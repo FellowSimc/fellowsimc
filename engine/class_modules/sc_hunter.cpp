@@ -2294,7 +2294,8 @@ struct hunter_main_pet_t final : public hunter_main_pet_base_t
     buffs.potent_mutagen = 
       make_buff( this, "potent_mutagen", o()->find_spell( 1218003 ) )
         //2025-03-07 - For some reason the base value is still 1, the pet buff says 0.5 seconds reduction per hit, but the server script doing the reduction only reduces by 0.25s
-        ->set_default_value( o()->find_spell( 1218004 )->effectN( 2 ).base_value() / 4 );
+        //2025-03-07 - The cooldown reduction is 10x what it should be (2.5s instead of 0.25s)
+        ->set_default_value( o()->find_spell( 1218004 )->effectN( 2 ).base_value() / 4 * ( o()->bugs ? 10 : 1 ) );
 
     buffs.solitary_companion = 
       make_buff( this, "solitary_companion", find_spell( 474751 ) )

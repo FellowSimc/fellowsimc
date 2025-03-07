@@ -85,7 +85,6 @@ actions.colossus_execute+=/bladestorm
 actions.colossus_execute+=/execute
 
 actions.colossus_st=rend,if=dot.rend.remains<=gcd
-actions.colossus_st+=/sweeping_strikes
 actions.colossus_st+=/thunderous_roar
 actions.colossus_st+=/ravager,if=cooldown.colossus_smash.remains<=gcd
 actions.colossus_st+=/champions_spear

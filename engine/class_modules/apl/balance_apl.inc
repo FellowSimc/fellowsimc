@@ -6,8 +6,8 @@ action_priority_list_t* pre_cd = get_action_priority_list( "pre_cd" );
 
 precombat->add_action( "variable,name=no_cd_talent,value=!talent.celestial_alignment&!talent.incarnation_chosen_of_elune|druid.no_cds" );
 precombat->add_action( "variable,name=on_use_trinket,value=0" );
-precombat->add_action( "variable,name=on_use_trinket,op=add,value=trinket.1.has_use_buff&!trinket.1.is.ovinaxs_mercurial_egg" );
-precombat->add_action( "variable,name=on_use_trinket,op=add,value=(trinket.2.has_use_buff&!trinket.2.is.ovinaxs_mercurial_egg)*2" );
+precombat->add_action( "variable,name=on_use_trinket,op=add,value=trinket.1.has_use_buff&!trinket.1.is.ovinaxs_mercurial_egg&!trinket.1.is.spymasters_web" );
+precombat->add_action( "variable,name=on_use_trinket,op=add,value=(trinket.2.has_use_buff&!trinket.2.is.ovinaxs_mercurial_egg&!trinket.2.is.spymasters_web)*2" );
 precombat->add_action( "bear_form,if=talent.lycaras_meditation&talent.fluid_form" );
 precombat->add_action( "moonkin_form,if=!talent.lycaras_meditation|!talent.fluid_form" );
 precombat->add_action( "wrath" );

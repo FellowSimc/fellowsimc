@@ -270,6 +270,186 @@ public:
   }
 };
 } // Namespace eff ends
+
+namespace stats
+{
+class proc_tracker_t
+{
+  const spell_data_t* m_source;
+  const action_t*     m_action;
+  proc_t*             m_proc;
+
+public:
+  proc_tracker_t( const spell_data_t* s, const action_t* a ) : m_source( s ), m_action( a )
+  {
+    m_proc = m_action->player->get_proc( fmt::format( "{}: {}",
+      s->name_cstr(),
+      m_action->data().ok()
+        ? m_action->data().name_cstr()
+        : m_action->name() ),
+      proc_report_e::REPORT_PROC_JSON | proc_report_e::REPORT_PROC_TEXT );
+  }
+
+  const action_t* action() const
+  { return m_action; }
+
+  const spell_data_t* source() const
+  { return m_source; }
+
+  std::string decorated_action_str() const
+  { return report_decorators::decorated_action( *action() ); }
+
+  std::string decorated_source_str() const
+  { return report_decorators::decorated_spell_data( action()->sim, source() ); }
+
+  const proc_t* proc() const
+  { return m_proc; }
+
+  virtual ~proc_tracker_t()
+  { }
+
+  void occur()
+  { m_proc->occur(); }
+};
+
+class proc_track_db_t
+{
+  using db_t = std::unordered_map<unsigned, std::vector<proc_tracker_t*>>;
+
+  player_t* m_player;
+  db_t      m_db;
+
+public:
+  proc_track_db_t( player_t* p ) : m_player( p )
+  { }
+
+  virtual ~proc_track_db_t()
+  {
+    for ( auto& [k, v] : m_db )
+    {
+      for ( auto& pt : v )
+      {
+        delete pt;
+      }
+    };
+  }
+
+  proc_tracker_t* register_proc( const spell_data_t* proc, const action_t* source )
+  {
+    auto proc_db = m_db[ proc->id() ];
+    auto proc_it = range::find_if( proc_db, [ source ]( const proc_tracker_t* pt ) {
+      return pt->action()->id == source->id;
+    } );
+
+    if ( proc_it != proc_db.end() )
+    {
+      return *proc_it;
+    }
+    else
+    {
+      return m_db[ proc->id() ].emplace_back( new proc_tracker_t( proc, source ) );
+    }
+  }
+
+  void output_html( report::sc_html_stream& os ) const
+  {
+    unsigned row = 0U;
+
+    std::vector<const std::vector<proc_tracker_t*>*> vals;
+    for ( auto& [k, v] : m_db )
+    {
+      if ( v.size() == 0 )
+      {
+        continue;
+      }
+
+      vals.push_back( &v );
+    }
+
+    std::sort( vals.begin(), vals.end(), []( auto a, auto b ) {
+      if ( a == b )
+      {
+        return false;
+      }
+
+      return strcmp( a->front()->source()->name_cstr(), b->front()->source()->name_cstr() ) < 0;
+    } );
+
+    os << R"(<table class="sc stripebody">)" << "\n"
+      << "<thead>\n"
+      << "<tr>\n";
+
+    os << R"(<th class="left">Proc Spell</th>)"
+        << R"(<th class="left">Source Ability</th>)"
+        << R"(<th class="left">Count</th>)"
+        << R"(<th class="left">Min</th>)"
+        << R"(<th class="left">Max</th>)"
+        << R"(<th class="left">Interval</th>)"
+        << R"(<th class="left">Min</th>)"
+        << R"(<th class="left">Max</th>)"
+        << "\n";
+
+    os << "</tr>\n"
+        << "</thead>\n"
+        << "<tbody>\n";
+
+    range::for_each( vals, [ &row, &os ]( auto pt ) {
+      auto first = true;
+      std::vector<proc_tracker_t*> trackers;
+      for ( auto tracker : *pt )
+      {
+        if ( tracker->proc()->count.mean() == 0 )
+        {
+          continue;
+        }
+
+        trackers.emplace_back( tracker );
+      }
+
+      std::sort( trackers.begin(), trackers.end(), []( auto a, auto b ) {
+        if ( a == b )
+        {
+          return false;
+        }
+
+        return a->action()->name_str < b->action()->name_str;
+      } );
+
+      for ( auto tracker : trackers )
+      {
+        os << fmt::format( R"(<tr class="{}">)""\n", row++ & 1 ? "odd" : "even" );
+        if ( first )
+        {
+          os << fmt::format( R"(<td class="left" rowspan="{}">{}</td>)",
+            trackers.size(),
+            report_decorators::decorated_spell_data( trackers.front()->action()->sim,
+              trackers.front()->source() ) );
+          first = false;
+        }
+
+        os << fmt::format(
+          R"(<td class="left">{}</td>)"
+          "<td>{:.1f}</td>"
+          "<td>{:.1f}</td>"
+          "<td>{:.1f}</td>"
+          "<td>{:.1f}s</td>"
+          "<td>{:.1f}s</td>"
+          "<td>{:.1f}s</td></tr>\n",
+          report_decorators::decorated_action( *tracker->action() ),
+          tracker->proc()->count.mean(),
+          tracker->proc()->count.min(),
+          tracker->proc()->count.max(),
+          tracker->proc()->interval_sum.mean(),
+          tracker->proc()->interval_sum.min(),
+          tracker->proc()->interval_sum.max() );
+      }
+    } );
+
+    os << "</tbody>\n"
+        << "</table>\n";
+  }
+};
+} // Namespace stats ends
  
 // ==========================================================================
 // Shaman
@@ -728,6 +908,9 @@ public:
 
   /// Molten Thunder 11.1
   double molten_thunder_chance;
+
+  /// Generic proc tracking
+  stats::proc_track_db_t tracker;
 
   // Cached actions
   struct actions_t
@@ -1451,6 +1634,7 @@ public:
       ascendance_extension_cap( timespan_t::from_seconds( 0 ) ),
       tempest_counter( 0U ),
       active_flowing_spirits_proc( 0U ),
+      tracker( this ),
       action(),
       pet( this ),
       constant(),
@@ -1569,7 +1753,7 @@ public:
   void trigger_maelstrom_gain( double maelstrom_gain, gain_t* gain = nullptr );
   void trigger_windfury_weapon( const action_state_t*, double override_chance = -1.0 );
   void trigger_flametongue_weapon( const action_state_t* );
-  void trigger_stormbringer( const action_state_t* state, double proc_chance = -1.0, proc_t* proc_obj = nullptr );
+  void trigger_stormbringer( const action_state_t* state, double proc_chance = -1.0, stats::proc_tracker_t* proc_obj = nullptr );
   void trigger_hot_hand( const action_state_t* state );
   void trigger_lava_surge();
   void trigger_splintered_elements( action_t* secondary );
@@ -2102,7 +2286,7 @@ public:
   bool affected_by_elemental_weapons_ta;
 
   bool may_proc_flowing_spirits;
-  proc_t *proc_fs;
+  stats::proc_tracker_t* proc_fs;
 
   bool affected_by_maelstrom_weapon = false;
   int mw_consume_max_stack, mw_consumed_stacks, mw_affected_stacks;
@@ -2382,7 +2566,10 @@ public:
       p()->ability_cooldowns.push_back( this->cooldown );
     }
 
-    proc_fs = p()->get_proc( std::string( "Flowing Spirits: " ) + full_name() );
+    if ( may_proc_flowing_spirits )
+    {
+      proc_fs = p()->tracker.register_proc( p()->talent.flowing_spirits, this );
+    }
   }
 
   action_state_t* new_state() override
@@ -2720,7 +2907,7 @@ public:
   bool may_proc_hot_hand;
   bool may_proc_ability_procs;  // For things that explicitly state they proc from "abilities"
 
-  proc_t *proc_wf, *proc_ft, *proc_fb, *proc_mw, *proc_sb, *proc_ls, *proc_hh;
+  stats::proc_tracker_t* proc_wf, *proc_fb, *proc_mw, *proc_sb, *proc_ls, *proc_hh, *proc_ft;
 
   shaman_attack_t( util::string_view token, shaman_t* p, const spell_data_t* s,
                    spell_variant variant_ = spell_variant::NORMAL )
@@ -2732,10 +2919,10 @@ public:
       may_proc_hot_hand( p->talent.hot_hand.ok() ),
       may_proc_ability_procs( true ),
       proc_wf( nullptr ),
-      proc_ft( nullptr ),
       proc_mw( nullptr ),
       proc_sb( nullptr ),
-      proc_hh( nullptr )
+      proc_hh( nullptr ),
+      proc_ft( nullptr )
   {
     special    = true;
     may_glance = false;
@@ -2773,22 +2960,22 @@ public:
   {
     if ( may_proc_flametongue )
     {
-      proc_ft = player->get_proc( std::string( "Flametongue: " ) + full_name() );
+      proc_ft = p()->tracker.register_proc( p()->find_class_spell( "Flametongue Weapon"), this );
     }
 
     if ( may_proc_hot_hand )
     {
-      proc_hh = player->get_proc( std::string( "Hot Hand: " ) + full_name() );
+      proc_hh = p()->tracker.register_proc( p()->talent.hot_hand, this );
     }
 
     if ( may_proc_stormsurge )
     {
-      proc_sb = player->get_proc( std::string( "Stormsurge: " ) + full_name() );
+      proc_sb = p()->tracker.register_proc( p()->spec.stormbringer, this );
     }
 
     if ( may_proc_windfury )
     {
-      proc_wf = player->get_proc( std::string( "Windfury: " ) + full_name() );
+      proc_wf = p()->tracker.register_proc( p()->talent.windfury_weapon, this );
     }
 
     base_t::init_finished();
@@ -2942,7 +3129,7 @@ struct shaman_spell_t : public shaman_spell_base_t<spell_t>
   action_t* overload;
 
   bool may_proc_stormsurge = false;
-  proc_t* proc_sb;
+  stats::proc_tracker_t* proc_sb;
   bool affected_by_master_of_the_elements = false;
   proc_t* proc_moe;
 
@@ -2962,7 +3149,7 @@ struct shaman_spell_t : public shaman_spell_base_t<spell_t>
   {
     if ( may_proc_stormsurge )
     {
-      proc_sb = player->get_proc( std::string( "Stormsurge: " ) + full_name() );
+      proc_sb = p()->tracker.register_proc( p()->spec.stormbringer, this );
     }
 
     if ( affected_by_master_of_the_elements && p()->talent.master_of_the_elements.ok() )
@@ -4480,13 +4667,18 @@ struct windfury_attack_t : public shaman_attack_t
     {
       if ( weapon->slot == SLOT_MAIN_HAND )
       {
-        proc_sb = player->get_proc( std::string( "Stormsurge: " ) + full_name() );
+        proc_sb = p()->tracker.register_proc( p()->spec.stormbringer, this );
       }
 
       if ( weapon->slot == SLOT_OFF_HAND )
       {
-        proc_sb = player->get_proc( std::string( "Stormsurge: " ) + full_name() + " Off-Hand" );
+        proc_sb = p()->tracker.register_proc( p()->spec.stormbringer, this );
       }
+    }
+
+    if ( p()->talent.flowing_spirits.ok() )
+    {
+      proc_fs = p()->tracker.register_proc( p()->talent.flowing_spirits, this );
     }
   }
 
@@ -5495,16 +5687,18 @@ struct stormstrike_base_t : public shaman_attack_t
       }
 
       action->trigger_stormflurry( target, stormblast );
-      action->p()->proc.stormflurry->occur();
+      action->proc_stormflurry->occur();
     }
   };
 
   stormstrike_attack_t *mh, *oh;
   strike_variant strike_type;
+  stats::proc_tracker_t* proc_stormflurry;
 
   stormstrike_base_t( shaman_t* player, util::string_view name, const spell_data_t* spell,
                       util::string_view options_str, strike_variant t = strike_variant::NORMAL )
-    : shaman_attack_t( name, player, spell ), mh( nullptr ), oh( nullptr ), strike_type( t )
+    : shaman_attack_t( name, player, spell ), mh( nullptr ), oh( nullptr ),
+      strike_type( t ), proc_stormflurry( nullptr )
   {
     parse_options( options_str );
 
@@ -5579,6 +5773,11 @@ struct stormstrike_base_t : public shaman_attack_t
     may_proc_flametongue = may_proc_windfury = may_proc_stormsurge = false;
 
     p()->set_mw_proc_state( this, mw_proc_state::DISABLED );
+
+    if ( p()->talent.stormflurry.ok() )
+    {
+      proc_stormflurry = p()->tracker.register_proc( p()->talent.stormflurry, this );
+    }
   }
 
   void execute() override
@@ -5793,8 +5992,11 @@ struct ice_strike_t : public shaman_attack_t
 
 struct sundering_t : public shaman_attack_t
 {
+  stats::proc_tracker_t* molten_thunder;
+
   sundering_t( shaman_t* player, util::string_view options_str )
-    : shaman_attack_t( "sundering", player, player->talent.sundering )
+    : shaman_attack_t( "sundering", player, player->talent.sundering ),
+      molten_thunder( nullptr )
   {
     weapon = &( player->main_hand_weapon );
 
@@ -5807,6 +6009,11 @@ struct sundering_t : public shaman_attack_t
     shaman_attack_t::init();
 
     may_proc_stormsurge = may_proc_flametongue = true;
+
+    if ( p()->talent.molten_thunder.ok() )
+    {
+      molten_thunder = p()->tracker.register_proc( p()->talent.molten_thunder, this );
+    }
   }
 
   void execute() override
@@ -5830,7 +6037,7 @@ struct sundering_t : public shaman_attack_t
     if ( p()->rng().roll( p()->molten_thunder_chance ) )
     {
       cooldown->reset( true );
-      p()->proc.molten_thunder->occur();
+      molten_thunder->occur();
 
       // Proc success, cut chance in half
       p()->molten_thunder_chance *= 0.5;
@@ -12433,7 +12640,7 @@ void shaman_t::track_magma_chamber()
 // ==========================================================================
 
 void shaman_t::trigger_stormbringer( const action_state_t* state, double override_proc_chance,
-                                     proc_t* override_proc_obj )
+                                     stats::proc_tracker_t* override_proc_obj )
 {
   // assert( debug_cast< shaman_attack_t* >( state -> action ) != nullptr &&
   //        "Stormbringer called on invalid action type" );
@@ -13995,14 +14202,12 @@ void shaman_t::init_procs()
   proc.elemental_blast_mastery = get_proc( "Elemental Blast: Mastery" );
 
   proc.windfury_uw            = get_proc( "Windfury: Unruly Winds" );
-  proc.stormflurry            = get_proc( "Stormflurry" );
   proc.stormflurry_failed     = get_proc( "Stormflurry (failed)" );
 
   proc.reset_swing_mw            = get_proc( "Maelstrom Weapon Swing Reset" );
 
   proc.tempest_awakening_storms = get_proc( "Awakened Storms w/ Tempest");
 
-  proc.molten_thunder = get_proc( "Molten Thunder" );
   proc.lively_totems = get_proc( "Lively Totems" );
 
   proc.hot_hand_duration = get_proc( "Hot Hand duration clip" );
@@ -15676,6 +15881,21 @@ public:
 
   void html_customsection( report::sc_html_stream& os ) override
   {
+    if ( p.specialization() == SHAMAN_ENHANCEMENT )
+    {
+      os << "\t\t\t\t<div class=\"player-section custom_section\">\n";
+      os << "\t\t\t\t\t<h3 class=\"toggle open\">Proc Details</h3>\n"
+          << "\t\t\t\t\t<div class=\"toggle-content\">\n";
+
+      p.tracker.output_html( os );
+
+      os << "\t\t\t\t\t</div>\n";
+
+      os << "<div class=\"clear\"></div>\n";
+
+      os << "\t\t\t\t\t</div>\n";
+    }
+
     // Custom Class Section
     if ( p.spec.maelstrom_weapon->ok() || p.talent.maelstrom_weapon.ok() )
     {
@@ -15746,6 +15966,7 @@ public:
 
       os << "\t\t\t\t\t</div>\n";
     }
+
   }
 };
 

@@ -6,12 +6,12 @@
 
 #include "sim/sim.hpp"
 
-proc_t::proc_t( sim_t& s, util::string_view n, bool q )
+proc_t::proc_t( sim_t& s, util::string_view n, unsigned flags )
   : sim( s ),
     iteration_count(),
     last_proc( timespan_t::min() ),
     name_str( n ),
-    quiet( q ),
+    proc_report_flags( flags ),
     interval_sum( "Interval", true ),
     count( "Count", true )
 {

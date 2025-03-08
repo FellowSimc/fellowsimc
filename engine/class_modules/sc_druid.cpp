@@ -12005,19 +12005,19 @@ void druid_t::init()
   {
     case DRUID_BALANCE:
       action_list_information +=
-        "\n# Balance APL can be found at https://www.dreamgrove.gg/sims/owl/balance.txt\n";
+        "\n# Balance APL can be found at https://github.com/dreamgrove/dreamgrove/blob/master/sims/owl/balance.txt\n";
       break;
     case DRUID_FERAL:
       action_list_information +=
-        "\n# Feral APL can be found at https://www.dreamgrove.gg/sims/cat/feral.txt\n";
+        "\n# Feral APL can be found at https://github.com/dreamgrove/dreamgrove/blob/master/sims/cat/feral.txt\n";
       break;
     case DRUID_GUARDIAN:
       action_list_information +=
-        "\n# Guardian APL can be found at https://www.dreamgrove.gg/sims/bear/guardian.txt\n";
+        "\n# Guardian APL can be found at https://github.com/dreamgrove/dreamgrove/blob/master/sims/bear/guardian.txt\n";
       break;
     case DRUID_RESTORATION:
       action_list_information +=
-        "\n# Restoration DPS APL can be found at https://www.dreamgrove.gg/sims/tree/restoration.txt\n";
+        "\n# Restoration DPS APL can be found at https://github.com/dreamgrove/dreamgrove/blob/master/sims/tree/restoration.txt\n";
       break;
     default:
       break;

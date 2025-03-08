@@ -1065,7 +1065,7 @@ public:
 
   dot_t*      get_dot     ( util::string_view name, player_t* source );
   gain_t*     get_gain    ( util::string_view name );
-  proc_t*     get_proc    ( util::string_view name );
+  proc_t*     get_proc    ( util::string_view name, bool quiet = false );
   stats_t*    get_stats   ( util::string_view name, action_t* action = nullptr );
   benefit_t*  get_benefit ( util::string_view name );
   uptime_t*   get_uptime  ( util::string_view name );

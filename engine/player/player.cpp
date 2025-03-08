@@ -8299,13 +8299,13 @@ gain_t* player_t::get_gain( util::string_view name )
   return g;
 }
 
-proc_t* player_t::get_proc( util::string_view name )
+proc_t* player_t::get_proc( util::string_view name, bool quiet )
 {
   proc_t* p = find_proc( name );
 
   if ( !p )
   {
-    p = new proc_t( *sim, name );
+    p = new proc_t( *sim, name, quiet );
 
     proc_list.push_back( p );
   }

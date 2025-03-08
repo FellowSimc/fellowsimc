@@ -23,11 +23,13 @@ private:
   timespan_t last_proc; // track time of the last proc
 public:
   const std::string name_str;
+  bool quiet; // Don't output proc in reporting
+
   // These are initialized in SIMPLE mode. Only change mode for infrequent procs to keep memory usage reasonable.
   extended_sample_data_t interval_sum;
   extended_sample_data_t count;
 
-  proc_t(sim_t& s, util::string_view n);
+  proc_t( sim_t& s, util::string_view n, bool q = false );
 
   void occur();
 

@@ -2338,8 +2338,6 @@ public:
   bool affected_by_ns_cast_time;
   bool affected_by_ans_cost;
   bool affected_by_ans_cast_time;
-  bool affected_by_lotfw_da;
-  bool affected_by_lotfw_ta;
 
   bool affected_by_stormkeeper_cast_time;
   bool affected_by_stormkeeper_damage;
@@ -2387,8 +2385,6 @@ public:
       affected_by_ns_cast_time( false ),
       affected_by_ans_cost( false ),
       affected_by_ans_cast_time( false ),
-      affected_by_lotfw_da( false ),
-      affected_by_lotfw_ta( false ),
       affected_by_stormkeeper_cast_time( false ),
       affected_by_stormkeeper_damage( false ),
       affected_by_arc_discharge( false ),
@@ -2451,9 +2447,6 @@ public:
                            ab::data().affected_by( player->buff.ancestral_swiftness->data().effectN( 3 ) );
     affected_by_ns_cast_time = ab::data().affected_by( player->talent.natures_swiftness->effectN( 2 ) );
     affected_by_ans_cast_time = ab::data().affected_by( player->buff.ancestral_swiftness->data().effectN( 2 ) );
-
-    affected_by_lotfw_da = ab::data().affected_by( player->find_spell( 384451 )->effectN( 1 ) );
-    affected_by_lotfw_ta = ab::data().affected_by( player->find_spell( 384451 )->effectN( 2 ) );
 
     affected_by_arc_discharge = ab::data().affected_by( player->buff.arc_discharge->data().effectN( 1 ) );
 
@@ -2705,11 +2698,6 @@ public:
   {
     double m = ab::action_da_multiplier();
 
-    if ( affected_by_lotfw_da && p()->buff.legacy_of_the_frost_witch->check() )
-    {
-      m *= 1.0 + p()->buff.legacy_of_the_frost_witch->value();
-    }
-
     if ( affected_by_arc_discharge && p()->buff.arc_discharge->check() )
     {
       m *= 1.0 + p()->buff.arc_discharge->value();
@@ -2763,11 +2751,6 @@ public:
   double action_ta_multiplier() const override
   {
     double m = ab::action_ta_multiplier();
-
-    if ( affected_by_lotfw_ta && p()->buff.legacy_of_the_frost_witch->check() )
-    {
-      m *= 1.0 + p()->buff.legacy_of_the_frost_witch->value();
-    }
 
     if ( affected_by_elemental_unity_fe_ta && p()->talent.elemental_unity.ok() &&
          ( p()->buff.fire_elemental->check() || p()->buff.lesser_fire_elemental->check() ) )
@@ -3940,15 +3923,6 @@ struct alpha_wolf_t : public pet_melee_attack_t<T>
 
   double composite_target_armor( player_t* ) const override
   { return 0.0; }
-
-  double action_da_multiplier() const override
-  {
-    double m = pet_melee_attack_t<T>::action_da_multiplier();
-
-    m *= 1.0 + this->o()->buff.legacy_of_the_frost_witch->value();
-
-    return m;
-  }
 };
 
 action_t* shaman_pet_t::create_action( util::string_view name, util::string_view options_str )
@@ -10018,9 +9992,6 @@ struct totem_pulse_action_t : public T
 
   bool affected_by_totemic_rebound_da;
 
-  bool affected_by_lotfw_da;
-  bool affected_by_lotfw_ta;
-
   bool affected_by_elemental_weapons_da;
   bool affected_by_elemental_weapons_ta;
 
@@ -10042,8 +10013,6 @@ struct totem_pulse_action_t : public T
 
     affected_by_totemic_rebound_da = T::data().affected_by_all( o()->buff.totemic_rebound->data().effectN( 1 ) ) ||
                                      T::data().affected_by_all( o()->buff.totemic_rebound->data().effectN( 2 ) );
-    affected_by_lotfw_da = T::data().affected_by( o()->buff.legacy_of_the_frost_witch->data().effectN( 1 ) );
-    affected_by_lotfw_ta = T::data().affected_by( o()->buff.legacy_of_the_frost_witch->data().effectN( 2 ) );
 
     affected_by_elemental_weapons_da = o()->talent.elemental_weapons.ok() && T::data().affected_by(
       o()->spell.elemental_weapons->effectN( 1 ) );
@@ -10105,11 +10074,6 @@ struct totem_pulse_action_t : public T
       m *= 1.0 + o()->buff.totemic_rebound->stack_value();
     }
 
-    if ( affected_by_lotfw_da && o()->buff.legacy_of_the_frost_witch->check() )
-    {
-      m *= 1.0 + o()->buff.legacy_of_the_frost_witch->value();
-    }
-
     if ( affected_by_elemental_weapons_da )
     {
       unsigned n_imbues = ( o()->main_hand_weapon.buff_type != 0 ) +
@@ -10123,11 +10087,6 @@ struct totem_pulse_action_t : public T
   double action_ta_multiplier() const override
   {
     double m = T::action_ta_multiplier();
-
-    if ( affected_by_lotfw_ta && o()->buff.legacy_of_the_frost_witch->check() )
-    {
-      m *= 1.0 + o()->buff.legacy_of_the_frost_witch->value();
-    }
 
     if ( affected_by_elemental_weapons_ta )
     {
@@ -14563,6 +14522,9 @@ void shaman_t::apply_action_effects( parse_effects_t* a )
   eff::source_eff_builder_t( buff.molten_weapon ).set_flag( USE_CURRENT, IGNORE_STACKS ).build( a );
   eff::source_eff_builder_t( buff.icy_edge ).set_flag( USE_CURRENT, IGNORE_STACKS ).build( a );
   eff::source_eff_builder_t( buff.earthen_weapon ).set_flag( USE_CURRENT, IGNORE_STACKS ).build( a );
+  eff::source_eff_builder_t( buff.legacy_of_the_frost_witch )
+    .add_affecting_spell( talent.legacy_of_the_frost_witch )
+    .build( a );
 
   eff::source_eff_builder_t( buff.tww2_enh_2pc ).build( a );
   eff::source_eff_builder_t( buff.tww2_enh_4pc_damage ).build( a );

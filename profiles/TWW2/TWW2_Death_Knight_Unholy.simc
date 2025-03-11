@@ -43,8 +43,9 @@ actions+=/call_action_list,name=san_trinkets,if=talent.vampiric_strike
 actions+=/call_action_list,name=trinkets,if=!talent.vampiric_strike
 actions+=/call_action_list,name=racials
 actions+=/call_action_list,name=cds_shared
-actions+=/call_action_list,name=cds_aoe_san,if=talent.vampiric_strike&active_enemies>=2
+actions+=/call_action_list,name=cds_aoe_san,if=talent.vampiric_strike&active_enemies>=3
 actions+=/call_action_list,name=cds_aoe,if=!talent.vampiric_strike&active_enemies>=2
+actions+=/call_action_list,name=cds_cleave_san,if=talent.vampiric_strike&active_enemies=2
 actions+=/call_action_list,name=cds_san,if=talent.vampiric_strike&active_enemies=1
 actions+=/call_action_list,name=cds,if=!talent.vampiric_strike&active_enemies=1
 actions+=/call_action_list,name=cleave,if=active_enemies=2
@@ -111,6 +112,13 @@ actions.cds_aoe_san+=/outbreak,if=dot.virulent_plague.ticks_remain<5&(dot.virule
 actions.cds_aoe_san+=/apocalypse,target_if=max:debuff.festering_wound.stack,if=variable.adds_remain&rune<=3
 actions.cds_aoe_san+=/abomination_limb,if=variable.adds_remain
 
+# San'layn Cleave Cooldowns
+actions.cds_cleave_san=dark_transformation,if=buff.death_and_decay.up&(talent.apocalypse&pet.apoc_ghoul.active|!talent.apocalypse)|fight_remains<20|raid_event.adds.exists&raid_event.adds.remains<20
+actions.cds_cleave_san+=/unholy_assault,if=buff.dark_transformation.up&buff.dark_transformation.remains<12|fight_remains<20|raid_event.adds.exists&raid_event.adds.remains<20
+actions.cds_cleave_san+=/apocalypse,target_if=max:debuff.festering_wound.stack
+actions.cds_cleave_san+=/outbreak,target_if=target.time_to_die>dot.virulent_plague.remains&dot.virulent_plague.ticks_remain<5,if=(dot.virulent_plague.refreshable|talent.morbidity&buff.infliction_of_sorrow.up&talent.superstrain&dot.frost_fever.refreshable&dot.blood_plague.refreshable)&(!talent.unholy_blight|talent.unholy_blight&cooldown.dark_transformation.remains>5)&(!talent.raise_abomination|talent.raise_abomination&cooldown.raise_abomination.remains>5)
+actions.cds_cleave_san+=/abomination_limb,if=active_enemies>=1&variable.st_planning&!buff.gift_of_the_sanlayn.up&!buff.sudden_doom.react&buff.festermight.up&debuff.festering_wound.stack<=2|!buff.gift_of_the_sanlayn.up&fight_remains<12
+
 # San'layn Cooldowns
 actions.cds_san=dark_transformation,if=active_enemies>=1&variable.st_planning&(talent.apocalypse&pet.apoc_ghoul.active|!talent.apocalypse)|fight_remains<20
 actions.cds_san+=/unholy_assault,if=variable.st_planning&(buff.dark_transformation.up&buff.dark_transformation.remains<12)|fight_remains<20
@@ -128,11 +136,12 @@ actions.cds_shared+=/summon_gargoyle,use_off_gcd=1,if=(variable.st_planning|vari
 actions.cds_shared+=/antimagic_shell,if=death_knight.ams_absorb_percent>0&runic_power<30&rune<2
 
 # Cleave
-actions.cleave=any_dnd,if=!death_and_decay.ticking
-actions.cleave+=/death_coil,if=!variable.pooling_runic_power
+actions.cleave=any_dnd,if=!death_and_decay.ticking&variable.adds_remain&(cooldown.apocalypse.remains|!talent.apocalypse)
+actions.cleave+=/death_coil,if=!variable.pooling_runic_power&talent.improved_death_coil
 actions.cleave+=/wound_spender,if=buff.vampiric_strike.react
+actions.cleave+=/death_coil,if=!variable.pooling_runic_power&!talent.improved_death_coil
 actions.cleave+=/festering_strike,target_if=min:debuff.festering_wound.stack,if=!buff.vampiric_strike.react&!variable.pop_wounds&debuff.festering_wound.stack<2|buff.festering_scythe.react
-actions.cleave+=/festering_strike,target_if=max:debuff.festering_wound.stack,if=cooldown.apocalypse.remains<variable.apoc_timing&debuff.festering_wound.stack<1
+actions.cleave+=/festering_strike,target_if=max:debuff.festering_wound.stack,if=!buff.vampiric_strike.react&cooldown.apocalypse.remains<variable.apoc_timing&debuff.festering_wound.stack<1
 actions.cleave+=/wound_spender,if=variable.pop_wounds
 
 # Racials

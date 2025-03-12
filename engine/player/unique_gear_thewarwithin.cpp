@@ -6499,63 +6499,38 @@ void flarendos_pilot_light( special_effect_t& effect )
 // 472185 Primary Buff
 void amorphous_relic( special_effect_t& effect )
 {
-  struct amorphous_relic_event_t : public event_t
-  {
-    player_t* player;
-    buff_t* haste_buff;
-    buff_t* crit_buff;
-    timespan_t period;
-    event_t* next_event;
+  buff_t* haste_buff = create_buff<stat_buff_t>( effect.player, effect.player->find_spell( 472184 ) )
+                           ->add_stat_from_effect( 2, effect.driver()->effectN( 4 ).average( effect ) )
+                           ->add_stat_from_effect( 3, effect.driver()->effectN( 3 ).average( effect ) )
+                           ->set_cooldown( 0_ms );
 
-    amorphous_relic_event_t( player_t* p, timespan_t time_to_execute, buff_t* haste, buff_t* crit )
-      : event_t( *p, time_to_execute ),
-        player( p ),
-        haste_buff( haste ),
-        crit_buff( crit ),
-        period( 0_ms ),
-        next_event( nullptr )
+  buff_t* crit_buff = create_buff<stat_buff_t>( effect.player, effect.player->find_spell( 472185 ) )
+                          ->add_stat_from_effect( 2, effect.driver()->effectN( 1 ).average( effect ) )
+                          ->add_stat_from_effect( 3, effect.driver()->effectN( 2 ).average( effect ) )
+                          ->set_cooldown( 0_ms );
+
+  buff_t* periodic = create_buff<buff_t>( effect.player, effect.player->find_spell( 472195 ) )
+                         ->set_tick_on_application( true )
+                         ->set_tick_callback( [ haste_buff, crit_buff ]( buff_t* b, int, timespan_t ) {
+                           if ( b->source->in_combat )
+                           {
+                             if ( b->source->rng().roll( 0.5 ) )
+                               haste_buff->trigger();
+                             else
+                               crit_buff->trigger();
+                           }
+                         } );
+
+  effect.player->register_on_combat_state_callback( [ haste_buff, crit_buff, periodic ]( player_t* p, bool c ) {
+    if ( !c )
     {
-      period = player->find_spell( 472195 )->effectN( 1 ).period();
+      periodic->expire();
+      haste_buff->expire();
+      crit_buff->expire();
     }
-
-    const char* name() const override
+    else
     {
-      return "amorphous_relic_event";
-    }
-
-    void execute() override
-    {
-      if ( next_event == nullptr )
-        next_event = make_event<amorphous_relic_event_t>( sim(), player, period, haste_buff, crit_buff );
-      else
-      {
-        // Reset the timer if combat was started again and the event triggered before the next secheduled time.
-        event_t::cancel( next_event );
-        next_event = make_event<amorphous_relic_event_t>( sim(), player, period, haste_buff, crit_buff );
-      }
-
-      if ( player->in_combat )
-      {
-        if ( rng().roll( 0.5 ) )
-          haste_buff->trigger();
-        else
-          crit_buff->trigger();
-      }
-    }
-  };
-
-  auto haste_buff = create_buff<stat_buff_t>( effect.player, effect.player->find_spell( 472184 ) )
-                        ->add_stat_from_effect( 2, effect.driver()->effectN( 4 ).average( effect ) )
-                        ->add_stat_from_effect( 3, effect.driver()->effectN( 3 ).average( effect ) );
-
-  auto crit_buff = create_buff<stat_buff_t>( effect.player, effect.player->find_spell( 472185 ) )
-                       ->add_stat_from_effect( 2, effect.driver()->effectN( 1 ).average( effect ) )
-                       ->add_stat_from_effect( 3, effect.driver()->effectN( 2 ).average( effect ) );
-
-  effect.player->register_on_combat_state_callback( [ haste_buff, crit_buff ]( player_t* p, bool c ) {
-    if ( c )
-    {
-      make_event<amorphous_relic_event_t>( *p->sim, p, 0_ms, haste_buff, crit_buff );
+      periodic->trigger();
     }
   } );
 }

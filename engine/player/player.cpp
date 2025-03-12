@@ -6736,6 +6736,9 @@ void player_t::enter_combat()
 
   for ( size_t i = 0; i < callbacks_on_combat_state.size(); ++i )
     callbacks_on_combat_state[ i ]( this, in_combat );
+
+  if ( buffs.shadowmeld->check() )
+    buffs.shadowmeld->expire();
 }
 
 void player_t::leave_combat()

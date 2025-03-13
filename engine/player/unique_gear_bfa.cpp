@@ -4915,10 +4915,6 @@ void items::goldcoated_superconductors( special_effect_t& effect )
 
   effect.custom_buff = buff;
 
-  effect.proc_flags_  = PF_DAMAGE_TAKEN;
-  effect.proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
-  effect.proc_chance_ = 1.0;
-
   effect.player->callbacks.register_callback_trigger_function(
       effect.driver()->id(), dbc_proc_callback_t::trigger_fn_type::CONDITION,
       [ & ]( const dbc_proc_callback_t*, action_t* a, const action_state_t* ) {

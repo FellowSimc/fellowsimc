@@ -3527,6 +3527,28 @@ struct crackling_jade_lightning_t : public monk_spell_t
       }
     }
   }
+
+  double cost() const override
+  {
+    double cost = monk_spell_t::cost();
+
+    if ( current_resource() == RESOURCE_ENERGY && p()->buff.the_emperors_capacitor->check() )
+      cost *= 1.0 + p()->buff.the_emperors_capacitor->data().effectN( 2 ).percent() *
+                        p()->buff.the_emperors_capacitor->check();
+
+    return cost;
+  }
+
+  double cost_per_tick( resource_e resource ) const override
+  {
+    double cost = monk_spell_t::cost_per_tick( resource );
+
+    if ( resource == RESOURCE_ENERGY && p()->buff.the_emperors_capacitor->check() )
+      cost *= 1.0 + p()->buff.the_emperors_capacitor->data().effectN( 2 ).percent() *
+                        p()->buff.the_emperors_capacitor->check();
+
+    return cost;
+  }
 };
 
 // ==========================================================================

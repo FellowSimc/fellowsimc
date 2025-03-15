@@ -6514,6 +6514,7 @@ void amorphous_relic( special_effect_t& effect )
 
   buff_t* periodic = create_buff<buff_t>( effect.player, effect.player->find_spell( 472195 ) )
                          ->set_tick_on_application( true )
+                         ->set_cooldown( 60_s ) // Not in data, but the ticking aura doesnt reapply if re-entering combat before 60s has passed.
                          ->set_tick_callback( [ haste_buff, crit_buff ]( buff_t* b, int, timespan_t ) {
                            if ( b->source->in_combat )
                            {
@@ -6526,15 +6527,9 @@ void amorphous_relic( special_effect_t& effect )
 
   effect.player->register_on_combat_state_callback( [ haste_buff, crit_buff, periodic ]( player_t* p, bool c ) {
     if ( !c )
-    {
       periodic->expire();
-      haste_buff->expire();
-      crit_buff->expire();
-    }
     else
-    {
       periodic->trigger();
-    }
   } );
 }
 

@@ -119,6 +119,7 @@ actions.colossus_sweep+=/rend,if=dot.rend.remains<=5
 actions.colossus_sweep+=/slam
 
 actions.slayer_aoe=thunder_clap,if=!dot.rend.remains
+actions.slayer_aoe+=/sweeping_strikes
 actions.slayer_aoe+=/thunderous_roar
 actions.slayer_aoe+=/avatar
 actions.slayer_aoe+=/champions_spear

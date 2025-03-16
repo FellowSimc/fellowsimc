@@ -254,6 +254,7 @@ void arms( player_t* p )
   colossus_sweep->add_action( "slam" );
 
   slayer_aoe->add_action( "thunder_clap,if=!dot.rend.remains" );
+  slayer_aoe->add_action( "sweeping_strikes" );
   slayer_aoe->add_action( "thunderous_roar" );
   slayer_aoe->add_action( "avatar" );
   slayer_aoe->add_action( "champions_spear" );

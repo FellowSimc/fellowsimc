@@ -26,7 +26,6 @@ actions.precombat+=/deaths_caress
 
 # Executed every time the actor is available.
 actions=auto_attack
-actions+=/restart_sequence,name=drw_bp,if=cooldown.dancing_rune_weapon.remains<10
 actions+=/use_item,name=tome_of_lights_devotion,if=buff.inner_resilience.up
 actions+=/use_items
 actions+=/blood_fury,if=buff.dancing_rune_weapon.up
@@ -59,7 +58,7 @@ actions.deathbringer+=/reapers_mark
 actions.deathbringer+=/marrowrend,if=buff.bone_shield.stack<6&!dot.bonestorm.ticking
 actions.deathbringer+=/tombstone,if=buff.bone_shield.stack>=8&(!talent.shattering_bone.enabled|death_and_decay.ticking)&cooldown.dancing_rune_weapon.remains>=25
 actions.deathbringer+=/abomination_limb,if=!buff.dancing_rune_weapon.up
-actions.deathbringer+=/call_action_list,name=sequence,if=buff.dancing_rune_weapon.up&cooldown.blood_boil.charges>=1
+actions.deathbringer+=/blood_boil,if=pet.dancing_rune_weapon.active&!drw.bp_ticking
 actions.deathbringer+=/any_dnd,if=!buff.death_and_decay.remains
 actions.deathbringer+=/blooddrinker,if=!buff.dancing_rune_weapon.up&active_enemies<=2&buff.coagulopathy.remains>3
 actions.deathbringer+=/death_strike
@@ -108,8 +107,6 @@ actions.sanlayn+=/consumption,if=cooldown.dancing_rune_weapon.remains>20
 actions.sanlayn+=/heart_strike,if=rune>1
 actions.sanlayn+=/bonestorm,if=buff.death_and_decay.up&buff.bone_shield.stack>5&cooldown.dancing_rune_weapon.remains
 actions.sanlayn+=/tombstone,if=buff.death_and_decay.up&buff.bone_shield.stack>5&runic_power.deficit>=30&cooldown.dancing_rune_weapon.remains
-
-actions.sequence=sequence,name=drw_bp:blood_boil
 
 head=exhumed_centurions_galea,id=212002,bonus_id=1540/10299/1808,gem_id=213743
 neck=sureki_zealots_insignia,id=225577,bonus_id=1540/10299/10376/8781,gem_id=213482/213482

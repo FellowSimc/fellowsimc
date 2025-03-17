@@ -4025,10 +4025,12 @@ struct fire_breath_t : public empowered_charge_spell_t
           {
           public:
             fire_breath_damage_t& action;
+            fire_breath_t& release;
             evoker_action_state_t<empower_data_t>* state;
 
-            dot_duration_expr_t( std::string_view name, fire_breath_damage_t& a, empower_e empower_level )
-              : expr_t( name ), action( a ), state( a.cast_state( a.get_state() ) )
+            dot_duration_expr_t( std::string_view name, fire_breath_damage_t& a, fire_breath_t& release,
+                                 empower_e empower_level )
+              : expr_t( name ), action( a ), release( release ), state( a.cast_state( a.get_state() ) )
             {
               state->n_targets    = 1;
               state->chain_target = 0;
@@ -4038,7 +4040,7 @@ struct fire_breath_t : public empowered_charge_spell_t
 
             double evaluate() override
             {
-              state->target = action.target;
+              state->target = release.target;
               action.snapshot_state( state, result_amount_type::DMG_OVER_TIME );
               return coerce( action.composite_dot_duration( state ) );
             }
@@ -4050,7 +4052,7 @@ struct fire_breath_t : public empowered_charge_spell_t
           };
 
           return std::make_unique<dot_duration_expr_t>( expression_str,
-                                                        dynamic_cast<fire_breath_damage_t&>( *release_spell ),
+                                                        dynamic_cast<fire_breath_damage_t&>( *release_spell ), *this,
                                                         static_cast<empower_e>( empower_to ) );
         }
       }

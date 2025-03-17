@@ -5534,12 +5534,40 @@ struct aimed_shot_base_t : public hunter_ranged_attack_t
       }
     }
 
-    if ( target_data->debuffs.spotters_mark->check() || target_data->debuffs.ohnahran_winds->check() )
+    int target_spotters_marks = 0;
+
+    // from other players
+    if ( p()->bugs )
     {
-      target_data->debuffs.spotters_mark->expire();
-      target_data->debuffs.ohnahran_winds->expire();
-      
-      p()->buffs.on_target->trigger();
+      // use indices since it's possible to spawn new actors when bloodlust is triggered
+      for ( size_t i = 0; i < sim->player_non_sleeping_list.size(); i++ )
+      {
+        auto* p = sim->player_non_sleeping_list[ i ];
+        auto* h = dynamic_cast<hunter_t*>( p );
+        if ( h )
+        {
+          hunter_td_t* hunter_target_data = h->get_target_data( s->target );
+          if ( hunter_target_data->debuffs.spotters_mark->check() || hunter_target_data->debuffs.ohnahran_winds->check() )
+            target_spotters_marks++;
+        }
+      }
+    }
+
+    // from current player
+    if ( target_data->debuffs.spotters_mark->check() || target_data->debuffs.ohnahran_winds->check() )
+      target_spotters_marks++;
+
+    if ( target_spotters_marks > 0 )
+    {
+      if ( !p()->bugs || !p()->buffs.on_target->at_max_stacks() )
+      {
+        target_data->debuffs.spotters_mark->expire();
+        target_data->debuffs.ohnahran_winds->expire();
+      }
+
+      int increment = std::min( target_spotters_marks, p()->buffs.on_target->max_stack() - p()->buffs.on_target->check() );
+      if ( increment )
+        p()->buffs.on_target->trigger( increment );
       
       if ( p()->talents.target_acquisition.ok() && p()->cooldowns.target_acquisition->up() )
       {
@@ -5550,7 +5578,7 @@ struct aimed_shot_base_t : public hunter_ranged_attack_t
       p()->cooldowns.trueshot->adjust( -( p()->talents.calling_the_shots->effectN( 1 ).time_value() + p()->talents.unerring_vision->effectN( 3 ).time_value() ) );
     }
 
-    // TODO 3/3/25: Aimed Shot hits are giving .3 second recution rather than .5
+    // TODO 3/3/25: Aimed Shot hits are giving .3 second reduction rather than .5
     p()->cooldowns.volley->adjust( -p()->talents.bullet_hell->effectN( 1 ).time_value() );
   }
 };

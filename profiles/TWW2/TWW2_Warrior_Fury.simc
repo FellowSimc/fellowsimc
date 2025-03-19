@@ -110,7 +110,7 @@ actions.thane+=/crushing_blow
 actions.thane+=/bloodbath
 actions.thane+=/onslaught,if=talent.tenderize
 actions.thane+=/rampage
-actions.thane+=/bloodthirst,if=talent.vicious_contempt&target.health.pct<35&buff.bloodcraze.stack>=2|!dot.ravager.remains&buff.bloodcraze.stack>=3|active_enemies>=6
+actions.thane+=/bloodthirst,if=talent.vicious_contempt&target.health.pct<35&buff.bloodcraze.stack>=2|!buff.ravager.up&buff.bloodcraze.stack>=3|active_enemies>=6
 actions.thane+=/raging_blow
 actions.thane+=/execute,if=talent.ashen_juggernaut
 actions.thane+=/thunder_blast

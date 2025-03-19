@@ -92,7 +92,7 @@ actions.colossus_execute+=/warbreaker
 actions.colossus_execute+=/execute,if=buff.juggernaut.remains<=gcd&talent.juggernaut
 actions.colossus_execute+=/skullsplitter,if=rage<40
 actions.colossus_execute+=/demolish,if=debuff.colossus_smash.up
-actions.colossus_execute+=/mortal_strike,if=debuff.executioners_precision.stack=2&!dot.ravager.remains|!talent.executioners_precision|talent.battlelord&debuff.executioners_precision.stack>0
+actions.colossus_execute+=/mortal_strike,if=debuff.executioners_precision.stack=2&!buff.ravager.up|!talent.executioners_precision|talent.battlelord&debuff.executioners_precision.stack>0
 actions.colossus_execute+=/overpower,if=rage<90
 actions.colossus_execute+=/execute,if=rage>=40&talent.executioners_precision
 actions.colossus_execute+=/overpower
@@ -170,7 +170,7 @@ actions.slayer_execute+=/execute,if=buff.juggernaut.remains<=gcd*2&talent.jugger
 actions.slayer_execute+=/bladestorm,if=(debuff.executioners_precision.stack=2&(debuff.colossus_smash.remains>4|cooldown.colossus_smash.remains>15))|!talent.executioners_precision
 actions.slayer_execute+=/skullsplitter,if=rage<=40
 actions.slayer_execute+=/overpower,if=buff.martial_prowess.stack<2&buff.opportunist.up&talent.opportunist&(talent.bladestorm|talent.ravager&rage<85)
-actions.slayer_execute+=/mortal_strike,if=dot.rend.remains<2|debuff.executioners_precision.stack=2&!dot.ravager.remains
+actions.slayer_execute+=/mortal_strike,if=dot.rend.remains<2|debuff.executioners_precision.stack=2&!buff.ravager.up
 actions.slayer_execute+=/overpower,if=rage<=40&buff.martial_prowess.stack<2&talent.fierce_followthrough
 actions.slayer_execute+=/execute
 actions.slayer_execute+=/overpower

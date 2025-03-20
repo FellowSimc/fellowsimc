@@ -873,8 +873,10 @@ public:
 
     bool shadow_tww2_4pc_insanity = true;
 
-    double synergistic_brewterializer_tof_chance        = 1.0;
-    double synergistic_brewterializer_barrel_hit_chance = 1.0;
+    // 10% Chance that a Fire Mage steals the proc because you are slow or you just dont hit it.
+    double synergistic_brewterializer_tof_chance = 0.9;
+    // ~20% damage penalty to account for GCD. ~10% Miss general chance.
+    double synergistic_brewterializer_barrel_hit_chance = 0.75;
   } options;
 
   priest_t( sim_t* sim, util::string_view name, race_e r );

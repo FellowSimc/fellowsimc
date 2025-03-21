@@ -959,8 +959,7 @@ struct smite_base_t : public priest_spell_t
   {
     priest_spell_t::execute();
 
-    // Weal and Woe can be Spell Queue'd into another (instant) spell to get more effect.
-    priest().buffs.weal_and_woe->expire( 250_ms );
+    priest().buffs.weal_and_woe->expire();
 
     if ( priest().talents.discipline.train_of_thought.enabled() )
     {
@@ -1020,15 +1019,11 @@ struct smite_base_t : public priest_spell_t
       {
         if ( p().allies_with_atonement.size() > 0 )
         {
-          /*auto it = *( std::min_element( p().allies_with_atonement.begin(), p().allies_with_atonement.end(),
+          auto it = *( std::min_element( p().allies_with_atonement.begin(), p().allies_with_atonement.end(),
                                          [ this ]( player_t* a, player_t* b ) {
                                            return a->health_percentage() < b->health_percentage() &&
                                                   priest().find_target_data( b )->buffs.atonement->remains() < 30_s;
-                                         } ) );*/
-
-          auto idx = rng().range( 0U, as<unsigned>( p().allies_with_atonement.size() ) );
-
-          auto it = p().allies_with_atonement[ idx ];
+                                         } ) );
 
           auto atone = priest().find_target_data( it )->buffs.atonement;
           if ( atone->remains() < 30_s )

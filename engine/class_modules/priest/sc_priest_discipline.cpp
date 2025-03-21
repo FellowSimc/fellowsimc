@@ -157,7 +157,7 @@ struct evangelism_t final : public priest_heal_t
   timespan_t atonement_extend;
   evangelism_t( priest_t& p, util::string_view options_str )
     : priest_heal_t( "evangelism", p, p.talents.discipline.evangelism ),
-      atonement_extend( timespan_t::from_seconds( p.talents.discipline.evangelism->effectN( 1 ).base_value() ) )
+      atonement_extend( timespan_t::from_seconds( p.talents.discipline.evangelism->effectN( 2 ).base_value() ) )
   {
     parse_options( options_str );
 
@@ -806,7 +806,7 @@ void priest_t::create_buffs_discipline()
   {
     double scov_amp          = 0;
     timespan_t scov_duration = 15_s;
-    if ( talents.shared.mindbender.enabled() && !talents.voidweaver.voidwraith.enabled() )
+    if ( talents.shared.mindbender.enabled() )
     {
       scov_amp      = 0.1;
       scov_duration = talents.shared.mindbender->duration();

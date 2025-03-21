@@ -6241,7 +6241,9 @@ void noggenfogger_ultimate_deluxe( special_effect_t& effect )
       this->trigger_gcd                 = 0_ms;
       this->school                      = SCHOOL_PHYSICAL;
       this->stats->school               = SCHOOL_PHYSICAL;
-      this->base_dd_min = this->base_dd_max = a->data().effectN( 1 ).average( e );  
+      this->base_dd_min = this->base_dd_max = a->data().effectN( 1 ).average( e );
+      // Not in data, but the pet deals less damage on tank specs.
+      this->base_multiplier                 = role_mult( e.player );
 
       auto proxy = a;
       auto it    = range::find( proxy->child_action, name, &action_t::name );

@@ -147,16 +147,11 @@ struct expiation_t final : public priest_spell_t
 struct mind_blast_base_t : public priest_spell_t
 {
 private:
-  timespan_t void_summoner_cdr;
   propagate_const<expiation_t*> child_expiation;
 
 public:
   mind_blast_base_t( priest_t& p, util::string_view options_str, const spell_data_t* s )
     : priest_spell_t( s->name_cstr(), p, s ),
-      void_summoner_cdr(
-          priest()
-              .talents.discipline.void_summoner->effectN( priest().talents.shared.mindbender.enabled() ? 2 : 1 )
-              .time_value() ),
       child_expiation( nullptr )
   {
     parse_options( options_str );
@@ -179,11 +174,6 @@ public:
   void execute() override
   {
     priest_spell_t::execute();
-
-    if ( priest().talents.discipline.void_summoner.enabled() )
-    {
-      priest().cooldowns.fiend->adjust( void_summoner_cdr );
-    }
 
     if ( priest().talents.shadow.mind_melt.enabled() && priest().buffs.mind_melt->check() )
     {
@@ -906,7 +896,6 @@ struct power_word_fortitude_t final : public priest_spell_t
 
 struct smite_base_t : public priest_spell_t
 {
-  timespan_t void_summoner_cdr;
   timespan_t train_of_thought_cdr;
   timespan_t t31_2pc_extend;
   timespan_t divine_procession_extend;
@@ -916,10 +905,6 @@ struct smite_base_t : public priest_spell_t
   smite_base_t( priest_t& p, util::string_view name, const spell_data_t* s, bool bg = false,
                 util::string_view options_str = {} )
     : priest_spell_t( name, p, s ),
-      void_summoner_cdr(
-          priest()
-              .talents.discipline.void_summoner->effectN( priest().talents.shared.mindbender.enabled() ? 2 : 1 )
-              .time_value() ),
       train_of_thought_cdr( priest().talents.discipline.train_of_thought->effectN( 2 ).time_value() ),
       t31_2pc_extend( priest().sets->set( PRIEST_DISCIPLINE, T31, B2 )->effectN( 1 ).time_value() ),
       divine_procession_extend( priest().talents.discipline.divine_procession->effectN( 1 ).time_value() ),
@@ -4090,6 +4075,7 @@ void priest_t::apply_affecting_auras_late( action_t& action )
   action.apply_affecting_aura( talents.discipline.revel_in_darkness );
   action.apply_affecting_aura( talents.discipline.eternal_barrier );
   action.apply_affecting_aura( talents.discipline.inner_focus );
+  action.apply_affecting_aura( talents.discipline.void_summoner );
 
   // Holy Talents
   action.apply_affecting_aura( talents.holy.miracle_worker );

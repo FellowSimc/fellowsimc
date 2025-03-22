@@ -212,6 +212,7 @@ class effect_builder_base_t
       if ( m_value_fn )
       {
         pe.data.value_func = m_value_fn;
+        pe.data.type |= VALUE_FUNCTION;
       }
 
       pe.mask = m_mask;
@@ -2351,9 +2352,6 @@ public:
 
   bool affected_by_ele_tww2_4pc_da;
 
-  bool affected_by_elemental_weapons_da;
-  bool affected_by_elemental_weapons_ta;
-
   bool may_proc_flowing_spirits;
   stats::proc_tracker_t* proc_fs;
 
@@ -2389,8 +2387,6 @@ public:
       affected_by_ele_tww1_4pc_cc( false ),
       affected_by_ele_tww1_4pc_cd( false ),
       affected_by_ele_tww2_4pc_da( false ),
-      affected_by_elemental_weapons_da( false ),
-      affected_by_elemental_weapons_ta( false ),
       may_proc_flowing_spirits( false ),
       proc_fs( nullptr ),
       affected_by_maelstrom_weapon( false ),
@@ -2460,11 +2456,6 @@ public:
       player->sets->set( SHAMAN_ELEMENTAL, TWW1, B4 )->effectN( 1 ).trigger()->effectN( 2 ) );
 
     affected_by_ele_tww2_4pc_da = ab::data().affected_by( player->buff.jackpot->data().effectN( 1 ) );
-
-    affected_by_elemental_weapons_da = p()->talent.elemental_weapons.ok() && ab::data().affected_by(
-      p()->spell.elemental_weapons->effectN( 1 ) );
-    affected_by_elemental_weapons_ta = p()->talent.elemental_weapons.ok() && ab::data().affected_by(
-      p()->spell.elemental_weapons->effectN( 2 ) );
 
     if ( this->data().ok() )
     {
@@ -2721,13 +2712,6 @@ public:
       m *= 1.0 + p()->buff.jackpot->data().effectN( 1 ).percent();
     }
 
-    if ( affected_by_elemental_weapons_da )
-    {
-      unsigned n_imbues = ( p()->main_hand_weapon.buff_type != 0 ) +
-        ( p()->off_hand_weapon.buff_type != 0 );
-      m *= 1.0 + p()->talent.elemental_weapons->effectN( 1 ).percent() / 10.0 * n_imbues;
-    }
-
     return m;
   }
 
@@ -2753,13 +2737,6 @@ public:
         !p()->buff.storm_elemental->up() && !p()->buff.lesser_storm_elemental->up())
     {
       m *= 1.0 + p()->buff.fury_of_the_storms->data().effectN( 3 ).percent();
-    }
-
-    if ( affected_by_elemental_weapons_ta )
-    {
-      unsigned n_imbues = ( p()->main_hand_weapon.buff_type != 0 ) +
-        ( p()->off_hand_weapon.buff_type != 0 );
-      m *= 1.0 + p()->talent.elemental_weapons->effectN( 1 ).percent() / 10.0 * n_imbues;
     }
 
     return m;
@@ -4601,9 +4578,6 @@ struct stormblast_t : public shaman_attack_t
   {
     weapon = &( p->main_hand_weapon );
     background = may_crit = callbacks = false;
-
-    // Not handled by spell data
-    affected_by_elemental_weapons_da = true;
   }
 
   void init() override
@@ -9963,11 +9937,6 @@ struct totem_pulse_action_t : public T
     affected_by_totemic_rebound_da = T::data().affected_by_all( o()->buff.totemic_rebound->data().effectN( 1 ) ) ||
                                      T::data().affected_by_all( o()->buff.totemic_rebound->data().effectN( 2 ) );
 
-    affected_by_elemental_weapons_da = o()->talent.elemental_weapons.ok() && T::data().affected_by(
-      o()->spell.elemental_weapons->effectN( 1 ) );
-    affected_by_elemental_weapons_ta = o()->talent.elemental_weapons.ok() && T::data().affected_by(
-      o()->spell.elemental_weapons->effectN( 2 ) );
-
     if ( T::data().ok() )
     {
       // Override source of stats/state for parse_effects to the owner, since that's where the stats
@@ -10023,26 +9992,12 @@ struct totem_pulse_action_t : public T
       m *= 1.0 + o()->buff.totemic_rebound->stack_value();
     }
 
-    if ( affected_by_elemental_weapons_da )
-    {
-      unsigned n_imbues = ( o()->main_hand_weapon.buff_type != 0 ) +
-        ( o()->off_hand_weapon.buff_type != 0 );
-      m *= 1.0 + o()->talent.elemental_weapons->effectN( 1 ).percent() / 10.0 * n_imbues;
-    }
-
     return m;
   }
 
   double action_ta_multiplier() const override
   {
     double m = T::action_ta_multiplier();
-
-    if ( affected_by_elemental_weapons_ta )
-    {
-      unsigned n_imbues = ( o()->main_hand_weapon.buff_type != 0 ) +
-        ( o()->off_hand_weapon.buff_type != 0 );
-      m *= 1.0 + o()->talent.elemental_weapons->effectN( 1 ).percent() / 10.0 * n_imbues;
-    }
 
     return m;
   }
@@ -14484,6 +14439,14 @@ void shaman_t::apply_action_effects( parse_effects_t* a )
     .set_state_fn( [ this ] { return buff.windfury_weapon->check(); } )
     .set_effect_mask( effect_mask_t( false ).enable( 2 ) )
     .add_affect_list( affect_list_t( 2 ).remove_spell( 25504, 33750 ))
+    .build( a );
+  eff::source_eff_builder_t( spell.elemental_weapons )
+    .add_affect_list( affect_list_t( 1 ).add_spell( 390287 ) )  // Stormblast
+    .set_state_fn( [ this ] { return talent.elemental_weapons.ok(); } )
+    .set_value( [ this ]( double ) {
+      unsigned n_imbues = ( main_hand_weapon.buff_type != 0 ) + ( off_hand_weapon.buff_type != 0 );
+      return talent.elemental_weapons->effectN( 1 ).percent() / 10.0 * n_imbues;
+    } )
     .build( a );
 
   eff::source_eff_builder_t( buff.tww2_enh_2pc ).build( a );

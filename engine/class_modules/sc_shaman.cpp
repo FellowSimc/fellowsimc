@@ -37,9 +37,6 @@
 #include <sstream>
 
 // TODO 11.1
-//
-// Enhancement
-// - Legacy of Frost Witch affects Primordial Frost twice (flags 24, 58) [bug?]
 
 namespace eff
 {
@@ -69,8 +66,7 @@ class effect_builder_base_t
     effect_builder_base_t( const spell_data_t& s ) : m_spell( &( s ) )
     { }
 
-    virtual ~effect_builder_base_t()
-    { }
+    virtual ~effect_builder_base_t() = default;
 
     const spell_data_t* target() const
     {
@@ -261,7 +257,7 @@ public:
       {
         continue;
       }
- 
+
       // local copy of pack per effect
       auto tmp = pe;
 
@@ -305,8 +301,7 @@ public:
   const proc_t* proc() const
   { return m_proc; }
 
-  virtual ~proc_tracker_t()
-  { }
+  virtual ~proc_tracker_t() = default;
 
   void occur()
   {
@@ -395,8 +390,7 @@ public:
   proc_track_db_t( player_t* /* p */ )
   { }
 
-  virtual ~proc_track_db_t()
-  { }
+  virtual ~proc_track_db_t() = default;
 
   bool has_data() const
   {
@@ -437,7 +431,7 @@ public:
   {
     auto proc_it = range::find_if( m_db, [ proc ]( const auto& entry ) {
         return proc->id() == entry.proc_spell()->id();
-    } ); 
+    } );
 
     if ( proc_it == m_db.end() )
     {
@@ -543,7 +537,7 @@ public:
   }
 };
 } // Namespace stats ends
- 
+
 // ==========================================================================
 // Shaman
 // ==========================================================================
@@ -9236,8 +9230,6 @@ struct frost_shock_t : public shaman_spell_t
 
     m *= 1.0 + p()->buff.icefury_dmg->value();
 
-    m *= 1.0 + p()->buff.hailstorm->stack_value();
-
     m *= 1.0 + p()->buff.ice_strike->stack_value();
 
     return m;
@@ -14120,12 +14112,9 @@ void shaman_t::create_buffs()
   buff.spirit_walk  = make_buff( this, "spirit_walk", talent.spirit_walk );
   buff.stormbringer = make_buff( this, "stormsurge", find_spell( 201846 ) );
   buff.maelstrom_weapon = new maelstrom_weapon_buff_t( this );
-  buff.hailstorm        = make_buff( this, "hailstorm", find_spell( 334196 ) )
-                            ->set_default_value_from_effect_type( A_ADD_PCT_MODIFIER, P_GENERIC )
-                            ->set_max_stack(
-                              talent.overflowing_maelstrom.ok()
-                              ? as<int>( talent.overflowing_maelstrom->effectN( 1 ).base_value() )
-                              : find_spell( 334196 )->max_stacks() );
+  buff.hailstorm = make_buff( this, "hailstorm", find_spell( 334196 ) )
+    ->set_default_value_from_effect_type( A_ADD_PCT_MODIFIER, P_GENERIC )
+    ->apply_affecting_aura( talent.overflowing_maelstrom );
   buff.static_accumulation = make_buff( this, "static_accumulation", find_spell( 384437 ) )
     ->set_default_value( talent.static_accumulation->effectN( 1 ).base_value() )
     ->set_tick_callback( [ this ]( buff_t* b, int, timespan_t ) {
@@ -14518,6 +14507,7 @@ void shaman_t::apply_action_effects( parse_effects_t* a )
   eff::source_eff_builder_t( buff.icy_edge ).set_flag( USE_CURRENT, IGNORE_STACKS ).build( a );
   eff::source_eff_builder_t( buff.earthen_weapon ).set_flag( USE_CURRENT, IGNORE_STACKS ).build( a );
   eff::source_eff_builder_t( buff.doom_winds ).build( a );
+  eff::source_eff_builder_t( buff.hailstorm ).build( a );
   eff::source_eff_builder_t( buff.legacy_of_the_frost_witch )
     .add_affecting_spell( talent.legacy_of_the_frost_witch )
     .build( a );

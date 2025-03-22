@@ -2336,8 +2336,6 @@ public:
   bool affected_by_stormkeeper_damage;
   bool affected_by_arc_discharge;
 
-  bool affected_by_enhanced_imbues_da;
-
   bool affected_by_storm_frenzy;
 
   bool affected_by_elemental_unity_fe_da;
@@ -2381,7 +2379,6 @@ public:
       affected_by_stormkeeper_cast_time( false ),
       affected_by_stormkeeper_damage( false ),
       affected_by_arc_discharge( false ),
-      affected_by_enhanced_imbues_da( false ), // Enhancement damage effects, Ele stuff is handled elsewhere
       affected_by_storm_frenzy( false ),
       affected_by_elemental_unity_fe_da( false ),
       affected_by_elemental_unity_fe_ta( false ),
@@ -2442,8 +2439,6 @@ public:
     affected_by_ans_cast_time = ab::data().affected_by( player->buff.ancestral_swiftness->data().effectN( 2 ) );
 
     affected_by_arc_discharge = ab::data().affected_by( player->buff.arc_discharge->data().effectN( 1 ) );
-
-    affected_by_enhanced_imbues_da = ab::data().affected_by( player->talent.enhanced_imbues->effectN( 2 ) );
 
     affected_by_storm_frenzy = ab::data().affected_by( player->buff.storm_frenzy->data().effectN( 1 ) );
 
@@ -2694,11 +2689,6 @@ public:
     if ( affected_by_arc_discharge && p()->buff.arc_discharge->check() )
     {
       m *= 1.0 + p()->buff.arc_discharge->value();
-    }
-
-    if ( affected_by_enhanced_imbues_da )
-    {
-      m *= 1.0 + p()->talent.enhanced_imbues->effectN( 2 ).percent();
     }
 
     if ( ( affected_by_elemental_unity_fe_da && p()->talent.elemental_unity.ok() &&
@@ -5120,18 +5110,6 @@ struct thunderstrike_ward_damage_t : public shaman_spell_t
   {
 
     background = true;
-  }
-
-  double action_da_multiplier() const override
-  {
-    double m = shaman_spell_t::action_da_multiplier();
-
-    if ( p()->talent.enhanced_imbues->ok() )
-    {
-      m *= 1.0 + p()->talent.enhanced_imbues->effectN( 9 ).percent();
-    }
-
-    return m;
   }
 };
 
@@ -14497,12 +14475,26 @@ void shaman_t::apply_action_effects( parse_effects_t* a )
   eff::source_eff_builder_t( buff.legacy_of_the_frost_witch )
     .add_affecting_spell( talent.legacy_of_the_frost_witch )
     .build( a );
+  eff::source_eff_builder_t( talent.enhanced_imbues )
+    .set_state_fn( [ this ] { return buff.flametongue_weapon->check(); } )
+    .set_effect_mask( effect_mask_t( false ).enable( 2 ) )
+    .add_affect_list( affect_list_t( 2 ).remove_spell( 10444, 318038, 319778, 467386, 467390 ))
+    .build( a );
+  eff::source_eff_builder_t( talent.enhanced_imbues )
+    .set_state_fn( [ this ] { return buff.windfury_weapon->check(); } )
+    .set_effect_mask( effect_mask_t( false ).enable( 2 ) )
+    .add_affect_list( affect_list_t( 2 ).remove_spell( 25504, 33750 ))
+    .build( a );
 
   eff::source_eff_builder_t( buff.tww2_enh_2pc ).build( a );
   eff::source_eff_builder_t( buff.tww2_enh_4pc_damage ).build( a );
 
   // Elemental
   eff::source_eff_builder_t( mastery.elemental_overload ).build( a );
+  eff::source_eff_builder_t( talent.enhanced_imbues )
+    .set_state_fn( [ this ] { return buff.thunderstrike_ward->check(); } )
+    .set_effect_mask( effect_mask_t( false ).enable( 9 ) )
+    .build( a );
 }
 
 // shaman_t::generate_bloodlust_options =====================================

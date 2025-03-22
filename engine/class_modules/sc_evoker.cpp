@@ -4450,7 +4450,7 @@ struct disintegrate_t : public essence_spell_t
     int targets_            = targets();
     targets_                = targets_ ? targets_ : 1;
 
-    int virtual_buff_stacks = ( p()->bugs ? 4 : num_ticks ) * targets_;
+    int virtual_buff_stacks = num_ticks * targets_;
 
     // trigger the buffs first so tick-zero can get buffed
     if ( p()->buff.essence_burst->check() )

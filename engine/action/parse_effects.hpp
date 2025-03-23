@@ -825,7 +825,10 @@ struct parse_action_base_t : public parse_effects_t
   std::vector<player_effect_t> da_multiplier_effects;
   std::vector<player_effect_t> execute_time_effects;
   std::vector<player_effect_t> flat_execute_time_effects;
+  // TODO: currently gcd is NOT split into flat vs percent effects via parsed_value_t, and only percent multipliers are
+  // parsed. If flat gcd effects become more prevalent, they may need to be added to parsing.
   std::vector<player_effect_t> gcd_effects;
+  // std::vector<player_effect_t> flat_gcd_effects;
   std::vector<player_effect_t> dot_duration_effects;
   std::vector<player_effect_t> flat_dot_duration_effects;
   std::vector<player_effect_t> tick_time_effects;
@@ -1105,7 +1108,7 @@ public:
     for ( const auto& i : gcd_effects )
       g *= 1.0 + get_effect_value( i );
 
-    return std::max( BASE::min_gcd, g );
+    return g <= 0_ms ? 0_ms : std::max( BASE::min_gcd, g );
   }
 
   double tick_time_pct_multiplier( const action_state_t* s ) const override

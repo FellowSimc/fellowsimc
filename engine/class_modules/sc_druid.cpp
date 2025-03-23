@@ -7283,12 +7283,10 @@ struct incarnation_moonkin_t final : public celestial_alignment_base_t
 struct dash_t final : public druid_spell_t
 {
   buff_t* buff_on_cast;
-  double gcd_mul;
 
   DRUID_ABILITY( dash_t, druid_spell_t, "dash",
                  p->talent.tiger_dash.ok() ? p->talent.tiger_dash : p->find_class_spell( "Dash" ) ),
-    buff_on_cast( p->talent.tiger_dash.ok() ? p->buff.tiger_dash : p->buff.dash ),
-    gcd_mul( find_effect( p->buff.cat_form, this, A_ADD_PCT_MODIFIER, P_GCD ).percent() )
+    buff_on_cast( p->talent.tiger_dash.ok() ? p->buff.tiger_dash : p->buff.dash )
   {
     harmful = may_miss = false;
     ignore_false_positive = true;

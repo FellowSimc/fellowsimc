@@ -2320,12 +2320,16 @@ bool action_t::select_target()
 {
   if ( target_if_mode != TARGET_IF_NONE )
   {
+    // Reset target for cases where we desire to check player target (priority target, highest health pull mob etc.)
+    // first in first mode or fall back to it in min or max mode if no other target is preferred
+    player_t* action_target = target;
+    target = player->target;
     player_t* potential_target = select_target_if_target();
     if ( potential_target )
     {
       // If the target changes, we need to regenerate the target cache to get the new primary target
       // as the first element of target_list. Only do this for abilities that are aoe.
-      if ( is_aoe() && potential_target != target )
+      if ( is_aoe() && ( potential_target != target || action_target != potential_target ) )
       {
         target_cache.is_valid = false;
       }

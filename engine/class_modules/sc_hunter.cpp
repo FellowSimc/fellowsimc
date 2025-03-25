@@ -1001,6 +1001,7 @@ public:
     timespan_t sentinel_watch_reduction = 0_s;
     howl_of_the_pack_leader_beast howl_of_the_pack_leader_next_beast = WYVERN;
     timespan_t fury_of_the_wyvern_extension = 0_s;
+    ground_aoe_event_t* current_boar_charge = nullptr;
   } state;
 
   struct options_t {
@@ -3836,12 +3837,27 @@ bool hunter_t::consume_howl_of_the_pack_leader( player_t* target )
   if ( buffs.howl_of_the_pack_leader_boar->check() )
   {
     up = true;
-    make_event<ground_aoe_event_t>( *sim, this, 
+    state.current_boar_charge = make_event<ground_aoe_event_t>( *sim, this, 
       ground_aoe_params_t()
         .target( target )
         .duration( talents.howl_of_the_pack_leader_boar_charge_trigger->duration() )
         .pulse_time( talents.howl_of_the_pack_leader_boar_charge_trigger->effectN( 2 ).period() )
-        .action( actions.boar_charge ),
+        .action( actions.boar_charge )
+        .state_callback( [ this ]( ground_aoe_params_t::state_type type, ground_aoe_event_t* event ) {
+            switch ( type )
+              {
+                case ground_aoe_params_t::EVENT_CREATED:
+                  state.current_boar_charge = event;
+                  break;
+                case ground_aoe_params_t::EVENT_STOPPED:
+                {
+                  state.current_boar_charge = nullptr;
+                  break;
+                }
+                default:
+                  break;
+              }
+          } ),
       true );
     buffs.howl_of_the_pack_leader_boar->expire();
 
@@ -7885,6 +7901,16 @@ std::unique_ptr<expr_t> hunter_t::create_expression( util::string_view expressio
           return state.tar_trap_aoe -> remains();
         } );
     }
+  }
+  else if ( splits.size() == 2 && splits[ 0 ] == "boar_charge" )
+  {
+    if ( splits[ 1 ] == "remains" )
+      return make_fn_expr( expression_str,
+        [ this ]() -> timespan_t {
+          if ( !state.current_boar_charge )
+            return 0_s;
+          return state.current_boar_charge->remaining_time();
+        } );
   }
   else if ( splits.size() >= 2 && splits[ 0 ] == "pet" && splits[ 1 ] == "main" &&
             !util::str_compare_ci( options.summon_pet_str, "disabled" ) )

@@ -14253,7 +14253,7 @@ void druid_t::apply_affecting_auras( action_t& a )
   a.apply_affecting_aura( talent.astral_insight );
   a.apply_affecting_aura( talent.bestial_strength );
   a.apply_affecting_aura( talent.early_spring );
-  a.apply_affecting_aura( talent.empowered_shapeshifting );
+  a.apply_affecting_aura( talent.empowered_shapeshifting, spec_spell );
   a.apply_affecting_aura( talent.groves_inspiration );
   a.apply_affecting_aura( talent.hunt_beneath_the_open_skies );
   a.apply_affecting_aura( talent.lunar_calling );

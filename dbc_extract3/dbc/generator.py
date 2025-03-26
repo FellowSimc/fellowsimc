@@ -1826,6 +1826,7 @@ class SpellDataGenerator(DataGenerator):
             ( 196810, 5 ),          # Searing Light (Divine Image legendary pet spell)
             ( 196811, 5 ),          # Searing Light (Divine Image talent pet spell)
             ( 196812, 5 ),          # Light Eruption (Divine Image legendary pet spell)
+            ( 464047, 5 ),          # Light Eruption (Divine Image legendary pet spell)
             ( 196813, 5 ),          # Blessed Light (Divine Image legendary pet spell)
             ( 196816, 5 ),          # Tranquil Light (Divine Image legendary pet spell)
             ( 325315, 0 ),          # Ascended Blast heal

@@ -6293,6 +6293,7 @@ void noggenfogger_ultimate_deluxe( special_effect_t& effect )
       current_pet_stats.composite_spell_cast_speed        = 1.0;
       current_pet_stats.composite_melee_haste             = 1.0;
       current_pet_stats.composite_spell_haste             = 1.0;
+      adjust_dynamic_cooldowns();
     }
 
     attack_t* create_auto_attack() override

@@ -1922,7 +1922,7 @@ struct bear_t final : public dire_critter_t
   bear_t( hunter_t* owner, util::string_view n = "bear" ) : dire_critter_t( owner, n )
   {
     owner_coeff.ap_from_ap = 0.7;
-    auto_attack_multiplier = 8;
+    auto_attack_multiplier = o()->specialization() == HUNTER_SURVIVAL ? 10 : 8;
     main_hand_weapon.swing_time = 1.5_s;
   }
 
@@ -5014,14 +5014,6 @@ struct lunar_storm_periodic_t : hunter_ranged_attack_t
 
     return tl.size();
   }
-};
-
-// Rend Flesh (Pack Leader) ========================================================
-
-// Used by the pet action to inherit damage modifiers from the player
-struct rend_flesh_t : public hunter_melee_attack_t
-{
-  rend_flesh_t( hunter_t* p ) : hunter_melee_attack_t( "rend_flesh", p, p->talents.howl_of_the_pack_leader_bear_bleed ) {}
 };
 
 //==============================
@@ -9447,9 +9439,6 @@ double hunter_t::composite_player_pet_damage_multiplier( const action_state_t* s
 {
   double m = player_t::composite_player_pet_damage_multiplier( s, guardian );
 
-  if ( mastery.spirit_bond->ok() )
-    m *= 1.0 + cache.mastery_value() * ( 1 + mastery.spirit_bond_buff->effectN( 1 ).percent() );
-
   if ( mastery.master_of_beasts->ok() )
     m *= 1.0 + cache.mastery_value();
 
@@ -9459,6 +9448,9 @@ double hunter_t::composite_player_pet_damage_multiplier( const action_state_t* s
 
   if ( !guardian )
   {
+    if ( mastery.spirit_bond->ok() )
+      m *= 1.0 + cache.mastery_value() * ( 1 + mastery.spirit_bond_buff->effectN( 1 ).percent() );
+
     if ( buffs.coordinated_assault->check() )
       m *= 1 + talents.coordinated_assault->effectN( 4 ).percent();
     

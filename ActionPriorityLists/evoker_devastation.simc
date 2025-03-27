@@ -123,7 +123,7 @@ actions.st=dragonrage
 # Flap wings
 actions.st+=/hover,use_off_gcd=1,if=raid_event.movement.in<6&!buff.hover.up&gcd.remains>=0.5|talent.slipstream&gcd.remains>=0.5
 # Become a faster dragon (for one empower)
-actions.st+=/tip_the_scales,if=buff.dragonrage.up&cooldown.fire_breath.remains<=cooldown.eternity_surge.remains
+actions.st+=/tip_the_scales,use_off_gcd=1,if=buff.dragonrage.up&cooldown.fire_breath.remains<=cooldown.eternity_surge.remains
 # Dont overcap with Vigor. With TWWS2 this is neutral but it will stay for posterity.
 actions.st+=/shattering_star,if=(buff.essence_burst.stack<buff.essence_burst.max_stack|!talent.arcane_vigor)
 # If has scorch and the gulf is gulfable do a four empower

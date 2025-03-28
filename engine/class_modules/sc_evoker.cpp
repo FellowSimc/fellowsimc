@@ -4929,7 +4929,8 @@ struct living_flame_t : public evoker_spell_t
 
     damage->execute_on_target( target );
 
-    int total_hits = damage->num_targets_hit;
+    int total_damage_hits = damage->num_targets_hit;
+    int total_heal_hits   = 0;
 
     if ( !p()->buff.burnout->up() )
       p()->buff.ancient_flame->expire();
@@ -4945,10 +4946,11 @@ struct living_flame_t : public evoker_spell_t
         // Leaping flames are hitting extra targets, the primary target is already a leaping flame used.
         p()->buff.leaping_flames->decrement( 1 );
         heal->execute_on_target( p() );
-        p()->buff.leaping_flames->decrement( heal->num_targets_hit );
+        if ( heal->num_targets_hit > 1 )
+          p()->buff.leaping_flames->decrement( heal->num_targets_hit - 1 );
         for ( int i = 0; i < heal->num_targets_hit; i++ )
           if ( rng().roll( p()->option.heal_eb_chance ) )
-            total_hits++;
+            total_heal_hits++;
       }
     }
 
@@ -4967,7 +4969,7 @@ struct living_flame_t : public evoker_spell_t
       if ( damage->target_cache.list.size() > 1 )
       {
         damage->execute_on_target( damage->target_list()[ 1 ] );
-        total_hits++;
+        total_damage_hits++;
       }
     }
 
@@ -4975,11 +4977,28 @@ struct living_flame_t : public evoker_spell_t
     {
       double eb_chance = p()->talent.ruby_essence_burst->effectN( 1 ).percent();
 
-      for ( int i = 0; i < total_hits; i++ )
+      for ( int i = 0; i < total_damage_hits; i++ )
       {
         // TODO:  Work out how this is rolled.
         if ( p()->talent.flameshaper.titanic_precision.ok() &&
-             rng().roll( composite_target_crit_chance( target ) && rng().roll( eb_chance ) ) )
+             rng().roll( damage->composite_target_crit_chance( target ) && rng().roll( eb_chance ) ) )
+        {
+          p()->buff.essence_burst->trigger();
+          p()->proc.titanic_precision_ruby_essence_burst->occur();
+        }
+
+        if ( p()->buff.dragonrage->up() || rng().roll( eb_chance ) )
+        {
+          p()->buff.essence_burst->trigger();
+          p()->proc.ruby_essence_burst->occur();
+        }
+      }
+
+      for ( int i = 0; i < total_heal_hits; i++ )
+      {
+        // TODO:  Work out how this is rolled.
+        if ( p()->talent.flameshaper.titanic_precision.ok() &&
+             rng().roll( heal->composite_target_crit_chance( player ) && rng().roll( eb_chance ) ) )
         {
           p()->buff.essence_burst->trigger();
           p()->proc.titanic_precision_ruby_essence_burst->occur();

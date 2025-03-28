@@ -5118,28 +5118,19 @@ struct quell_t : public evoker_spell_t
 struct shattering_star_t : public evoker_spell_t
 {
   size_t tier_set_proc;
-  size_t pre_span_aoe;
-  mutable std::vector<player_t*> helper_vector;
 
   shattering_star_t( evoker_t* p, std::string_view name, size_t tier_set_proc, std::string_view options_str = {} )
     : evoker_spell_t( name, p, tier_set_proc > 0 ? p->find_spell( 370452 ) : p->talent.shattering_star, options_str ),
-      tier_set_proc( tier_set_proc ),
-      helper_vector()
+      tier_set_proc( tier_set_proc )
   {
-    aoe = as<int>( data().effectN( 1 ).base_value() );
     if ( tier_set_proc )
     {
-      aoe += as<int>( p->sets->set( EVOKER_DEVASTATION, TWW2, B2 )->effectN( 2 ).base_value() -
-                      data().effectN( 1 ).base_value() );
       base_multiplier *= p->sets->set( EVOKER_DEVASTATION, TWW2, B2 )->effectN( 1 ).percent();
       
       not_a_proc = true;
     }
 
-    pre_span_aoe = as<size_t>(aoe == 1 ? 0 : aoe);
-
-    aoe = as<int>( aoe * ( 1 + p->talent.eternitys_span->effectN( 2 ).percent() ) );
-
+    aoe = as<int>( data().effectN( 1 ).base_value() + p->talent.eternitys_span->effectN( 2 ).percent() );
     aoe = ( aoe == 1 ) ? 0 : aoe;
   }
 
@@ -5150,64 +5141,18 @@ struct shattering_star_t : public evoker_spell_t
 
   void execute() override
   {
-    if ( tier_set_proc )
-      target_cache.is_valid = false;
-
     evoker_spell_t::execute();
 
     if ( p()->talent.arcane_vigor.ok() && !background )
     {
       p()->buff.essence_burst->trigger();
     }
-
-    if ( p()->sets->has_set_bonus( EVOKER_DEVASTATION, TWW2, B4 ) )
-    {
-      p()->buff.jackpot->trigger();
-    }
-  }
-
-  
-  size_t available_targets( std::vector<player_t*>& tl ) const override
-  {
-    auto size = evoker_spell_t::available_targets( tl );
-
-    if ( !tier_set_proc )
-      return size;
-
-    auto& main_tl = target_cache.list;
-    rng().shuffle( main_tl.begin() + 1, main_tl.end() );
-
-    auto targets = std::min( pre_span_aoe, main_tl.size() );
-
-    if ( targets <= 1 || !p()->talent.eternitys_span.ok() )
-    {
-      return tl.size();
-    }
-
-    helper_vector.clear();
-
-    for ( size_t i = 0; i < targets; i++ )
-    {
-      helper_vector.push_back( main_tl[ i ] );
-
-      auto rnd_ind = rng().range( (size_t)0, main_tl.size() - 1 );
-      rnd_ind      = rnd_ind == i ? ( rnd_ind + 1 ) % main_tl.size() : rnd_ind;
-      helper_vector.push_back( main_tl[ rnd_ind ] );
-    }
-
-    tl.clear();
-
-    for ( auto& t : helper_vector )
-      tl.push_back( t );
-
-    return tl.size();
   }
 
   std::vector<player_t*>& target_list() const override
   {
     auto& target_cache = evoker_spell_t::target_list();
-    if ( !tier_set_proc )
-      rng().shuffle( target_cache.begin() + 1, target_cache.end() );
+    rng().shuffle( target_cache.begin() + 1, target_cache.end() );
     return target_cache;
   }
 
@@ -5232,6 +5177,51 @@ struct shattering_star_t : public evoker_spell_t
     da *= 1.0 + p()->buff.iridescence_blue->check_value();
 
     return da;
+  }
+};
+
+struct shattering_star_proc_t : evoker_spell_t
+{
+  shattering_star_t* star;
+  shattering_star_proc_t( evoker_t* p, std::string_view name, size_t proc_type )
+    : evoker_spell_t( fmt::format( "{}_helper", name ), p, p->find_spell( 1215687 ) )
+  {
+    star = p->get_secondary_action<shattering_star_t>( name, name,
+                                                       proc_type );
+    if ( star )
+    {
+      add_child( star );
+    }
+
+    aoe = as<int>( p->sets->set( EVOKER_DEVASTATION, TWW2, B2 )->effectN( 2 ).base_value() );
+  }
+
+  
+  std::vector<player_t*>& target_list() const override
+  {
+    auto& target_cache = evoker_spell_t::target_list();
+    rng().shuffle( target_cache.begin() + 1, target_cache.end() );
+    return target_cache;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    evoker_spell_t::impact( s );
+
+    if ( result_is_hit( s->result ) )
+    {
+      star->execute_on_target( s->target );
+    }
+  }
+
+  void execute() override
+  {
+    evoker_spell_t::execute();
+
+    if ( p()->sets->has_set_bonus( EVOKER_DEVASTATION, TWW2, B4 ) )
+    {
+      p()->buff.jackpot->trigger();
+    }
   }
 };
 
@@ -5513,7 +5503,7 @@ struct dragonrage_t : public evoker_spell_t
 
   action_t* damage;
   unsigned max_targets;
-  spells::shattering_star_t* shattering_star;
+  spells::shattering_star_proc_t* shattering_star;
 
   dragonrage_t( evoker_t* p, std::string_view options_str )
     : evoker_spell_t( "dragonrage", p, p->talent.dragonrage, options_str ),
@@ -5530,7 +5520,8 @@ struct dragonrage_t : public evoker_spell_t
 
     if ( p->sets->has_set_bonus( EVOKER_DEVASTATION, TWW2, B2 ) )
     {
-      shattering_star = p->get_secondary_action<spells::shattering_star_t>( "shattering_star_2pc_dragonrage", "shattering_star_2pc_dragonrage",
+      shattering_star = p->get_secondary_action<spells::shattering_star_proc_t>( "shattering_star_2pc_dragonrage_helper",
+                                                                                 "shattering_star_2pc_dragonrage",
                                                                          1 );
       add_child( shattering_star );
     }
@@ -8804,7 +8795,7 @@ void evoker_t::init_special_effects()
   {
     struct devastation_tww2_2pc : public dbc_proc_callback_t
     {
-      spells::shattering_star_t* damage_spell;
+      spells::shattering_star_proc_t* damage_spell;
 
       devastation_tww2_2pc( evoker_t* p, const special_effect_t& e )
         : dbc_proc_callback_t( p, e ), damage_spell( nullptr )
@@ -8814,7 +8805,7 @@ void evoker_t::init_special_effects()
         activate();
 
         damage_spell =
-            p->get_secondary_action<spells::shattering_star_t>( "shattering_star_2pc", "shattering_star_2pc", 2 );
+            p->get_secondary_action<spells::shattering_star_proc_t>( "shattering_star_2pc_helper", "shattering_star_2pc", 2 );
       }
 
       void execute( action_t*, action_state_t* s ) override

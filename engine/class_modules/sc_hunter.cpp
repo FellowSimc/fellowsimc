@@ -1010,6 +1010,7 @@ public:
     std::string summon_pet_str = "duck";
     timespan_t pet_attack_speed = 2_s;
     timespan_t pet_basic_attack_delay = 0.15_s;
+    bool max_prio_damage = true;
   } options;
 
   hunter_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE ) :
@@ -7853,7 +7854,11 @@ std::unique_ptr<expr_t> hunter_t::create_expression( util::string_view expressio
 {
   auto splits = util::string_split<util::string_view>( expression_str, "." );
 
-  if ( splits.size() == 2 && splits[ 0 ] == "tar_trap" )
+  if ( splits.size() == 1 && splits[ 0 ] == "max_prio_damage" )
+  {
+    return std::make_unique<const_expr_t>( expression_str, options.max_prio_damage );
+  }
+  else if ( splits.size() == 2 && splits[ 0 ] == "tar_trap" )
   {
     if ( splits[ 1 ] == "up" )
       return make_fn_expr( expression_str, [ this ] { return state.tar_trap_aoe != nullptr; } );
@@ -9587,6 +9592,7 @@ void hunter_t::create_options()
                             0.5_s, 4_s ) );
   add_option( opt_timespan( "hunter.pet_basic_attack_delay", options.pet_basic_attack_delay,
                             0_ms, 0.6_s ) );
+  add_option( opt_bool( "max_prio_damage", options.max_prio_damage ) );
 }
 
 std::string hunter_t::create_profile( save_e stype )

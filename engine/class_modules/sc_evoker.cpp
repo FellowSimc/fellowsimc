@@ -4825,6 +4825,33 @@ struct hover_t : public evoker_spell_t
     harmful = false;
   }
 
+  
+  bool ready() override
+  {
+    if ( p()->last_foreground_action && p()->in_gcd() )
+    {
+      switch ( p()->last_foreground_action->id )
+      {
+        // DB SC
+        case 433874:
+          // DB
+        case 357210:
+          // Eons SC
+        case 442204:
+          // Eons
+        case 403631:
+          return false;
+        default:
+          break;
+      }
+
+      if ( dynamic_cast<empowered_release_spell_t*>( p()->last_foreground_action ) )
+        return false;
+    }
+
+    return evoker_spell_t::ready();
+  }
+
   void execute() override
   {
     evoker_spell_t::execute();

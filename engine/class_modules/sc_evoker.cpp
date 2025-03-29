@@ -8970,7 +8970,8 @@ void evoker_t::create_buffs()
 
   buff.hover = MB( this, "hover", find_class_spell( "Hover" ) )
                    ->set_cooldown( 0_ms )
-                   ->set_default_value_from_effect_type( A_MOD_INCREASE_SPEED );
+                   ->set_default_value_from_effect_type( A_MOD_INCREASE_SPEED )
+                   ->set_refresh_behavior( buff_refresh_behavior::EXTEND );
 
   buff.tailwind = MBF( talent.tailwind.ok(), this, "tailwind",
                        find_spelleffect( talent.tailwind, A_PROC_TRIGGER_SPELL )->trigger() )

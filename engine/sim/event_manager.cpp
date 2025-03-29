@@ -28,6 +28,9 @@ event_manager_t::event_manager_t( sim_t* s )
     wheel_granularity( 0.0 ),
     wheel_time( timespan_t::zero() ),
     event_stopwatch(),
+#ifndef NDEBUG
+    max_events( 0U ),
+#endif
 #ifdef EVENT_QUEUE_DEBUG
     monitor_cpu( false ),
     max_queue_depth( 0 ),
@@ -215,6 +218,9 @@ bool event_manager_t::execute()
 #endif
       if ( ++n_events == MAX_EVENTS )
       {
+#ifndef NDEBUG
+        max_events = n_events;
+#endif
         cancel_stuck( debug_list );
       }
     }
@@ -222,6 +228,7 @@ bool event_manager_t::execute()
     {
 #ifndef NDEBUG
       debug_list.clear();
+      max_events = std::max( n_events, max_events );
 #endif
       n_events = 0U;
     }

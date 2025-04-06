@@ -590,10 +590,10 @@ void echoing_void( special_effect_t& effect )
   auto new_driver = effect.player->find_spell( 1225883 );
 
   auto stacking_buff =
-      create_buff<stat_buff_t>( effect.player, "echoing_void_stacking", effect.player->find_spell( 1225886 ) );
+      create_buff<buff_t>( effect.player, "echoing_void_stacking", effect.player->find_spell( 1225886 ) );
   stacking_buff->name_str_reporting = "Stacking";
   auto ticking_buff =
-      create_buff<stat_buff_t>( effect.player, "echoing_void_ticking", effect.player->find_spell( 1225887 ) );
+      create_buff<buff_t>( effect.player, "echoing_void_ticking", effect.player->find_spell( 1225887 ) );
   ticking_buff->name_str_reporting = "Ticking";
 
   stacking_buff->set_stack_change_callback( [ effect, ticking_buff, new_driver ]( buff_t* b, int old_, int new_ ) {

@@ -558,6 +558,8 @@ void daybreak_spellthread( special_effect_t& effect )
 // 1225045 Value Spell/Default Driver - Greater
 // 1225074 Role Mult Spell - Lesser
 // 1233223 Role Mult Spell - Greater
+// TODO: The damage split on this is incredibly strange. Seems to divide the damage in half every time it hits a new target 
+// Possibly not able to dynamically calculate the damage split on execute?
 void twilight_devastation( special_effect_t& effect )
 {
   if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
@@ -582,6 +584,7 @@ void twilight_devastation( special_effect_t& effect )
 // 1225880 Value Spell/Default Driver - Greater
 // 1233355 Role Mult Spell - Lesser
 // 1225873 Role Mult Spell - Greater
+// TODO: Check the chance to trigger void collapse is correct.
 void echoing_void( special_effect_t& effect )
 {
   if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
@@ -637,6 +640,7 @@ void echoing_void( special_effect_t& effect )
 // 1227297 Value Spell/Default Driver - Greater
 // 1233392 Role Mult Spell - Lesser
 // 1227294 Role Mult Spell - Greater
+// TODO: Implement slow effect on enemy targeted by mind flay if it ever matters for sims.
 void twisted_appendage( special_effect_t& effect )
 {
   if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
@@ -703,6 +707,7 @@ void twisted_appendage( special_effect_t& effect )
 // 1227316 Buff
 // 1227312 Value Spell/Default Driver - Lesser
 // 1227314 Value Spell/Default Driver - Greater
+// TODO: Check if this still adheres to the increased chance if at least 2 players are wearing it. 
 void void_ritual( special_effect_t& effect )
 {
   if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )

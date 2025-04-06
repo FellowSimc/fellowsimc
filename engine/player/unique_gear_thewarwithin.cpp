@@ -560,10 +560,13 @@ void daybreak_spellthread( special_effect_t& effect )
 // 1233223 Role Mult Spell - Greater
 void twilight_devastation( special_effect_t& effect )
 {
-  auto damage = create_proc_action<generic_aoe_proc_t>( "twilight_devastation", effect, 1225040, true );
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
+    return;
+
+  auto damage         = create_proc_action<generic_aoe_proc_t>( "twilight_devastation", effect, 1225040, true );
   damage->base_dd_min = damage->base_dd_max = effect.driver()->effectN( 1 ).average( effect.player );
   // Using the Greater version for the ID here, but, they should be the same.
-  damage->base_multiplier *= role_mult( effect.player, effect.player->find_spell( 1233223 ) ); 
+  damage->base_multiplier *= role_mult( effect.player, effect.player->find_spell( 1233223 ) );
 
   effect.execute_action = damage;
   effect.spell_id       = effect.player->find_spell( 1225038 )->id();
@@ -581,7 +584,10 @@ void twilight_devastation( special_effect_t& effect )
 // 1225873 Role Mult Spell - Greater
 void echoing_void( special_effect_t& effect )
 {
-  auto damage         = create_proc_action<generic_aoe_proc_t>( "echoing_void_corruption", effect, 1225889, true );
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
+    return;
+
+  auto damage = create_proc_action<generic_aoe_proc_t>( "echoing_void_corruption", effect, 1225889, true );
   damage->name_str_reporting = "Corruption";
   damage->base_dd_min = damage->base_dd_max = effect.driver()->effectN( 1 ).average( effect.player );
   // Using the Greater version for the ID here, but, they should be the same.
@@ -633,6 +639,9 @@ void echoing_void( special_effect_t& effect )
 // 1227294 Role Mult Spell - Greater
 void twisted_appendage( special_effect_t& effect )
 {
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
+    return;
+
   struct twisted_appendage_pet_t : unique_gear_pet_t
   {
     action_t* mind_flay;
@@ -640,9 +649,9 @@ void twisted_appendage( special_effect_t& effect )
     twisted_appendage_pet_t( const special_effect_t& e, action_t* damage = nullptr, action_t* parent = nullptr )
       : unique_gear_pet_t( "twisted_appendage", e, &parent->data() ), mind_flay( damage )
     {
-      parent_action = parent;
-      use_auto_attack = false;
-      base_movement_speed = 0.0; 
+      parent_action       = parent;
+      use_auto_attack     = false;
+      base_movement_speed = 0.0;
     }
 
     void arise() override
@@ -660,16 +669,17 @@ void twisted_appendage( special_effect_t& effect )
       : generic_proc_t( e, "twisted_appendage", e.driver() ), appendage_spawner( "twisted_appendage", e.player )
     {
       auto summon_spell = e.player->find_spell( 1227301 );
-      auto appendage = new action_t( action_e::ACTION_OTHER, "twisted_appendage_summon", e.player, summon_spell );
+      auto appendage    = new action_t( action_e::ACTION_OTHER, "twisted_appendage_summon", e.player, summon_spell );
       appendage->name_str_reporting = "Summon";
 
-      auto mind_flay = create_proc_action<generic_proc_t>( "twisted_appendage_mind_flay", e, 1227303 );
+      auto mind_flay     = create_proc_action<generic_proc_t>( "twisted_appendage_mind_flay", e, 1227303 );
       mind_flay->base_td = e.driver()->effectN( 1 ).average( e.player );
       mind_flay->base_td_multiplier *= role_mult( e.player, e.player->find_spell( 1227294 ) );
       mind_flay->name_str_reporting = "mind_flay";
 
-      appendage_spawner.set_creation_callback(
-        [ &e, mind_flay, appendage ]( player_t* ) { return new twisted_appendage_pet_t( e, mind_flay, appendage ); } );
+      appendage_spawner.set_creation_callback( [ &e, mind_flay, appendage ]( player_t* ) {
+        return new twisted_appendage_pet_t( e, mind_flay, appendage );
+      } );
       appendage_spawner.set_default_duration( summon_spell->duration() );
       add_child( appendage );
       appendage->add_child( mind_flay );
@@ -695,6 +705,9 @@ void twisted_appendage( special_effect_t& effect )
 // 1227314 Value Spell/Default Driver - Greater
 void void_ritual( special_effect_t& effect )
 {
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
+    return;
+
   auto buff = create_buff<stat_buff_t>( effect.player, "the_end_is_coming", effect.player->find_spell( 1227316 ) )
                   ->add_stat_from_effect_type( A_MOD_RATING, effect.driver()->effectN( 1 ).average( effect.player ) )
                   ->set_refresh_behavior( buff_refresh_behavior::DISABLED );
@@ -703,11 +716,8 @@ void void_ritual( special_effect_t& effect )
   effect.spell_id    = effect.player->find_spell( 1227315 )->id();
 
   effect.player->callbacks.register_callback_trigger_function(
-    effect.spell_id, dbc_proc_callback_t::trigger_fn_type::CONDITION,
-    [ buff ]( const dbc_proc_callback_t*, action_t* a, const action_state_t* s )
-    {
-      return !buff->up();
-    } );
+      effect.spell_id, dbc_proc_callback_t::trigger_fn_type::CONDITION,
+      [ buff ]( const dbc_proc_callback_t*, action_t* a, const action_state_t* s ) { return !buff->up(); } );
 
   new dbc_proc_callback_t( effect.player, effect );
 }
@@ -721,7 +731,10 @@ void void_ritual( special_effect_t& effect )
 // 1227288 Role Mult Spell - Greater
 void gushing_wound( special_effect_t& effect )
 {
-  auto damage = create_proc_action<generic_proc_t>( "gushing_wound", effect, 1227293 );
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
+    return;
+
+  auto damage     = create_proc_action<generic_proc_t>( "gushing_wound", effect, 1227293 );
   damage->base_td = effect.driver()->effectN( 1 ).average( effect.player );
   // Using the Greater version for the ID here, but, they should be the same.
   damage->base_td_multiplier *= role_mult( effect.player, effect.player->find_spell( 1233388 ) );

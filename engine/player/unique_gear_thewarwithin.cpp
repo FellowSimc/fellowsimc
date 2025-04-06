@@ -570,6 +570,59 @@ void twilight_devastation( special_effect_t& effect )
   new dbc_proc_callback_t( effect.player, effect );
 }
 
+// Rune of the Echoing Void
+// 1225883 Driver
+// 1225889 Damage
+// 1225886 Stacking Buff
+// 1225887 Periodic Buff
+// 1225878 Value Spell/Default Driver - Lesser
+// 1225880 Value Spell/Default Driver - Greater
+// 1233355 Role Mult Spell - Lesser
+// 1225873 Role Mult Spell - Greater
+void echoing_void( special_effect_t& effect )
+{
+  auto damage         = create_proc_action<generic_aoe_proc_t>( "echoing_void_corruption", effect, 1225889, true );
+  damage->name_str_reporting = "Corruption";
+  damage->base_dd_min = damage->base_dd_max = effect.driver()->effectN( 1 ).average( effect.player );
+  // Using the Greater version for the ID here, but, they should be the same.
+  damage->base_multiplier *= role_mult( effect.player, effect.player->find_spell( 1233355 ) );
+
+  auto new_driver = effect.player->find_spell( 1225883 );
+
+  auto stacking_buff =
+      create_buff<stat_buff_t>( effect.player, "echoing_void_stacking", effect.player->find_spell( 1225886 ) );
+  stacking_buff->name_str_reporting = "Stacking";
+  auto ticking_buff =
+      create_buff<stat_buff_t>( effect.player, "echoing_void_ticking", effect.player->find_spell( 1225887 ) );
+  ticking_buff->name_str_reporting = "Ticking";
+
+  stacking_buff->set_stack_change_callback( [ effect, ticking_buff, new_driver ]( buff_t* b, int old_, int new_ ) {
+    if ( new_ > old_ )
+    {
+      // Might not be correct, not seeing the % chance to trigger in the spell data, but seems to increase in chance the
+      // more stacks you have.
+      if ( effect.player->rng().roll( new_driver->effectN( 2 ).percent() * b->check() ) )
+        ticking_buff->trigger( 1_s + ( b->check() * 1_s ) );
+    }
+  } );
+
+  ticking_buff->set_tick_callback( [ stacking_buff, damage ]( buff_t*, int, timespan_t ) {
+    stacking_buff->decrement();
+    damage->execute();
+  } );
+
+  effect.custom_buff = stacking_buff;
+  effect.spell_id    = new_driver->id();
+
+  effect.player->callbacks.register_callback_trigger_function(
+      new_driver->id(), dbc_proc_callback_t::trigger_fn_type::CONDITION,
+      [ ticking_buff ]( const dbc_proc_callback_t*, action_t* a, const action_state_t* s ) {
+        return !ticking_buff->up();
+      } );
+
+  new dbc_proc_callback_t( effect.player, effect );
+}
+
 }  // namespace enchants
 
 namespace embellishments
@@ -10117,6 +10170,7 @@ void register_special_effects()
   register_special_effect( 435488, enchants::insightful_blasphemite );
   register_special_effect( { 457615, 457616, 457617 }, enchants::daybreak_spellthread );
   register_special_effect( { 1225042, 1225045 }, enchants::twilight_devastation );
+  register_special_effect( { 1225878, 1225880 }, enchants::echoing_void );
 
 
   // Embellishments & Tinkers

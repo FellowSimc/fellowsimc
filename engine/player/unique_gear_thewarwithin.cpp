@@ -558,17 +558,46 @@ void daybreak_spellthread( special_effect_t& effect )
 // 1225045 Value Spell/Default Driver - Greater
 // 1225074 Role Mult Spell - Lesser
 // 1233223 Role Mult Spell - Greater
-// TODO: The damage split on this is incredibly strange. Seems to divide the damage in half every time it hits a new target 
-// Possibly not able to dynamically calculate the damage split on execute?
 void twilight_devastation( special_effect_t& effect )
 {
   if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
     return;
 
-  auto damage         = create_proc_action<generic_aoe_proc_t>( "twilight_devastation", effect, 1225040, true );
-  damage->base_dd_min = damage->base_dd_max = effect.driver()->effectN( 1 ).average( effect.player );
-  // Using the Greater version for the ID here, but, they should be the same.
-  damage->base_multiplier *= role_mult( effect.player, effect.player->find_spell( 1233223 ) );
+  struct twilight_devastation_t : public generic_proc_t
+  {
+    double current_mult;
+    twilight_devastation_t( const special_effect_t& e ) : generic_proc_t( e, "twilight_devastation", e.driver() ), current_mult( 1.0 )
+    {
+      base_dd_min = base_dd_max = e.driver()->effectN( 1 ).average( e.player );
+      base_multiplier *= role_mult( e.player, e.player->find_spell( 1233223 ) );
+      aoe = -1;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      double m = generic_proc_t::composite_da_multiplier( s );
+
+      m *= current_mult;
+
+      return m;
+    }
+
+    void execute() override
+    {
+      current_mult = 1.0;
+      generic_proc_t::execute();
+    }
+
+    void impact( action_state_t* s ) override
+    {
+      if( ( s->chain_target + 1 ) % 2 == 0 )
+        current_mult *= 0.5;
+
+      generic_proc_t::impact( s );
+    }
+  };
+
+  auto damage         = create_proc_action<twilight_devastation_t>( "twilight_devastation", effect );
 
   effect.execute_action = damage;
   effect.spell_id       = effect.player->find_spell( 1225038 )->id();

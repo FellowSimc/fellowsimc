@@ -742,7 +742,7 @@ void gushing_wound( special_effect_t& effect )
   auto damage     = create_proc_action<generic_proc_t>( "gushing_wound", effect, 1227293 );
   damage->base_td = effect.driver()->effectN( 1 ).average( effect.player );
   // Using the Greater version for the ID here, but, they should be the same.
-  damage->base_td_multiplier *= role_mult( effect.player, effect.player->find_spell( 1233388 ) );
+  damage->base_td_multiplier *= role_mult( effect.player, effect.player->find_spell( 1227288 ) );
   damage->cooldown->duration = damage->data().internal_cooldown();
 
   effect.execute_action = damage;

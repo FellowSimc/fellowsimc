@@ -560,7 +560,7 @@ void daybreak_spellthread( special_effect_t& effect )
 // 1233223 Role Mult Spell - Greater
 void twilight_devastation( special_effect_t& effect )
 {
-  auto damage = create_proc_action<generic_aoe_proc_t>( "twilight_devastation", effect, 1225040 );
+  auto damage = create_proc_action<generic_aoe_proc_t>( "twilight_devastation", effect, 1225040, true );
   damage->base_dd_min = damage->base_dd_max = effect.driver()->effectN( 1 ).average( effect.player );
   // Using the Greater version for the ID here, but, they should be the same.
   damage->base_multiplier *= role_mult( effect.player, effect.player->find_spell( 1233223 ) ); 

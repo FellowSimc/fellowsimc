@@ -462,7 +462,7 @@ void unholy( player_t* p )
   aoe_burst->add_action( "wound_spender,target_if=max:debuff.festering_wound.stack" );
 
   aoe_setup->add_action( "festering_strike,if=buff.festering_scythe.react", "AoE Setup" );
-  aoe_setup->add_action( "festering_strike,target_if=max:debuff.festering_wound.stack,if=talent.vile_contagion&cooldown.vile_contagion.remains<5" );
+  aoe_setup->add_action( "festering_strike,target_if=max:debuff.festering_wound.stack,if=talent.vile_contagion&cooldown.vile_contagion.remains<5&!debuff.festering_wound.stack=6" );
   aoe_setup->add_action( "festering_strike,target_if=min:debuff.festering_wound.stack,if=death_knight.fwounded_targets=0&cooldown.apocalypse.remains<gcd" );
   aoe_setup->add_action( "wound_spender,target_if=debuff.chains_of_ice_trollbane_slow.up" );
   aoe_setup->add_action( "death_coil,if=!variable.pooling_runic_power&active_enemies<variable.epidemic_targets&rune<4" );

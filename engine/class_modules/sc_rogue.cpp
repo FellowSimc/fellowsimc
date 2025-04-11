@@ -7184,6 +7184,9 @@ struct unseen_blade_t : public rogue_attack_t
     }
   }
 
+  bool procs_main_gauche() const override
+  { return true; }
+
   bool procs_blade_flurry() const override
   { return true; }
 

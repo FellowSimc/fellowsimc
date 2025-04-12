@@ -43,8 +43,9 @@ actions.precombat+=/firestorm,if=talent.firestorm&(!talent.engulf|!talent.ruby_e
 actions.precombat+=/living_flame,if=!talent.firestorm|talent.engulf&talent.ruby_embers
 
 # Executed every time the actor is available.
+actions=use_item,slot=shirt
 # Delay pot in ST if you are about to SS - mostly relevant for opener where you want DR->FB->SS->rotation
-actions=potion,if=(!talent.dragonrage|buff.dragonrage.up)&(!cooldown.shattering_star.up|debuff.shattering_star_debuff.up|active_enemies>=2)|fight_remains<35
+actions+=/potion,if=(!talent.dragonrage|buff.dragonrage.up)&(!cooldown.shattering_star.up|debuff.shattering_star_debuff.up|active_enemies>=2)|fight_remains<35
 # Variable that evaluates when next dragonrage is by working out the maximum between the dragonrage cd and your empowers, ignoring CDR effect estimates.
 actions+=/variable,name=next_dragonrage,value=cooldown.dragonrage.remains<?((cooldown.eternity_surge.remains-8)>?(cooldown.fire_breath.remains-8))
 # Invoke External Power Infusions if they're available during dragonrage

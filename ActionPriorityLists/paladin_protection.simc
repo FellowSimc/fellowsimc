@@ -17,7 +17,8 @@ actions.precombat+=/variable,name=trinket_sync_slot,value=1,if=trinket.1.has_coo
 actions.precombat+=/variable,name=trinket_sync_slot,value=2,if=trinket.2.has_cooldown&trinket.2.has_stat.any_dps&(!trinket.1.has_stat.any_dps|trinket.2.cooldown.duration>trinket.1.cooldown.duration)|!trinket.1.has_cooldown
 
 # Executed every time the actor is available.
-actions=auto_attack
+actions=use_item,slot=shirt
+actions+=/auto_attack
 actions+=/call_action_list,name=cooldowns
 actions+=/call_action_list,name=defensives
 actions+=/call_action_list,name=trinkets

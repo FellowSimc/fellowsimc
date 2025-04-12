@@ -14,7 +14,8 @@ actions.precombat+=/variable,name=trinket_sync_slot,value=2,if=trinket.2.has_use
 actions.precombat+=/stealth
 
 # Executed every time the actor is available.
-actions=stealth
+actions=use_item,slot=shirt
+actions+=/stealth
 # Variables
 actions+=/variable,name=stealth,value=buff.shadow_dance.up|buff.stealth.up|buff.vanish.up
 actions+=/variable,name=targets,value=spell_targets.shuriken_storm

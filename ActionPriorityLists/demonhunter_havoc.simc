@@ -17,8 +17,9 @@ actions.precombat+=/sigil_of_flame
 actions.precombat+=/immolation_aura
 
 # Executed every time the actor is available.
+actions=use_item,slot=shirt
 # Default actions regardless of hero tree
-actions=auto_attack,if=!buff.out_of_range.up
+actions+=/auto_attack,if=!buff.out_of_range.up
 actions+=/disrupt
 # Spread Burning Wounds for uptime in multitarget scenarios
 actions+=/retarget_auto_attack,line_cd=1,target_if=min:debuff.burning_wound.remains,if=talent.burning_wound&talent.demon_blades&active_dot.burning_wound<(spell_targets>?3)

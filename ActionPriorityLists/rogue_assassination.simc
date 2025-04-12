@@ -18,8 +18,9 @@ actions.precombat+=/stealth
 actions.precombat+=/slice_and_dice,precombat_seconds=1
 
 # Executed every time the actor is available.
+actions=use_item,slot=shirt
 # Restealth if possible (no vulnerable enemies in combat)
-actions=stealth
+actions+=/stealth
 # Interrupt on cooldown to allow simming interactions with that
 actions+=/kick
 # Conditional to check if there is only one enemy

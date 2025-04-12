@@ -16,7 +16,8 @@ actions.precombat+=/variable,name=trinket_2_sync,op=setif,value=1,value_else=0.5
 actions.precombat+=/variable,name=trinket_priority,op=setif,value=2,value_else=1,condition=!variable.trinket_1_buffs&variable.trinket_2_buffs|variable.trinket_2_buffs&((trinket.2.cooldown.duration%trinket.2.proc.any_dps.duration)*(1.5+trinket.2.has_buff.strength)*(variable.trinket_2_sync))>((trinket.1.cooldown.duration%trinket.1.proc.any_dps.duration)*(1.5+trinket.1.has_buff.strength)*(variable.trinket_1_sync))
 
 # Executed every time the actor is available.
-actions=auto_attack
+actions=use_item,slot=shirt
+actions+=/auto_attack
 actions+=/rebuke
 actions+=/call_action_list,name=cooldowns
 actions+=/call_action_list,name=generators

@@ -34,7 +34,8 @@ actions.precombat+=/variable,name=oblit_rune_pooling,default=4,op=reset
 actions.precombat+=/variable,name=breath_rime_rp_threshold,default=60,op=reset
 
 # Executed every time the actor is available.
-actions=auto_attack
+actions=use_item,slot=shirt
+actions+=/auto_attack
 # Choose Action list to run
 actions+=/call_action_list,name=variables
 actions+=/call_action_list,name=trinkets

@@ -13,7 +13,8 @@ actions.precombat+=/snapshot_stats
 actions.precombat+=/variable,name=stronger_trinket_slot,op=setif,value=1,value_else=2,condition=!trinket.2.is.house_of_cards&(trinket.1.is.house_of_cards|!trinket.2.has_cooldown|trinket.1.has_use_buff&(!trinket.2.has_use_buff|trinket.2.cooldown.duration<trinket.1.cooldown.duration|trinket.2.cast_time<trinket.1.cast_time|trinket.2.cast_time=trinket.1.cast_time&trinket.2.cooldown.duration=trinket.1.cooldown.duration)|!trinket.1.has_use_buff&(!trinket.2.has_use_buff&(trinket.2.cooldown.duration<trinket.1.cooldown.duration|trinket.2.cast_time<trinket.1.cast_time|trinket.2.cast_time=trinket.1.cast_time&trinket.2.cooldown.duration=trinket.1.cooldown.duration)))
 
 # Executed every time the actor is available.
-actions=auto_attack
+actions=use_item,slot=shirt
+actions+=/auto_attack
 actions+=/call_action_list,name=cds
 actions+=/call_action_list,name=trinkets
 actions+=/call_action_list,name=plst,if=active_enemies<3&talent.howl_of_the_pack_leader

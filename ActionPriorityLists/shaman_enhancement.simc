@@ -19,7 +19,8 @@ actions.precombat+=/variable,name=expected_cl_funnel,value=action.chain_lightnin
 actions.precombat+=/snapshot_stats
 
 # Executed every time the actor is available.
-actions=bloodlust,line_cd=600
+actions=use_item,slot=shirt
+actions+=/bloodlust,line_cd=600
 actions+=/potion,if=(buff.ascendance.up|buff.feral_spirit.up|buff.doom_winds.up|(fight_remains%%300<=30)|(!talent.ascendance.enabled&!talent.feral_spirit.enabled&!talent.doom_winds.enabled))
 actions+=/auto_attack
 actions+=/use_item,name=elementium_pocket_anvil,use_off_gcd=1

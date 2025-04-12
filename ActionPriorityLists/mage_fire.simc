@@ -22,7 +22,8 @@ actions.precombat+=/frostfire_bolt,if=talent.frostfire_bolt
 actions.precombat+=/pyroblast
 
 # Executed every time the actor is available.
-actions=call_action_list,name=cds,if=!(buff.hot_streak.up&prev_gcd.1.scorch)
+actions=use_item,slot=shirt
+actions+=/call_action_list,name=cds,if=!(buff.hot_streak.up&prev_gcd.1.scorch)
 actions+=/run_action_list,name=ff_combustion,if=talent.frostfire_bolt&(cooldown.combustion.remains<=variable.combustion_precast_time|buff.combustion.react|buff.combustion.remains>5)
 actions+=/run_action_list,name=sf_combustion,if=cooldown.combustion.remains<=variable.combustion_precast_time|buff.combustion.react|buff.combustion.remains>5
 actions+=/run_action_list,name=ff_filler,if=talent.frostfire_bolt

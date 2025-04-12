@@ -10,7 +10,8 @@ actions.precombat=snapshot_stats
 actions.precombat+=/battle_stance,toggle=on
 
 # Executed every time the actor is available.
-actions=auto_attack
+actions=use_item,slot=shirt
+actions+=/auto_attack
 actions+=/charge,if=time=0
 actions+=/use_items
 actions+=/avatar,if=buff.thunder_blast.down|buff.thunder_blast.stack<=2

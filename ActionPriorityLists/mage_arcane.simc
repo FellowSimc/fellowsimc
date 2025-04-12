@@ -24,7 +24,8 @@ actions.precombat+=/arcane_blast,if=!talent.evocation
 actions.precombat+=/evocation,if=talent.evocation
 
 # Executed every time the actor is available.
-actions=counterspell
+actions=use_item,slot=shirt
+actions+=/counterspell
 actions+=/potion,if=!equipped.spymasters_web&(buff.siphon_storm.up|(!talent.evocation&cooldown.arcane_surge.ready))|equipped.spymasters_web&(buff.spymasters_web.up|(fight_remains>330&buff.siphon_storm.up))
 actions+=/lights_judgment,if=(buff.arcane_surge.down&debuff.touch_of_the_magi.down&active_enemies>=2)
 actions+=/berserking,if=(prev_gcd.1.arcane_surge&variable.opener)|((prev_gcd.1.arcane_surge&(fight_remains<80|target.health.pct<35|!talent.arcane_bombardment|buff.spymasters_web.up))|(prev_gcd.1.arcane_surge&!equipped.spymasters_web))

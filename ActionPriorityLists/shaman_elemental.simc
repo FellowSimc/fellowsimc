@@ -20,8 +20,9 @@ actions.precombat+=/variable,name=special_trinket2,value=(trinket.2.is.house_of_
 actions.precombat+=/stormkeeper
 
 # Executed every time the actor is available.
+actions=use_item,slot=shirt
 # Enable more movement.
-actions=spiritwalkers_grace,moving=1,if=movement.distance>6
+actions+=/spiritwalkers_grace,moving=1,if=movement.distance>6
 # Interrupt of casts.
 actions+=/wind_shear
 actions+=/blood_fury,if=!talent.ascendance|buff.ascendance.up|cooldown.ascendance.remains>50

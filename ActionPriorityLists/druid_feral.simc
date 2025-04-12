@@ -17,7 +17,8 @@ actions.precombat+=/use_item,name=treacherous_transmitter
 actions.precombat+=/prowl,if=!buff.prowl.up
 
 # Executed every time the actor is available.
-actions=prowl,if=buff.bs_inc.down&!buff.prowl.up
+actions=use_item,slot=shirt
+actions+=/prowl,if=buff.bs_inc.down&!buff.prowl.up
 actions+=/cat_form,if=!buff.cat_form.up&!talent.fluid_form
 # Line up <a href='https://www.wowhead.com/spell=10060/power-infusion'>Power Infusion</a> with Berserk.
 actions+=/invoke_external_buff,name=power_infusion,if=buff.bs_inc.up|!talent.berserk_heart_of_the_lion

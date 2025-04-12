@@ -49,7 +49,8 @@ actions.precombat+=/demonbolt,if=!buff.power_siphon.up
 actions.precombat+=/shadow_bolt
 
 # Executed every time the actor is available.
-actions=call_action_list,name=variables
+actions=use_item,slot=shirt
+actions+=/call_action_list,name=variables
 actions+=/potion,if=buff.tyrant.remains>10
 actions+=/call_action_list,name=racials,if=pet.demonic_tyrant.active|fight_remains<22,use_off_gcd=1
 actions+=/call_action_list,name=items,use_off_gcd=1

@@ -17,8 +17,9 @@ actions.precombat+=/roll_the_bones,precombat_seconds=1
 actions.precombat+=/adrenaline_rush,precombat_seconds=0,if=talent.improved_adrenaline_rush
 
 # Executed every time the actor is available.
+actions=use_item,slot=shirt
 # Restealth if possible (no vulnerable enemies in combat).
-actions=stealth
+actions+=/stealth
 # Interrupt on cooldown to allow simming interactions with that.
 actions+=/kick
 actions+=/variable,name=ambush_condition,value=(talent.hidden_opportunity|combo_points.deficit>=2+talent.improved_ambush+buff.broadside.up)&energy>=50

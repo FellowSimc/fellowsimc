@@ -16,8 +16,9 @@ actions.precombat+=/cat_form,if=talent.rake.enabled
 actions.precombat+=/prowl,if=talent.rake.enabled
 
 # Executed every time the actor is available.
+actions=use_item,slot=shirt
 # Executed every time the actor is available.
-actions=berserking
+actions+=/berserking
 actions+=/natures_vigil,if=!buff.prowl.up&!buff.shadowmeld.up
 actions+=/run_action_list,name=healing,if=!buff.prowl.up&!buff.shadowmeld.up,line_cd=13
 actions+=/heart_of_the_wild,if=!buff.prowl.up&!buff.shadowmeld.up

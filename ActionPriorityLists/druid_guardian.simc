@@ -16,8 +16,9 @@ actions.precombat+=/heart_of_the_Wild,if=talent.heart_of_the_wild.enabled&!talen
 actions.precombat+=/bear_form
 
 # Executed every time the actor is available.
+actions=use_item,slot=shirt
 # Executed every time the actor is available.
-actions=auto_attack,if=!buff.prowl.up
+actions+=/auto_attack,if=!buff.prowl.up
 actions+=/use_item,name=bestinslots,if=buff.incarnation_guardian_of_ursoc.up|buff.berserk_bear.up
 actions+=/use_item,name=tome_of_lights_devotion,if=buff.inner_resilience.up
 actions+=/use_items

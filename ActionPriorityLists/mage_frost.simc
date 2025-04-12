@@ -15,7 +15,8 @@ actions.precombat+=/blizzard,if=active_enemies>=3
 actions.precombat+=/frostbolt,if=active_enemies<=2
 
 # Executed every time the actor is available.
-actions=counterspell
+actions=use_item,slot=shirt
+actions+=/counterspell
 actions+=/call_action_list,name=cds
 actions+=/run_action_list,name=aoe_ff,if=talent.frostfire_bolt&active_enemies>=3
 actions+=/run_action_list,name=aoe_ss,if=active_enemies>=3

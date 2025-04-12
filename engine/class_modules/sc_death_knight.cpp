@@ -8290,6 +8290,19 @@ struct death_coil_damage_t final : public death_knight_spell_t
     }
   }
 
+  std::vector<player_t*>& target_list() const override
+  {
+    std::vector<player_t*>& current_targets = death_knight_spell_t::target_list();
+    // Don't bother ordering the list if all the valid targets will be hit
+    if (current_targets.size() <= as<size_t>( n_targets() ))
+      return current_targets;
+
+    // first target, the action target, needs to be left in place
+    rng().shuffle( current_targets.begin() + 1, current_targets.end() );
+
+    return current_targets;
+  }
+
   double composite_target_multiplier( player_t* target ) const override
   {
     double m = death_knight_spell_t::composite_target_multiplier( target );

@@ -10279,40 +10279,57 @@ private:
 };
 
 // Vile Contagion =============================================================
-
 struct vile_contagion_t final : public death_knight_spell_t
 {
+  unsigned max_targets;
+  int n_wounds;
   vile_contagion_t( death_knight_t* p, std::string_view options_str )
-    : death_knight_spell_t( "vile_contagion", p, p->talent.unholy.vile_contagion )
+    : death_knight_spell_t( "vile_contagion", p, p->talent.unholy.vile_contagion ), max_targets( 0 ), n_wounds( 0 )
   {
     parse_options( options_str );
-    aoe = as<int>( p->talent.unholy.vile_contagion->effectN( 1 ).base_value() );
+    max_targets = as<unsigned>( p->talent.unholy.vile_contagion->effectN( 1 ).base_value() );
+    may_miss = may_crit = false;
+    aoe = 0;
   }
 
-  size_t available_targets( std::vector<player_t*>& tl ) const override
+  void apply_vc_wounds()
   {
-    death_knight_spell_t::available_targets( tl );
+    int targets = 0;
+    if ( ( p()->sim->target_non_sleeping_list.size() - 1 ) > max_targets )
+      targets = max_targets;
+    else
+      targets = ( p()->sim->target_non_sleeping_list.size() - 1 );
 
-    // Does not hit the main target
-    auto it = range::find( tl, target );
-    if ( it != tl.end() )
+    for ( int i = 0; i < targets; i++ )
     {
-      tl.erase( it );
+      // Dont hit the main target
+      player_t* this_target = p()->sim->target_non_sleeping_list[ i + 1 ];
+      p()->get_target_data( this_target )->debuff.festering_wound->trigger( n_wounds );
+      int n_applications = n_wounds;
+      while ( n_applications-- > 0 )
+      {
+        p()->procs.fw_vile_contagion->occur();
+        p()->background_actions.festering_wound_application->execute_on_target( this_target );
+      }
     }
+  }
 
-    return tl.size();
+  bool target_ready( player_t* candidate_target ) override
+  {
+    const death_knight_td_t* td = get_td( candidate_target );
+
+    if ( !td || !td->debuff.festering_wound->check() )
+      return false;
+
+    return death_knight_spell_t::target_ready( candidate_target );
   }
 
   void impact( action_state_t* s ) override
   {
     death_knight_spell_t::impact( s );
 
-    if ( result_is_hit( s->result ) && get_td( s->target )->debuff.festering_wound->check() )
-    {
-      unsigned n_stacks = get_td( s->target )->debuff.festering_wound->stack();
-
-      p()->trigger_festering_wound( s, n_stacks, p()->procs.fw_vile_contagion );
-    }
+    n_wounds = get_td( s->target )->debuff.festering_wound->check();
+    apply_vc_wounds();
   }
 };
 

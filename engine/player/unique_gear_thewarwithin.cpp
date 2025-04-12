@@ -592,7 +592,7 @@ void twilight_devastation( special_effect_t& effect )
     void impact( action_state_t* s ) override
     {
       if ( ( s->chain_target + 1 ) % 2 == 0 )
-        current_mult *= 0.5;
+        current_mult *= 0.65;
 
       generic_proc_t::impact( s );
     }

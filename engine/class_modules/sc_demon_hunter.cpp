@@ -5807,8 +5807,6 @@ struct felblade_t : public inertia_trigger_t<demon_hunter_attack_t>
     {
       background = dual = true;
       gain              = p->get_gain( "felblade" );
-
-      affected_by.chaos_brand_server_side.direct = true;
     }
 
     double action_multiplier() const override
@@ -6787,6 +6785,10 @@ struct wounded_quarry_t : public demon_hunter_attack_t
       affected_by.demon_hide.direct   = true;
       affected_by.demon_hide.periodic = true;
     }
+
+    // WQ is affected by Chaos Brand on the server side
+    affected_by.chaos_brand_server_side.direct = true;
+    affected_by.chaos_brand_server_side.periodic = true;
   }
 
   void impact( action_state_t* s ) override

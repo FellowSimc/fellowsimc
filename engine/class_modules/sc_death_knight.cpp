@@ -14451,7 +14451,7 @@ void death_knight_t::create_buffs()
       make_fallback( sets->has_set_bonus( DEATH_KNIGHT_FROST, TWW1, B4 ), this, "icy_vigor", spell.icy_vigor );
 
   buffs.winning_streak_frost =
-      make_fallback( sets->has_set_bonus( DEATH_KNIGHT_FROST, TWW2, B2 ), this, "winning_streak",
+      make_fallback( sets->has_set_bonus( DEATH_KNIGHT_FROST, TWW2, B2 ), this, "winning_streak_frost",
                      spell.winning_streak_frost )
           ->set_chance( 1.01 )
           ->set_expire_callback( [ this ]( buff_t*, int, timespan_t ) {
@@ -14531,7 +14531,7 @@ void death_knight_t::create_buffs()
                                           "unholy_commander", spell.unholy_commander );
 
   buffs.winning_streak_unholy = make_fallback( sets->has_set_bonus( DEATH_KNIGHT_UNHOLY, TWW2, B2 ), this,
-                                               "winning_streak", spell.winning_streak_unholy )
+                                               "winning_streak_unholy", spell.winning_streak_unholy )
                                     ->set_chance( 1.01 );
 }
 

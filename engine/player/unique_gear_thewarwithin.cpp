@@ -733,19 +733,16 @@ void twisted_appendage( special_effect_t& effect )
   {
     spawner::pet_spawner_t<twisted_appendage_pet_t> appendage_spawner;
 
-    twisted_appendage_cb_t( special_effect_t& e )
+    twisted_appendage_cb_t( special_effect_t& e, int original_id )
       : dbc_proc_callback_t( e.player, e ), appendage_spawner( "twisted_appendage", e.player )
     {
-      auto summon_spell      = e.player->find_spell( 1227301 );
-      auto appendage         = new action_t( action_e::ACTION_OTHER, "twisted_appendage", e.player, summon_spell );
-      int original_driver_id = e.driver()->id();
+      auto summon_spell = e.player->find_spell( 1227301 );
+      auto appendage    = new action_t( action_e::ACTION_OTHER, "twisted_appendage", e.player, summon_spell );
 
-      appendage_spawner.set_creation_callback( [ &e, appendage, original_driver_id ]( player_t* ) {
-        return new twisted_appendage_pet_t( e, original_driver_id, appendage );
+      appendage_spawner.set_creation_callback( [ &original_id, &e, appendage ]( player_t* ) {
+        return new twisted_appendage_pet_t( e, original_id, appendage );
       } );
       appendage_spawner.set_default_duration( summon_spell->duration() );
-
-      e.spell_id = 1227300;
     }
 
     void execute( action_t*, action_state_t* ) override
@@ -754,7 +751,9 @@ void twisted_appendage( special_effect_t& effect )
     }
   };
 
-  new twisted_appendage_cb_t( effect );
+  int original_driver_id = effect.driver()->id();
+  effect.spell_id        = 1227300;
+  new twisted_appendage_cb_t( effect, original_driver_id );
 }
 
 // Rune of the Void Ritual

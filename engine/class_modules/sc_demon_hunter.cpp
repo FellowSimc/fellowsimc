@@ -2353,8 +2353,10 @@ struct winning_streak_removal_trigger_t : public BASE
 {
   using base_t = winning_streak_removal_trigger_t<BASE>;
 
+  timespan_t winning_streak_removal_delay;
+
   winning_streak_removal_trigger_t( util::string_view n, demon_hunter_t* p, const spell_data_t* s, util::string_view o )
-    : BASE( n, p, s, o )
+    : BASE( n, p, s, o ), winning_streak_removal_delay( 0_ms )
   {
   }
 
@@ -2370,18 +2372,24 @@ struct winning_streak_removal_trigger_t : public BASE
       int stacks          = BASE::p()->buff.winning_streak->stack();
       int residual_stacks = BASE::p()->buff.winning_streak_residual->stack();
 
-      BASE::p()->buff.winning_streak->expire();
-      BASE::p()->proc.winning_streak_drop_from_tww2_havoc_2pc->occur();
+      // 2025-04-13 -- Winning Streak! removal seems to only happen after the triggering spell has finished dealing all
+      //               damage
+      make_event(*BASE::p()->sim, winning_streak_removal_delay, [ this, stacks, residual_stacks ] {
+        int new_stacks = BASE::p()->buff.winning_streak->stack();
+        int new_residual_stacks = BASE::p()->buff.winning_streak_residual->stack();
+        BASE::p()->buff.winning_streak->expire();
+        BASE::p()->proc.winning_streak_drop_from_tww2_havoc_2pc->occur();
 
-      if ( stacks >= residual_stacks )
-      {
-        BASE::p()->buff.winning_streak_residual->expire();
-        BASE::p()->buff.winning_streak_residual->trigger( stacks + residual_stacks );
-      }
-      else
-      {
-        BASE::p()->proc.winning_streak_drop_wasted_from_tww2_havoc_2pc->occur();
-      }
+        if ( new_stacks >= new_residual_stacks )
+        {
+          BASE::p()->buff.winning_streak_residual->expire();
+          BASE::p()->buff.winning_streak_residual->trigger( stacks + residual_stacks );
+        }
+        else
+        {
+          BASE::p()->proc.winning_streak_drop_wasted_from_tww2_havoc_2pc->occur();
+        }
+      } );
     }
   }
 };

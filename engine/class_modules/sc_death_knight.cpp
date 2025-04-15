@@ -15651,6 +15651,7 @@ struct death_knight_module_t : public module_t
     unique_gear::register_special_effect( 326982, runeforge::unending_thirst );
   }
 
+  /*
   void register_hotfixes() const override
   {
     hotfix::register_effect( "Death Knight", "2025-4-11", "The Blood Is Life(Blood) nerfed to 35%", 1124175,
@@ -15723,7 +15724,7 @@ struct death_knight_module_t : public module_t
       .modifier( 0.2491398 )
       .verification_value( 0.191646 );
   }
-
+  */
   void init( player_t* ) const override
   {
   }

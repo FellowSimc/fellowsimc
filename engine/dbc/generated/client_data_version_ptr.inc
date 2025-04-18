@@ -9,8 +9,8 @@ static const wowv_t __ptr_client_data_version { 11, 1, 5, 60253 };
 
 // Hotfix data versioning information
 
-#define PTR_CLIENT_DATA_HOTFIX_DATE "2025-04-15"
+#define PTR_CLIENT_DATA_HOTFIX_DATE "2025-04-18"
 #define PTR_CLIENT_DATA_HOTFIX_BUILD (60253)
-#define PTR_CLIENT_DATA_HOTFIX_HASH "df4646917bcc7fc3a9baf901800f7f8c3829cd2e484d906bac53e33005883d7a"
+#define PTR_CLIENT_DATA_HOTFIX_HASH "abf1d457ec2c9ac5d9071b04a271c21a3e2868430bb138e12bf7c490ed99d6f3"
 
 #endif /* PTR_CLIENT_DATA_VERSION_INC*/

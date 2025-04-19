@@ -4532,17 +4532,19 @@ struct evocation_t final : public arcane_mage_spell_t
 struct fireball_t final : public fire_mage_spell_t
 {
   const bool frostfire;
+  double master_of_flame_mult;
 
   fireball_t( std::string_view n, mage_t* p, std::string_view options_str, bool frostfire_ = false ) :
     fire_mage_spell_t( n, p, frostfire_ ? p->talents.frostfire_bolt : p->find_specialization_spell( "Fireball" ) ),
-    frostfire( frostfire_ )
+    frostfire( frostfire_ ),
+    master_of_flame_mult( 1.0 )
   {
     parse_options( options_str );
     triggers.hot_streak = triggers.kindling = TT_ALL_TARGETS;
     triggers.phoenix_reborn = triggers.unleashed_inferno = TT_MAIN_TARGET;
     triggers.ignite = triggers.from_the_ashes = true;
     affected_by.unleashed_inferno = affected_by.flame_accelerant = true;
-    if ( p->bugs )
+    if ( p->bugs && sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
       base_dd_multiplier *= 1.0 + p->talents.master_of_flame->effectN( 3 ).percent();
 
     if ( frostfire )
@@ -4554,6 +4556,9 @@ struct fireball_t final : public fire_mage_spell_t
       enable_calculate_on_impact( 468655 );
       triggers.frostfire_mastery = false; // Manually triggered on impact
     }
+
+    if ( p->talents.master_of_flame.ok() )
+      master_of_flame_mult *= 1.0 + p->find_spell( 1217750 )->effectN( 1 ).percent();
   }
 
   timespan_t travel_time() const override
@@ -4647,10 +4652,7 @@ struct fireball_t final : public fire_mage_spell_t
     double m = fire_mage_spell_t::composite_da_multiplier( s );
 
     if ( !p()->buffs.combustion->check() )
-      // TODO: This bonus actually probably comes from spell data on
-      // a hidden buff (spell_id 1217750). If the bug with this talent
-      // is fixed, make sure that the effect used here is still valid.
-      m *= 1.0 + p()->talents.master_of_flame->effectN( 3 ).percent();
+      m *= master_of_flame_mult;
 
     if ( frostfire )
     {
@@ -8564,6 +8566,7 @@ void mage_t::create_buffs()
                                ->set_chance( talents.slick_ice.ok() );
   buffs.wintertide         = make_buff( this, "wintertide", find_spell( 1222865 ) )
                                ->set_default_value_from_effect( 1 )
+                               // TODO (11.1.5): This is now 2/4 rather than 0/2, making the total effect 4/6
                                ->modify_default_value( talents.wintertide->effectN( 1 ).percent() )
                                ->set_chance( talents.wintertide.ok() );
 

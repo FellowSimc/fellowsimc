@@ -841,7 +841,6 @@ struct parse_action_base_t : public parse_effects_t
   std::vector<player_effect_t> crit_chance_multiplier_effects;
   std::vector<player_effect_t> crit_bonus_effects;
   std::vector<player_effect_t> spell_school_effects;
-  std::vector<player_effect_t> spell_target_count_effects;
   std::vector<target_effect_t> target_multiplier_effects;
   std::vector<target_effect_t> target_crit_chance_effects;
   std::vector<target_effect_t> target_crit_bonus_effects;
@@ -1183,16 +1182,6 @@ public:
       cd *= 1.0 + get_effect_value( i, td );
 
     return cd;
-  }
-
-  int n_targets() const override
-  {
-    int target_count = BASE::n_targets();
-
-    for ( const auto& i : spell_target_count_effects )
-      target_count += as<int>( get_effect_value( i ) );
-
-    return target_count;
   }
 
   void html_customsection( report::sc_html_stream& os ) override

@@ -3633,8 +3633,24 @@ struct dancing_rune_weapon_pet_t : public death_knight_pet_t
   struct death_strike_t : public drw_action_t<melee_attack_t>
   {
     death_strike_t( std::string_view n, dancing_rune_weapon_pet_t* p )
-      : drw_action_t<melee_attack_t>( p, n, p->dk()->talent.death_strike )
-    {}
+      : drw_action_t<melee_attack_t>( p, n, p->dk()->talent.death_strike ), tww2_blood_4pc_cleave_targets( 0 )
+    {
+      if ( dk()->sets->has_set_bonus( DEATH_KNIGHT_BLOOD, TWW2, B4 ) )
+      {
+        tww2_blood_4pc_cleave_targets =
+            data().effectN( 1 ).chain_target() + as<int>( dk()->spell.luck_of_the_draw->effectN( 4 ).base_value() );
+      }
+    }
+
+    int n_targets() const override
+    {
+      if ( dk()->sets->has_set_bonus( DEATH_KNIGHT_BLOOD, TWW2, B4 ) && dk()->buffs.luck_of_the_draw->check() )
+        return tww2_blood_4pc_cleave_targets;
+      return drw_action_t::n_targets();
+    }
+
+  private:
+    int tww2_blood_4pc_cleave_targets;
   };
 
   struct heart_strike_t : public drw_action_t<melee_attack_t>
@@ -3647,6 +3663,12 @@ struct dancing_rune_weapon_pet_t : public death_knight_pet_t
         blood_strike_rp_generation(
             dk()->pet_spell.drw_heart_strike_rp_gen->effectN( 1 ).resource( RESOURCE_RUNIC_POWER ) )
     {
+    }
+
+    int n_targets() const override
+    {
+      return dk()->in_death_and_decay() ? aoe + as<int>( dk()->talent.cleaving_strikes->effectN( 3 ).base_value() )
+                                        : aoe;
     }
 
     void execute() override
@@ -3663,7 +3685,6 @@ struct dancing_rune_weapon_pet_t : public death_knight_pet_t
       : drw_action_t<melee_attack_t>( p, n, p->dk()->spell.vampiric_strike )
     {
       attack_power_mod.direct = data().effectN( 5 ).ap_coeff();
-      aoe                     = p->dk()->pet_spell.drw_heart_strike->effectN( 1 ).chain_target();
     }
   };
 
@@ -4313,7 +4334,7 @@ struct mograine_pet_t final : public horseman_pet_t
       if ( dk->talent.rider.mograines_might.ok() )
       {
         dk->buffs.mograines_might->expire();
-        dk->buffs.death_and_decay->expire( 4_s );
+        dk->buffs.death_and_decay->expire();
       }
       if ( mograine()->extended_by_apoc_now )
       {
@@ -5718,7 +5739,7 @@ struct gift_of_the_sanlayn_buff_t final : public death_knight_buff_t
 struct death_and_decay_buff_t : public death_knight_buff_t
 {
   death_and_decay_buff_t( death_knight_t* p, std::string_view name, const spell_data_t* spell )
-    : death_knight_buff_t( p, name, spell )
+    : death_knight_buff_t( p, name, spell ), leway_buff( false )
   {
     set_duration( 0_ms );  // Handled by things that trigger this buff.
     // Specifically use a stack change callback here due to when its called in buff_t::expire
@@ -5727,12 +5748,16 @@ struct death_and_decay_buff_t : public death_knight_buff_t
       {
         trigger();
       }
+      if ( new_ == 0 && !leway_buff && !p->in_death_and_decay() )
+      {
+        trigger( 4_s );
+      }
     } );
   }
 
   void trigger_buffs()
   {
-    if ( !p()->talent.unholy_ground.ok() && !p()->talent.blood.sanguine_ground.ok() && !p()->talent.sanlayn.bloodsoaked_ground.ok() )
+    if ( !p()->talent.unholy_ground.ok() && !p()->talent.blood.sanguine_ground.ok() )
       return;
 
     if ( p()->talent.unholy_ground.ok() && !p()->buffs.unholy_ground->check() )
@@ -5747,7 +5772,7 @@ struct death_and_decay_buff_t : public death_knight_buff_t
 
   void expire_buffs()
   {
-    if (!p()->talent.unholy_ground.ok() && !p()->talent.blood.sanguine_ground.ok() && !p()->talent.sanlayn.bloodsoaked_ground.ok())
+    if ( !p()->talent.unholy_ground.ok() && !p()->talent.blood.sanguine_ground.ok() )
       return;
 
     if ( p()->talent.unholy_ground.ok() && p()->buffs.unholy_ground->check() )
@@ -5764,6 +5789,11 @@ struct death_and_decay_buff_t : public death_knight_buff_t
   {
     death_knight_buff_t::start( s, v, d );
     trigger_buffs();
+
+    if ( d == 4_s )
+      leway_buff = true;
+    else
+      leway_buff = false;
   }
 
   void expire_override( int s, timespan_t d ) override
@@ -5771,6 +5801,9 @@ struct death_and_decay_buff_t : public death_knight_buff_t
     death_knight_buff_t::expire_override( s, d );
     expire_buffs();
   }
+
+private:
+  bool leway_buff;
 };
 
 // Anti-magic Shell =========================================================
@@ -8125,7 +8158,7 @@ struct death_and_decay_base_t : public death_knight_spell_t
                   break;
                 case ground_aoe_params_t::EVENT_STOPPED:
                   p()->active_dnd = nullptr;
-                  p()->buffs.death_and_decay->expire( 4_s );
+                  p()->buffs.death_and_decay->expire();
                   break;
                 default:
                   break;
@@ -8486,7 +8519,8 @@ struct death_strike_t final : public death_knight_melee_attack_t
       heal( get_action<death_strike_heal_t>( "death_strike_heal", p ) ),
       oh_attack( nullptr ),
       improved_death_strike_reduction( 0 ),
-      sanguination_pct( 0.0 )
+      sanguination_pct( 0.0 ),
+      tww2_blood_4pc_cleave_targets( 0 )
   {
     parse_options( options_str );
     may_parry = false;
@@ -8508,6 +8542,12 @@ struct death_strike_t final : public death_knight_melee_attack_t
         improved_death_strike_reduction +=
             p->talent.improved_death_strike->effectN( 3 ).resource( RESOURCE_RUNIC_POWER );
     }
+
+    if ( p->sets->has_set_bonus( DEATH_KNIGHT_BLOOD, TWW2, B4 ) )
+    {
+      tww2_blood_4pc_cleave_targets =
+          data().effectN( 1 ).chain_target() + as<int>( p->spell.luck_of_the_draw->effectN( 4 ).base_value() );
+    }
   }
 
   void init_finished() override
@@ -8518,6 +8558,13 @@ struct death_strike_t final : public death_knight_melee_attack_t
     {
       sanguination_pct = 1 + ( 0.25 * ( 1 + p()->talent.unholy_bond->effectN( 1 ).percent() ) );
     }
+  }
+
+  int n_targets() const override
+  {
+    if ( p()->sets->has_set_bonus( DEATH_KNIGHT_BLOOD, TWW2, B4 ) && p()->buffs.luck_of_the_draw->check() )
+      return tww2_blood_4pc_cleave_targets;
+    return death_knight_melee_attack_t::n_targets();
   }
 
   double action_multiplier() const override
@@ -8600,6 +8647,7 @@ private:
   propagate_const<action_t*> oh_attack;
   double improved_death_strike_reduction;
   double sanguination_pct;
+  int tww2_blood_4pc_cleave_targets;
 };
 
 // Empower Rune Weapon ======================================================
@@ -9449,6 +9497,11 @@ struct heart_strike_base_t : public death_knight_melee_attack_t
     leeching_strike = get_action<leeching_strike_t>( "leeching_strike", p );
   }
 
+  int n_targets() const override
+  {
+    return p()->in_death_and_decay() ? aoe + as<int>( p()->talent.cleaving_strikes->effectN( 3 ).base_value() ) : aoe;
+  }
+
   void execute() override
   {
     death_knight_melee_attack_t::execute();
@@ -9595,6 +9648,11 @@ struct heart_strike_bloodied_blade_t : public death_knight_melee_attack_t
       vampiric_strike_cost = p->spell.vampiric_strike->cost( POWER_RUNE );
       add_child( vampiric_strike );
     }
+  }
+
+  int n_targets() const override
+  {
+    return p()->in_death_and_decay() ? aoe + as<int>( p()->talent.cleaving_strikes->effectN( 3 ).base_value() ) : aoe;
   }
 
   double cost() const override
@@ -9878,19 +9936,26 @@ struct obliterate_strike_t final : public death_knight_melee_attack_t
     may_miss             = false;
     weapon               = w;
 
+    // To support Cleaving strieks affecting Obliterate in Dragonflight:
+    // - obliterate damage spells have gained a value of 1 in their chain target data
+    // - the death and decay buff now has an effect that modifies obliterate's chain target with a value of 0
+    // - cleaving strikes increases the aforementionned death and decay buff effect by 1
+    cleaving_strikes_targets = data().effectN( 1 ).chain_target() +
+                               as<int>( p->spell.dnd_buff->effectN( 4 ).base_value() ) +
+                               as<int>( p->talent.cleaving_strikes->effectN( 2 ).base_value() );
+
     inexorable_assault = get_action<inexorable_assault_damage_t>( "inexorable_assault", p );
   }
 
   int n_targets() const override
   {
-    int targets = death_knight_melee_attack_t::n_targets();
-    if ( p()->buffs.death_and_decay->up() )
+    if ( p()->in_death_and_decay() )
     {
       if ( p()->talent.cleaving_strikes.ok() )
-        targets += as<int>( data().effectN( 1 ).chain_target() );
+        return cleaving_strikes_targets;
     }
 
-    return targets;
+    return death_knight_melee_attack_t::n_targets();
   }
 
   double composite_da_multiplier( const action_state_t* state ) const override
@@ -9966,6 +10031,7 @@ struct obliterate_strike_t final : public death_knight_melee_attack_t
 
 private:
   propagate_const<action_t*> inexorable_assault;
+  int cleaving_strikes_targets;
 };
 
 struct obliterate_t final : public death_knight_melee_attack_t
@@ -10472,7 +10538,7 @@ struct wound_spender_base_t : public death_knight_melee_attack_t
   int n_targets() const override
   {
     if ( p()->talent.cleaving_strikes.ok() )
-      return p()->buffs.death_and_decay->up() ? dnd_cleave_targets : 0;
+      return p()->in_death_and_decay() ? dnd_cleave_targets : 0;
     return 0;
   }
 
@@ -11683,8 +11749,10 @@ void death_knight_t::trigger_virulent_plague_death( player_t* target )
 
 bool death_knight_t::in_death_and_decay() const
 {
-  if ( talent.rider.mograines_might.ok() && buffs.mograines_might->check() )
+  if ( ( talent.rider.mograines_might.ok() && buffs.mograines_might->check() ) || buffs.death_and_decay->check() )
+  {
     return true;
+  }
 
   if ( !sim->distance_targeting_enabled || !active_dnd )
     return active_dnd != nullptr;
@@ -12946,13 +13014,13 @@ std::unique_ptr<expr_t> death_knight_t::create_expression( std::string_view name
     // Returns true if there's an active dnd AND the player is inside it
     if ( util::str_compare_ci( splits[ 1 ], "active" ) )
     {
-      return make_fn_expr( "dnd_active", [ this ]() { return in_death_and_decay() ? 1 : 0; } );
+      return make_fn_expr( "dnd_ticking", [ this ]() { return in_death_and_decay() ? 1 : 0; } );
     }
 
     // Returns the remaining value on the active dnd if the player is inside it, or 0 otherwise
     if ( util::str_compare_ci( splits[ 1 ], "active_remains" ) )
     {
-      return make_fn_expr( "dnd_active_remains", [ this ]() {
+      return make_fn_expr( "dnd_remains", [ this ]() {
         return in_death_and_decay() ? active_dnd->remaining_time().total_seconds() : 0;
       } );
     }
@@ -15088,9 +15156,6 @@ void death_knight_t::adjust_dynamic_cooldowns()
 template <class T_PET, class Base>
 void pets::pet_action_t<T_PET, Base>::apply_pet_action_effects()
 {
-  // Shared
-  parse_effects( dk()->buffs.death_and_decay, dk()->talent.cleaving_strikes );
-
   // Blood
   parse_effects( dk()->buffs.consumption );
   parse_effects( dk()->buffs.crimson_scourge );
@@ -15099,7 +15164,7 @@ void pets::pet_action_t<T_PET, Base>::apply_pet_action_effects()
   parse_effects( dk()->buffs.heartrend, dk()->talent.blood.heartrend );
   parse_effects( dk()->buffs.hemostasis );
   parse_effects( dk()->buffs.ossuary );
-  parse_effects( dk()->buffs.luck_of_the_draw, effect_mask_t( true ).disable( 5 ) );
+  parse_effects( dk()->buffs.luck_of_the_draw, effect_mask_t( true ).disable( 4, 5 ) );
 
   // Don't auto parse coag, since there is some snapshot behavior when the weapon dies
   // parse_effects( dk()->buffs.coagulopathy );
@@ -15173,7 +15238,6 @@ void death_knight_action_t<Base>::apply_action_effects()
 {
   // Shared
   parse_effects( p()->buffs.blood_draw );
-  parse_effects( p()->buffs.death_and_decay, p()->talent.cleaving_strikes );
 
   // Blood
   parse_effects( p()->buffs.coagulopathy );
@@ -15184,7 +15248,7 @@ void death_knight_action_t<Base>::apply_action_effects()
   parse_effects( p()->buffs.heartrend, p()->talent.blood.heartrend );
   parse_effects( p()->buffs.hemostasis );
   parse_effects( p()->buffs.ossuary );
-  parse_effects( p()->buffs.luck_of_the_draw, effect_mask_t( true ).disable( 5 ) );
+  parse_effects( p()->buffs.luck_of_the_draw, effect_mask_t( true ).disable( 4, 5 ) );
   if ( p()->sets->has_set_bonus( DEATH_KNIGHT_BLOOD, TWW2, B4 ) )
     parse_effects( p()->buffs.luck_of_the_draw, effect_mask_t( false ).enable( 5 ) );
 

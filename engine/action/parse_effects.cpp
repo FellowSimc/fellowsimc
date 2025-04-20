@@ -1780,8 +1780,7 @@ size_t parse_action_base_t::total_effects_count()
          crit_chance_effects.size() +
          crit_chance_multiplier_effects.size() +
          crit_bonus_effects.size() +
-         spell_school_effects.size() + 
-         spell_target_count_effects.size() +
+         spell_school_effects.size() +
          target_multiplier_effects.size() +
          target_crit_chance_effects.size() +
          target_crit_bonus_effects.size();

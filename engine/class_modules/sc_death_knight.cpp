@@ -10530,7 +10530,6 @@ struct wound_spender_base_t : public death_knight_melee_attack_t
       dnd_cleave_targets( as<int>( p->talent.unholy.scourge_strike->effectN( 4 ).base_value() ) )
   {
     weapon = &( player->main_hand_weapon );
-    aoe = 0;
   }
 
   // The death and decay target cap is displayed both in scourge strike's effects

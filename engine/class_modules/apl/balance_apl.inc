@@ -83,7 +83,7 @@ aoe->add_action( "fury_of_elune,if=eclipse.in_eclipse" );
 aoe->add_action( "call_action_list,name=pre_cd" );
 aoe->add_action( "celestial_alignment,if=variable.cd_condition" );
 aoe->add_action( "incarnation,if=variable.cd_condition" );
-aoe->add_action( "warrior_of_elune,if=!talent.lunar_calling&buff.eclipse_solar.remains<7|talent.lunar_calling" );
+aoe->add_action( "warrior_of_elune,if=!talent.lunar_calling&buff.eclipse_solar.remains<7|talent.lunar_calling&!buff.dreamstate.up" );
 aoe->add_action( "starfire,if=(!talent.lunar_calling&spell_targets.starfire=1)&(buff.eclipse_solar.up&buff.eclipse_solar.remains<action.starfire.cast_time|eclipse.in_none)" );
 aoe->add_action( "starfall,if=buff.starweavers_warp.up|buff.touch_the_cosmos.up" );
 aoe->add_action( "starsurge,if=buff.starweavers_weft.up" );

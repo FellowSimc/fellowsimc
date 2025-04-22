@@ -432,14 +432,16 @@ void unholy( player_t* p )
   default_->add_action( "call_action_list,name=cds_san,if=talent.vampiric_strike&active_enemies=1" );
   default_->add_action( "call_action_list,name=cds,if=!talent.vampiric_strike&active_enemies=1" );
   default_->add_action( "call_action_list,name=cleave,if=active_enemies=2" );
-  default_->add_action( "call_action_list,name=aoe_setup,if=active_enemies>=3&!death_and_decay.ticking&cooldown.any_dnd.remains<10" );
-  default_->add_action( "call_action_list,name=aoe_burst,if=active_enemies>=3&(death_and_decay.ticking|buff.death_and_decay.up&death_knight.fwounded_targets>=(active_enemies*0.5))" );
-  default_->add_action( "call_action_list,name=aoe,if=active_enemies>=3&!death_and_decay.ticking" );
+  default_->add_action( "call_action_list,name=aoe_setup,if=active_enemies>=3&cooldown.any_dnd.remains<10&!death_and_decay.ticking" );
+  default_->add_action( "call_action_list,name=aoe_burst,if=active_enemies>=3&(death_and_decay.ticking|buff.death_and_decay.up&(death_knight.fwounded_targets>=(active_enemies*0.5)|talent.vampiric_strike&active_enemies<16))" );
+  default_->add_action( "call_action_list,name=aoe,if=active_enemies>=3&!buff.death_and_decay.up" );
   default_->add_action( "run_action_list,name=san_fishing,if=active_enemies=1&talent.gift_of_the_sanlayn&!cooldown.dark_transformation.ready&!buff.gift_of_the_sanlayn.up&buff.essence_of_the_blood_queen.remains<cooldown.dark_transformation.remains+3" );
   default_->add_action( "call_action_list,name=san_st,if=active_enemies=1&talent.vampiric_strike" );
   default_->add_action( "call_action_list,name=st,if=active_enemies=1&!talent.vampiric_strike" );
 
   aoe->add_action( "festering_strike,if=buff.festering_scythe.react", "AOE" );
+  aoe->add_action( "death_coil,target_if=min:debuff.rotten_touch.remains*(buff.sudden_doom.react&talent.rotten_touch),if=rune<4&active_enemies<variable.epidemic_targets&buff.gift_of_the_sanlayn.up&gcd<=1.0&(!raid_event.adds.exists&fight_remains>buff.dark_transformation.remains|raid_event.adds.exists&raid_event.adds.remains>buff.dark_transformation.remains*2)" );
+  aoe->add_action( "epidemic,if=rune<4&active_enemies>variable.epidemic_targets&buff.gift_of_the_sanlayn.up&gcd<=1.0&(!raid_event.adds.exists&fight_remains>buff.dark_transformation.remains|raid_event.adds.exists&raid_event.adds.remains>buff.dark_transformation.remains*2)" );
   aoe->add_action( "wound_spender,target_if=max:debuff.festering_wound.stack,if=debuff.festering_wound.stack>=1&buff.death_and_decay.up&talent.bursting_sores&cooldown.apocalypse.remains>variable.apoc_timing" );
   aoe->add_action( "death_coil,target_if=min:debuff.rotten_touch.remains*(buff.sudden_doom.react&talent.rotten_touch),if=!variable.pooling_runic_power&active_enemies<variable.epidemic_targets" );
   aoe->add_action( "epidemic,if=!variable.pooling_runic_power" );
@@ -449,12 +451,12 @@ void unholy( player_t* p )
   aoe->add_action( "wound_spender,target_if=max:debuff.festering_wound.stack,if=debuff.festering_wound.stack>=1&cooldown.apocalypse.remains>gcd|buff.vampiric_strike.react&dot.virulent_plague.ticking" );
 
   aoe_burst->add_action( "festering_strike,if=buff.festering_scythe.react", "AoE Burst" );
-  aoe_burst->add_action( "death_coil,target_if=min:debuff.rotten_touch.remains*(buff.sudden_doom.react&talent.rotten_touch),if=!buff.vampiric_strike.react&active_enemies<variable.epidemic_targets&(!talent.bursting_sores|talent.bursting_sores&death_knight.fwounded_targets<active_enemies&death_knight.fwounded_targets<active_enemies*0.4&buff.sudden_doom.react|buff.sudden_doom.react&(talent.doomed_bidding&talent.menacing_magus|talent.rotten_touch|debuff.death_rot.remains<gcd)|rune<2)" );
-  aoe_burst->add_action( "epidemic,if=!buff.vampiric_strike.react&(!talent.bursting_sores|talent.bursting_sores&death_knight.fwounded_targets<active_enemies&death_knight.fwounded_targets<active_enemies*0.4&buff.sudden_doom.react|buff.sudden_doom.react&(buff.a_feast_of_souls.up|debuff.death_rot.remains<gcd|debuff.death_rot.stack<10)|rune<2)" );
+  aoe_burst->add_action( "death_coil,target_if=min:debuff.rotten_touch.remains*(buff.sudden_doom.react&talent.rotten_touch),if=!buff.vampiric_strike.react&active_enemies<variable.epidemic_targets&(!talent.bursting_sores|talent.bursting_sores&death_knight.fwounded_targets<active_enemies&death_knight.fwounded_targets<active_enemies*0.4&buff.sudden_doom.react|buff.sudden_doom.react&(talent.doomed_bidding&talent.menacing_magus|talent.rotten_touch|debuff.death_rot.remains<gcd)|rune<2)|(rune<4|active_enemies<4|raid_event.pull.has_boss)&active_enemies<variable.epidemic_targets&buff.gift_of_the_sanlayn.up&gcd<=1.0&(!raid_event.adds.exists&fight_remains>buff.dark_transformation.remains|raid_event.adds.exists&raid_event.adds.remains>buff.dark_transformation.remains*2)" );
+  aoe_burst->add_action( "epidemic,if=!buff.vampiric_strike.react&(!talent.bursting_sores|talent.bursting_sores&death_knight.fwounded_targets<active_enemies&death_knight.fwounded_targets<active_enemies*0.4&buff.sudden_doom.react|buff.sudden_doom.react&(buff.a_feast_of_souls.up|debuff.death_rot.remains<gcd|debuff.death_rot.stack<10)|rune<2)|(rune<4|raid_event.pull.has_boss)&active_enemies>variable.epidemic_targets&buff.gift_of_the_sanlayn.up&gcd<=1.0&(!raid_event.adds.exists&fight_remains>buff.dark_transformation.remains|raid_event.adds.exists&raid_event.adds.remains>buff.dark_transformation.remains*2)" );
   aoe_burst->add_action( "wound_spender,target_if=debuff.chains_of_ice_trollbane_slow.up" );
-  aoe_burst->add_action( "wound_spender,target_if=max:debuff.festering_wound.stack,if=debuff.festering_wound.stack>=1|buff.vampiric_strike.react" );
+  aoe_burst->add_action( "wound_spender,target_if=max:debuff.festering_wound.stack,if=debuff.festering_wound.stack>=1|buff.vampiric_strike.react|buff.death_and_decay.up" );
   aoe_burst->add_action( "death_coil,target_if=min:debuff.rotten_touch.remains*(buff.sudden_doom.react&talent.rotten_touch),if=active_enemies<variable.epidemic_targets" );
-  aoe_burst->add_action( "epidemic" );
+  aoe_burst->add_action( "epidemic,if=variable.epidemic_targets<active_enemies" );
   aoe_burst->add_action( "festering_strike,target_if=min:debuff.festering_wound.stack,if=debuff.festering_wound.stack<=2" );
   aoe_burst->add_action( "wound_spender,target_if=max:debuff.festering_wound.stack" );
 
@@ -464,7 +466,7 @@ void unholy( player_t* p )
   aoe_setup->add_action( "wound_spender,target_if=debuff.chains_of_ice_trollbane_slow.up" );
   aoe_setup->add_action( "death_coil,target_if=min:debuff.rotten_touch.remains*(buff.sudden_doom.react&talent.rotten_touch),if=!variable.pooling_runic_power&active_enemies<variable.epidemic_targets&rune<4" );
   aoe_setup->add_action( "epidemic,if=!variable.pooling_runic_power&variable.epidemic_targets<=active_enemies&rune<4" );
-  aoe_setup->add_action( "any_dnd,if=!death_and_decay.ticking&(!talent.bursting_sores&!talent.vile_contagion|death_knight.fwounded_targets=active_enemies|death_knight.fwounded_targets>=8|raid_event.adds.exists&raid_event.adds.remains<=11&raid_event.adds.remains>5|!buff.death_and_decay.up&talent.defile&rune>3)" );
+  aoe_setup->add_action( "any_dnd,if=!buff.death_and_decay.up&(!talent.bursting_sores&!talent.vile_contagion|death_knight.fwounded_targets=active_enemies|death_knight.fwounded_targets>=8|raid_event.adds.exists&raid_event.adds.remains<=11&raid_event.adds.remains>5|!buff.death_and_decay.up&talent.defile)" );
   aoe_setup->add_action( "death_coil,target_if=min:debuff.rotten_touch.remains*(buff.sudden_doom.react&talent.rotten_touch),if=!variable.pooling_runic_power&active_enemies<variable.epidemic_targets&(buff.sudden_doom.react|death_knight.fwounded_targets=active_enemies|death_knight.fwounded_targets>=8)" );
   aoe_setup->add_action( "epidemic,if=!variable.pooling_runic_power&variable.epidemic_targets<=active_enemies&(buff.sudden_doom.react|death_knight.fwounded_targets=active_enemies|death_knight.fwounded_targets>=8)" );
   aoe_setup->add_action( "death_coil,target_if=min:debuff.rotten_touch.remains*(buff.sudden_doom.react&talent.rotten_touch),if=!variable.pooling_runic_power&active_enemies<variable.epidemic_targets" );

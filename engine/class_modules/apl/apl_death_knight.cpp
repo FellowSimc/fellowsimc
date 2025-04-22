@@ -489,7 +489,8 @@ void unholy( player_t* p )
 
   cds_aoe_san->add_action( "vile_contagion,target_if=max:debuff.festering_wound.stack,if=debuff.festering_wound.stack>=4&variable.adds_remain", "San'layn AoE Cooldowns" );
   cds_aoe_san->add_action( "dark_transformation,if=variable.adds_remain&(buff.death_and_decay.up|active_enemies<=3)" );
-  cds_aoe_san->add_action( "unholy_assault,target_if=max:debuff.festering_wound.stack,if=variable.adds_remain&(debuff.festering_wound.stack>=2&cooldown.vile_contagion.remains<6|!talent.vile_contagion)" );
+  cds_aoe_san->add_action( "unholy_assault,target_if=debuff.festering_wound.stack<3,if=variable.adds_remain&talent.vile_contagion&debuff.festering_wound.stack<=2&cooldown.vile_contagion.remains<6" );
+  cds_aoe_san->add_action( "unholy_assault,target_if=min:debuff.festering_wound.stack,if=variable.adds_remain&!talent.vile_contagion&buff.dark_transformation.up&buff.dark_transformation.remains<12" );
   cds_aoe_san->add_action( "outbreak,if=dot.virulent_plague.ticks_remain<5&(dot.virulent_plague.refreshable|talent.morbidity&!buff.gift_of_the_sanlayn.up&talent.superstrain&dot.frost_fever.refreshable&dot.blood_plague.refreshable)&(!dot.virulent_plague.ticking&variable.epidemic_targets<active_enemies|(!talent.unholy_blight|talent.unholy_blight&cooldown.dark_transformation.remains>5)&(!talent.raise_abomination|talent.raise_abomination&cooldown.raise_abomination.remains>5))" );
   cds_aoe_san->add_action( "apocalypse,target_if=min:debuff.festering_wound.stack,if=variable.adds_remain&rune<=3" );
   cds_aoe_san->add_action( "abomination_limb,if=variable.adds_remain" );

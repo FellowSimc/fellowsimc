@@ -8016,6 +8016,17 @@ void ringing_ritual_mud( special_effect_t& effect )
   effect.execute_action = create_proc_action<mudborne_t>( "ringing_ritual_mud", effect );
 }
 
+void hallowed_tome( special_effect_t& effect )
+{
+  auto buff_spell = effect.driver()->effectN( 2 ).trigger();
+
+  auto buff = make_buff<stat_buff_t>( effect.player, util::tokenize_fn( buff_spell->name_cstr() ), buff_spell )
+                  ->add_stat_from_effect_type( A_MOD_RATING, effect.driver()->effectN( 1 ).average( effect ) );
+
+  effect.custom_buff = buff;
+  new dbc_proc_callback_t( effect.player, effect );
+}
+
 // Gigazap's Zap-Cap
 void gigazaps_zapcap( special_effect_t& effect )
 {
@@ -10534,6 +10545,7 @@ void register_special_effects()
   register_special_effect( 1219102, items::ringing_ritual_mud );
   register_special_effect( 1221145, DISABLED_EFFECT );
   register_special_effect( 1219103, items::gigazaps_zapcap );
+  register_special_effect( { 1223886, 1223899, 1223902, 1223904 }, items::hallowed_tome );
 
   // Weapons
   register_special_effect( 443384, items::fateweaved_needle );

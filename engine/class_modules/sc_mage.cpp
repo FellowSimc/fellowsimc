@@ -2466,21 +2466,23 @@ public:
   }
 
 
-  // If an action and it's direct after-effect can increment intuition's BLP,
-  // exclude the second incoming incrementation if we already gained intuition from its previous associated action
+  // The blp_exclude_initial param controls whether the spell is allowed to start a new BLP "chain"
+  // by itself. Some spells (orbs from Orb Barrage, AE echoes) only contribute to ongoing chains.
   void trigger_intuition( bool blp_exclude_initial )
   {
-    if ( !p()->talents.intuition.ok() )
+    if ( !p()->talents.intuition.ok() || p()->buffs.intuition->check() )
       return;
 
-    constexpr int blp_threshold { 11 };
+    constexpr int blp_threshold = 11;
 
     if ( p()->state.intuition_blp_count > 0 || !blp_exclude_initial )
       p()->state.intuition_blp_count += 1;
     
-    if ( p()->state.intuition_blp_count >= blp_threshold || ( !background && harmful && rng().roll( p()->talents.intuition->effectN( 1 ).percent() ) ) ) 
+    if ( p()->state.intuition_blp_count >= blp_threshold
+      || ( !background && harmful && rng().roll( p()->talents.intuition->effectN( 1 ).percent() ) ) )
     {
-      make_event( *sim, [ this ] { p()->buffs.intuition->trigger(); } ); // Needs to be triggered with a delay so that ABar doesn't eat its own proc
+      // Needs to be triggered with a delay so that ABar doesn't eat its own proc
+      make_event( *sim, [ this ] { p()->buffs.intuition->trigger(); } );
       p()->state.intuition_blp_count = 0;
     }
   }

@@ -5551,7 +5551,7 @@ void torqs_big_red_button( special_effect_t& effect )
 
       e.player->callbacks.register_callback_execute_function(
           stack_buff->data().id(), [ &, damage ]( const dbc_proc_callback_t*, action_t*, const action_state_t* s ) {
-            if ( stack_buff->check() )
+            if ( stack_buff->check() && e.player->specialization() != specialization_e::DEATH_KNIGHT_FROST )
             {
               damage->execute_on_target( s->target );
               stack_buff->decrement();

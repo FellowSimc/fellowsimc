@@ -3145,10 +3145,7 @@ struct dawnlight_t : public paladin_spell_t
 
     if ( p()->talents.herald_of_the_sun.gleaming_rays->ok() )
     {
-      if ( !( p()->bugs && target_already_has_dawnlight ) )
-      {
-        p()->buffs.herald_of_the_sun.gleaming_rays->trigger();
-      }
+      p()->buffs.herald_of_the_sun.gleaming_rays->trigger();
     }
 
     if ( p()->talents.herald_of_the_sun.suns_avatar->ok() )

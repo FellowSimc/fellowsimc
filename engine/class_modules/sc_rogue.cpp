@@ -9613,8 +9613,8 @@ void actions::rogue_action_t<Base>::trigger_tww2_set_bonus_removal()
       // If the 4pc refreshes itself, the restoration value (default_value) gets updated to 10 stacks
       if ( p()->buffs.tww2_assassination_4pc->check() )
       {
-        p()->buffs.tww2_assassination_4pc->trigger( p()->buffs.tww2_assassination_4pc->max_stack(),
-                                                    p()->buffs.tww2_assassination_4pc->max_stack() );
+        p()->buffs.tww2_assassination_4pc->trigger( p()->buffs.tww2_assassination_4pc->max_stack() );
+        p()->buffs.tww2_assassination_4pc->default_value = p()->buffs.tww2_assassination_4pc->max_stack();
       }
       else
       {

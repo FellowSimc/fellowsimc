@@ -1698,7 +1698,7 @@ void judgment_t::impact( action_state_t* s )
   {
     if ( p()->talents.greater_judgment->ok() )
     {
-      p()->trigger_greater_judgment( td( s->target ) );
+      p()->trigger_greater_judgment( td( s->target ), 1 );
     }
 
     int amount = 5;
@@ -2178,12 +2178,24 @@ struct hammer_of_light_t : public holy_power_consumer_t<paladin_melee_attack_t>
 
     void impact( action_state_t* s ) override
     {
-      if ( p()->specialization() == PALADIN_RETRIBUTION && p()->talents.templar.undisputed_ruling->ok() &&
+      // 02.05.25 Fluttershy - Hammer of Light should apply Judgment and consume it instantly to increase damage. It
+      // currently doesn't
+      if ( !p()->bugs && p()->specialization() == PALADIN_RETRIBUTION && p()->talents.templar.undisputed_ruling->ok() &&
            p()->talents.greater_judgment->ok() )
       {
-        p()->trigger_greater_judgment( td( s->target ) );
+        p()->trigger_greater_judgment( td( s->target ), 1 );
       }
-      holy_power_consumer_t::impact( s );
+
+      holy_power_consumer_t<paladin_melee_attack_t>::impact( s );
+
+      if ( p()->bugs && p()->specialization() == PALADIN_RETRIBUTION && p()->talents.templar.undisputed_ruling->ok() &&
+           p()->talents.greater_judgment->ok() )
+      {
+        // 02.05.25 Fluttershy - If target has no Judgment Debuffs, Hammer of Light consumes one stack without damage
+        // increase
+        bool removeStack = td( s->target )->debuff.judgment->stack() == 0;
+        p()->trigger_greater_judgment( td( s->target ), removeStack ? 0 : 1 );
+      }
     }
   };
 
@@ -2294,9 +2306,26 @@ struct hammer_of_light_t : public holy_power_consumer_t<paladin_melee_attack_t>
    }
    void impact( action_state_t* s ) override
    {
+     // 02.05.25 Fluttershy - Hammer of Light should apply Judgment and consume it instantly to increase damage. It currently doesn't
+     if ( !p()->bugs && p()->specialization() == PALADIN_RETRIBUTION && p()->talents.templar.undisputed_ruling->ok() &&
+          p()->talents.greater_judgment->ok() )
+     {
+       p()->trigger_greater_judgment( td( s->target ), 1 );
+     }
+
      holy_power_consumer_t<paladin_melee_attack_t>::impact( s );
+
      if ( p()->talents.templar.undisputed_ruling->ok() )
        p()->buffs.templar.undisputed_ruling->execute();
+
+     if ( p()->bugs && p()->specialization() == PALADIN_RETRIBUTION && p()->talents.templar.undisputed_ruling->ok() &&
+          p()->talents.greater_judgment->ok() )
+     {
+       // 02.05.25 Fluttershy - If target has no Judgment Debuffs, Hammer of Light consumes one stack without damage increase
+       bool removeStack = td( s->target )->debuff.judgment->stack() == 0;
+       p()->trigger_greater_judgment( td( s->target ), removeStack ? 0 : 1 );
+       
+     }
    }
 };
 
@@ -2448,9 +2477,8 @@ void paladin_t::trigger_lights_deliverance( bool /* triggered_by_hol */ )
   buffs.templar.lights_deliverance->expire();
 }
 
-void paladin_t::trigger_greater_judgment(paladin_td_t* targetdata)
+void paladin_t::trigger_greater_judgment(paladin_td_t* targetdata, int num_stacks = 1)
 {
-  int num_stacks = 1;
   if ( talents.highlords_wrath->ok() )
   {
     num_stacks += as<int>( talents.highlords_wrath->effectN( 1 ).base_value() );

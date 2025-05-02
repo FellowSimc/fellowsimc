@@ -8175,7 +8175,7 @@ Stance Mask      : 0x00000040
 Attributes       : Do Not Sheath (18), Initiates Combat (Enables Auto-Attack) (41), Discount Power On Miss (59), Allow While Not Shapeshifted (caster form) (83), Not In Spellbook (143), Show Mechanic as Combat Text (213), Aura Points On Client (268), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=803166)   : School Damage (2): frost
-                   Base Value: 0 | Scaled Value: 0 (delta=0.05) | AP Coefficient: 0.597168 | Target: Enemy (6)
+                   Base Value: 0 | Scaled Value: 0 (delta=0.05) | AP Coefficient: 0.8360352 | Target: Enemy (6)
 #2 (id=803167)   : Apply Aura (6) | Decrease Movement Speed% (33)
                    Base Value: 60 | Scaled Value: 60 | Mechanic: Snare | Target: Enemy (6)
 Description      : Deals $s1 Frost damage and reduces their movement speed by $s2% for $d.
@@ -14197,7 +14197,7 @@ Proc Flags       : Yellow Melee, Yellow Ranged, Generic Hostile Spell, Magic Hos
 Attributes       : Passive (6), Include In Advanced Combat Log (72), Not In Spellbook (143), Do Not Log on Learn (355)
 Effects          :
 #1 (id=1124176)  : Apply Aura (6) | Dummy (4)
-                   Base Value: 50 | Scaled Value: 50 | Misc Value: 1 | Target: Self (1)
+                   Base Value: 25 | Scaled Value: 25 | Misc Value: 1 | Target: Self (1)
 Description      : You store $s1% of all Shadow damage dealt into your Blood Beast to explode for additional damage when it expires.
 
 Name             : Sanguine Scent (id=434263) [Spell Family (15), Passive] 

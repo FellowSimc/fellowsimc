@@ -4575,8 +4575,6 @@ struct fireball_t final : public fire_mage_spell_t
     triggers.phoenix_reborn = triggers.unleashed_inferno = TT_MAIN_TARGET;
     triggers.ignite = triggers.from_the_ashes = true;
     affected_by.unleashed_inferno = affected_by.flame_accelerant = true;
-    if ( p->bugs && sim->dbc->wowv() < wowv_t{ 11, 1, 5 } )
-      base_dd_multiplier *= 1.0 + p->talents.master_of_flame->effectN( 3 ).percent();
 
     if ( frostfire )
     {

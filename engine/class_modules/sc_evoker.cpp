@@ -4278,7 +4278,6 @@ struct eruption_t : public essence_spell_t
   int mass_eruption_max_targets;
   double motes_chance;
   bool is_overlord;
-  bool is_overlord_deep_breath;
   double tww2_4pc_mult;
 
   eruption_t( evoker_t* p, std::string_view name ) : eruption_t( p, name, {} )
@@ -4295,7 +4294,6 @@ struct eruption_t : public essence_spell_t
       mass_eruption_max_targets( as<int>( p->talent.scalecommander.mass_eruption_buff->effectN( 1 ).base_value() ) ),
       motes_chance( p->talent.motes_of_possibility->proc_chance() ),
       is_overlord( false ),
-      is_overlord_deep_breath( false ),
       tww2_4pc_mult( p->sets->has_set_bonus( EVOKER_AUGMENTATION, TWW2, B4 )
                          ? p->sets->set( EVOKER_AUGMENTATION, TWW2, B4 )->effectN( 2 ).percent()
                          : 0.0 )
@@ -4335,7 +4333,7 @@ struct eruption_t : public essence_spell_t
                     p()->talent.ricocheting_pyroclast->effectN( 1 ).percent();
     }
 
-    if ( p()->buff.mass_eruption_stacks->check() && ( !is_overlord || is_overlord_deep_breath && p()->bugs ) )
+    if ( p()->buff.mass_eruption_stacks->check() && !is_overlord )
     {
       da *= 1 + ( mass_eruption_max_targets - mass_eruption_targets() ) * mass_eruption_mult;
     }
@@ -4350,8 +4348,8 @@ struct eruption_t : public essence_spell_t
   {
     essence_spell_t::impact( s );
 
-    if ( p()->talent.scalecommander.bombardments.enabled() && p()->buff.mass_eruption_stacks->check() &&
-         ( !is_overlord && s->chain_target == 0 || is_overlord_deep_breath && p()->bugs ) )
+    if ( p()->talent.scalecommander.bombardments.enabled() && p()->buff.mass_eruption_stacks->check() && !is_overlord &&
+         s->chain_target == 0 )
     {
       p()->apply_bombardments( s->target );
     }
@@ -4389,7 +4387,7 @@ struct eruption_t : public essence_spell_t
           ->buffs.blistering_scales->bump( as<int>( p()->talent.regenerative_chitin->effectN( 3 ).base_value() ) );
     }
 
-    if ( ( !is_overlord || is_overlord_deep_breath && p()->bugs ) )
+    if ( !is_overlord  )
     {
       if ( p()->talent.scalecommander.mass_eruption.enabled() && p()->buff.mass_eruption_stacks->check() &&
            execute_state )
@@ -4408,8 +4406,7 @@ struct eruption_t : public essence_spell_t
       }
 
       p()->buff.volcanic_upsurge->decrement();
-      if ( !is_overlord_deep_breath )
-        p()->buff.mass_eruption_stacks->decrement();
+      p()->buff.mass_eruption_stacks->decrement();
     }
   }
 };
@@ -4684,7 +4681,6 @@ struct deep_breath_t : public evoker_spell_t
       {
         eruption              = p->get_secondary_action<eruption_t>( "eruption_overlord", "eruption_overlord" );
         eruption->is_overlord = true;
-        eruption->is_overlord_deep_breath = true;
         eruption->motes_chance            = p->talent.overlord->effectN( 2 ).percent();
         add_child( eruption );
       }

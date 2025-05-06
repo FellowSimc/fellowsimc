@@ -4263,11 +4263,6 @@ struct eruption_t : public essence_spell_t
 
       return da;
     }
-
-    void execute() override
-    {
-      evoker_spell_t::execute();
-    }
   };
 
   timespan_t extend_ebon;

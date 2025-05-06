@@ -1563,6 +1563,7 @@ public:
     modified_spell_data_t* infliction_of_sorrow;
     modified_spell_data_t* vampiric_strike;
     modified_spell_data_t* tww2_bdk_2pc;
+    modified_spell_data_t* pact_of_the_sanlayn;
   } modified_spell;
 
   // RPPM
@@ -4892,7 +4893,7 @@ struct death_knight_action_t : public parse_action_effects_t<Base>
          dbc::is_school( this->get_school(), SCHOOL_SHADOW ) )
     {
       p()->pets.blood_beast.active_pet()->accumulator +=
-          s->result_amount * p()->talent.sanlayn.pact_of_the_sanlayn->effectN( 1 ).percent();
+          s->result_amount * p()->modified_spell.pact_of_the_sanlayn->effectN( 1 ).percent();
     }
 
     if ( p()->talent.deathbringer.reapers_mark.ok() && this->data().id() != p()->spell.reapers_mark_explosion->id() &&
@@ -15210,6 +15211,9 @@ void death_knight_t::apply_effect_modifying_effects()
 
   modified_spell.tww2_bdk_2pc = get_modified_spell( sets->set( DEATH_KNIGHT_BLOOD, TWW2, B2 ) )
                                     ->parse_effects( sets->set( DEATH_KNIGHT_BLOOD, TWW2, B4 ) );
+
+  modified_spell.pact_of_the_sanlayn =
+      get_modified_spell( talent.sanlayn.pact_of_the_sanlayn )->parse_effects( spec.unholy_death_knight );
 }
 
 template <class Base>
@@ -15627,6 +15631,7 @@ struct death_knight_module_t : public module_t
     unique_gear::register_special_effect( 326982, runeforge::unending_thirst );
   }
 
+  /*
   void register_hotfixes() const override
   {
     hotfix::register_effect( "Death Knight", "2025-5-2", "Pact of the San'layn nerfed to 25%", 1124176,
@@ -15642,7 +15647,7 @@ struct death_knight_module_t : public module_t
       .operation( hotfix::HOTFIX_SET )
       .modifier( 0.8360352 )
       .verification_value( 0.597168 );
-  }
+  }*/
 
   void init( player_t* ) const override
   {

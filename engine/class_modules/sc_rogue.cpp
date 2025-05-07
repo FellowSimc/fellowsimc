@@ -8770,12 +8770,6 @@ void actions::rogue_action_t<Base>::trigger_blade_flurry( const action_state_t* 
   // Compute Blade Flurry modifier
   double multiplier = p()->buffs.blade_flurry->check_value();
 
-  // Grand Melee buff is additive with Killing Spree base value
-  if ( p()->buffs.grand_melee->up() )
-  {
-    multiplier += p()->spec.grand_melee->effectN( 2 ).percent();
-  }
-
   if ( p()->talent.outlaw.precise_cuts->ok() )
   {
     // Already ignores the main target due to the target_list() being filtered
@@ -8785,6 +8779,12 @@ void actions::rogue_action_t<Base>::trigger_blade_flurry( const action_state_t* 
     {
       multiplier += p()->talent.outlaw.precise_cuts->effectN( 1 ).percent() * ( max_targets - num_targets );
     }
+  }
+
+  // 2025-05-06 Grand Melee is 20% multiplicative, used to be 10% additive, spell data is hotfixed manually
+  if ( p()->buffs.grand_melee->up() )
+  {
+    multiplier *= 1.0 + p()->spec.grand_melee->effectN( 2 ).percent();
   }
 
   // 2024-08-12 -- This effect is multiplicative, even though it uses the same tooltip as additive mods
@@ -13098,6 +13098,12 @@ public:
 
   void register_hotfixes() const override
   {
+    // 2025-05-06 Grand Melee is 20% multiplicative
+    hotfix::register_effect( "Rogue", "2025-05-06", "Grand Melee Blade Flurry Bonus", 1107258 )
+        .field( "base_value" )
+        .operation( hotfix::HOTFIX_SET )
+        .modifier( 20 )
+        .verification_value( 10 );
   }
 
   void init( player_t* ) const override {}

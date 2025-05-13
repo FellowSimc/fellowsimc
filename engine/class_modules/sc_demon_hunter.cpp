@@ -4899,6 +4899,18 @@ struct auto_attack_damage_t : public burning_blades_trigger_t<demon_hunter_attac
     return m;
   }
 
+  double composite_target_da_multiplier( player_t* t ) const override
+  {
+    double m = base_t::composite_target_da_multiplier( t );
+
+    demon_hunter_td_t* target_data = td( t );
+    if ( target_data->debuffs.reavers_mark->up() ) {
+      m *= 1.0 + target_data->debuffs.reavers_mark->check_stack_value();
+    }
+
+    return m;
+  }
+
   void reset() override
   {
     base_t::reset();

@@ -14055,7 +14055,7 @@ void death_knight_t::create_buffs()
           ->set_stack_change_callback( [ this ]( buff_t*, int, int new_ ) {
             if ( talent.deathbringer.dark_talons.ok() )
             {
-              if ( new_ == 1 )
+              if ( new_ >= 1 )
               {
                 buffs.dark_talons_shadowfrost->trigger();
               }

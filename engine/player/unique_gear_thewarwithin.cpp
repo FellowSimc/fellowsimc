@@ -6886,19 +6886,73 @@ void mugs_moxie_jug( special_effect_t& effect )
                        ->set_refresh_behavior( buff_refresh_behavior::DISABLED );
 
   auto buff_driver          = new special_effect_t( effect.player );
-  buff_driver->name_str     = util::tokenize_fn( effect.driver()->effectN( 1 ).trigger()->name_cstr() );
+  buff_driver->name_str     = "moxie_frenzy";
   buff_driver->spell_id     = effect.driver()->effectN( 1 ).trigger_spell_id();
-  buff_driver->proc_flags2_ = PF2_ALL_HIT | PF2_ALL_CAST | PF2_PERIODIC_DAMAGE | PF2_PERIODIC_HEAL;
+  buff_driver->proc_flags_  = PF_ALL_DAMAGE | PF_ALL_HEAL;
+  buff_driver->proc_flags2_ = PF2_ALL_HIT | PF2_ALL_CAST | PF2_LANDED;
   buff_driver->custom_buff  = crit_buff;
   effect.player->special_effects.push_back( buff_driver );
 
   auto second_proc = new dbc_proc_callback_t( effect.player, *buff_driver );
+
+  auto CT = []( player_t* p, std::string_view n ) { return p->find_talent_spell( talent_tree::CLASS, n ); };
+  auto ST = []( player_t* p, std::string_view n ) { return p->find_talent_spell( talent_tree::SPECIALIZATION, n ); };
+
+  switch ( effect.player->type )
+  {
+    case WARLOCK:
+      // Pretend everything is triggering soul leech which is triggering the trinket. This is not quite true in practice
+      // though.
+      second_proc->allow_pet_procs = true;
+      buff_driver->proc_flags_ |= PF_PERIODIC | PF_HELPFUL_PERIODIC;
+      buff_driver->proc_flags2_ |= PF2_PERIODIC_DAMAGE | PF2_PERIODIC_HEAL;
+
+      effect.player->callbacks.register_callback_trigger_function(
+          buff_driver->driver()->id(), dbc_proc_callback_t::trigger_fn_type::CONDITION,
+          []( const dbc_proc_callback_t*, action_t*, const action_state_t* s ) {
+            if ( s->action->player->type == PLAYER_GUARDIAN || s->action->player->type == PLAYER_PET )
+            {
+              // Allowing every pet to hit it grants far too high of an uptime
+              return s->action->player->rng().roll( 0.1 );
+            }
+            // Dots probably do the same. Probably.
+            if ( s->result_type == result_amount_type::DMG_OVER_TIME )
+              return s->action->player->rng().roll( 0.15 );
+            return true;
+          } );
+      break;
+    case EVOKER:
+      // Heals trigger Scarlet, which triggers the trinket. Otherwise burnout procs do. Hooking these would be ideal but
+      // there is no easy way to do that, so instead just roll the same chance.
+      if ( ST( effect.player, "Scarlet Adaptation" ).ok() )
+      {
+        buff_driver->proc_flags_ |= PF_HELPFUL_PERIODIC;
+        buff_driver->proc_flags2_ |= PF2_PERIODIC_HEAL;
+      }
+      if ( CT( effect.player, "Burnout" ).ok() )
+      {
+        buff_driver->proc_flags_ |= PF_PERIODIC;
+        buff_driver->proc_flags2_ |= PF2_PERIODIC_DAMAGE;
+
+        effect.player->callbacks.register_callback_trigger_function(
+            buff_driver->driver()->id(), dbc_proc_callback_t::trigger_fn_type::CONDITION,
+            []( const dbc_proc_callback_t*, action_t*, const action_state_t* s ) {
+              if ( s->result_type != result_amount_type::DMG_OVER_TIME )
+                return true;
+              if ( s->action->player->rng().roll( 0.16 ) )
+                return true;
+              return false;
+            } );
+      }
+      break;
+    default:
+      break;
+  }
   second_proc->activate_with_buff( crit_buff, true );
 
-  effect.cooldown_    = effect.duration();
-  effect.proc_flags_  = PF_ALL_DAMAGE | PF_ALL_HEAL;
-  effect.proc_flags2_ = PF2_ALL_HIT | PF2_ALL_CAST | PF2_PERIODIC_DAMAGE | PF2_PERIODIC_HEAL | PF2_LANDED;
-  effect.custom_buff  = crit_buff;
+  effect.cooldown_   = effect.duration();
+  effect.custom_buff = crit_buff;
+
   new dbc_proc_callback_t( effect.player, effect );
 }
 

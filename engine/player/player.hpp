@@ -857,7 +857,7 @@ struct player_t : public actor_t
     // harvester's edict chance to intercept
     double harvesters_edict_intercept_chance = 0.2;
     // Dawn/Duskthread Lining
-    double dawn_dusk_thread_lining_uptime = 0.6;
+    double dawn_dusk_thread_lining_uptime = 0.7;
     // Interval between checking blue_silken_lining_uptime
     timespan_t dawn_dusk_thread_lining_update_interval = 10_s;
     // Standard Deviation of interval

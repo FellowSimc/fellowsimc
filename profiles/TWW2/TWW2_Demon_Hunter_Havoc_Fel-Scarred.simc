@@ -348,7 +348,7 @@ actions.fs_opener+=/death_sweep
 actions.fs_opener+=/annihilation
 actions.fs_opener+=/demons_bite
 
-head=darkfuse_racketeers_tricorne,id=228848,bonus_id=1808,ilevel=684,gem_id=213743
+head=darkfuse_racketeers_tricorne,id=228848,bonus_id=1808,ilevel=684,gem_id=213743,enchant_id=7917
 neck=undermine_mercs_dog_tags,id=232663,bonus_id=8781,ilevel=684,gem_id=213473/213482
 shoulders=feldealers_recycled_reavers,id=229314,ilevel=684
 back=chef_chewies_towel,id=221054,ilevel=684,enchant_id=7403

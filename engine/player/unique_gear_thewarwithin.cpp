@@ -3312,7 +3312,7 @@ struct pickup_entropic_skardyn_core_t : public action_t
 
   bool ready() override
   {
-    return tracker->check();
+    return tracker && tracker->check();
   }
 
   void execute() override

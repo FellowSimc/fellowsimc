@@ -8900,16 +8900,12 @@ void evoker_t::init_special_effects()
         if ( s->target->is_sleeping() )
           return;
 
-        double da = s->result_amount;
-        if ( da > 0 )
-        {
-          auto emp_state       = upheaval_set->get_state();
-          emp_state->target    = s->target;
-          upheaval_set->target = s->target;
-          upheaval_set->snapshot_state( emp_state, upheaval_set->amount_type( emp_state ) );
-          upheaval_set->cast_state( emp_state )->empower = EMPOWER_4;
-          upheaval_set->schedule_execute( emp_state );
-        }
+        auto emp_state       = upheaval_set->get_state();
+        emp_state->target    = s->target;
+        upheaval_set->target = s->target;
+        upheaval_set->snapshot_state( emp_state, upheaval_set->amount_type( emp_state ) );
+        upheaval_set->cast_state( emp_state )->empower = EMPOWER_4;
+        upheaval_set->schedule_execute( emp_state );
       }
     };
 
@@ -8917,6 +8913,7 @@ void evoker_t::init_special_effects()
     auto set_effect          = new special_effect_t( this );
     set_effect->name_str     = util::tokenize_fn( set_spell->name_cstr() );
     set_effect->type         = SPECIAL_EFFECT_EQUIP;
+    set_effect->proc_flags2_ = PF2_ALL_HIT;
     set_effect->spell_id     = set_spell->id();
     special_effects.push_back( set_effect );
 
@@ -8946,15 +8943,11 @@ void evoker_t::init_special_effects()
         if ( s->target->is_sleeping() )
           return;
 
-        double da = s->result_amount;
-        if ( da > 0 )
-        {
-          auto emp_state       = damage_spell->get_state();
-          emp_state->target    = s->target;
-          damage_spell->target = s->target;
-          damage_spell->snapshot_state( emp_state, damage_spell->amount_type( emp_state ) );
-          damage_spell->schedule_execute( emp_state );
-        }
+        auto emp_state       = damage_spell->get_state();
+        emp_state->target    = s->target;
+        damage_spell->target = s->target;
+        damage_spell->snapshot_state( emp_state, damage_spell->amount_type( emp_state ) );
+        damage_spell->schedule_execute( emp_state );
       }
     };
 
@@ -8962,6 +8955,7 @@ void evoker_t::init_special_effects()
     auto set_effect          = new special_effect_t( this );
     set_effect->name_str     = util::tokenize_fn( set_spell->name_cstr() );
     set_effect->type         = SPECIAL_EFFECT_EQUIP;
+    set_effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
     set_effect->spell_id     = set_spell->id();
     special_effects.push_back( set_effect );
 

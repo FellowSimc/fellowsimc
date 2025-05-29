@@ -1121,6 +1121,7 @@ public:
   virtual void init_blizzard_action_list();
   virtual std::vector<std::string> action_names_from_spell_id( unsigned int spell_id ) const;
   virtual std::string aura_expr_from_spell_id( unsigned int spell_id, bool on_self = true ) const;
+  virtual void parse_assisted_combat_step( const assisted_combat_step_data_t& step, action_priority_list_t* assisted_combat );
   virtual std::string parse_assisted_combat_rule( const assisted_combat_rule_data_t& rule,
                                                   const assisted_combat_step_data_t& step ) const;
   virtual void init_gains();

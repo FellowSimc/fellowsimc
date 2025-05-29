@@ -3397,26 +3397,7 @@ void player_t::init_blizzard_action_list()
   cooldowns->add_action( "ancestral_call" );
 
   for ( const auto& step : assisted_combat_step_data_t::data( specialization(), is_ptr() ) )
-  {
-    std::string options = "";
-    std::string rule_str;
-    for ( const auto& rule : assisted_combat_rule_data_t::data( step.id, is_ptr() ) )
-    {
-      std::string rule_str = parse_assisted_combat_rule( rule, step );
-      if ( !rule_str.empty() )
-        options += options.empty() ? rule_str : "&" + rule_str;
-    }
-    for ( const auto& name : action_names_from_spell_id( step.spell_id ) )
-    {
-      if ( !name.empty() )
-      {
-        if ( options.empty() )
-          assisted_combat->add_action( name );
-        else
-          assisted_combat->add_action( name + ",if=" + options );
-      }
-    }
-  }
+    player_t::parse_assisted_combat_step( step, assisted_combat );
 }
 
 std::vector<std::string> player_t::action_names_from_spell_id( unsigned int spell_id ) const
@@ -3470,6 +3451,28 @@ std::string player_t::aura_expr_from_spell_id( unsigned int spell_id, bool on_se
   }
 
   return "debuff." + aura_name;
+}
+
+void player_t::parse_assisted_combat_step( const assisted_combat_step_data_t& step, action_priority_list_t* assisted_combat )
+{
+  std::string options = "";
+  std::string rule_str;
+  for ( const auto& rule : assisted_combat_rule_data_t::data( step.id, is_ptr() ) )
+  {
+    std::string rule_str = parse_assisted_combat_rule( rule, step );
+    if ( !rule_str.empty() )
+      options += options.empty() ? rule_str : "&" + rule_str;
+  }
+  for ( const auto& name : action_names_from_spell_id( step.spell_id ) )
+  {
+    if ( !name.empty() )
+    {
+      if ( options.empty() )
+        assisted_combat->add_action( name );
+      else
+        assisted_combat->add_action( name + ",if=" + options );
+    }
+  }
 }
 
 std::string player_t::parse_assisted_combat_rule( const assisted_combat_rule_data_t& rule,

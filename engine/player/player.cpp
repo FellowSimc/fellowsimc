@@ -3548,11 +3548,11 @@ std::string player_t::parse_assisted_combat_rule( const assisted_combat_rule_dat
         return fmt::format( "{}.ticking", expr_str );
       return fmt::format( "{}.up", expr_str );
     case TARGET_COUNT_NEAR_TARGET_GREATER:
-      assert( v2 == 0 && v3 == 0 );
+      assert( v3 == 0 );
       // TODO: add distance targeting
       return fmt::format( "active_enemies>{}", v1 );
     case TARGET_COUNT_NEAR_PLAYER_GREATER:
-      assert( v2 == 0 && v3 == 0 );
+      assert( v3 == 0 );
       // TODO: add distance targeting
       return fmt::format( "active_enemies>{}", v1 );
     case AURA_COUNT_NEAR_PLAYER_GREATER:

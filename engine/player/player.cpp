@@ -1105,6 +1105,7 @@ player_t::player_t( sim_t* s, player_e t, util::string_view n, race_e r )
     // Actions
     use_default_action_list( false ),
     use_blizzard_action_list( false ),
+    one_button_mode( false ),
     precombat_action_list( 0 ),
     active_action_list(),
     default_action_list(),
@@ -13065,6 +13066,7 @@ void player_t::create_options()
   add_option( opt_string( "modify_action", modify_action ) );
   add_option( opt_string( "use_apl", use_apl ) );
   add_option( opt_bool( "use_blizzard_action_list", use_blizzard_action_list ) );
+  add_option( opt_bool( "one_button_mode", one_button_mode ) );
   add_option( opt_timespan( "reaction_time_mean", reaction.mean ) );
   add_option( opt_timespan( "reaction_time_stddev", reaction.stddev ) );
   add_option( opt_timespan( "reaction_time_nu", reaction_nu ) );

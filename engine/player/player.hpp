@@ -326,6 +326,7 @@ struct player_t : public actor_t
   std::string use_apl;
   bool use_default_action_list;
   bool use_blizzard_action_list;
+  bool one_button_mode;
   auto_dispose< std::vector<dot_t*> > dot_list;
   auto_dispose< std::vector<action_priority_list_t*> > action_priority_list;
   std::vector<action_t*> precombat_action_list;

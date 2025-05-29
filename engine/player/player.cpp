@@ -3396,7 +3396,7 @@ void player_t::init_blizzard_action_list()
   cooldowns->add_action( "ancestral_call" );
 
   for ( const auto& step : assisted_combat_step_data_t::data( specialization(), is_ptr() ) )
-    player_t::parse_assisted_combat_step( step, assisted_combat );
+    parse_assisted_combat_step( step, assisted_combat );
 }
 
 std::vector<std::string> player_t::action_names_from_spell_id( unsigned int spell_id ) const

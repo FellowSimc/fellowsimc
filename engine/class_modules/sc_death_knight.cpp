@@ -22,8 +22,6 @@
 #include "class_modules/apl/apl_death_knight.hpp"
 #include "player/pet_spawner.hpp"
 
-#include <regex>
-
 #include "simulationcraft.hpp"
 
 namespace

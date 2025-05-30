@@ -13876,15 +13876,20 @@ void death_knight_t::init_blizzard_action_list()
   switch ( specialization() )
   {
     case DEATH_KNIGHT_BLOOD:
-      cooldowns->add_action( "dancing_rune_weapon" );
+      cooldowns->add_action( "vampiric_blood" );
+      cooldowns->add_action( "tombstone", "if=buff.bone_shield.stack>5");
+      cooldowns->add_action( "abomination_limb" );
       break;
     case DEATH_KNIGHT_FROST:
-      cooldowns->add_action( "frostwyrms_fury" );
+      cooldowns->add_action( "breath_of_sindragosa", "if=runic_power>60" );
+      cooldowns->add_action( "empower_rune_weapon" );
+      cooldowns->add_action( "abomination_limb" );
       break;
     case DEATH_KNIGHT_UNHOLY:
       cooldowns->add_action( "raise_abomination" );
       cooldowns->add_action( "army_of_the_dead" );
-      cooldowns->add_action( "summon_gargoyle" );
+      cooldowns->add_action( "summon_gargoyle", "if=runic_power>30");
+      cooldowns->add_action( "abomination_limb" );
   }
 }
 

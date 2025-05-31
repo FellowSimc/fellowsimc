@@ -5673,7 +5673,7 @@ struct secret_technique_t : public rogue_attack_t
     {
       aoe = -1;
       full_amount_targets = 1; // 2025-05-30 -- Primary target is not reduced by sqrt scaling
-      reduced_aoe_targets = p->talent.subtlety.secret_technique->effectN( 6 ).base_value();
+      reduced_aoe_targets = p->talent.subtlety.secret_technique->effectN( 6 ).base_value() - 1;
     }
 
     double composite_player_multiplier( const action_state_t* state ) const override

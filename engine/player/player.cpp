@@ -3457,27 +3457,41 @@ std::string player_t::aura_expr_from_spell_id( unsigned int spell_id, bool on_se
 
 void player_t::parse_assisted_combat_step( const assisted_combat_step_data_t& step, action_priority_list_t* assisted_combat )
 {
-  std::string options = "";
-  std::string rule_str;
+  std::string expr = "";
+  std::string base_expr = "";
+  std::string comment = "";
+  bool show_diff = false;
   for ( const auto& rule : assisted_combat_rule_data_t::data( step.id, is_ptr() ) )
   {
-    std::string rule_str = parse_assisted_combat_rule( rule, step );
-    if ( !rule_str.empty() )
-      options += options.empty() ? rule_str : "&" + rule_str;
+    parsed_assisted_combat_rule_t derived_combat_rule = parse_assisted_combat_rule( rule, step );
+    parsed_assisted_combat_rule_t base_combat_rule = player_t::parse_assisted_combat_rule( rule, step );
+
+    if ( !derived_combat_rule.expr.empty() )
+      expr += expr.empty() ? derived_combat_rule.expr : "&" + derived_combat_rule.expr;
+    if ( !derived_combat_rule.comment.empty() )
+      comment += comment.empty() ? derived_combat_rule.comment : ", " + derived_combat_rule.comment;
+    if ( !base_combat_rule.expr.empty() )
+      base_expr += base_expr.empty() ? base_combat_rule.expr : "&" + base_combat_rule.expr;
+
+    show_diff |= derived_combat_rule.show_diff;
   }
+
+  if ( base_expr != expr && show_diff )
+    comment += ( comment.empty() ? ""  : " " ) + fmt::format( "(Overridden from '{}')", base_expr );
+
   for ( const auto& name : action_names_from_spell_id( step.spell_id ) )
   {
     if ( !name.empty() )
     {
-      if ( options.empty() )
-        assisted_combat->add_action( name );
+      if ( expr.empty() )
+        assisted_combat->add_action( name, comment );
       else
-        assisted_combat->add_action( name + ",if=" + options );
+        assisted_combat->add_action( name + ",if=" + expr, comment );
     }
   }
 }
 
-std::string player_t::parse_assisted_combat_rule( const assisted_combat_rule_data_t& rule,
+parsed_assisted_combat_rule_t player_t::parse_assisted_combat_rule( const assisted_combat_rule_data_t& rule,
                                                   const assisted_combat_step_data_t& step ) const
 {
   auto tokenize_spell = [ & ] ( unsigned int spell_id )

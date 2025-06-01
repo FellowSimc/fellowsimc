@@ -10599,7 +10599,7 @@ void static_charge( special_effect_t& effect )
   const spell_data_t* driver      = effect.player->find_spell( titan_disc_effect_e::STATIC_CHARGE );
   const spell_data_t* stat_buff   = driver->effectN( 1 ).trigger();
   const spell_data_t* value_spell = effect.player->find_spell( titan_disc_effect_e::TITAN_DISC_VALUE_SPELL );
-  const double stat_value         = value_spell->effectN( 6 ).average( effect ) / stat_buff->max_stacks();
+  double stat_value         = value_spell->effectN( 5 ).average( effect ) / stat_buff->max_stacks();
 
   effect.name_str     = util::tokenize_fn( driver->name_cstr() );;
   effect.proc_flags2_ = PF2_ALL_CAST;

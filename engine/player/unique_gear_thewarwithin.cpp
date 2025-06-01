@@ -10474,6 +10474,8 @@ enum titan_disc_effect_e
   ELECTRIC_CURRENT       = 1236961,
 };
 
+// Currently doesnt work in game, and is entirely untestable.
+// Implementation is speculative and based on the spell data alone.
 void charged_bolts( special_effect_t& effect )
 {
   if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 7 } )
@@ -10545,7 +10547,7 @@ void critical_chain( special_effect_t& effect )
 
   effect.name_str     = util::tokenize_fn( driver->name_cstr() );
   effect.proc_flags_  = driver->proc_flags() | PF_ALL_DAMAGE;
-  effect.proc_flags2_ = PF2_ALL_HIT;
+  effect.proc_flags2_ = PF2_ALL_CAST;
   effect.ppm_         = driver->_rppm;
   effect.custom_buff =
       create_buff<critical_overload_t>( effect.player, util::tokenize_fn( driver->name_cstr() ), trigger_buff, effect );
@@ -10564,7 +10566,7 @@ void spark_burst( special_effect_t& effect )
 
   effect.name_str     = util::tokenize_fn( driver->name_cstr() );
   effect.proc_flags_  = driver->proc_flags() | PF_ALL_DAMAGE;
-  effect.proc_flags2_ = PF2_ALL_HIT;
+  effect.proc_flags2_ = PF2_ALL_CAST;
   effect.ppm_         = driver->_rppm;
   effect.custom_buff  = create_buff<stat_buff_t>( effect.player, util::tokenize_fn( driver->name_cstr() ), stat_buff )
                            ->add_stat_from_effect_type( A_MOD_RATING, value_spell->effectN( 4 ).average( effect ) );
@@ -10592,8 +10594,6 @@ void static_charge( special_effect_t& effect )
       if ( state && state->target->is_sleeping() )
         return;
 
-      dbc_proc_callback_t::execute( action, state );
-
       buff->decrement();
     }
   };
@@ -10602,9 +10602,8 @@ void static_charge( special_effect_t& effect )
   const spell_data_t* stat_buff   = driver->effectN( 1 ).trigger();
   const spell_data_t* value_spell = effect.player->find_spell( titan_disc_effect_e::TITAN_DISC_VALUE_SPELL );
 
-  effect.name_str     = util::tokenize_fn( driver->name_cstr() );
-  effect.proc_flags_  = driver->proc_flags() | PF_ALL_DAMAGE;
-  effect.proc_flags2_ = PF2_ALL_HIT;
+  effect.name_str     = util::tokenize_fn( driver->name_cstr() );;
+  effect.proc_flags2_ = PF2_ALL_CAST;
   effect.ppm_         = driver->_rppm;
   effect.custom_buff  = create_buff<stat_buff_t>( effect.player, util::tokenize_fn( driver->name_cstr() ), stat_buff )
                            ->add_stat_from_effect_type( A_MOD_RATING, value_spell->effectN( 5 ).average( effect ) )

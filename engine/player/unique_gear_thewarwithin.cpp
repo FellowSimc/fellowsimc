@@ -10551,6 +10551,13 @@ void critical_chain( special_effect_t& effect )
   effect.custom_buff =
       create_buff<critical_overload_t>( effect.player, util::tokenize_fn( driver->name_cstr() ), trigger_buff, effect );
 
+  effect.player->callbacks.register_callback_trigger_function(
+    effect.driver()->id(), dbc_proc_callback_t::trigger_fn_type::CONDITION,
+    [ effect ]( const dbc_proc_callback_t*, action_t*, const action_state_t* )
+    {
+      return !effect.custom_buff->check();
+    } );
+
   new dbc_proc_callback_t( effect.player, effect );
 }
 

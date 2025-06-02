@@ -3170,6 +3170,13 @@ struct ghoul_pet_t final : public base_ghoul_pet_t
     dark_transformation_gain = get_gain( "Dark Transformation" );
   }
 
+  void demise() override
+  {
+    base_ghoul_pet_t::demise();
+    if ( dk()->buffs.dark_transformation->check() )
+      dk()->buffs.dark_transformation->expire();
+  }
+
   void init_action_list() override
   {
     base_ghoul_pet_t::init_action_list();
@@ -3210,6 +3217,7 @@ struct ghoul_pet_t final : public base_ghoul_pet_t
 
     dark_transformation = make_buff( this, "dark_transformation", dk()->talent.unholy.dark_transformation )
                               ->set_duration( 0_ms )  // Handled by the player buff
+                              ->set_cooldown( 0_ms )  // Handled by the action
                               ->set_default_value_from_effect_type( A_MOD_DAMAGE_PERCENT_DONE );
 
     ghoulish_frenzy = make_buff( this, "ghoulish_frenzy", dk()->pet_spell.ghoulish_frenzy )
@@ -5624,32 +5632,39 @@ struct dark_transformation_buff_t final : public death_knight_buff_t
   void start( int stacks, double value, timespan_t duration ) override
   {
     death_knight_buff_t::start( stacks, value, duration );
+
+    pets::ghoul_pet_t* ghoul = p()->pets.ghoul_pet.active_pet();
+
+    ghoul->dark_transformation->trigger();
+
     if ( p()->talent.unholy.ghoulish_frenzy.ok() )
     {
       p()->buffs.ghoulish_frenzy->trigger();
-      p()->pets.ghoul_pet.active_pet()->ghoulish_frenzy->trigger();
+      ghoul->ghoulish_frenzy->trigger();
     }
+
     if ( p()->talent.sanlayn.gift_of_the_sanlayn.ok() )
-    {
       p()->buffs.gift_of_the_sanlayn->trigger();
-    }
   }
 
   void expire_override( int expiration_stacks, timespan_t remaining_duration ) override
   {
     death_knight_buff_t::expire_override( expiration_stacks, remaining_duration );
+
+    pets::ghoul_pet_t* ghoul = p()->pets.ghoul_pet.active_pet();
+
+    if ( ghoul != nullptr )
+    {
+      ghoul->dark_transformation->expire();
+      if ( p()->talent.unholy.ghoulish_frenzy.ok() )
+        ghoul->ghoulish_frenzy->expire();
+    }
+
     if ( p()->talent.unholy.ghoulish_frenzy.ok() )
-    {
       p()->buffs.ghoulish_frenzy->expire();
-      if ( p()->pets.ghoul_pet.active_pet() != nullptr )
-      {
-        p()->pets.ghoul_pet.active_pet()->ghoulish_frenzy->expire();
-      }
-    }
+
     if ( p()->talent.sanlayn.gift_of_the_sanlayn.ok() )
-    {
       p()->buffs.gift_of_the_sanlayn->expire();
-    }
   }
 };
 
@@ -14619,17 +14634,7 @@ void death_knight_t::create_buffs()
   // Unholy
   buffs.dark_transformation =
       make_fallback<dark_transformation_buff_t>( talent.unholy.dark_transformation.ok(), this, "dark_transformation",
-                                                 spell.dark_transformation_player_buff )
-          ->set_stack_change_callback( [ this ]( buff_t*, int, int new_ ) {
-            pets::ghoul_pet_t* ghoul = pets.ghoul_pet.active_pet();
-            if ( ghoul != nullptr )
-            {
-              if ( new_ )
-                ghoul->dark_transformation->trigger();
-              else
-                ghoul->dark_transformation->expire();
-            }
-          } );
+                                                 spell.dark_transformation_player_buff );
 
   buffs.sudden_doom = make_fallback( talent.unholy.sudden_doom.ok(), this, "sudden_doom",
                                      talent.unholy.sudden_doom->effectN( 1 ).trigger() )

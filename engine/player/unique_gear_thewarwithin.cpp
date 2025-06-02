@@ -10703,7 +10703,48 @@ void charged_touch( special_effect_t& effect )
 
 void energy_shield( special_effect_t& effect )
 {
-  // NYI: Tank effect lol
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 1, 7 } )
+    return;
+
+  struct energy_shield_t : public absorb_t
+  {
+    action_t* energy_wave;
+    double energy_wave_mod;
+    energy_shield_t( std::string_view name, special_effect_t& effect )
+      : absorb_t( name, effect.player, effect.player->find_spell( 1236993 ) ),
+        energy_wave( nullptr ),
+        energy_wave_mod( 0.0 )
+    {
+      const spell_data_t* value_spell = player->find_spell( titan_disc_effect_e::TITAN_DISC_VALUE_SPELL );
+      base_dd_min = base_dd_max = value_spell->effectN( 11 ).average( effect );
+      target                    = effect.player;
+      background                = true;
+      harmful                   = false;
+
+      energy_wave =
+          create_proc_action<generic_aoe_proc_t>( "energy_wave", effect, effect.player->find_spell( 1237011 ) );
+      energy_wave_mod = value_spell->effectN( 12 ).percent();
+    }
+
+    absorb_buff_t* create_buff( const action_state_t* s ) override
+    {
+      auto b = absorb_t::create_buff( s );
+
+      b->set_expire_callback( [ this, s ]( buff_t* b, int, timespan_t d ) {
+        // Dont bother executing energy wave if the absorb is entirely consumed
+        if ( d == timespan_t::zero() )
+        {
+          energy_wave->base_dd_min = energy_wave->base_dd_max = b->current_value * energy_wave_mod;
+          energy_wave->execute();
+        }
+      } );
+
+      return b;
+    }
+  };
+
+  effect.execute_action = new energy_shield_t( util::tokenize_fn( effect.driver()->name_cstr() ), effect );
+  new dbc_proc_callback_t( effect.player, effect );
 }
 
 void charged_crystal( special_effect_t& effect )

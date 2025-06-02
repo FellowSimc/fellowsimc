@@ -1939,6 +1939,7 @@ class SpellDataGenerator(DataGenerator):
           ( 326982, 0 ), # Unending Thirst
           ( 425721, 0 ), # T31 Blood 2pc buff
           ( 377445, 0 ), # Unholy Aura debuff
+          ( 1235391, 0 ), # Dark Transformation player buff
           # The War Within
           ( 290577, 0 ), # Abomiantion Disease Cloud
           ( 439539, 0 ), # Icy Death Torrent Damage

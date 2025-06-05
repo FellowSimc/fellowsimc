@@ -1073,6 +1073,7 @@ public:
   void init_blizzard_action_list() override;
   parsed_assisted_combat_rule_t parse_assisted_combat_rule( const assisted_combat_rule_data_t& rule, const assisted_combat_step_data_t& step ) const override;
   std::vector<std::string> action_names_from_spell_id( unsigned int spell_id ) const override;
+  void parse_assisted_combat_step( const assisted_combat_step_data_t& step, action_priority_list_t* assisted_combat ) override;
   void init_special_effects() override;
   void init_finished() override;
   void reset() override;
@@ -9058,6 +9059,10 @@ void hunter_t::init_action_list()
 
 void hunter_t::init_blizzard_action_list()
 {
+  action_priority_list_t* default_ = get_action_priority_list( "default" );
+  // Added before generating the other action lists so its always the highest priority and gets executed at the start of combat.
+  default_->add_action( specialization() == HUNTER_SURVIVAL ? "auto_attack" : "auto_shot" );
+
   player_t::init_blizzard_action_list();
 
   action_priority_list_t* precombat = get_action_priority_list( "precombat" );
@@ -9070,10 +9075,6 @@ void hunter_t::init_blizzard_action_list()
       precombat->add_action( "summon_pet" );
       break;
   }
-
-
-  action_priority_list_t* default_ = get_action_priority_list( "default" );
-  default_->add_action( specialization() == HUNTER_SURVIVAL ? "auto_attack" : "auto_shot" );
 
   action_priority_list_t* cooldowns = get_action_priority_list( "cooldowns" );
   switch ( specialization() )
@@ -9108,6 +9109,17 @@ std::vector<std::string> hunter_t::action_names_from_spell_id( unsigned int spel
   }
 
   return player_t::action_names_from_spell_id( spell_id );
+}
+
+void hunter_t::parse_assisted_combat_step( const assisted_combat_step_data_t& step, action_priority_list_t* assisted_combat )
+{
+  // Revive Pet is not an action relevant for SimC, so we don't add it to the assisted combat list.
+  if ( step.spell_id == 982 )
+  {
+    return;
+  }
+
+  return player_t::parse_assisted_combat_step( step, assisted_combat );
 }
 
 void hunter_t::init_special_effects()

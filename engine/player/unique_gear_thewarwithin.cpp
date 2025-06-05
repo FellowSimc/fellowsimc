@@ -10489,7 +10489,7 @@ void charged_bolts( special_effect_t& effect )
       : buff_t( player, name, effect.driver()->effectN( 1 ).trigger() ), damage( nullptr )
     {
       const spell_data_t* damage_spell_data  = effect.driver()->effectN( 1 ).trigger()->effectN( 1 ).trigger();
-      const spell_data_t* tooltip_spell_data = player->find_spell( 1236108 );
+      const spell_data_t* tooltip_spell_data = player->find_spell( 1241244 );
       const spell_data_t* value_spell_data   = player->find_spell( titan_disc_effect_e::TITAN_DISC_VALUE_SPELL );
 
       damage = create_proc_action<generic_proc_t>( util::tokenize_fn( damage_spell_data->name_cstr() ), effect,
@@ -10607,9 +10607,8 @@ void static_charge( special_effect_t& effect )
   const spell_data_t* stat_buff   = driver->effectN( 1 ).trigger();
   const spell_data_t* value_spell = effect.player->find_spell( titan_disc_effect_e::TITAN_DISC_VALUE_SPELL );
 
-  effect.name_str     = util::tokenize_fn( driver->name_cstr() );;
+  effect.name_str     = util::tokenize_fn( driver->name_cstr() );
   effect.proc_flags2_ = PF2_ALL_CAST;
-  effect.ppm_         = driver->_rppm;
   effect.custom_buff  = create_buff<stat_buff_t>( effect.player, util::tokenize_fn( driver->name_cstr() ), stat_buff )
                            ->add_stat_from_effect_type( A_MOD_RATING, value_spell->effectN( 5 ).average( effect ) )
                            ->set_reverse( true )
@@ -10763,7 +10762,7 @@ void charged_crystal( special_effect_t& effect )
       create_proc_action<generic_aoe_proc_t>( util::tokenize_fn( trigger->name_cstr() ), effect, trigger );
   effect.execute_action->base_dd_min = effect.execute_action->base_dd_max =
       value_spell->effectN( 13 ).average( effect );
-  // effect.execute_action->base_multiplier *= role_mult( effect.player, effect.player->find_spell( 1236135 ) );
+  effect.execute_action->base_multiplier *= role_mult( effect.player, effect.player->find_spell( 1241240 ) );
 
   new dbc_proc_callback_t( effect.player, effect );
 }

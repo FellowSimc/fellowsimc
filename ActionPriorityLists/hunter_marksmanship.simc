@@ -42,9 +42,10 @@ actions.st+=/explosive_shot,if=talent.precision_detonation&set_bonus.thewarwithi
 actions.st+=/aimed_shot,if=talent.precision_detonation&set_bonus.thewarwithin_season_2_4pc&(buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up)&buff.lock_and_load.up
 # For Double Tap, lower Volley in priority until Trueshot has already triggered Double Tap.
 actions.st+=/volley,if=talent.double_tap&buff.double_tap.down
-# Kill Shot/Black Arrow become the primary Precise Shot spenders for Headshot builds. For all Precise Shot spenders, skip to Aimed Shot if both Spotter's Mark and Moving Target are already up.
-actions.st+=/black_arrow,target_if=min:dot.black_arrow_dot.ticking|max_prio_damage,if=talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)|!talent.headshot&buff.razor_fragments.up
-actions.st+=/kill_shot,target_if=max:debuff.spotters_mark.down|action.aimed_shot.in_flight_to_target|max_prio_damage,if=talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)|!talent.headshot&buff.razor_fragments.up
+# Black Arrow becomes the primary Precise Shot spenders for Headshot builds. For all Precise Shot spenders, skip to Aimed Shot if both Spotter's Mark and Moving Target are already up.
+actions.st+=/kill_shot,target_if=min:dot.black_arrow_dot.ticking|max_prio_damage,if=talent.black_arrow&(talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)|!talent.headshot&buff.razor_fragments.up)
+# Kill Shot becomes the primary Precise Shot spenders for Headshot builds. For all Precise Shot spenders, skip to Aimed Shot if both Spotter's Mark and Moving Target are already up.
+actions.st+=/kill_shot,target_if=max:debuff.spotters_mark.down|action.aimed_shot.in_flight_to_target|max_prio_damage,if=!talent.black_arrow&(talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)|!talent.headshot&buff.razor_fragments.up)
 # With either Symphonic Arsenal or Small Game Hunter, Multi-Shot can be used as the Precise Shots spender on 2 targets without Aspect of the Hydra.
 actions.st+=/multishot,target_if=max:debuff.spotters_mark.down|action.aimed_shot.in_flight_to_target|max_prio_damage,if=buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)&active_enemies>1&!talent.aspect_of_the_hydra&(talent.symphonic_arsenal|talent.small_game_hunter)
 actions.st+=/arcane_shot,target_if=max:debuff.spotters_mark.down|action.aimed_shot.in_flight_to_target|max_prio_damage,if=buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)
@@ -55,7 +56,7 @@ actions.st+=/rapid_fire,if=(!hero_tree.sentinel|buff.lunar_storm_cooldown.remain
 # Aimed Shot if we've spent Precise Shots to trigger Spotter's Mark and Moving Target. With No Scope this means Precise Shots could be up when Aimed Shot is cast.
 actions.st+=/aimed_shot,target_if=max:debuff.spotters_mark.up|max_prio_damage,if=buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up
 actions.st+=/explosive_shot,if=!set_bonus.thewarwithin_season_2_4pc|!talent.precision_detonation
-actions.st+=/black_arrow,if=!talent.headshot
+actions.st+=/kill_shot,if=talent.black_arrow&!talent.headshot
 # Steady Shot is our only true filler due to the Aimed Shot cdr.
 actions.st+=/steady_shot
 
@@ -66,7 +67,7 @@ actions.trickshots+=/multishot,target_if=max:debuff.spotters_mark.down|action.ai
 # For Double Tap, lower Volley in priority until Trueshot has already triggered Double Tap.
 actions.trickshots+=/volley,if=talent.double_tap&buff.double_tap.down
 # Always cast Black Arrow with Trick Shots up for Bleak Powder.
-actions.trickshots+=/black_arrow,if=buff.trick_shots.up
+actions.trickshots+=/kill_shot,if=talent.black_arrow&buff.trick_shots.up
 # Prioritize Aimed Shot a bit higher than Rapid Fire if it's close to charge capping and Bulletstorm is up.
 actions.trickshots+=/aimed_shot,if=(buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up)&buff.trick_shots.up&buff.bulletstorm.up&full_recharge_time<gcd
 # With Sentinel, hold Rapid Fire for up to 1/3 of its cooldown to trigger Lunar Storm as soon as possible.

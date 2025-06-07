@@ -9703,7 +9703,7 @@ struct thunderlords_crackling_citrine_t : public damage_citrine_t
   thunderlords_crackling_citrine_t( const special_effect_t& e )
     : damage_citrine_t( e, "thunderlords_crackling_citrine", 462951, THUNDERLORDS_CRACKLING_CITRINE )
   {
-    base_dd_min = base_dd_max = cyrce_driver->effectN( 1 ).average( e ) * driver_spell->effectN( 2 ).percent();
+    base_dd_min = base_dd_max = driver_spell->effectN( 1 ).average( e ) * cyrce_driver->effectN( 3 ).percent();
   }
 };
 
@@ -9712,7 +9712,7 @@ struct undersea_overseers_citrine_t : public damage_citrine_t
   undersea_overseers_citrine_t( const special_effect_t& e )
     : damage_citrine_t( e, "undersea_overseers_citrine", 462953, UNDERSEA_OVERSEERS_CITRINE )
   {
-    base_dd_min = base_dd_max = cyrce_driver->effectN( 1 ).average( e ) * driver_spell->effectN( 2 ).percent();
+    base_dd_min = base_dd_max = driver_spell->effectN( 1 ).average( e ) * cyrce_driver->effectN( 3 ).percent();
   }
 };
 
@@ -9721,7 +9721,7 @@ struct squall_sailors_citrine_t : public damage_citrine_t
   squall_sailors_citrine_t( const special_effect_t& e )
     : damage_citrine_t( e, "squall_sailors_citrine", 462952, SQUALL_SAILORS_CITRINE )
   {
-    base_dd_min = base_dd_max = cyrce_driver->effectN( 1 ).average( e ) * driver_spell->effectN( 2 ).percent();
+    base_dd_min = base_dd_max = driver_spell->effectN( 1 ).average( e ) * cyrce_driver->effectN( 3 ).percent();
   }
 };
 
@@ -9730,7 +9730,7 @@ struct seabed_leviathans_citrine_t : public damage_citrine_t
   seabed_leviathans_citrine_t( const special_effect_t& e )
     : damage_citrine_t( e, "seabed_leviathans_citrine", 468990, SEABED_LEVIATHANS_CITRINE )
   {
-    base_dd_min = base_dd_max = cyrce_driver->effectN( 1 ).average( e ) * driver_spell->effectN( 5 ).percent();
+    base_dd_min = base_dd_max = driver_spell->effectN( 1 ).average( e ) * cyrce_driver->effectN( 3 ).percent();
   }
 };
 
@@ -9739,7 +9739,7 @@ struct mariners_hallowed_citrine_t : public heal_citrine_t
   mariners_hallowed_citrine_t( const special_effect_t& e )
     : heal_citrine_t( e, "mariners_hallowed_citrine", 462960, MARINERS_HALLOWED_CITRINE )
   {
-    base_dd_min = base_dd_max = cyrce_driver->effectN( 1 ).average( e ) * driver_spell->effectN( 2 ).percent();
+    base_dd_min = base_dd_max = driver_spell->effectN( 1 ).average( e ) * cyrce_driver->effectN( 3 ).percent();
   }
 };
 
@@ -9748,7 +9748,7 @@ struct old_salts_bardic_citrine_t : public heal_citrine_t
   old_salts_bardic_citrine_t( const special_effect_t& e )
     : heal_citrine_t( e, "old_salts_bardic_citrine", 462959, OLD_SALTS_BARDIC_CITRINE )
   {
-    base_td = cyrce_driver->effectN( 1 ).average( e ) * driver_spell->effectN( 2 ).percent() / 6;
+    base_td = driver_spell->effectN( 1 ).average( e ) * cyrce_driver->effectN( 3 ).percent() / 6;
   }
 };
 
@@ -9999,8 +9999,7 @@ struct windsingers_runed_citrine_proc_t : public generic_proc_t
     const spell_data_t* buff_driver = e.player->find_spell( WINDSINGERS_RUNED_CITRINE );
     const spell_data_t* buff_spell = e.player->find_spell( 465963 );
     const spell_data_t* cyrce_driver = e.player->find_spell( CYRCES_CIRCLET );
-    double stat_value = cyrce_driver->effectN( 2 ).average( e ) * buff_driver->effectN( 2 ).percent() /
-      cyrce_driver->effectN( 3 ).base_value() * cyrce_driver->effectN( 5 ).base_value() / 3;
+    double stat_value = buff_driver->effectN( 1 ).average( e ) * cyrce_driver->effectN( 5 ).percent() / 3;
 
     create_all_stat_buffs<stat_buff_current_value_t>( e, buff_spell, stat_value,
                                                       [ &, stat_value ]( stat_e s, buff_t* b )
@@ -10086,8 +10085,7 @@ struct seabed_leviathans_citrine_proc_buff_t : stat_buff_current_value_t
   {
     const spell_data_t* cyrce_driver = effect.player->find_spell( CYRCES_CIRCLET );
     auto buff_driver                 = effect.player->find_spell( SEABED_LEVIATHANS_CITRINE );
-    double stat_value = cyrce_driver->effectN( 2 ).average( effect ) * buff_driver->effectN( 2 ).percent() /
-                        cyrce_driver->effectN( 3 ).base_value() * cyrce_driver->effectN( 5 ).base_value() / 3;
+    double stat_value = buff_driver->effectN( 1 ).average( effect ) * cyrce_driver->effectN( 5 ).percent() / 3;
 
     default_value = stat_value;
 
@@ -10135,8 +10133,7 @@ buff_t* create_citrine_proc_buff( const special_effect_t& effect, singing_citrin
       const spell_data_t* buff_driver  = effect.player->find_spell( driver );
       const spell_data_t* buff_spell   = effect.player->find_spell( 465961 );
       const spell_data_t* cyrce_driver = effect.player->find_spell( CYRCES_CIRCLET );
-      double stat_value = cyrce_driver->effectN( 2 ).average( effect ) * buff_driver->effectN( 2 ).percent() /
-                          cyrce_driver->effectN( 3 ).base_value() * cyrce_driver->effectN( 5 ).base_value() / 3;
+      double stat_value = buff_driver->effectN( 1 ).average( effect ) * cyrce_driver->effectN( 5 ).percent() / 3;
 
       buff_t* buff =
           create_buff<stat_buff_current_value_t>( effect.player, "stormbringers_runed_citrine_proc", buff_spell )
@@ -10149,8 +10146,7 @@ buff_t* create_citrine_proc_buff( const special_effect_t& effect, singing_citrin
       const spell_data_t* buff_driver  = effect.player->find_spell( driver );
       const spell_data_t* buff_spell   = effect.player->find_spell( 465962 );
       const spell_data_t* cyrce_driver = effect.player->find_spell( CYRCES_CIRCLET );
-      double stat_value = cyrce_driver->effectN( 2 ).average( effect ) * buff_driver->effectN( 2 ).percent() /
-                          cyrce_driver->effectN( 3 ).base_value() * cyrce_driver->effectN( 5 ).base_value() / 3;
+      double stat_value = buff_driver->effectN( 1 ).average( effect ) * cyrce_driver->effectN( 5 ).percent() / 3;
 
       buff_t* buff =
           create_buff<stat_buff_current_value_t>( effect.player, "fathomdwellers_runed_citrine_proc", buff_spell )
@@ -10248,8 +10244,7 @@ void storm_sewers_citrine( special_effect_t& effect )
 void windsingers_runed_citrine( special_effect_t& effect )
 {
   auto cyrce_driver = effect.player->find_spell( CYRCES_CIRCLET );
-  auto stat_value   = ( cyrce_driver->effectN( 2 ).average( effect ) / cyrce_driver->effectN( 3 ).base_value() ) *
-                    effect.driver()->effectN( 2 ).percent() * ( cyrce_driver->effectN( 5 ).base_value() / 3 );
+  auto stat_value   = effect.driver()->effectN( 1 ).average( effect ) * cyrce_driver->effectN( 5 ).percent() / 3;
 
   std::unordered_map<stat_e, buff_t*> buffs;
 
@@ -10290,8 +10285,7 @@ void windsingers_runed_citrine( special_effect_t& effect )
 void fathomdwellers_runed_citrine( special_effect_t& effect )
 {
   auto cyrce_driver = effect.player->find_spell( CYRCES_CIRCLET );
-  auto stat_value   = cyrce_driver->effectN( 2 ).average( effect ) * effect.driver()->effectN( 2 ).percent() /
-                    cyrce_driver->effectN( 3 ).base_value() * cyrce_driver->effectN( 5 ).base_value() / 3;
+  auto stat_value   = effect.driver()->effectN( 1 ).average( effect ) * cyrce_driver->effectN( 5 ).percent() / 3;
 
   auto buff = create_buff<stat_buff_t>( effect.player, "fathomdwellers_runed_citrine", effect.driver() )
                   ->add_stat_from_effect( 1, stat_value );
@@ -10403,8 +10397,7 @@ void legendary_skippers_citrine( special_effect_t& effect )
 void stormbringers_runed_citrine( special_effect_t& effect )
 {
   auto cyrce_driver = effect.player->find_spell( CYRCES_CIRCLET );
-  auto stat_value   = ( cyrce_driver->effectN( 2 ).average( effect ) / cyrce_driver->effectN( 3 ).base_value() ) *
-                    effect.driver()->effectN( 2 ).percent() * ( cyrce_driver->effectN( 5 ).base_value() / 3 );
+  auto stat_value = effect.driver()->effectN( 1 ).average( effect ) * cyrce_driver->effectN( 5 ).percent() / 3;
 
   auto buff = create_buff<stat_buff_current_value_t>( effect.player, "stormbringers_runed_citrine", effect.driver() )
                   ->add_stat_from_effect( 1, stat_value )
@@ -10440,8 +10433,7 @@ void seabed_leviathans_citrine( special_effect_t& effect )
   new dbc_proc_callback_t( effect.player, effect );
 
   auto cyrce_driver = effect.player->find_spell( CYRCES_CIRCLET );
-  auto stat_value   = cyrce_driver->effectN( 2 ).average( effect ) * effect.driver()->effectN( 2 ).percent() /
-                    cyrce_driver->effectN( 3 ).base_value() * cyrce_driver->effectN( 5 ).base_value() / 3;
+  auto stat_value   = effect.driver()->effectN( 1 ).average( effect ) * cyrce_driver->effectN( 5 ).percent() / 3;
 
   auto buff = create_buff<stat_buff_current_value_t>( effect.player, "seabed_leviathans_citrine", effect.driver() )
                   ->set_stat_from_effect_type( A_MOD_STAT, stat_value )

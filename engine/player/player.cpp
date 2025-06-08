@@ -3512,6 +3512,9 @@ parsed_assisted_combat_rule_t player_t::parse_assisted_combat_rule( const assist
   auto v2 = rule.condition_value_2;
   auto v3 = rule.condition_value_3;
   std::string expr_str;
+  std::string expr_str_2;
+  std::string expr_str_3;
+  bool has_or;
   // TODO: verify < vs <= and > vs >= on all condition types
   switch ( rule.condition_type )
   {
@@ -3556,12 +3559,37 @@ parsed_assisted_combat_rule_t player_t::parse_assisted_combat_rule( const assist
       assert( v2 == 0 && v3 == 0 );
       return fmt::format( "target.health.pct<={}", v1 );
     case AURA_ON_PLAYER:
-      assert( v2 == 0 && v3 == 0 );
-      expr_str = aura_expr_from_spell_id( v1, true );
       // TODO: Are there any cases where a passive here would not be a talent?
-      if ( expr_str.find( "talent." ) == 0 )
-        return expr_str;
-      return fmt::format( "{}.up", expr_str );
+      expr_str   = v1 ? aura_expr_from_spell_id( v1, true ) : "";
+      expr_str_2 = v2 ? aura_expr_from_spell_id( v2, true ) : "";
+      expr_str_3 = v3 ? aura_expr_from_spell_id( v3, true ) : "";
+      if ( v1 && !expr_str.find( "talent." ) == 0 )
+        expr_str += ".up";
+      if ( v2 && !expr_str_2.find( "talent." ) == 0 )
+        expr_str_2 += ".up";
+      if ( v3 && !expr_str_3.find( "talent." ) == 0 )
+        expr_str_3 += ".up";
+      if ( v2 )
+      {
+        if ( !expr_str.empty() )
+        {
+          expr_str += "|";
+          has_or = true;
+        }
+        expr_str += expr_str_2;
+      }
+      if ( v3 )
+      {
+        if ( !expr_str.empty() )
+        {
+          expr_str += "|";
+          has_or = true;
+        }
+        expr_str += expr_str_3;
+      }
+      if ( has_or )
+        return fmt::format( "({})", expr_str );
+      return expr_str;
     case AURA_ON_TARGET:
       assert( v2 == 0 && v3 == 0 );
       expr_str = aura_expr_from_spell_id( v1, false );

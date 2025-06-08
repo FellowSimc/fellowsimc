@@ -1705,6 +1705,7 @@ public:
     double average_cs_travel_time      = 0.4;
     timespan_t first_ams_cast          = 20_s;
     double horsemen_ams_absorb_percent = 0.6;
+    bool rm_reset_psuedo_random        = false;
   } options;
 
   // Runes
@@ -6673,14 +6674,25 @@ struct exterminate_t final : public death_knight_spell_t
   exterminate_t( std::string_view name, death_knight_t* p )
     : death_knight_spell_t( name, p, p->spell.exterminate_damage ),
       second_hit( get_action<exterminate_aoe_t>( name_str + "_second_hit", p ) ),
-      mark_proc_chance( p->talent.deathbringer.exterminate->effectN( 2 ).percent() )
+      mark_proc_chance( 0.0 ),
+      reset_attempts( 0 )
   {
     background              = true;
     cooldown->duration      = 0_ms;
     const int effect_idx    = p->specialization() == DEATH_KNIGHT_FROST ? 2 : 1;
     attack_power_mod.direct = data().effectN( effect_idx ).ap_coeff();
+    if ( p->options.rm_reset_psuedo_random )
+      mark_proc_chance = p->pseudo_random_c_from_p( p->talent.deathbringer.exterminate->effectN( 2 ).percent() );
+    else
+      mark_proc_chance = p->talent.deathbringer.exterminate->effectN( 2 ).percent();
 
     add_child( second_hit );
+  }
+
+  void reset() override
+  {
+    death_knight_spell_t::reset();
+    reset_attempts = 0;
   }
 
   void execute() override
@@ -6688,10 +6700,22 @@ struct exterminate_t final : public death_knight_spell_t
     death_knight_spell_t::execute();
 
     buff_t* rm = get_td( execute_state->target )->debuff.reapers_mark;
-    if ( !rm->up() && p()->rng().roll( mark_proc_chance ) )
+    if ( p()->options.rm_reset_psuedo_random )
     {
-      rm->trigger();
-      p()->procs.exterminate_reapers_mark->occur();
+      if ( !rm->up() && p()->rng().roll( mark_proc_chance * ++reset_attempts ) )
+      {
+        rm->trigger();
+        p()->procs.exterminate_reapers_mark->occur();
+        reset_attempts = 0;
+      }
+    }
+    else
+    {
+      if ( !rm->up() && p()->rng().roll( mark_proc_chance ) )
+      {
+        rm->trigger();
+        p()->procs.exterminate_reapers_mark->occur();
+      }
     }
 
     make_event<delayed_execute_event_t>( *sim, p(), second_hit, execute_state->target, 500_ms );
@@ -6700,6 +6724,7 @@ struct exterminate_t final : public death_knight_spell_t
 private:
   action_t* second_hit;
   double mark_proc_chance;
+  int reset_attempts;
 };
 
 struct reapers_mark_explosion_t final : public death_knight_spell_t
@@ -11623,6 +11648,7 @@ void death_knight_t::create_options()
   add_option(
       opt_timespan( "deathknight.first_ams_cast", options.first_ams_cast, timespan_t::zero(), timespan_t::max() ) );
   add_option( opt_float( "deathknight.horsemen_ams_absorb_percent", options.horsemen_ams_absorb_percent, 0.0, 1.0 ) );
+  add_option( opt_bool( "deathknight.rm_reset_psuedo_random", options.rm_reset_psuedo_random ) );
 }
 
 void death_knight_t::copy_from( player_t* source )

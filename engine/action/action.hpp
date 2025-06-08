@@ -242,6 +242,9 @@ public:
   /// True if ability should be used while casting another spell.
   bool use_while_casting;
 
+  /// True if the Ability should receive the one button GCD penalty.
+  bool can_have_one_button_penalty;
+
   /// True if ability is usable while casting another spell
   bool usable_while_casting;
 

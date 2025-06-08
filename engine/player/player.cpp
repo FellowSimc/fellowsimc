@@ -3487,9 +3487,9 @@ void player_t::parse_assisted_combat_step( const assisted_combat_step_data_t& st
     if ( !name.empty() )
     {
       if ( expr.empty() )
-        assisted_combat->add_action( name, comment );
+        assisted_combat->add_action( name + ",can_have_one_button_penalty=1", comment );
       else
-        assisted_combat->add_action( name + ",if=" + expr, comment );
+        assisted_combat->add_action( name + ",can_have_one_button_penalty=1,if=" + expr, comment );
     }
   }
 }

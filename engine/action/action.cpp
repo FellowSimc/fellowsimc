@@ -562,6 +562,7 @@ action_t::action_t( action_e ty, util::string_view token, player_t* p, const spe
   add_option( opt_bool( "interrupt_immediate", option.interrupt_immediate ) );
   add_option( opt_bool( "use_off_gcd", use_off_gcd ) );
   add_option( opt_bool( "use_while_casting", use_while_casting ) );
+  add_option( opt_bool( "can_have_one_button_penalty", can_have_one_button_penalty ) );
 }
 
 action_t::~action_t()
@@ -1218,7 +1219,7 @@ timespan_t action_t::gcd() const
   }
 
   // TODO: Figure out how this works for spells with cast times.
-  if ( gcd_ != timespan_t::zero() && player->is_player() && player->one_button_mode )
+  if ( gcd_ != timespan_t::zero() && player->is_player() && player->one_button_mode && can_have_one_button_penalty )
     gcd_ *= 1.0 + player->single_button_assistant->effectN( 1 ).percent();
 
   return gcd_;

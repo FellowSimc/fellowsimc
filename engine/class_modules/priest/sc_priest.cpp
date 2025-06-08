@@ -4358,7 +4358,7 @@ void priest_t::parse_assisted_combat_step( const assisted_combat_step_data_t& st
     std::string name = blizzard_apl_action_replace( options );
     if ( name != "" )
     {
-      assisted_combat->add_action( name + ",if=" + options, comment );
+      assisted_combat->add_action( name + "can_have_one_button_penalty=1,if=" + options, comment );
       return;
     }
   }
@@ -4368,9 +4368,9 @@ void priest_t::parse_assisted_combat_step( const assisted_combat_step_data_t& st
     if ( !name.empty() )
     {
       if ( options.empty() )
-        assisted_combat->add_action( name, comment );
+        assisted_combat->add_action( name + ",can_have_one_button_penalty=1", comment);
       else
-        assisted_combat->add_action( name + ",if=" + options, comment );
+        assisted_combat->add_action( name + ",can_have_one_button_penalty=1,if=" + options, comment );
     }
   }
 }

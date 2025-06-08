@@ -10741,7 +10741,7 @@ struct scourge_strike_t final : public wound_spender_base_t
     {
       background = true;  // Prevent executing this through the APL with Clawing Shadows talented
     }
-    if ( p->talent.sanlayn.vampiric_strike.ok() )
+    if ( p->talent.sanlayn.vampiric_strike.ok() && !p->talent.unholy.clawing_shadows.ok() )
     {
       vampiric_strike      = new vampiric_strike_unholy_t( "vampiric_strike", p );
       vampiric_strike_cost = p->spell.vampiric_strike->cost( POWER_RUNE );

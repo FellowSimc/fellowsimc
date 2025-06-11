@@ -7869,7 +7869,6 @@ action_t* hunter_t::create_action( util::string_view name, util::string_view opt
   using namespace spells;
 
   if ( name == "aimed_shot"            ) return new             aimed_shot_t( this, options_str );
-  if ( name == "arcane_shot"           ) return new            arcane_shot_t( this, options_str );
   if ( name == "aspect_of_the_eagle"   ) return new    aspect_of_the_eagle_t( this, options_str );
   if ( name == "auto_attack"           ) return new   actions::auto_attack_t( this, options_str );
   if ( name == "auto_shot"             ) return new   actions::auto_attack_t( this, options_str );
@@ -7903,6 +7902,16 @@ action_t* hunter_t::create_action( util::string_view name, util::string_view opt
   if ( name == "trueshot"              ) return new               trueshot_t( this, options_str );
   if ( name == "volley"                ) return new                 volley_t( this, options_str );
   if ( name == "wildfire_bomb"         ) return new          wildfire_bomb_t( this, options_str );
+
+  // Blizzard refers to Cobra Shot as Arcane Shot in their Assisted Combat system. 
+  // We should consider if we want to do the same in the APL where we only allow 'arcane_shot' to be used for both spells.
+  if ( name == "arcane_shot" )
+  {
+    if ( talents.cobra_shot.ok() )
+      return new cobra_shot_t( this, options_str );
+    else
+      return new arcane_shot_t( this, options_str );
+  }
 
   if ( name == "kill_shot" )
   {
@@ -8374,8 +8383,8 @@ void hunter_t::init_spells()
 
   specs.auto_shot            = find_spell( 75 );
   specs.freezing_trap        = find_class_spell( "Freezing Trap" );
-  specs.arcane_shot          = find_class_spell( "Arcane Shot" );
-  specs.steady_shot          = find_class_spell( "Steady Shot" );
+  specs.arcane_shot          = talents.cobra_shot.ok() ? spell_data_t::not_found() : find_class_spell( "Arcane Shot" );
+  specs.steady_shot          = talents.pack_tactics.ok() ?  spell_data_t::not_found() : find_class_spell( "Steady Shot" );
   specs.steady_shot_energize = find_spell( 77443 );
   specs.flare                = find_class_spell( "Flare" );
   specs.call_pet             = find_spell( 883 );

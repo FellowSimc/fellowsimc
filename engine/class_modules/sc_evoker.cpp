@@ -8343,6 +8343,8 @@ void evoker_t::init_blizzard_action_list()
       cooldowns->add_action( "use_items,if=buff.dragonrage.up|!talent.dragonrage|cooldown.dragonrage.remains>20" );
       break;
     case EVOKER_AUGMENTATION:
+      cooldowns->add_action( "prescience,use_auto=1,if=cooldown.breath_of_eons.up&talent.breath_of_eons" );
+      cooldowns->add_action( "ebon_might,if=cooldown.breath_of_eons.up&talent.breath_of_eons" );
       cooldowns->add_action( "breath_of_eons" );
       cooldowns->add_action( "deep_breath" );
       cooldowns->add_action( "tip_the_scales" );

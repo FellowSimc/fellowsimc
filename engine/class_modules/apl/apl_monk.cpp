@@ -917,7 +917,6 @@ void monk_t::init_blizzard_action_list()
       break;
     case MONK_WINDWALKER:
       cooldowns->add_action( "invoke_xuen_the_white_tiger" );
-      cooldowns->add_action( "celestial_conduit,if=cooldown.strike_of_the_windlord.remains" );
       break;
     default:
       assert( false );
@@ -953,6 +952,10 @@ parsed_assisted_combat_rule_t monk_t::parse_assisted_combat_rule( const assisted
                  true };
     }
   }
+
+  if ( rule.condition_type == TARGET_COUNT_NEAR_PLAYER_GREATER && rule.condition_value_1 == 1 &&
+       rule.condition_value_2 == 15 )
+    return { "1", "Counts valid targets for action, including player." };
 
   return base_t::parse_assisted_combat_rule( rule, step );
 }

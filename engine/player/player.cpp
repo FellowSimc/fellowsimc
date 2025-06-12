@@ -3806,7 +3806,19 @@ parsed_assisted_combat_rule_t player_t::parse_assisted_combat_rule( const assist
       assert( v2 == 0 && v3 == 0 );
       return fmt::format( "pain<={}", v1 );
     case SPELL_CHARGES_GREATER:
-      assert( v2 == 0 && v3 == 0 );
+      assert( v3 == 0 );
+      if ( v2 != 0 )
+      {
+        assisted_combat_rule_data_t fixed_rule = rule;
+        fixed_rule.condition_value_2 = 0;
+        auto result = player_t::parse_assisted_combat_rule( fixed_rule, step );
+        if ( v1 )
+          result.comment = fmt::format( "This checks for charges>={} instead of the intended action.{}.charges>={}.",
+                                        v1, tokenize_spell( v1 ), v2 );
+        else
+          result.comment = fmt::format( "This checks for charges>={} instead of the intended charges>={}.", v1, v2 );
+        return result;
+      }
       return fmt::format( "charges>={}", v1 );
     case SPELL_CHARGES_LESS:
       assert( v2 == 0 && v3 == 0 );

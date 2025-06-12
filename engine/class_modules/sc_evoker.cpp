@@ -5178,7 +5178,7 @@ struct firestorm_t : public evoker_spell_t
 
     if ( duration > 0_s && tick_period > 0_s )
     {
-      auto total_ticks = as<int>( std::floor( duration / tick_period ) );
+      auto total_ticks = as<int>( std::floor( duration / tick_period ) + 1);
 
       make_event<ground_aoe_event_t>(
           *sim, p(),

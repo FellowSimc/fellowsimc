@@ -3450,7 +3450,7 @@ std::string player_t::aura_expr_from_spell_id( unsigned int spell_id, bool on_se
     return "buff." + aura_name;
   }
 
-  for ( auto e : spell->effects() )
+  for ( const auto& e : spell->effects() )
   {
     for ( auto a : { A_PERIODIC_DAMAGE, A_PERIODIC_LEECH } )
     {

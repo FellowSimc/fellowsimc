@@ -1382,7 +1382,13 @@ struct evoker_t : public player_t
   void validate_sim_options() override;
   unsigned int specialization_aura_id();
   void init_action_list() override;
-  std::string aura_expr_from_spell_id( unsigned int spell_id, bool on_self = true ) const override;
+  void init_blizzard_action_list() override;
+  parsed_assisted_combat_rule_t parse_assisted_combat_rule( const assisted_combat_rule_data_t& rule,
+                                                            const assisted_combat_step_data_t& step ) const override;
+  void parse_assisted_combat_step( const assisted_combat_step_data_t& step,
+                                   action_priority_list_t* assisted_combat ) override;
+  std::vector<std::string> action_names_from_spell_id( unsigned int spell_id ) const;
+  std::string aura_expr_from_spell_id( unsigned int spell_id, bool on_self ) const override;
   void init_finished() override;
   void init_base_stats() override;
   void init_background_actions() override;
@@ -1877,6 +1883,8 @@ public:
         else if ( util::str_compare_ci( desc, "Red" ) )
           spell_color = SPELL_RED;
       }
+      
+      ab::can_have_one_button_penalty = true;
 
       move_during_hover =
           player->find_spelleffect( player->find_class_spell( "Hover" ), A_CAST_WHILE_MOVING_WHITELIST, 0, &ab::data() )
@@ -2296,6 +2304,7 @@ public:
     : BASE( name, p, spell, options_str ),
       max_empower( p->talent.font_of_magic.ok() ? empower_e::EMPOWER_4 : empower_e::EMPOWER_3 )
   {
+    BASE::can_have_one_button_penalty = false;
   }
 
   action_state_t* new_state() override
@@ -2641,7 +2650,7 @@ struct empowered_charge_t : public empowered_base_t<BASE>
       release_spell( nullptr ),
       dummy_stat( p->get_stats( "dummy_stat" ) ),
       orig_stat( ab::stats ),
-      empower_to( ab::max_empower ),
+      empower_to( EMPOWER_MAX ),
       base_empower_duration( 0_ms ),
       lag( 0_ms ),
       instability_matrix_max_cdr(
@@ -2654,12 +2663,22 @@ struct empowered_charge_t : public empowered_base_t<BASE>
 
     ab::parse_options( options_str );
 
-    empower_to = std::min( static_cast<int>( ab::max_empower ), empower_to );
 
-    ab::dot_duration = ab::base_tick_time = base_empower_duration =
-        base_time_to_empower( static_cast<empower_e>( empower_to ) );
 
+    if ( static_cast<empower_e>( empower_to ) == EMPOWER_MAX )
+    {
+      ab::dot_duration = ab::base_tick_time = base_empower_duration = max_hold_time();
+    }
+    else
+    {
+      empower_to  = std::min( static_cast<int>( ab::max_empower ), empower_to );
+      ab::dot_duration = ab::base_tick_time = base_empower_duration =
+          base_time_to_empower( static_cast<empower_e>( empower_to ) );
+    }
+
+    // Things affecting Empower Duration must be done after setting base_tick_time and their dot stats.
     ab::apply_affecting_aura( p->talent.font_of_magic );
+    ab::apply_affecting_aura( p->talent.rockfall );
 
     ab::gcd_type = gcd_haste_type::NONE;
     if ( ab::trigger_gcd > timespan_t::zero() )
@@ -5157,33 +5176,38 @@ struct firestorm_t : public evoker_spell_t
 
     evoker_spell_t::execute();
 
-    make_event<ground_aoe_event_t>(
-        *sim, p(),
-        ground_aoe_params_t()
-            .target( execute_state->target )
-            .pulse_time( tick_period )
-            .hasted( ground_aoe_params_t::hasted_with::SPELL_HASTE )
-            .duration( duration )
-            .action( damage )
-            .state_callback( [ this ]( ground_aoe_params_t::state_type s, ground_aoe_event_t* e ) {
-              if ( s == ground_aoe_params_t::state_type::EVENT_STARTED )
-              {
-                for ( player_t* t : e->params->action()->target_list() )
+    if ( duration > 0_s && tick_period > 0_s )
+    {
+      auto total_ticks = as<int>( std::floor( duration / tick_period ) );
+
+      make_event<ground_aoe_event_t>(
+          *sim, p(),
+          ground_aoe_params_t()
+              .target( execute_state->target )
+              .pulse_time( tick_period )
+              .hasted( ground_aoe_params_t::hasted_with::SPELL_HASTE )
+              .n_pulses( total_ticks )
+              .action( damage )
+              .state_callback( [ this ]( ground_aoe_params_t::state_type s, ground_aoe_event_t* e ) {
+                if ( s == ground_aoe_params_t::state_type::EVENT_STARTED )
                 {
-                  auto td = p()->get_target_data( t );
-                  td->debuffs.in_firestorm->increment();
+                  for ( player_t* t : e->params->action()->target_list() )
+                  {
+                    auto td = p()->get_target_data( t );
+                    td->debuffs.in_firestorm->increment();
+                  }
                 }
-              }
-              else if ( s == ground_aoe_params_t::state_type::EVENT_STOPPED )
-              {
-                for ( player_t* t : e->params->action()->target_list() )
+                else if ( s == ground_aoe_params_t::state_type::EVENT_STOPPED )
                 {
-                  auto td = p()->get_target_data( t );
-                  td->debuffs.in_firestorm->decrement();
+                  for ( player_t* t : e->params->action()->target_list() )
+                  {
+                    auto td = p()->get_target_data( t );
+                    td->debuffs.in_firestorm->decrement();
+                  }
                 }
-              }
-            } ),
-        true );
+              } ),
+          true );
+    }
 
     if ( !proc )
       p()->buff.snapfire->expire();
@@ -6210,19 +6234,23 @@ protected:
   double anachronism_chance;
   double golden_opportunity_chance;
   double double_time_mult;
+  bool use_auto;
 
 public:
   prescience_t( evoker_t* p, std::string_view options_str )
     : evoker_augment_t( "prescience", p, p->talent.prescience, options_str ),
       anachronism_chance(),
       golden_opportunity_chance(),
-      double_time_mult()
+      double_time_mult(),
+      use_auto( false )
   {
     anachronism_chance        = p->talent.anachronism->effectN( 1 ).percent();
     golden_opportunity_chance = p->talent.chronowarden.golden_opportunity->effectN( 1 ).percent();
     double_time_mult          = p->talent.chronowarden.double_time->effectN( 2 ).percent();
 
     may_crit = true;
+
+    add_option( opt_bool( "use_auto", use_auto ) );
   }
 
   void activate() override
@@ -6235,6 +6263,18 @@ public:
         sim->print_debug( "{} had target cache for prescience invalidated by {}", *p(), *e );
         target_cache.is_valid = false;
       } );
+    }
+  }
+
+  void init_finished() override
+  {
+    evoker_augment_t::init_finished();
+
+    if ( action_list && action_list->name_str == "assisted_combat" )
+    {
+      use_auto = true;
+      sim->print_debug( "{} setting use_auto to true for action {} because it is in the assisted_combat action_list.",
+                        *player, *this );
     }
   }
 
@@ -6353,6 +6393,62 @@ public:
     }
 
     evoker_augment_t::queue_execute( et );
+  }
+
+  bool select_target() override
+  {
+    if ( use_auto )
+    {
+      auto& tl = target_list();
+
+      std::sort( tl.begin(), tl.end(), [ this ]( player_t* p1, player_t* p2 ) {
+        auto td1 = p()->get_target_data( p1 );
+        auto td2 = p()->get_target_data( p2 );
+
+        return !td1->buffs.prescience->check() || td2->buffs.prescience->check();
+      } );
+
+      auto it = std::find_if( tl.begin(), tl.end(), [ this ]( player_t* tar ) {
+        return p()->get_target_data( tar )->buffs.prescience->check();
+      } );
+
+      std::sort( tl.begin(), it, [ this ]( player_t* p1, player_t* p2 ) {
+        auto p1_dps = p1->role != ROLE_HYBRID && p1->role != ROLE_HEAL && p1->role != ROLE_TANK &&
+                      p1->specialization() != EVOKER_AUGMENTATION;
+        auto p2_dps = p2->role != ROLE_HYBRID && p2->role != ROLE_HEAL && p2->role != ROLE_TANK &&
+                      p2->specialization() != EVOKER_AUGMENTATION;
+
+        return p1_dps || !p2_dps;
+      } );
+
+      if ( it < tl.end() )
+      {
+        std::sort( it, tl.end(), [ this ]( player_t* p1, player_t* p2 ) {
+          auto p1_dps = p1->role != ROLE_HYBRID && p1->role != ROLE_HEAL && p1->role != ROLE_TANK &&
+                        p1->specialization() != EVOKER_AUGMENTATION;
+          auto p2_dps = p2->role != ROLE_HYBRID && p2->role != ROLE_HEAL && p2->role != ROLE_TANK &&
+                        p2->specialization() != EVOKER_AUGMENTATION;
+
+          return p1_dps || !p2_dps;
+        } );
+      }
+      target = tl.front();
+
+      auto potential_target =
+          std::find_if( tl.begin(), tl.end(), [ this ]( player_t* tar ) { return target_ready( tar ); } );
+      
+      if ( potential_target != tl.end() )
+      {
+        target = *potential_target;
+        return true;
+      }
+
+      return false;
+    }
+    else
+    {
+      return action_t::select_target();
+    }
   }
 
   void execute() override
@@ -8162,12 +8258,168 @@ void evoker_t::init_action_list()
   player_t::init_action_list();
 }
 
+void evoker_t::init_blizzard_action_list()
+{
+  action_priority_list_t* default_ = get_action_priority_list( "default" );
+  player_t::init_blizzard_action_list();
+
+  //// default overrides
+  //switch ( specialization() )
+  //{
+  //  case PRIEST_DISCIPLINE:
+  //    break;
+  //  case PRIEST_HOLY:
+  //    break;
+  //  case PRIEST_SHADOW:
+  //    break;
+  //  default:
+  //    break;
+  //}
+
+  // precombat overrides
+  action_priority_list_t* pre_c = get_action_priority_list( "precombat" );
+
+  switch ( specialization() )
+  {
+    case EVOKER_PRESERVATION:
+      break;
+    case EVOKER_AUGMENTATION:
+      pre_c->add_action( "blistering_scales,if=talent.blistering_scales" );
+      SC_FALLTHROUGH;
+    case EVOKER_DEVASTATION:
+      pre_c->add_action( "living_flame" );
+      break;
+    default:
+      break;
+  }
+
+  // cooldown overrides
+  action_priority_list_t* cooldowns = get_action_priority_list( "cooldowns" );
+  // reset this from player.cpp
+  cooldowns->action_list.clear();
+  
+  cooldowns->add_action( "potion" );
+
+  switch ( specialization() )
+  {
+    case EVOKER_PRESERVATION:
+      break;
+    case EVOKER_DEVASTATION:
+      cooldowns->add_action( "deep_breath,if=talent.imminent_destruction|talent.melt_armor|talent.maneuverability|active_enemies>1" );
+      cooldowns->add_action( "dragonrage" );
+      cooldowns->add_action( "tip_the_scales" );
+      cooldowns->add_action( "use_items,if=buff.dragonrage.up|!talent.dragonrage|cooldown.dragonrage.remains>20" );
+      break;
+    case EVOKER_AUGMENTATION:
+      cooldowns->add_action( "breath_of_eons" );
+      cooldowns->add_action( "deep_breath" );
+      cooldowns->add_action( "tip_the_scales" );
+      cooldowns->add_action( "time_skip" );
+      cooldowns->add_action( "use_items" );
+      break;
+    default:
+      break;
+  }
+}
+
+parsed_assisted_combat_rule_t evoker_t::parse_assisted_combat_rule( const assisted_combat_rule_data_t& rule,
+                                                                    const assisted_combat_step_data_t& step ) const
+{
+  // Blistering scales checks if it is up
+  if ( rule.condition_type == AURA_MISSING_PLAYER && rule.condition_value_1 == 1245013 )
+  {
+    return { "!evoker.scales_up" };
+  }
+  // Blistering scales checks if it is up
+  if ( rule.condition_type == AURA_ON_PLAYER && rule.condition_value_1 == 1245013 )
+  {
+    return { "evoker.scales_up" };
+  }
+
+  //if ( rule.condition_type == AURA_ON_PLAYER && rule.condition_value_1 == 410089 )
+  //{
+  //  return { "" };
+  //}
+  //  
+  //if ( rule.condition_type == AURA_MISSING_PLAYER && rule.condition_value_1 == 410089 )
+  //{
+  //  return { "" };
+  //}
+
+  return player_t::parse_assisted_combat_rule( rule, step );
+}
+
+void evoker_t::parse_assisted_combat_step( const assisted_combat_step_data_t& step,
+                                           action_priority_list_t* assisted_combat )
+{
+  std::string expr                    = "";
+  std::string base_expr               = "";
+  std::string comment                 = "";
+  bool show_diff                      = false;
+  bool cooldown_allow_casting_success = false;
+  bool use_auto                       = false;
+  
+  for ( const auto& rule : assisted_combat_rule_data_t::data( step.id, is_ptr() ) )
+  {
+    if ( rule.condition_type == COOLDOWN_ALLOW_CASTING_SUCCESS )
+      cooldown_allow_casting_success = true;
+
+    parsed_assisted_combat_rule_t derived_combat_rule = parse_assisted_combat_rule( rule, step );
+    parsed_assisted_combat_rule_t base_combat_rule    = player_t::parse_assisted_combat_rule( rule, step );
+
+    if ( !derived_combat_rule.expr.empty() )
+      expr += expr.empty() ? derived_combat_rule.expr : "&" + derived_combat_rule.expr;
+    if ( !derived_combat_rule.comment.empty() )
+      comment += comment.empty() ? derived_combat_rule.comment : ", " + derived_combat_rule.comment;
+    if ( !base_combat_rule.expr.empty() )
+      base_expr += base_expr.empty() ? base_combat_rule.expr : "&" + base_combat_rule.expr;
+
+    show_diff |= derived_combat_rule.show_diff;
+  }
+
+  if ( base_expr != expr && show_diff )
+    comment += ( comment.empty() ? "" : " " ) + fmt::format( "(Overridden from '{}')", base_expr );
+
+  for ( const auto& name : action_names_from_spell_id( step.spell_id ) )
+  {
+    if ( name.empty() )
+      continue;
+
+    if ( name == "prescience" )
+    {
+      use_auto = true;
+    }
+
+    std::string action_str = name;
+
+    if ( !expr.empty() )
+      action_str += ",if=" + expr;
+
+    if ( cooldown_allow_casting_success )
+      action_str += ",cooldown_allow_casting_success=1";
+    
+    if ( use_auto )
+      action_str += ",use_auto=1";
+
+    assisted_combat->add_action( action_str, comment );
+  }
+}
+
+std::vector<std::string> evoker_t::action_names_from_spell_id( unsigned int spell_id ) const
+{
+  if ( spell_id == 356995 && talent.eruption.enabled() )  // Eruption Replacement
+  {
+    return { "eruption" };
+  }
+
+  return player_t::action_names_from_spell_id( spell_id );
+}
+
 std::string evoker_t::aura_expr_from_spell_id( unsigned int spell_id, bool on_self ) const
 {
-  if ( spell_id == 1245013 && on_self )
-    return "buff.blistering_scales";
+  std::string aura_expr = player_t::aura_expr_from_spell_id( spell_id, on_self );
 
-  return player_t::aura_expr_from_spell_id( spell_id, on_self );
+  return aura_expr;
 }
 
 void evoker_t::create_pets()
@@ -9533,7 +9785,6 @@ void evoker_t::apply_affecting_auras_late( action_t& action )
   // Augmentation
   action.apply_affecting_aura( talent.dream_of_spring );
   action.apply_affecting_aura( talent.unyielding_domain );
-  action.apply_affecting_aura( talent.rockfall );
   action.apply_affecting_aura( talent.volcanism );
   action.apply_affecting_aura( talent.interwoven_threads );
   action.apply_affecting_aura( talent.arcane_reach );

@@ -828,6 +828,7 @@ struct halo_t final : public priest_spell_t
           {
             priest().buffs.mind_flay_insanity->trigger();
           }
+          SC_FALLTHROUGH;
         default:
           break;
       }

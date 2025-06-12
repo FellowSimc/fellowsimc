@@ -2567,6 +2567,12 @@ bool action_t::action_ready()
   return true;
 }
 
+bool action_t::cost_affordable()
+{
+  auto resource = current_resource();
+  return resource == RESOURCE_NONE || player->resource_available( resource, cost() );
+}
+
 // Properties that govern if the spell itself is executable, without considering any kind of user
 // options
 bool action_t::ready()
@@ -2581,8 +2587,7 @@ bool action_t::ready()
   if ( player->is_moving() && !usable_moving() )
     return false;
 
-  auto resource = current_resource();
-  if ( resource != RESOURCE_NONE && !player->resource_available( resource, cost() ) )
+  if ( !cost_affordable() )
   {
     if ( starved_proc )
       starved_proc->occur();
@@ -3189,6 +3194,9 @@ std::unique_ptr<expr_t> action_t::create_expression( std::string_view name )
 
   if ( name == "cost" )
     return make_mem_fn_expr( name, *this, &action_t::cost );
+
+  if ( name == "cost_affordable" )
+    return make_mem_fn_expr( name, *this, &action_t::cost_affordable );
 
   if ( name == "target" )
     return make_fn_expr( name, [this] { return target->actor_index; } );

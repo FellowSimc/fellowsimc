@@ -15175,9 +15175,6 @@ parsed_assisted_combat_rule_t shaman_t::parse_assisted_combat_rule( const assist
   if ( rule.condition_type == AURA_ON_PLAYER && rule.condition_value_1 == 466469 )
     return "action.ice_strike.ready";
 
-  if ( rule.condition_type == AFFORD_COST && rule.condition_value_1 == 117014 )
-    return { "action.elemental_blast.ready", "Elemental Blast being ready implies that the player has enough resources to cast it." };
-
   return parse_player_effects_t::parse_assisted_combat_rule( rule, step );
 }
 

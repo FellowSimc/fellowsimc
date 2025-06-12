@@ -3634,7 +3634,6 @@ parsed_assisted_combat_rule_t player_t::parse_assisted_combat_rule( const assist
     case AFFORD_COST:
       assert( v2 == 0 && v3 == 0 );
       if ( v1 )
-        // TODO: implement this expression
         return fmt::format( "action.{}.cost_affordable", tokenize_spell( v1 ) );
       return ""; // no check necessary because simc actions are not ready unless their cost is affordable
     case AURA_MISSING_TARGET:

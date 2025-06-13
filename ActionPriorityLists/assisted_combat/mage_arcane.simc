@@ -1,0 +1,19 @@
+
+# Executed before combat begins. Accepts non-harmful actions only.
+actions.precombat=snapshot_stats
+
+# Executed every time the actor is available.
+actions=call_action_list,name=cooldowns
+actions+=/call_action_list,name=assisted_combat
+
+# This is the default action priority list from the game's Assisted Combat system.
+
+# Major cooldowns are not used by the Assisted Combat system. This simple default cooldown usage has been provided by simc.
+actions.cooldowns=use_items
+actions.cooldowns+=/potion
+actions.cooldowns+=/blood_fury
+actions.cooldowns+=/berserking
+actions.cooldowns+=/fireblood
+actions.cooldowns+=/ancestral_call
+actions.cooldowns+=/evocation,if=cooldown.arcane_surge.remains<3*gcd.max&cooldown.touch_of_the_magi.remains<5*gcd.max
+actions.cooldowns+=/arcane_surge,if=cooldown.touch_of_the_magi.remains<action.arcane_surge.execute_time

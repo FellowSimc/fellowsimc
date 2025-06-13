@@ -1,0 +1,17 @@
+
+# Executed before combat begins. Accepts non-harmful actions only.
+actions.precombat=snapshot_stats
+actions.precombat+=/living_flame
+
+# Executed every time the actor is available.
+actions=call_action_list,name=cooldowns
+actions+=/call_action_list,name=assisted_combat
+
+# This is the default action priority list from the game's Assisted Combat system.
+
+# Major cooldowns are not used by the Assisted Combat system. This simple default cooldown usage has been provided by simc.
+actions.cooldowns=potion
+actions.cooldowns+=/deep_breath,if=talent.imminent_destruction|talent.melt_armor|talent.maneuverability|active_enemies>1
+actions.cooldowns+=/dragonrage
+actions.cooldowns+=/tip_the_scales
+actions.cooldowns+=/use_items,if=buff.dragonrage.up|!talent.dragonrage|cooldown.dragonrage.remains>20

@@ -1,0 +1,21 @@
+
+# Executed before combat begins. Accepts non-harmful actions only.
+actions.precombat=snapshot_stats
+actions.precombat+=/blistering_scales,if=talent.blistering_scales
+actions.precombat+=/living_flame
+
+# Executed every time the actor is available.
+actions=call_action_list,name=cooldowns
+actions+=/call_action_list,name=assisted_combat
+
+# This is the default action priority list from the game's Assisted Combat system.
+
+# Major cooldowns are not used by the Assisted Combat system. This simple default cooldown usage has been provided by simc.
+actions.cooldowns=potion
+actions.cooldowns+=/prescience,use_auto=1,if=cooldown.breath_of_eons.up&talent.breath_of_eons
+actions.cooldowns+=/ebon_might,if=cooldown.breath_of_eons.up&talent.breath_of_eons
+actions.cooldowns+=/breath_of_eons
+actions.cooldowns+=/deep_breath
+actions.cooldowns+=/tip_the_scales
+actions.cooldowns+=/time_skip
+actions.cooldowns+=/use_items

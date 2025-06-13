@@ -1,0 +1,21 @@
+
+# Executed before combat begins. Accepts non-harmful actions only.
+actions.precombat=snapshot_stats
+actions.precombat+=/shadowform,if=!buff.shadowform.up
+
+# Executed every time the actor is available.
+actions=call_action_list,name=cooldowns
+actions+=/call_action_list,name=assisted_combat
+
+# This is the default action priority list from the game's Assisted Combat system.
+
+# Major cooldowns are not used by the Assisted Combat system. This simple default cooldown usage has been provided by simc.
+actions.cooldowns=potion
+actions.cooldowns+=/blood_fury
+actions.cooldowns+=/berserking
+actions.cooldowns+=/fireblood
+actions.cooldowns+=/ancestral_call
+actions.cooldowns+=/use_items,if=buff.voidform.up|buff.dark_ascension.up
+actions.cooldowns+=/void_eruption
+actions.cooldowns+=/dark_ascension,if=dot.vampiric_touch.ticking
+actions.cooldowns+=/power_infusion,if=buff.voidform.up|buff.dark_ascension.up

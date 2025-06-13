@@ -224,7 +224,7 @@ jobs:
             save_actions=assisted_combat/${{ matrix.spec }}.simc
 
       - name: Upload APL
-        if: steps.dump_apl.outcome == 'success'
+        if: steps.dump_apl_default.outcome == 'success' || steps.dump_apl_assisted.outcome == 'success'
         continue-on-error: true
         uses: actions/upload-artifact@v4
         with:

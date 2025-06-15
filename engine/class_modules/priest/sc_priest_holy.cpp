@@ -34,6 +34,14 @@ struct holy_word_sanctify_t final : public priest_heal_t
   void execute() override
   {
     priest_heal_t::execute();
+
+    
+    if ( priest().talents.holy.eternal_sanctity.enabled() )
+    {
+      priest().buffs.apotheosis->extend_duration( player,
+                                                  priest().talents.holy.eternal_sanctity->effectN( 1 ).time_value() );
+    }
+
     if ( priest().talents.holy.divine_image.enabled() )
     {
       priest().buffs.divine_image->trigger();
@@ -64,6 +72,14 @@ struct holy_word_serenity_t final : public priest_heal_t
   void execute() override
   {
     priest_heal_t::execute();
+
+    
+    if ( priest().talents.holy.eternal_sanctity.enabled() )
+    {
+      priest().buffs.apotheosis->extend_duration( player,
+                                                  priest().talents.holy.eternal_sanctity->effectN( 1 ).time_value() );
+    }
+
     if ( priest().talents.holy.divine_image.enabled() )
     {
       priest().buffs.divine_image->trigger();
@@ -416,6 +432,12 @@ struct holy_word_chastise_t final : public priest_spell_t
   {
     priest_spell_t::execute();
 
+    if ( priest().talents.holy.eternal_sanctity.enabled() )
+    {
+      priest().buffs.apotheosis->extend_duration( player,
+                                                  priest().talents.holy.eternal_sanctity->effectN( 1 ).time_value() );
+    }
+
     if ( priest().talents.holy.divine_word.enabled() && priest().buffs.divine_word->check() )
     {
       priest().buffs.divine_word->expire();
@@ -570,7 +592,8 @@ void priest_t::init_spells_holy()
   // Row 7
   talents.holy.apotheosis = ST( "Apotheosis" );
   // Row 8
-  talents.holy.holy_celerity = ST( "Holy Celerity" );
+  talents.holy.eternal_sanctity = ST( "Eternal Sanctity" );
+  talents.holy.holy_celerity    = ST( "Holy Celerity" );
   // Row 9
   talents.holy.burning_vehemence        = ST( "Burning Vehemence" );
   talents.holy.burning_vehemence_damage = find_spell( 400370 );

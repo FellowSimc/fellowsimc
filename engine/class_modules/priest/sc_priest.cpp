@@ -3814,7 +3814,7 @@ void priest_t::init_spells()
 
   // Oracle Hero Talents (Holy/Discipline)
   talents.oracle.premonition           = HT( "Premonition" );            // NYI
-  talents.oracle.preventive_measures   = HT( "Preventive Measures" );    // NYI
+  talents.oracle.preventive_measures   = HT( "Preventive Measures" );
   talents.oracle.preemptive_care       = HT( "Preemptive Care" );        // NYI
   talents.oracle.waste_no_time         = HT( "Waste No Time" );          // NYI
   talents.oracle.miraculous_recovery   = HT( "Miraculous Recovery" );    // NYI
@@ -4072,6 +4072,9 @@ void priest_t::apply_affecting_auras_late( action_t& action )
   action.apply_affecting_aura( talents.archon.empowered_surges );
   action.apply_affecting_aura( talents.archon.energy_compression );
 
+  // Oracle Talents
+  action.apply_affecting_aura( talents.oracle.preventive_measures );
+
   // TWW1 2pc
   action.apply_affecting_aura( sets->set( PRIEST_SHADOW, TWW1, B2 ) );
   action.apply_affecting_aura( sets->set( PRIEST_DISCIPLINE, TWW1, B2 ) );
@@ -4270,8 +4273,12 @@ void priest_t::init_blizzard_action_list()
     switch ( specialization() )
     {
       case PRIEST_DISCIPLINE:
+        cooldowns->add_action( "power_infusion" );
         break;
       case PRIEST_HOLY:
+        cooldowns->add_action( "halo,if=talent.power_surge" );
+        cooldowns->add_action( "apotheosis" );
+        cooldowns->add_action( "power_infusion" );
         break;
       case PRIEST_SHADOW:
         cooldowns->add_action( "use_items,if=buff.voidform.up|buff.dark_ascension.up" );

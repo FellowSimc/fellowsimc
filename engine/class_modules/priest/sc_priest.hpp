@@ -504,7 +504,7 @@ public:
 
     struct
     {
-      // Row 1
+      // Row 1  
       player_talent_t holy_word_serenity;
       // Row 2
       player_talent_t holy_word_chastise;
@@ -514,8 +514,10 @@ public:
       player_talent_t holy_word_sanctify;
       // Row 4
       player_talent_t searing_light;
-      // Row 8
+      // Row 7
       player_talent_t apotheosis;
+      // Row 8
+      player_talent_t eternal_sanctity;
       player_talent_t holy_celerity;
       // Row 9
       player_talent_t burning_vehemence;

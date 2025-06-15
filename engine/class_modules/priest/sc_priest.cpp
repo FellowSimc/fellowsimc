@@ -899,7 +899,6 @@ struct smite_base_t : public priest_spell_t
   timespan_t train_of_thought_cdr;
   timespan_t t31_2pc_extend;
   timespan_t divine_procession_extend;
-  propagate_const<action_t*> child_holy_fire;
   action_t* child_searing_light;
 
   smite_base_t( priest_t& p, util::string_view name, const spell_data_t* s, bool bg = false,
@@ -908,7 +907,6 @@ struct smite_base_t : public priest_spell_t
       train_of_thought_cdr( priest().talents.discipline.train_of_thought->effectN( 2 ).time_value() ),
       t31_2pc_extend( priest().sets->set( PRIEST_DISCIPLINE, T31, B2 )->effectN( 1 ).time_value() ),
       divine_procession_extend( priest().talents.discipline.divine_procession->effectN( 1 ).time_value() ),
-      child_holy_fire( priest().background_actions.holy_fire ),
       child_searing_light( priest().background_actions.searing_light )
 
   {
@@ -916,10 +914,6 @@ struct smite_base_t : public priest_spell_t
     if ( !background )
     {
       parse_options( options_str );
-      if ( priest().talents.holy.divine_word.enabled() )
-      {
-        child_holy_fire->background = true;
-      }
     }
 
     triggers_atonement = true;
@@ -964,15 +958,6 @@ struct smite_base_t : public priest_spell_t
     if ( priest().talents.discipline.train_of_thought.enabled() )
     {
       priest().cooldowns.penance->adjust( train_of_thought_cdr );
-    }
-
-    // If we have divine word, have triggered divine favor: chastise, and proc the holy fire effect
-    if ( child_holy_fire && priest().talents.holy.divine_word.enabled() &&
-         priest().buffs.divine_favor_chastise->check() &&
-         rng().roll( priest().talents.holy.divine_favor_chastise->effectN( 3 ).percent() ) )
-    {
-      priest().procs.divine_favor_chastise->occur();
-      child_holy_fire->execute();
     }
 
     // T31 Background set bonus triggers the shadow amp. Core logic ignores background spell execution so manually
@@ -4074,6 +4059,7 @@ void priest_t::apply_affecting_auras_late( action_t& action )
 
   // Holy Talents
   action.apply_affecting_aura( talents.holy.miracle_worker );
+  action.apply_affecting_aura( talents.holy.burning_vehemence );
 
   // Disc T31 2pc
   action.apply_affecting_aura( sets->set( PRIEST_DISCIPLINE, T31, B2 ) );
@@ -4251,8 +4237,11 @@ void priest_t::init_blizzard_action_list()
   switch ( specialization() )
   {
     case PRIEST_DISCIPLINE:
+      pre_c->add_action( "smite" );
       break;
     case PRIEST_HOLY:
+      pre_c->add_action( "holy_fire" );
+      pre_c->add_action( "smite" );
       break;
     case PRIEST_SHADOW:
       pre_c->add_action( "shadowform,if=!buff.shadowform.up" );
@@ -4353,37 +4342,66 @@ std::string priest_t::blizzard_apl_action_replace( std::string options )
 void priest_t::parse_assisted_combat_step( const assisted_combat_step_data_t& step,
                                            action_priority_list_t* assisted_combat )
 {
-  std::string options = "";
-  std::string comment = "";
+  std::string expr                    = "";
+  std::string base_expr               = "";
+  std::string comment                 = "";
+  bool show_diff                      = false;
+  bool cooldown_allow_casting_success = false;
   for ( const auto& rule : assisted_combat_rule_data_t::data( step.id, is_ptr() ) )
   {
-    parsed_assisted_combat_rule_t rule_str = parse_assisted_combat_rule( rule, step );
-    if ( !rule_str.expr.empty() )
-      options += options.empty() ? rule_str.expr : "&" + rule_str.expr;
-    if ( !rule_str.comment.empty() )
-      comment += comment.empty() ? rule_str.comment : ", " + rule_str.comment;
+    if ( rule.condition_type == COOLDOWN_ALLOW_CASTING_SUCCESS )
+      cooldown_allow_casting_success = true;
+
+    parsed_assisted_combat_rule_t derived_combat_rule = parse_assisted_combat_rule( rule, step );
+    parsed_assisted_combat_rule_t base_combat_rule    = player_t::parse_assisted_combat_rule( rule, step );
+
+    if ( !derived_combat_rule.expr.empty() )
+      expr += expr.empty() ? derived_combat_rule.expr : "&" + derived_combat_rule.expr;
+    if ( !derived_combat_rule.comment.empty() )
+      comment += comment.empty() ? derived_combat_rule.comment : ", " + derived_combat_rule.comment;
+    if ( !base_combat_rule.expr.empty() )
+      base_expr += base_expr.empty() ? base_combat_rule.expr : "&" + base_combat_rule.expr;
+
+    show_diff |= derived_combat_rule.show_diff;
   }
 
+  if ( base_expr != expr && show_diff )
+    comment += ( comment.empty() ? "" : " " ) + fmt::format( "(Overridden from '{}')", base_expr );
+
+  
   // This is kinda ugly, maybe find a better way to do this?
-  if ( !options.empty() )
+  if ( !expr.empty() )
   {
-    std::string name = blizzard_apl_action_replace( options );
+    std::string name = blizzard_apl_action_replace( expr );
     if ( !name.empty() )
     {
-      assisted_combat->add_action( name + ",can_have_one_button_penalty=1,if=" + options, comment );
+      std::string action_str = name;
+
+      if ( !expr.empty() )
+        action_str += ",if=" + expr;
+
+      if ( cooldown_allow_casting_success )
+        action_str += ",cooldown_allow_casting_success=1";
+
+      assisted_combat->add_action( action_str, comment );
       return;
     }
   }
 
   for ( const auto& name : action_names_from_spell_id( step.spell_id ) )
   {
-    if ( !name.empty() )
-    {
-      if ( options.empty() )
-        assisted_combat->add_action( name + ",can_have_one_button_penalty=1", comment );
-      else
-        assisted_combat->add_action( name + ",can_have_one_button_penalty=1,if=" + options, comment );
-    }
+    if ( name.empty() )
+      continue;
+
+    std::string action_str = name;
+
+    if ( !expr.empty() )
+      action_str += ",if=" + expr;
+
+    if ( cooldown_allow_casting_success )
+      action_str += ",cooldown_allow_casting_success=1";
+
+    assisted_combat->add_action( action_str, comment );
   }
 }
 

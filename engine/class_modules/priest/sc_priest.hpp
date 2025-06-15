@@ -510,6 +510,7 @@ public:
       player_talent_t holy_word_chastise;
       // Row 3
       player_talent_t empyreal_blaze;
+      const spell_data_t* empyreal_blaze_buff;
       player_talent_t holy_word_sanctify;
       // Row 4
       player_talent_t searing_light;
@@ -782,7 +783,6 @@ public:
     propagate_const<actions::spells::mental_fortitude_t*> mental_fortitude;
     propagate_const<actions::spells::expiation_t*> expiation;
     propagate_const<actions::spells::purge_the_wicked_t*> purge_the_wicked;
-    propagate_const<action_t*> holy_fire;
     propagate_const<action_t*> searing_light;
     propagate_const<action_t*> light_eruption;
     propagate_const<actions::spells::burning_vehemence_t*> burning_vehemence;
@@ -964,7 +964,6 @@ private:
   void create_buffs_holy();
   void init_spells_holy();
   void init_rng_holy();
-  void generate_apl_holy();
   expr_t* create_expression_holy( action_t* a, util::string_view name_str );
   action_t* create_action_holy( util::string_view name, util::string_view options_str );
   target_specific_t<priest_td_t> _target_data;

@@ -133,22 +133,6 @@ struct light_eruption_t final : public priest_spell_t
   }
 };
 
-struct empyreal_blaze_t final : public priest_spell_t
-{
-  empyreal_blaze_t( priest_t& p, util::string_view options_str )
-    : priest_spell_t( "empyreal_blaze", p, p.talents.holy.empyreal_blaze )
-  {
-    parse_options( options_str );
-    harmful = false;
-  }
-
-  void execute() override
-  {
-    priest_spell_t::execute();
-    priest().buffs.empyreal_blaze->trigger();
-  }
-};
-
 struct burning_vehemence_t final : public priest_spell_t
 {
   burning_vehemence_t( priest_t& p ) : priest_spell_t( "burning_vehemence", p, p.talents.holy.burning_vehemence_damage )
@@ -174,6 +158,9 @@ struct burning_vehemence_t final : public priest_spell_t
 
   void trigger( double initial_hit_damage )
   {
+    if ( target_list().size() == 0 )
+      return;
+
     double bv_damage = initial_hit_damage * base_multiplier;
     sim->print_debug(
         "burning_vehemence splash damage calculating: initial holy_fire hit: {}, multiplier: {}, result: {}",
@@ -187,36 +174,51 @@ struct holy_fire_t final : public priest_spell_t
 {
   propagate_const<burning_vehemence_t*> child_burning_vehemence;
   action_t* child_searing_light;
-  bool casted;
+  cooldown_t* dummy_cooldown;
 
-  holy_fire_t( priest_t& p, util::string_view options_str, bool _casted = true )
+  holy_fire_t( priest_t& p, util::string_view options_str  )
     : priest_spell_t( "holy_fire", p, p.specs.holy_fire ),
       child_burning_vehemence( nullptr ),
       child_searing_light( priest().background_actions.searing_light )
   {
-    casted = _casted;
-    if ( !casted )
+    if ( proc )
     {
       base_dd_max            = 0.0;
       base_dd_min            = 0.0;
       spell_power_mod.direct = 0;
     }
+
     if ( p.talents.holy.empyreal_blaze.enabled() )
     {
       dot_behavior = DOT_EXTEND;
     }
-    if ( priest().talents.holy.burning_vehemence.enabled() && casted )
+
+    if ( priest().talents.holy.burning_vehemence.enabled() && !proc )
     {
       child_burning_vehemence = new burning_vehemence_t( priest() );
       add_child( child_burning_vehemence );
     }
-    apply_affecting_aura( p.talents.holy.burning_vehemence );
+
+    dummy_cooldown = p.get_cooldown( "holy_fire_empyreal", this );
+    dummy_cooldown->add_execute_type( execute_type::FOREGROUND );
+
     parse_options( options_str );
+  }
+
+  void queue_execute( execute_type type ) override
+  {
+    cooldown_t* original_cd = cooldown;
+    if ( p().buffs.empyreal_blaze->check() )
+    {
+      cooldown = dummy_cooldown;
+    }
+    priest_spell_t::queue_execute( type );
+    cooldown = original_cd;
   }
 
   double cost() const override
   {
-    if ( priest().buffs.empyreal_blaze->check() | !casted )
+    if ( priest().buffs.empyreal_blaze->check() || proc )
     {
       return 0;
     }
@@ -233,14 +235,110 @@ struct holy_fire_t final : public priest_spell_t
     return priest_spell_t::execute_time();
   }
 
+  // Brutal implementation of Ignore Spell Cooldown.
+  bool ready() override
+  {
+    // Check conditions that do NOT pertain to the target before cycle_targets
+    if ( !cooldown->is_ready() && !p().buffs.empyreal_blaze->check() )
+      return false;
+
+    if ( internal_cooldown->down() )
+      return false;
+
+    if ( player->is_moving() && !usable_moving() )
+      return false;
+
+    auto resource = current_resource();
+    if ( resource != RESOURCE_NONE && !player->resource_available( resource, cost() ) )
+    {
+      if ( starved_proc )
+        starved_proc->occur();
+      return false;
+    }
+
+    if ( usable_while_casting )
+    {
+      if ( execute_time() > timespan_t::zero() )
+      {
+        return false;
+      }
+
+      // Don't allow cast-while-casting spells that trigger the GCD to be ready if the GCD is still
+      // ongoing (during the cast)
+      if ( ( player->executing || player->channeling ) && gcd() > timespan_t::zero() &&
+           player->gcd_ready > sim->current_time() )
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  void update_ready( timespan_t cd_duration /* = timespan_t::min() */ ) override
+  {
+    if ( proc )
+      return;
+
+    if ( cd_waste_data )
+      cd_waste_data->add( cd_duration, time_to_execute );
+
+    if ( ( cd_duration > 0_ms || ( cd_duration == timespan_t::min() && cooldown_duration() > 0_ms ) ) && !dual )
+    {
+      timespan_t delay = 0_ms;
+
+      if ( !background && !proc )
+      { /*This doesn't happen anymore due to the gcd queue, in WoD if an ability has a cooldown of 20 seconds,
+        it is usable exactly every 20 seconds with proper Lag tolerance set in game.
+        The only situation that this could happen is when world lag is over 400, as blizzard does not allow
+        custom lag tolerance to go over 400.
+        */
+        delay = rng().gauss( player->world_lag );
+        if ( delay > 400_ms )
+        {
+          delay -= 400_ms;  // Even high latency players get some benefit from CLT.
+          sim->print_debug( "{} delaying the cooldown finish of {} by {}", *player, *this, delay );
+        }
+        else
+          delay = 0_ms;
+      }
+
+      if ( !p().buffs.empyreal_blaze->check() )
+      {
+        cooldown->start( this, cd_duration, delay );
+
+        sim->print_debug(
+            "{} starts cooldown for {} ({}, {}/{}). Duration={} Delay={}. Will "
+            "be ready at {}",
+            *player, *this, *cooldown, cooldown->current_charge, cooldown->charges, cd_duration, delay,
+            cooldown->ready );
+      }
+
+      if ( internal_cooldown->duration > 0_ms )
+      {
+        internal_cooldown->start( this );
+
+        sim->print_debug( "{} starts internal_cooldown for {} ({}). Will be ready at {}", *player, *this,
+                          *internal_cooldown, internal_cooldown->ready );
+      }
+    }
+  }
+
   void execute() override
   {
-    priest_spell_t::execute();
-    if ( priest().talents.holy.empyreal_blaze.enabled() && priest().buffs.empyreal_blaze->check() )
+    cooldown_t* original_cd = cooldown;
+
+    if ( p().buffs.empyreal_blaze->up() )
     {
-      priest().cooldowns.holy_fire->reset( false );
-      priest().buffs.empyreal_blaze->trigger();
+      cooldown = dummy_cooldown;
     }
+
+    priest_spell_t::execute();
+
+    if ( !proc )
+      priest().buffs.empyreal_blaze->decrement();
+
+    cooldown = original_cd;
   }
 
   void impact( action_state_t* s ) override
@@ -291,15 +389,17 @@ struct holy_word_chastise_t final : public priest_spell_t
   {
     parse_options( options_str );
   }
+
   double cost() const override
   {
-    if ( priest().buffs.apotheosis->check() || priest().buffs.answered_prayers->check() )
+    if ( priest().buffs.apotheosis->check() )
     {
       return 0;
     }
 
     return priest_spell_t::cost();
   }
+
   double composite_da_multiplier( const action_state_t* s ) const override
   {
     double d = priest_spell_t::composite_da_multiplier( s );
@@ -315,11 +415,13 @@ struct holy_word_chastise_t final : public priest_spell_t
   void execute() override
   {
     priest_spell_t::execute();
+
     if ( priest().talents.holy.divine_word.enabled() && priest().buffs.divine_word->check() )
     {
       priest().buffs.divine_word->expire();
       priest().buffs.divine_favor_chastise->trigger();
     }
+
     if ( priest().talents.holy.divine_image.enabled() )
     {
       priest().buffs.divine_image->trigger();
@@ -329,6 +431,11 @@ struct holy_word_chastise_t final : public priest_spell_t
       {
         child_searing_light->execute();
       }
+    }
+
+    if ( priest().talents.holy.empyreal_blaze.ok() )
+    {
+      priest().buffs.empyreal_blaze->trigger();
     }
   }
 
@@ -432,15 +539,7 @@ void priest_t::create_buffs_holy()
             }
           } ) );
 
-  buffs.empyreal_blaze = make_buff( this, "empyreal_blaze", talents.holy.empyreal_blaze->effectN( 2 ).trigger() )
-                             ->set_trigger_spell( talents.holy.empyreal_blaze )
-                             ->set_reverse( true )
-                             ->set_stack_change_callback( [ this ]( buff_t*, int, int new_ ) {
-                               if ( new_ > 0 )
-                               {
-                                 cooldowns.holy_fire->reset( false );
-                               }
-                             } );
+  buffs.empyreal_blaze = make_buff( this, "empyreal_blaze", talents.holy.empyreal_blaze_buff )->set_reverse( true );
 
   buffs.divine_word = make_buff( this, "divine_word", talents.holy.divine_word );
 
@@ -463,8 +562,9 @@ void priest_t::init_spells_holy()
   // Row 2
   talents.holy.holy_word_chastise = ST( "Holy Word: Chastise" );
   // Row 3
-  talents.holy.empyreal_blaze     = ST( "Empyreal Blaze" );
-  talents.holy.holy_word_sanctify = ST( "Holy Word: Sanctify" );
+  talents.holy.empyreal_blaze      = ST( "Empyreal Blaze" );
+  talents.holy.empyreal_blaze_buff = find_spell( 372617 );
+  talents.holy.holy_word_sanctify  = ST( "Holy Word: Sanctify" );
   // Row 4
   talents.holy.searing_light = ST( "Searing Light" );
   // Row 8
@@ -513,10 +613,6 @@ action_t* priest_t::create_action_holy( util::string_view name, util::string_vie
   {
     return new holy_word_sanctify_t( *this, options_str );
   }
-  if ( name == "empyreal_blaze" )
-  {
-    return new empyreal_blaze_t( *this, options_str );
-  }
   if ( name == "divine_word" )
   {
     return new divine_word_t( *this, options_str );
@@ -535,10 +631,6 @@ action_t* priest_t::create_action_holy( util::string_view name, util::string_vie
 
 void priest_t::init_background_actions_holy()
 {
-  if ( talents.holy.divine_word.enabled() )
-  {
-    background_actions.holy_fire = new actions::spells::holy_fire_t( *this, "", false );
-  }
   if ( talents.holy.divine_image.enabled() )
   {
     background_actions.searing_light  = new actions::spells::searing_light_t( *this );

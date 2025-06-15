@@ -4273,9 +4273,11 @@ void priest_t::init_blizzard_action_list()
     switch ( specialization() )
     {
       case PRIEST_DISCIPLINE:
+        cooldowns->add_action( "use_items" );
         cooldowns->add_action( "power_infusion" );
         break;
       case PRIEST_HOLY:
+        cooldowns->add_action( "use_items" );
         cooldowns->add_action( "halo,if=talent.power_surge" );
         cooldowns->add_action( "apotheosis" );
         cooldowns->add_action( "power_infusion" );

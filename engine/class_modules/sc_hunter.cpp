@@ -2278,7 +2278,7 @@ struct hunter_main_pet_t final : public hunter_main_pet_base_t
       make_buff( this, "potent_mutagen", o()->find_spell( 1218003 ) )
         //2025-03-07 - For some reason the base value is still 1, the pet buff says 0.5 seconds reduction per hit, but the server script doing the reduction only reduces by 0.25s
         //2025-06-05 - The base value is now 25 for a 0.25s reduction per hit on the PTR for 11.1.7.
-        ->set_default_value( is_ptr() ? o()->find_spell( 1218004)->effectN( 2 ).percent() : ( o()->find_spell( 1218004 )->effectN( 2 ).base_value() / 4 ) );
+        ->set_default_value( o()->find_spell( 1218004)->effectN( 2 ).percent() );
 
     buffs.solitary_companion = 
       make_buff( this, "solitary_companion", find_spell( 474751 ) )
@@ -4733,7 +4733,7 @@ struct black_arrow_t final : public kill_shot_base_t
 
     if ( p->talents.withering_fire.ok() )
     {
-      withering_fire.count = as<int>( p->talents.withering_fire->effectN( 3 ).base_value() + p->specs.beast_mastery_hunter->effectN( p->is_ptr() ? 12 : 13 ).base_value() );
+      withering_fire.count = as<int>( p->talents.withering_fire->effectN( 3 ).base_value() + p->specs.beast_mastery_hunter->effectN( 12 ).base_value() );
       withering_fire.action = p->get_background_action<withering_fire_t>( "black_arrow_withering_fire" );
       add_child( withering_fire.action );
     }

@@ -207,7 +207,7 @@ back=chef_chewies_towel,id=221054,bonus_id=4786/11996/3176
 chest=cauldron_champions_ribcage,id=229256,bonus_id=11996/10356/11958/6652/1533/10255,enchant=crystalline_radiance_3
 wrists=everforged_vambraces,id=222435,bonus_id=12043/9631/9633/8902/12040/11109/8960/10878,gem_id=213458,crafted_stats=49/32
 hands=cauldron_champions_fistguards,id=229254,bonus_id=11996/10356/11959/6652/1533/10255
-waist=automatic_waist_tightener,id=168976,bonus_id=4786/11346/12376,gem_id=213479
+waist=durable_information_securing_container,id=245966,bonus_id=12533/1489,gem_id=213458,titan_disc_id=1236109
 legs=cauldron_champions_tattered_cuisses,id=229252,bonus_id=11996/10356/11961/6652/1533/10255,enchant=stormbound_armor_kit_3
 feet=hopsladen_greatboots,id=221061,bonus_id=4786/11996/3176
 finger1=the_jastor_diamond,id=231265,bonus_id=10356/1533/6935,gem_id=213491/213458,enchant=radiant_critical_strike_3
@@ -218,14 +218,14 @@ main_hand=remixed_ignition_saber,id=228895,bonus_id=10356/1533,enchant=rune_of_r
 off_hand=charged_slicer,id=222451,bonus_id=12043/9631/9633/8902/12040/11300/8960,enchant=rune_of_the_fallen_crusader,crafted_stats=49/32
 
 # Gear Summary
-# gear_ilvl=683.63
-# gear_strength=59547
-# gear_stamina=421565
-# gear_crit_rating=17666
-# gear_haste_rating=9195
-# gear_mastery_rating=19996
+# gear_ilvl=684.69
+# gear_strength=60290
+# gear_stamina=429095
+# gear_crit_rating=16924
+# gear_haste_rating=9048
+# gear_mastery_rating=19059
 # gear_versatility_rating=147
-# gear_armor=75670
+# gear_armor=76623
 # set_bonus=thewarwithin_season_2_2pc=1
 # set_bonus=thewarwithin_season_2_4pc=1
 deathknight.ams_absorb_percent=1

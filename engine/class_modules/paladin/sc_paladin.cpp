@@ -4227,6 +4227,9 @@ std::vector<std::string> paladin_t::action_names_from_spell_id( unsigned int spe
   if ( spell_id == 387174 )
     return { "eye_of_tyr", "hammer_of_light" };
 
+  if ( spell_id == 35395 )
+    return { "crusader_strike", "hammer_of_the_righteous", "blessed_hammer", "templar_slash", "templar_strike" };
+
   return player_t::action_names_from_spell_id( spell_id );
 }
 

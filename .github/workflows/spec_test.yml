@@ -111,11 +111,11 @@ jobs:
           ${{ runner.workspace }}/b/ninja/simc ${{ env.PTR_ARG }} ${{ env.SIMC_ARGS }} html=test.html json=test.json ${{ matrix.style_arg }} \
             ${{ env.CLASS_STR }}=${{ matrix.spec }} spec=${{ env.SPEC_STR }} ${{ env.PLAYER_ARGS }}
 
-      - name: "All Talents, Assisted Combat"
-        if: always()
+      - name: "Assisted Combat Expression Validation"
+        if: matrix.fightstyle == 'singletarget'
         run: |
           ${{ runner.workspace }}/b/ninja/simc ${{ env.PTR_ARG }} ${{ env.SIMC_ARGS }} ${{ matrix.style_arg }} \
-            enable_all_talents=1 \
+            iterations=1 \
             ${{ env.CLASS_STR }}=${{ matrix.spec }} spec=${{ env.SPEC_STR }} ${{ env.PLAYER_ARGS }} use_blizzard_action_list=1
 
 

@@ -10484,6 +10484,9 @@ void charged_bolts( special_effect_t& effect )
       const spell_data_t* tooltip_spell_data = player->find_spell( 1241244 );
       const spell_data_t* value_spell_data   = player->find_spell( titan_disc_effect_e::TITAN_DISC_VALUE_SPELL );
 
+      // Manually handled in bump since it triggers on refresh as well. 
+      set_tick_zero( false );
+
       damage = create_proc_action<generic_proc_t>( util::tokenize_fn( damage_spell_data->name_cstr() ), effect,
                                                    damage_spell_data );
       damage->base_dd_min = damage->base_dd_max = value_spell_data->effectN( 1 ).average( effect );

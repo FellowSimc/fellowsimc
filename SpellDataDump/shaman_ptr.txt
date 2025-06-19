@@ -1,4 +1,4 @@
-SimulationCraft 1115-02 for World of Warcraft 11.1.7.61491 PTR
+SimulationCraft 1115-02 for World of Warcraft 11.2.0.61476 PTR
 Name             : Block (desc=Passive) (id=107) [Passive] 
 Class            : Warrior, Paladin, Shaman
 School           : Physical
@@ -73,7 +73,7 @@ Internal Cooldown: 3 seconds
 Stacks           : 9 maximum
 Proc Chance      : 100%
 Proc Flags       : White Melee Taken, Yellow Melee Taken, White Ranged Taken, Yellow Ranged Taken, Generic Hostile Spell Taken, Magic Heal Taken, Magic Hostile Spell Taken
-Affecting Spells : Embrace of Earth (338329 effect#1), Earthen Harmony (382020 effect#3), Earthen Communion (443441 effects: #1, #2), Reactive Warding (462454 effect#2), Therazane's Resilience (1217622 effects: #2, #3, #6, #7)
+Affecting Spells : Embrace of Earth (338329 effect#1), Earthen Harmony (382020 effect#3), Earthen Communion (443441 effects: #1, #2), Reactive Warding (462454 effect#2), Therazane's Resilience (1217622 effects: #2, #3)
 Family Flags     : 42
 Attributes       : Not Shapeshifted (16), Do Not Sheath (18), Combo on Block (Mainline: Dispel All Stacks) (62), DoT Stacking Rule (103), Allow Aura While Dead (116), Can Proc From Procs (122), Cannot Be Stolen (134), Allow Proc While Sitting (147), Limit N (165), Vehicle Immunity Category (218), Disable Aura While Dead (226), Can Proc From Suppressed Target Procs (254), Aura Points On Client (268), Allow Class Ability Procs (416), Do Not Consume Aura Stack On Proc (428)
 Effects          :
@@ -1050,16 +1050,16 @@ Labels           : 16: Class Spells
                  : 24: Shaman Spells
                  : 292
 Internal Cooldown: 3 seconds
-Stacks           : 9 initial, 9 maximum
+Stacks           : 9 maximum
 Proc Chance      : 100%
 Proc Flags       : White Melee Taken
-Affecting Spells : Reactive Warding (462454 effect#2), Therazane's Resilience (1217622 effects: #4, #5)
+Affecting Spells : Reactive Warding (462454 effect#2), Therazane's Resilience (1217622 effects: #4, #5, #6, #7)
 Family Flags     : 37
-Attributes       : Wearer Casts Proc Trigger (11), Not Shapeshifted (16), Do Not Sheath (18), No Threat (42), Allow Dead Target (64), Suppress Caster Procs (112), Suppress Target Procs (113), Allow Aura While Dead (116), Allow Proc While Sitting (147), Aura Points On Client (268), Allow Class Ability Procs (416)
+Attributes       : Wearer Casts Proc Trigger (11), Not Shapeshifted (16), Do Not Sheath (18), No Threat (42), Allow Dead Target (64), Suppress Caster Procs (112), Suppress Target Procs (113), Allow Aura While Dead (116), Allow Proc While Sitting (147), Aura Points On Client (268), Allow Class Ability Procs (416), Do Not Consume Aura Stack On Proc (428)
 Aura Interrupt   : Change Specialization (38)
 Effects          :
-#1 (id=44554)    : Apply Aura (6) | Proc Trigger Spell (42): Water Shield
-                   Base Value: 40 | Scaled Value: 40 | SP Coefficient: 0.25 | Trigger Spell: 52128 | Target: Self (1)
+#1 (id=44554)    : Apply Aura (6) | Dummy (4)
+                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 1 | Target: Self (1)
 #2 (id=44555)    : Apply Aura (6) | Restore Power (85) | Scaling Class: -1
                    Base Value: 0 | Scaled Value: 2015.248 (coefficient=0.526316) | PvP Coefficient: 1.75 | Target: Self (1)
 Description      : The caster is surrounded by globes of water, granting $s2 mana per 5 sec. When a melee attack hits the caster, the caster regains $?s382033[${($382033s5/100+1)*$52128s1}][$52128s1]% of their mana. This effect can only occur once every $?a462454[${$proccooldown+($462454s2/1000)}.1][$proccooldown] sec. 
@@ -1075,8 +1075,7 @@ Spell Type       : None
 Labels           : 16: Class Spells
                  : 24: Shaman Spells
                  : 292
-Affecting Spells : Reactive Warding (462454 effect#2), Therazane's Resilience (1217622 effects: #4, #5)
-Triggered By     : Water Shield (52127)
+Affecting Spells : Reactive Warding (462454 effect#2), Therazane's Resilience (1217622 effects: #4, #5, #6, #7)
 Family Flags     : 37
 Attributes       : Do Not Sheath (18), Allow While Mounted (24), Allow While Sitting (27), No Immunities (29), Not an Action (92), Can't Crit (93), Suppress Caster Procs (112), Allow Cast While Casting (135), Allow Class Ability Procs (416)
 Effects          :
@@ -1479,7 +1478,7 @@ Effects          :
                    Family Flags: 0, 1, 2, 3, 10, 20, 21, 28, 30, 31, 44, 45, 50, 60, 79, 83, 98, 107, 119, 121
 #2 (id=830842)   : Apply Aura (6) | Apply Percent Modifier w/ Label (218): Spell Critical Bonus Multiplier (15)
                    Base Value: 50 | Scaled Value: 50 | Misc Value: 15 | Misc Value 2: 3924 (Label) | Target: Self (1)
-                   Affected Spells (Label): Earthen Rage (170374), Earthen Rage (170379), Primordial Wave (375984), Awakening Storms (455130)
+                   Affected Spells (Label): Earthen Rage (170374), Earthen Rage (170379), Primordial Wave (375984), Awakening Storms (455130), Thunderstrike (462763)
 Description      : Your damaging $?a343190[and healing ][]critical strikes deal ${$m1+200}% damage $?a343190[or healing ][]instead of the usual 200%.
 
 Name             : Riptide (id=61295) [Spell Family (11)] 
@@ -1806,7 +1805,7 @@ Effects          :
                    Base Value: 0 | Scaled Value: 0 | SP Coefficient: 2 | Misc Value: 22 | Target: Self (1)
                    Affected Spells: Searing Bolt (3606), Flametongue Attack (10444), Lava Burst (51505), Lava Lash (60103), Elemental Blast (117014), Crash Lightning (187874), Lightning Bolt (188196), Flame Shock (188389), Chain Lightning (188443), Chain Lightning (191732), Lightning Shield (192109), Crash Lightning (195592), Frost Shock (196840), Sundering (197214), Lightning Shield (273324), Strength of Earth (273466), Lightning Conduit (275394), Lava Burst (285452), Lightning Lasso (305484), Lightning Lasso (305485), Fae Transfusion (328928), Fire Nova (333977), Ice Strike (342240), Ascendance (344548), Primordial Wave (375984), Tempest Strikes (428078), Tempest (452201), Awakening Storms (455130), Tremor (455622), Searing Volley (458147), Surging Bolt (458267), Tempest Overload (463351), Ascendance (467263), Sundering (467283), Flametongue Attack (467386), Flametongue Attack (467390), Doom Winds (469270), Voltaic Blaze (470057), Ice Strike (470194), Flame Shock (470411), Primordial Fire (1218113), Primordial Frost (1218116), Primordial Lightning (1218118)
                    Family Flags: 56
-Description      : Increases your chance to trigger Stormbringer and Windfury Weapon by ${$m3}.2%, and increases all Fire, Frost, and Nature damage you deal by ${$77223m1}.1%.$?s201845[
+Description      : Increases your chance to trigger Stormsurge and Windfury Weapon by ${$m3}.2%, and increases all Fire, Frost, and Nature damage you deal by ${$77223m1}.1%.$?s201845[
 
 $@spellicon201845 $@spellname201845
 $@spelldesc201845][]
@@ -2377,6 +2376,8 @@ Effects          :
                    Base Value: 0 | Scaled Value: 0 | Misc Value: 233843 | Misc Value 2: 0x6 | Target: Self (1)
 #14 (id=1189101) : Apply Aura (6) | Change Model (56)
                    Base Value: 0 | Scaled Value: 0 | Misc Value: 233844 | Misc Value 2: 0x6 | Target: Self (1)
+#15 (id=1239481) : Apply Aura (6) | Unknown(285)
+                   Base Value: 0 | Scaled Value: 0 | Trigger Spell: 384437 | Target: Self (1)
 Description      : Transform into an Air Ascendant for $114051d, immediately dealing $344548s1 Nature damage to any enemy within $344548A1 yds, reducing the cooldown and cost of Stormstrike by $s9%, and transforming your auto attack and Stormstrike into Wind attacks which bypass armor and have a $114089r yd range.$?s384411[
 
 While Ascendance is active, generate $s1 Maelstrom Weapon $lstack:stacks; every $384437t1 sec.][]
@@ -2401,7 +2402,7 @@ Proc Chance      : 100%
 Proc Flags       : Magic Heal, Helpful Periodic
 Affecting Spells : Elemental Rebalancers (208777 effect#1), Thorim's Invocation (384444 effect#4), Maelstrom of Elements (394677 effect#1), First Ascendant (462440 effect#1), Preeminence (462443 effects: #1, #2)
 Family Flags     : 102
-Attributes       : Not Shapeshifted (16), No Aura Cancel (31), Can Proc From Procs (122), Aura Points On Client (268), Spellcast Override In Spellbook (310), Reset cooldown upon ending an encounter (333), Only Proc From Class Abilities (415), Allow Class Ability Procs (416), Nameplate Personal Buffs/Debuffs (423), Periodic Refresh Extends Duration (436)
+Attributes       : Not Shapeshifted (16), No Aura Cancel (31), Can Proc From Procs (122), Aura Points On Client (268), Spellcast Override In Spellbook (310), Reset cooldown upon ending an encounter (333), Allow Class Ability Procs (416), Nameplate Personal Buffs/Debuffs (423)
 Aura Interrupt   : Raid Encounter End or M+ Start (41)
 Effects          :
 #1 (id=127155)   : Apply Aura (6) | Change Model (56)
@@ -2542,7 +2543,7 @@ Family Flags     : 41, 110
 Attributes       : Exclude Caster (51), Ignore Line of Sight (66), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=128512)   : Direct Heal (10)
-                   Base Value: 0 | Scaled Value: 0 (delta=0.05) | SP Coefficient: 1.75 | Radius: 0 - 40 yards | Target: At Self (18) -> At Friendly in Area (31)
+                   Base Value: 0 | Scaled Value: 0 (delta=0.05) | SP Coefficient: 3.5 | Radius: 0 - 40 yards | Target: At Self (18) -> At Friendly in Area (31)
 Description      : Heals injured allies.
 
 Name             : Windstrike (id=115356) [Spell Family (11)] 
@@ -3627,8 +3628,8 @@ Labels           : 16: Class Spells
                  : 292
                  : 2626: Reactivity (445035 effect#4)
 Proc Chance      : 100%
-Proc Flags       : Generic Heal, Magic Heal, Helpful Periodic, Cast Successful
-Attributes       : Passive (6), Can Proc From Procs (122), Not In Spellbook (143), Aura Points On Client (268), Only Proc From Class Abilities (415), Allow Class Ability Procs (416), Do Not Consume Aura Stack On Proc (428)
+Proc Flags       : Generic Heal, Magic Heal, Helpful Periodic
+Attributes       : Passive (6), Can Proc From Procs (122), Not In Spellbook (143), Aura Points On Client (268), Allow Class Ability Procs (416), Do Not Consume Aura Stack On Proc (428)
 Effects          :
 #1 (id=219624)   : Apply Pet Area Aura (119) | Dummy (4)
                    Base Value: 0 | Scaled Value: 0 | Radius: 100 yards | Target: Self (1)
@@ -3771,7 +3772,7 @@ Labels           : 16: Class Spells
                  : 292
                  : 3924: Elemental Fury (60188 effect#2)
                  : 3983
-                 : 4013: Stormcaller (454021 effect#3)
+                 : 4013: Stormcaller (454021 effect#3), Stormcaller (454021 effect#4)
 Affecting Spells : Spiritwalker's Grace (79206 effect#1), Restoration Shaman (137039 effects: #3, #4), Elemental Shaman (137040 effects: #1, #2), Enhancement Shaman (137041 effects: #1, #2), Storm Elemental (157299 effects: #4, #5), Primal Storm Elemental (157319 effects: #4, #5), Mastery: Elemental Overload (168534 effects: #3, #4), Summon Lightning Elemental (191716 effects: #2, #3), Crackling Surge (224127 effects: #1, #2), Initial Shaman (417374 effects: #1, #2), Amplification Core (456369 effects: #1, #2), Maelstrom Surge (457727 effects: #1, #2), Lightning Capacitor (462862 effects: #1, #2), Lesser Storm Elemental (462990 effects: #4, #5), Lesser Storm Elemental (462993 effects: #4, #5)
 Family Flags     : 39, 126
 Attributes       : No Reflection (39), Not In Spellbook (143), Always Line of Sight (185), Allow Class Ability Procs (416)
@@ -10092,7 +10093,7 @@ Labels           : 16: Class Spells
                  : 24: Shaman Spells
                  : 292
                  : 1679: Nature's Fury (381655 effect#2)
-                 : 4013: Stormcaller (454021 effect#3)
+                 : 4013: Stormcaller (454021 effect#3), Stormcaller (454021 effect#4)
 Affecting Spells : Mastery: Enhanced Elements (77223 effects: #1, #5), Spiritwalker's Grace (79206 effect#1), Restoration Shaman (137039 effects: #3, #4), Elemental Shaman (137040 effects: #1, #2), Enhancement Shaman (137041 effects: #1, #2), Storm Elemental (157299 effects: #4, #5), Primal Storm Elemental (157319 effects: #4, #5), Mastery: Elemental Overload (168534 effects: #3, #4), Summon Lightning Elemental (191716 effects: #2, #3), Elemental Rebalancers (208777 effect#1), Crackling Surge (224127 effects: #1, #2), Thorim's Invocation (384444 effect#4), Maelstrom of Elements (394677 effect#1), Elemental Weapons (408390 effects: #1, #2), Initial Shaman (417374 effects: #1, #2), Amplification Core (456369 effects: #1, #2), Maelstrom Surge (457727 effects: #1, #2), First Ascendant (462440 effect#1), Preeminence (462443 effects: #1, #2), Lightning Capacitor (462862 effects: #1, #2), Lesser Storm Elemental (462990 effects: #4, #5), Lesser Storm Elemental (462993 effects: #4, #5)
 Triggered By     : Ascendance (114051)
 Family Flags     : 39, 56, 102, 126
@@ -10729,7 +10730,7 @@ School           : Elemental
 Spell Type       : Magic
 Resource         : 0.6% Base Mana (0) (id=265386)
 Spell Level      : 10
-Range            : 45 yards
+Range            : 40 yards
 GCD              : 1.5 seconds
 Charges          : 1 (30 seconds cooldown)
 Category         : 1893 (Type 0x1)
@@ -11858,7 +11859,7 @@ Attributes       : Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log
 Effects          :
 #1 (id=1013223)  : Apply Aura (6) | Dummy (4)
                    Base Value: -3000 | Scaled Value: -3000 | Target: Self (1)
-Description      : Consuming Tidal Waves has a chance to reduce the cooldown of your Healing Stream, Cloudburst, Healing Tide, Mana Tide, and Poison Cleansing totems by ${$s1/-1000}.1 sec.
+Description      : Consuming Tidal Waves has a chance to reduce the cooldown of your Healing Stream, Cloudburst, Healing Tide, and Poison Cleansing totems by ${$s1/-1000}.1 sec.
 
 Name             : Echo Chamber (id=382032) [Spell Family (11), Passive, Hidden] 
 Talent Entry     : Elemental [tree=spec, row=7, col=3, max_rank=1, req_points=8]
@@ -12539,7 +12540,7 @@ Internal Cooldown: 3 seconds
 Stacks           : 9 maximum
 Proc Chance      : 100%
 Proc Flags       : White Melee Taken, Yellow Melee Taken, White Ranged Taken, Yellow Ranged Taken, Generic Hostile Spell Taken, Magic Heal Taken, Magic Hostile Spell Taken
-Affecting Spells : Embrace of Earth (338329 effect#1), Earthen Harmony (382020 effect#3), Earthen Communion (443441 effects: #1, #2), Reactive Warding (462454 effect#2), Therazane's Resilience (1217622 effects: #2, #3, #6, #7)
+Affecting Spells : Embrace of Earth (338329 effect#1), Earthen Harmony (382020 effect#3), Earthen Communion (443441 effects: #1, #2), Reactive Warding (462454 effect#2), Therazane's Resilience (1217622 effects: #2, #3)
 Family Flags     : 42
 Attributes       : Not Shapeshifted (16), Do Not Sheath (18), Combo on Block (Mainline: Dispel All Stacks) (62), DoT Stacking Rule (103), Allow Aura While Dead (116), Can Proc From Procs (122), Cannot Be Stolen (134), Allow Proc While Sitting (147), Vehicle Immunity Category (218), Disable Aura While Dead (226), Can Proc From Suppressed Target Procs (254), Aura Points On Client (268), Allow Class Ability Procs (416), Do Not Consume Aura Stack On Proc (428)
 Effects          :
@@ -12761,6 +12762,7 @@ Duration         : 15 seconds
 Labels           : 16: Class Spells
                  : 24: Shaman Spells
                  : 292
+Triggered By     : Ascendance (114051)
 Attributes       : Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Can Proc From Procs (122)
 Effects          :
 #1 (id=1017055)  : Apply Aura (6) | Periodic Dummy (226): every 1 seconds
@@ -12793,9 +12795,11 @@ Effects          :
                    Base Value: 20 | Scaled Value: 20 | Target: Self (1)
                    Affected Spells: Lightning Bolt (188196), Chain Lightning (188443), Lightning Bolt (214815), Lightning Bolt Overload (214816), Tempest (452201)
                    Family Flags: 0, 1, 107
+#6 (id=1239450)  : Apply Aura (6) | Dummy (4)
+                   Base Value: 10 | Scaled Value: 10 | Target: Self (1)
 Description      : Increases the damage of Lightning Bolt and Chain Lightning by $s5%$?a378270[, and Deeply Rooted Elements lasts ${$s2/1000} sec longer]?s114051[, and reduces the cooldown of Ascendance by ${$s4/-1000} sec][, reduces the cooldown of Ascendance by ${$s4/-1000} sec, and causes Deeply Rooted Elements to last ${$s2/1000} sec longer].
 
-While Ascendance is active, Windstrike automatically consumes up to $s1 Maelstrom Weapon stacks to discharge a Lightning Bolt or Chain Lightning at $s3% effectiveness at your enemy, whichever you most recently used.
+During Ascendance, Windstrike consumes up to $s1 Maelstrom Weapon to discharge a Lightning Bolt or Chain Lightning at $s3% effectiveness at your enemy, whichever you most recently used$?s454009[. When available, it will instead discharge a Tempest at $s3% effectiveness, consuming $s6 Maelstrom Weapon.][.]
 
 Name             : Witch Doctor's Ancestry (id=384447) [Spell Family (11), Passive, Hidden] 
 Talent Entry     : Enhancement [tree=spec, row=9, col=3, max_rank=1, req_points=20, select_idx=100]
@@ -13273,7 +13277,6 @@ Class            : Shaman
 School           : Fire
 Spell Type       : Magic
 Range            : 100 yards
-Max Targets      : 3
 Labels           : 16: Class Spells
                  : 24: Shaman Spells
                  : 292
@@ -14212,8 +14215,8 @@ Labels           : 16: Class Spells
                  : 24: Shaman Spells
                  : 292
                  : 1679: Nature's Fury (381655 effect#2)
-                 : 4012: Stormcaller (454021 effect#4)
-                 : 4013: Stormcaller (454021 effect#3)
+                 : 4012
+                 : 4013: Stormcaller (454021 effect#3), Stormcaller (454021 effect#4)
 Affecting Spells : Mastery: Enhanced Elements (77223 effects: #1, #5), Spiritwalker's Grace (79206 effect#1), Restoration Shaman (137039 effects: #3, #4), Elemental Shaman (137040 effects: #1, #2), Enhancement Shaman (137041 effects: #1, #2), Storm Elemental (157299 effects: #4, #5), Primal Storm Elemental (157319 effects: #4, #5), Mastery: Elemental Overload (168534 effects: #3, #4), Summon Lightning Elemental (191716 effects: #2, #3), Crackling Surge (224127 effects: #1, #2), Elemental Weapons (408390 effects: #1, #2), Initial Shaman (417374 effects: #1, #2), Amplification Core (456369 effects: #1, #2), Maelstrom Surge (457727 effects: #1, #2), Lightning Capacitor (462862 effects: #1, #2), Lesser Storm Elemental (462990 effects: #4, #5), Lesser Storm Elemental (462993 effects: #4, #5)
 Triggered By     : Tempest Strikes (428071)
 Family Flags     : 39, 56, 126
@@ -14386,7 +14389,7 @@ Attributes       : Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log
 Effects          :
 #1 (id=1139364)  : Apply Aura (6) | Apply Flat Modifier w/ Label (219): Spell Duration (1)
                    Base Value: 4000 | Scaled Value: 4000 | Misc Value: 1 | Misc Value 2: 3447 (Label) | Target: Self (1)
-                   Affected Spells (Label): Call of the Ancestors (445624), Call of the Ancestors (447244)
+                   Affected Spells (Label): Call of the Ancestors (445624), Call of the Ancestors (447244), Call of the Ancestors (1238269)
 #2 (id=1174817)  : Apply Aura (6) | Apply Flat Modifier w/ Label (219): Spell Effect 1 (3)
                    Base Value: 4 | Scaled Value: 4 | Misc Value: 3 | Misc Value 2: 3964 (Label) | Target: Self (1)
                    Affected Spells (Label): Call of the Ancestors (443450)
@@ -14556,7 +14559,7 @@ Stacks           : 1 initial, 1 maximum
 Proc Chance      : 101%
 Proc Flags       : Magic Heal, Magic Hostile Spell
 Family Flags     : 65
-Attributes       : Do Not Sheath (18), Cooldown On Event (25), No Threat (42), No AutoCast (AI) (49), Suppress Caster Procs (112), Suppress Target Procs (113), Cannot Be Stolen (134), Aura Points On Client (268), Allow Class Ability Procs (416)
+Attributes       : Do Not Sheath (18), Cooldown On Event (25), No Threat (42), No AutoCast (AI) (49), Suppress Caster Procs (112), Suppress Target Procs (113), Cannot Be Stolen (134), Aura Points On Client (268), Enable Procs from Suppressed Caster Procs (384), Allow Class Ability Procs (416)
 Aura Interrupt   : Change Specialization (38), Change Talent (46)
 Effects          :
 #1 (id=1139375)  : Apply Aura (6) | Add Percent Modifier (108): Spell Resource Cost (14)
@@ -14878,7 +14881,7 @@ Effects          :
                    Base Value: 5 | Scaled Value: 5 | Target: Self (1)
 Description      : $?a137041[Lava Lash has a chance to summon a Searing Totem to hurl Searing Bolts that deal $3606s1 Fire damage to a nearby enemy. Lasts $458101d.
 
-Frost Shocks empowered by Hailstorm, Lava Lash, and Fire Nova cause your Searing totems to shoot a Searing Volley at up to $s3 nearby enemies for $458147s1 Fire damage.][When you summon a Healing Tide Totem, Healing Stream Totem, Cloudburst Totem, Mana Tide Totem, or Spirit Link Totem you cast a free instant Chain Heal at $458221s2% effectiveness.]
+Frost Shocks empowered by Hailstorm, Lava Lash, and Fire Nova cause your Searing totems to shoot a Searing Volley at up to $s3 nearby enemies for $458147s1 Fire damage.][When you summon a Healing Tide Totem, Healing Stream Totem, Cloudburst Totem, or Spirit Link Totem you cast a free instant Chain Heal at $458221s2% effectiveness.]
 
 Name             : Reactivity (id=445035) [Spell Family (11), Passive, Hidden] 
 Talent Entry     : Totemic (Enhancement, Restoration) [tree=hero, row=3, col=3, max_rank=1, req_points=1]
@@ -14898,7 +14901,7 @@ Effects          :
                    Affected Spells: Cloudburst (157503)
                    Family Flags: 4
 #3 (id=1164018)  : Apply Aura (6) | Dummy (4)
-                   Base Value: 50 | Scaled Value: 50 | PvP Coefficient: 0.6 | Target: Self (1)
+                   Base Value: 100 | Scaled Value: 100 | Target: Self (1)
 #4 (id=1176666)  : Apply Aura (6) | Apply Flat Modifier w/ Label (219): Spell Effect 3 (23)
                    Base Value: 25 | Scaled Value: 25 | Misc Value: 23 | Misc Value 2: 2626 (Label) | Target: Self (1)
                    Affected Spells (Label): Cloudburst Totem (157504)
@@ -14976,7 +14979,7 @@ Labels           : 16: Class Spells
                  : 3022
 Proc Chance      : 100%
 Proc Flags       : Generic Heal, Generic Hostile Spell, Magic Heal, Magic Hostile Spell
-Triggered By     : Call of the Ancestors (445624)
+Triggered By     : Call of the Ancestors (445624), Call of the Ancestors (1238269)
 Attributes       : Do Not Display (Spellbook, Aura Icon, Combat Log) (7), No Immunities (29), Allow Cast While Casting (135), Allow Actions During Channel (160), Allow While Stunned (163), Allow While Confused (178), Allow While Charmed (261), Allow While Banished Aura State (299), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=1145057)  : Apply Aura (6) | Dummy (4)
@@ -15383,7 +15386,7 @@ Labels           : 16: Class Spells
 Stacks           : 2 maximum
 Proc Chance      : 101%
 Attributes       : Aura Points On Client (268), Spellcast Override In Spellbook (310)
-Aura Interrupt   : Change Specialization (38), Change Talent (46)
+Aura Interrupt   : Change Specialization (38), Raid Encounter Start or M+ Start (40), Change Talent (46)
 Effects          :
 #1 (id=1156250)  : Apply Aura (6) | Override Action Spell (Misc /w Base) (332) | Attributes: Suppress Points Stacking (6)
                    Base Value: 452201 | Scaled Value: 452201 | Misc Value: 188196 | Target: Self (1)
@@ -15414,8 +15417,8 @@ Effects          :
                    Base Value: 5 | Scaled Value: 5 | Misc Value: 7 | Misc Value 2: 4013 (Label) | Target: Self (1)
                    Affected Spells (Label): Earthen Rage (170379), Ascendance (344548), Tempest Strikes (428078), Awakening Storms (455130), Thunderstrike (462763), Ascendance (467263)
 #4 (id=1176170)  : Apply Aura (6) | Apply Percent Modifier w/ Label (218): Spell Critical Bonus Multiplier (15)
-                   Base Value: 5 | Scaled Value: 5 | Misc Value: 15 | Misc Value 2: 4012 (Label) | Target: Self (1)
-                   Affected Spells (Label): Tempest Strikes (428078)
+                   Base Value: 5 | Scaled Value: 5 | Misc Value: 15 | Misc Value 2: 4013 (Label) | Target: Self (1)
+                   Affected Spells (Label): Earthen Rage (170379), Ascendance (344548), Tempest Strikes (428078), Awakening Storms (455130), Thunderstrike (462763), Ascendance (467263)
 Description      : Increases the critical strike chance of your Nature damage spells by $s1% and the critical strike damage of your Nature spells by $s2%.
 
 Name             : Electroshock (id=454022) [Spell Family (11), Passive, Hidden] 
@@ -15778,7 +15781,7 @@ Labels           : 16: Class Spells
                  : 1679: Nature's Fury (381655 effect#2)
                  : 3022
                  : 3924: Elemental Fury (60188 effect#2)
-                 : 4013: Stormcaller (454021 effect#3)
+                 : 4013: Stormcaller (454021 effect#3), Stormcaller (454021 effect#4)
                  : 4065: Enhancement Shaman (137041 effect#30), Enhancement Shaman (1214207 effect#14), Enhancement Shaman (1214207 effect#15)
 Affecting Spells : Mastery: Enhanced Elements (77223 effects: #1, #5), Spiritwalker's Grace (79206 effect#1), Restoration Shaman (137039 effects: #3, #4), Elemental Shaman (137040 effects: #1, #2), Enhancement Shaman (137041 effects: #1, #2), Storm Elemental (157299 effects: #4, #5), Primal Storm Elemental (157319 effects: #4, #5), Mastery: Elemental Overload (168534 effects: #3, #4), Summon Lightning Elemental (191716 effects: #2, #3), Crackling Surge (224127 effects: #1, #2), Elemental Weapons (408390 effects: #1, #2), Initial Shaman (417374 effects: #1, #2), Amplification Core (456369 effects: #1, #2), Maelstrom Surge (457727 effects: #1, #2), Lightning Capacitor (462862 effects: #1, #2), Lesser Storm Elemental (462990 effects: #4, #5), Lesser Storm Elemental (462993 effects: #4, #5)
 Triggered By     : Awakening Storms (455129)
@@ -16341,7 +16344,7 @@ Labels           : 16: Class Spells
 Stacks           : 3 maximum
 Proc Chance      : 101%
 Attributes       : No Aura Cancel (31)
-Aura Interrupt   : Raid Encounter Start or M+ Start (40), Change Talent (46), Challenge Mode Start (54)
+Aura Interrupt   : Change Specialization (38), Raid Encounter Start or M+ Start (40), Change Talent (46), Challenge Mode Start (54)
 Effects          :
 #1 (id=1171364)  : Apply Aura (6) | Dummy (4)
                    Base Value: 1 | Scaled Value: 1 | Target: Self (1)
@@ -16829,8 +16832,9 @@ Range            : 100 yards
 Labels           : 16: Class Spells
                  : 24: Shaman Spells
                  : 292
+                 : 3924: Elemental Fury (60188 effect#2)
                  : 3945: Enhanced Imbues (462796 effect#9)
-                 : 4013: Stormcaller (454021 effect#3)
+                 : 4013: Stormcaller (454021 effect#3), Stormcaller (454021 effect#4)
 Affecting Spells : Spiritwalker's Grace (79206 effect#1), Restoration Shaman (137039 effects: #3, #4), Elemental Shaman (137040 effects: #1, #2), Enhancement Shaman (137041 effects: #1, #2), Storm Elemental (157299 effects: #4, #5), Primal Storm Elemental (157319 effects: #4, #5), Mastery: Elemental Overload (168534 effects: #3, #4), Summon Lightning Elemental (191716 effects: #2, #3), Crackling Surge (224127 effects: #1, #2), Initial Shaman (417374 effects: #1, #2), Amplification Core (456369 effects: #1, #2), Maelstrom Surge (457727 effects: #1, #2), Lightning Capacitor (462862 effects: #1, #2), Lesser Storm Elemental (462990 effects: #4, #5), Lesser Storm Elemental (462993 effects: #4, #5)
 Family Flags     : 39, 126
 Attributes       : Do Not Display Range (126), Not In Spellbook (143)
@@ -17538,7 +17542,7 @@ Labels           : 16: Class Spells
                  : 24: Shaman Spells
                  : 292
                  : 1679: Nature's Fury (381655 effect#2)
-                 : 4013: Stormcaller (454021 effect#3)
+                 : 4013: Stormcaller (454021 effect#3), Stormcaller (454021 effect#4)
 Affecting Spells : Mastery: Enhanced Elements (77223 effects: #1, #5), Spiritwalker's Grace (79206 effect#1), Restoration Shaman (137039 effects: #3, #4), Elemental Shaman (137040 effects: #1, #2), Enhancement Shaman (137041 effects: #1, #2), Storm Elemental (157299 effects: #4, #5), Primal Storm Elemental (157319 effects: #4, #5), Mastery: Elemental Overload (168534 effects: #3, #4), Summon Lightning Elemental (191716 effects: #2, #3), Elemental Rebalancers (208777 effect#1), Crackling Surge (224127 effects: #1, #2), Thorim's Invocation (384444 effect#4), Maelstrom of Elements (394677 effect#1), Elemental Weapons (408390 effects: #1, #2), Initial Shaman (417374 effects: #1, #2), Amplification Core (456369 effects: #1, #2), Maelstrom Surge (457727 effects: #1, #2), First Ascendant (462440 effect#1), Preeminence (462443 effects: #1, #2), Lightning Capacitor (462862 effects: #1, #2), Lesser Storm Elemental (462990 effects: #4, #5), Lesser Storm Elemental (462993 effects: #4, #5)
 Family Flags     : 39, 56, 102, 126
 Attributes       : Always AOE Line of Sight (186), Aura Points On Client (268), Allow Class Ability Procs (416)
@@ -18504,11 +18508,11 @@ Effects          :
                    Affected Spells: Earth Shield (379)
                    Family Flags: 70
 #2 (id=1201813)  : Apply Aura (6) | Add Flat Modifier (107): Spell Max Stacks (37)
-                   Base Value: -8 | Scaled Value: -8 | Misc Value: 37 | Target: Self (1)
+                   Base Value: -99 | Scaled Value: -99 | Misc Value: 37 | Target: Self (1)
                    Affected Spells: Earth Shield (974), Earth Shield (383648)
                    Family Flags: 42
 #3 (id=1201819)  : Apply Aura (6) | Add Flat Modifier (107): Spell Doses (31)
-                   Base Value: -8 | Scaled Value: -8 | Misc Value: 31 | Target: Self (1)
+                   Base Value: -99 | Scaled Value: -99 | Misc Value: 31 | Target: Self (1)
                    Affected Spells: Earth Shield (974), Earth Shield (383648)
                    Family Flags: 42
 #4 (id=1201820)  : Apply Aura (6) | Add Percent Modifier (108): Spell Effect 2 (12)
@@ -18520,13 +18524,13 @@ Effects          :
                    Affected Spells: Water Shield (52127), Water Shield (52128)
                    Family Flags: 37
 #6 (id=1201822)  : Apply Aura (6) | Add Flat Modifier (107): Spell Max Stacks (37)
-                   Base Value: -9 | Scaled Value: -9 | Misc Value: 37 | Target: Self (1)
-                   Affected Spells: Earth Shield (974), Earth Shield (383648)
-                   Family Flags: 42
+                   Base Value: -99 | Scaled Value: -99 | Misc Value: 37 | Target: Self (1)
+                   Affected Spells: Water Shield (52127), Water Shield (52128)
+                   Family Flags: 37
 #7 (id=1201823)  : Apply Aura (6) | Add Flat Modifier (107): Spell Doses (31)
-                   Base Value: -9 | Scaled Value: -9 | Misc Value: 31 | Target: Self (1)
-                   Affected Spells: Earth Shield (974), Earth Shield (383648)
-                   Family Flags: 42
+                   Base Value: -99 | Scaled Value: -99 | Misc Value: 31 | Target: Self (1)
+                   Affected Spells: Water Shield (52127), Water Shield (52128)
+                   Family Flags: 37
 Description      : Earth Shield and Water Shield no longer lose charges and are ${100+$s1}% effective.
 
 Name             : Primordial Storm (id=1218047) [Spell Family (11), Passive] 
@@ -18591,7 +18595,7 @@ Labels           : 16: Class Spells
 Affecting Spells : Mastery: Enhanced Elements (77223 effects: #1, #5), Spiritwalker's Grace (79206 effect#1), Restoration Shaman (137039 effects: #3, #4), Elemental Shaman (137040 effects: #1, #2), Enhancement Shaman (137041 effects: #1, #2), Mastery: Elemental Overload (168534 effects: #3, #4), Maelstrom Weapon (187881 effect#2), Fire Elemental (188592 effects: #4, #5), Molten Weapon (224125 effects: #1, #2, #3, #4), Icy Edge (224126 effects: #3, #4), Crackling Surge (224127 effects: #3, #4), Legacy of the Frost Witch (384451 effects: #1, #2), Earthen Weapon (392375 effects: #1, #2), Elemental Weapons (408390 effects: #1, #2), Volcanic Strength (409833 effects: #1, #2), Initial Shaman (417374 effects: #1, #2), Amplification Core (456369 effects: #1, #2), Maelstrom Surge (457727 effects: #1, #2), Lesser Fire Elemental (462992 effects: #4, #5)
 Triggered By     : Primordial Storm (1218090)
 Family Flags     : 39, 56, 58, 103, 125
-Attributes       : Is Ability (4), Not Shapeshifted (16), Do Not Sheath (18), No Skill Increase (36), Initiates Combat (Enables Auto-Attack) (41), Not a Proc (105), Requires Main-Hand Weapon (106), No Cast Log (128), Allow Class Ability Procs (416)
+Attributes       : Is Ability (4), Not Shapeshifted (16), Do Not Sheath (18), No Skill Increase (36), Initiates Combat (Enables Auto-Attack) (41), Not a Proc (105), Requires Main-Hand Weapon (106), No Cast Log (128), Always AOE Line of Sight (186), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=1202739)  : School Damage (2): flamestrike
                    Base Value: 0 | Scaled Value: 0 (delta=0.05) | AP Coefficient: 0.9 | PvP Coefficient: 0.85 | Radius: 0 - 8 yards | Target: At Self (18) -> At Enemy in Area (16)
@@ -18607,7 +18611,7 @@ Labels           : 16: Class Spells
 Affecting Spells : Mastery: Enhanced Elements (77223 effects: #1, #5), Spiritwalker's Grace (79206 effect#1), Restoration Shaman (137039 effects: #3, #4), Elemental Shaman (137040 effects: #1, #2), Enhancement Shaman (137041 effects: #1, #2), Mastery: Elemental Overload (168534 effects: #3, #4), Maelstrom Weapon (187881 effect#2), Molten Weapon (224125 effects: #3, #4), Icy Edge (224126 effects: #1, #2, #3, #4), Crackling Surge (224127 effects: #3, #4), Legacy of the Frost Witch (384451 effects: #1, #2), Earthen Weapon (392375 effects: #1, #2), Elemental Weapons (408390 effects: #1, #2), Volcanic Strength (409833 effects: #1, #2), Initial Shaman (417374 effects: #1, #2), Amplification Core (456369 effects: #1, #2), Maelstrom Surge (457727 effects: #1, #2)
 Triggered By     : Primordial Storm (1218090)
 Family Flags     : 24, 39, 56, 58, 125
-Attributes       : Is Ability (4), Not Shapeshifted (16), Do Not Sheath (18), No Skill Increase (36), Initiates Combat (Enables Auto-Attack) (41), Not a Proc (105), Requires Main-Hand Weapon (106), No Cast Log (128), Allow Class Ability Procs (416)
+Attributes       : Is Ability (4), Not Shapeshifted (16), Do Not Sheath (18), No Skill Increase (36), Initiates Combat (Enables Auto-Attack) (41), Not a Proc (105), Requires Main-Hand Weapon (106), No Cast Log (128), Always AOE Line of Sight (186), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=1202743)  : School Damage (2): froststrike
                    Base Value: 0 | Scaled Value: 0 (delta=0.05) | AP Coefficient: 0.9 | PvP Coefficient: 0.85 | Radius: 0 - 8 yards | Target: At Self (18) -> At Enemy in Area (16)
@@ -18623,7 +18627,7 @@ Labels           : 16: Class Spells
 Affecting Spells : Mastery: Enhanced Elements (77223 effects: #1, #5), Spiritwalker's Grace (79206 effect#1), Restoration Shaman (137039 effects: #3, #4), Elemental Shaman (137040 effects: #1, #2), Enhancement Shaman (137041 effects: #1, #2), Storm Elemental (157299 effects: #4, #5), Primal Storm Elemental (157319 effects: #4, #5), Mastery: Elemental Overload (168534 effects: #3, #4), Maelstrom Weapon (187881 effect#2), Summon Lightning Elemental (191716 effects: #2, #3), Molten Weapon (224125 effects: #3, #4), Icy Edge (224126 effects: #3, #4), Crackling Surge (224127 effects: #1, #2, #3, #4), Legacy of the Frost Witch (384451 effects: #1, #2), Earthen Weapon (392375 effects: #1, #2), Elemental Weapons (408390 effects: #1, #2), Volcanic Strength (409833 effects: #1, #2), Initial Shaman (417374 effects: #1, #2), Amplification Core (456369 effects: #1, #2), Maelstrom Surge (457727 effects: #1, #2), Lightning Capacitor (462862 effects: #1, #2), Lesser Storm Elemental (462990 effects: #4, #5), Lesser Storm Elemental (462993 effects: #4, #5)
 Triggered By     : Primordial Storm (1218090)
 Family Flags     : 39, 56, 58, 125, 126
-Attributes       : Is Ability (4), Not Shapeshifted (16), Do Not Sheath (18), No Skill Increase (36), Initiates Combat (Enables Auto-Attack) (41), Not a Proc (105), Requires Main-Hand Weapon (106), No Cast Log (128), Allow Class Ability Procs (416)
+Attributes       : Is Ability (4), Not Shapeshifted (16), Do Not Sheath (18), No Skill Increase (36), Initiates Combat (Enables Auto-Attack) (41), Not a Proc (105), Requires Main-Hand Weapon (106), No Cast Log (128), Always AOE Line of Sight (186), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=1202746)  : School Damage (2): stormstrike
                    Base Value: 0 | Scaled Value: 0 (delta=0.05) | AP Coefficient: 0.9 | PvP Coefficient: 0.85 | Radius: 0 - 8 yards | Target: At Self (18) -> At Enemy in Area (16)
@@ -18928,5 +18932,45 @@ Effects          :
                    Affected Spells: Frost Shock (196840)
                    Family Flags: 31
 Description      : Elemental Shaman baseline passive
+
+Name             : Awakening Storms (id=1238133) [Spell Family (11), Hidden] 
+Class            : Shaman
+School           : Nature
+Spell Type       : Magic
+Range            : 100 yards
+Duration         : Aura (infinite)
+Labels           : 16: Class Spells
+                 : 24: Shaman Spells
+                 : 292
+                 : 3022
+Stacks           : 12 maximum
+Proc Chance      : 101%
+Attributes       : Do Not Display (Spellbook, Aura Icon, Combat Log) (7), No Aura Cancel (31)
+Aura Interrupt   : Raid Encounter Start or M+ Start (40), Change Talent (46), Challenge Mode Start (54)
+Effects          :
+#1 (id=1235187)  : Apply Aura (6) | Dummy (4)
+                   Base Value: 1 | Scaled Value: 1 | Target: Self (1)
+Description      : $@spelldesc455129
+Tooltip          : $s1 Awakening $lStorm:Storms; accumulated. Upon reaching $u stacks, your Lightning Bolt is replaced with Tempest.
+
+Name             : Call of the Ancestors (id=1238269) [Spell Family (11)] 
+Class            : Shaman
+School           : Nature
+Spell Type       : None
+Range            : 100 yards
+Duration         : 15 seconds
+Labels           : 16: Class Spells
+                 : 24: Shaman Spells
+                 : 292
+                 : 3022
+                 : 3447: Heed My Call (443444 effect#1)
+Attributes       : Do Not Display Range (126), Do Not Display Cast Time (441)
+Aura Interrupt   : Change Specialization (38), Change Talent (46)
+Effects          :
+#1 (id=1235406)  : Summon (28)
+                   Base Value: 0 | Scaled Value: 0 | Misc Value: 245543 | Misc Value 2: 0x1716 | Radius: 3 yards | Target: Unknown(50)
+#2 (id=1235407)  : Trigger Spell (64): Call of the Ancestors
+                   Base Value: 0 | Scaled Value: 0 | Trigger Spell: 447206 | Target: Self (1)
+Description      : $@spelldesc443450
 
 

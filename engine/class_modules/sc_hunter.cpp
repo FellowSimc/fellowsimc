@@ -637,12 +637,13 @@ public:
     spell_data_ptr_t rapid_fire;
     spell_data_ptr_t rapid_fire_tick;
     spell_data_ptr_t rapid_fire_energize;
-    spell_data_ptr_t precise_shots; // TODO gcd changes
+    spell_data_ptr_t precise_shots;
     spell_data_ptr_t precise_shots_buff;
 
     spell_data_ptr_t streamline;
     spell_data_ptr_t streamline_buff;
-    spell_data_ptr_t lock_and_load; // TODO proc rate changes
+    spell_data_ptr_t lock_and_load; // TODO how does its blp work
+    spell_data_ptr_t lock_and_load_buff;
     spell_data_ptr_t ammo_conservation;
 
     spell_data_ptr_t penetrating_shots;
@@ -658,7 +659,7 @@ public:
     spell_data_ptr_t surging_shots;
     spell_data_ptr_t master_marksman;
     spell_data_ptr_t master_marksman_bleed;
-    spell_data_ptr_t light_ammo; // TODO new
+    spell_data_ptr_t light_ammo;
 
     spell_data_ptr_t improved_deathblow;
     spell_data_ptr_t obsidian_arrowhead;
@@ -678,14 +679,14 @@ public:
     spell_data_ptr_t no_scope;
     spell_data_ptr_t feathered_frenzy;
     spell_data_ptr_t target_acquisition;
-    spell_data_ptr_t shrapnel_shot; // TODO triggers lnl
+    spell_data_ptr_t shrapnel_shot;
     spell_data_ptr_t magnetic_gunpowder;
     
-    spell_data_ptr_t unmatched_precision; // TODO new
+    spell_data_ptr_t unmatched_precision;
     spell_data_ptr_t bullseye;
     spell_data_ptr_t bullseye_buff;
-    spell_data_ptr_t calling_the_shots; // TODO flat reduction
-    spell_data_ptr_t unerring_vision; // TODO no cdr effect
+    spell_data_ptr_t calling_the_shots;
+    spell_data_ptr_t unerring_vision;
     spell_data_ptr_t small_game_hunter;
     spell_data_ptr_t eagles_accuracy;
 
@@ -697,7 +698,7 @@ public:
     spell_data_ptr_t volley;
     spell_data_ptr_t volley_data;
     spell_data_ptr_t volley_dmg;
-    spell_data_ptr_t ohnahran_winds; // TODO guaranteed 1 target
+    spell_data_ptr_t ohnahran_winds;
     spell_data_ptr_t ohnahran_winds_debuff;
 
     spell_data_ptr_t windrunner_quiver;
@@ -1264,6 +1265,7 @@ public:
     ab::apply_affecting_aura( p->talents.deadeye );
     ab::apply_affecting_aura( p->talents.eagles_accuracy );
     ab::apply_affecting_aura( p->talents.small_game_hunter );
+    ab::apply_affecting_aura( p->talents.calling_the_shots );
 
     // Beast Mastery Tree passives
     ab::apply_affecting_aura( p->talents.aspect_of_the_beast );
@@ -3637,17 +3639,12 @@ void hunter_t::trigger_spotters_mark( player_t* target, bool force )
     
     if ( talents.ohnahran_winds.ok() )
     {
-      int affected = 0;
-      int max = as<int>( talents.ohnahran_winds->effectN( 1 ).base_value() );
-
       for ( player_t* t : sim->target_non_sleeping_list )
       {
-        if ( t->is_enemy() && t != target && rng().roll( talents.ohnahran_winds->effectN( 2 ).percent() ) )
+        if ( t->is_enemy() && t != target )
         {
           get_target_data( t )->debuffs.ohnahran_winds->trigger();
-          affected++;
-          if ( affected == max )
-            break;
+          break;
         }
       }
     }
@@ -3928,11 +3925,13 @@ struct auto_shot_base_t : public auto_attack_base_t<ranged_attack_t>
 
   double snakeskin_quiver_chance = 0;
   double wild_call_chance = 0;
+  double lock_and_load_chance = 0;
 
   auto_shot_base_t( util::string_view n, hunter_t* p, const spell_data_t* s ) : auto_attack_base_t( n, p, s )
   {
     wild_call_chance = p->talents.wild_call->effectN( 1 ).percent();
     snakeskin_quiver_chance = p->talents.snakeskin_quiver->effectN( 1 ).percent();
+    lock_and_load_chance = p->talents.lock_and_load->effectN( 1 ).percent();
     
     if ( p->talents.precise_shots.ok() )
     {
@@ -3961,8 +3960,11 @@ struct auto_shot_base_t : public auto_attack_base_t<ranged_attack_t>
   {
     auto_attack_base_t::impact( s );
 
-    if ( p() -> buffs.lock_and_load -> trigger() )
-      p() -> cooldowns.aimed_shot -> reset( true );
+    if ( rng().roll( lock_and_load_chance ) )
+    {
+      p()->buffs.lock_and_load->trigger();
+      p()->cooldowns.aimed_shot->reset( true );
+    }
 
     if ( s -> result == RESULT_CRIT && p() -> talents.wild_call.ok() && rng().roll( wild_call_chance ) )
     {
@@ -4111,7 +4113,7 @@ struct arcane_shot_t : public arcane_shot_base_t
     {
       background = dual = true;
       base_costs[ RESOURCE_FOCUS ] = 0;
-      base_multiplier *= p->talents.aspect_of_the_hydra->effectN( 1 ).percent();
+      base_multiplier *= p->talents.aspect_of_the_hydra->effectN( 1 ).percent() + p->talents.light_ammo->effectN( 3 ).percent();
     }
   };
 
@@ -4155,6 +4157,16 @@ struct arcane_shot_t : public arcane_shot_base_t
       c *= 1 + p()->talents.precise_shots_buff->effectN( 3 ).percent();
 
     return c;
+  }
+
+  timespan_t gcd() const override
+  {
+    timespan_t g = arcane_shot_base_t::gcd();
+
+    if ( p()->buffs.precise_shots->check() )
+      g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
+
+    return std::max( min_gcd, g );
   }
 
   action_state_t* new_state() override
@@ -4247,6 +4259,9 @@ struct explosive_shot_base_t : public hunter_ranged_attack_t
         for ( auto pet : p() -> pets.cotw_stable_pet.active_pets() )
           pet->actions.thundering_hooves->execute();
       }
+
+      if ( p()->talents.shrapnel_shot.ok() )
+        p()->buffs.lock_and_load->trigger();
     }
 
     void impact( action_state_t* s ) override
@@ -4451,6 +4466,7 @@ struct kill_shot_base_t : hunter_ranged_attack_t
 
   double health_threshold_pct;
   razor_fragments_t* razor_fragments = nullptr;
+  double precise_shots_multiplier = 0;
 
   kill_shot_base_t( util::string_view n, hunter_t* p, spell_data_ptr_t s ) :
     hunter_ranged_attack_t( n, p, s ),
@@ -4458,6 +4474,10 @@ struct kill_shot_base_t : hunter_ranged_attack_t
   {
     if ( p->talents.razor_fragments.ok() )
       razor_fragments = p -> get_background_action<razor_fragments_t>( "razor_fragments" );
+
+    precise_shots_multiplier = p->talents.headshot->effectN( 1 ).percent() + p->talents.unmatched_precision->effectN( 3 ).percent();
+    if ( p->talents.windrunner_quiver.ok() )
+      precise_shots_multiplier *= 1 + p->talents.windrunner_quiver->effectN( 5 ).percent();
   }
 
   void execute() override
@@ -4554,9 +4574,19 @@ struct kill_shot_base_t : hunter_ranged_attack_t
     double am = hunter_ranged_attack_t::composite_da_multiplier( s );
 
     if ( p()->talents.headshot.ok() )
-      am *= 1 + p()->buffs.precise_shots->check_stack_value() * p()->talents.headshot->effectN( 1 ).percent();
+      am *= 1 + p()->buffs.precise_shots->check() * precise_shots_multiplier;
 
     return am;
+  }
+
+  timespan_t gcd() const override
+  {
+    timespan_t g = hunter_ranged_attack_t::gcd();
+
+    if ( p()->talents.headshot.ok() && p()->buffs.precise_shots->check() )
+      g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
+
+    return std::max( min_gcd, g );
   }
 
   action_state_t* new_state() override
@@ -5354,6 +5384,16 @@ struct multishot_mm_t: public hunter_ranged_attack_t
     return c;
   }
 
+  timespan_t gcd() const override
+  {
+    timespan_t g = hunter_ranged_attack_t::gcd();
+
+    if ( p()->buffs.precise_shots->check() )
+      g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
+
+    return std::max( min_gcd, g );
+  }
+
   action_state_t* new_state() override
   {
     return new state_t( this, target );
@@ -5377,7 +5417,7 @@ struct aimed_shot_base_t : public hunter_ranged_attack_t
 
   aimed_shot_base_t( util::string_view n, hunter_t* p, spell_data_ptr_t s ) :
     hunter_ranged_attack_t( n, p, s ),
-    trick_shots_targets( as<int>( p->talents.trick_shots_data->effectN( 1 ).base_value() ) ),
+    trick_shots_targets( as<int>( p->talents.trick_shots_data->effectN( 1 ).base_value() + p->talents.light_ammo->effectN( 1 ).base_value() ) ),
     target_acquisition_reduction( p->talents.target_acquisition->effectN( 1 ).time_value() )
   {
     radius = 8;
@@ -5510,8 +5550,6 @@ struct aimed_shot_base_t : public hunter_ranged_attack_t
         p()->cooldowns.target_acquisition->start();
         p()->cooldowns.aimed_shot->adjust( -target_acquisition_reduction );
       }
-
-      p()->cooldowns.trueshot->adjust( -( p()->talents.calling_the_shots->effectN( 1 ).time_value() + p()->talents.unerring_vision->effectN( 3 ).time_value() ) );
     }
 
     // TODO 3/3/25: Aimed Shot hits are giving .3 second reduction rather than .5
@@ -5527,7 +5565,7 @@ struct aimed_shot_t : public aimed_shot_base_t
     {
       background = dual = true;
       base_costs[ RESOURCE_FOCUS ] = 0;
-      base_multiplier *= p->talents.aspect_of_the_hydra->effectN( 1 ).percent();
+      base_multiplier *= p->talents.aspect_of_the_hydra->effectN( 1 ).percent() + p->talents.light_ammo->effectN( 3 ).percent();
     }
   };
 
@@ -5648,10 +5686,6 @@ struct aimed_shot_t : public aimed_shot_base_t
 
   void execute() override
   {
-    // The Explosive Shot hits before the Aimed Shot, so it must be cast beforehand.
-    if ( lock_and_loaded && tww_s2_mm_4pc )
-      tww_s2_mm_4pc->execute_on_target( target );
-
     aimed_shot_base_t::execute();
 
     // Lock and Load completely supresses consumption of Streamline
@@ -5690,6 +5724,11 @@ struct aimed_shot_t : public aimed_shot_base_t
       p()->buffs.lock_and_load->decrement();
       p()->cooldowns.explosive_shot->adjust( p()->talents.magnetic_gunpowder->effectN( 2 ).time_value() );
     }
+
+    // The Explosive Shot can trigger Lock and Load with Shrapnel Shot.
+    if ( lock_and_loaded && tww_s2_mm_4pc )
+      tww_s2_mm_4pc->execute_on_target( target );
+
     lock_and_loaded = false;
   }
 
@@ -5719,7 +5758,7 @@ struct rapid_fire_t: public hunter_ranged_attack_t
 
     rapid_fire_tick_t( util::string_view n, hunter_t* p )
       : hunter_ranged_attack_t( n, p, p->talents.rapid_fire_tick ),
-        trick_shots_targets( as<int>( p->talents.trick_shots_data->effectN( 3 ).base_value() ) )
+        trick_shots_targets( as<int>( p->talents.trick_shots_data->effectN( 3 ).base_value() + p->talents.light_ammo->effectN( 2 ).base_value() ) )
     {
       background = dual = true;
       direct_tick = true;
@@ -5757,7 +5796,7 @@ struct rapid_fire_t: public hunter_ranged_attack_t
   {
     rapid_fire_tick_aspect_of_the_hydra_t( util::string_view n, hunter_t* p ) : rapid_fire_tick_t( n, p )
     {
-      base_multiplier *= p->talents.aspect_of_the_hydra->effectN( 1 ).percent();
+      base_multiplier *= p->talents.aspect_of_the_hydra->effectN( 1 ).percent() + p->talents.light_ammo->effectN( 3 ).percent();
     }
   };
 
@@ -8020,6 +8059,7 @@ void hunter_t::init_spells()
     talents.streamline                        = find_talent_spell( talent_tree::SPECIALIZATION, "Streamline", HUNTER_MARKSMANSHIP );
     talents.streamline_buff                   = talents.streamline.ok() ? find_spell( 342076 ) : spell_data_t::not_found();
     talents.lock_and_load                     = find_talent_spell( talent_tree::SPECIALIZATION, "Lock and Load", HUNTER_MARKSMANSHIP );
+    talents.lock_and_load_buff                = find_spell( 194594 );
     talents.ammo_conservation                 = find_talent_spell( talent_tree::SPECIALIZATION, "Ammo Conservation", HUNTER_MARKSMANSHIP );
     
     talents.penetrating_shots                 = find_talent_spell( talent_tree::SPECIALIZATION, "Penetrating Shots", HUNTER_MARKSMANSHIP );
@@ -8472,7 +8512,8 @@ void hunter_t::create_buffs()
   buffs.precise_shots = 
     make_buff( this, "precise_shots", talents.precise_shots_buff )
       ->set_default_value_from_effect( 1 )
-      ->apply_affecting_aura( talents.windrunner_quiver );
+      ->apply_affecting_aura( talents.windrunner_quiver )
+      ->apply_affecting_aura( talents.unmatched_precision );
 
   buffs.streamline =
     make_buff( this, "streamline", talents.streamline_buff )
@@ -8482,8 +8523,7 @@ void hunter_t::create_buffs()
     make_buff( this, "trick_shots", talents.trick_shots_buff );
   
   buffs.lock_and_load =
-    make_buff( this, "lock_and_load", talents.lock_and_load -> effectN( 1 ).trigger() )
-      ->set_trigger_spell( talents.lock_and_load );
+    make_buff( this, "lock_and_load", talents.lock_and_load_buff );
 
   buffs.in_the_rhythm = 
     make_buff( this, "in_the_rhythm", talents.in_the_rhythm_buff )
@@ -8525,7 +8565,6 @@ void hunter_t::create_buffs()
   buffs.bullseye =
     make_buff( this, "bullseye", talents.bullseye_buff )
       ->set_default_value_from_effect( 1 )
-      ->set_max_stack( std::max( as<int>( talents.bullseye -> effectN( 2 ).base_value() ), 1 ) )
       ->set_chance( talents.bullseye.ok() );
 
   buffs.bulletstorm =

@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.61476
-static const std::array<spelltext_data_t, 27997> __ptr_spelltext_data { {
+static const std::array<spelltext_data_t, 27998> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -27530,6 +27530,7 @@ static const std::array<spelltext_data_t, 27997> __ptr_spelltext_data { {
   { 1232001, "Increases movement speed and jump distance by $s3% for $d, while in untethered space.\r\n\r\nRestore $s5% health every 3 sec for $d.\r\n\r\n", "Increases movement speed and jump distance by $s3% for $d, while in untethered space.\r\n\r\nRestore $s5 health every 3 sec for $d.", 0 },
   { 1232110, 0, "Brann deals $w1%, takes $w2% more damage, and looks good while doing it.", 0 },
   { 1232205, "Brann dons mana-tinted glasses while in combat, periodically increasing his damage done by $s4% and damage taken by $s3% every $1233377t sec up to $1232110u times.\r\n\r\nDispelling the glasses will heal Brann for $s1% of his maximum health and stun nearby enemies for $s2 sec.\r\nThis effect is automatically dispelled when Brann drops below $1233377s2% health which prevents the stun from occurring.", "Brann dons mana-tinted glasses while in combat, periodically increasing his damage done by $w4% and damage taken by $w3% every $1233377t sec up to $1232110u times.\r\n\r\nDispelling the glasses will heal Brann for $w1% of his maximum health and stun nearby enemies for $w2 sec.\r\nThis effect is automatically dispelled when Brann drops below $1233377w2% health which prevents the stun from occurring.", "Rank 1/4" },
+  { 1232346, "$@spelldesc1234698", 0, 0 },
   { 1232556, "$@spelldesc355312", "$@auracaster's animated remains.", 0 },
   { 1232567, "$@spelldesc47540", 0, 0 },
   { 1232571, "$@spelldesc47540", 0, 0 },

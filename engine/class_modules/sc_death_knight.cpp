@@ -10800,6 +10800,9 @@ struct desecrate_t : public death_knight_spell_t
 
   bool ready() override
   {
+    if ( !p()->buffs.desecrate_buff->check() )
+      return false;
+
     return p()->active_dnd != nullptr;
   }
 
@@ -14705,6 +14708,7 @@ void death_knight_t::activate()
       {
         event_t::cancel( active_dnd );
         buffs.death_and_decay->expire();
+        buffs.desecrate_buff->expire();
         make_event( sim, 100_ms, [ this ]() { buffs.death_and_decay->trigger( 4_s ); } );
       }
     }
@@ -14713,6 +14717,7 @@ void death_knight_t::activate()
       if ( active_dnd != nullptr )
       {
         event_t::cancel( active_dnd );
+        buffs.desecrate_buff->expire();
         buffs.death_and_decay->expire();
       }
 

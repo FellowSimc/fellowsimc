@@ -5686,7 +5686,6 @@ struct gift_of_the_sanlayn_buff_t final : public death_knight_buff_t
       if ( p->talent.sanlayn.infliction_of_sorrow.ok() )
       {
         p->buffs.infliction_of_sorrow->trigger();
-        p->cooldown.death_and_decay_dynamic->reset( true, 1 );
       }
     } );
     set_stack_change_callback( [ p ]( buff_t*, int, int new_ ) {
@@ -7967,6 +7966,16 @@ struct death_and_decay_base_t : public death_knight_spell_t
 
     if ( p()->talent.unholy.desecrate.ok() )
       p()->buffs.desecrate_buff->trigger();
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    death_knight_spell_t::impact( s );
+
+    if ( p()->talent.sanlayn.infliction_of_sorrow.ok() )
+    {
+      p()->trigger_infliction_of_sorrow( s->target, false );
+    }
   }
 
   bool ready() override
@@ -11109,7 +11118,7 @@ void runeforge::razorice( special_effect_t& effect )
     buff_t* create_debuff( player_t* t ) override
     {
       auto buff = buff_t::find( t, "razorice" );
-      if ( !buff )
+      if (!buff)
       {
         std::string name_ = target_debuff->ok() ? target_debuff->name_cstr() : name_str;
         util::tokenize( name_ );

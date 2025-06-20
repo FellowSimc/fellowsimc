@@ -1011,6 +1011,7 @@ public:
     const spell_data_t* might_of_the_frozen_wastes;
     const spell_data_t* frostreaper;
     const spell_data_t* rime;
+    const spell_data_t* glacial_advance;
 
     // Unholy
     const spell_data_t* dark_transformation_2;
@@ -1162,7 +1163,6 @@ public:
       player_talent_t unleashed_frenzy;
       player_talent_t runic_command;
       // Row 5
-      player_talent_t glacial_advance;
       player_talent_t pillar_of_frost;
       player_talent_t frostscythe;
       player_talent_t biting_cold;
@@ -8493,7 +8493,7 @@ struct empower_rune_weapon_t final : public death_knight_spell_t
   {
     death_knight_spell_t::execute();
 
-    p()->buffs.empower_rune_weapon->trigger();
+    //p()->buffs.empower_rune_weapon->trigger();
   }
 };
 
@@ -9201,7 +9201,7 @@ struct glacial_advance_damage_t final : public death_knight_spell_t
   {
     death_knight_spell_t::impact( state );
 
-    get_td( state->target )->debuff.razorice->trigger();
+    /*get_td( state->target )->debuff.razorice->trigger();
     if ( is_arctic_assault )
     {
       p()->procs.razorice_from_arctic_assault->occur();
@@ -9209,7 +9209,7 @@ struct glacial_advance_damage_t final : public death_knight_spell_t
     else
     {
       p()->procs.razorice_from_glacial_advance->occur();
-    }
+    }*/
 
     if ( p()->talent.frost.hyperpyrexia->ok() && state->result_amount > 0 &&
          p()->rng().roll( p()->talent.frost.hyperpyrexia->proc_chance() ) )
@@ -9226,7 +9226,7 @@ private:
 struct glacial_advance_t final : public death_knight_spell_t
 {
   glacial_advance_t( death_knight_t* p, std::string_view options_str )
-    : death_knight_spell_t( "glacial_advance", p, p->talent.frost.glacial_advance )
+    : death_knight_spell_t( "glacial_advance", p, p->spec.glacial_advance )
   {
     parse_options( options_str );
 
@@ -13064,6 +13064,7 @@ void death_knight_t::init_spells()
   spec.might_of_the_frozen_wastes = find_specialization_spell( "Might of the Frozen Wastes" );
   spec.frostreaper                = find_specialization_spell( "Frostreaper" );
   spec.rime                       = find_specialization_spell( "Rime" );
+  spec.glacial_advance            = find_specialization_spell( "Glacial Advance" );
 
   // Unholy Baselines
   spec.unholy_death_knight   = find_specialization_spell( "Unholy Death Knight" );
@@ -13203,7 +13204,6 @@ void death_knight_t::init_spells()
   talent.frost.unleashed_frenzy = find_talent_spell( talent_tree::SPECIALIZATION, "Unleashed Frenzy" );
   talent.frost.runic_command    = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Command" );
   // Row 5
-  talent.frost.glacial_advance     = find_talent_spell( talent_tree::SPECIALIZATION, "Glacial Advance" );
   talent.frost.pillar_of_frost     = find_talent_spell( talent_tree::SPECIALIZATION, "Pillar of Frost" );
   talent.frost.frostscythe         = find_talent_spell( talent_tree::SPECIALIZATION, "Frostscythe" );
   talent.frost.frostwyrms_fury     = find_talent_spell( talent_tree::SPECIALIZATION, "Frostwyrm's Fury" );
@@ -13431,7 +13431,7 @@ void death_knight_t::spell_lookups()
   spell.frostwyrms_fury_damage = conditional_spell_lookup( talent.frost.frostwyrms_fury.ok(), 279303 );
   spell.frozen_dominion_buff        = conditional_spell_lookup( talent.frost.frozen_dominion.ok(), 377253 );
   spell.glacial_advance_damage =
-      conditional_spell_lookup( talent.frost.glacial_advance.ok() || talent.frost.arctic_assault.ok(), 195975 );
+      conditional_spell_lookup( spec.glacial_advance->ok() || talent.frost.arctic_assault.ok(), 195975 );
   spell.avalanche_damage           = conditional_spell_lookup( talent.frost.avalanche.ok(), 207150 );
   spell.enduring_strength_cooldown = conditional_spell_lookup( talent.frost.enduring_strength.ok(), 377192 );
   spell.obliteration_gains         = conditional_spell_lookup( talent.frost.obliteration.ok(), 281327 );
@@ -13869,7 +13869,7 @@ inline death_knight_td_t::death_knight_td_t( player_t& target, death_knight_t& p
   }
   if ( !debuff.razorice )
   {
-    debuff.razorice = make_debuff( p.talent.frost.avalanche->ok() || p.talent.frost.glacial_advance->ok() ||
+    debuff.razorice = make_debuff( p.talent.frost.avalanche->ok() || 
                                        p.talent.frost.arctic_assault->ok(),
                                    *this, "razorice", p.spell.razorice_debuff )
                           ->set_default_value_from_effect( 1 )
@@ -14544,7 +14544,6 @@ void death_knight_t::init_procs()
 
   procs.razorice_from_arctic_assault  = get_proc( "Razorice from Arctic Assault" );
   procs.razorice_from_avalanche       = get_proc( "Razorice from Avalanche" );
-  procs.razorice_from_glacial_advance = get_proc( "Razorice from Glacial Advance" );
   procs.razorice_from_runeforge       = get_proc( "Razorice from Runeforge" );
 
   procs.ready_rune = get_proc( "Rune ready" );

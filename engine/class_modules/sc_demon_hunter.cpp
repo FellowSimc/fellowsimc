@@ -8925,7 +8925,7 @@ void demon_hunter_t::init_spells()
   set_bonuses.tww2_vengeance_2pc  = sets->set( DEMON_HUNTER_VENGEANCE, TWW2, B2 );
   set_bonuses.tww2_vengeance_4pc  = sets->set( DEMON_HUNTER_VENGEANCE, TWW2, B4 );
   set_bonuses.tww3_aldrachi_2pc   = spell_data_t::not_found();
-  set_bonuses.tww3_aldrachi_4pc   = find_spell( 1236360 ); // spell_data_t::not_found();
+  set_bonuses.tww3_aldrachi_4pc   = spell_data_t::not_found();
   set_bonuses.tww3_felscarred_2pc = spell_data_t::not_found();
   set_bonuses.tww3_felscarred_4pc = spell_data_t::not_found();
 

@@ -6902,7 +6902,7 @@ struct dark_transformation_t : public death_knight_spell_t
 {
   int winning_streak_stacks;
 
-  dark_transformation_t( std::string_view n, death_knight_t* p, std::string_view options_str = "" )
+  dark_transformation_t( std::string_view n, death_knight_t* p, std::string_view options_str )
     : death_knight_spell_t( n, p, p->talent.unholy.dark_transformation ), winning_streak_stacks( 0 )
   {
     harmful = false;
@@ -6968,6 +6968,8 @@ struct apocalypse_t final : public death_knight_melee_attack_t
       rune_generation( as<int>( p->spell.apocalypse_rune_gen->effectN( 1 ).base_value() ) ),
       num_wounds( 0 )
   {
+    parse_options( options_str );
+
     num_wounds = as<int>( data().effectN( 2 ).base_value() );
     p->pets.apoc_ghouls.set_creation_event_callback( pets::parent_pet_action_fn( this ) );
     if ( p->talent.unholy.magus_of_the_dead.ok() )

@@ -10703,7 +10703,28 @@ struct legion_of_souls_damage_t : public death_knight_spell_t
   void reset() override
   {
     death_knight_spell_t::reset();
-    wounds_applied = 0;
+    for ( auto& target : sim->target_non_sleeping_list )
+    {
+      set_wounds_applied( target, 0 );
+    }
+  }
+
+  int& get_wounds_applied( const player_t* target )
+  {
+    if ( wounds_applied[ target ] != nullptr )
+      return *wounds_applied[ target ];
+
+    int* wounds = new int;
+
+    wounds_applied[ target ] = new int;
+    *wounds_applied[ target ] = 0;
+    return *wounds_applied[ target ];
+  }
+
+  void set_wounds_applied( const player_t* target, int val )
+  {
+    int& wounds = get_wounds_applied( target );
+    wounds = val;
   }
 
   void execute() override
@@ -10719,12 +10740,17 @@ struct legion_of_souls_damage_t : public death_knight_spell_t
   void impact( action_state_t* s ) override
   {
     death_knight_spell_t::impact( s );
-    if ( !p()->bugs && wounds_applied++ < max_wounds )
+    death_knight_td_t* td = get_td( s->target );
+    if ( !p()->bugs && get_wounds_applied( s->target ) < max_wounds &&
+         td->debuff.festering_wound->check() < td->debuff.festering_wound->max_stack() )
+    {
       p()->trigger_festering_wound( s, 1, p()->procs.fw_legion_of_souls );
+      set_wounds_applied( s->target, get_wounds_applied( s->target ) + 1 );
+    }
   }
 
 public:
-  int wounds_applied;
+  target_specific_t<int> wounds_applied;
 
 private:
   int max_wounds;
@@ -10752,7 +10778,12 @@ struct legion_of_souls_t : public death_knight_spell_t
   void execute() override
   {
     death_knight_spell_t::execute();
-    debug_cast<legion_of_souls_damage_t*>( damage )->wounds_applied = 0;
+
+    for ( auto& target : sim->target_non_sleeping_list )
+    {
+      legion_of_souls_damage_t* damage_action = debug_cast<legion_of_souls_damage_t*>( damage );
+      damage_action->set_wounds_applied( target, 0 );
+    }
   }
 
 private:

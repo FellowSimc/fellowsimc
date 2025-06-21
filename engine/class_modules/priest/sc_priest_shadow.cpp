@@ -441,6 +441,7 @@ struct shadowy_apparition_state_t : public action_state_t
   {
     double m = action_state_t::composite_da_multiplier();
 
+    // TODO: sim->dbc->wowv() >= wowv_t{ 11, 2, 0 }
     m *= source_crit;
 
     if ( buffed_by_darkflame_shroud )
@@ -530,7 +531,7 @@ public:
     background   = true;
     proc         = false;
     may_miss     = false;
-    may_crit     = false;
+    may_crit     = sim->dbc->wowv() >= wowv_t{ 11, 2, 0 };
     trigger_gcd  = timespan_t::zero();
     travel_speed = priest().talents.shadow.shadowy_apparition->missile_speed();
 
@@ -2759,33 +2760,40 @@ void priest_t::trigger_shadowy_apparitions( proc_t* proc, bool gets_crit_mod )
   // BUG: https://github.com/SimCMinMax/WoW-BugTracker/issues/1097
   // Tormented Spirits Shadowy Apparitions get the crit mod if the last action to
   // trigger a Shadowy Apparition crit, not if the SW:P tick crit
-  if ( bugs )
+  if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
   {
-    if ( proc == procs.shadowy_apparition_swp )
+    gets_crit_mod = false;
+  }
+  else
+  {
+    if ( bugs )
     {
-      if ( buffs.last_shadowy_apparition_crit->check() )
+      if ( proc == procs.shadowy_apparition_swp )
       {
-        sim->print_debug( "{} triggered a shadowy_apparition from tormented_spirits with the crit mod", *this );
-        gets_crit_mod = true;
-      }
-    }
-    else
-    {
-      if ( gets_crit_mod )
-      {
-        buffs.last_shadowy_apparition_crit->trigger();
+        if ( buffs.last_shadowy_apparition_crit->check() )
+        {
+          sim->print_debug( "{} triggered a shadowy_apparition from tormented_spirits with the crit mod", *this );
+          gets_crit_mod = true;
+        }
       }
       else
       {
-        buffs.last_shadowy_apparition_crit->expire();
+        if ( gets_crit_mod )
+        {
+          buffs.last_shadowy_apparition_crit->trigger();
+        }
+        else
+        {
+          buffs.last_shadowy_apparition_crit->expire();
+        }
       }
     }
-  }
 
-  // Proc tracking since we do not use real crits
-  if ( gets_crit_mod )
-  {
-    procs.shadowy_apparition_crit->occur();
+    // Proc tracking since we do not use real crits
+    if ( gets_crit_mod )
+    {
+      procs.shadowy_apparition_crit->occur();
+    }
   }
 
   // Idol of Yogg-Saron only triggers for each cast that generates an apparition

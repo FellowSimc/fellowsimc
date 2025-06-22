@@ -1164,6 +1164,7 @@ public:
       // Row 4
       player_talent_t arctic_assault;
       player_talent_t runic_overflow;
+      player_talent_t frostbound_will;
       player_talent_t unleashed_frenzy;
       player_talent_t runic_command;
       // Row 5
@@ -9806,6 +9807,11 @@ struct howling_blast_t final : public death_knight_spell_t
                           p()->gains.rage_of_the_frozen_champion );
     }
 
+    if ( p()->buffs.rime->up() && p()->talent.frost.frostbound_will->ok() )
+    {
+      p()->cooldown.empower_rune_weapon->adjust( p()->talent.frost.frostbound_will->effectN( 1 ).time_value() );
+    }
+
     if ( p()->talent.deathbringer.dark_talons.ok() && p()->buffs.rime->check() && p()->talent.icy_talons->ok() &&
          rng().roll( p()->talent.deathbringer.dark_talons->effectN( 1 ).percent() ) )
     {
@@ -13432,6 +13438,7 @@ void death_knight_t::init_spells()
   // Row 4
   talent.frost.arctic_assault = find_talent_spell( talent_tree::SPECIALIZATION, "Arctic Assault" );
   talent.frost.runic_overflow   = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Overflow" );
+  talent.frost.frostbound_will  = find_talent_spell( talent_tree::SPECIALIZATION, "Frostbound Will" );
   talent.frost.unleashed_frenzy = find_talent_spell( talent_tree::SPECIALIZATION, "Unleashed Frenzy" );
   talent.frost.runic_command    = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Command" );
   // Row 5

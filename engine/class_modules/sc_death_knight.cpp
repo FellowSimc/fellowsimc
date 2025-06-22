@@ -852,7 +852,6 @@ public:
     propagate_const<cooldown_t*> pillar_of_frost;
     propagate_const<cooldown_t*> frostwyrms_fury;
     propagate_const<cooldown_t*> empower_rune_weapon;
-    propagate_const<cooldown_t*> frostscythe;
 
     // Unholy
     propagate_const<cooldown_t*> apocalypse;
@@ -1160,13 +1159,13 @@ public:
       // Row 3
       player_talent_t killing_machine;
       player_talent_t empower_rune_weapon;
+      player_talent_t frostscythe;
       player_talent_t everfrost;
       // Row 4
       player_talent_t unleashed_frenzy;
       player_talent_t runic_command;
       // Row 5
       player_talent_t pillar_of_frost;
-      player_talent_t frostscythe;
       player_talent_t biting_cold;
       // Row 6
       player_talent_t rage_of_the_frozen_champion;
@@ -1761,7 +1760,6 @@ public:
     cooldown.mind_freeze            = get_cooldown( "mind_freeze" );
     cooldown.frostwyrms_fury        = get_cooldown( "frostwyrms_fury" );
     cooldown.empower_rune_weapon    = get_cooldown( "empower_rune_weapon" );
-    cooldown.frostscythe            = get_cooldown( "frostscythe" );
     cooldown.soul_reaper            = get_cooldown( "soul_reaper" );
 
     // Target Specific
@@ -9060,7 +9058,6 @@ struct frostscythe_base_t : public death_knight_melee_attack_t
     weapon              = &( player->main_hand_weapon );
     aoe                 = -1;
     reduced_aoe_targets = data().effectN( 5 ).base_value();
-    base_crit           = 1.0;
   }
 
   void impact( action_state_t* s ) override
@@ -9083,7 +9080,6 @@ struct frostscythe_base_t : public death_knight_melee_attack_t
     }
   }
 
-  // TODO: Check if this modifies the proc only, or all frostscythe casts.
   double composite_target_multiplier( player_t* t ) const override
   {
     double m = death_knight_melee_attack_t::composite_target_multiplier( t );
@@ -9097,9 +9093,12 @@ struct frostscythe_base_t : public death_knight_melee_attack_t
   void execute() override
   {
     death_knight_melee_attack_t::execute();
-
-    // Frostscythe procs rime at half the chance of Obliterate
-    p()->buffs.rime->trigger( 1, buff_t::DEFAULT_VALUE(), p()->buffs.rime->manual_chance * 0.5 );
+    
+    if ( p()->buffs.killing_machine->up() )
+    {
+      // TODO 11.2 check over fsc misc values for a potential delay source
+      p()->consume_killing_machine( p()->procs.killing_machine_fsc, 0_ms );
+    }
   }
 
 private:
@@ -11941,10 +11940,6 @@ void death_knight_t::consume_killing_machine( proc_t* proc, timespan_t total_del
       } );
     }
 
-    if ( talent.frost.frostscythe.ok() )
-    {
-      cooldown.frostscythe->adjust( timespan_t::from_millis( -talent.frost.frostscythe->effectN( 1 ).base_value() ) );
-    }
 
     if ( talent.deathbringer.dark_talons.ok() && talent.icy_talons->ok() &&
          rng().roll( talent.deathbringer.dark_talons->effectN( 1 ).percent() ) )
@@ -13431,13 +13426,13 @@ void death_knight_t::init_spells()
   // Row 3
   talent.frost.killing_machine = find_talent_spell( talent_tree::SPECIALIZATION, "Killing Machine" );
   talent.frost.empower_rune_weapon = find_talent_spell( talent_tree::SPECIALIZATION, "Empower Rune Weapon" );
+  talent.frost.frostscythe         = find_talent_spell( talent_tree::SPECIALIZATION, "Frostscythe" );
   talent.frost.everfrost       = find_talent_spell( talent_tree::SPECIALIZATION, "Everfrost" );
   // Row 4
   talent.frost.unleashed_frenzy = find_talent_spell( talent_tree::SPECIALIZATION, "Unleashed Frenzy" );
   talent.frost.runic_command    = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Command" );
   // Row 5
   talent.frost.pillar_of_frost     = find_talent_spell( talent_tree::SPECIALIZATION, "Pillar of Frost" );
-  talent.frost.frostscythe         = find_talent_spell( talent_tree::SPECIALIZATION, "Frostscythe" );
   talent.frost.frostwyrms_fury     = find_talent_spell( talent_tree::SPECIALIZATION, "Frostwyrm's Fury" );
   talent.frost.biting_cold         = find_talent_spell( talent_tree::SPECIALIZATION, "Biting Cold" );
   // Row 6

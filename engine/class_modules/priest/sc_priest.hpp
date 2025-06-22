@@ -790,10 +790,10 @@ public:
     propagate_const<gain_t*> insanity_idol_of_cthun_mind_sear;
     propagate_const<gain_t*> hallucinations_power_word_shield;
     propagate_const<gain_t*> insanity_maddening_touch;
-    propagate_const<gain_t*> insanity_t30_2pc;
     propagate_const<gain_t*> cauterizing_shadows_health;
     propagate_const<gain_t*> shield_discipline;
     propagate_const<gain_t*> ascension_tww3_2pc;
+    propagate_const<gain_t*> insanity_dark_thoughts;
   } gains;
 
   // Benefits

@@ -297,11 +297,10 @@ public:
         td.buffs.apathy->trigger();
       }
 
-      if ( priest().sets->has_set_bonus( PRIEST_SHADOW, T30, B2 ) && priest().buffs.shadowy_insight->check() )
+      if ( priest().talents.shadow.dark_thoughts.enabled() && priest().buffs.shadowy_insight->check() )
       {
-        priest().generate_insanity(
-            priest().sets->set( PRIEST_SHADOW, T30, B2 )->effectN( 2 ).resource( RESOURCE_INSANITY ),
-            priest().gains.insanity_t30_2pc, s->action );
+        priest().generate_insanity( priest().talents.shadow.dark_thoughts->effectN( 1 ).resource( RESOURCE_INSANITY ),
+                                    priest().gains.insanity_dark_thoughts, s->action );
       }
 
       if ( child_expiation )
@@ -2965,10 +2964,10 @@ void priest_t::create_gains()
   gains.insanity_idol_of_cthun_mind_sear = get_gain( "Insanity Gained from Idol of C'thun Mind Sear's" );
   gains.hallucinations_power_word_shield = get_gain( "Insanity Gained from Power Word: Shield with Hallucinations" );
   gains.insanity_maddening_touch         = get_gain( "Maddening Touch" );
-  gains.insanity_t30_2pc                 = get_gain( "Insanity Gained from T30 2PC" );
   gains.cauterizing_shadows_health       = get_gain( "Health from Cauterizing Shadows" );
   gains.shield_discipline                = get_gain( "Shield Discipline" );
   gains.ascension_tww3_2pc               = get_gain( "Ascension" );
+  gains.insanity_dark_thoughts           = get_gain( "Dark Thoughts" );
 }
 
 /** Construct priest procs */

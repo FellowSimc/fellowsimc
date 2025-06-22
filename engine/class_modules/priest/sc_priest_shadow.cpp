@@ -2473,7 +2473,8 @@ void priest_t::init_rng_shadow()
 
   // Shadowy Insight
   const dot_t* shadow_word_pain = get_dot( "shadow_word_pain", this );
-  double mod                    = sets->has_set_bonus( PRIEST_SHADOW, T30, B2 ) ? 1.25 : 1.0;
+  double mod =
+      talents.shadow.dark_thoughts.enabled() ? 1.0 + talents.shadow.dark_thoughts->effectN( 2 ).percent() : 1.0;
 
   threshold_rng.shadowy_insight =
       get_threshold_rng( "shadowy_insight", talents.shadow.shadowy_insight.ok() ? 0.1558 * mod : 0.0,

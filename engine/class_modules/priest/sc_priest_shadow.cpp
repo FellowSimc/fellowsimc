@@ -2396,18 +2396,21 @@ void priest_t::create_buffs_shadow()
       make_buff( this, "last_shadowy_apparition_crit" )->set_quiet( true )->set_duration( 0_s )->set_max_stack( 1 );
 
   // Idol of Y'Shaarj
-  buffs.call_of_the_void = make_buff( this, "call_of_the_void", talents.shadow.call_of_the_void )
-                               ->set_default_value_from_effect( 1 )
-                               ->add_invalidate( CACHE_HASTE )
-                               ->set_stack_change_callback( ( [ this ]( buff_t*, int, int new_ ) {
-                                 if ( new_ == 0 )
-                                 {
-                                   buffs.overburdened_mind->trigger();
-                                 }
-                               } ) );
-  buffs.overburdened_mind = make_buff( this, "overburdened_mind", talents.shadow.overburdened_mind )
-                                ->set_default_value_from_effect( 1 )
-                                ->add_invalidate( CACHE_HASTE );
+  if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
+  {
+    buffs.call_of_the_void = make_buff( this, "call_of_the_void", talents.shadow.call_of_the_void )
+                                 ->set_default_value_from_effect( 1 )
+                                 ->add_invalidate( CACHE_HASTE )
+                                 ->set_stack_change_callback( ( [ this ]( buff_t*, int, int new_ ) {
+                                   if ( new_ == 0 )
+                                   {
+                                     buffs.overburdened_mind->trigger();
+                                   }
+                                 } ) );
+    buffs.overburdened_mind = make_buff( this, "overburdened_mind", talents.shadow.overburdened_mind )
+                                  ->set_default_value_from_effect( 1 )
+                                  ->add_invalidate( CACHE_HASTE );
+  }
 
   // Tier Sets
   // 393684 -> 394961

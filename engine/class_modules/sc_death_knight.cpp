@@ -1468,6 +1468,8 @@ public:
     const spell_data_t* visceral_strength_buff;
     const spell_data_t* visceral_strength_unholy_buff;
     const spell_data_t* bloodsoaked_ground_buff;
+    // San'layn Tier Set spells
+    const spell_data_t* blood_rush;
 
     // Deathbringer spells
     const spell_data_t* reapers_mark_debuff;
@@ -2629,6 +2631,10 @@ struct death_knight_pet_t : public pet_t
     pet_t::create_buffs();
     grave_mastery = make_buff( this, "grave_mastery", dk()->pet_spell.grave_mastery_buff )
                         ->set_default_value_from_effect_type( A_MOD_CRIT_DAMAGE_BONUS );
+
+    blood_rush = make_buff( this, "blood_rush", dk()->spell.blood_rush )
+                     ->set_default_value_from_effect( 1 )
+                     ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS );
   }
 
   void init_action_list() override
@@ -2639,6 +2645,9 @@ struct death_knight_pet_t : public pet_t
 
     pet_t::init_action_list();
   }
+
+public:
+  propagate_const<buff_t*> blood_rush;
 };
 
 // ==========================================================================
@@ -2800,7 +2809,7 @@ struct pet_spell_t : public pet_action_t<T_PET, spell_t>
 // ==========================================================================
 
 // Generic auto attack for meleeing pets
-template <typename T>
+template <typename T = death_knight_pet_t>
 struct auto_attack_melee_t : public pet_melee_attack_t<T>
 {
   bool first;
@@ -3095,11 +3104,29 @@ struct ghoul_pet_t final : public base_ghoul_pet_t
     }
   };
 
+  struct dt_auto_t final : public auto_attack_melee_t<ghoul_pet_t>
+  {
+    dt_auto_t( ghoul_pet_t* p, std::string_view name ) : auto_attack_melee_t( p, name )
+    {
+    }
+
+    double composite_da_multiplier( const action_state_t* state ) const override
+    {
+      double m = auto_attack_melee_t<ghoul_pet_t>::composite_da_multiplier( state );
+
+      if ( pet()->blood_rush->check() )
+        m *= 1.0 + pet()->blood_rush->check_value();
+
+      return m;
+    }
+  };
+
   ghoul_pet_t( death_knight_t* owner, bool guardian = true ) : base_ghoul_pet_t( owner, "ghoul", guardian )
   {
-    gnaw_cd                = get_cooldown( "gnaw" );
-    gnaw_cd->duration      = owner->pet_spell.gnaw->cooldown();
-    owner_coeff.ap_from_ap = 0.6318;
+    gnaw_cd                   = get_cooldown( "gnaw" );
+    gnaw_cd->duration         = owner->pet_spell.gnaw->cooldown();
+    affected_by_grave_mastery = true;
+    owner_coeff.ap_from_ap    = 0.6318;
     if ( owner->talent.unholy.raise_dead.ok() && !owner->talent.sacrificial_pact.ok() )
     {
       dynamic = false;
@@ -3108,7 +3135,7 @@ struct ghoul_pet_t final : public base_ghoul_pet_t
 
   attack_t* create_main_hand_auto_attack() override
   {
-    return new auto_attack_melee_t<ghoul_pet_t>( this );
+    return new dt_auto_t( this, "auto_attach_mh" );
   }
 
   double composite_player_multiplier( school_e school ) const override
@@ -3209,6 +3236,7 @@ public:
   propagate_const<gain_t*> dark_transformation_gain;
   propagate_const<buff_t*> dark_transformation;
   propagate_const<buff_t*> ghoulish_frenzy;
+
 };
 
 // ==========================================================================
@@ -3414,7 +3442,7 @@ struct risen_skulker_pet_t : public death_knight_pet_t
     main_hand_weapon.type       = WEAPON_BEAST_RANGED;
     main_hand_weapon.swing_time = 2.7_s;
 
-    affected_by_grave_mastery = false;
+    affected_by_grave_mastery = true;
 
     // Using a background repeating action as a replacement for a foreground action. Change Ready Type to trigger so we
     // can wake up the pet when it needs to re-execute this action.
@@ -7137,7 +7165,7 @@ struct apocalypse_t final : public death_knight_melee_attack_t
     if ( p()->pets.ghoul_pet.active_pet() == nullptr )
       p()->pets.ghoul_pet.spawn();
 
-    if ( p()->options.tww3_2pc )
+    if ( p()->options.tww3_2pc && p()->talent.rider.riders_champion.ok() )
     {
       action_t* whitemane = p()->pet_summon.summon_whitemane;
       debug_cast<summon_rider_t*>( whitemane )->duration =
@@ -12313,6 +12341,8 @@ void death_knight_t::trigger_infliction_of_sorrow( player_t* target, bool is_vam
     timespan_t extension = timespan_t::from_seconds( talent.sanlayn.infliction_of_sorrow->effectN( 3 ).base_value() );
     mod                  = modified_spell.infliction_of_sorrow->effectN( 2 ).percent();
 
+    if (options.tww3_2pc)
+      extension += spell.tww3_2pc_san->effectN( 2 ).time_value();
     if ( disease_td->is_ticking() )
     {
       disease_td->adjust_duration( extension );
@@ -12382,6 +12412,11 @@ void death_knight_t::trigger_sanlayn_execute_talents( bool is_vampiric )
     if ( !buffs.gift_of_the_sanlayn->check() )
     {
       buffs.vampiric_strike->expire();
+    }
+    if ( options.tww3_4pc )
+    {
+      if ( specialization() == DEATH_KNIGHT_UNHOLY && pets.ghoul_pet.active_pet() != nullptr )
+        pets.ghoul_pet.active_pet()->blood_rush->trigger();
     }
   }
 }
@@ -13081,7 +13116,10 @@ void death_knight_t::create_pets()
   if ( talent.sanlayn.the_blood_is_life.ok() )
   {
     pets.blood_beast.set_creation_callback( []( death_knight_t* p ) { return new pets::blood_beast_pet_t( p ); } );
-    pets.blood_beast.set_default_duration( spell.blood_beast_summon->duration() );
+    timespan_t bb_dur = spell.blood_beast_summon->duration();
+    if ( options.tww3_4pc )
+      bb_dur += spell.tww3_4pc_san->effectN( 1 ).time_value();
+    pets.blood_beast.set_default_duration( bb_dur );
     pets.blood_beast.set_max_pets( 1 );
     pets.blood_beast.set_replacement_strategy( spawner::pet_replacement_strategy::REPLACE_OLDEST );
   }
@@ -13712,6 +13750,7 @@ void death_knight_t::spell_lookups()
   spell.visceral_strength_unholy_buff = conditional_spell_lookup(
       talent.sanlayn.visceral_strength.ok() && specialization() == DEATH_KNIGHT_UNHOLY, 1234532 );
   spell.bloodsoaked_ground_buff = conditional_spell_lookup( talent.sanlayn.bloodsoaked_ground.ok(), 434034 );
+  spell.blood_rush              = conditional_spell_lookup( options.tww3_4pc, 1236822 );
 
   // Deathbringer Spells
   spell.reapers_mark_debuff          = conditional_spell_lookup( talent.deathbringer.reapers_mark.ok(), 434765 );
@@ -14312,8 +14351,11 @@ void death_knight_t::create_buffs()
           ->set_default_value( spell.rune_carved_plates_magical_buff->effectN( 1 ).base_value() / 1000 );
 
   // San'layn
-  buffs.essence_of_the_blood_queen = make_fallback(
-      talent.sanlayn.vampiric_strike.ok(), this, "essence_of_the_blood_queen", spell.essence_of_the_blood_queen_buff );
+  buffs.essence_of_the_blood_queen =
+      make_fallback( talent.sanlayn.vampiric_strike.ok(), this, "essence_of_the_blood_queen",
+                     spell.essence_of_the_blood_queen_buff )
+          ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY )
+          ->set_default_value( options.tww3_4pc ? spell.tww3_2pc_san->effectN( 1 ).base_value() / 10 : 0 );
 
   buffs.gift_of_the_sanlayn = make_fallback<gift_of_the_sanlayn_buff_t>(
       talent.sanlayn.gift_of_the_sanlayn.ok(), this, "gift_of_the_sanlayn", spell.gift_of_the_sanlayn_buff );
@@ -15601,7 +15643,7 @@ void death_knight_t::parse_player_effects()
                         pet_spell.trollbanes_chains_of_ice_debuff );
 
   // San'layn
-  parse_effects( buffs.essence_of_the_blood_queen, [ & ]( double v ) {
+  parse_effects( buffs.essence_of_the_blood_queen, effect_mask_t( true ).disable( 3 ), [ & ]( double v ) {
     v *= 0.1;  // Divides by 10 in spell data
     if ( buffs.gift_of_the_sanlayn->check() )
       v *= 1.0 + buffs.gift_of_the_sanlayn->check_value();
@@ -15707,9 +15749,7 @@ void death_knight_t::apply_affecting_auras( action_t& action )
 
   // San'layn
   if ( talent.unholy.clawing_shadows.ok() )
-  {
     action.apply_affecting_aura( spell.vampiric_strike_clawing_shadows );
-  }
 
   // Deathbringer
   action.apply_affecting_aura( talent.deathbringer.bind_in_darkness );

@@ -1951,6 +1951,7 @@ class SpellDataGenerator(DataGenerator):
           ( 460501, 0 ), # Bloodied blade heart strike
           ( 463730, 0 ), # Coagulating Blood for Death Strike
           ( 1232346, 0 ), # Desecrate Damage
+          ( 1239422, 0 ), # Blighted Arrow Coil Buff
           # Rider of the Apocalypse
           ( 444505, 0 ), # Mograines Might Buff
           ( 444826, 0 ), # Trollbanes Chains of Ice Main

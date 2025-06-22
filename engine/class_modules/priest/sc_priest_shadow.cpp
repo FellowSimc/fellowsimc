@@ -2327,20 +2327,20 @@ void priest_t::create_buffs_shadow()
                              ->set_stack_change_callback( [ this ]( buff_t*, int old, int cur ) {
                                cooldowns.shadow_word_death->adjust_max_charges( cur - old );
                              } );
+
+    buffs.devoured_pride = make_buff( this, "devoured_pride", talents.shadow.devoured_pride )
+                               ->set_trigger_spell( talents.shadow.idol_of_yshaarj )
+                               ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
+
+    buffs.devoured_despair = make_buff<buffs::devoured_despair_buff_t>( *this );
+
+    buffs.devoured_anger =
+        make_buff( this, "devoured_anger", talents.shadow.devoured_anger )
+            ->set_trigger_spell( talents.shadow.idol_of_yshaarj )
+            ->set_duration( talents.shadow.devoured_pride->duration() )  // Duration is incorrect in spell data
+            ->add_invalidate( CACHE_HASTE )
+            ->set_default_value_from_effect( 1 );
   }
-
-  buffs.devoured_pride = make_buff( this, "devoured_pride", talents.shadow.devoured_pride )
-                             ->set_trigger_spell( talents.shadow.idol_of_yshaarj )
-                             ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
-
-  buffs.devoured_despair = make_buff<buffs::devoured_despair_buff_t>( *this );
-
-  buffs.devoured_anger =
-      make_buff( this, "devoured_anger", talents.shadow.devoured_anger )
-          ->set_trigger_spell( talents.shadow.idol_of_yshaarj )
-          ->set_duration( talents.shadow.devoured_pride->duration() )  // Duration is incorrect in spell data
-          ->add_invalidate( CACHE_HASTE )
-          ->set_default_value_from_effect( 1 );
 
   buffs.mind_melt = make_buff( this, "mind_melt", talents.shadow.mind_melt->effectN( 2 ).trigger() )
                         ->set_default_value_from_effect( 1 );
@@ -2382,6 +2382,20 @@ void priest_t::create_buffs_shadow()
   buffs.last_shadowy_apparition_crit =
       make_buff( this, "last_shadowy_apparition_crit" )->set_quiet( true )->set_duration( 0_s )->set_max_stack( 1 );
 
+  // Idol of Y'Shaarj
+  buffs.call_of_the_void = make_buff( this, "call_of_the_void", talents.shadow.call_of_the_void )
+                               ->set_default_value_from_effect( 1 )
+                               ->add_invalidate( CACHE_HASTE )
+                               ->set_stack_change_callback( ( [ this ]( buff_t*, int, int new_ ) {
+                                 if ( new_ == 0 )
+                                 {
+                                   buffs.overburdened_mind->trigger();
+                                 }
+                               } ) );
+  buffs.overburdened_mind = make_buff( this, "overburdened_mind", talents.shadow.overburdened_mind )
+                                ->set_default_value_from_effect( 1 )
+                                ->add_invalidate( CACHE_HASTE );
+
   // Tier Sets
   // 393684 -> 394961
   buffs.gathering_shadows =
@@ -2394,7 +2408,6 @@ void priest_t::create_buffs_shadow()
           ->set_default_value_from_effect( 1 );
 
   // TODO: Wire up spell data, split into helper function.
-
   auto darkflame_embers  = find_spell( 409502 );
   buffs.darkflame_embers = make_buff( this, "darkflame_embers", darkflame_embers )
                                ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
@@ -2426,6 +2439,11 @@ void priest_t::init_rng_shadow()
   if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
   {
     rppm.deathspeaker = get_rppm( "deathspeaker", talents.shadow.deathspeaker );
+  }
+
+  if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
+  {
+    rppm.idol_of_yshaarj = get_rppm( "idol_of_yshaarj", talents.shadow.idol_of_yshaarj );
   }
 
   // Shadowy Insight
@@ -2504,12 +2522,23 @@ void priest_t::init_spells_shadow()
   talents.shadow.insidious_ire       = ST( "Insidious Ire" );
   talents.shadow.malediction         = ST( "Malediction" );
   // Row 10
-  talents.shadow.idol_of_yshaarj   = ST( "Idol of Y'Shaarj" );
-  talents.shadow.devoured_pride    = find_spell( 373316 );  // Pet Damage, Your Damage - Healthy
-  talents.shadow.devoured_despair  = find_spell( 373317 );  // Insanity Generation - Stunned
-  talents.shadow.devoured_anger    = find_spell( 373318 );  // Haste - Enrage - Stubbed
-  talents.shadow.devoured_fear     = find_spell( 373319 );  // Pet Damage, Your Damage - Feared - NYI
-  talents.shadow.devoured_violence = find_spell( 373320 );  // Pet Extension - Default
+  talents.shadow.idol_of_yshaarj = ST( "Idol of Y'Shaarj" );
+
+  if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+  {
+    talents.shadow.devoured_pride    = find_spell( 373316 );  // Pet Damage, Your Damage - Healthy
+    talents.shadow.devoured_despair  = find_spell( 373317 );  // Insanity Generation - Stunned
+    talents.shadow.devoured_anger    = find_spell( 373318 );  // Haste - Enrage - Stubbed
+    talents.shadow.devoured_fear     = find_spell( 373319 );  // Pet Damage, Your Damage - Feared - NYI
+    talents.shadow.devoured_violence = find_spell( 373320 );  // Pet Extension - Default
+  }
+
+  if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
+  {
+    talents.shadow.call_of_the_void  = find_spell( 373316 );  // Idol of Y'Shaarj positive haste buff
+    talents.shadow.overburdened_mind = find_spell( 373317 );  // Idol of Y'Shaarj negative haste buff
+  }
+
   talents.shadow.idol_of_nzoth     = ST( "Idol of N'Zoth" );
   talents.shadow.idol_of_yoggsaron = ST( "Idol of Yogg-Saron" );
   talents.shadow.idol_of_cthun     = ST( "Idol of C'Thun" );

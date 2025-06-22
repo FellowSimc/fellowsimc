@@ -2972,17 +2972,21 @@ void priest_t::create_procs()
   procs.shadowy_insight_overflow       = get_proc( "Shadowy Insight procs lost to overflow" );
   procs.shadowy_insight_missed         = get_proc( "Shadowy Insight procs not consumed" );
   procs.thing_from_beyond              = get_proc( "Thing from Beyond procs" );
-  procs.deathspeaker                   = get_proc( "Shadow Word: Death resets from Deathspeaker" );
   procs.idol_of_nzoth_swp              = get_proc( "Idol of N'Zoth procs from Shadow Word: Pain" );
   procs.idol_of_nzoth_vt               = get_proc( "Idol of N'Zoth procs from Vampiric Touch" );
   procs.mind_flay_insanity_wasted      = get_proc( "Mind Flay: Insanity casts that did not channel for full ticks" );
-  procs.idol_of_yshaarj_extra_duration = get_proc( "Idol of Y'Shaarj Devoured Violence procs" );
   procs.void_torrent_ticks_no_mastery  = get_proc( "Void Torrent ticks without full Mastery value" );
   procs.mindgames_casts_no_mastery     = get_proc( "Mindgames casts without full Mastery value" );
   procs.inescapable_torment_missed_mb  = get_proc( "Inescapable Torment expired when Mind Blast was ready" );
   procs.inescapable_torment_missed_swd = get_proc( "Inescapable Torment expired when Shadow Word: Death was ready" );
   procs.shadowy_apparition_crit        = get_proc( "Shadowy Apparitions that dealt 100% more damage" );
   procs.depth_of_shadows               = get_proc( "Depth of Shadows spawns of your main pet" );
+
+  if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+  {
+    procs.idol_of_yshaarj_extra_duration = get_proc( "Idol of Y'Shaarj Devoured Violence procs" );
+    procs.deathspeaker                   = get_proc( "Shadow Word: Death resets from Deathspeaker" );
+  }
   // Holy
   procs.divine_favor_chastise = get_proc( "Smite procs Holy Fire via Divine Favor: Chastise" );
   procs.divine_image          = get_proc( "Divine Image from Holy Words" );
@@ -3222,9 +3226,19 @@ double priest_t::composite_spell_haste() const
     h *= 1.0 / ( 1.0 + buffs.dark_reveries->current_value );
   }
 
-  if ( buffs.devoured_anger->check() )
+  if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } && buffs.devoured_anger->check() )
   {
     h *= 1.0 / ( 1.0 + buffs.devoured_anger->check_value() );
+  }
+
+  if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && buffs.call_of_the_void->check() )
+  {
+    h *= 1.0 / ( 1.0 + buffs.call_of_the_void->check_value() );
+  }
+
+  if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && buffs.overburdened_mind->check() )
+  {
+    h *= 1.0 / ( 1.0 + buffs.overburdened_mind->check_value() );
   }
 
   if ( buffs.borrowed_time->check() )
@@ -3239,7 +3253,7 @@ double priest_t::composite_melee_haste() const
 {
   double h = player_t::composite_melee_haste();
 
-  if ( buffs.devoured_anger->check() )
+  if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } && buffs.devoured_anger->check() )
   {
     h *= 1.0 / ( 1.0 + buffs.devoured_anger->check_value() );
   }
@@ -3283,7 +3297,7 @@ double priest_t::composite_player_pet_damage_multiplier( const action_state_t* s
   }
 
   // Auto parsing does not cover melee attacks, and other attacks double dip with this
-  if ( buffs.devoured_pride->check() )
+  if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } && buffs.devoured_pride->check() )
   {
     m *= ( 1.0 + talents.shadow.devoured_pride->effectN( 2 ).percent() );
   }
@@ -4039,8 +4053,8 @@ void priest_t::create_buffs()
   buffs.ascension = make_buff_fallback( tww3_spells.archon_2pc->ok(), this, "ascension", tww3_spells.archon_2pc_buff );
 
   buffs.overflowing_void = make_buff_fallback( tww3_spells.voidweaver_4pc_buff->ok(), this, "overflowing_void",
-                                               tww3_spells.voidweaver_4pc_buff )->set_default_value( 0 );
-
+                                               tww3_spells.voidweaver_4pc_buff )
+                               ->set_default_value( 0 );
 
   buffs.tww3_archon_4pc = make_buff_fallback( tww3_spells.archon_4pc->ok(), this, "tww3_archon_4pc_helper" );
 
@@ -4063,7 +4077,7 @@ void priest_t::create_buffs()
       }
     } );
   }
-                              
+
   create_buffs_shadow();
   create_buffs_discipline();
   create_buffs_holy();

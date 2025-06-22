@@ -242,6 +242,8 @@ public:
     propagate_const<buff_t*> deathspeaker;
     propagate_const<buff_t*> dark_ascension;
     propagate_const<buff_t*> last_shadowy_apparition_crit;
+    propagate_const<buff_t*> call_of_the_void;
+    propagate_const<buff_t*> overburdened_mind;
 
     // Tier Sets
     propagate_const<buff_t*> gathering_shadows;
@@ -420,6 +422,8 @@ public:
       const spell_data_t* devoured_anger;
       const spell_data_t* devoured_fear;
       const spell_data_t* devoured_violence;
+      const spell_data_t* call_of_the_void;
+      const spell_data_t* overburdened_mind;
       player_talent_t idol_of_nzoth;
       player_talent_t idol_of_yoggsaron;
       player_talent_t idol_of_cthun;
@@ -509,7 +513,7 @@ public:
 
     struct
     {
-      // Row 1  
+      // Row 1
       player_talent_t holy_word_serenity;
       // Row 2
       player_talent_t holy_word_sanctify;
@@ -755,6 +759,7 @@ public:
     propagate_const<real_ppm_t*> idol_of_cthun;
     propagate_const<real_ppm_t*> deathspeaker;
     propagate_const<real_ppm_t*> power_of_the_dark_side;
+    propagate_const<real_ppm_t*> idol_of_yshaarj;
   } rppm;
 
   struct threshold_rngs_t
@@ -981,8 +986,10 @@ public:
   void target_mitigation( school_e, result_amount_type, action_state_t* ) override;
   void init_action_list() override;
   void init_blizzard_action_list() override;
-  void parse_assisted_combat_step( const assisted_combat_step_data_t& step, action_priority_list_t* assisted_combat ) override;
-  parsed_assisted_combat_rule_t parse_assisted_combat_rule( const assisted_combat_rule_data_t& rule, const assisted_combat_step_data_t& step ) const override;
+  void parse_assisted_combat_step( const assisted_combat_step_data_t& step,
+                                   action_priority_list_t* assisted_combat ) override;
+  parsed_assisted_combat_rule_t parse_assisted_combat_rule( const assisted_combat_rule_data_t& rule,
+                                                            const assisted_combat_step_data_t& step ) const override;
   std::vector<std::string> action_names_from_spell_id( unsigned int spell_id ) const override;
   std::string aura_expr_from_spell_id( unsigned int spell_id, bool on_self ) const override;
   void combat_begin() override;
@@ -1030,7 +1037,8 @@ private:
   target_specific_t<priest_td_t> _target_data;
 
 public:
-  void do_holy_word_cdr( cooldown_t* cd, timespan_t amount, bool affected_by_apotheosis = true, bool affected_by_naaru = true );
+  void do_holy_word_cdr( cooldown_t* cd, timespan_t amount, bool affected_by_apotheosis = true,
+                         bool affected_by_naaru = true );
   void generate_insanity( double num_amount, gain_t* g, action_t* action );
   double tick_damage_over_time( timespan_t duration, const dot_t* dot ) const;
   void trigger_inescapable_torment( player_t* target, bool echo = false, double mod = 1.0 );
@@ -1054,7 +1062,7 @@ public:
   // Stores the currently active Entropic Rift event
   void trigger_entropic_rift();
   void extend_entropic_rift();
-  void expand_entropic_rift(int stacks = -1);
+  void expand_entropic_rift( int stacks = -1 );
   void trigger_cauterizing_shadows();
   std::string blizzard_apl_action_replace( std::string options );
 
@@ -1280,11 +1288,9 @@ public:
     else
       parse_effects( p().buffs.surge_of_light, IGNORE_STACKS );
 
-
     // SHADOW BUFF EFFECTS
     if ( p().specialization() == PRIEST_SHADOW )
     {
-      parse_effects( p().buffs.devoured_pride );  // Spell Direct and Periodic amount
       parse_effects( p().buffs.voidform, effect_mask_t( true ).disable( 3 ), IGNORE_STACKS,  // Skip E3 for AM
                      p().talents.archon.perfected_form );
       parse_effects( p().buffs.shadowform );
@@ -1293,8 +1299,9 @@ public:
       if ( p().sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
       {
         parse_effects( p().buffs.dark_evangelism, p().talents.shadow.dark_evangelism );
+        parse_effects( p().buffs.devoured_pride );  // Spell Direct and Periodic amount
       }
-      
+
       parse_effects( p().buffs.dark_ascension, effect_mask_t( true ).disable( 4 ), IGNORE_STACKS,  // Skip E4 for AM
                      p().talents.archon.perfected_form );                  // Buffs non-periodic spells
       parse_effects( p().buffs.mind_melt, p().talents.shadow.mind_melt );  // Mind Blast instant cast and Crit increase
@@ -1606,7 +1613,7 @@ struct priest_heal_t : public priest_action_t<heal_t>
       }
     }
   }
-  
+
   void execute() override
   {
     base_t::execute();
@@ -1708,7 +1715,19 @@ struct priest_spell_t : public priest_action_t<spell_t>
       }
 
       if ( triggers_atonement && ( s->chain_target == 0 || split_aoe_damage ) )
+      {
         p().trigger_atonement( s, composite_atonement_multiplier( s ) );
+      }
+
+      // Double check that this cant proc while the buff or debuff is active
+      if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && priest().talents.shadow.idol_of_yshaarj.enabled() &&
+           !priest().buffs.call_of_the_void->check() && !priest().buffs.overburdened_mind->check() )
+      {
+        if ( priest().rppm.idol_of_yshaarj->trigger() )
+        {
+          priest().buffs.call_of_the_void->trigger();
+        }
+      }
     }
   }
 

@@ -225,7 +225,7 @@ struct priest_pet_melee_t : public melee_attack_t
       mul *= 1 + p().o().talents.discipline.atonement->effectN( 3 ).percent();
 
     // TODO: Check if applies
-    //if ( p().o().talents.discipline.abyssal_reverie.enabled() &&
+    // if ( p().o().talents.discipline.abyssal_reverie.enabled() &&
     //     ( dbc::get_school_mask( s->action->school ) & SCHOOL_SHADOW ) != SCHOOL_SHADOW )
     //  mul *= 1 + p().o().talents.discipline.abyssal_reverie->effectN( 1 ).percent();
 
@@ -293,9 +293,13 @@ struct priest_pet_spell_t : public parse_action_effects_t<spell_t>
       parse_effects( p().o().buffs.voidform, effect_mask_t( true ).disable( 3 ), IGNORE_STACKS,  // Skip E3 for AM
                      p().o().talents.archon.perfected_form );
       parse_effects( p().o().buffs.shadowform );
-      parse_effects( p().o().buffs.devoured_pride );
       parse_effects( p().o().buffs.dark_ascension, effect_mask_t( true ).disable( 4 ), IGNORE_STACKS,  // Skip E4 for AM
                      p().o().talents.archon.perfected_form );  // Buffs non-periodic spells
+
+      if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+      {
+        parse_effects( p().o().buffs.devoured_pride );
+      }
     }
 
     if ( p().o().talents.shadow.ancient_madness.enabled() )
@@ -554,7 +558,7 @@ struct void_flay_t final : public priest_pet_spell_t
     gcd_type    = gcd_haste_type::SPELL_HASTE;
     trigger_gcd = 1.5_s;
 
-    damage_mul = data().effectN( 2 ).percent();
+    damage_mul           = data().effectN( 2 ).percent();
     affected_by_reveries = false;
   }
 
@@ -1207,10 +1211,14 @@ void priest_t::trigger_inescapable_torment( player_t* target, bool echo, double 
   if ( get_current_main_pet().n_active_pets() > 0 )
   {
     auto extend = talents.shared.inescapable_torment->effectN( 2 ).time_value() * mod;
-    buffs.devoured_pride->extend_duration( this, extend );
-    buffs.devoured_anger->extend_duration( this, extend );
-    buffs.devoured_despair->extend_duration( this, extend );
     buffs.shadow_covenant->extend_duration( this, extend );
+
+    if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    {
+      buffs.devoured_pride->extend_duration( this, extend );
+      buffs.devoured_anger->extend_duration( this, extend );
+      buffs.devoured_despair->extend_duration( this, extend );
+    }
 
     for ( auto a_pet : get_current_main_pet() )
     {
@@ -1223,8 +1231,10 @@ void priest_t::trigger_inescapable_torment( player_t* target, bool echo, double 
 
 void priest_t::trigger_idol_of_yshaarj( player_t* target )
 {
-  if ( !talents.shadow.idol_of_yshaarj.enabled() )
+  if ( !talents.shadow.idol_of_yshaarj.enabled() || sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
+  {
     return;
+  }
 
   // TODO: Use Spell Data. Health threshold from blizzard post, no spell data yet.
   if ( ( target->buffs.stunned->check() && options.forced_yshaarj_type == "default" ) ||

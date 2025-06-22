@@ -15548,7 +15548,7 @@ void death_knight_action_t<Base>::apply_target_effects()
 
   // Rider of the Apocalypse
   if( p()->options.tww3_4pc )
-    parse_target_effects( d_fn( &death_knight_td_t::dots_t::undeath ), p()->pet_spell.undeath_dot, p()->spell.tww3_4pc_rider );
+    parse_target_effects( d_fn( &death_knight_td_t::dots_t::undeath, false ), p()->pet_spell.undeath_dot, p()->spell.tww3_4pc_rider );
 
   // Deathbringer
 

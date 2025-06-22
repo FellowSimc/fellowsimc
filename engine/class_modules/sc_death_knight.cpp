@@ -6570,13 +6570,7 @@ struct undeath_dot_t final : public death_knight_spell_t
   {
     death_knight_spell_t::tick( d );
     auto td = p()->get_target_data( d->target );
-    auto cd = p()->cooldown.undeath_spread->get_cooldown( d->target );
-
-    if ( !cd->down() )
-    {
-      td->dot.undeath->increment( 1 );
-      cd->start();
-    }
+    td->dot.undeath->increment( 1 );
   }
 };
 

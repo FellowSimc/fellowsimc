@@ -371,6 +371,10 @@ struct void_blast_shadow_t final : public mind_blast_base_t
     if ( priest().talents.voidweaver.darkening_horizon.enabled() )
     {
       priest().extend_entropic_rift();
+      if ( priest().tww3_spells.voidweaver_4pc->ok() )
+      {
+        priest().expand_entropic_rift();
+      }
     }
   }
 
@@ -793,7 +797,7 @@ struct halo_t final : public priest_spell_t
       }
     }
 
-    if ( priest().talents.archon.sustained_potency.enabled() )
+    if ( priest().talents.archon.sustained_potency.enabled() && !is_precombat )
     {
       bool extended = false;
       if ( priest().buffs.voidform->check() )
@@ -834,6 +838,11 @@ struct halo_t final : public priest_spell_t
         default:
           break;
       }
+    }
+
+    if ( priest().tww3_spells.archon_2pc->ok() )
+    {
+      priest().buffs.ascension->trigger();
     }
   }
 
@@ -1088,6 +1097,10 @@ struct void_blast_disc_t final : public smite_base_t
 
     // This call contains the relevant talent checks, do not need to make them twice.
     p().extend_entropic_rift();
+    if ( priest().tww3_spells.voidweaver_4pc->ok() )
+    {
+      priest().expand_entropic_rift( 2 );
+    }
   }
 
   double composite_atonement_multiplier( action_state_t* s ) override
@@ -3690,6 +3703,16 @@ void priest_t::init_spells()
   auto ST = [ this ]( std::string_view n ) { return find_talent_spell( talent_tree::SPECIALIZATION, n ); };
   auto HT = [ this ]( std::string_view n ) { return find_talent_spell( talent_tree::HERO, n ); };
 
+  auto sd_nf = spell_data_t::not_found();
+
+  tww3_spells.archon_2pc      = options.tww3_archon_set >= 2 ? find_spell( 1236398 ) : sd_nf;
+  tww3_spells.archon_2pc_buff = tww3_spells.archon_2pc->ok() ? find_spell( 1239336 ) : sd_nf;
+  tww3_spells.archon_4pc      = options.tww3_archon_set >= 4 ? find_spell( 1236399 ) : sd_nf;
+
+  tww3_spells.voidweaver_2pc      = options.tww3_vw_set >= 2 ? find_spell( 1236396 ) : sd_nf;
+  tww3_spells.voidweaver_4pc      = options.tww3_vw_set >= 4 ? find_spell( 1236397 ) : sd_nf;
+  tww3_spells.voidweaver_4pc_buff = tww3_spells.voidweaver_4pc->ok() ? find_spell( 1237615 ) : sd_nf;
+
   init_spells_shadow();
   init_spells_discipline();
   init_spells_holy();
@@ -3968,6 +3991,12 @@ void priest_t::create_buffs()
             buffs.darkening_horizon->expire();
             background_actions.collapsing_void->trigger( state.last_entropic_rift_target,
                                                          buffs.collapsing_void->check() );
+
+            if ( tww3_spells.voidweaver_4pc->ok() )
+            {
+              auto value = std::min( buffs.collapsing_void->check_value() * 0.2 + 1.0, 2.0 );
+              buffs.overflowing_void->trigger( 1, value );
+            }
             buffs.collapsing_void->expire();
           }
         } );
@@ -3984,7 +4013,13 @@ void priest_t::create_buffs()
                               ->set_default_value_from_effect( specialization() == PRIEST_SHADOW ? 3 : 4, 0.01 )
                               ->set_duration( 0_s )
                               ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
-                              ->set_max_stack( 10 );
+                              ->set_max_stack( specialization() == PRIEST_SHADOW ? 5 : 10 );
+
+  if ( tww3_spells.voidweaver_4pc->ok() )
+  {
+    buffs.collapsing_void->default_value +=
+        tww3_spells.voidweaver_4pc->effectN( specialization() == PRIEST_SHADOW ? 3 : 1 ).percent();
+  }
 
   // Unknown what this piece of spell data is for. Discipline testing shows a maximum of 10 stacks.
   /*if ( talents.voidweaver.collapsing_void.enabled() )
@@ -4001,6 +4036,34 @@ void priest_t::create_buffs()
   buffs.sustained_potency = make_buff_fallback( talents.archon.sustained_potency.enabled(), this, "sustained_potency",
                                                 talents.archon.sustained_potency_buff );
 
+  buffs.ascension = make_buff_fallback( tww3_spells.archon_2pc->ok(), this, "ascension", tww3_spells.archon_2pc_buff );
+
+  buffs.overflowing_void = make_buff_fallback( tww3_spells.voidweaver_4pc_buff->ok(), this, "overflowing_void",
+                                               tww3_spells.voidweaver_4pc_buff )->set_default_value( 0 );
+
+
+  buffs.tww3_archon_4pc = make_buff_fallback( tww3_spells.archon_4pc->ok(), this, "tww3_archon_4pc_helper" );
+
+  if ( tww3_spells.archon_4pc->ok() )
+  {
+    int casts_per_extend = as<int>( tww3_spells.archon_4pc->effectN( 1 ).base_value() );
+    int max_extension    = as<int>( tww3_spells.archon_4pc->effectN( 3 ).base_value() );
+    buffs.tww3_archon_4pc->set_max_stack( casts_per_extend * max_extension )
+        ->set_stack_change_callback( [ this, casts_per_extend ]( buff_t*, int, int _new ) {
+          if ( _new % casts_per_extend == 0 && _new != 0 )
+          {
+            buffs.power_surge->extend_duration( this, buffs.power_surge->tick_time() );
+          }
+        } );
+
+    buffs.power_surge->add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
+      if ( !_new )
+      {
+        buffs.tww3_archon_4pc->expire();
+      }
+    } );
+  }
+                              
   create_buffs_shadow();
   create_buffs_discipline();
   create_buffs_holy();
@@ -4115,6 +4178,9 @@ void priest_t::apply_affecting_auras_late( action_t& action )
   // TWW1 2pc
   action.apply_affecting_aura( sets->set( PRIEST_SHADOW, TWW1, B2 ) );
   action.apply_affecting_aura( sets->set( PRIEST_DISCIPLINE, TWW1, B2 ) );
+
+  // TWW3 2pc
+  action.apply_affecting_aura( tww3_spells.voidweaver_2pc );
 }
 
 double priest_t::composite_mastery_value() const
@@ -4627,6 +4693,9 @@ void priest_t::create_options()
                          0.0, 1.0 ) );
   add_option( opt_float( "priest.synergistic_brewterializer_barrel_hit_chance",
                          options.synergistic_brewterializer_barrel_hit_chance, 0.0, 1.0 ) );
+
+  add_option( opt_int( "priest.tww3_archon_set", options.tww3_archon_set, 0, 5 ) );
+  add_option( opt_int( "priest.tww3_vw_set", options.tww3_vw_set, 0, 5 ) );
 }
 
 std::string priest_t::create_profile( save_e type )
@@ -4780,14 +4849,14 @@ void priest_t::trigger_entropic_rift()
   background_actions.entropic_rift->execute();
 }
 
-void priest_t::expand_entropic_rift()
+void priest_t::expand_entropic_rift( int stacks )
 {
   if ( !talents.voidweaver.collapsing_void.enabled() || !buffs.entropic_rift->check() )
   {
     return;
   }
 
-  buffs.collapsing_void->trigger();
+  buffs.collapsing_void->trigger( stacks );
 }
 
 void priest_t::extend_entropic_rift()

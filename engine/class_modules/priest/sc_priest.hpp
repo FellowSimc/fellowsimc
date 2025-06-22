@@ -251,6 +251,9 @@ public:
     propagate_const<buff_t*> darkflame_shroud;
     propagate_const<buff_t*> devouring_chorus;
     propagate_const<buff_t*> darkness_from_light;
+    propagate_const<buff_t*> ascension;         // TWW3 Archon Set 2pc
+    propagate_const<buff_t*> tww3_archon_4pc;   // TWW3 Archon Set 4pc helper
+    propagate_const<buff_t*> overflowing_void;  // TWW3 VW Set 4pc
 
     // Archon
     propagate_const<buff_t*> power_surge;
@@ -709,6 +712,16 @@ public:
     const spell_data_t* echo_of_light;
   } mastery_spells;
 
+  struct
+  {
+    const spell_data_t* voidweaver_2pc;
+    const spell_data_t* voidweaver_4pc;
+    const spell_data_t* voidweaver_4pc_buff;
+    const spell_data_t* archon_2pc;
+    const spell_data_t* archon_2pc_buff;
+    const spell_data_t* archon_4pc;
+  } tww3_spells;
+
   // Cooldowns
   struct
   {
@@ -921,6 +934,9 @@ public:
     double synergistic_brewterializer_tof_chance = 0.7;
     // ~20% damage penalty to account for GCD. ~10% Miss general chance.
     double synergistic_brewterializer_barrel_hit_chance = 0.75;
+
+    int tww3_vw_set     = 0;
+    int tww3_archon_set = 0;
   } options;
 
   priest_t( sim_t* sim, util::string_view name, race_e r );
@@ -1038,7 +1054,7 @@ public:
   // Stores the currently active Entropic Rift event
   void trigger_entropic_rift();
   void extend_entropic_rift();
-  void expand_entropic_rift();
+  void expand_entropic_rift(int stacks = -1);
   void trigger_cauterizing_shadows();
   std::string blizzard_apl_action_replace( std::string options );
 
@@ -1359,7 +1375,7 @@ public:
     if ( p().talents.archon.resonant_energy.enabled() )
     {
       parse_target_effects( d_fn( &priest_td_t::buffs_t::resonant_energy, true ),
-                            p().talents.archon.resonant_energy_shadow );
+                            p().talents.archon.resonant_energy_shadow, p().tww3_spells.archon_2pc );
     }
   }
 

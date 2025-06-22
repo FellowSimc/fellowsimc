@@ -1146,6 +1146,11 @@ struct devouring_plague_t final : public priest_spell_t
       priest().buffs.surge_of_insanity->trigger();
     }
 
+    if ( priest().tww3_spells.archon_4pc->ok() && priest().buffs.power_surge->check() )
+    {
+      priest().buffs.tww3_archon_4pc->trigger();
+    }
+
     if ( priest().sets->has_set_bonus( PRIEST_SHADOW, T29, B2 ) )
     {
       priest().buffs.gathering_shadows->expire();
@@ -1590,6 +1595,18 @@ struct void_torrent_t final : public priest_spell_t
     return m;
   }
 
+  double composite_persistent_multiplier( const action_state_t* s ) const override
+  {
+    double m = priest_spell_t::composite_persistent_multiplier( s );
+
+    if ( priest().buffs.overflowing_void->check() )
+    {
+      m *= 1 + priest().buffs.overflowing_void->check_value();
+    }
+
+    return m;
+  }
+
   void last_tick( dot_t* d ) override
   {
     priest().buffs.void_torrent->expire();
@@ -1622,6 +1639,7 @@ struct void_torrent_t final : public priest_spell_t
     priest_spell_t::execute();
 
     priest().buffs.void_torrent->trigger();
+    priest().buffs.overflowing_void->expire();
   }
 
   void impact( action_state_t* s ) override

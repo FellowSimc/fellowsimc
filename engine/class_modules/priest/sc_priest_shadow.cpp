@@ -2553,8 +2553,8 @@ void priest_t::init_spells_shadow()
   talents.shadow.mind_flay_insanity        = ST( "Mind Flay: Insanity" );
   talents.shadow.mind_flay_insanity_spell  = find_spell( 391403 );  // Not linked to talent, actual dmg spell
   // Row 5
-  talents.shadow.shadow_crash         = find_talent_spell( 125983 );  // targeted at a location
-  talents.shadow.shadow_crash_target  = find_talent_spell( 103813 );  // targeted at a specific target
+  talents.shadow.shadow_crash         = find_talent_spell( 133524 );  // targeted at a location
+  talents.shadow.shadow_crash_target  = find_talent_spell( 133378 );  // targeted at a specific target
   talents.shadow.unfurling_darkness   = ST( "Unfurling Darkness" );
   talents.shadow.void_eruption        = ST( "Void Eruption" );
   talents.shadow.void_eruption_damage = find_spell( 228360 );

@@ -7789,7 +7789,9 @@ struct breath_of_sindragosa_tick_t final : public death_knight_spell_t
   void execute() override
   {
     death_knight_spell_t::execute();
-    p()->buffs.rime->trigger( 1, buff_t::DEFAULT_VALUE(), p()->spec.rime->effectN( 1 ).percent() );
+    p()->buffs.rime->trigger(
+        1, buff_t::DEFAULT_VALUE(),
+        p()->spec.rime->effectN( 1 ).percent() + p()->talent.frost.rage_of_the_frozen_champion->effectN( 2 ).percent() );
   }
 
   void impact( action_state_t* state ) override
@@ -13804,7 +13806,7 @@ void death_knight_t::spell_lookups()
 
   // Frost
   spell.murderous_efficiency_gain   = conditional_spell_lookup( talent.frost.murderous_efficiency.ok(), 207062 );
-  spell.rage_of_the_frozen_champion = conditional_spell_lookup( talent.frost.rage_of_the_frozen_champion.ok(), 341725 );
+  spell.rage_of_the_frozen_champion = conditional_spell_lookup( talent.frost.rage_of_the_frozen_champion.ok(), 377077 );
   spell.runic_empowerment_chance    = conditional_spell_lookup( spec.frost_death_knight->ok(), 81229 );
   spell.gathering_storm_buff        = conditional_spell_lookup( talent.frost.gathering_storm.ok(), 211805 );
   spell.inexorable_assault_buff     = conditional_spell_lookup( talent.frost.inexorable_assault.ok(), 253595 );

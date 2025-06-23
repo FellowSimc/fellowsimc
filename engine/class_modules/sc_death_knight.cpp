@@ -847,8 +847,6 @@ public:
     // Frost
     propagate_const<cooldown_t*> inexorable_assault_icd;  // internal cooldown to prevent multiple procs during aoe
     propagate_const<cooldown_t*>
-        frigid_executioner_icd;  // internal cooldown that prevents several procs on the same dual-wield attack
-    propagate_const<cooldown_t*>
         enduring_strength_icd;  // internal cooldown that prevents several procs on the same dual-wield attacl
     propagate_const<cooldown_t*> pillar_of_frost;
     propagate_const<cooldown_t*> frostwyrms_fury;
@@ -963,7 +961,6 @@ public:
     propagate_const<gain_t*> breath_of_sindragosa;
     propagate_const<gain_t*> empower_rune_weapon;
     propagate_const<gain_t*> frost_fever;         // RP generation per tick
-    propagate_const<gain_t*> frigid_executioner;  // Rune refund chance
     propagate_const<gain_t*> murderous_efficiency;
     propagate_const<gain_t*> obliteration;
     propagate_const<gain_t*> rage_of_the_frozen_champion;
@@ -1768,7 +1765,6 @@ public:
         get_cooldown( "death_and_decay" );  // Default value, changed during action construction
     cooldown.death_grip             = get_cooldown( "death_grip" );
     cooldown.inexorable_assault_icd = get_cooldown( "inexorable_assault_icd" );
-    cooldown.frigid_executioner_icd = get_cooldown( "frigid_executioner_icd" );
     cooldown.pillar_of_frost        = get_cooldown( "pillar_of_frost" );
     cooldown.vampiric_blood         = get_cooldown( "vampiric_blood" );
     cooldown.enduring_strength_icd  = get_cooldown( "enduring_strength" );
@@ -10174,19 +10170,6 @@ struct obliterate_t final : public death_knight_melee_attack_t
 
     if ( hit_any_target )
     {
-      if ( p()->talent.frost.frigid_executioner.ok() && p()->cooldown.frigid_executioner_icd->is_ready() )
-      {
-        if ( p()->rng().roll( p()->talent.frost.frigid_executioner->proc_chance() ) )
-        {
-          // # of runes to restore was stored in a secondary affect
-          p()->replenish_rune(
-              as<unsigned int>(
-                  p()->talent.frost.frigid_executioner->effectN( 1 ).trigger()->effectN( 1 ).base_value() ),
-              p()->gains.frigid_executioner );
-          p()->cooldown.frigid_executioner_icd->start();
-        }
-      }
-
       if ( p()->talent.frost.bonegrinder.ok() && !p()->buffs.bonegrinder_frost->up() )
       {
         p()->buffs.bonegrinder_crit->trigger();
@@ -12063,6 +12046,18 @@ void death_knight_t::trigger_runic_empowerment( double rpcost )
   sim->print_debug( "{} Runic Empowerment regenerated {} rune", name(), regenerated );
   log_rune_status( this );
 
+  if ( talent.frost.frigid_executioner->ok() )
+  {
+    if ( rng().roll( talent.frost.frigid_executioner->effectN( 2 ).percent() ) )
+    {
+      int regenerated = replenish_rune( as<int>( spell.runic_empowerment_gain->effectN( 1 ).resource( RESOURCE_RUNE ) ),
+                                        gains.runic_empowerment );
+
+      sim->print_debug( "{} Runic Empowerment (Frigid Executioner) regenerated {} rune", name(), regenerated );
+      log_rune_status( this );
+    }
+  }
+
   if ( talent.frost.icy_onslaught->ok() )
   {
     buffs.icy_onslaught->expire( 100_ms ); // 11.2 TODO magic number is bad
@@ -13548,16 +13543,17 @@ void death_knight_t::init_spells()
   talent.frost.pillar_of_frost = find_talent_spell( talent_tree::SPECIALIZATION, "Pillar of Frost" );
   talent.frost.icy_onslaught   = find_talent_spell( talent_tree::SPECIALIZATION, "Icy Onslaught" );
   talent.frost.gathering_storm = find_talent_spell( talent_tree::SPECIALIZATION, "Gathering Storm" );
-  talent.frost.frostwyrms_fury = find_talent_spell( talent_tree::SPECIALIZATION, "Frostwyrm's Fury" );
   // Row 6
   talent.frost.howling_blades = find_talent_spell( talent_tree::SPECIALIZATION, "Howling Blades" );
+  talent.frost.inexorable_assault = find_talent_spell( talent_tree::SPECIALIZATION, "Inexorable Assault" );
   talent.frost.enduring_strength = find_talent_spell( talent_tree::SPECIALIZATION, "Enduring Strength" );
+  talent.frost.frostwyrms_fury   = find_talent_spell( talent_tree::SPECIALIZATION, "Frostwyrm's Fury" );
+  talent.frost.frigid_executioner = find_talent_spell( talent_tree::SPECIALIZATION, "Frigid Executioner" );
+
   talent.frost.rage_of_the_frozen_champion =
       find_talent_spell( talent_tree::SPECIALIZATION, "Rage of the Frozen Champion" );
-  talent.frost.frigid_executioner = find_talent_spell( talent_tree::SPECIALIZATION, "Frigid Executioner" );
   // Row 7
   talent.frost.murderous_efficiency = find_talent_spell( talent_tree::SPECIALIZATION, "Murderous Efficiency" );
-  talent.frost.inexorable_assault   = find_talent_spell( talent_tree::SPECIALIZATION, "Inexorable Assault" );
   talent.frost.frozen_dominion      = find_talent_spell( talent_tree::SPECIALIZATION, "Frozen Dominion" );
   talent.frost.cryogenic_chamber    = find_talent_spell( talent_tree::SPECIALIZATION, "Cryogenic Chamber" );
   // Row 8
@@ -13964,9 +13960,6 @@ void death_knight_t::set_icds()
   if ( talent.frost.inexorable_assault.ok() )
     cooldown.inexorable_assault_icd->duration =
         spell.inexorable_assault_buff->internal_cooldown();  // Inexorable Assault buff spell id
-
-  if ( talent.frost.frigid_executioner.ok() )
-    cooldown.frigid_executioner_icd->duration = talent.frost.frigid_executioner->internal_cooldown();
 
   if ( talent.rider.whitemanes_famine.ok() )
     cooldown.undeath_spread->base_duration = pet_spell.undeath_dot->internal_cooldown();
@@ -14859,7 +14852,6 @@ void death_knight_t::init_gains()
   gains.rage_of_the_frozen_champion = get_gain( "Rage of the Frozen Champion" );
   gains.runic_attenuation           = get_gain( "Runic Attenuation" );
   gains.runic_empowerment           = get_gain( "Runic Empowerment" );
-  gains.frigid_executioner          = get_gain( "Frigid Executioner" );
 
   // Unholy
   gains.apocalypse      = get_gain( "Apocalypse" );
@@ -15847,7 +15839,6 @@ void death_knight_t::apply_affecting_auras( action_t& action )
   action.apply_affecting_aura( talent.blood.rapid_decomposition );
 
   // Frost
-  action.apply_affecting_aura( talent.frost.frigid_executioner );
   action.apply_affecting_aura( talent.frost.biting_cold );
   if ( spec.might_of_the_frozen_wastes->ok() && main_hand_weapon.group() == WEAPON_2H )
   {

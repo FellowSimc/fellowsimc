@@ -1174,7 +1174,9 @@ public:
       player_talent_t frostreaper;
       player_talent_t pillar_of_frost;
       player_talent_t icy_onslaught;
+      player_talent_t gathering_storm;
       // Row 6
+      player_talent_t howling_blades;
       player_talent_t rage_of_the_frozen_champion;
       player_talent_t frigid_executioner;
       player_talent_t enduring_strength;
@@ -1183,7 +1185,6 @@ public:
       player_talent_t murderous_efficiency;
       player_talent_t inexorable_assault;
       player_talent_t frozen_dominion;
-      player_talent_t gathering_storm;
       player_talent_t cryogenic_chamber;
       // Row 8
       player_talent_t bonegrinder;
@@ -1407,6 +1408,8 @@ public:
     const spell_data_t* frostreaper_debuff;
     const spell_data_t* frostreaper_damage;
     const spell_data_t* icy_onslaught_buff;
+    const spell_data_t* first_howling_blades_damage;
+    const spell_data_t* second_howling_blades_damage;
     // Tier Sets
     const spell_data_t* icy_vigor;
     const spell_data_t* winning_streak_frost;
@@ -1648,6 +1651,7 @@ public:
     propagate_const<proc_t*> km_from_obliteration_sr;  // Soul Reaper during Obliteration
     propagate_const<proc_t*> km_from_grim_reaper;
     propagate_const<proc_t*> km_from_erw;
+    propagate_const<proc_t*> km_from_howling_blades;
 
     // Killing machine refreshed by
     propagate_const<proc_t*> km_from_crit_aa_wasted;
@@ -1657,6 +1661,7 @@ public:
     propagate_const<proc_t*> km_from_obliteration_sr_wasted;  // Soul Reaper during Obliteration
     propagate_const<proc_t*> km_from_grim_reaper_wasted;
     propagate_const<proc_t*> km_from_erw_wasted;
+    propagate_const<proc_t*> km_from_howling_blades_wasted;
 
     // Razorice applied by
     propagate_const<proc_t*> razorice_from_arctic_assault;
@@ -9727,6 +9732,27 @@ struct avalanche_t final : public death_knight_spell_t
   }
 };
 
+struct howling_blades_t final : public death_knight_spell_t
+{
+  howling_blades_t( std::string_view name, death_knight_t* p, const spell_data_t* data )
+    : death_knight_spell_t( name, p, data )
+  {
+    background = true;
+  }
+
+  void impact( action_state_t* state ) override
+  {
+    death_knight_spell_t::impact( state );
+
+    // 11.2 TODO Keep an eye out for an ICD appearing on this
+    if ( p()->rng().roll( p()->talent.frost.howling_blades->effectN( 1 ).base_value() / 100 ) )
+    {
+      p()->trigger_killing_machine( false, p()->procs.km_from_howling_blades,
+                                    p()->procs.km_from_howling_blades_wasted );
+    }
+  }
+}; 
+
 struct howling_blast_t final : public death_knight_spell_t
 {
   howling_blast_t( death_knight_t* p, std::string_view options_str )
@@ -9752,6 +9778,14 @@ struct howling_blast_t final : public death_knight_spell_t
     {
       avalanche = get_action<avalanche_t>( "avalanche", p );
       add_child( avalanche );
+    }
+    if ( p->talent.frost.howling_blades.ok() )
+    {
+      first_howling_blades = get_action<howling_blades_t>( "howling_blades_first", p, p->spell.first_howling_blades_damage );
+      add_child( first_howling_blades );
+      second_howling_blades =
+          get_action<howling_blades_t>( "howling_blades_second", p, p->spell.second_howling_blades_damage );
+      add_child( second_howling_blades );
     }
   }
 
@@ -9845,10 +9879,18 @@ struct howling_blast_t final : public death_knight_spell_t
     }
 
     p()->buffs.rime->decrement();
+
+    if ( p()->talent.frost.howling_blades->ok() )
+    {
+      make_event<delayed_execute_event_t>( *sim, p(), first_howling_blades, execute_state->target, 500_ms );
+      make_event<delayed_execute_event_t>( *sim, p(), second_howling_blades, execute_state->target, 500_ms );
+    }
   }
 
 private:
   propagate_const<action_t*> avalanche;
+  propagate_const<action_t*> first_howling_blades;
+  propagate_const<action_t*> second_howling_blades;
 };
 
 // Marrowrend ===============================================================
@@ -13473,21 +13515,22 @@ void death_knight_t::init_spells()
   talent.frost.runic_command    = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Command" );
   talent.frost.biting_cold      = find_talent_spell( talent_tree::SPECIALIZATION, "Biting Cold" );
   // Row 5
-  talent.frost.runic_strikes       = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Strikes" );
-  talent.frost.frostreaper         = find_talent_spell( talent_tree::SPECIALIZATION, "Frostreaper" );
-  talent.frost.pillar_of_frost     = find_talent_spell( talent_tree::SPECIALIZATION, "Pillar of Frost" );
-  talent.frost.icy_onslaught       = find_talent_spell( talent_tree::SPECIALIZATION, "Icy Onslaught" );
-  talent.frost.frostwyrms_fury     = find_talent_spell( talent_tree::SPECIALIZATION, "Frostwyrm's Fury" );
+  talent.frost.runic_strikes   = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Strikes" );
+  talent.frost.frostreaper     = find_talent_spell( talent_tree::SPECIALIZATION, "Frostreaper" );
+  talent.frost.pillar_of_frost = find_talent_spell( talent_tree::SPECIALIZATION, "Pillar of Frost" );
+  talent.frost.icy_onslaught   = find_talent_spell( talent_tree::SPECIALIZATION, "Icy Onslaught" );
+  talent.frost.gathering_storm = find_talent_spell( talent_tree::SPECIALIZATION, "Gathering Storm" );
+  talent.frost.frostwyrms_fury = find_talent_spell( talent_tree::SPECIALIZATION, "Frostwyrm's Fury" );
   // Row 6
+  talent.frost.howling_blades = find_talent_spell( talent_tree::SPECIALIZATION, "Howling Blades" );
   talent.frost.rage_of_the_frozen_champion =
       find_talent_spell( talent_tree::SPECIALIZATION, "Rage of the Frozen Champion" );
-  talent.frost.frigid_executioner  = find_talent_spell( talent_tree::SPECIALIZATION, "Frigid Executioner" );
-  talent.frost.enduring_strength   = find_talent_spell( talent_tree::SPECIALIZATION, "Enduring Strength" );
+  talent.frost.frigid_executioner = find_talent_spell( talent_tree::SPECIALIZATION, "Frigid Executioner" );
+  talent.frost.enduring_strength  = find_talent_spell( talent_tree::SPECIALIZATION, "Enduring Strength" );
   // Row 7
   talent.frost.murderous_efficiency = find_talent_spell( talent_tree::SPECIALIZATION, "Murderous Efficiency" );
   talent.frost.inexorable_assault   = find_talent_spell( talent_tree::SPECIALIZATION, "Inexorable Assault" );
   talent.frost.frozen_dominion      = find_talent_spell( talent_tree::SPECIALIZATION, "Frozen Dominion" );
-  talent.frost.gathering_storm      = find_talent_spell( talent_tree::SPECIALIZATION, "Gathering Storm" );
   talent.frost.cryogenic_chamber    = find_talent_spell( talent_tree::SPECIALIZATION, "Cryogenic Chamber" );
   // Row 8
   talent.frost.bonegrinder        = find_talent_spell( talent_tree::SPECIALIZATION, "Bonegrinder" );
@@ -13697,7 +13740,7 @@ void death_knight_t::spell_lookups()
   spell.death_strike_offhand =
       conditional_spell_lookup( talent.death_strike.ok() && off_hand_weapon.type != WEAPON_NONE, 66188 );
   spell.frostwyrms_fury_damage = conditional_spell_lookup( talent.frost.frostwyrms_fury.ok(), 279303 );
-  spell.frozen_dominion_buff        = conditional_spell_lookup( talent.frost.frozen_dominion.ok(), 377253 );
+  spell.frozen_dominion_buff   = conditional_spell_lookup( talent.frost.frozen_dominion.ok(), 377253 );
   spell.glacial_advance_damage =
       conditional_spell_lookup( spec.glacial_advance->ok() || talent.frost.arctic_assault.ok(), 195975 );
   spell.avalanche_damage           = conditional_spell_lookup( talent.frost.avalanche.ok(), 207150 );
@@ -13709,15 +13752,17 @@ void death_knight_t::spell_lookups()
       conditional_spell_lookup( talent.frost.frost_strike.ok() && main_hand_weapon.group() == WEAPON_1H, 222026 );
   spell.frost_strike_oh =
       conditional_spell_lookup( talent.frost.frost_strike.ok() && off_hand_weapon.type != WEAPON_NONE, 66196 );
-  spell.icy_death_torrent_damage = conditional_spell_lookup( talent.frost.icy_death_torrent.ok(), 439539 );
-  spell.cryogenic_chamber_damage = conditional_spell_lookup( talent.frost.cryogenic_chamber.ok(), 456371 );
-  spell.cryogenic_chamber_buff   = conditional_spell_lookup( talent.frost.cryogenic_chamber.ok(), 456370 );
-  spell.rime_buff                = conditional_spell_lookup( spec.rime->ok(), 59052 );
-  spell.hyperpyrexia_damage      = conditional_spell_lookup( talent.frost.hyperpyrexia.ok(), 458169 );
-  spell.empower_rune_weapon_buff = conditional_spell_lookup( talent.frost.empower_rune_weapon.ok(), 1230959 );
-  spell.frostreaper_debuff       = conditional_spell_lookup( talent.frost.frostreaper.ok(), 1233351 );
-  spell.frostreaper_damage       = conditional_spell_lookup( talent.frost.frostreaper.ok(), 1233619 );
-  spell.icy_onslaught_buff       = conditional_spell_lookup(talent.frost.icy_onslaught.ok(), 1230273 );
+  spell.icy_death_torrent_damage     = conditional_spell_lookup( talent.frost.icy_death_torrent.ok(), 439539 );
+  spell.cryogenic_chamber_damage     = conditional_spell_lookup( talent.frost.cryogenic_chamber.ok(), 456371 );
+  spell.cryogenic_chamber_buff       = conditional_spell_lookup( talent.frost.cryogenic_chamber.ok(), 456370 );
+  spell.rime_buff                    = conditional_spell_lookup( spec.rime->ok(), 59052 );
+  spell.hyperpyrexia_damage          = conditional_spell_lookup( talent.frost.hyperpyrexia.ok(), 458169 );
+  spell.empower_rune_weapon_buff     = conditional_spell_lookup( talent.frost.empower_rune_weapon.ok(), 1230959 );
+  spell.frostreaper_debuff           = conditional_spell_lookup( talent.frost.frostreaper.ok(), 1233351 );
+  spell.frostreaper_damage           = conditional_spell_lookup( talent.frost.frostreaper.ok(), 1233619 );
+  spell.icy_onslaught_buff           = conditional_spell_lookup( talent.frost.icy_onslaught.ok(), 1230273 );
+  spell.first_howling_blades_damage  = conditional_spell_lookup( talent.frost.howling_blades.ok(), 1231083 );
+  spell.second_howling_blades_damage = conditional_spell_lookup( talent.frost.howling_blades.ok(), 1231082 );
   // Tier Sets
   spell.icy_vigor            = conditional_spell_lookup( sets->has_set_bonus( DEATH_KNIGHT_FROST, TWW1, B4 ), 457189 );
   spell.winning_streak_frost = conditional_spell_lookup( sets->has_set_bonus( DEATH_KNIGHT_FROST, TWW2, B2 ), 1217897 );
@@ -14812,6 +14857,7 @@ void death_knight_t::init_procs()
   procs.km_from_obliteration_sr = get_proc( "Killing Machine: Soul Reaper" );
   procs.km_from_grim_reaper     = get_proc( "Killing Machine: Grim Reaper" );
   procs.km_from_erw             = get_proc( "Killing Machine: Empower Rune Weapon" ); 
+  procs.km_from_howling_blades  = get_proc( "Killing Machine: Howling Blades" );
 
   procs.km_from_crit_aa_wasted         = get_proc( "Killing Machine wasted: Critical auto attacks" );
   procs.km_from_obliteration_fs_wasted = get_proc( "Killing Machine wasted: Frost Strike" );
@@ -14820,6 +14866,7 @@ void death_knight_t::init_procs()
   procs.km_from_obliteration_sr_wasted = get_proc( "Killing Machine wasted: Soul Reaper" );
   procs.km_from_grim_reaper_wasted     = get_proc( "Killing Machine wasted: Grim Reaper" );
   procs.km_from_erw_wasted             = get_proc( "Killing Machine wasted: Empower Rune Weapon" );
+  procs.km_from_howling_blades_wasted  = get_proc( "Killing Machine wasted: Howling Blades" );
 
   procs.razorice_from_arctic_assault  = get_proc( "Razorice from Arctic Assault" );
   procs.razorice_from_avalanche       = get_proc( "Razorice from Avalanche" );

@@ -765,6 +765,7 @@ public:
     propagate_const<buff_t*> icy_vigor;
     propagate_const<buff_t*> winning_streak_frost;
     propagate_const<buff_t*> murderous_frenzy;
+    propagate_const<buff_t*> icy_onslaught;
 
     // Unholy
     propagate_const<buff_t*> dark_transformation;
@@ -1172,6 +1173,7 @@ public:
       player_talent_t runic_strikes;
       player_talent_t frostreaper;
       player_talent_t pillar_of_frost;
+      player_talent_t icy_onslaught;
       // Row 6
       player_talent_t rage_of_the_frozen_champion;
       player_talent_t frigid_executioner;
@@ -1404,6 +1406,7 @@ public:
     const spell_data_t* empower_rune_weapon_buff;
     const spell_data_t* frostreaper_debuff;
     const spell_data_t* frostreaper_damage;
+    const spell_data_t* icy_onslaught_buff;
     // Tier Sets
     const spell_data_t* icy_vigor;
     const spell_data_t* winning_streak_frost;
@@ -9302,6 +9305,11 @@ struct frost_strike_t final : public death_knight_melee_attack_t
     }
 
     death_knight_melee_attack_t::execute();
+    // 11.2 TODO 6/21/25 IO still buffs the frost strike that procs RE so we need to delay expiration and prevent additional stacks til after the FS is resolved
+    if ( p()->talent.frost.icy_onslaught->ok() && p()->buffs.icy_onslaught->expiration_delay == nullptr)
+    {
+      p()->buffs.icy_onslaught->trigger();
+    }
 
     if ( hit_any_target )
     {
@@ -9993,7 +10001,7 @@ struct obliterate_strike_t final : public death_knight_melee_attack_t
       int chains_remaining                    = p()->spell.frostreaper_debuff->effectN( 1 ).chain_target() - 1;
       for ( auto t : current_targets )
       {
-        if ( chains_remaining == 0 )
+        if ( chains_remaining <= 0 )
         {
           break;
         }
@@ -11984,6 +11992,11 @@ void death_knight_t::trigger_runic_empowerment( double rpcost )
 
   sim->print_debug( "{} Runic Empowerment regenerated {} rune", name(), regenerated );
   log_rune_status( this );
+
+  if ( talent.frost.icy_onslaught->ok() )
+  {
+    buffs.icy_onslaught->expire( 100_ms ); // 11.2 TODO magic number is bad
+  }
 }
 
 void death_knight_t::trigger_runic_corruption( proc_t* proc, double rpcost, double override_chance, bool death_trigger )
@@ -13463,6 +13476,7 @@ void death_knight_t::init_spells()
   talent.frost.runic_strikes       = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Strikes" );
   talent.frost.frostreaper         = find_talent_spell( talent_tree::SPECIALIZATION, "Frostreaper" );
   talent.frost.pillar_of_frost     = find_talent_spell( talent_tree::SPECIALIZATION, "Pillar of Frost" );
+  talent.frost.icy_onslaught       = find_talent_spell( talent_tree::SPECIALIZATION, "Icy Onslaught" );
   talent.frost.frostwyrms_fury     = find_talent_spell( talent_tree::SPECIALIZATION, "Frostwyrm's Fury" );
   // Row 6
   talent.frost.rage_of_the_frozen_champion =
@@ -13703,6 +13717,7 @@ void death_knight_t::spell_lookups()
   spell.empower_rune_weapon_buff = conditional_spell_lookup( talent.frost.empower_rune_weapon.ok(), 1230959 );
   spell.frostreaper_debuff       = conditional_spell_lookup( talent.frost.frostreaper.ok(), 1233351 );
   spell.frostreaper_damage       = conditional_spell_lookup( talent.frost.frostreaper.ok(), 1233619 );
+  spell.icy_onslaught_buff       = conditional_spell_lookup(talent.frost.icy_onslaught.ok(), 1230273 );
   // Tier Sets
   spell.icy_vigor            = conditional_spell_lookup( sets->has_set_bonus( DEATH_KNIGHT_FROST, TWW1, B4 ), 457189 );
   spell.winning_streak_frost = conditional_spell_lookup( sets->has_set_bonus( DEATH_KNIGHT_FROST, TWW2, B2 ), 1217897 );
@@ -14671,6 +14686,9 @@ void death_knight_t::create_buffs()
                                ->set_default_value_from_effect_type( A_MOD_MASTERY_PCT )
                                ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
 
+  buffs.icy_onslaught =
+      make_fallback( talent.frost.icy_onslaught.ok(), this, "icy_onslaught", spell.icy_onslaught_buff );
+
   // Unholy
   buffs.dark_transformation = make_fallback<dark_transformation_buff_t>(
       talent.unholy.dark_transformation.ok(), this, "dark_transformation", spell.dark_transformation_player_buff );
@@ -15510,6 +15528,8 @@ void death_knight_action_t<Base>::apply_action_effects()
   parse_effects( p()->mastery.frozen_heart );
   parse_effects( p()->talent.frost.smothering_offense );
   parse_effects( p()->buffs.winning_streak_frost, p()->sets->set( DEATH_KNIGHT_FROST, TWW2, B4 ) );
+  parse_effects( p()->buffs.icy_onslaught );
+
 
   // Unholy
   parse_effects( p()->buffs.unholy_assault );

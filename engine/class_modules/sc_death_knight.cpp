@@ -5466,6 +5466,21 @@ struct inexorable_assault_damage_t final : public death_knight_spell_t
   {
     background = true;
   }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    double m = death_knight_spell_t::composite_da_multiplier( s );
+
+    int stacks = p()->buffs.inexorable_assault->stack();
+
+    p()->buffs.inexorable_assault->decrement( as<int>(p()->talent.frost.inexorable_assault->effectN( 1 ).base_value()) - 1 );
+
+    int stacks_consumed = stacks - p()->buffs.inexorable_assault->stack();
+
+    m *= 1 + stacks_consumed;
+
+    return m;
+  }
 };
 
 // Icy Death Torrent ========================================================

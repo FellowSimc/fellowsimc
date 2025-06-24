@@ -1162,7 +1162,6 @@ public:
       player_talent_t killing_machine;
       player_talent_t empower_rune_weapon;
       player_talent_t frostscythe;
-      player_talent_t everfrost;
       // Row 4
       player_talent_t arctic_assault;
       player_talent_t runic_overflow;
@@ -1179,13 +1178,14 @@ public:
       player_talent_t howling_blades;
       player_talent_t inexorable_assault;
       player_talent_t enduring_strength;
-      player_talent_t rage_of_the_frozen_champion;
-      player_talent_t frigid_executioner;
       player_talent_t frostwyrms_fury;
+      player_talent_t frigid_executioner;
       // Row 7
       player_talent_t murderous_efficiency;
-      player_talent_t frozen_dominion;
       player_talent_t cryogenic_chamber;
+      player_talent_t rage_of_the_frozen_champion;
+      player_talent_t frozen_dominion;
+      player_talent_t everfrost;
       // Row 8
       player_talent_t bonegrinder;
       player_talent_t smothering_offense;
@@ -9858,6 +9858,10 @@ struct howling_blast_t final : public death_knight_spell_t
         m *= 1.0 + p()->talent.deathbringer.bind_in_darkness->effectN( 4 ).percent();
       }
     }
+    if ( !p()->bugs && p()->talent.frost.everfrost->ok() && p()->buffs.rime->check() && this->target != t )
+    {
+      m *= 1.0 + p()->talent.frost.everfrost->effectN( 2 ).percent();
+    }
 
     return m;
   }
@@ -13581,16 +13585,15 @@ void death_knight_t::init_spells()
   talent.frost.obliterate    = find_talent_spell( talent_tree::SPECIALIZATION, "Obliterate" );
   talent.frost.howling_blast = find_talent_spell( talent_tree::SPECIALIZATION, "Howling Blast" );
   // Row 3
-  talent.frost.killing_machine = find_talent_spell( talent_tree::SPECIALIZATION, "Killing Machine" );
+  talent.frost.killing_machine     = find_talent_spell( talent_tree::SPECIALIZATION, "Killing Machine" );
   talent.frost.empower_rune_weapon = find_talent_spell( talent_tree::SPECIALIZATION, "Empower Rune Weapon" );
   talent.frost.frostscythe         = find_talent_spell( talent_tree::SPECIALIZATION, "Frostscythe" );
-  talent.frost.everfrost       = find_talent_spell( talent_tree::SPECIALIZATION, "Everfrost" );
   // Row 4
-  talent.frost.arctic_assault = find_talent_spell( talent_tree::SPECIALIZATION, "Arctic Assault" );
-  talent.frost.runic_overflow   = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Overflow" );
-  talent.frost.frostbound_will  = find_talent_spell( talent_tree::SPECIALIZATION, "Frostbound Will" );
-  talent.frost.runic_command    = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Command" );
-  talent.frost.biting_cold      = find_talent_spell( talent_tree::SPECIALIZATION, "Biting Cold" );
+  talent.frost.arctic_assault  = find_talent_spell( talent_tree::SPECIALIZATION, "Arctic Assault" );
+  talent.frost.runic_overflow  = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Overflow" );
+  talent.frost.frostbound_will = find_talent_spell( talent_tree::SPECIALIZATION, "Frostbound Will" );
+  talent.frost.runic_command   = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Command" );
+  talent.frost.biting_cold     = find_talent_spell( talent_tree::SPECIALIZATION, "Biting Cold" );
   // Row 5
   talent.frost.runic_strikes   = find_talent_spell( talent_tree::SPECIALIZATION, "Runic Strikes" );
   talent.frost.frostreaper     = find_talent_spell( talent_tree::SPECIALIZATION, "Frostreaper" );
@@ -13598,18 +13601,18 @@ void death_knight_t::init_spells()
   talent.frost.icy_onslaught   = find_talent_spell( talent_tree::SPECIALIZATION, "Icy Onslaught" );
   talent.frost.gathering_storm = find_talent_spell( talent_tree::SPECIALIZATION, "Gathering Storm" );
   // Row 6
-  talent.frost.howling_blades = find_talent_spell( talent_tree::SPECIALIZATION, "Howling Blades" );
+  talent.frost.howling_blades     = find_talent_spell( talent_tree::SPECIALIZATION, "Howling Blades" );
   talent.frost.inexorable_assault = find_talent_spell( talent_tree::SPECIALIZATION, "Inexorable Assault" );
-  talent.frost.enduring_strength = find_talent_spell( talent_tree::SPECIALIZATION, "Enduring Strength" );
-  talent.frost.frostwyrms_fury   = find_talent_spell( talent_tree::SPECIALIZATION, "Frostwyrm's Fury" );
+  talent.frost.enduring_strength  = find_talent_spell( talent_tree::SPECIALIZATION, "Enduring Strength" );
+  talent.frost.frostwyrms_fury    = find_talent_spell( talent_tree::SPECIALIZATION, "Frostwyrm's Fury" );
   talent.frost.frigid_executioner = find_talent_spell( talent_tree::SPECIALIZATION, "Frigid Executioner" );
-
-  talent.frost.rage_of_the_frozen_champion =
-      find_talent_spell( talent_tree::SPECIALIZATION, "Rage of the Frozen Champion" );
   // Row 7
   talent.frost.murderous_efficiency = find_talent_spell( talent_tree::SPECIALIZATION, "Murderous Efficiency" );
-  talent.frost.frozen_dominion      = find_talent_spell( talent_tree::SPECIALIZATION, "Frozen Dominion" );
   talent.frost.cryogenic_chamber    = find_talent_spell( talent_tree::SPECIALIZATION, "Cryogenic Chamber" );
+  talent.frost.rage_of_the_frozen_champion =
+      find_talent_spell( talent_tree::SPECIALIZATION, "Rage of the Frozen Champion" );
+  talent.frost.everfrost       = find_talent_spell( talent_tree::SPECIALIZATION, "Everfrost" );
+  talent.frost.frozen_dominion = find_talent_spell( talent_tree::SPECIALIZATION, "Frozen Dominion" );
   // Row 8
   talent.frost.bonegrinder        = find_talent_spell( talent_tree::SPECIALIZATION, "Bonegrinder" );
   talent.frost.smothering_offense = find_talent_spell( talent_tree::SPECIALIZATION, "Smothering Offense" );

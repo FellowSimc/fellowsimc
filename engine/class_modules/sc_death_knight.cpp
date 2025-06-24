@@ -15671,6 +15671,8 @@ void death_knight_action_t<Base>::apply_action_effects()
   parse_effects( p()->talent.frost.smothering_offense );
   parse_effects( p()->buffs.winning_streak_frost, p()->sets->set( DEATH_KNIGHT_FROST, TWW2, B4 ) );
   parse_effects( p()->buffs.icy_onslaught );
+  parse_effects( p()->buffs.remorseless_winter, p()->talent.cleaving_strikes );
+  parse_effects( p()->buffs.cryogenic_chamber_remorseless_winter, p()->talent.cleaving_strikes );
 
 
   // Unholy

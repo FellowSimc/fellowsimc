@@ -1160,7 +1160,7 @@ enum effect_subtype_t : unsigned {
     A_MOD_ALL_CRIT_CHANCE = 290,
     A_MOD_QUEST_XP_PCT = 291,
     A_OPEN_STABLE = 292,
-    A_293 = 293,
+    A_CATEGORY_COOLDOWN_RECHARGE_IMMEDIATE = 293,
     A_294 = 294,
     A_295 = 295,
     A_296 = 296,

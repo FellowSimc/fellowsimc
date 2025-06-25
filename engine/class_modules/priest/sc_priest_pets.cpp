@@ -988,7 +988,7 @@ struct void_tendril_mind_flay_t final : public priest_pet_spell_t
     channeled                  = true;
     hasted_ticks               = false;
     affected_by_shadow_weaving = true;
-    
+
     apply_affecting_aura( p.o().talents.shadow.subservient_shadows );
   }
 
@@ -1334,16 +1334,16 @@ void priest_t::priest_pets_t::set_pet_defaults( priest_t& p )
   // Void Tendril: 377355
   // Void Lasher: 377355
   auto idol_of_cthun  = p.find_spell( 377355 );
-  auto cthun_duration = idol_of_cthun->duration() + timespan_t::from_millis( 1 ) +
-                        p.talents.shadow.subservient_shadows->effectN( 2 ).time_value();
+  auto cthun_duration = ( idol_of_cthun->duration() + timespan_t::from_millis( 1 ) ) *
+                        ( 1.0 + p.talents.shadow.subservient_shadows->effectN( 2 ).percent() );
 
   // Add 1ms to ensure pet is dismissed after last dot tick.
   void_tendril.set_default_duration( cthun_duration );
   void_lasher.set_default_duration( cthun_duration );
 
   auto thing_from_beyond_spell = p.find_spell( 373277 );
-  thing_from_beyond.set_default_duration( thing_from_beyond_spell->duration() +
-                                          p.talents.shadow.subservient_shadows->effectN( 2 ).time_value() );
+  thing_from_beyond.set_default_duration( thing_from_beyond_spell->duration() *
+                                          ( 1.0 + p.talents.shadow.subservient_shadows->effectN( 2 ).percent() ) );
 }
 
 }  // namespace priestspace

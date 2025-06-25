@@ -1338,7 +1338,7 @@ struct summon_fiend_t final : public priest_spell_t
 
   summon_fiend_t( priest_t& p, util::string_view options_str )
     : priest_spell_t( pet_name( p ), p, pet_summon_spell( p ) ),
-      default_duration( data().duration() + p.talents.shadow.subservient_shadows->effectN( 2 ).time_value() ),
+      default_duration( data().duration() * ( 1.0 + p.talents.shadow.subservient_shadows->effectN( 2 ).percent() ) ),
       spawner( pet_spawner( p ) )
   {
     parse_options( options_str );
@@ -1590,10 +1590,13 @@ public:
                                      : 1.0 ) ),
       shadow_word_death_self_damage( new shadow_word_death_self_damage_t( p ) ),
       depth_of_shadows_duration(
-          timespan_t::from_seconds( p.talents.voidweaver.depth_of_shadows->effectN( 1 ).base_value() ) ),
-      depth_of_shadows_threshold( ( !p.bugs && sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+          sim->dbc->wowv() >= wowv_t{ 11, 2, 0 }
+              ? timespan_t::from_seconds( p.talents.voidweaver.depth_of_shadows->effectN( 1 ).base_value() ) *
+                    ( 1.0 + p.talents.shadow.subservient_shadows->effectN( 2 ).percent() )
+              : timespan_t::from_seconds( p.talents.voidweaver.depth_of_shadows->effectN( 1 ).base_value() ) ),
+      depth_of_shadows_threshold( sim->dbc->wowv() < wowv_t{ 11, 2, 0 }
                                       ? p.talents.voidweaver.depth_of_shadows->effectN( 2 ).base_value() +
-                                            priest().talents.shadow.deathspeaker->effectN( 2 ).base_value()
+                                            priest().talents.shadow.deathspeaker->effectN( 5 ).base_value()
                                       : p.talents.voidweaver.depth_of_shadows->effectN( 2 ).base_value() ),
       child_expiation( nullptr ),
       child_searing_light( priest().background_actions.searing_light ),

@@ -5916,36 +5916,30 @@ struct gift_of_the_sanlayn_buff_t final : public death_knight_buff_t
 struct essence_of_the_blood_queen_buff_t final : public death_knight_buff_t
 {
   essence_of_the_blood_queen_buff_t( death_knight_t* p, std::string_view name, const spell_data_t* spell )
-    : death_knight_buff_t( p, name, spell ), gift_idx( 0 )
+    : death_knight_buff_t( p, name, spell )
   {
     set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
     set_default_value( p->sets->set( HERO_SANLAYN, TWW3, B2 )->effectN( 1 ).base_value() / 10 );
-    gift_idx = p->specialization() == DEATH_KNIGHT_UNHOLY ? 7 : 8;
   }
 
   // Override the value of the buff to properly capture Essence of the Blood Queens's buff behavior
   double value() override
   {
-    double v = death_knight_buff_t::value();
+    double v = default_value;
 
-    if ( p()->buffs.gift_of_the_sanlayn->check() )
-      v *= 1.0 + p()->spell.gift_of_the_sanlayn_buff->effectN( gift_idx ).percent();
+    v *= 1.0 + p()->buffs.gift_of_the_sanlayn->check_value();
 
     return v;
   }
 
   double check_value() const override
   {
-    double v = death_knight_buff_t::check_value();
+    double v = default_value;
 
-    if ( p()->buffs.gift_of_the_sanlayn->check() )
-      v *= 1.0 + p()->spell.gift_of_the_sanlayn_buff->effectN( gift_idx ).percent();
+    v *= 1.0 + p()->buffs.gift_of_the_sanlayn->check_value();
 
     return v;
   }
-
-private:
-  int gift_idx;
 };
 
 // Death and Decay ==========================================================
@@ -14558,9 +14552,8 @@ void death_knight_t::create_buffs()
           ->set_default_value( spell.rune_carved_plates_magical_buff->effectN( 1 ).base_value() / 1000 );
 
   // San'layn
-    buffs.essence_of_the_blood_queen = make_fallback<essence_of_the_blood_queen_buff_t>(
-        talent.sanlayn.vampiric_strike.ok(), this, "essence_of_the_blood_queen",
-        spell.essence_of_the_blood_queen_buff );
+  buffs.essence_of_the_blood_queen = make_fallback<essence_of_the_blood_queen_buff_t>(
+      talent.sanlayn.vampiric_strike.ok(), this, "essence_of_the_blood_queen", spell.essence_of_the_blood_queen_buff );
 
   buffs.gift_of_the_sanlayn = make_fallback<gift_of_the_sanlayn_buff_t>(
       talent.sanlayn.gift_of_the_sanlayn.ok(), this, "gift_of_the_sanlayn", spell.gift_of_the_sanlayn_buff );

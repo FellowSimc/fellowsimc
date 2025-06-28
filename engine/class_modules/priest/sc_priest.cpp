@@ -3602,20 +3602,6 @@ void priest_t::init_base_stats()
 
 void priest_t::init_resources( bool force )
 {
-  // Can perform pre-pull actions that are harmful without actually hitting the boss
-  // to build up Insanity before pulling
-  if ( ( specialization() == PRIEST_SHADOW ) && resources.initial_opt[ RESOURCE_INSANITY ] <= 0 &&
-       options.init_insanity )
-  {
-    auto shadow_crash_insanity = talents.shadow.shadow_crash->effectN( 2 ).resource( RESOURCE_INSANITY );
-
-    if ( talents.shadow.shadow_crash.enabled() || talents.shadow.shadow_crash_target.enabled() )
-    {
-      // One Shadow Crash == 6 Insanity
-      resources.initial_opt[ RESOURCE_INSANITY ] = shadow_crash_insanity;
-    }
-  }
-
   base_t::init_resources( force );
 }
 

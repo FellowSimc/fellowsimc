@@ -2048,7 +2048,8 @@ public:
     register_damage_buff( p()->buffs.tww2_assassination_2pc );
     register_damage_buff( p()->buffs.tww2_assassination_4pc );
     register_damage_buff( p()->buffs.tww2_outlaw_2pc );
-    register_damage_buff( p()->buffs.tww2_subtlety_2pc );   
+    register_damage_buff( p()->buffs.tww2_subtlety_2pc );
+    register_damage_buff( p()->buffs.tww3_deathstalker_2pc );
 
     if ( ab::base_costs[ RESOURCE_COMBO_POINT ] > 0 )
     {

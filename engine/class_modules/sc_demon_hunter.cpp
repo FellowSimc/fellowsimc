@@ -3082,7 +3082,7 @@ struct eye_beam_t : public eye_beam_base_t
     {
       return abyssal_gaze_cost;
     }
-    return base_costs[ POWER_FURY ];
+    return eye_beam_base_t::cost();
   }
 
   void execute() override
@@ -3281,7 +3281,7 @@ struct fel_devastation_t : public fel_devastation_base_t
     {
       return fel_desolation_cost;
     }
-    return base_costs[ POWER_FURY ];
+    return fel_devastation_base_t::cost();
   }
 
   void execute() override
@@ -3747,7 +3747,7 @@ struct sigil_of_flame_t : public sigil_of_flame_base_t
     {
       return sigil_of_doom_cost;
     }
-    return base_costs[ POWER_FURY ];
+    return sigil_of_flame_base_t::cost();
   }
 
   void execute() override
@@ -4557,7 +4557,7 @@ struct spirit_bomb_t : public spirit_bomb_base_t
     {
       return spirit_burst_cost;
     }
-    return base_costs[ POWER_FURY ];
+    return spirit_bomb_base_t::cost();
   }
 
   void execute() override
@@ -6409,7 +6409,7 @@ struct soul_cleave_t : public soul_cleave_base_t
     {
       return soul_sunder_cost;
     }
-    return base_costs[ POWER_FURY ];
+    return soul_cleave_base_t::cost();
   }
 
   void execute() override

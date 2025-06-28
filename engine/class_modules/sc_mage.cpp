@@ -260,7 +260,6 @@ public:
     event_t* merged_buff_execute;
     event_t* meteor_burn;
     event_t* splinterstorm;
-    event_t* time_anomaly;
   } events;
 
   // Ground AoE tracking
@@ -418,7 +417,6 @@ public:
     buff_t* ice_floes;
     buff_t* incanters_flow;
     buff_t* overflowing_energy;
-    buff_t* time_warp;
 
 
     // Set Bonuses
@@ -469,7 +467,6 @@ public:
     double arcane_missiles_chain_relstddev = 0.1;
     timespan_t arcane_missiles_delay = 100_ms;
     timespan_t glacial_spike_delay = 100_ms;
-    bool treat_bloodlust_as_time_warp = false;
     unsigned initial_spellfire_spheres = 5;
     arcane_phoenix_rotation arcane_phoenix_rotation_override = arcane_phoenix_rotation::DEFAULT;
     bool ice_nova_consumes_winters_chill = true;
@@ -506,7 +503,6 @@ public:
     proc_t* brain_freeze;
     proc_t* brain_freeze_excess_fire;
     proc_t* brain_freeze_splinterstorm;
-    proc_t* brain_freeze_time_anomaly;
     proc_t* brain_freeze_water_jet;
     proc_t* fingers_of_frost;
     proc_t* fingers_of_frost_flash_freeze;
@@ -519,11 +515,6 @@ public:
     proc_t* icicles_fired;
     proc_t* icicles_overflowed;
   } procs;
-
-  struct shuffled_rngs_t
-  {
-    shuffled_rng_t* time_anomaly;
-  } shuffled_rng;
 
   struct rppms_t
   {
@@ -665,7 +656,6 @@ public:
     // Row 10
     player_talent_t ice_cold;
     player_talent_t inspired_intellect;
-    player_talent_t time_anomaly;
     player_talent_t mass_barrier;
     player_talent_t mass_invisibility;
 
@@ -7516,98 +7506,6 @@ struct merged_buff_execute_event_t final : public mage_event_t
   }
 };
 
-struct time_anomaly_tick_event_t final : public mage_event_t
-{
-  enum ta_proc_type_e
-  {
-    TA_ARCANE_SURGE,
-    TA_CLEARCASTING,
-    TA_COMBUSTION,
-    TA_FIRE_BLAST,
-    TA_ICY_VEINS,
-    TA_BRAIN_FREEZE,
-    TA_TIME_WARP
-  };
-
-  time_anomaly_tick_event_t( mage_t& m, timespan_t delta_time ) :
-    mage_event_t( m, delta_time )
-  { }
-
-  const char* name() const override
-  { return "time_anomaly_tick_event"; }
-
-  void execute() override
-  {
-    mage->events.time_anomaly = nullptr;
-    sim().print_log( "{} Time Anomaly tick event occurs.", mage->name() );
-
-    if ( mage->shuffled_rng.time_anomaly->trigger() )
-    {
-      sim().print_log( "{} Time Anomaly proc successful, triggering effects.", mage->name() );
-
-      std::vector<ta_proc_type_e> possible_procs;
-
-      auto spec = mage->specialization();
-
-      // TODO: these conditions haven't been tested
-      if ( spec == MAGE_ARCANE && !mage->buffs.arcane_surge->check() )
-        possible_procs.push_back( TA_ARCANE_SURGE );
-      if ( spec == MAGE_ARCANE && !mage->buffs.clearcasting->at_max_stacks() )
-        possible_procs.push_back( TA_CLEARCASTING );
-      if ( spec == MAGE_FIRE && !mage->buffs.combustion->check() )
-        possible_procs.push_back( TA_COMBUSTION );
-      if ( spec == MAGE_FIRE && mage->cooldowns.fire_blast->current_charge != mage->cooldowns.fire_blast->charges )
-        possible_procs.push_back( TA_FIRE_BLAST );
-      if ( spec == MAGE_FROST && !mage->buffs.icy_veins->check() )
-        possible_procs.push_back( TA_ICY_VEINS );
-      if ( spec == MAGE_FROST && !mage->buffs.brain_freeze->check() )
-        possible_procs.push_back( TA_BRAIN_FREEZE );
-      if ( !mage->buffs.time_warp->check() && ( !mage->player_t::buffs.bloodlust->check() || !mage->options.treat_bloodlust_as_time_warp ) )
-        possible_procs.push_back( TA_TIME_WARP );
-
-      if ( !possible_procs.empty() )
-      {
-        switch ( rng().range( possible_procs ) )
-        {
-          case TA_ARCANE_SURGE:
-            mage->buffs.arcane_surge->trigger( 1000 * mage->talents.time_anomaly->effectN( 1 ).time_value() );
-            break;
-          case TA_CLEARCASTING:
-            mage->trigger_clearcasting( 1.0, 0_ms, true );
-            break;
-          case TA_COMBUSTION:
-            mage->buffs.combustion->trigger( 1000 * mage->talents.time_anomaly->effectN( 4 ).time_value() );
-            break;
-          case TA_FIRE_BLAST:
-            mage->cooldowns.fire_blast->reset( true );
-            break;
-          case TA_BRAIN_FREEZE:
-            // TODO: figure out the delay
-            mage->trigger_brain_freeze( 1.0, mage->procs.brain_freeze_time_anomaly );
-            break;
-          case TA_ICY_VEINS:
-            mage->buffs.icy_veins->trigger( 1000 * mage->talents.time_anomaly->effectN( 5 ).time_value() );
-            mage->buffs.cryopathy->trigger( mage->buffs.cryopathy->max_stack() );
-            // TODO: should have been removed according to 11.1 notes
-            mage->trigger_flash_freezeburn();
-            if ( mage->pets.water_elemental->is_sleeping() )
-              mage->pets.water_elemental->summon();
-            break;
-          case TA_TIME_WARP:
-            mage->buffs.time_warp->trigger();
-            break;
-          default:
-            assert( false );
-            break;
-        }
-      }
-    }
-
-    mage->events.time_anomaly = make_event<time_anomaly_tick_event_t>(
-      sim(), *mage, mage->talents.time_anomaly->effectN( 1 ).period() );
-  }
-};
-
 struct splinterstorm_event_t final : public mage_event_t
 {
   splinterstorm_event_t( mage_t& m, timespan_t delta_time ) :
@@ -7761,7 +7659,6 @@ mage_t::mage_t( sim_t* sim, std::string_view name, race_e r ) :
   options(),
   pets(),
   procs(),
-  shuffled_rng(),
   rppm(),
   accumulated_rng(),
   sample_data(),
@@ -7980,7 +7877,6 @@ void mage_t::create_options()
   add_option( opt_float( "mage.arcane_missiles_chain_relstddev", options.arcane_missiles_chain_relstddev, 0.0, std::numeric_limits<double>::max() ) );
   add_option( opt_timespan( "mage.arcane_missiles_delay", options.arcane_missiles_delay, 0_ms, timespan_t::max() ) );
   add_option( opt_timespan( "mage.glacial_spike_delay", options.glacial_spike_delay, 0_ms, timespan_t::max() ) );
-  add_option( opt_bool( "mage.treat_bloodlust_as_time_warp", options.treat_bloodlust_as_time_warp ) );
   add_option( opt_uint( "mage.initial_spellfire_spheres", options.initial_spellfire_spheres ) );
   add_option( opt_func( "mage.arcane_phoenix_rotation_override", [ this ] ( sim_t*, util::string_view, util::string_view value )
               {
@@ -8104,7 +8000,7 @@ void mage_t::create_pets()
 {
   player_t::create_pets();
 
-  if ( ( talents.icy_veins.ok() && find_action( "icy_veins" ) ) || ( specialization() == MAGE_FROST && talents.time_anomaly.ok() ) )
+  if ( talents.icy_veins.ok() && find_action( "icy_veins" ) )
     pets.water_elemental = new pets::water_elemental::water_elemental_pet_t( sim, this );
 
   if ( talents.mirror_image.ok() && find_action( "mirror_image" ) )
@@ -8189,7 +8085,6 @@ void mage_t::init_spells()
   // Row 10
   talents.ice_cold                 = find_talent_spell( talent_tree::CLASS, "Ice Cold"                 );
   talents.inspired_intellect       = find_talent_spell( talent_tree::CLASS, "Inspired Intellect"       );
-  talents.time_anomaly             = find_talent_spell( talent_tree::CLASS, "Time Anomaly"             );
   talents.mass_barrier             = find_talent_spell( talent_tree::CLASS, "Mass Barrier"             );
   talents.mass_invisibility        = find_talent_spell( talent_tree::CLASS, "Mass Invisibility"        );
 
@@ -8756,9 +8651,6 @@ void mage_t::create_buffs()
   buffs.overflowing_energy = make_buff( this, "overflowing_energy", find_spell( 394195 ) )
                                ->set_default_value_from_effect( 1 )
                                ->set_chance( talents.overflowing_energy.ok() );
-  buffs.time_warp          = make_buff( this, "time_warp", find_spell( 342242 ) )
-                               ->set_default_value_from_effect( 1 )
-                               ->set_pct_buff_type( STAT_PCT_BUFF_HASTE );
 
 
   // Set Bonuses
@@ -8822,7 +8714,6 @@ void mage_t::init_procs()
       procs.brain_freeze                    = get_proc( "Brain Freeze" );
       procs.brain_freeze_excess_fire        = get_proc( "Brain Freeze from Excess Fire" );
       procs.brain_freeze_splinterstorm      = get_proc( "Brain Freeze from Splinterstorm" );
-      procs.brain_freeze_time_anomaly       = get_proc( "Brain Freeze from Time Anomaly" );
       procs.brain_freeze_water_jet          = get_proc( "Brain Freeze from Water Jet" );
       procs.fingers_of_frost                = get_proc( "Fingers of Frost" );
       procs.fingers_of_frost_flash_freeze   = get_proc( "Fingers of Frost from Flash Freeze" );
@@ -8889,9 +8780,6 @@ void mage_t::init_rng()
 {
   player_t::init_rng();
 
-  // TODO: There's no data about this in game. Keep an eye out in case Blizzard
-  // changes this behind the scenes.
-  shuffled_rng.time_anomaly = get_shuffled_rng( "time_anomaly", 1, 16 );
   rppm.energy_reconstitution = get_rppm( "energy_reconstitution", talents.energy_reconstitution );
   rppm.frostfire_infusion = get_rppm( "frostfire_infusion", talents.frostfire_infusion );
   rppm.arcane_jackpot = get_rppm( "arcane_jackpot", sets->set( MAGE_ARCANE, TWW2, B2 ) );
@@ -9234,12 +9122,6 @@ void mage_t::arise()
   {
     timespan_t first_tick = rng().real() * talents.flame_accelerant->effectN( 1 ).period();
     events.flame_accelerant = make_event<events::flame_accelerant_event_t>( *sim, *this, first_tick );
-  }
-
-  if ( talents.time_anomaly.ok() )
-  {
-    timespan_t first_tick = rng().real() * talents.time_anomaly->effectN( 1 ).period();
-    events.time_anomaly = make_event<events::time_anomaly_tick_event_t>( *sim, *this, first_tick );
   }
 
   if ( talents.splinterstorm.ok() )

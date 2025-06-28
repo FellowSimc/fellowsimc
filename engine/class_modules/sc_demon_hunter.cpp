@@ -4212,7 +4212,6 @@ struct metamorphosis_t : public demon_hunter_spell_t
 
     if ( p()->set_bonuses.tww3_felscarred_4pc->ok() )
     {
-      p()->spawn_soul_fragment( soul_fragment::EMPOWERED_DEMON );
       p()->trigger_demonsurge(
           demonsurge_ability::ENTER_META,
           timespan_t::from_millis( p()->set_bonuses.demonsurge_meta_trigger->effectN( 1 ).misc_value1() ), false );
@@ -7267,9 +7266,7 @@ struct metamorphosis_buff_t : public demon_hunter_buff_t<buff_t>
       if ( p()->set_bonuses.tww3_felscarred_4pc->ok() )
       {
         p()->spawn_soul_fragment( soul_fragment::EMPOWERED_DEMON );
-        p()->trigger_demonsurge(
-            demonsurge_ability::ENTER_META,
-            timespan_t::from_millis( p()->set_bonuses.demonsurge_meta_trigger->effectN( 1 ).misc_value1() ), false );
+        p()->trigger_demonsurge( demonsurge_ability::ENTER_META, false );
       }
     }
 
@@ -8068,7 +8065,8 @@ void demon_hunter_t::create_buffs()
       make_buff( this, "winning_streak_residual", set_bonuses.winning_streak_residual_buff )->set_chance( 1.01 );
   buff.necessary_sacrifice = make_buff( this, "necessary_sacrifice", set_bonuses.necessary_sacrifice_buff );
 
-  buff.demon_soul_tww3 = make_buff( this, "demon_soul_tww3", set_bonuses.demon_soul_buff )->set_refresh_behavior( buff_refresh_behavior::EXTEND );
+  buff.demon_soul_tww3 = make_buff( this, "demon_soul_tww3", set_bonuses.demon_soul_buff )
+                             ->set_refresh_behavior( buff_refresh_behavior::EXTEND );
   buff.scarred_strikes = make_buff( this, "scarred_strikes", set_bonuses.scarred_strikes )->set_quiet( true );
 }
 
@@ -10009,6 +10007,11 @@ void demon_hunter_t::trigger_demonsurge( demonsurge_ability ability, timespan_t 
       buff.demonsurge_abilities[ ability ]->expire();
     }
     make_event<delayed_execute_event_t>( *sim, this, active.demonsurge, target, delay );
+    if ( ability == ENTER_META )
+    {
+      make_event( *sim, timespan_t::from_millis( delay.total_millis() + 1 ),
+                  [ this ] { spawn_soul_fragment( soul_fragment::EMPOWERED_DEMON ); } );
+    }
   }
 }
 

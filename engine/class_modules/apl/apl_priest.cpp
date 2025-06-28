@@ -188,8 +188,8 @@ void shadow_ptr( player_t* p )
   precombat->add_action( "arcane_torrent" );
   precombat->add_action( "use_item,name=aberrant_spellforge" );
   precombat->add_action( "halo,if=!fight_style.dungeonroute&!fight_style.dungeonslice&active_enemies<=4&(fight_remains>=120|active_enemies<=2)&!talent.power_surge" );
-  precombat->add_action( "shadow_crash,if=raid_event.adds.in>=25&spell_targets.shadow_crash<=8&!fight_style.dungeonslice" );
-  precombat->add_action( "vampiric_touch,if=!talent.shadow_crash.enabled|raid_event.adds.in<25|spell_targets.shadow_crash>8|fight_style.dungeonslice" );
+  precombat->add_action( "shadow_crash,if=raid_event.adds.in>=25&spell_targets.shadow_crash<=12&!fight_style.dungeonslice" );
+  precombat->add_action( "vampiric_touch,if=!action.shadow_crash.enabled|raid_event.adds.in<25|spell_targets.shadow_crash>8|fight_style.dungeonslice" );
 
   default_->add_action( "variable,name=holding_crash,op=set,value=raid_event.adds.in<15" );
   default_->add_action( "call_action_list,name=aoe,if=active_enemies>2" );
@@ -202,8 +202,8 @@ void shadow_ptr( player_t* p )
   aoe_variables->add_action( "variable,name=max_vts,op=set,default=12,value=spell_targets.vampiric_touch>?12" );
   aoe_variables->add_action( "variable,name=is_vt_possible,op=set,value=0,default=1" );
   aoe_variables->add_action( "variable,name=is_vt_possible,op=set,value=1,target_if=max:(target.time_to_die*dot.vampiric_touch.refreshable),if=target.time_to_die>=18" );
-  aoe_variables->add_action( "variable,name=dots_up,op=set,value=(active_dot.vampiric_touch+8*(action.shadow_crash.in_flight&talent.shadow_crash))>=variable.max_vts|!variable.is_vt_possible", "TODO: Revamp to fix undesired behavior with unstacked fights" );
-  aoe_variables->add_action( "variable,name=holding_crash,op=set,value=(variable.max_vts-active_dot.vampiric_touch)<4&raid_event.adds.in>15|raid_event.adds.in<10&raid_event.adds.count>(variable.max_vts-active_dot.vampiric_touch),if=variable.holding_crash&talent.shadow_crash&raid_event.adds.exists" );
+  aoe_variables->add_action( "variable,name=dots_up,op=set,value=(active_dot.vampiric_touch+8*(action.shadow_crash.in_flight&action.shadow_crash.enabled))>=variable.max_vts|!variable.is_vt_possible", "TODO: Revamp to fix undesired behavior with unstacked fights" );
+  aoe_variables->add_action( "variable,name=holding_crash,op=set,value=(variable.max_vts-active_dot.vampiric_touch)<4&raid_event.adds.in>15|raid_event.adds.in<10&raid_event.adds.count>(variable.max_vts-active_dot.vampiric_touch),if=variable.holding_crash&action.shadow_crash.enabled&raid_event.adds.exists" );
   aoe_variables->add_action( "variable,name=manual_vts_applied,op=set,value=(active_dot.vampiric_touch+8*!variable.holding_crash)>=variable.max_vts|!variable.is_vt_possible" );
 
   cds->add_action( "potion,if=(buff.voidform.up&buff.power_infusion.up|buff.dark_ascension.up)&(fight_remains>=320|time_to_bloodlust>=320|buff.bloodlust.react)|fight_remains<=30", "TODO: Add holding condition for weird fight times to potion with execute" );
@@ -217,7 +217,7 @@ void shadow_ptr( player_t* p )
   cds->add_action( "power_infusion,if=(buff.voidform.up|buff.dark_ascension.up&(fight_remains<=80|fight_remains>=140)|active_allied_augmentations)&(!buff.power_infusion.up|set_bonus.tww2_4pc&buff.power_infusion.remains<=15)", "Sync Power Infusion with Voidform or Dark Ascension" );
   cds->add_action( "halo,if=talent.power_surge&(pet.fiend.active&cooldown.fiend.remains>=4&talent.mindbender|!talent.mindbender&!cooldown.fiend.up|active_enemies>2&!talent.inescapable_torment|!talent.dark_ascension)&(cooldown.mind_blast.charges=0|!cooldown.void_torrent.up|!talent.void_eruption|cooldown.void_eruption.remains>=gcd.max*4|buff.mind_devourer.up&talent.mind_devourer)", "Make sure Mindbender is active before popping Dark Ascension unless you have insignificant talent points or too many targets" );
   cds->add_action( "void_eruption,if=(pet.fiend.active&cooldown.fiend.remains>=4|!talent.mindbender&!cooldown.fiend.up|active_enemies>2&!talent.inescapable_torment)&(cooldown.mind_blast.charges=0|time>15|buff.mind_devourer.up&talent.mind_devourer|buff.power_surge.up)", "Make sure Mindbender is active before popping Void Eruption and dump charges of Mind Blast before casting" );
-  cds->add_action( "dark_ascension,if=(pet.fiend.active&cooldown.fiend.remains>=4|!talent.mindbender&!cooldown.fiend.up|active_enemies>2&!talent.inescapable_torment)&(active_dot.devouring_plague>=1|insanity>=(15+5*!talent.minds_eye+5*talent.distorted_reality-pet.fiend.active*6))" );
+  cds->add_action( "dark_ascension,if=(pet.fiend.active&cooldown.fiend.remains>=4|!talent.mindbender&!cooldown.fiend.up|active_enemies>2&!talent.inescapable_torment)&(active_dot.devouring_plague>=1|insanity>=(20-(5*talent.minds_eye)+(5*talent.distorted_reality)-(pet.fiend.active*2)))", "Use Dark Ascension when you have enough Insanity to cast Devouring Plague." );
   cds->add_action( "call_action_list,name=trinkets" );
   cds->add_action( "desperate_prayer,if=health.pct<=75", "Use Desperate Prayer to heal up should Shadow Word: Death or other damage bring you below 75%" );
 
@@ -225,9 +225,9 @@ void shadow_ptr( player_t* p )
   heal_for_tof->add_action( "divine_star", "Use Divine Star to acquire Twist of Fate if an ally can be healed for it and it is not currently up." );
   heal_for_tof->add_action( "holy_nova,if=buff.rhapsody.stack=20&talent.rhapsody", "Use Holy Nova when Rhapsody is fully stacked to acquire Twist of Fate if an ally can be healed for it and it is not currently up." );
 
-  main->add_action( "variable,name=dots_up,op=set,value=active_dot.vampiric_touch=active_enemies|action.shadow_crash.in_flight&talent.shadow_crash,if=active_enemies<3" );
+  main->add_action( "variable,name=dots_up,op=set,value=active_dot.vampiric_touch=active_enemies|action.shadow_crash.in_flight&action.shadow_crash.enabled,if=active_enemies<3" );
   main->add_action( "call_action_list,name=cds,if=fight_remains<30|target.time_to_die>15&(!variable.holding_crash|active_enemies>2)" );
-  main->add_action( "mindbender,if=(dot.shadow_word_pain.ticking&variable.dots_up|action.shadow_crash.in_flight&talent.shadow_crash)&(fight_remains<30|target.time_to_die>15)&(!talent.dark_ascension|cooldown.dark_ascension.remains<gcd.max|fight_remains<15)", "Use Shadowfiend and Mindbender on cooldown as long as Vampiric Touch and Shadow Word: Pain are active and sync with Dark Ascension" );
+  main->add_action( "mindbender,if=(dot.shadow_word_pain.ticking&variable.dots_up|action.shadow_crash.in_flight&action.shadow_crash.enabled)&(fight_remains<30|target.time_to_die>15)&(!talent.dark_ascension|cooldown.dark_ascension.remains<gcd.max|fight_remains<15)", "Use Shadowfiend and Mindbender on cooldown as long as Vampiric Touch and Shadow Word: Pain are active and sync with Dark Ascension" );
   main->add_action( "shadow_word_death,target_if=max:(target.health.pct<=20)*100+dot.devouring_plague.ticking,if=priest.force_devour_matter&talent.devour_matter", "High Priority Shadow Word: Death when you are forcing the bonus from Devour Matter" );
   main->add_action( "void_blast,target_if=max:(dot.devouring_plague.remains*1000+target.time_to_die),if=(dot.devouring_plague.remains>=execute_time|buff.entropic_rift.remains<=gcd.max|action.void_torrent.channeling&talent.void_empowerment)&(insanity.deficit>=16|cooldown.mind_blast.full_recharge_time<=gcd.max|buff.entropic_rift.remains<=gcd.max)", "Blast more burst :wicked:" );
   main->add_action( "devouring_plague,target_if=max:target.time_to_die*(dot.devouring_plague.remains<=gcd.max|variable.dr_force_prio|!talent.distorted_reality&variable.me_force_prio),if=buff.voidform.up&talent.perfected_form&buff.voidform.remains<=gcd.max&talent.void_eruption", "Do not let Voidform Expire if you can avoid it." );
@@ -236,9 +236,9 @@ void shadow_ptr( player_t* p )
   main->add_action( "void_torrent,target_if=max:(dot.devouring_plague.remains*1000+target.time_to_die),if=!variable.holding_crash&(dot.devouring_plague.remains>=2.5&(cooldown.dark_ascension.remains>=12|!talent.dark_ascension|!talent.void_blast)|cooldown.void_eruption.remains<=3&talent.void_eruption)", "Use Void Torrent if it will get near full Mastery Value" );
   main->add_action( "void_volley,if=buff.void_volley.remains<=5|buff.entropic_rift.up&action.void_blast.usable_in>buff.entropic_rift.remains|target.time_to_die<=5", "Use Void Volley if it would expire soon" );
   main->add_action( "mind_flay_insanity,target_if=max:dot.devouring_plague.remains", "MFI is a good button" );
-  main->add_action( "shadow_crash,target_if=dot.vampiric_touch.refreshable,if=!variable.holding_crash", "Use Shadow Crash as long as you are not holding for adds and Vampiric Touch is within pandemic range" );
-  main->add_action( "vampiric_touch,target_if=max:(refreshable*10000+target.time_to_die)*(dot.vampiric_touch.ticking|!variable.dots_up),if=refreshable&target.time_to_die>12&(dot.vampiric_touch.ticking|!variable.dots_up)&(variable.max_vts>0|active_enemies=1)&(action.shadow_crash.usable_in>=dot.vampiric_touch.remains|variable.holding_crash|!talent.shadow_crash)&(!action.shadow_crash.in_flight|!talent.shadow_crash)", "Put out Vampiric Touch on enemies that will live at least 12s and Shadow Crash is not available soon" );
-  main->add_action( "mind_blast,target_if=max:dot.devouring_plague.remains,if=(!buff.mind_devourer.react|!talent.mind_devourer|cooldown.void_eruption.up&talent.void_eruption)", "Use all charges of Mind Blast if Vampiric Touch and Shadow Word: Pain are active and Mind Devourer is not active or you are prepping Void Eruption" );
+  main->add_action( "shadow_crash,target_if=dot.vampiric_touch.refreshable,if=!variable.holding_crash&!action.shadow_crash.in_flight", "Use Shadow Crash as long as you are not holding for adds and Vampiric Touch is within pandemic range" );
+  main->add_action( "vampiric_touch,target_if=max:(refreshable*10000+target.time_to_die)*(dot.vampiric_touch.ticking|!variable.dots_up),if=refreshable&target.time_to_die>12&(dot.vampiric_touch.ticking|!variable.dots_up)&(variable.max_vts>0|active_enemies=1)&(action.shadow_crash.usable_in>=dot.vampiric_touch.remains|variable.holding_crash|!action.shadow_crash.enabled)&(!action.shadow_crash.in_flight)", "Put out Vampiric Touch on enemies that will live at least 12s and Shadow Crash is not available soon" );
+  main->add_action( "mind_blast,target_if=max:dot.devouring_plague.remains,if=(!buff.mind_devourer.react|!talent.mind_devourer|cooldown.void_eruption.up&talent.void_eruption)&(!talent.dark_ascension&|!cooldown.dark_ascension.up|cooldown.mind_blast.charges=2)", "Use all charges of Mind Blast if Vampiric Touch and Shadow Word: Pain are active and Mind Devourer is not active or you are prepping Void Eruption" );
   main->add_action( "void_volley" );
   main->add_action( "devouring_plague,if=buff.voidform.up&talent.void_eruption|buff.power_surge.up|talent.distorted_reality" );
   main->add_action( "halo,if=spell_targets>1" );

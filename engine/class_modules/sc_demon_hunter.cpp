@@ -7265,7 +7265,6 @@ struct metamorphosis_buff_t : public demon_hunter_buff_t<buff_t>
 
       if ( p()->set_bonuses.tww3_felscarred_4pc->ok() )
       {
-        p()->spawn_soul_fragment( soul_fragment::EMPOWERED_DEMON );
         p()->trigger_demonsurge( demonsurge_ability::ENTER_META, false );
       }
     }

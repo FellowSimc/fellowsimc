@@ -4028,7 +4028,10 @@ void priest_t::create_buffs()
                                                          buffs.collapsing_void->check() );
             if ( sets->has_set_bonus( HERO_VOIDWEAVER, TWW3, B4 ) )
             {
-              auto value = std::min( buffs.collapsing_void->check_value() + 1.0, buffs.collapsing_void->default_value * buffs.collapsing_void->max_stack() );
+              auto base_value_per_stack =
+                  talents.voidweaver.collapsing_void->effectN( specialization() == PRIEST_SHADOW ? 3 : 4 ).percent();
+              auto value = std::min( buffs.collapsing_void->check() * base_value_per_stack + 1.0,
+                                     buffs.collapsing_void->default_value * buffs.collapsing_void->max_stack() );
               buffs.overflowing_void->trigger( 1, value );
             }
             buffs.collapsing_void->expire();

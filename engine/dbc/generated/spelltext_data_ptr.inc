@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.61703
-static const std::array<spelltext_data_t, 28015> __ptr_spelltext_data { {
+static const std::array<spelltext_data_t, 28016> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -27807,6 +27807,7 @@ static const std::array<spelltext_data_t, 28015> __ptr_spelltext_data { {
   { 1237173, "$@spelldesc1226311", 0, 0 },
   { 1237196, "$@spelldesc450615", "$w1 Flurry Strikes charged, released on your next attack.", 0 },
   { 1237269, "$@spelldesc431695", "Haste, movement speed, and cooldown recovery rate increased by $s1%.", "Bronze" },
+  { 1237388, "A sweeping attack that strikes all enemies in front of you for $s2 Frost damage. Deals reduced damage beyond $s5 targets. ", 0, 0 },
   { 1237591, "$@spelldesc369939", 0, 0 },
   { 1237615, "$@spelldesc1236397", "The damage of your next $?c1[Mind Blast][Void Torrent] is increased by $w1%.", 0 },
   { 1237777, "The powers of your Reshii Wraps also reduce Cosmic damage taken by $1237859s2% for $1237859d or until $s1 damage has been prevented.", 0, 0 },

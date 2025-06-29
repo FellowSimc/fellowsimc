@@ -1268,8 +1268,8 @@ struct arcane_phoenix_spell_t : public mage_pet_spell_t
 
     base_multiplier *= 1.0 + o()->spec.arcane_mage->effectN( 1 ).percent();
     base_multiplier *= 1.0 + o()->spec.fire_mage->effectN( 1 ).percent();
-    // TODO: Uncomment when this modifier is fixed to be properly applied.
-    // base_dd_multiplier *= 1.0 + o()->spec.arcane_mage->effectN( 9 ).percent();
+    if ( data().affected_by( o()->spec.arcane_mage->effectN( 9 ) ) )
+      base_dd_multiplier *= 1.0 + o()->spec.arcane_mage->effectN( 9 ).percent();
     crit_bonus_multiplier *= 1.0 + o()->talents.overflowing_energy->effectN( 1 ).percent();
     crit_bonus_multiplier *= 1.0 + o()->talents.wildfire->effectN( 2 ).percent();
     // TODO: Does this work with the unbugged meteorite (which isn't a mage spell)?
@@ -1466,14 +1466,18 @@ struct arcane_barrage_t final : public arcane_phoenix_spell_t
 {
   arcane_barrage_t( std::string_view n, arcane_phoenix_pet_t* p ) :
     arcane_phoenix_spell_t( n, p, p->find_spell( 450499 ) )
-  {}
+  {
+    is_mage_spell = true;
+  }
 };
 
 struct pyroblast_t final : public arcane_phoenix_spell_t
 {
   pyroblast_t( std::string_view n, arcane_phoenix_pet_t* p ) :
     arcane_phoenix_spell_t( n, p, p->find_spell( 450461 ) )
-  {}
+  {
+    is_mage_spell = true;
+  }
 };
 
 struct flamestrike_t final : public arcane_phoenix_spell_t
@@ -1485,23 +1489,6 @@ struct flamestrike_t final : public arcane_phoenix_spell_t
     reduced_aoe_targets = data().effectN( 2 ).base_value(); // TODO: Verify this
     is_mage_spell = true;
   }
-
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = arcane_phoenix_spell_t::composite_da_multiplier( s );
-
-    if ( o()->buffs.combustion->check() )
-      m *= 1.0 + o()->talents.unleashed_inferno->effectN( 4 ).percent();
-
-    if ( o()->buffs.sparking_cinders->check() )
-      m *= 1.0 + o()->buffs.sparking_cinders->data().effectN( 2 ).percent();
-
-    // TODO: Double check that this actually applies and check whether it gets consumed.
-    if ( o()->buffs.burden_of_power->check() )
-      m *= 1.0 + o()->buffs.burden_of_power->data().effectN( 3 ).percent();
-
-    return m;
-  }
 };
 
 struct arcane_surge_t final : public arcane_phoenix_spell_t
@@ -1509,19 +1496,7 @@ struct arcane_surge_t final : public arcane_phoenix_spell_t
   arcane_surge_t( std::string_view n, arcane_phoenix_pet_t* p ) :
     arcane_phoenix_spell_t( n, p, p->find_spell( 453326 ), true )
   {
-    reduced_aoe_targets = data().effectN( 3 ).base_value(); // TODO: Verify this
     is_mage_spell = true;
-    // TODO: Check this; also see the player arcane_surge_t
-    base_multiplier *= 1.0 + o()->sets->set( MAGE_ARCANE, TWW1, B4 )->effectN( 1 ).percent();
-  }
-
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = arcane_phoenix_spell_t::composite_da_multiplier( s );
-
-    m *= 1.0 + o()->cache.mastery() * o()->spec.savant->effectN( 5 ).mastery_value();
-
-    return m;
   }
 };
 
@@ -1529,7 +1504,9 @@ struct greater_pyroblast_t final : public arcane_phoenix_spell_t
 {
   greater_pyroblast_t( std::string_view n, arcane_phoenix_pet_t* p ) :
     arcane_phoenix_spell_t( n, p, p->find_spell( 450421 ), true )
-  {}
+  {
+    is_mage_spell = true;
+  }
 };
 
 struct meteorite_impact_t final : public arcane_phoenix_spell_t
@@ -1539,7 +1516,7 @@ struct meteorite_impact_t final : public arcane_phoenix_spell_t
   {
     aoe = -1;
     reduced_aoe_targets = 8; // TODO: Verify this
-    is_mage_spell = bug;
+    is_mage_spell = true;
     if ( !bug )
       base_dd_multiplier *= 1.0 + o()->spec.arcane_mage->effectN( 10 ).percent();
   }

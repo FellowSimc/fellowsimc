@@ -6090,6 +6090,12 @@ struct meteor_impact_t final : public fire_mage_spell_t
     aoe = -1;
     reduced_aoe_targets = 8;
     background = proc = triggers.ignite = true;
+
+    // As of 11.2, Meteor deals extra damage to the target closest to the impact point.
+    // For simplicity, we assume that will be the main target.
+    double m = 1.0 + p->find_spell( 153561 )->effectN( 2 ).percent();
+    base_multiplier     *= m;
+    base_aoe_multiplier /= m;
   }
 
   void execute() override
@@ -6152,12 +6158,6 @@ struct meteor_t final : public fire_mage_spell_t
 
     action_t* meteor_burn = get_action<meteor_burn_t>( burn_name, p );
     impact_action = get_action<meteor_impact_t>( impact_name, p, meteor_burn, type );
-
-    // As of 11.2, Meteor deals extra damage to the target closest to the impact point.
-    // For simplicity, we assume that will be the main target.
-    double m = 1.0 + data().effectN( 2 ).percent();
-    impact_action->base_multiplier     *= m;
-    impact_action->base_aoe_multiplier /= m;
 
     add_child( meteor_burn );
     add_child( impact_action );
@@ -6910,7 +6910,7 @@ struct arcane_echo_t final : public arcane_mage_spell_t
   {
     aoe = -1;
     reduced_aoe_targets = p->talents.arcane_echo->effectN( 1 ).base_value();
-    background = proc = affected_by.savant = true;
+    background = proc = true;
   }
 };
 

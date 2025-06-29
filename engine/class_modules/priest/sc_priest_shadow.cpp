@@ -765,6 +765,9 @@ struct shadow_word_pain_t final : public priest_spell_t
         // its either -0.9 or -0.909. Not too sure right now. Leaning on -0.9
         auto chance = 2.0 / 9.0 * std::pow( priest().get_active_dots( d ), -0.9 );
 
+        if ( d->state->result == RESULT_CRIT )
+          chance *= 1 + priest().talents.shadow.tormented_spirits->effectN( 1 ).percent();
+
         if ( priest().talents.shadow.tormented_spirits.enabled() && rng().roll( chance ) )
         {
           priest().trigger_shadowy_apparitions( priest().procs.shadowy_apparition_swp, false );

@@ -424,6 +424,7 @@ public:
     buff_t* rollin_hot;
 
     buff_t* extended_bankroll;
+    buff_t* spherical_sorcery;
   } buffs;
 
   // Cooldowns
@@ -1884,6 +1885,7 @@ struct mage_spell_t : public spell_t
     bool blessing_of_the_phoenix = true;
     bool clarity = true;
     bool rollin_hot = true;
+    bool spherical_sorcery = true;
 
     // Misc
     bool combustion = true;
@@ -2055,6 +2057,9 @@ public:
     // TODO (11.1 PTR): the second effect affects spell effects rather than periodic damage
     if ( affected_by.rollin_hot )
       m *= 1.0 + p()->buffs.rollin_hot->check_value();
+
+    if ( affected_by.spherical_sorcery )
+      m *= 1.0 + p()->buffs.spherical_sorcery->check_value();
 
     return m;
   }
@@ -3279,6 +3284,7 @@ struct frost_mage_spell_t : public mage_spell_t
       return false;
     p()->buffs.cold_front_ready->expire();
     p()->action.cold_front_frozen_orb->execute_on_target( target );
+    p()->buffs.spherical_sorcery->trigger();
     return true;
   }
 };
@@ -3291,6 +3297,7 @@ struct icicle_t final : public frost_mage_spell_t
     background = proc = track_shatter = true;
     base_dd_min = base_dd_max = 1.0;
     base_multiplier *= 1.0 + p->talents.flash_freeze->effectN( 2 ).percent();
+    base_multiplier *= 1.0 + p->sets->set( HERO_SPELLSLINGER, TWW3, B2 )->effectN( 4 ).percent();
     crit_bonus_multiplier *= 1.0 + p->talents.piercing_cold->effectN( 1 ).percent();
 
     if ( p->talents.splitting_ice.ok() )
@@ -3482,6 +3489,16 @@ struct arcane_orb_t final : public arcane_mage_spell_t
       if ( s->chain_target < max_count / count )
         p()->trigger_splinter( s->target, count );
     }
+
+    if ( p()->sets->has_set_bonus( HERO_SPELLSLINGER, TWW3, B4 ) )
+    {
+      const auto* set = p()->sets->set( HERO_SPELLSLINGER, TWW3, B4 );
+      int max_count = as<int>( set->effectN( 4 ).base_value() );
+      double chance = set->effectN( 3 ).percent();
+      // TODO: How does this work when the chance isn't 100%?
+      if ( s->chain_target < max_count && rng().roll( chance ) )
+        p()->buffs.arcane_harmony->trigger();
+    }
   }
 };
 
@@ -3648,6 +3665,7 @@ struct arcane_blast_t final : public dematerialize_spell_t
     triggers.intuition = true;
     base_multiplier *= 1.0 + p->talents.consortiums_bauble->effectN( 2 ).percent();
     base_multiplier *= 1.0 + p->sets->set( MAGE_ARCANE, TWW1, B2 )->effectN( 1 ).percent();
+    base_multiplier *= 1.0 + p->sets->set( HERO_SPELLSLINGER, TWW3, B2 )->effectN( 3 ).percent();
     base_costs[ RESOURCE_MANA ] *= 1.0 + p->talents.consortiums_bauble->effectN( 1 ).percent();
   }
 
@@ -5304,7 +5322,13 @@ struct frozen_orb_bolt_t final : public frost_mage_spell_t
     frost_mage_spell_t::execute();
 
     if ( hit_any_target )
+    {
       p()->trigger_fof( p()->talents.fingers_of_frost->effectN( 2 ).percent(), proc_fof );
+
+      double chance = p()->sets->set( HERO_SPELLSLINGER, TWW3, B4 )->effectN( 2 ).percent();
+      if ( rng().roll( chance ) )
+        trigger_cold_front();
+    }
   }
 
   double composite_target_multiplier( player_t* target ) const override
@@ -5399,6 +5423,7 @@ struct glacial_spike_t final : public frost_mage_spell_t
     enable_calculate_on_impact( 228600 );
     track_shatter = consumes_winters_chill = true;
     base_multiplier *= 1.0 + p->talents.flash_freeze->effectN( 2 ).percent();
+    base_multiplier *= 1.0 + p->sets->set( HERO_SPELLSLINGER, TWW3, B2 )->effectN( 4 ).percent();
     crit_bonus_multiplier *= 1.0 + p->talents.piercing_cold->effectN( 1 ).percent();
 
     if ( p->talents.splitting_ice.ok() )
@@ -5543,6 +5568,7 @@ struct ice_lance_t final : public custom_state_spell_t<frost_mage_spell_t, ice_l
     affected_by.icicles_st = true;
     base_multiplier *= 1.0 + p->talents.lonely_winter->effectN( 1 ).percent();
     base_multiplier *= 1.0 + p->sets->set( MAGE_FROST, TWW1, B2 )->effectN( 1 ).percent();
+    base_multiplier *= 1.0 + p->sets->set( HERO_SPELLSLINGER, TWW3, B2 )->effectN( 4 ).percent();
 
     // TODO: Cleave distance for SI seems to be 8 + hitbox size.
     if ( p->talents.splitting_ice.ok() )
@@ -7129,6 +7155,8 @@ struct embedded_splinter_t final : public mage_spell_t
   {
     background = proc = true;
     dot_max_stack += as<int>( p->talents.splinterstorm->effectN( 3 ).base_value() );
+    if ( p->specialization() == MAGE_ARCANE )
+      base_multiplier *= 1.0 + p->sets->set( HERO_SPELLSLINGER, TWW3, B4 )->effectN( 6 ).percent();
   }
 
   timespan_t calculate_dot_refresh_duration( const dot_t*, timespan_t duration ) const override
@@ -7211,6 +7239,8 @@ struct splinter_t final : public mage_spell_t
   {
     background = proc = true;
     triggers.overflowing_energy = false;
+    if ( p->specialization() == MAGE_ARCANE )
+      base_multiplier *= 1.0 + p->sets->set( HERO_SPELLSLINGER, TWW3, B4 )->effectN( 5 ).percent();
 
     if ( p->talents.controlled_instincts.ok() )
       controlled_instincts = get_action<controlled_instincts_t>( "controlled_instincts", p );
@@ -7259,6 +7289,17 @@ struct splinter_t final : public mage_spell_t
 
     auto cd = p()->specialization() == MAGE_FROST ? p()->cooldowns.frozen_orb : p()->cooldowns.arcane_orb;
     cd->adjust( -p()->talents.spellfrost_teachings->effectN( p()->specialization() == MAGE_FROST ? 2 : 1 ).time_value(), false );
+
+    double chance = p()->sets->set( HERO_SPELLSLINGER, TWW3, B2 )->effectN( p()->specialization() == MAGE_FROST ? 2 : 1 ).percent();
+    if ( rng().roll( chance ) )
+    {
+      p()->buffs.arcane_harmony->trigger();
+      // TODO: Move the trigger_cold_front function out of frost_mage_spell_t and use it here?
+      // TODO: The proc chance seems to be much lower than the spell data value and there's also
+      // most likely some sort of an ICD. We might have to implement this if it's not fixed by
+      // the time S3 goes live.
+      trigger_tracking_buff( p()->buffs.cold_front, p()->buffs.cold_front_ready, 2 );
+    }
   }
 
   timespan_t travel_time() const override
@@ -8423,8 +8464,7 @@ void mage_t::create_buffs()
                                       ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
   buffs.intuition                 = make_buff( this, "intuition", find_spell( 1223797 ) )
                                       ->set_default_value_from_effect( 1 )
-                                      ->modify_default_value( talents.aether_fragment->effectN( 1 ).percent() )
-                                      ->set_chance( talents.intuition.ok() );
+                                      ->modify_default_value( talents.aether_fragment->effectN( 1 ).percent() );
   buffs.leydrinker                = make_buff( this, "leydrinker", find_spell( 453758 ) )
                                       ->set_chance( talents.leydrinker.ok() );
   buffs.nether_precision          = make_buff( this, "nether_precision", find_spell( 383783 ) )
@@ -8637,6 +8677,9 @@ void mage_t::create_buffs()
   buffs.extended_bankroll = make_buff( this, "extended_bankroll", find_spell( 1216914 ) )
                               ->set_chance( sets->has_set_bonus( MAGE_FROST, TWW2, B4 ) )
                               ->set_tick_callback( [ this ] ( buff_t*, int, timespan_t ) { trigger_jackpot(); } );
+  buffs.spherical_sorcery = make_buff( this, "spherical_sorcery", find_spell( 1247525 ) )
+                              ->set_default_value_from_effect( 1 )
+                              ->set_chance( sets->has_set_bonus( HERO_SPELLSLINGER, TWW3, B4 ) );
 
 
   // Buffs that use stack_react or may_react need to be reactable regardless of what the APL does
@@ -8649,6 +8692,12 @@ void mage_t::create_buffs()
   // Hyperthermia can be activated through Memory of Al'ar and doesn't need to be talented
   if ( talents.memory_of_alar.ok() )
     buffs.hyperthermia->default_chance = -1.0;
+
+  if ( sets->has_set_bonus( HERO_SPELLSLINGER, TWW3, B4 ) )
+  {
+    buffs.arcane_harmony->set_stack_change_callback( [ this ] ( buff_t* b, int, int cur )
+                          { if ( cur == b->max_stack() ) buffs.intuition->trigger(); } );
+  }
 }
 
 void mage_t::init_gains()

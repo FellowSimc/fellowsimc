@@ -2542,7 +2542,8 @@ public:
       if ( p()->get_active_dots( td( state->target )->dots.rupture ) >=
            as<unsigned int>( p()->talent.deathstalker.follow_the_blood->effectN( 2 ).base_value() ) )
       {
-        m *= 1.0 + p()->talent.deathstalker.follow_the_blood->effectN( 1 ).percent();
+        m *= 1.0 + p()->talent.deathstalker.follow_the_blood->effectN( 1 ).percent() *
+          ( 1.0 + p()->buffs.tww3_deathstalker_2pc->check() * p()->spec.tww3_deathstalker_2pc_buff->effectN( 2 ).percent() );
       }
     }
 
@@ -2551,7 +2552,8 @@ public:
     {
       if ( p()->buffs.darkest_night->up() && cast_state( state )->get_combo_points() >= p()->consume_cp_max() )
       {
-        m *= 1.0 + p()->spell.darkest_night_buff->effectN( 2 ).percent();
+        m *= 1.0 + p()->spell.darkest_night_buff->effectN( 2 ).percent() *
+          ( 1.0 + p()->buffs.tww3_deathstalker_2pc->check() * p()->spec.tww3_deathstalker_2pc_buff->effectN( 3 ).percent() );
       }
     }
 
@@ -2609,7 +2611,8 @@ public:
       if ( p()->get_active_dots( td( state->target )->dots.rupture ) >=
            as<unsigned int>( p()->talent.deathstalker.follow_the_blood->effectN( 2 ).base_value() ) )
       {
-        m *= 1.0 + p()->talent.deathstalker.follow_the_blood->effectN( 1 ).percent();
+        m *= 1.0 + p()->talent.deathstalker.follow_the_blood->effectN( 1 ).percent() *
+          ( 1.0 + p()->buffs.tww3_deathstalker_2pc->check() * p()->spec.tww3_deathstalker_2pc_buff->effectN( 2 ).percent() );
       }
     }
 
@@ -2704,7 +2707,8 @@ public:
 
     if ( affected_by.momentum_of_despair && p()->buffs.momentum_of_despair->check() )
     {
-      cm *= 1.0 + p()->spell.momentum_of_despair_buff->effectN( 2 ).percent();
+      cm *= 1.0 + p()->spell.momentum_of_despair_buff->effectN( 2 ).percent() *
+        ( 1.0 + p()->buffs.tww3_deathstalker_2pc->check() * p()->spec.tww3_deathstalker_2pc_buff->effectN( 3 ).percent() );
     }
 
     return cm;
@@ -5745,7 +5749,8 @@ struct secret_technique_t : public rogue_attack_t
       if ( p()->bugs && secondary_trigger_type == secondary_trigger::SECRET_TECHNIQUE_CLONE &&
            p()->buffs.lingering_darkness->check() )
       {
-        m /= 1.0 + p()->buffs.lingering_darkness->check_value();
+        m /= 1.0 + p()->buffs.lingering_darkness->check_value() *
+          ( 1.0 + p()->buffs.tww3_deathstalker_2pc->check() * p()->spec.tww3_deathstalker_2pc_buff->effectN( 2 ).percent() );
       }
 
       return m;
@@ -10093,7 +10098,8 @@ double rogue_t::composite_player_multiplier( school_e school ) const
 
     if ( effect.has_common_school( school ) )
     {
-      m *= 1.0 + buffs.lingering_darkness->value();
+      m *= 1.0 + buffs.lingering_darkness->value() *
+        ( 1.0 + buffs.tww3_deathstalker_2pc->check() * spec.tww3_deathstalker_2pc_buff->effectN( 2 ).percent() );
     }
   }
 
@@ -12463,7 +12469,14 @@ void rogue_t::create_buffs()
   }
 
   buffs.tww3_deathstalker_2pc = make_buff<damage_buff_t>( this, "deaths_study", spec.tww3_deathstalker_2pc_buff );
-  buffs.tww3_deathstalker_2pc->apply_affecting_aura( set_bonuses.tww3_deathstalker_4pc ); // Duration Increase
+  buffs.tww3_deathstalker_2pc->apply_affecting_aura( set_bonuses.tww3_deathstalker_4pc ) // Duration Increase
+    ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
+  if ( spec.tww3_deathstalker_2pc_buff->ok() )
+  {
+    buffs.deathstalkers_mark->apply_dynamic_buff_multiplier( buffs.tww3_deathstalker_2pc );
+    buffs.momentum_of_despair->apply_dynamic_buff_multiplier( buffs.tww3_deathstalker_2pc );
+    buffs.symbolic_victory->apply_dynamic_buff_multiplier( buffs.tww3_deathstalker_2pc );
+  }
 
   buffs.tww3_trickster_4pc = make_buff( this, "tww3_trickster_4pc", set_bonuses.tww3_trickster_4pc );
   if ( set_bonuses.tww3_trickster_4pc->ok() )

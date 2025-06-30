@@ -8225,6 +8225,9 @@ void unyielding_netherprism( special_effect_t& effect )
 // 1232797 Value Spell
 void arazs_ritual_forge( special_effect_t& effect )
 {
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
   struct arazs_buff_t final : public stat_buff_t
   {
     const special_effect_t& effect;
@@ -8319,6 +8322,9 @@ void arazs_ritual_forge( special_effect_t& effect )
 // TODO: Investigate the area trigger, see if has importance for sims
 void astral_antenna( special_effect_t& effect )
 {
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
   auto buff = create_buff<stat_buff_t>( effect.player, "astral_antenna", effect.player->find_spell( 1239641 ) )
                   ->set_stat_from_effect_type( A_MOD_RATING, effect.driver()->effectN( 1 ).average( effect ) )
                   ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS );
@@ -8337,6 +8343,9 @@ void astral_antenna( special_effect_t& effect )
 // 1242901 On Death damage
 void screams_of_a_forgotten_sky( special_effect_t& effect )
 {
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
   struct screams_of_a_forgotten_sky_base_t : public generic_proc_t
   {
     double debuff_stack_val;
@@ -8437,6 +8446,9 @@ void screams_of_a_forgotten_sky( special_effect_t& effect )
 // 1241847 Unknown Dummy: 6 yard radius, maybe random visual location?
 void eradicating_arcanocore( special_effect_t& effect )
 {
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
   struct eradicating_arcanocore_t final : public generic_aoe_proc_t
   {
     buff_t* stacking_buff;

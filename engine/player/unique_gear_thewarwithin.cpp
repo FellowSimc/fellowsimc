@@ -8145,6 +8145,81 @@ void diamantine_voidcore( special_effect_t& effect )
   new dbc_proc_callback_t( effect.player, effect );
 }
 
+// Unyielding Netherprism
+// 1233553 Equip Driver & Values
+// 1233556 Use Driver & Stat Buff
+// 1239674 Damage
+// 1239675 Stacking buff
+void unyielding_netherprism( special_effect_t& effect )
+{
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
+  auto equip_driver = effect.player->find_spell( 1233553 );
+  assert( equip_driver && "Unyielding Netherprism missing Equip Driver" );
+
+  struct unyielding_netherprism_use_t : public generic_proc_t
+  {
+    buff_t* stacking;
+    buff_t* stat_buff;
+
+    unyielding_netherprism_use_t( const special_effect_t& e, buff_t* stacking_buff, const spell_data_t* equip )
+      : generic_proc_t( e, "unyielding_netherprism_use", e.driver() ), stacking( stacking_buff ), stat_buff( nullptr )
+    {
+      // Setting max stacks here for reporting to allow for quickly checking the average stacks consumed
+      stat_e stat = e.player->convert_hybrid_stat( STAT_STR_AGI );
+      int idx = stat == STAT_AGILITY ? 1 : 2;
+      stat_buff = create_buff<stat_buff_t>( e.player, e.driver() )
+                      ->add_stat_from_effect( idx, equip->effectN( 2 ).average( e ) )
+                      ->set_cooldown( 0_ms )  // Handled by the trinket
+                      ->set_max_stack( e.player->find_spell( 1239675 )->max_stacks() );
+    }
+
+    void execute() override
+    {
+      generic_proc_t::execute();
+      stat_buff->trigger( stacking->check() );
+      stacking->expire();
+    }
+  };
+
+  struct unyielding_netherprism_damage_t : public generic_aoe_proc_t
+  {
+    buff_t* stacking;
+
+    unyielding_netherprism_damage_t( const special_effect_t& e, const spell_data_t* equip, buff_t* stacking_buff )
+      : generic_aoe_proc_t( e, "unyielding_netherprism", e.player->find_spell( 1239674 ), true ),
+        stacking( stacking_buff )
+    {
+      base_dd_min = base_dd_max = equip->effectN( 1 ).average( e );
+    }
+
+    void execute() override
+    {
+      generic_aoe_proc_t::execute();
+      stacking->trigger();
+    }
+  };
+
+  buff_t* stacking_buff = create_buff<buff_t>( effect.player, effect.player->find_spell( 1239675 ) );
+
+  auto equip            = new special_effect_t( effect.player );
+  equip->name_str       = fmt::format( "{}_{}", equip_driver->name_cstr(), "equip" );
+  equip->spell_id       = equip_driver->id();
+  equip->execute_action = create_proc_action<unyielding_netherprism_damage_t>( "unyielding_netherprism", effect, equip_driver, stacking_buff );
+  effect.player->special_effects.push_back( equip );
+
+  auto cb = new dbc_proc_callback_t( effect.player, *equip );
+  cb->initialize();
+  cb->activate();
+
+  effect.execute_action = create_proc_action<unyielding_netherprism_use_t>( "unyielding_netherprism_use", effect,
+                                                                            stacking_buff, equip_driver );
+
+  effect.stat = effect.player->convert_hybrid_stat( STAT_STR_AGI );
+  effect.disable_buff();
+}
+
 // Weapons
 
 // 443384 driver
@@ -11176,6 +11251,8 @@ void register_special_effects()
   register_special_effect( 1219103, items::gigazaps_zapcap );
   register_special_effect( { 1223886, 1223899, 1223902, 1223904 }, items::hallowed_tome );
   register_special_effect( 1234996, items::diamantine_voidcore );
+  register_special_effect( 1233556, items::unyielding_netherprism );
+  register_special_effect( 1233553, DISABLED_EFFECT ); // Unyielding Netherprism equip driver
 
   // Weapons
   register_special_effect( 443384, items::fateweaved_needle );

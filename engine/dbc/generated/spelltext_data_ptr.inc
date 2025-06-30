@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.61703
-static const std::array<spelltext_data_t, 28016> __ptr_spelltext_data { {
+static const std::array<spelltext_data_t, 28017> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -27876,6 +27876,7 @@ static const std::array<spelltext_data_t, 28016> __ptr_spelltext_data { {
   { 1239609, "$@spelldesc1236395", "Haste increased by ${$W1}.1%. Multiple applications may overlap.", 0 },
   { 1239640, "$@spelldesc1234714", "The antenna is drawing ambient arcane energy towards you!", 0 },
   { 1239641, "$@spelldesc1234714", "Critical Strike rating increased by $w1.", 0 },
+  { 1239674, "$@spelldesc1233553", 0, 0 },
   { 1239675, "$@spelldesc1233553", "The Netherprism is accumulating latent energy and will grant ${$w1} Strength or Agility on use.", 0 },
   { 1239689, "$@spelldesc1236415", "Your Demonic Soul has been unleashed and is assaulting nearby enemies.\r\n\r\n$?a1236416[Generating ${$s2/10} $lSoul Shard:Soul Shards; every $t2 sec.][]", 0 },
   { 1239714, "$@spelldesc449631", 0, 0 },

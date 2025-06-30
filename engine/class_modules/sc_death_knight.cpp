@@ -11135,11 +11135,14 @@ struct remorseless_winter_base_t : public death_knight_spell_t
 
     // Periodic behavior handled by the buff
     dot_duration = base_tick_time = 0_ms;
-    if ( p->spec.remorseless_winter->ok() || p->talent.frost.frozen_dominion->ok() )
+
+    if ( data->ok() )
+    {
       add_child( damage );
 
-    if ( p->talent.frost.cryogenic_chamber.ok() )
-      add_child( get_action<cryogenic_chamber_t>( "cryogenic_chamber", p ) );
+      if ( p->talent.frost.cryogenic_chamber.ok() )
+        ( get_action<cryogenic_chamber_t>( "cryogenic_chamber", p ) );
+    }
   }
 
   void execute() override
@@ -13606,7 +13609,7 @@ void death_knight_t::create_actions()
     if ( talent.frost.frozen_dominion.ok() )
     {
       background_actions.frozen_dominion_remorseless_winter =
-          get_action<frozen_dominion_remorseless_winter_t>( "remorseless_winter", this );
+          get_action<frozen_dominion_remorseless_winter_t>( "remorseless_winter_frozen_dominion", this );
     }
 
     if ( talent.frost.frostbane.ok() )
@@ -14548,7 +14551,7 @@ void death_knight_t::spell_lookups()
   spell.first_howling_blades_damage  = conditional_spell_lookup( talent.frost.howling_blades.ok(), 1231083 );
   spell.second_howling_blades_damage = conditional_spell_lookup( talent.frost.howling_blades.ok(), 1231082 );
   spell.frozen_dominion_remorseless_winter_buff =
-      conditional_spell_lookup( talent.frost.cryogenic_chamber.ok(), 1233152 );
+      conditional_spell_lookup( talent.frost.frozen_dominion.ok(), 1233152 );
   spell.frostbane_buff      = conditional_spell_lookup( talent.frost.frostbane.ok(), 1229310 );
   spell.frostbane_driver    = conditional_spell_lookup( talent.frost.frostbane.ok(), 1228433 );
   spell.frostbane_damage    = conditional_spell_lookup( talent.frost.frostbane.ok(), 1228443 );

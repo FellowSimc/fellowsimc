@@ -8503,6 +8503,7 @@ void sigil_of_the_cosmic_hunt( special_effect_t& effect )
       : generic_proc_t( e, "cosmic_radiation", e.player->find_spell( 1239403 ) )
     {
       split_aoe_damage = true;
+      aoe = -1;
     }
 
     size_t available_targets( std::vector<player_t*>& tl ) const override

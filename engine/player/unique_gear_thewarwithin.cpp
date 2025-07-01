@@ -8494,6 +8494,9 @@ void eradicating_arcanocore( special_effect_t& effect )
 // 1239403 AoE
 void sigil_of_the_cosmic_hunt( special_effect_t& effect )
 {
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
   struct cosmic_radiation_t final : public generic_proc_t
   {
     cosmic_radiation_t( const special_effect_t& e )

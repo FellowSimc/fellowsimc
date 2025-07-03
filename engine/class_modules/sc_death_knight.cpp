@@ -1705,6 +1705,7 @@ public:
     propagate_const<proc_t*> fw_wound_spender;
     propagate_const<proc_t*> fw_sudden_doom;
     propagate_const<proc_t*> fw_death;
+    propagate_const<proc_t*> fw_desecreate_consume;
 
     // Decomposition
     propagate_const<proc_t*> decomposition;
@@ -1916,7 +1917,7 @@ public:
   void trigger_runic_empowerment( double rpcost );
   // Unholy
   void trigger_festering_wound( const action_state_t* state, unsigned n_stacks = 1, proc_t* proc = nullptr );
-  void burst_festering_wound( player_t* target, unsigned n = 1, proc_t* action = nullptr, bool apoc = false );
+  void burst_festering_wound( player_t* target, unsigned n = 1, proc_t* action = nullptr );
   void trigger_runic_corruption( proc_t* proc, double rpcost, double override_chance = -1.0,
                                  bool death_trigger = false );
   void trigger_bursting_sores( player_t* target, unsigned n = 1 );
@@ -7659,7 +7660,7 @@ struct apocalypse_t final : public death_knight_melee_attack_t
 
     int n_wounds = std::min( num_wounds, td->debuff.festering_wound->check() );
 
-    p()->burst_festering_wound( state->target, n_wounds, p()->procs.fw_apocalypse, true );
+    p()->burst_festering_wound( state->target, n_wounds, p()->procs.fw_apocalypse );
     p()->pets.apoc_ghouls.spawn( num_wounds );
 
     if ( p()->talent.unholy.magus_of_the_dead.ok() )
@@ -11822,8 +11823,13 @@ struct desecrate_damage_t : public death_knight_spell_t
   void impact( action_state_t* s ) override
   {
     death_knight_spell_t::impact( s );
-    p()->trigger_festering_wound( s, as<unsigned int>( p()->spell.desecrate_action->effectN( 1 ).base_value() ),
-                                  p()->procs.fw_desecrate );
+    death_knight_td_t* td = get_td( s->target );
+    unsigned int wound_count =
+        rng().range( as<unsigned int>( p()->spell.desecrate_action->effectN( 1 ).base_value() ) );
+    if ( td->debuff.festering_wound->check() )
+      p()->burst_festering_wound( s->target, wound_count, p()->procs.fw_desecreate_consume );
+    else
+      p()->trigger_festering_wound( s, wound_count, p()->procs.fw_desecrate );
   }
 };
 
@@ -12876,7 +12882,7 @@ void death_knight_t::trigger_bursting_sores( player_t* target, unsigned n )
   make_event<bs_event_t>( *sim, this, target, n );
 }
 
-void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t* proc, bool apoc )
+void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t* proc )
 {
   struct fs_burst_t : public event_t
   {
@@ -12886,8 +12892,8 @@ void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t
     proc_t* proc;
     bool apocalypse;
 
-    fs_burst_t( player_t* p, player_t* target, unsigned n, proc_t* proc, bool apoc )
-      : event_t( *p, 0_ms ), n( n ), target( target ), dk( p ), proc( proc ), apocalypse( apoc )
+    fs_burst_t( player_t* p, player_t* target, unsigned n, proc_t* proc )
+      : event_t( *p, 0_ms ), n( n ), target( target ), dk( p ), proc( proc )
     {
     }
 
@@ -12906,12 +12912,6 @@ void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t
       death_knight_td_t* td = p()->get_target_data( target );
 
       unsigned n_executes = std::min( n, as<unsigned>( td->debuff.festering_wound->check() ) );
-
-      // Apocalypse is currently bugged, acting as if it popped 4 wounds even if there are less on the target.
-      if ( apocalypse && p()->bugs )
-      {
-        n_executes = n;
-      }
 
       for ( unsigned i = 0; i < n_executes; ++i )
       {
@@ -12936,11 +12936,9 @@ void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t
             p()->buffs.festering_scythe_stacks->expire();
           }
         }
+        else if ( p()->buffs.festering_scythe->check() )
+          p()->buffs.festering_scythe->trigger();
       }
-
-      // Revert back to actual number of wounds before decrementing the debuff
-      if ( apocalypse && p()->bugs )
-        n_executes = std::min( n, as<unsigned>( td->debuff.festering_wound->check() ) );
 
       td->debuff.festering_wound->decrement( n_executes );
     }
@@ -12954,7 +12952,7 @@ void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t
     return;
   }
 
-  make_event<fs_burst_t>( *sim, this, target, n, proc, apoc );
+  make_event<fs_burst_t>( *sim, this, target, n, proc );
 }
 
 // Launches the repeating event for the Inexorable Assault talent
@@ -15715,10 +15713,11 @@ void death_knight_t::init_procs()
   procs.fw_legion_of_souls = get_proc( "Festering Wound from Legion of Souls" );
   procs.fw_desecrate       = get_proc( "Festering Wound from Desecrate" );
 
-  procs.fw_apocalypse    = get_proc( "Festering Wound Burst by Apocalypse" );
-  procs.fw_death         = get_proc( "Festering Wound Burst by Target Death" );
-  procs.fw_wound_spender = get_proc( "Festering Wound Burst by Wound Spender" );
-  procs.fw_sudden_doom   = get_proc( "Festering Wound Burst by Sudden Doom" );
+  procs.fw_apocalypse         = get_proc( "Festering Wound Burst by Apocalypse" );
+  procs.fw_death              = get_proc( "Festering Wound Burst by Target Death" );
+  procs.fw_wound_spender      = get_proc( "Festering Wound Burst by Wound Spender" );
+  procs.fw_sudden_doom        = get_proc( "Festering Wound Burst by Sudden Doom" );
+  procs.fw_desecreate_consume = get_proc( "Festering Wound Burst by Desecrate" );
 
   procs.coil_vs = get_proc( "Coils cast by Visceral Strength Proc" );
   procs.epi_vs  = get_proc( "Epidemic cast by Visceral Strength Proc" );

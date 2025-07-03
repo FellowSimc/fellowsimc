@@ -922,8 +922,8 @@ public:
     propagate_const<action_t*> arctic_assault_frostscythe;
 
     // Unholy
-    propagate_const<action_t*> bursting_sores;
-    propagate_const<action_t*> festering_wound;
+    action_t* bursting_sores;
+    action_t* festering_wound;
     propagate_const<action_t*> festering_wound_application;
     propagate_const<action_t*> virulent_eruption;
     propagate_const<action_t*> virulent_plague;
@@ -1917,7 +1917,7 @@ public:
   void trigger_runic_empowerment( double rpcost );
   // Unholy
   void trigger_festering_wound( const action_state_t* state, unsigned n_stacks = 1, proc_t* proc = nullptr );
-  void burst_festering_wound( player_t* target, unsigned n = 1, proc_t* action = nullptr );
+  void burst_festering_wound( player_t* target, unsigned n = 1, proc_t* action = nullptr, bool ss_crit = false );
   void trigger_runic_corruption( proc_t* proc, double rpcost, double override_chance = -1.0,
                                  bool death_trigger = false );
   void trigger_bursting_sores( player_t* target, unsigned n = 1 );
@@ -3353,7 +3353,7 @@ struct gargoyle_pet_t : public death_knight_pet_t
     affected_by_commander_of_the_dead = true;
     decomposition_can_extend          = true;
     tww1_4pc_proc                     = true;
-    affected_by_grave_mastery         = false;
+    affected_by_grave_mastery         = true;
   }
 
   struct gargoyle_strike_t : public pet_spell_t<gargoyle_pet_t>
@@ -9437,8 +9437,7 @@ struct bursting_sores_t final : public death_knight_spell_t
     : death_knight_spell_t( n, p, p->spell.bursting_sores_damage )
   {
     background          = true;
-    aoe                 = -1;
-    reduced_aoe_targets = data().effectN( 3 ).base_value();
+    aoe                 = data().max_targets() - 1;
   }
 
   // Bursting sores have a slight delay ingame, but nothing really significant
@@ -9461,6 +9460,19 @@ struct bursting_sores_t final : public death_knight_spell_t
 
     return tl.size();
   }
+
+  double composite_da_multiplier( const action_state_t* state ) const override
+  {
+    double m = death_knight_spell_t::composite_da_multiplier( state );
+
+    if ( ss_crit )
+      m *= 1.0 + p()->talent.unholy.scourge_strike->effectN( 5 ).percent();
+
+    return m;
+  }
+
+public:
+  bool ss_crit;
 };
 
 struct festering_wound_application_t final : public death_knight_spell_t
@@ -9477,7 +9489,8 @@ struct festering_wound_t final : public death_knight_spell_t
   festering_wound_t( std::string_view n, death_knight_t* p )
     : death_knight_spell_t( n, p, p->spell.festering_wound_damage ),
       bursting_sores( get_action<bursting_sores_t>( "bursting_sores", p ) ),
-      rp_gen( p->spec.festering_wound->effectN( 1 ).trigger()->effectN( 2 ).resource( RESOURCE_RUNIC_POWER ) )
+      rp_gen( p->spec.festering_wound->effectN( 1 ).trigger()->effectN( 2 ).resource( RESOURCE_RUNIC_POWER ) ),
+      ss_crit( false )
   {
     background = true;
     if ( p->talent.unholy.bursting_sores.ok() )
@@ -9486,16 +9499,29 @@ struct festering_wound_t final : public death_knight_spell_t
     }
   }
 
+  double composite_target_multiplier( player_t* t ) const override
+  {
+    double m = death_knight_spell_t::composite_target_multiplier( t );
+
+    if ( ss_crit )
+      m *= 1.0 + p()->talent.unholy.scourge_strike->effectN( 5 ).percent();
+
+    return m;
+  }
+
   void execute() override
   {
     death_knight_spell_t::execute();
 
     p()->resource_gain( RESOURCE_RUNIC_POWER, rp_gen, p()->gains.festering_wound, this );
+    debug_cast<bursting_sores_t*>( bursting_sores )->ss_crit = ss_crit;
   }
 
 private:
   action_t* bursting_sores;
   double rp_gen;
+public:
+  bool ss_crit;
 };
 
 struct festering_base_t : public death_knight_melee_attack_t
@@ -11288,7 +11314,7 @@ struct wound_spender_base_t : public death_knight_melee_attack_t
     death_knight_melee_attack_t::impact( state );
     auto td = get_td( state->target );
 
-    p()->burst_festering_wound( state->target, 1, p()->procs.fw_wound_spender );
+    p()->burst_festering_wound( state->target, 1, p()->procs.fw_wound_spender, state->result == RESULT_CRIT );
 
     if ( p()->talent.unholy.plaguebringer.ok() )
     {
@@ -11825,7 +11851,7 @@ struct desecrate_damage_t : public death_knight_spell_t
     death_knight_spell_t::impact( s );
     death_knight_td_t* td = get_td( s->target );
     unsigned int wound_count =
-        rng().range( as<unsigned int>( p()->spell.desecrate_action->effectN( 1 ).base_value() ) );
+        rng().range( as<unsigned int>( p()->spell.desecrate_action->effectN( 1 ).base_value() ) + 1 );
     if ( td->debuff.festering_wound->check() )
       p()->burst_festering_wound( s->target, wound_count, p()->procs.fw_desecreate_consume );
     else
@@ -12882,7 +12908,7 @@ void death_knight_t::trigger_bursting_sores( player_t* target, unsigned n )
   make_event<bs_event_t>( *sim, this, target, n );
 }
 
-void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t* proc )
+void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t* proc, bool ss_crit )
 {
   struct fs_burst_t : public event_t
   {
@@ -12890,10 +12916,10 @@ void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t
     player_t* target;
     player_t* dk;
     proc_t* proc;
-    bool apocalypse;
+    bool ss_crit;
 
-    fs_burst_t( player_t* p, player_t* target, unsigned n, proc_t* proc )
-      : event_t( *p, 0_ms ), n( n ), target( target ), dk( p ), proc( proc )
+    fs_burst_t( player_t* p, player_t* target, unsigned n, proc_t* proc, bool ss_crit )
+      : event_t( *p, 0_ms ), n( n ), target( target ), dk( p ), proc( proc ), ss_crit( ss_crit )
     {
     }
 
@@ -12915,6 +12941,8 @@ void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t
 
       for ( unsigned i = 0; i < n_executes; ++i )
       {
+        festering_wound_t* wound = debug_cast< festering_wound_t* >( p()->background_actions.festering_wound );
+        wound->ss_crit = ss_crit;
         p()->background_actions.festering_wound->execute_on_target( target );
         proc->occur();
       }
@@ -12952,7 +12980,7 @@ void death_knight_t::burst_festering_wound( player_t* target, unsigned n, proc_t
     return;
   }
 
-  make_event<fs_burst_t>( *sim, this, target, n, proc );
+  make_event<fs_burst_t>( *sim, this, target, n, proc, ss_crit );
 }
 
 // Launches the repeating event for the Inexorable Assault talent
@@ -16667,6 +16695,8 @@ void death_knight_t::apply_affecting_auras( action_t& action )
   action.apply_affecting_aura( talent.unholy.foul_infections );
   action.apply_affecting_aura( talent.unholy.menacing_magus );
   action.apply_affecting_aura( talent.unholy.plague_mastery );
+  action.apply_affecting_aura( talent.unholy.grave_mastery );
+  action.apply_affecting_aura( talent.unholy.desecrate );
 
   // Rider of the Apocalypse
   action.apply_affecting_aura( talent.rider.mawsworn_menace );

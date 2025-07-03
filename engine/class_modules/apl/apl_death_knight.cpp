@@ -698,7 +698,7 @@ void unholy( player_t* p )
     cds_shared->add_action( "legion_of_souls,if=(variable.st_planning|variable.adds_remain)&(death_knight.fwounded_targets<active_enemies|(cooldown.apocalypse.remains<3|cooldown.dark_transformation.remains<3))" );
     cds_shared->add_action( "summon_gargoyle,use_off_gcd=1,if=(variable.st_planning|variable.adds_remain)&(buff.commander_of_the_dead.up|!talent.commander_of_the_dead&active_enemies>=1)|fight_remains<25" );
     cds_shared->add_action( "antimagic_shell,if=death_knight.ams_absorb_percent>0&runic_power<30&rune<2" );
-    cds_shared->add_action( "desecrate,if=active_enemies>=2&(!raid_event.adds.exists&fight_remains<6|raid_event.adds.exists&raid_event.adds.remains<6)|active_enemies>1&death_knight.fwounded_targets<active_enemies" );
+    cds_shared->add_action( "desecrate,if=active_enemies>=2&(!raid_event.adds.exists&fight_remains<6|raid_event.adds.exists&raid_event.adds.remains<6)|active_enemies>1&death_knight.fwounded_targets<active_enemies|death_knight.fwounded_targets=active_enemies" );
 
     cleave->add_action( "any_dnd,if=!death_and_decay.ticking&variable.adds_remain&(cooldown.apocalypse.remains|!talent.apocalypse)", "Cleave" );
     cleave->add_action( "death_coil,if=!variable.pooling_runic_power&talent.improved_death_coil" );

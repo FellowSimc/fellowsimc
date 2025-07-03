@@ -9648,22 +9648,20 @@ void actions::rogue_action_t<Base>::trigger_unseen_blade( const action_state_t* 
 
   assert( p()->active.trickster.unseen_blade );
 
+  p()->cooldowns.unseen_blade_icd->start();
+
   p()->active.trickster.unseen_blade->execute_on_target( state->target );
+  
+  if ( p()->set_bonuses.tww3_trickster_2pc->ok() &&
+       p()->rng().roll( p()->set_bonuses.tww3_trickster_2pc->effectN( 2 ).percent() ) )
+  {
+    p()->active.trickster.unseen_blade->execute_on_target( state->target );
+  }
 
   if ( p()->buffs.disorienting_strikes->check() )
     p()->buffs.disorienting_strikes->decrement();
   else
     p()->buffs.unseen_blade_cd->trigger();
-
-  if ( p()->set_bonuses.tww3_trickster_2pc->ok() )
-  {
-    if ( this->rng().roll( p()->set_bonuses.tww3_trickster_2pc->effectN( 2 ).percent() ) )
-    {
-      p()->buffs.unseen_blade_cd->expire();
-    }
-  }
-
-  p()->cooldowns.unseen_blade_icd->start();
 }
 
 template <typename Base>

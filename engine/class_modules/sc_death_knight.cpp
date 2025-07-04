@@ -1699,6 +1699,7 @@ public:
     propagate_const<proc_t*> fw_abomination;
     propagate_const<proc_t*> fw_legion_of_souls;  // Legion of Souls talent
     propagate_const<proc_t*> fw_desecrate;
+    propagate_const<proc_t*> fw_soul_reaper;
 
     // Festering Wound consumed by
     propagate_const<proc_t*> fw_apocalypse;
@@ -11603,6 +11604,14 @@ struct soul_reaper_action_t final : public soul_reaper_t
     }
   }
 
+  void impact( action_state_t* s ) override
+  {
+    soul_reaper_t::impact( s );
+    // Not mentioned in patch notes anywhere, nor in data anywhere. Assuming this is a bug for now.
+    if ( p()->talent.unholy.reaping.ok() && p()->bugs && s->target->health_percentage() < 35 )
+      p()->trigger_festering_wound( s, 1, p()->procs.fw_soul_reaper );
+  }
+
   double composite_energize_amount( const action_state_t* s ) const override
   {
     double c = death_knight_melee_attack_t::composite_energize_amount( s );
@@ -15736,10 +15745,10 @@ void death_knight_t::init_procs()
   procs.fw_festering_scythe = get_proc( "Festering Wound from Festering Scythe" );
   procs.fw_infected_claws   = get_proc( "Festering Wound from Infected Claws" );
   procs.fw_unholy_assault   = get_proc( "Festering Wound from Unholy Assault" );
-
-  procs.fw_abomination     = get_proc( "Festering Wound from Abomination" );
-  procs.fw_legion_of_souls = get_proc( "Festering Wound from Legion of Souls" );
-  procs.fw_desecrate       = get_proc( "Festering Wound from Desecrate" );
+  procs.fw_abomination      = get_proc( "Festering Wound from Abomination" );
+  procs.fw_legion_of_souls  = get_proc( "Festering Wound from Legion of Souls" );
+  procs.fw_desecrate        = get_proc( "Festering Wound from Desecrate" );
+  procs.fw_soul_reaper      = get_proc( "Festering Wound from Soul Reaper" );
 
   procs.fw_apocalypse         = get_proc( "Festering Wound Burst by Apocalypse" );
   procs.fw_death              = get_proc( "Festering Wound Burst by Target Death" );

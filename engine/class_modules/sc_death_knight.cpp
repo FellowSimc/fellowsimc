@@ -11608,7 +11608,7 @@ struct soul_reaper_action_t final : public soul_reaper_t
   {
     soul_reaper_t::impact( s );
     // Not mentioned in patch notes anywhere, nor in data anywhere. Assuming this is a bug for now.
-    if ( p()->talent.unholy.reaping.ok() && p()->bugs && s->target->health_percentage() < 35 )
+    if ( p()->talent.unholy.reaping.ok() && p()->bugs && s->target->health_percentage() < data().effectN( 2 ).base_value() )
       p()->trigger_festering_wound( s, 1, p()->procs.fw_soul_reaper );
   }
 

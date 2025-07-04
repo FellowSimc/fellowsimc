@@ -16468,6 +16468,19 @@ void death_knight_action_t<Base>::apply_action_effects()
   parse_effects( p()->buffs.bind_in_darkness, p()->talent.deathbringer.bind_in_darkness );
   parse_effects( p()->buffs.exterminate );
   parse_effects( p()->buffs.reaper_of_souls );
+  auto tww3_rider_mask = effect_mask_t( true );
+  switch ( p()->specialization() )
+  {
+    case DEATH_KNIGHT_UNHOLY:
+      tww3_rider_mask.disable( 3, 5, 8 );
+      break;
+    case DEATH_KNIGHT_FROST:
+      tww3_rider_mask.disable( 2, 4 );
+      break;
+    default:
+      break;
+  }
+  parse_effects( p()->sets->set( HERO_RIDER_OF_THE_APOCALYPSE, TWW3, B2 ), tww3_rider_mask );
 
   // San'layn
   parse_effects( p()->buffs.visceral_strength_unholy, p()->talent.sanlayn.visceral_strength );

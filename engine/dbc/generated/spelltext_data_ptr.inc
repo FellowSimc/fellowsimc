@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.61787
-static const std::array<spelltext_data_t, 28035> __ptr_spelltext_data { {
+static const std::array<spelltext_data_t, 28036> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -27963,6 +27963,7 @@ static const std::array<spelltext_data_t, 28035> __ptr_spelltext_data { {
   { 1243105, "$@spelldesc373280", 0, 0 },
   { 1243106, "$@spelldesc373280", 0, 0 },
   { 1243118, "Your melee attacks have a chance to coalesce a warpstalker echo to strike with you, inflicting ${$<rolemult>*$s1} Arcane damage split between enemies in its path.", 0, 0 },
+  { 1243133, "$@spelldesc1243118", 0, 0 },
   { 1243162, "$@spelldesc1245978$@spelldesc1240891", 0, 0 },
   { 1243304, "$@spelldesc1227014", 0, 0 },
   { 1243373, "$@spelldesc1229038", 0, 0 },

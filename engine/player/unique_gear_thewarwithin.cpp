@@ -8691,6 +8691,22 @@ void perfidious_projector( special_effect_t& effect )
   effect.execute_action = dot;
 }
 
+// Incorporeal Warpclap
+// 1243118 Driver
+// 1243133 Damage
+void incorporeal_warpclaw( special_effect_t& effect )
+{
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
+  auto damage         = create_proc_action<generic_aoe_proc_t>( "incorporeal_warpstrike", effect, 1243133 );
+  damage->base_dd_min = damage->base_dd_max = effect.driver()->effectN( 1 ).average( effect );
+
+  effect.execute_action = damage;
+
+  new dbc_proc_callback_t( effect.player, effect );
+}
+
 // Weapons
 
 // 443384 driver
@@ -11732,6 +11748,7 @@ void register_special_effects()
   register_special_effect( 1242326, items::cursed_stone_idol );
   register_special_effect( 1235387, items::naazindhris_mystic_lash );
   register_special_effect( 1244636, items::perfidious_projector );
+  register_special_effect( 1243118, items::incorporeal_warpclaw );
 
   // Weapons
   register_special_effect( 443384, items::fateweaved_needle );

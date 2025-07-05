@@ -1559,6 +1559,7 @@ class SpellDataGenerator(DataGenerator):
          1241809, 1241809, # Cursed Stone Idol
          1239810, # Naazindhris Mystic Lash
          1244448, 1244444, # Perfidious Projector
+         1243133, # Incorporeal Warpclap
         ),
 
         # Warrior:

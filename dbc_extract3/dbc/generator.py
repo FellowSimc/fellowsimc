@@ -2137,6 +2137,7 @@ class SpellDataGenerator(DataGenerator):
           ( 1216988, 0 ),                           # Recently damaged by Blizzard (Freezing Winds talent)
           ( 1223801, 0 ),                           # Arcane Rebound
           ( 1217750, 0 ),                           # Master of Flame hidden buff
+          ( 1236209, 0 ),                           # Frostfire 4pc Glacial Spike
         ),
 
         # Warlock:

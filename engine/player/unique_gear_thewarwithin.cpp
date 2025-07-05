@@ -8707,6 +8707,66 @@ void incorporeal_warpclaw( special_effect_t& effect )
   new dbc_proc_callback_t( effect.player, effect );
 }
 
+// Mind-Fracturing Odium
+// 1245148 Driver
+// 1245637 Stacking Buff
+// 1245643 Haste Buff
+void mind_fracturing_odium( special_effect_t& effect )
+{
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
+  struct mind_fracturing_odium_cb_t final : public dbc_proc_callback_t
+  {
+    buff_t* stacking;
+    buff_t* stat;
+    bool decrementing;
+
+    mind_fracturing_odium_cb_t( const special_effect_t& e )
+      : dbc_proc_callback_t( e.player, e ), stacking( nullptr ), stat( nullptr ), decrementing( false )
+    {
+      stat = create_buff<stat_buff_t>( e.player, "arcane_insanity", e.player->find_spell( 1245643 ) )
+                 ->set_stat_from_effect_type( A_MOD_RATING, e.driver()->effectN( 1 ).average( e ) );
+
+      stacking = create_buff<buff_t>( e.player, "mindfracturing_odium", e.driver()->effectN( 1 ).trigger() )
+                     ->set_expire_callback( [ & ]( buff_t*, int, timespan_t ) {
+                       decrementing = false;
+                       stat->expire();
+                     } );
+
+      e.player->register_on_kill_callback( [ &, e ]( player_t* ) {
+        if ( !e.player->sim->event_mgr.canceled )
+          stacking->increment( 2 );
+      } );
+
+      e.player->register_on_arise_callback( effect.player, [ & ] {
+        make_repeating_event( *listener->sim, e.driver()->effectN( 1 ).trigger()->effectN( 2 ).period(), [ & ] {
+          if ( decrementing )
+            stacking->decrement();
+        } );
+      } );
+    }
+
+    void reset() override
+    {
+      dbc_proc_callback_t::reset();
+      decrementing = false;
+    }
+
+    void execute( action_t*, action_state_t* ) override
+    {
+      stacking->trigger();
+      if ( stacking->at_max_stacks() )
+      {
+        decrementing = true;
+        stat->trigger();
+      }
+    }
+  };
+
+  new mind_fracturing_odium_cb_t( effect );
+}
+
 // Weapons
 
 // 443384 driver
@@ -9790,6 +9850,9 @@ void ethereal_energy( special_effect_t& effect )
 
 void reshii_grace( special_effect_t& effect )
 {
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
   effect.player->passive_values.reshii_grace = effect.driver()->effectN( 1 ).percent();
 }
 
@@ -11755,6 +11818,7 @@ void register_special_effects()
   register_special_effect( 1235387, items::naazindhris_mystic_lash );
   register_special_effect( 1244636, items::perfidious_projector );
   register_special_effect( 1243118, items::incorporeal_warpclaw );
+  register_special_effect( 1245148, items::mind_fracturing_odium );
 
   // Weapons
   register_special_effect( 443384, items::fateweaved_needle );

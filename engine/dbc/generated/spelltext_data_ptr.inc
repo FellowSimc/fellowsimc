@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.61787
-static const std::array<spelltext_data_t, 28036> __ptr_spelltext_data { {
+static const std::array<spelltext_data_t, 28037> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -28003,6 +28003,7 @@ static const std::array<spelltext_data_t, 28036> __ptr_spelltext_data { {
   { 1245611, "The caster launches arcane energy towards players, inflicting $1245618s1 Arcane damage to players within $1245618A1 yards of the impact zone.", 0, 0 },
   { 1245618, "$@spelldesc1245611", 0, 0 },
   { 1245637, "$@spelldesc1245148", "At the tenth tear, succumb to Arcane Insanity.", 0 },
+  { 1245643, 0, "Haste increased by $1245148w1.", 0 },
   { 1245926, "All pet damage dealt increased by $s1%.", 0, 0 },
   { 1245948, "$@spelldesc1245978", 0, 0 },
   { 1245978, "The casters bind several players together for $d, causing them to snap towards each other and suffer $1243162s1 Chaos damage if they move further than $s1 yards apart.", 0, 0 },

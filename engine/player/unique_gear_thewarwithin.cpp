@@ -8769,7 +8769,8 @@ void mind_fracturing_odium( special_effect_t& effect )
 
     void execute( action_t*, action_state_t* ) override
     {
-      stacking->trigger();
+      if( !decrementing )
+        stacking->trigger();
       if ( stacking->at_max_stacks() )
       {
         decrementing = true;

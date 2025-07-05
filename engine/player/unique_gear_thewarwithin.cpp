@@ -8638,6 +8638,7 @@ void naazindhris_mystic_lash( special_effect_t& effect )
 {
   if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
     return;
+
   struct naazindhris_mystic_lash_t final : public generic_aoe_proc_t
   {
     naazindhris_mystic_lash_t( const special_effect_t& e, std::string_view n )
@@ -8652,7 +8653,7 @@ void naazindhris_mystic_lash( special_effect_t& effect )
     {
       double m = generic_aoe_proc_t::composite_da_multiplier( s );
 
-      m *= 1.0 + ( player->composite_mastery() / 100 );
+      m *= 1.0 + ( ( player->composite_mastery() - player->base.mastery ) / 100 );
 
       return m;
     }

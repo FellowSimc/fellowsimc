@@ -8664,6 +8664,33 @@ void naazindhris_mystic_lash( special_effect_t& effect )
   new dbc_proc_callback_t( effect.player, effect );
 }
 
+// Perfidious Projector
+// 1244636 Driver
+// 1235557 Value Spell
+// 1235566 Ticking spell
+// 1244444 Ground AoE Area Trigger
+// 1244448 Damage
+void perfidious_projector( special_effect_t& effect )
+{
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
+  auto value_spell = effect.player->find_spell( 1235557 );
+  assert( value_spell && "Perfidious Projector Value Spell not found" );
+
+  auto dot_spell = effect.player->find_spell( 1235566 );
+  auto n_ticks   = dot_spell->duration() / dot_spell->effectN( 1 ).period();
+
+  auto damage         = create_proc_action<generic_aoe_proc_t>( "shadowguard_to_me", effect, 1244448, true );
+  auto damage_val     = value_spell->effectN( 1 ).average( effect ) / n_ticks;
+  damage->base_dd_min = damage->base_dd_max = damage_val;
+
+  auto dot         = create_proc_action<generic_proc_t>( "perfidious_projector", effect, dot_spell );
+  dot->tick_action = damage;
+
+  effect.execute_action = dot;
+}
+
 // Weapons
 
 // 443384 driver
@@ -11704,6 +11731,7 @@ void register_special_effects()
   register_special_effect( 1235360, items::sigil_of_the_cosmic_hunt );
   register_special_effect( 1242326, items::cursed_stone_idol );
   register_special_effect( 1235387, items::naazindhris_mystic_lash );
+  register_special_effect( 1244636, items::perfidious_projector );
 
   // Weapons
   register_special_effect( 443384, items::fateweaved_needle );

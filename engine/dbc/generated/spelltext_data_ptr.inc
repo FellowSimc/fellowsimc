@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.61787
-static const std::array<spelltext_data_t, 28033> __ptr_spelltext_data { {
+static const std::array<spelltext_data_t, 28035> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -27980,6 +27980,8 @@ static const std::array<spelltext_data_t, 28033> __ptr_spelltext_data { {
   { 1244406, "Blocking, parrying, or dodging has a chance to awaken the Gauze causing it to lash out dealing $s1 Arcane damage split between nearby enemies while shielding you for $s2 damage for $1245431d.\r\n", 0, 0 },
   { 1244410, "Rip magical essence out of your target and consume it dealing ${$s1*$<rolemult>} Arcane damage while granting you $1247205s1 of your lowest secondary stat for $1247207d.\r\n\r\nIf the target was an Ethereal, your highest secondary stat is increased instead.", 0, 0 },
   { 1244417, "Your healing spell and abilities have a very high chance to summon a Twisted Mana Sprite to assist you in combat for $1247081d1. Twisted Mana Sprite periodically heal a random nearby ally for ${$s1*$<healingrolemult>}. Overhealing is converted into an absorb shield for $1247511d.\r\n\r\n", 0, 0 },
+  { 1244444, "$@spelldesc1235566\r\n\r\n", 0, 0 },
+  { 1244448, "$@spelldesc1235566", 0, 0 },
   { 1244636, "Compel an oathbound Shadowguard squad to annihilate your target and nearby enemies, dealing $1235557s1 Cosmic damage split between them.\r\n\r\n$@spelldesc1240903", 0, 0 },
   { 1244920, "Shows the location of all nearby wild pets on the minimap.", "Tracking Wild Pets.", 0 },
   { 1245032, "Nether Phantoms ambush you and strike from the shadows, inflicting $1245039s1 Shadow damage. Failing to face a phantom as it dashes instead inflicts $1245171s1 Shadow damage.", 0, 0 },

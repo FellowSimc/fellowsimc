@@ -1927,6 +1927,7 @@ struct mage_spell_t : public spell_t
 
   bool calculate_on_impact;
   unsigned impact_flags;
+  double base_ignite_multiplier = 1.0;
 
 public:
   mage_spell_t( std::string_view n, mage_t* p, const spell_data_t* s = spell_data_t::nil() ) :
@@ -2307,6 +2308,9 @@ public:
     if ( s->result_total <= 0.0 )
       return;
 
+    if ( triggers.ignite )
+      trigger_ignite( s );
+
     if ( triggers.overflowing_energy && p()->talents.overflowing_energy.ok() && s->result_type == result_amount_type::DMG_DIRECT )
     {
       // TODO: This isn't perfect, but currently describes all "non AoE" spells mages have
@@ -2376,6 +2380,53 @@ public:
 
     if ( channeled && affected_by.ice_floes )
       p()->buffs.ice_floes->decrement();
+  }
+
+  virtual double composite_ignite_multiplier( const action_state_t* s ) const
+  {
+    double m = base_ignite_multiplier;
+
+    if ( !p()->buffs.combustion->check() )
+      m *= 1.0 + p()->talents.master_of_flame->effectN( 1 ).percent();
+
+    if ( auto td = find_td( s->target ) )
+      m *= 1.0 + td->debuffs.controlled_destruction->check_stack_value();
+
+    return m;
+  }
+
+  void trigger_ignite( action_state_t* s )
+  {
+    if ( !p()->spec.ignite->ok() )
+      return;
+
+    double m = s->target_da_multiplier;
+    if ( m <= 0.0 )
+      return;
+
+    double trigger_dmg = s->result_total;
+
+    if ( p()->bugs && s->result == RESULT_CRIT )
+    {
+      double spell_bonus  = composite_crit_damage_bonus_multiplier() * composite_target_crit_damage_bonus_multiplier( s->target );
+      double global_bonus = composite_player_critical_multiplier( s );
+      trigger_dmg /= 1.0 + s->result_crit_bonus;
+      trigger_dmg *= ( 1.0 + spell_bonus ) * global_bonus;
+      // TODO: This calculation is incomplete because it doesn't take into
+      // account crit_bonus or the pvp rules. However, in normal situations
+      // it's pretty close to what happens in game.
+    }
+
+    double amount = trigger_dmg / m * p()->cache.mastery_value();
+    if ( amount <= 0.0 )
+      return;
+
+    amount *= composite_ignite_multiplier( s );
+
+    if ( !p()->action.ignite->get_dot( s->target )->is_ticking() )
+      p()->procs.ignite_applied->occur();
+
+    residual_action::trigger( p()->action.ignite, s->target, amount );
   }
 
   void trigger_winters_chill( const action_state_t* s, int stacks = -1 )
@@ -2739,9 +2790,6 @@ struct fire_mage_spell_t : public mage_spell_t
 
     if ( result_is_hit( s->result ) )
     {
-      if ( triggers.ignite )
-        trigger_ignite( s );
-
       if ( tt_applicable( s, triggers.hot_streak ) )
         handle_hot_streak( s->composite_crit_chance(), s->result == RESULT_CRIT ? HS_CRIT : HS_HIT );
 
@@ -2863,53 +2911,6 @@ struct fire_mage_spell_t : public mage_spell_t
       mul *= 1.0 + p()->buffs.flame_accelerant->check_value();
 
     return mul;
-  }
-
-  virtual double composite_ignite_multiplier( const action_state_t* s ) const
-  {
-    double m = 1.0;
-
-    if ( !p()->buffs.combustion->check() )
-      m *= 1.0 + p()->talents.master_of_flame->effectN( 1 ).percent();
-
-    if ( auto td = find_td( s->target ) )
-      m *= 1.0 + td->debuffs.controlled_destruction->check_stack_value();
-
-    return m;
-  }
-
-  void trigger_ignite( action_state_t* s )
-  {
-    if ( !p()->spec.ignite->ok() )
-      return;
-
-    double m = s->target_da_multiplier;
-    if ( m <= 0.0 )
-      return;
-
-    double trigger_dmg = s->result_total;
-
-    if ( p()->bugs && s->result == RESULT_CRIT )
-    {
-      double spell_bonus  = composite_crit_damage_bonus_multiplier() * composite_target_crit_damage_bonus_multiplier( s->target );
-      double global_bonus = composite_player_critical_multiplier( s );
-      trigger_dmg /= 1.0 + s->result_crit_bonus;
-      trigger_dmg *= ( 1.0 + spell_bonus ) * global_bonus;
-      // TODO: This calculation is incomplete because it doesn't take into
-      // account crit_bonus or the pvp rules. However, in normal situations
-      // it's pretty close to what happens in game.
-    }
-
-    double amount = trigger_dmg / m * p()->cache.mastery_value();
-    if ( amount <= 0.0 )
-      return;
-
-    amount *= composite_ignite_multiplier( s );
-
-    if ( !p()->action.ignite->get_dot( s->target )->is_ticking() )
-      p()->procs.ignite_applied->occur();
-
-    residual_action::trigger( p()->action.ignite, s->target, amount );
   }
 
   // TODO: When an Ignite has a partial tick, how is the bank amount calculated to determine valid spread targets?

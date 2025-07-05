@@ -177,6 +177,7 @@ enum runeforge_apocalypse
 
 enum rider_of_the_apocalypse
 {
+  NONE,
   WHITEMANE,
   TROLLBANE,
   NAZGRIM,
@@ -13006,10 +13007,35 @@ void death_knight_t::start_inexorable_assault()
 
 int death_knight_t::get_random_rider()
 {
-  int n = static_cast<int>( rng().range( 0, rider_of_the_apocalypse::ALL_RIDERS ) );
+  int n = static_cast<int>( rng().range( 1, rider_of_the_apocalypse::ALL_RIDERS ) );
+
+  // If all riders are active, dont bother running the rest of the function, no random riders can be spawned.
+  if ( pets.mograine.active_pet() != nullptr && pets.nazgrim.active_pet() != nullptr &&
+       pets.trollbane.active_pet() != nullptr && pets.whitemane.active_pet() != nullptr )
+    return rider_of_the_apocalypse::NONE;
+
   if ( n == last_summoned_rider )
   {
     n = get_random_rider();
+  }
+  switch ( n )
+  {
+    case rider_of_the_apocalypse::MOGRAINE:
+      if ( pets.mograine.active_pet() != nullptr )
+        n = get_random_rider();
+      break;
+    case rider_of_the_apocalypse::NAZGRIM:
+      if ( pets.nazgrim.active_pet() != nullptr )
+        n = get_random_rider();
+      break;
+    case rider_of_the_apocalypse::TROLLBANE:
+      if ( pets.trollbane.active_pet() != nullptr )
+        n = get_random_rider();
+      break;
+    case rider_of_the_apocalypse::WHITEMANE:
+      if ( pets.whitemane.active_pet() != nullptr )
+        n = get_random_rider();
+      break;
   }
   last_summoned_rider = n;
   return n;
@@ -13022,6 +13048,9 @@ void death_knight_t::summon_rider( timespan_t duration, bool random )
     n = get_random_rider();
   else
     n = rider_of_the_apocalypse::ALL_RIDERS;
+
+  if ( n == rider_of_the_apocalypse::NONE )
+    return;
 
   std::vector<action_t*> summon_riders;
 
@@ -13044,6 +13073,8 @@ void death_knight_t::summon_rider( timespan_t duration, bool random )
       summon_riders.push_back( pet_summon.summon_nazgrim );
       summon_riders.push_back( pet_summon.summon_trollbane );
       summon_riders.push_back( pet_summon.summon_whitemane );
+      break;
+    default:
       break;
   }
 

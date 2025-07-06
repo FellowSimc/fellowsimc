@@ -11397,7 +11397,9 @@ private:
 struct legion_of_souls_t : public death_knight_spell_t
 {
   legion_of_souls_t( death_knight_t* p, std::string_view options_str )
-    : death_knight_spell_t( "legion_of_souls", p, p->talent.unholy.legion_of_souls ), damage( nullptr )
+    : death_knight_spell_t( "legion_of_souls", p, p->talent.unholy.legion_of_souls ),
+      damage( nullptr ),
+      rider_duration( 0_ms )
   {
     may_miss = may_dodge = may_parry = false;
 
@@ -11411,6 +11413,11 @@ struct legion_of_souls_t : public death_knight_spell_t
       tick_action->stats = stats;
       stats->action_list.push_back( tick_action );
     }
+
+    if ( p->talent.rider.apocalypse_now.ok() )
+    {
+      rider_duration = p->spell.apocalypse_now_data->duration();
+    }
   }
 
   void execute() override
@@ -11421,6 +11428,11 @@ struct legion_of_souls_t : public death_knight_spell_t
     {
       legion_of_souls_damage_t* damage_action = debug_cast<legion_of_souls_damage_t*>( damage );
       damage_action->set_wounds_applied( target, 0 );
+    }
+
+    if ( p()->talent.rider.apocalypse_now.ok() )
+    {
+      p()->summon_rider( rider_duration, false );
     }
 
     p()->buffs.death_and_decay->trigger();
@@ -11436,6 +11448,7 @@ struct legion_of_souls_t : public death_knight_spell_t
 
 private:
   action_t* damage;
+  timespan_t rider_duration;
 };
 
 // Desecrate ================================================================

@@ -2622,7 +2622,14 @@ struct lesser_weapon_cb_t : public dbc_proc_callback_t
     {
       p->active.lesser_weapon_proc_heal->execute_on_target( s->target );
     }
-    p->get_target_data( player )->buffs.lesser_weapon[ index ].decrement();
+    if (p == player)
+    {
+      p->buffs.lightsmith.lesser_weapon[ index ]->decrement();
+    }
+    else
+    {
+      p->get_target_data( player )->buffs.lesser_weapon->decrement();
+    }
   }
 };
 
@@ -2803,7 +2810,7 @@ void paladin_t::cast_holy_armaments( player_t* target, armament usedArmament, ar
             if ( _p != this )
             {
               if ( usedArmament == SACRED_WEAPON )
-                get_target_data( _p )->buffs.lesser_weapon[ 0 ].trigger( 5 );
+                get_target_data( _p )->buffs.lesser_weapon->trigger( 5 );
               else
                 get_target_data( _p )->buffs.lesser_bulwark->execute();
             }
@@ -2858,7 +2865,8 @@ dbc_proc_callback_t* paladin_t::create_sacred_weapon_callback( paladin_t* source
 dbc_proc_callback_t* paladin_t::create_lesser_weapon_callback(paladin_t* source, player_t* target, int index)
 {
   auto lesser_weapon_effect = new special_effect_t( target );
-  lesser_weapon_effect->name_str = "lesser_weapon_cb_" + source->name_str + "_" + target->name_str;
+  lesser_weapon_effect->name_str =
+      fmt::format( "lesser_weapon_cb_{}_{}_{}", source->name_str, target->name_str, index );
   lesser_weapon_effect->spell_id = 1239091;
   lesser_weapon_effect->type     = SPECIAL_EFFECT_EQUIP;
   

@@ -16256,7 +16256,7 @@ void death_knight_t::parse_player_effects()
   auto mograines_might_mask = effect_mask_t( true );
   if ( specialization() == DEATH_KNIGHT_UNHOLY )
   {
-    mograines_might_mask.disable(4);
+    mograines_might_mask.disable( 4 );
   }
   parse_effects( buffs.mograines_might, talent.rider.mograines_might, mograines_might_mask );
   parse_target_effects( d_fn( &death_knight_td_t::debuffs_t::chains_of_ice_trollbane_damage ),

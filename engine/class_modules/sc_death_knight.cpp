@@ -9405,13 +9405,6 @@ struct frostwyrms_fury_damage_t : public death_knight_spell_t
       p()->summon_rider( p()->spell.apocalypse_now_data->duration(), false );
     }
   }
-
-  void impact( action_state_t* s ) override
-  {
-    death_knight_spell_t::impact( s );
-    if ( p()->talent.frost.frozen_dominion->ok() )
-      p()->buffs.frozen_dominion->trigger();
-  }
 };
 
 struct frostwyrms_fury_t final : public death_knight_spell_t

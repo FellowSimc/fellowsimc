@@ -2725,9 +2725,21 @@ public:
 
 struct kill_command_bm_t: public hunter_pet_attack_t<hunter_main_pet_base_t>
 {
+  struct
+  {
+    double replicate_amount = 0;
+    int max_targets = 0;
+  } phantom_pain;
+
   kill_command_bm_t( hunter_main_pet_base_t* p, const spell_data_t* s ) : hunter_pet_attack_t( "kill_command", p, s )
   {
     background = dual = proc = true;
+
+    if ( o()->talents.phantom_pain.ok() )
+    {
+      phantom_pain.replicate_amount = o()->talents.phantom_pain->effectN( 1 ).percent();
+      phantom_pain.max_targets = o()->talents.phantom_pain->effectN( 3 ).base_value();
+    }
   }
 
   void execute() override
@@ -2756,18 +2768,19 @@ struct kill_command_bm_t: public hunter_pet_attack_t<hunter_main_pet_base_t>
       o() -> get_target_data( s -> target ) -> debuffs.wild_instincts -> trigger();
     }
 
-    if ( o()->talents.phantom_pain.ok() )
+    if ( phantom_pain.replicate_amount > 0 )
     {
-      double replicate_amount = o()->talents.phantom_pain->effectN( 1 ).percent();
+      int target_count = 0;
       for ( player_t* t : sim->target_non_sleeping_list )
       {
         if ( t->is_enemy() && !t->demise_event && t != s->target )
         {
-          hunter_td_t* td = o()->get_target_data( t );
-          if ( td->dots.black_arrow->is_ticking() )
+          if ( o()->get_target_data( t )->dots.black_arrow->is_ticking() )
           {
-            double amount = replicate_amount * s->result_amount;
+            double amount = phantom_pain.replicate_amount * s->result_amount;
             o()->actions.phantom_pain->execute_on_target( t, amount );
+            if ( ++target_count = phantom_pain.max_targets )
+              break;
           }
         }
       }
@@ -5417,6 +5430,12 @@ struct aimed_shot_base_t : public hunter_ranged_attack_t
 
   timespan_t target_acquisition_reduction;
 
+  struct
+  {
+    double replicate_amount = 0;
+    int max_targets = 0;
+  } phantom_pain;
+
   aimed_shot_base_t( util::string_view n, hunter_t* p, spell_data_ptr_t s ) :
     hunter_ranged_attack_t( n, p, s ),
     trick_shots_targets( as<int>( p->talents.trick_shots_data->effectN( 1 ).base_value() + p->talents.light_ammo->effectN( 1 ).base_value() ) ),
@@ -5424,6 +5443,12 @@ struct aimed_shot_base_t : public hunter_ranged_attack_t
   {
     radius = 8;
     base_aoe_multiplier = p->talents.trick_shots_data->effectN( 4 ).percent();
+
+    if ( p->talents.phantom_pain.ok() )
+    {
+      phantom_pain.replicate_amount = p->talents.phantom_pain->effectN( 2 ).percent();
+      phantom_pain.max_targets = p->talents.phantom_pain->effectN( 3 ).base_value();
+    }
   }
 
   double action_multiplier() const override
@@ -5522,18 +5547,19 @@ struct aimed_shot_base_t : public hunter_ranged_attack_t
       }
     }
 
-    if ( p()->talents.phantom_pain.ok() )
+    if ( phantom_pain.replicate_amount > 0 )
     {
-      double replicate_amount = p()->talents.phantom_pain->effectN( 1 ).percent() + p()->specs.marksmanship_hunter->effectN( 15 ).percent();
+      int target_count = 0;
       for ( player_t* t : sim->target_non_sleeping_list )
       {
         if ( t->is_enemy() && !t->demise_event && t != s->target )
         {
-          hunter_td_t* td = p()->get_target_data( t );
-          if ( td->dots.black_arrow->is_ticking() )
+          if ( p()->get_target_data( t )->dots.black_arrow->is_ticking() )
           {
-            double amount = replicate_amount * s->result_amount;
+            double amount = phantom_pain.replicate_amount * s->result_amount;
             p()->actions.phantom_pain->execute_on_target( t, amount );
+            if ( ++target_count >= phantom_pain.max_targets )
+              break;
           }
         }
       }

@@ -12329,24 +12329,24 @@ void death_knight_t::consume_killing_machine( proc_t* proc, timespan_t total_del
       buffs.breath_of_sindragosa->extend_duration(this, base_extension * decrement_count);
     }
 
+    if ( talent.frost.bonegrinder.ok() && !buffs.bonegrinder_frost->up() )
+    {
+      buffs.bonegrinder_crit->trigger( decrement_count );
+      if ( buffs.bonegrinder_crit->at_max_stacks() )
+      {
+        buffs.bonegrinder_frost->trigger();
+        buffs.bonegrinder_crit->expire();
+      }
+    }
+
+    if ( rng().roll( talent.frost.murderous_efficiency->effectN( 1 ).percent() ) )
+    {
+      replenish_rune( as<int>( spell.murderous_efficiency_gain->effectN( 1 ).base_value() ),
+                      gains.murderous_efficiency );
+    }
+
     for ( int i = decrement_count; i > 0; --i )
     {
-      if ( talent.frost.bonegrinder.ok() && !buffs.bonegrinder_frost->up() )
-      {
-        buffs.bonegrinder_crit->trigger();
-        if ( buffs.bonegrinder_crit->at_max_stacks() )
-        {
-          buffs.bonegrinder_frost->trigger();
-          buffs.bonegrinder_crit->expire();
-        }
-      }
-
-      if ( rng().roll( talent.frost.murderous_efficiency->effectN( 1 ).percent() ) )
-      {
-        replenish_rune( as<int>( spell.murderous_efficiency_gain->effectN( 1 ).base_value() ),
-                        gains.murderous_efficiency );
-      }
-
       if ( talent.frost.arctic_assault.ok() )
       {
         // Arctic Assault fires on a delay after consuming Killing Machine.

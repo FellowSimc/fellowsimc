@@ -11471,6 +11471,12 @@ struct desecrate_damage_t : public death_knight_spell_t
     return m;
   }
 
+  void execute() override
+  {
+    death_knight_spell_t::execute();
+    p()->buffs.desecrate_buff->expire();
+  }
+
   void impact( action_state_t* s ) override
   {
     death_knight_spell_t::impact( s );

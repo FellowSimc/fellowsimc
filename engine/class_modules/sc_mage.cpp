@@ -9093,6 +9093,16 @@ parsed_assisted_combat_rule_t mage_t::parse_assisted_combat_rule( const assisted
              "This should check stacks on player instead of the target." };
   }
 
+  if ( rule.condition_type == PLAYER_AURA_APPLICATION_GREATER && rule.condition_value_1 == 384452 )
+  {
+    assert( rule.condition_value_3 == 0 );
+    if ( bugs )
+      return { "0", "This will never trigger because it checks for stacks of the wrong Arcane Harmony spell." };
+
+    return { fmt::format( "buff.arcane_harmony.stack>={}", rule.condition_value_2 ),
+             "This should check stacks of the correct spell." };
+  }
+
   return player_t::parse_assisted_combat_rule( rule, step );
 }
 

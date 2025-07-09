@@ -4006,20 +4006,23 @@ std::unique_ptr<expr_t> action_t::create_expression( std::string_view name )
     return std::make_unique<target_proxy_expr_t>( *this, tail );
   }
 
-  if ( ( splits.size() == 3 && splits[ 0 ] == "action" ) || splits[ 0 ] == "in_flight" || splits[ 0 ] == "in_flight_count" ||
-       splits[ 0 ] == "in_flight_to_target" || splits[ 0 ] == "in_flight_remains" || splits[ 0 ] == "in_flight_to_target_count" )
+  auto is_in_flight_expr_name = [] ( std::string_view str ) {
+    return str == "in_flight" || str == "in_flight_count" || str == "in_flight_to_target" ||
+           str == "in_flight_remains" || str == "in_flight_to_target_count";
+  };
+
+  if ( ( splits.size() == 3 && splits[ 0 ] == "action" ) || is_in_flight_expr_name( splits[ 0 ] ) )
   {
     std::vector<action_t*> in_flight_list;
-    bool in_flight_singleton = ( splits[ 0 ] == "in_flight" || splits[ 0 ] == "in_flight_to_target" ||
-                                 splits[ 0 ] == "in_flight_remains" || splits[ 0 ] == "in_flight_to_target_count" );
-    auto action_name  = ( in_flight_singleton ) ? name_str : splits[ 1 ];
+    bool in_flight_singleton = is_in_flight_expr_name( splits[ 0 ] );
+    auto action_name = in_flight_singleton ? name_str : splits[ 1 ];
+    bool is_in_flight_expr = in_flight_singleton || is_in_flight_expr_name( splits[ 2 ] );
     for ( size_t i = 0; i < player->action_list.size(); ++i )
     {
       action_t* action = player->action_list[ i ];
       if ( action->name_str == action_name )
       {
-        if ( in_flight_singleton || splits[ 2 ] == "in_flight" ||
-          splits[ 2 ] == "in_flight_to_target" || splits[ 2 ] == "in_flight_remains" )
+        if ( is_in_flight_expr )
         {
           in_flight_list.push_back( action );
         }
@@ -4029,6 +4032,7 @@ std::unique_ptr<expr_t> action_t::create_expression( std::string_view name )
         }
       }
     }
+
     if ( !in_flight_list.empty() )
     {
       if ( splits[ 0 ] == "in_flight" || ( !in_flight_singleton && splits[ 2 ] == "in_flight" ) )

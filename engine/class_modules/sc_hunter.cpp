@@ -1898,8 +1898,8 @@ struct fenryr_t final : public dire_critter_t
 
   fenryr_t( hunter_t* owner, util::string_view n = "fenryr" ) : dire_critter_t( owner, n )
   {
-    owner_coeff.ap_from_ap = 0.37;
-    auto_attack_multiplier = 7;
+    // 9-7-25 Hati and Fenryr base damage increased to about 2x of a normal Dire Beast's damage.
+    owner_coeff.ap_from_ap = 2;
     main_hand_weapon.swing_time = 1.5_s;
   }
 
@@ -1934,8 +1934,8 @@ struct hati_t final : public dire_critter_t
 {
   hati_t( hunter_t* owner, util::string_view n = "hati" ) : dire_critter_t( owner, n )
   {
-    owner_coeff.ap_from_ap = 0.37;
-    auto_attack_multiplier = 7;
+   // 9-7-25 Hati and Fenryr base damage increased to about 2x of a normal Dire Beast's damage.
+    owner_coeff.ap_from_ap = 2;
     main_hand_weapon.swing_time = 1.5_s;
   }
 };
@@ -1971,9 +1971,9 @@ struct bear_t final : public dire_critter_t
 
   bear_t( hunter_t* owner, util::string_view n = "bear" ) : dire_critter_t( owner, n )
   {
-    // TODO check and update
-    owner_coeff.ap_from_ap = 0.7;
-    auto_attack_multiplier = o()->specialization() == HUNTER_SURVIVAL ? 10 : 8;
+    owner_coeff.ap_from_ap = 1;
+    // TODO check both specs
+    auto_attack_multiplier = o()->specialization() == HUNTER_SURVIVAL ? 6.5625 : 5.25;
     main_hand_weapon.swing_time = 1.5_s;
   }
 

@@ -3137,16 +3137,6 @@ struct ghoul_pet_t final : public base_ghoul_pet_t
     dt_auto_t( ghoul_pet_t* p, std::string_view name ) : auto_attack_melee_t( p, name )
     {
     }
-
-    double composite_da_multiplier( const action_state_t* state ) const override
-    {
-      double m = auto_attack_melee_t<ghoul_pet_t>::composite_da_multiplier( state );
-
-      if ( pet()->blood_rush->check() )
-        m *= 1.0 + pet()->blood_rush->check_value();
-
-      return m;
-    }
   };
 
   ghoul_pet_t( death_knight_t* owner, bool guardian = true ) : base_ghoul_pet_t( owner, "ghoul", guardian )
@@ -3177,6 +3167,9 @@ struct ghoul_pet_t final : public base_ghoul_pet_t
 
       if ( ghoulish_frenzy->check() )
         m *= 1.0 + ghoulish_frenzy->check_value();
+
+      if ( blood_rush->check() )
+        m *= 1.0 + blood_rush->check_value();
     }
 
     return m;
@@ -16047,6 +16040,7 @@ void death_knight_action_t<Base>::apply_action_effects()
   parse_effects( p()->buffs.unholy_assault );
   parse_effects( p()->buffs.sudden_doom, p()->talent.unholy.harbinger_of_doom );
   parse_effects( p()->buffs.plaguebringer, p()->talent.unholy.plaguebringer );
+  parse_effects( p()->buffs.commander_of_the_dead, p()->talent.unholy.commander_of_the_dead );
   parse_effects( p()->mastery.dreadblade );
   parse_effects( p()->buffs.winning_streak_unholy, [ & ]( double v ) {
     v *= 0.1;  // Divides by 10 in spell data
@@ -16086,6 +16080,8 @@ void death_knight_action_t<Base>::apply_action_effects()
       [ & ]( double v ) {
         if ( p()->spec.blood_death_knight->ok() )
           v += p()->spec.blood_death_knight->effectN( 19 ).percent();
+        if ( p()->spec.unholy_death_knight->ok() )
+          v += p()->spec.unholy_death_knight->effectN( 21 ).percent();
         if ( p()->buffs.gift_of_the_sanlayn->check() )
           v *= 1.0 + p()->buffs.gift_of_the_sanlayn->check_value();
         return v;
@@ -16120,6 +16116,8 @@ void death_knight_action_t<Base>::apply_target_effects()
   // Unholy
   parse_target_effects( d_fn( &death_knight_td_t::debuffs_t::death_rot ), p()->spell.death_rot_debuff );
   parse_target_effects( d_fn( &death_knight_td_t::debuffs_t::rotten_touch ), p()->spell.rotten_touch_debuff );
+  parse_target_effects( d_fn( &death_knight_td_t::debuffs_t::unholy_aura ), p()->spell.unholy_aura_debuff,
+                        p()->talent.unholy.unholy_aura );
 
   // Rider of the Apocalypse
   if( p()->sets->has_set_bonus( HERO_RIDER_OF_THE_APOCALYPSE, TWW3, B4 ) )

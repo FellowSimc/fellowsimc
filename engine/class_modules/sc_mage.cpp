@@ -4434,7 +4434,7 @@ struct comet_storm_projectile_t final : public frost_mage_spell_t
       triggers.ignite = true;
       const auto* set = p->sets->set( HERO_FROSTFIRE, TWW3, B2 );
       base_ignite_multiplier = set->effectN( 1 ).percent();
-      base_multiplier *= 1.0 + set->effectN( 3 ).percent();
+      base_multiplier *= 1.0 + set->effectN( 4 ).percent();
     }
   }
 
@@ -5166,7 +5166,7 @@ struct frostbolt_t final : public frost_mage_spell_t
       if ( p->sets->has_set_bonus( HERO_FROSTFIRE, TWW3, B2 ) )
       {
         triggers.ignite_2pc = true;
-        base_dd_multiplier *= 1.0 + p->sets->set( HERO_FROSTFIRE, TWW3, B2 )->effectN( 4 ).percent();
+        base_dd_multiplier *= 1.0 + p->sets->set( HERO_FROSTFIRE, TWW3, B2 )->effectN( 5 ).percent();
       }
     }
     enable_calculate_on_impact( frostfire ? 468655 : 228597 );
@@ -5861,7 +5861,7 @@ struct ice_nova_t final : public frost_mage_spell_t
       triggers.ignite = true;
       const auto* set = p->sets->set( HERO_FROSTFIRE, TWW3, B2 );
       base_ignite_multiplier = set->effectN( 1 ).percent();
-      base_multiplier *= 1.0 + set->effectN( 3 ).percent();
+      base_multiplier *= 1.0 + set->effectN( 4 ).percent();
     }
 
     if ( excess )
@@ -6213,7 +6213,7 @@ struct meteor_impact_t final : public fire_mage_spell_t
     if ( type == meteor_type::ISOTHERMIC && p->sets->has_set_bonus( HERO_FROSTFIRE, TWW3, B2 ) )
     {
       triggers.ignite_2pc = true;
-      base_multiplier *= 1.0 + p->sets->set( HERO_FROSTFIRE, TWW3, B2 )->effectN( 4 ).percent();
+      base_multiplier *= 1.0 + p->sets->set( HERO_FROSTFIRE, TWW3, B2 )->effectN( 6 ).percent();
     }
   }
 
@@ -7256,7 +7256,7 @@ struct frostfire_burst_t final : public mage_spell_t
       triggers.ignite_2pc = !is_fire;
       const auto* set = p->sets->set( HERO_FROSTFIRE, TWW3, B2 );
       base_ignite_multiplier = set->effectN( 1 ).percent();
-      base_multiplier *= 1.0 + set->effectN( is_fire ? 3 : 4 ).percent();
+      base_multiplier *= 1.0 + set->effectN( is_fire ? 4 : 6 ).percent();
     }
   }
 

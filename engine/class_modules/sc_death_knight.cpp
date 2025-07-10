@@ -7623,7 +7623,7 @@ struct blood_boil_t final : public death_knight_spell_t
     p()->trigger_drw_action( DRW_ACTION_BLOOD_BOIL );
 
     if ( p()->talent.sanlayn.visceral_strength->ok() && execute_state->n_targets >= p()->talent.sanlayn.visceral_strength->effectN( 2 ).base_value() )
-      p()->buffs.bone_shield->trigger( p()->talent.sanlayn.visceral_strength->effectN( 3 ).base_value() );
+      p()->buffs.bone_shield->trigger( as<int>( p()->talent.sanlayn.visceral_strength->effectN( 3 ).base_value() ) );
   }
 
   void impact( action_state_t* state ) override
@@ -11329,12 +11329,14 @@ struct legion_of_souls_damage_t : public death_knight_spell_t
     aoe                 = -1;
     reduced_aoe_targets = p->talent.unholy.legion_of_souls->effectN( 4 ).base_value();
     max_wounds          = as<int>( p->talent.unholy.legion_of_souls->effectN( 3 ).base_value() );
+    for ( auto& target : sim->target_list )
+      target->register_on_kill_callback( [ & ]( player_t* t ) { set_wounds_applied( t, 0 ); } );
   }
 
   void reset() override
   {
     death_knight_spell_t::reset();
-    for ( auto& target : sim->target_non_sleeping_list )
+    for ( auto& target : sim->target_list )
     {
       set_wounds_applied( target, 0 );
     }
@@ -11405,7 +11407,7 @@ struct legion_of_souls_t : public death_knight_spell_t
   {
     death_knight_spell_t::execute();
 
-    for ( auto& target : sim->target_non_sleeping_list )
+    for ( auto& target : sim->target_list )
     {
       legion_of_souls_damage_t* damage_action = debug_cast<legion_of_souls_damage_t*>( damage );
       damage_action->set_wounds_applied( target, 0 );
@@ -14906,7 +14908,7 @@ void death_knight_t::create_buffs()
       make_fallback( talent.deathbringer.exterminate.ok(), this, "exterminate", spell.exterminate_buff );
       // Unfortunately blizz removed the aura from reapers onslaught that auto adjusted max stacks.  Looks like they scripted it.
       if ( talent.deathbringer.reapers_onslaught->ok() )
-          buffs.exterminate->set_max_stack( spell.exterminate_buff->max_stacks() + talent.deathbringer.reapers_onslaught->effectN( 2 ).base_value() );
+          buffs.exterminate->set_max_stack( spell.exterminate_buff->max_stacks() + as<int>( talent.deathbringer.reapers_onslaught->effectN( 2 ).base_value() ) );
 
   buffs.reaper_of_souls =
       make_fallback( talent.deathbringer.reapers_mark.ok(), this, "reaper_of_souls", spell.reapers_of_souls_buff )

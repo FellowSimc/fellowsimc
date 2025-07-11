@@ -3705,16 +3705,21 @@ public:
     if ( !td )
       return 0;
 
+    
+    double mult = ( p()->sets->has_set_bonus( HERO_CHRONOWARDEN, TWW3, B4 ) && p()->buff.temporal_burst->check() )
+                      ? chrono_mult + p()->sets->set( HERO_CHRONOWARDEN, TWW3, B4 )->effectN( 1 ).percent()
+                      : chrono_mult;
+
     double pool =
         std::accumulate( td->chrono_tracker.damage_buckets.begin(), td->chrono_tracker.damage_buckets.end(), 0.0 ) *
-        chrono_mult;
+        mult;
 
     return pool;
   }
 
   double current_chrono_cap( action_state_t* s )
   {
-    if ( p()->sets->set( HERO_CHRONOWARDEN, TWW3, B4 ) && p()->buff.temporal_burst->check() )
+    if ( p()->sets->has_set_bonus( HERO_CHRONOWARDEN, TWW3, B4 ) && p()->buff.temporal_burst->check() )
       return composite_versatility( s ) * composite_total_spell_power() * TWW3_set_cap;
     return composite_versatility( s ) * composite_total_spell_power() * chrono_cap;
   }
@@ -4055,7 +4060,7 @@ struct fire_breath_t : public empowered_charge_spell_t
     {
       empowered_release_spell_t::impact( s );
 
-      int max_afterimage = p()->sets->set( HERO_CHRONOWARDEN, TWW3, B4 ) && p()->buff.temporal_burst->check()
+      int max_afterimage = p()->sets->has_set_bonus( HERO_CHRONOWARDEN, TWW3, B4 ) && p()->buff.temporal_burst->check()
                                ? max_afterimage_targets + 1
                                : max_afterimage_targets;
 
@@ -5451,13 +5456,17 @@ struct living_flame_t : public evoker_spell_t
   bool cast_heal;
   timespan_t prepull_timespent;
   double mana_return;
+  int extra_hits_tww3_s4;
 
   living_flame_t( evoker_t* p, std::string_view options_str )
     : evoker_spell_t( "living_flame", p, p->find_class_spell( "Living Flame" ) ),
       gcd_mul( p->find_spelleffect( &p->buff.ancient_flame->data(), A_ADD_PCT_MODIFIER, P_GCD, &data() )->percent() ),
       cast_heal( false ),
       prepull_timespent( timespan_t::zero() ),
-      mana_return( p->spec.energizing_flame->effectN( 1 ).percent() )
+      mana_return( p->spec.energizing_flame->effectN( 1 ).percent() ),
+      extra_hits_tww3_s4( p->sets->has_set_bonus( HERO_CHRONOWARDEN, TWW3, B4 )
+                              ? as<int>( p->sets->set( HERO_CHRONOWARDEN, TWW3, B4 )->effectN( 3 ).base_value() )
+                              : 0 )
   {
     damage        = p->get_secondary_action<living_flame_damage_t>( "living_flame_damage" );
     damage->stats = stats;
@@ -5573,7 +5582,7 @@ struct living_flame_t : public evoker_spell_t
       }
     }
 
-    if ( p()->sets->set( HERO_CHRONOWARDEN, TWW3, B4 ) && p()->buff.temporal_burst->check() )
+    if ( p()->sets->has_set_bonus( HERO_CHRONOWARDEN, TWW3, B4 ) && p()->buff.temporal_burst->check() )
     {
       if ( !damage->target_cache.is_valid )
       {
@@ -5581,12 +5590,25 @@ struct living_flame_t : public evoker_spell_t
         damage->target_cache.is_valid = true;
       }
 
+      int set_damage_hits = 0;
+
       if ( damage->target_cache.list.size() > 1 )
       {
-        for ( int i = 1; i < 4 && i < damage->target_cache.list.size(); i++ )
+        for ( int i = 1; i < extra_hits_tww3_s4 + 1 && i < damage->target_cache.list.size(); i++ )
         {
           damage->execute_on_target( damage->target_list()[ i ] );
-          total_damage_hits++;
+          set_damage_hits++;
+        }
+
+        total_damage_hits += set_damage_hits;
+      }
+      if ( set_damage_hits < extra_hits_tww3_s4 )
+      {
+        for ( int i = 0; i < extra_hits_tww3_s4 - set_damage_hits; i++ )
+        {
+          heal->execute_on_target( p() );
+          if ( rng().roll( p()->option.heal_eb_chance ) )
+            total_heal_hits++;
         }
       }
     }

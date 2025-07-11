@@ -8650,6 +8650,7 @@ void cursed_stone_idol( special_effect_t& effect )
       : generic_proc_t( e, "cursed_stone_idol", e.driver() )
     {
       impact_action = create_proc_action<cursed_stone_idol_damage_t>( "cursed_stone_idol_damage", e );
+      add_child( impact_action );
       use_off_gcd = false;
     }
   };

@@ -8623,11 +8623,11 @@ void cursed_stone_idol( special_effect_t& effect )
     }
   };
 
-  struct cursed_stone_idol_t final : public generic_aoe_proc_t
+  struct cursed_stone_idol_damage_t final : public generic_aoe_proc_t
   {
     buff_t* buff;
-    cursed_stone_idol_t( const special_effect_t& e )
-      : generic_aoe_proc_t( e, "cursed_stone_idol", e.player->find_spell( 1241809 ) ), buff( nullptr )
+    cursed_stone_idol_damage_t( const special_effect_t& e )
+      : generic_aoe_proc_t( e, "cursed_stone_idol_damage", e.player->find_spell( 1241809 ) ), buff( nullptr )
     {
       const spell_data_t* value_spell = e.player->find_spell( 1241801 );
       base_dd_min = base_dd_max = value_spell->effectN( 2 ).average( e );
@@ -8641,6 +8641,16 @@ void cursed_stone_idol( special_effect_t& effect )
       cursed_stone_idol_buff_t* stat = debug_cast<cursed_stone_idol_buff_t*>( buff );
       stat->n_hit                    = as<int>( sim->target_non_sleeping_list.size() );
       stat->trigger();
+    }
+  };
+
+  struct cursed_stone_idol_t final : public generic_proc_t
+  {
+    cursed_stone_idol_t( const special_effect_t& e )
+      : generic_proc_t( e, "cursed_stone_idol", e.driver() )
+    {
+      impact_action = create_proc_action<cursed_stone_idol_damage_t>( "cursed_stone_idol_damage", e );
+      use_off_gcd = false;
     }
   };
 

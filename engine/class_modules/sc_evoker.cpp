@@ -12,6 +12,9 @@
 
 #include "simulationcraft.hpp"
 
+#include <regex>
+
+
 namespace
 {
 // ==========================================================================
@@ -3683,13 +3686,16 @@ public:
 {
   double chrono_mult;
   double chrono_cap;
+  double TWW3_set_cap;
   chrono_flame_damage_t( evoker_t* p, std::string_view suffix = "" )
     : evoker_spell_t( fmt::format( "chrono_flame{}", suffix ), p, p->talent.chronowarden.chrono_flame_damage ),
       chrono_mult( p->talent.chronowarden.chrono_flame->effectN( p->specialization() == EVOKER_AUGMENTATION ? 3 : 1 )
                        .percent() ),
-      chrono_cap( 2.5 )  // TODO: Parse from variable
+      chrono_cap( 2.5 ),  // TODO: Parse from variable,
+      TWW3_set_cap( 4.5 )  // TODO: Parse from variable,
   {
     may_crit     = false;
+    // sets->set( HERO_CHRONOWARDEN, TWW3, B2 )
   }
 
   double get_damage( const action_state_t* s ) const
@@ -3706,10 +3712,16 @@ public:
     return pool;
   }
 
+  double current_chrono_cap( action_state_t* s )
+  {
+    if ( p()->sets->set( HERO_CHRONOWARDEN, TWW3, B4 ) && p()->buff.temporal_burst->check() )
+      return composite_versatility( s ) * composite_total_spell_power() * TWW3_set_cap;
+    return composite_versatility( s ) * composite_total_spell_power() * chrono_cap;
+  }
+
   void impact( action_state_t* s )
   {
-    s->result_total = s->result_raw = s->result_amount =
-        std::min( get_damage( s ), composite_versatility( s ) * composite_total_spell_power() * chrono_cap );
+    s->result_total = s->result_raw = s->result_amount = std::min( get_damage( s ), current_chrono_cap( s ) );
 
     evoker_spell_t::impact( s );
   }
@@ -4043,7 +4055,11 @@ struct fire_breath_t : public empowered_charge_spell_t
     {
       empowered_release_spell_t::impact( s );
 
-      if ( chrono_flames && s->chain_target < max_afterimage_targets )
+      int max_afterimage = p()->sets->set( HERO_CHRONOWARDEN, TWW3, B4 ) && p()->buff.temporal_burst->check()
+                               ? max_afterimage_targets + 1
+                               : max_afterimage_targets;
+
+      if ( chrono_flames && s->chain_target < max_afterimage )
       {
         chrono_flames->execute_on_target( s->target );
       }
@@ -5554,6 +5570,24 @@ struct living_flame_t : public evoker_spell_t
       {
         damage->execute_on_target( damage->target_list()[ 1 ] );
         total_damage_hits++;
+      }
+    }
+
+    if ( p()->sets->set( HERO_CHRONOWARDEN, TWW3, B4 ) && p()->buff.temporal_burst->check() )
+    {
+      if ( !damage->target_cache.is_valid )
+      {
+        damage->available_targets( damage->target_cache.list );
+        damage->target_cache.is_valid = true;
+      }
+
+      if ( damage->target_cache.list.size() > 1 )
+      {
+        for ( int i = 1; i < 4 && i < damage->target_cache.list.size(); i++ )
+        {
+          damage->execute_on_target( damage->target_list()[ i ] );
+          total_damage_hits++;
+        }
       }
     }
 
@@ -9876,6 +9910,7 @@ void evoker_t::apply_affecting_auras_late( action_t& action )
   action.apply_affecting_aura( talent.interwoven_threads );
   action.apply_affecting_aura( talent.arcane_reach );
   action.apply_affecting_aura( sets->set( EVOKER_AUGMENTATION, TWW1, B2 ) );
+  action.apply_affecting_aura( sets->set( HERO_CHRONOWARDEN, TWW3, B2 ) );
 
   // Devastaion
   action.apply_affecting_aura( talent.arcane_intensity );

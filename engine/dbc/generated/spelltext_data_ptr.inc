@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.61871
-static const std::array<spelltext_data_t, 28034> __ptr_spelltext_data { {
+static const std::array<spelltext_data_t, 28037> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -27761,6 +27761,8 @@ static const std::array<spelltext_data_t, 28034> __ptr_spelltext_data { {
   { 1236424, "$?c1[Overpower][Raging Blow] damage increased by $s1% and $?c1[Overpower][Raging Blow] has a $s2% chance per stack of Overwhelmed on the target to trigger Reap the Storm at $s3% effectiveness.", 0, 0 },
   { 1236556, "$@spelldesc1236334", "A dryad is assisting you!", 0 },
   { 1236564, "$@spelldesc1236372", "Your Mastery is increased by $s1%.", 0 },
+  { 1236565, "$@spelldesc1236372", "Your Haste is increased by $s1%.", 0 },
+  { 1236566, "$@spelldesc1236372", "Your critical strike chance is increased by $s1%.", 0 },
   { 1236573, "$@spelldesc740", "Heals $w2 damage every $t2 sec.", 0 },
   { 1236623, "Scan the environment highlighting Mislaid Curiosities for the rest of the delve.", 0, 0 },
   { 1236644, "$@spelldesc1236374", "Your next $?c2[Aimed Shot][Wildfire Bomb] deals Arcane damage and its damage is increased by $?c2[$s1][$s3]%.", 0 },
@@ -28034,6 +28036,7 @@ static const std::array<spelltext_data_t, 28034> __ptr_spelltext_data { {
   { 1248979, "$@spelldesc1227048", "Targeting by Voidblade Ambush.", 0 },
   { 1249464, "$@spelldesc1236374", "Your next $?c2[Aimed Shot][Wildfire Bomb] deals Arcane damage and its damage is increased by $?c2[$s1][$s3]%.", 0 },
   { 1249658, "Call upon Sindragosa's aid in battle for $d, continuously dealing ${$155166s2*$<CAP>/$AP} Frost damage every $t1 sec to enemies in a cone in front of you. Consuming Killing Machine or Rime increases the duration by ${$s3/1000}.1 sec. Deals reduced damage to secondary targets.\r\n\r\n|cFFFFFFFFGrants a charge of Empower Rune Weapon at the start and 2 Runes at the end.|r", "Continuously dealing Frost damage every $t1 sec to enemies in a cone in front of you.", 0 },
+  { 1250068, "Summon a herd of stampeding animals from the wilds around you that deal ${$201594s1*3} Physical damage to your enemies over $d.", 0, 0 },
 } };
 
 // spelltext hotfix entries, wow build 11.2.0.61871

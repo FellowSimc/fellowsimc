@@ -18393,6 +18393,40 @@ Effects          :
 Description      : $@spelldesc1236372
 Tooltip          : Your Mastery is increased by $s1%.
 
+Name             : Hasted Hooves (id=1236565) [Spell Family (9)] 
+Class            : Hunter
+School           : Physical
+Spell Type       : None
+Duration         : 8 seconds
+Labels           : 16: Class Spells
+                 : 23: Hunter Spells
+                 : 292
+                 : 295
+                 : 5061
+Aura Interrupt   : Leave World (19), Enter World (22), Change Specialization (38), Raid Encounter Start or M+ Start (40), Raid Encounter End or M+ Start (41), Disconnect (42), Enter Instance (43), Leave Arena or Battleground (45), Change Talent (46)
+Effects          :
+#1 (id=1232600)  : Apply Aura (6) | Modify All Haste% (193)
+                   Base Value: 8 | Scaled Value: 8 | PvP Coefficient: 0.33 | Target: Self (1)
+Description      : $@spelldesc1236372
+Tooltip          : Your Haste is increased by $s1%.
+
+Name             : Sharpened Fangs (id=1236566) [Spell Family (9)] 
+Class            : Hunter
+School           : Physical
+Spell Type       : None
+Duration         : 8 seconds
+Labels           : 16: Class Spells
+                 : 23: Hunter Spells
+                 : 292
+                 : 295
+                 : 5061
+Aura Interrupt   : Leave World (19), Enter World (22), Change Specialization (38), Raid Encounter Start or M+ Start (40), Raid Encounter End or M+ Start (41), Disconnect (42), Enter Instance (43), Leave Arena or Battleground (45), Change Talent (46)
+Effects          :
+#1 (id=1232601)  : Apply Aura (6) | Modify Critical Strike% (290)
+                   Base Value: 8 | Scaled Value: 8 | PvP Coefficient: 0.33 | Target: Self (1)
+Description      : $@spelldesc1236372
+Tooltip          : Your critical strike chance is increased by $s1%.
+
 Name             : Boon of Elune (id=1236644) [Spell Family (9)] 
 Class            : Hunter
 School           : Physical
@@ -18516,5 +18550,23 @@ Effects          :
                    Family Flags: 25
 Description      : $@spelldesc1236374
 Tooltip          : Your next $?c2[Aimed Shot][Wildfire Bomb] deals Arcane damage and its damage is increased by $?c2[$s1][$s3]%.
+
+Name             : Stampede (id=1250068) [Spell Family (9)] 
+Class            : Hunter
+School           : Physical
+Spell Type       : None
+Range            : 40 yards
+Duration         : 4 seconds
+Labels           : 16: Class Spells
+                 : 23: Hunter Spells
+                 : 117
+                 : 292
+Attributes       : No Aura Cancel (31), No Aura Icon (60), Extra Initial Period (169)
+Effects          :
+#1 (id=1253995)  : Dummy (3)
+                   Base Value: 1 | Scaled Value: 1 | Radius: 6 yards | Target: Unknown(48) -> Unknown(86)
+#2 (id=1253997)  : Apply Aura (6) | Periodic Dummy (226): every 2 seconds
+                   Base Value: 1 | Scaled Value: 1 | Target: Self (1)
+Description      : Summon a herd of stampeding animals from the wilds around you that deal ${$201594s1*3} Physical damage to your enemies over $d.
 
 

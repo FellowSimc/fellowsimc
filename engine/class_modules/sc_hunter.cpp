@@ -447,7 +447,12 @@ public:
     spell_data_ptr_t tww_s3_sentinel_4pc_buff;
 
     spell_data_ptr_t tww_s3_pack_leader_2pc;
+    spell_data_ptr_t tww_s3_pack_leader_2pc_haste_buff;
+    spell_data_ptr_t tww_s3_pack_leader_2pc_mastery_buff;
+    spell_data_ptr_t tww_s3_pack_leader_2pc_crit_buff;
     spell_data_ptr_t tww_s3_pack_leader_4pc;
+    spell_data_ptr_t tww_s3_pack_leader_4pc_stampede_buff;
+    spell_data_ptr_t tww_s3_pack_leader_4pc_stampede_damage;
   } tier_set;
 
   struct buffs_t
@@ -517,6 +522,10 @@ public:
     buff_t* blighted_quiver; // Dark Ranger 4pc
     buff_t* boon_of_elune_2pc; // Sentinel 2pc
     buff_t* boon_of_elune_4pc; // Sentinel 4pc
+    buff_t* grizzled_fur; // Pack Leader 2pc mastery
+    buff_t* hasted_hooves; // Pack Leader 2pc haste
+    buff_t* sharpened_fangs; // Pack Leader 2pc crit
+    buff_t* stampede; // Pack Leader 4pc buff
 
     // Hero Talents 
 
@@ -1011,6 +1020,8 @@ public:
     action_t* lunar_storm_periodic = nullptr;
 
     action_t* phantom_pain = nullptr;
+
+    action_t* stampede = nullptr;
   } actions;
 
   cdwaste::player_data_t cd_waste;
@@ -1321,6 +1332,7 @@ public:
     ab::apply_affecting_aura( p->tier_set.tww_s3_dark_ranger_4pc );
     ab::apply_affecting_aura( p->tier_set.tww_s3_sentinel_2pc );
     ab::apply_affecting_aura( p->tier_set.tww_s3_sentinel_4pc );
+    ab::apply_affecting_aura( p->tier_set.tww_s3_pack_leader_2pc );
 
     // Hero Tree passives
     ab::apply_affecting_aura( p->talents.sentinel_precision );
@@ -2022,7 +2034,8 @@ struct bear_t final : public dire_critter_t
     buffs.bear_summon = make_buff( this, "bear_summon", o()->talents.howl_of_the_pack_leader_bear_buff )
       ->set_default_value_from_effect( 1 )
       ->apply_affecting_aura( o()->specs.beast_mastery_hunter )
-      ->apply_affecting_aura( o()->specs.survival_hunter );
+      ->apply_affecting_aura( o()->specs.survival_hunter )
+      ->apply_affecting_aura( o()->tier_set.tww_s3_pack_leader_2pc );
   }
 
   const bear_td_t* find_target_data( const player_t* target ) const override
@@ -3852,7 +3865,7 @@ void hunter_t::trigger_lunar_storm( player_t* target )
   }
 
   if ( tier_set.tww_s3_sentinel_2pc.ok() )
-    make_event( sim, talents.lunar_storm_periodic_trigger->duration(), [ this ]() { buffs.boon_of_elune_2pc->trigger(); } );
+    make_event( sim, talents.lunar_storm_periodic_trigger->duration(), [ this ]() { buffs.boon_of_elune_2pc->trigger( tier_set.tww_s3_sentinel_2pc_buff->max_stacks() ); } );
   }
 }
 
@@ -3865,6 +3878,7 @@ bool hunter_t::consume_howl_of_the_pack_leader( player_t* target )
     up = true;
     buffs.wyverns_cry->trigger( as<int>( talents.howl_of_the_pack_leader->effectN( 3 ).base_value() + specs.survival_hunter->effectN( 12 ).base_value() ) );
     buffs.howl_of_the_pack_leader_wyvern->expire();
+    buffs.sharpened_fangs->trigger();
   }
 
   if ( buffs.howl_of_the_pack_leader_boar->check() )
@@ -3893,6 +3907,7 @@ bool hunter_t::consume_howl_of_the_pack_leader( player_t* target )
           } ),
       true );
     buffs.howl_of_the_pack_leader_boar->expire();
+    buffs.hasted_hooves->trigger();
 
     if ( talents.hogstrider.ok() )
       buffs.mongoose_fury->extend_duration( this, buffs.mongoose_fury->buff_duration() - buffs.mongoose_fury->remains() );
@@ -3903,6 +3918,7 @@ bool hunter_t::consume_howl_of_the_pack_leader( player_t* target )
     up = true;
     pets.bear.spawn( talents.howl_of_the_pack_leader_bear_summon->duration() + talents.dire_frenzy->effectN( 1 ).time_value() );
     buffs.howl_of_the_pack_leader_bear->expire();
+    buffs.grizzled_fur->trigger();
   }
 
   // Only applied once even if two are summoned at once.
@@ -3910,6 +3926,8 @@ bool hunter_t::consume_howl_of_the_pack_leader( player_t* target )
   {
     cooldowns.barbed_shot->adjust( -talents.pack_mentality->effectN( 2 ).time_value() );
     cooldowns.wildfire_bomb->adjust( -talents.pack_mentality->effectN( 3 ).time_value() );
+    if ( actions.stampede )
+      actions.stampede->execute_on_target( target );
   }
 
   return up;
@@ -5114,6 +5132,43 @@ struct lunar_storm_periodic_t : hunter_ranged_attack_t
     range::erase_remove( tl, [ this ]( player_t* t ) { return !td( t )->debuffs.sentinel->check(); } );
 
     return tl.size();
+  }
+};
+// Stampede (Pack Leader) ============================================================
+
+struct stampede_t : hunter_ranged_attack_t
+{
+  struct damage_t : public hunter_ranged_attack_t
+  {
+    damage_t( util::string_view n, hunter_t* p ) : hunter_ranged_attack_t( n, p, p->tier_set.tww_s3_pack_leader_4pc_stampede_damage )
+    {
+      aoe = as<int>( p->tier_set.tww_s3_pack_leader_4pc->effectN( 3 ).base_value() );
+      background = dual = true;
+    }
+  };
+
+  damage_t* damage;
+
+  stampede_t( hunter_t* p ) : hunter_ranged_attack_t( "stampede", p, p->tier_set.tww_s3_pack_leader_4pc_stampede_buff ),
+    damage( p->get_background_action<damage_t>( "stampede_tick" ) )
+  {
+    background = dual = true;
+    aoe = as<int>( p->tier_set.tww_s3_pack_leader_4pc->effectN( 2 ).base_value() );
+  }
+
+  void tick( dot_t* d ) override
+  {
+    hunter_ranged_attack_t::tick( d );
+
+    // There's a gap of about 300ms between each successive damage event triggered by a tick, the first starting with a travel time of about 600ms.
+    damage->min_travel_time = 0.6;
+    damage->execute_on_target( d->target );
+    
+    damage->min_travel_time = 0.9;
+    damage->execute_on_target( d->target );
+    
+    damage->min_travel_time = 1.2;
+    damage->execute_on_target( d->target );
   }
 };
 
@@ -8484,7 +8539,12 @@ void hunter_t::init_spells()
   tier_set.tww_s3_sentinel_4pc_buff = tier_set.tww_s3_sentinel_4pc.ok() ? find_spell( 1249464 ) : spell_data_t::not_found();
   
   tier_set.tww_s3_pack_leader_2pc = sets->set( HERO_PACK_LEADER, TWW3, B2 );
+  tier_set.tww_s3_pack_leader_2pc_mastery_buff = tier_set.tww_s3_pack_leader_2pc.ok() ? find_spell( 1236564 ) : spell_data_t::not_found();
+  tier_set.tww_s3_pack_leader_2pc_haste_buff = tier_set.tww_s3_pack_leader_2pc.ok() ? find_spell( 1236565 ) : spell_data_t::not_found();
+  tier_set.tww_s3_pack_leader_2pc_crit_buff = tier_set.tww_s3_pack_leader_2pc.ok() ? find_spell( 1236566 ) : spell_data_t::not_found();
   tier_set.tww_s3_pack_leader_4pc = sets->set( HERO_PACK_LEADER, TWW3, B4 );
+  tier_set.tww_s3_pack_leader_4pc_stampede_buff = tier_set.tww_s3_pack_leader_4pc.ok() ? find_spell( 1250068 ) : spell_data_t::not_found();
+  tier_set.tww_s3_pack_leader_4pc_stampede_damage = tier_set.tww_s3_pack_leader_4pc.ok() ? find_spell( 201594 ) : spell_data_t::not_found();
 
   // Cooldowns
   cooldowns.target_acquisition->duration = talents.target_acquisition->internal_cooldown();
@@ -8563,6 +8623,9 @@ void hunter_t::create_actions()
 
   if ( talents.phantom_pain.ok() )
     actions.phantom_pain = new attacks::phantom_pain_t( this );
+
+  if ( tier_set.tww_s3_pack_leader_4pc.ok() )
+    actions.stampede = new attacks::stampede_t( this );
 }
 
 void hunter_t::create_buffs()
@@ -8878,12 +8941,32 @@ void hunter_t::create_buffs()
 
   buffs.boon_of_elune_2pc =
     make_buff( this, "boon_of_elune", tier_set.tww_s3_sentinel_2pc_buff )
-      ->set_default_value_from_effect( specialization() == HUNTER_MARKSMANSHIP ? 1 : 3 )
-      ->set_initial_stack( tier_set.tww_s3_sentinel_2pc_buff->max_stacks() );
+      ->set_default_value_from_effect( specialization() == HUNTER_MARKSMANSHIP ? 1 : 3 );
 
   buffs.boon_of_elune_4pc =
     make_buff( this, "boon_of_elune", tier_set.tww_s3_sentinel_4pc_buff )
       ->set_default_value_from_effect( specialization() == HUNTER_MARKSMANSHIP ? 1 : 3 );
+
+  buffs.grizzled_fur =
+    make_buff( this, "grizzled_fur", tier_set.tww_s3_pack_leader_2pc_mastery_buff )
+      ->set_default_value_from_effect( 1 )
+      ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
+  
+  buffs.hasted_hooves =
+    make_buff( this, "hasted_hooves", tier_set.tww_s3_pack_leader_2pc_haste_buff )
+      ->set_default_value_from_effect( 1 )
+      ->set_pct_buff_type( STAT_PCT_BUFF_HASTE );
+
+  buffs.sharpened_fangs =
+    make_buff( this, "sharpened_fangs", tier_set.tww_s3_pack_leader_2pc_crit_buff )
+      ->set_default_value_from_effect( 1 )
+      ->set_pct_buff_type( STAT_PCT_BUFF_CRIT );
+
+  buffs.stampede = make_buff( this, "stampede", tier_set.tww_s3_pack_leader_4pc_stampede_buff )->set_tick_callback(
+      [ this ]( buff_t*, int, timespan_t ) {
+        actions.stampede->execute();
+      
+    } );
 
   // Hero Talents
 
@@ -9591,10 +9674,16 @@ double hunter_t::composite_player_pet_damage_multiplier( const action_state_t* s
     m *= 1 + buffs.the_bell_tolls->check_stack_value();
 
     if ( specialization() == HUNTER_BEAST_MASTERY )
+    {
       m *= 1 + talents.better_together->effectN( 1 ).percent();
+      m *= 1 + tier_set.tww_s3_pack_leader_2pc->effectN( 1 ).percent();
+    }
 
     if ( specialization() == HUNTER_SURVIVAL )
+    {
       m *= 1 + talents.better_together->effectN( 2 ).percent();
+      m *= 1 + tier_set.tww_s3_pack_leader_2pc->effectN( 2 ).percent();
+    }
   }
 
   return m;

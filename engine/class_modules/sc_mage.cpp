@@ -6513,6 +6513,7 @@ struct glacial_spike_4pc_t final : public mage_spell_t
   double icicles_mastery_coef;
   double icicles2_mastery_coef;
   double icicle_count;
+  double base_gs_coef; // The mastery multiplier seems to be based on the spcoef of the original GS.
 
   glacial_spike_4pc_t( std::string_view n, mage_t* p ) :
     mage_spell_t( n, p, p->find_spell( 1236209 ) )
@@ -6525,6 +6526,7 @@ struct glacial_spike_4pc_t final : public mage_spell_t
     icicles_mastery_coef = p->find_spell( 76613 )->effectN( 3 ).sp_coeff();
     icicles2_mastery_coef = p->find_spell( 321684 )->effectN( 3 ).mastery_value();
     icicle_count = p->find_spell( 76613 )->effectN( 2 ).base_value();
+    base_gs_coef = p->find_spell( 228600 )->effectN( 1 ).sp_coeff();
   }
 
   double action_multiplier() const override
@@ -6533,7 +6535,7 @@ struct glacial_spike_4pc_t final : public mage_spell_t
 
     double icicle_coef = base_icicle_coef + p()->cache.mastery() * icicles_mastery_coef;
     // See glacial_spike_t for explanation.
-    double icicles1_part = icicle_count * icicle_coef / spell_power_mod.direct;
+    double icicles1_part = icicle_count * icicle_coef / base_gs_coef;
     double icicles2_part = p()->cache.mastery() * icicles2_mastery_coef;
     am *= 1.0 + icicles1_part / ( 1.0 + icicles2_part );
 

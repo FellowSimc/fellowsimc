@@ -641,6 +641,11 @@ struct death_knight_td_t : public actor_target_data_t
     propagate_const<buff_t*> incite_terror;
   } debuff;
 
+  struct flags_t
+  {
+    bool razorice_consumed;
+  } flag;
+
   death_knight_td_t( player_t& target, death_knight_t& p );
 
   template <typename Buff = buff_t, typename... Args>
@@ -9455,12 +9460,11 @@ struct frostbane_strike_t final : public death_knight_melee_attack_t
   double composite_da_multiplier( const action_state_t* state ) const override
   {
     double m      = death_knight_melee_attack_t::composite_da_multiplier( state );
-    const auto ri = get_td( state->target )->debuff.razorice;
+    const auto ri = get_td( state->target )->flag.razorice_consumed;
 
-    if ( ri->at_max_stacks() )
+    if ( ri )
     {
       m *= 1.0 + p()->talent.frost.shattering_blade->effectN( 1 ).percent();
-      ri->expire();
     }
 
     double target_reduction = 1 - ( state->chain_target * p()->talent.frost.frostbane->effectN( 4 ).percent() );
@@ -9481,6 +9485,21 @@ struct frostbane_t final : public death_knight_spell_t
     if ( data().ok() )
     {
       add_child( frostbane_strike );
+    }
+    aoe = -1;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    death_knight_spell_t::impact( s );
+
+    auto td = get_td( s->target );
+    td->flag.razorice_consumed = false;
+
+    if (td->debuff.razorice->at_max_stacks() )
+    {
+      td->debuff.razorice->expire();
+      td->flag.razorice_consumed = true;
     }
   }
 
@@ -14763,6 +14782,8 @@ inline death_knight_td_t::death_knight_td_t( player_t& target, death_knight_t& p
           ->set_default_value( p.talent.frost.everfrost->effectN( 1 ).percent() );
 
   debuff.frostreaper = make_debuff( p.talent.frost.frostreaper.ok(), *this, "frostreaper", p.spell.frostreaper_debuff );
+
+  flag.razorice_consumed = false;
 
   // Unholy
   debuff.festering_wound =

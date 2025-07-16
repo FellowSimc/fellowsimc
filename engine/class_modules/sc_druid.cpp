@@ -888,6 +888,7 @@ struct druid_t final : public parse_player_effects_t
     player_talent_t killer_instinct;
     player_talent_t lingering_healing;
     player_talent_t lore_of_the_grove;
+    player_talent_t lycaras_inspiration;
     player_talent_t lycaras_meditation;  // TODO: remove in 11.2
     player_talent_t lycaras_teachings;
     player_talent_t maim;
@@ -10262,6 +10263,7 @@ void druid_t::init_spells()
   talent.killer_instinct                = CT( "Killer Instinct" );
   talent.lingering_healing              = CT( "Lingering Healing" );
   talent.lore_of_the_grove              = CT( "Lore of the Grove" );
+  talent.lycaras_inspiration            = CT( "Lycara's Inspiration" );
   talent.lycaras_meditation             = CT( "Lycara's Meditation" );  // TODO: remove in 11.2
   talent.lycaras_teachings              = CT( "Lycara's Teachings" );
   talent.maim                           = CT( "Maim" );
@@ -13042,6 +13044,9 @@ double druid_t::stacking_movement_modifier() const
   if ( racials.elusiveness->ok() && buff.prowl->check() )
     ms += racials.elusiveness->effectN( 1 ).percent();
 
+  if ( talent.lycaras_inspiration.ok() && buff.lycaras_teachings_vers->check() )
+    ms += buff.lycaras_teachings_vers->data().effectN( 2 ).percent();
+
   return ms;
 }
 
@@ -14348,6 +14353,9 @@ void druid_t::parse_action_effects( action_t* action )
   _a->parse_effects( talent.circle_of_the_heavens, circle_mask );
   _a->parse_effects( talent.circle_of_the_wild, circle_mask );
 
+  if ( talent.lycaras_inspiration.ok() )
+    _a->parse_effects( buff.lycaras_teachings_haste );
+
   // Balance
   _a->parse_effects( mastery.astral_invocation,
                      // arcane passive mastery (eff#1) and nature passive mastery (eff#3) apply to orbital strike &
@@ -14541,6 +14549,9 @@ void druid_t::parse_player_effects()
     .set_value( bear_stam )
     .set_opt_enum( 1 << ( STAT_STAMINA - 1 ) )
     .set_eff( &find_effect( spec.bear_form_passive, A_MOD_TOTAL_STAT_PERCENTAGE ) );
+
+  if ( talent.lycaras_inspiration.ok() )
+    parse_effects( buff.lycaras_teachings_crit );
 
   parse_effects( buff.bear_form );
   parse_effects( buff.killing_strikes );

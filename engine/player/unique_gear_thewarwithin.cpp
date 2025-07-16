@@ -8144,23 +8144,26 @@ void diamantine_voidcore( special_effect_t& effect )
 
   effect.custom_buff = buff;
   
-  if ( effect.player->resources.active_resource[ RESOURCE_MANA ] )
+  struct diamantine_voidcore_cb_t : public dbc_proc_callback_t
   {
-    // Create the RPPM object ahead of the ::initialize() call so we can refer to it.
-    auto rppm = effect.player->get_rppm( effect.name(), effect.rppm(), effect.rppm_modifier(), effect.rppm_scale() );
+    double mana_threshold;
+    double rppm_boost;
+    diamantine_voidcore_cb_t( const special_effect_t& e )
+      : dbc_proc_callback_t( e.player, e ),
+        mana_threshold( e.driver()->effectN( 2 ).percent() ),
+        rppm_boost( e.driver()->effectN( 3 ).percent() )
+    {
+    }
 
-    // resource_callback is_pct uses 100 to represent 100%.
-    effect.player->register_resource_callback(
-        RESOURCE_MANA, mana_threshold * 100,
-        [ rppm_boost, rppm, player = effect.player, mana_threshold ] {
-          rppm->set_modifier( player->resources.pct( RESOURCE_MANA ) >= mana_threshold ? 1.0 + rppm_boost : 1.0 );
-          player->sim->print_debug( "{} set RPPM modifier for {} to: {}. ", *player, rppm->name(),
-                                    rppm->get_modifier() );
-        },
-        true, false );
-  }
+    void trigger( action_t* a, action_state_t* state ) override
+    {
+      if ( listener->resources.active_resource[ RESOURCE_MANA ] )
+        rppm->set_modifier( listener->resources.pct( RESOURCE_MANA ) <= mana_threshold ? 1.0 + rppm_boost : 1.0 );
+      dbc_proc_callback_t::trigger( a, state );
+    }
+  };
 
-  new dbc_proc_callback_t( effect.player, effect );
+  new diamantine_voidcore_cb_t( effect );
 }
 
 // Unyielding Netherprism

@@ -4202,6 +4202,7 @@ void priest_t::apply_affecting_auras_late( action_t& action )
   action.apply_affecting_aura( talents.shadow.mastermind );
   action.apply_affecting_aura( talents.shadow.mental_decay );
   action.apply_affecting_aura( talents.shadow.instilled_doubt );
+  action.apply_affecting_aura( talents.shadow.subservient_shadows );
 
   if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
   {

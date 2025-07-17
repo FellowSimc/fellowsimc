@@ -742,6 +742,7 @@ public:
   {
     const spell_data_t* voidweaver_4pc_buff;
     const spell_data_t* archon_2pc_buff;
+    std::unique_ptr<modified_spell_data_t> voidweaver_4pc;
   } tww3_spells;
 
   // Cooldowns

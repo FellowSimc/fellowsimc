@@ -3937,6 +3937,16 @@ void priest_t::init_spells()
   talents.voidweaver.embrace_the_shadow     = HT( "Embrace the Shadow" );  // NYI
   talents.voidweaver.collapsing_void        = HT( "Collapsing Void" );
   talents.voidweaver.collapsing_void_damage = find_spell( 448405 );
+
+  if ( sets->has_set_bonus( HERO_VOIDWEAVER, TWW3, B4 ) )
+  {
+    tww3_spells.voidweaver_4pc = std::make_unique<modified_spell_data_t>( sets->set( HERO_VOIDWEAVER, TWW3, B4 ) );
+    tww3_spells.voidweaver_4pc->parse_effects( specs.shadow_priest )->parse_effects( specs.discipline_priest );
+  }
+  else
+  {
+    tww3_spells.voidweaver_4pc = std::make_unique<modified_spell_data_t>( sd_nf );
+  }
 }
 
 void priest_t::create_buffs()
@@ -4090,7 +4100,7 @@ void priest_t::create_buffs()
 
   if ( sets->has_set_bonus( HERO_VOIDWEAVER, TWW3, B4 ) )
   {
-    buffs.overflowing_void->set_default_value( sets->set( HERO_VOIDWEAVER, TWW3, B4 )->effectN( 2 ).percent() / 2 );
+    buffs.overflowing_void->set_default_value( tww3_spells.voidweaver_4pc->effectN( 2 ).percent() / 2 );
   }
 
   buffs.tww3_archon_4pc =

@@ -4690,10 +4690,8 @@ struct fireball_t final : public fire_mage_spell_t
 
       if ( p->sets->has_set_bonus( HERO_FROSTFIRE, TWW3, B2 ) )
       {
-        const auto* set = p->sets->set( HERO_FROSTFIRE, TWW3, B2 );
-        // TODO: The ignite multiplier part of the set bonus doesn't work
-        base_ignite_multiplier = set->effectN( 1 ).percent();
-        base_dd_multiplier *= 1.0 + set->effectN( 3 ).percent();
+        base_dd_multiplier *= 1.0 + p->sets->set( HERO_FROSTFIRE, TWW3, B2 )->effectN( 3 ).percent();
+        // The ignite multiplier part doesn't seem to affect FFB
       }
     }
 
@@ -8883,7 +8881,7 @@ void mage_t::create_buffs()
                              ->set_default_value_from_effect( specialization() == MAGE_FIRE ? 2 : 1 )
                              ->set_chance( sets->has_set_bonus( HERO_SUNFURY, TWW3, B4 ) );
   buffs.lesser_time_warp = make_buff( this, "lesser_time_warp", find_spell( 1236231 ) )
-                             ->set_default_value_from_effect( 1 )
+                             ->set_default_value_from_effect( specialization() == MAGE_FIRE ? 2 : 1 )
                              ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
                              ->set_chance( sets->has_set_bonus( HERO_SUNFURY, TWW3, B4 ) );
 
@@ -9195,9 +9193,9 @@ double mage_t::composite_player_pet_damage_multiplier( const action_state_t* s, 
 {
   double m = player_t::composite_player_pet_damage_multiplier( s, guardian );
 
-  m *= 1.0 + spec.arcane_mage->effectN( 3 ).percent();
-  m *= 1.0 + spec.fire_mage->effectN( 3 ).percent();
-  m *= 1.0 + spec.frost_mage->effectN( 3 ).percent();
+  m *= 1.0 + spec.arcane_mage->effectN( guardian ? 6 : 3 ).percent();
+  m *= 1.0 + spec.fire_mage->effectN( guardian ? 4 : 3 ).percent();
+  m *= 1.0 + spec.frost_mage->effectN( guardian ? 5 : 3 ).percent();
 
   if ( !guardian )
   {

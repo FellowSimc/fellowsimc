@@ -2380,7 +2380,11 @@ struct empyrean_hammer_wd_t : public paladin_spell_t
 struct empyrean_hammer_t : public paladin_spell_t
 {
   empyrean_hammer_wd_t* wd;
-  empyrean_hammer_t( paladin_t* p ) : paladin_spell_t( "empyrean_hammer", p, p->spells.templar.empyrean_hammer ), wd(nullptr)
+  double wrathful_descent_multiplier;
+  empyrean_hammer_t( paladin_t* p )
+    : paladin_spell_t( "empyrean_hammer", p, p->spells.templar.empyrean_hammer ),
+      wd( nullptr ),
+      wrathful_descent_multiplier(1.0)
   {
     background = proc = may_crit = true;
     may_miss                     = false;
@@ -2388,6 +2392,11 @@ struct empyrean_hammer_t : public paladin_spell_t
     {
       wd = new empyrean_hammer_wd_t( p );
       add_child( wd );
+      wrathful_descent_multiplier = p->talents.templar.wrathful_descent->effectN( 2 ).percent();
+      if (p->specialization() == PALADIN_RETRIBUTION)
+      {
+        wrathful_descent_multiplier += p->spec.retribution_paladin_2->effectN( 20 ).percent();
+      }
     }
     if ( p->sets->has_set_bonus( HERO_TEMPLAR, TWW3, B2 ) )
       apply_affecting_aura( p->sets->set( HERO_TEMPLAR, TWW3, B2 ) );
@@ -2440,8 +2449,7 @@ struct empyrean_hammer_t : public paladin_spell_t
     paladin_spell_t::impact( s );
     if ( p()->talents.templar.wrathful_descent->ok() && s->result == RESULT_CRIT && !wd->target_list().empty() )
     {
-      wd->base_dd_min = wd->base_dd_max =
-          p()->talents.templar.wrathful_descent->effectN( 2 ).percent() * s->result_total;
+      wd->base_dd_min = wd->base_dd_max = wrathful_descent_multiplier * s->result_total;
       wd->execute_on_target( target );
       p()->get_target_data( s->target )->debuff.empyrean_hammer->execute();
     }

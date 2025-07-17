@@ -1296,7 +1296,8 @@ struct evoker_t : public player_t
       player_talent_t draconic_instincts;
       player_talent_t consume_flame;
       const spell_data_t* consume_flame_damage;  // 444089      
-      const spell_data_t* inner_flame_buff;  // TWw3_2pc 1236776
+      const spell_data_t* inner_flame_buff_base;                // TWw3_2pc 1236776
+      std::unique_ptr<modified_spell_data_t> inner_flame_buff;  // TWw3_2pc 1236776
       const spell_data_t* essence_bomb_spell; // TWw3_4pc 1236792
     } flameshaper;
 
@@ -9716,7 +9717,9 @@ void evoker_t::init_spells()
   talent.flameshaper.consume_flame               = HT( "Consume Flame" );
   talent.flameshaper.consume_flame_damage        = find_spell( 444089 );
 
-  talent.flameshaper.inner_flame_buff   = find_spell( 1236776 );
+  talent.flameshaper.inner_flame_buff_base = find_spell( 1236776 );
+  talent.flameshaper.inner_flame_buff      = std::make_unique<modified_spell_data_t>( find_spell( 1236776 ) );
+  talent.flameshaper.inner_flame_buff->parse_effects( spec.devastation );
   talent.flameshaper.essence_bomb_spell = find_spell( 1236792 );
 
   // Scalecommander
@@ -10212,8 +10215,8 @@ void evoker_t::create_buffs()
 
   // Flameshaper
   buff.inner_flame =
-      MBF( sets->has_set_bonus( HERO_FLAMESHAPER, TWW3, B2 ), this, "inner_flame", talent.flameshaper.inner_flame_buff )
-          ->set_default_value_from_effect( 2, 0.01 )
+      MBF( sets->has_set_bonus( HERO_FLAMESHAPER, TWW3, B2 ), this, "inner_flame", talent.flameshaper.inner_flame_buff_base )
+          ->set_default_value( talent.flameshaper.inner_flame_buff->effectN( 2 ).percent() )
           ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS );
 
   // Scalecommander

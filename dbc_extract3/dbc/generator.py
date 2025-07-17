@@ -2012,6 +2012,7 @@ class SpellDataGenerator(DataGenerator):
           ( 440005, 0 ), # Blood Fever damage
           # Tier TWW1
           ( 457506, 0 ), # Blood TWW1 set, Piledriver
+          ( 1238673, 0 ), # Rune Carved Weapons
         ),
 
         # Shaman:

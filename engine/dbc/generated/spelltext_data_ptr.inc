@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.62049
-static const std::array<spelltext_data_t, 28040> __ptr_spelltext_data { {
+static const std::array<spelltext_data_t, 28042> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -27831,8 +27831,10 @@ static const std::array<spelltext_data_t, 28040> __ptr_spelltext_data { {
   { 1238197, "$@spelldesc1226311", 0, 0 },
   { 1238269, "$@spelldesc443450", 0, 0 },
   { 1238279, "$@spelldesc1236407", "Cast time of your damage and healing spells reduced by $s1%.\r\nMana cost of healing spells reduced by $s2%\r\nRecharge time of Lava Burst$?s137039[ and Riptide][] reduced by $s6%", 0 },
+  { 1238281, "Empower Rune Weapon causes your next damaging Rune spending ability to cost no Runes, but now generates ${$s1/-10} less Runic Power.", 0, 0 },
   { 1238285, "$@spelldesc1236407", "Cast time of your damage and healing spells reduced by $s1%.\r\nMana cost of healing spells reduced by $s2%\r\nRecharge time of Lava Burst$?s137039[ and Riptide][] reduced by $s6%", 0 },
   { 1238462, "$@spelldesc1236361", "$?a212613[Soul Cleave][Chaos Strike] damage is increased by $w1%.", 0 },
+  { 1238673, "$@spelldesc1238281", 0, 0 },
   { 1238675, "$@spelldesc1236361", "Damage increased by $w1%.", 0 },
   { 1238676, "$@spelldesc1236361", "Damage increased by $w1%.", 0 },
   { 1238680, "Consuming Rime reduces the cooldown of Empower Rune Weapon by ${$s1/-1000} sec.", 0, 0 },

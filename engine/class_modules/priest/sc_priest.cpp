@@ -4028,10 +4028,8 @@ void priest_t::create_buffs()
                                                          buffs.collapsing_void->check() );
             if ( sets->has_set_bonus( HERO_VOIDWEAVER, TWW3, B4 ) )
             {
-              auto base_value_per_stack =
-                  talents.voidweaver.collapsing_void->effectN( specialization() == PRIEST_SHADOW ? 3 : 4 ).percent();
-              auto value = std::min( buffs.collapsing_void->check() * base_value_per_stack + 1.0,
-                                     buffs.collapsing_void->default_value * buffs.collapsing_void->max_stack() );
+              auto value = ( 1.0 + as<double>( buffs.collapsing_void->check() ) / buffs.collapsing_void->max_stack() ) *
+                           buffs.overflowing_void->default_value;
               buffs.overflowing_void->trigger( 1, value );
             }
             buffs.collapsing_void->expire();
@@ -4089,6 +4087,11 @@ void priest_t::create_buffs()
   buffs.overflowing_void = make_buff_fallback( tww3_spells.voidweaver_4pc_buff->ok(), this, "overflowing_void",
                                                tww3_spells.voidweaver_4pc_buff )
                                ->set_default_value( 0 );
+
+  if ( sets->has_set_bonus( HERO_VOIDWEAVER, TWW3, B4 ) )
+  {
+    buffs.overflowing_void->set_default_value( sets->set( HERO_VOIDWEAVER, TWW3, B4 )->effectN( 2 ).percent() / 2 );
+  }
 
   buffs.tww3_archon_4pc =
       make_buff_fallback( sets->has_set_bonus( HERO_ARCHON, TWW3, B4 ), this, "tww3_archon_4pc_helper" );

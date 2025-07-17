@@ -1995,6 +1995,7 @@ class SpellDataGenerator(DataGenerator):
           ( 445513, 0 ), # Whitemane Death Coil
           ( 1237172, 0 ), # Whitemane Epidemic
           ( 445504, 0 ), # Mograine Heart Strike
+          ( 1251951, 0 ), # Mograine Death and Decay
           ( 445507, 0 ), # Trollbane Obliterate
           ( 445508, 0 ), # Nazgrim Scourge Strike Phys
           ( 445509, 0 ), # Nazgrim Scourge Strike Shadow

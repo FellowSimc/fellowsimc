@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.62049
-static const std::array<spelltext_data_t, 28039> __ptr_spelltext_data { {
+static const std::array<spelltext_data_t, 28040> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -28037,6 +28037,7 @@ static const std::array<spelltext_data_t, 28039> __ptr_spelltext_data { {
   { 1249464, "$@spelldesc1236374", "Your next $?c2[Aimed Shot][Wildfire Bomb] deals Arcane damage and its damage is increased by $?c2[$s1][$s3]%.", 0 },
   { 1249658, "Call upon Sindragosa's aid in battle for $d, continuously dealing ${$155166s2*$<CAP>/$AP} Frost damage every $t1 sec to enemies in a cone in front of you. Consuming Killing Machine or Rime increases the duration by ${$s3/1000}.1 sec. Deals reduced damage to secondary targets.\r\n\r\n|cFFFFFFFFGrants a charge of Empower Rune Weapon at the start and 2 Runes at the end.|r", "Continuously dealing Frost damage every $t1 sec to enemies in a cone in front of you.", 0 },
   { 1250068, "Summon a herd of stampeding animals from the wilds around you that deal ${$201594s1*3} Physical damage to your enemies over $d.", 0, 0 },
+  { 1251951, "Corrupts the ground targeted by the Death Knight, causing Shadow damage every sec that targets remain in the area for $43265d.", 0, 0 },
   { 1252024, "$@spelldesc1236336", "$?c1[The damage of your next Starsurge is increased by $w1 and it splashes $w2% of its damage done to nearby enemies, reduced beyond $w4 targets.][The healing of your next Swiftmend is increased by $w1 and it splashes $w3% of its healing done to nearby allies, reduced beyond $w4 targets.]", 0 },
   { 1252096, "$@spelldesc1236422", "Thunder Blast damage increased by $w1%.", 0 },
 } };

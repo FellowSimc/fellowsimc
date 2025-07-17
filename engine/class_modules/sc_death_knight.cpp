@@ -1572,6 +1572,7 @@ public:
     const spell_data_t* trollbanes_icy_fury_ability;
     const spell_data_t* undeath_dot;
     const spell_data_t* undeath_range;
+    const spell_data_t* mograines_death_and_decay_aura;
     const spell_data_t* mograines_death_and_decay;
     const spell_data_t* mograines_might_buff;
     const spell_data_t* rider_ams;
@@ -4355,7 +4356,7 @@ struct mograine_pet_t final : public horseman_pet_t
   struct dnd_damage_mograine_t final : public horseman_spell_t
   {
     dnd_damage_mograine_t( std::string_view name, horseman_pet_t* p )
-      : horseman_spell_t( p, name, p->dk()->spell.death_and_decay_damage )
+      : horseman_spell_t( p, name, p->dk()->pet_spell.mograines_death_and_decay )
     {
       background = true;
       aoe        = -1;
@@ -4365,7 +4366,7 @@ struct mograine_pet_t final : public horseman_pet_t
   struct dnd_aura_t final : public buff_t
   {
     dnd_aura_t( horseman_pet_t* p )
-      : buff_t( p, "death_and_decay", p->dk()->pet_spell.mograines_death_and_decay ),
+      : buff_t( p, "death_and_decay", p->dk()->pet_spell.mograines_death_and_decay_aura ),
         dk( p->dk() ),
         dnd_damage( get_action<dnd_damage_mograine_t>( "death_and_decay", p ) )
     {
@@ -14472,18 +14473,19 @@ void death_knight_t::spell_lookups()
   pet_spell.apocalyptic_conquest             = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444763 );
   pet_spell.trollbanes_chains_of_ice_ability = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444826 );
   pet_spell.trollbanes_chains_of_ice_debuff  = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444828 );
-  pet_spell.trollbanes_icy_fury_ability   = conditional_spell_lookup( talent.rider.trollbanes_icy_fury.ok(), 444834 );
-  pet_spell.undeath_dot                   = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444633 );
-  pet_spell.undeath_range                 = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444634 );
-  pet_spell.mograines_death_and_decay     = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444474 );
-  pet_spell.mograines_might_buff          = conditional_spell_lookup( talent.rider.mograines_might.ok(), 444505 );
-  pet_spell.rider_ams                     = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444741 );
-  pet_spell.rider_ams_icd                 = conditional_spell_lookup( talent.rider.horsemens_aid.ok(), 451777 );
-  pet_spell.whitemane_death_coil          = conditional_spell_lookup( talent.rider.riders_champion.ok(), 445513 );
-  pet_spell.whitemane_epidemic            = conditional_spell_lookup( talent.rider.riders_champion.ok(), 1237172 );
-  pet_spell.mograine_heart_strike         = conditional_spell_lookup( talent.rider.riders_champion.ok(), 445504 );
-  pet_spell.trollbane_obliterate          = conditional_spell_lookup( talent.rider.riders_champion.ok(), 445507 );
-  pet_spell.trollbane_frostscythe = conditional_spell_lookup(
+  pet_spell.trollbanes_icy_fury_ability    = conditional_spell_lookup( talent.rider.trollbanes_icy_fury.ok(), 444834 );
+  pet_spell.undeath_dot                    = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444633 );
+  pet_spell.undeath_range                  = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444634 );
+  pet_spell.mograines_death_and_decay_aura = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444474 );
+  pet_spell.mograines_death_and_decay      = conditional_spell_lookup( talent.rider.riders_champion.ok(), 1251951 );
+  pet_spell.mograines_might_buff           = conditional_spell_lookup( talent.rider.mograines_might.ok(), 444505 );
+  pet_spell.rider_ams                      = conditional_spell_lookup( talent.rider.riders_champion.ok(), 444741 );
+  pet_spell.rider_ams_icd                  = conditional_spell_lookup( talent.rider.horsemens_aid.ok(), 451777 );
+  pet_spell.whitemane_death_coil           = conditional_spell_lookup( talent.rider.riders_champion.ok(), 445513 );
+  pet_spell.whitemane_epidemic             = conditional_spell_lookup( talent.rider.riders_champion.ok(), 1237172 );
+  pet_spell.mograine_heart_strike          = conditional_spell_lookup( talent.rider.riders_champion.ok(), 445504 );
+  pet_spell.trollbane_obliterate           = conditional_spell_lookup( talent.rider.riders_champion.ok(), 445507 );
+  pet_spell.trollbane_frostscythe          = conditional_spell_lookup(
       talent.rider.riders_champion.ok() && sets->has_set_bonus( HERO_RIDER_OF_THE_APOCALYPSE, TWW3, B2 ), 1237388 );
   pet_spell.nazgrim_scourge_strike_phys   = conditional_spell_lookup( talent.rider.riders_champion.ok(), 445508 );
   pet_spell.nazgrim_scourge_strike_shadow = conditional_spell_lookup( talent.rider.riders_champion.ok(), 445509 );

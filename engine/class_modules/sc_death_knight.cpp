@@ -9304,8 +9304,8 @@ struct frostscythe_t : public frostscythe_base_t
 
     if ( p()->buffs.killing_machine->up() )
     {
-      // TODO 11.2 check over fsc misc values for a potential delay source
-      p()->consume_killing_machine( p()->procs.killing_machine_fsc, 0_ms, aa_action );
+      // No spell data values found that match delay betwee FSC cast and KM consumption 
+      p()->consume_killing_machine( p()->procs.killing_machine_fsc, 50_ms, aa_action );
     }
 
     if ( p()->talent.frost.obliteration.ok() && p()->buffs.empower_rune_weapon->check() )
@@ -9524,16 +9524,6 @@ struct frostreaper_t : public death_knight_spell_t
   {
     background = true;
   }
-
-  void impact( action_state_t* state ) override
-  {
-    death_knight_spell_t::impact( state );    
-
-    for ( auto t : target_list() )
-    {
-      get_td( state->target )->debuff.frostreaper->expire();
-    }
-  }
 };
 
 struct frost_strike_t final : public death_knight_melee_attack_t
@@ -9595,8 +9585,9 @@ struct frost_strike_t final : public death_knight_melee_attack_t
   {
     const auto td = get_td( target );
 
-    // 11.2 TODO 6/21/25 IO still buffs the frost strike that procs RE so we need to delay expiration and prevent
+    // 6/21/25 IO buffs the frost strike that procs RE so we need to delay expiration and prevent
     // additional stacks til after the FS is resolved
+    // In game this looks like: start FS cast, check if RE proced and stack IO if it did not, finish FS cast, calc damage, expire IO
 
     // frostbane benefits from IO, and stacks it, but because its damage is delayed it will not get buffed
     // when frostbane procs RE
@@ -9608,6 +9599,10 @@ struct frost_strike_t final : public death_knight_melee_attack_t
     if ( td->debuff.frostreaper->up() )
     {
       frostreaper->execute_on_target( target );
+      for ( auto t : target_list() )
+      {
+        get_td( t )->debuff.frostreaper->expire();
+      }
     }
 
     if ( p()->buffs.frostbane->up() )
@@ -9786,8 +9781,13 @@ struct glacial_advance_t final : public death_knight_spell_t
 
   void execute() override
   {
-    // 11.2 TODO 6/21/25 IO still buffs the frost strike that procs RE so we need to delay expiration and prevent
+    // 6/21/25 IO buffs the frost strike that procs RE so we need to delay expiration and prevent
     // additional stacks til after the FS is resolved
+    // In game this looks like: start FS cast, check if RE proced and stack IO if it did not, finish FS cast, calc
+    // damage, expire IO
+
+    // frostbane benefits from IO, and stacks it, but because its damage is delayed it will not get buffed
+    // when frostbane procs RE
     if ( p()->talent.frost.icy_onslaught->ok() && p()->buffs.icy_onslaught->expiration_delay == nullptr )
     {
       p()->buffs.icy_onslaught->trigger();
@@ -10071,7 +10071,6 @@ struct howling_blades_t final : public death_knight_spell_t
   {
     death_knight_spell_t::impact( state );
 
-    // 11.2 TODO Keep an eye out for an ICD appearing on this
     if ( p()->rng().roll( p()->talent.frost.howling_blades->effectN( 1 ).base_value() / 100 ) )
     {
       p()->trigger_killing_machine( false, p()->procs.km_from_howling_blades,
@@ -12531,7 +12530,7 @@ void death_knight_t::trigger_runic_empowerment( double rpcost )
 
   if ( talent.frost.icy_onslaught->ok() )
   {
-    buffs.icy_onslaught->expire( 100_ms ); // 11.2 TODO magic number is bad
+    buffs.icy_onslaught->expire( 100_ms ); // Delay needed to push icy_onslaughts expiration to after frost strike is resolved
   }
 }
 
@@ -14778,7 +14777,11 @@ inline death_knight_td_t::death_knight_td_t( player_t& target, death_knight_t& p
       make_debuff( p.talent.frost.everfrost.ok(), *this, "everfrost", p.talent.frost.everfrost->effectN( 1 ).trigger() )
           ->set_default_value( p.talent.frost.everfrost->effectN( 1 ).percent() );
 
-  debuff.frostreaper = make_debuff( p.talent.frost.frostreaper.ok(), *this, "frostreaper", p.spell.frostreaper_debuff );
+  debuff.frostreaper = make_debuff( p.talent.frost.frostreaper.ok(), *this, "frostreaper", p.spell.frostreaper_debuff )
+                           ->set_refresh_duration_callback( [ & ]( const buff_t* b, timespan_t time ) {
+                             p.background_actions.frostreaper->execute_on_target( b->player );
+                             return time;
+                           } );
 
   flag.razorice_consumed = false;
 

@@ -15,7 +15,7 @@
       { "data_type": "h", "field": "ui_order" },
       { "data_type": "i", "field": "id_icon_file_data" },
       { "data_type": "i", "field": "id_reward_item" },
-      { "data_type": "I", "field": "criteria_tree" },
+      { "data_type": "I", "field": "criteria_tree", "ref": "CriteriaTree" },
       { "data_type": "h", "field": "shares_criteria" },
       { "data_type": "i", "field": "id_covenant" },
       { "data_type": "i", "field": "hidden_before_display_season" },
@@ -348,6 +348,17 @@
   "CraftingQuality": {
     "fields": [
       { "data_type": "i", "field": "tier" }
+    ]
+  },
+  "CriteriaTree": {
+    "fields": [
+      { "data_type": "S", "field": "description" },
+      { "data_type": "I", "field": "parent" },
+      { "data_type": "I", "field": "amount" },
+      { "data_type": "i", "field": "operator" },
+      { "data_type": "i", "field": "id_criteria" },
+      { "data_type": "i", "field": "order_index" },
+      { "data_type": "i", "field": "flags" }
     ]
   },
   "CurrencyCategory": {

@@ -2311,7 +2311,7 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Not In Spellbook (143), Requires Equipped Inv Types (276), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=908167)   : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | Misc Value 2: 0x8 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | Stat: Int | Target: Self (1)
 Description      : Increases your Intellect by $s1% while wearing only Mail armor.
 
 Name             : Fire Breath (desc=Red) (id=366903) [Spell Family (224), Hidden] 
@@ -5254,7 +5254,7 @@ Labels           : 16: Class Spells
 Attributes       : Passive (6), Not In Spellbook (143), Do Not Log on Learn (355), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=1003035)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 6 | Scaled Value: 6 | Misc Value 2: 0x4 | Target: Self (1)
+                   Base Value: 6 | Scaled Value: 6 | Stat: Sta | Target: Self (1)
 Description      : Your Stamina is increased by $s1%.
 
 Name             : Lifeforce Mender (id=376179) [Spell Family (224), Passive] 
@@ -8539,7 +8539,7 @@ Family Flags     : 67
 Attributes       : Aura Points On Client (268), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=1071877)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | Misc Value 2: 0x8 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | Stat: Int | Target: Self (1)
 Description      : $@spelldesc408004
 Tooltip          : Intellect increased by $w1%.
 
@@ -10822,7 +10822,7 @@ Attributes       : Do Not Log on Learn (355)
 Aura Interrupt   : Change Specialization (38)
 Effects          :
 #1 (id=1120244)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | Misc Value 2: 0x8 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | Stat: Int | Target: Self (1)
 Description      : $@spelldesc431984
 Tooltip          : Intellect increased by $s1%.
 

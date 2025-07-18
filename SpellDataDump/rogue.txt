@@ -2091,7 +2091,7 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Not In Spellbook (143), Requires Equipped Inv Types (276), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=87554)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Misc Value 2: 0x2 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Stat: Agi | Target: Self (1)
 Description      : Increases your Agility by $s1% while wearing only Leather armor.
 
 Name             : Main Gauche (id=86392) [Spell Family (8)] 
@@ -9406,7 +9406,7 @@ Labels           : 16: Class Spells
 Attributes       : Passive (6), Not In Spellbook (143), Aura Points On Client (268), Do Not Log on Learn (355), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=1012995)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | PvP Coefficient: 3.6 | Misc Value 2: 0x4 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | PvP Coefficient: 3.6 | Stat: Sta | Target: Self (1)
 #2 (id=1092655)  : Dummy (3)
                    Base Value: 3 | Scaled Value: 3
 Description      : Stamina increased by $<stam>%.
@@ -10951,7 +10951,7 @@ Attributes       : No Aura Cancel (31), Do Not Display Range (126), Do Not Displ
 Aura Interrupt   : Leave World (19)
 Effects          :
 #1 (id=1033443)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 1 | Scaled Value: 1 | Misc Value 2: 0x2 | Target: Self (1)
+                   Base Value: 1 | Scaled Value: 1 | Stat: Agi | Target: Self (1)
 Description      : $@spelldesc381799
 Tooltip          : Your Ruptures are increasing your Agility by $W1%.
 
@@ -11908,7 +11908,7 @@ Labels           : 16: Class Spells
 Attributes       : Aura Points On Client (268)
 Effects          :
 #1 (id=1074593)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | PvP Coefficient: 0.5 | Misc Value 2: 0x2 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | PvP Coefficient: 0.5 | Stat: Agi | Target: Self (1)
 Description      : Increases Agility by $s1%. 
 Tooltip          : Increases Agility by $w1%.
 
@@ -13598,7 +13598,7 @@ Attributes       : No Aura Cancel (31), Aura Points On Client (268)
 Aura Interrupt   : Leave World (19), Enter World (22), Change Specialization (38), Raid Encounter Start or M+ Start (40), Enter Instance (43), Change Talent (46)
 Effects          :
 #1 (id=1153844)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 7 | Scaled Value: 7 | Misc Value 2: 0x2 | Target: Self (1)
+                   Base Value: 7 | Scaled Value: 7 | Stat: Agi | Target: Self (1)
 Description      : $@spelldesc452536
 Tooltip          : Agility increased by $w1%.
 

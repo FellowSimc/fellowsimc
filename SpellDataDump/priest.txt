@@ -763,7 +763,7 @@ Attributes       : Not Shapeshifted (16), No Threat (42), No AutoCast (AI) (49),
 Aura Interrupt   : Enter World (22), Disconnect (42)
 Effects          :
 #1 (id=12246)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | Misc Value 2: 0x4 | Radius: 100 yards | Target: Friendly or Raid (118)
+                   Base Value: 5 | Scaled Value: 5 | Stat: Sta | Radius: 100 yards | Target: Friendly or Raid (118)
 #2 (id=808851)   : Apply Aura (6) | Modify Damage Taken% (87)
                    Base Value: 0 | Scaled Value: 0 | Misc Value: 0x7e | Radius: 100 yards | Target: Friendly or Raid (118)
                    Affected School(s): Arcane, Fire, Frost, Holy, Nature, Shadow
@@ -2101,7 +2101,7 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Not In Spellbook (143), Requires Equipped Inv Types (276), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=92640)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Misc Value 2: 0x8 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Stat: Int | Target: Self (1)
 Description      : Increases your Intellect by $s1%.
 
 Name             : Leap of Faith (id=92833) [Spell Family (6)] 

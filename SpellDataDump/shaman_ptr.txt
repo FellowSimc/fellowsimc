@@ -1987,7 +1987,7 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Not In Spellbook (143), Requires Equipped Inv Types (276), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=87561)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Misc Value 2: 0x2 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Stat: Agi | Target: Self (1)
 Description      : Increases your Agility by $s1% while wearing only Mail armor.
 
 Name             : Mail Specialization (desc=Passive) (id=86100) [Passive, Hidden] 
@@ -2003,7 +2003,7 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Not In Spellbook (143), Requires Equipped Inv Types (276), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=87562)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Misc Value 2: 0x8 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Stat: Int | Target: Self (1)
 Description      : Increases your Intellect by $s1% while wearing only Mail armor.
 
 Name             : Mail Specialization (desc=Passive) (id=86108) [Passive, Hidden] 
@@ -2019,7 +2019,7 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Not In Spellbook (143), Requires Equipped Inv Types (276), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=87579)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Misc Value 2: 0x8 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Stat: Int | Target: Self (1)
 Description      : Increases your Intellect by $s1% while wearing only Mail armor.
 
 Name             : Dual Wield (id=86629) [Spell Family (11), Passive, Hidden] 

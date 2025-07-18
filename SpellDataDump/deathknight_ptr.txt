@@ -526,7 +526,7 @@ Attributes       : Passive (6), Not In Spellbook (143), Aura Points On Client (2
 Aura Interrupt   : Login (29)
 Effects          :
 #1 (id=40417)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 20 | Scaled Value: 20 | PvP Coefficient: 0.5 | Misc Value: 2 | Misc Value 2: 0x4 | Target: Self (1)
+                   Base Value: 20 | Scaled Value: 20 | PvP Coefficient: 0.5 | Misc Value: 2 | Stat: Sta | Target: Self (1)
 #2 (id=40418)    : Apply Aura (6) | Add Percent Modifier (108): Spell Generated Threat (2)
                    Base Value: -100 | Scaled Value: -100 | Misc Value: 2 | Target: Self (1)
                    Affected Spells: Death Coil (47633), Unholy Strength (53365), Bonestorm (194844), Bonestorm (196528)
@@ -1207,7 +1207,7 @@ Attributes       : Is Ability (4), Not Shapeshifted (16), Do Not Sheath (18), No
 Aura Interrupt   : Raid Encounter End or M+ Start (41)
 Effects          :
 #1 (id=43590)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 30 | Scaled Value: 30 | PvP Coefficient: 0.4 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 30 | Scaled Value: 30 | PvP Coefficient: 0.4 | Stat: Str | Target: Self (1)
 #2 (id=43591)    : Apply Aura (6) | Dummy (4)
                    Base Value: 2 | Scaled Value: 2 | PvP Coefficient: 0.5 | Misc Value: 1887 | Target: Self (1)
 #3 (id=337680)   : Apply Aura (6) | Dummy (4)
@@ -1408,7 +1408,7 @@ Family Flags     : 106
 Attributes       : Can't Crit (93), Ignore Healing Modifiers (219), Allow Class Ability Procs (416), Always Allow Negative Healing Percent Modifiers (442)
 Effects          :
 #1 (id=46012)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 15 | Scaled Value: 15 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 15 | Scaled Value: 15 | Stat: Str | Target: Self (1)
 #2 (id=46013)    : Direct Heal% (136)
                    Base Value: 4 | Scaled Value: 4 | Target: Self (1)
 Description      : Affixes your rune weapon with a rune that has a chance to heal you for $53365s2% and increase total Strength by $53365s1% for $53365d.
@@ -1924,7 +1924,7 @@ Effects          :
 #1 (id=56128)    : Apply Aura (6) | Modify Armor% (101)
                    Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Misc Value: 1 | Target: Self (1)
 #2 (id=56129)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | Misc Value: 2 | Misc Value 2: 0xf | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | Misc Value: 2 | Stat: Str | Stat: Agi | Stat: Sta | Stat: Int | Target: Self (1)
 
 Name             : Rune of the Stoneskin Gargoyle (id=62158) [Hidden] 
 Class            : Death Knight
@@ -2478,7 +2478,7 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Not In Spellbook (143), Requires Equipped Inv Types (276), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=87586)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Stat: Str | Target: Self (1)
 Description      : Increases your Strength by $s1% while wearing only Plate armor.
 
 Name             : Plate Specialization (desc=Passive) (id=86536) [Passive, Hidden] 
@@ -2494,7 +2494,7 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Not In Spellbook (143), Requires Equipped Inv Types (276), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=88152)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Stat: Str | Target: Self (1)
 Description      : Increases your Strength by $s1% while wearing only Plate armor.
 
 Name             : Plate Specialization (desc=Passive) (id=86537) [Passive, Hidden] 
@@ -2510,7 +2510,7 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Not In Spellbook (143), Requires Equipped Inv Types (276), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=88153)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Misc Value 2: 0x4 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Stat: Sta | Target: Self (1)
 Description      : Increases your Stamina by $s1% while wearing only Plate armor.
 
 Name             : Claw (id=91776) 
@@ -8358,7 +8358,7 @@ Proc Chance      : 101%
 Attributes       : Can't Crit (93), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=805586)   : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | PvP Coefficient: 0.666667 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | PvP Coefficient: 0.666667 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc319230
 Tooltip          : Strength increased by $s1%.
 
@@ -8375,7 +8375,7 @@ Family Flags     : 107
 Attributes       : Passive (6), Update Passives on Apply/Remove (344)
 Effects          :
 #1 (id=805636)   : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 10 | Scaled Value: 10 | Misc Value: 2 | Misc Value 2: 0x4 | Target: Self (1)
+                   Base Value: 10 | Scaled Value: 10 | Misc Value: 2 | Stat: Sta | Target: Self (1)
 #2 (id=805637)   : Apply Aura (6) | Add Percent Modifier (108): Spell Generated Threat (2)
                    Base Value: -100 | Scaled Value: -100 | Misc Value: 2 | Target: Self (1)
                    Affected Spells: Death Coil (47633), Unholy Strength (53365), Bonestorm (194844), Bonestorm (196528)
@@ -8557,7 +8557,7 @@ Family Flags     : 5
 Attributes       : Can't Crit (93), Not In Spellbook Until Learned (269), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=813579)   : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 2 | Scaled Value: 2 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 2 | Scaled Value: 2 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc324128
 Tooltip          : Strength increased by $s1%.
 
@@ -9814,7 +9814,7 @@ Triggered By     : Unleashed Frenzy (338492)
 Attributes       : Do Not Display Range (126), Aura Points On Client (268), Not In Spellbook Until Learned (269), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=837178)   : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 0 | Scaled Value: 0 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 0 | Scaled Value: 0 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc338492
 Tooltip          : Strength increased by ${$W1}.1%.
 
@@ -10557,7 +10557,7 @@ Attributes       : Include In Advanced Combat Log (72), Aura Points On Client (2
 Aura Interrupt   : Leave World (19), Enter World (22), Raid Encounter Start or M+ Start (40)
 Effects          :
 #1 (id=907320)   : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 1 | Scaled Value: 1 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 1 | Scaled Value: 1 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc364399
 Tooltip          : Strength increased by $w1%.
 
@@ -10900,7 +10900,7 @@ Labels           : 16: Class Spells
 Attributes       : Aura Points On Client (268)
 Effects          :
 #1 (id=1000492)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 0 | Scaled Value: 0 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 0 | Scaled Value: 0 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc374574
 Tooltip          : Strength increased by $w1%.
 
@@ -11007,7 +11007,7 @@ Labels           : 16: Class Spells
 Attributes       : Passive (6), Update Passives on Apply/Remove (344)
 Effects          :
 #1 (id=1000722)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 30 | Scaled Value: 30 | Misc Value: 2 | Misc Value 2: 0x4 | Target: Self (1)
+                   Base Value: 30 | Scaled Value: 30 | Misc Value: 2 | Stat: Sta | Target: Self (1)
 #2 (id=1000723)  : Apply Aura (6) | Modify Damage Taken% (87)
                    Base Value: 0 | Scaled Value: 0 | Misc Value: 0x7f | Target: Self (1)
                    Affected School(s): All
@@ -11365,7 +11365,7 @@ Attributes       : Disable Aura While Dead (226), Aura Points On Client (268), O
 Aura Interrupt   : Change Specialization (38)
 Effects          :
 #1 (id=1004894)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 8 | Scaled Value: 8 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 8 | Scaled Value: 8 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc377190
 Tooltip          : Strength increased by $w1%.
 
@@ -11665,7 +11665,7 @@ Attributes       : No Aura Cancel (31), Allow Low Level Buff (67), Aura Points O
 Aura Interrupt   : Change Specialization (38)
 Effects          :
 #1 (id=1005518)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 0 | Scaled Value: 0 | PvP Coefficient: 0.65 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 0 | Scaled Value: 0 | PvP Coefficient: 0.65 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc377590
 Tooltip          : Strength increased by ${$W1}.2%.
 
@@ -13114,7 +13114,7 @@ Attributes       : Do Not Sheath (18), No Threat (42), Ignore Line of Sight (66)
 Aura Interrupt   : Change Specialization (38)
 Effects          :
 #1 (id=1072430)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 10 | Scaled Value: 10 | PvP Coefficient: 0.5 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 10 | Scaled Value: 10 | PvP Coefficient: 0.5 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc405500
 Tooltip          : Strength increased by $w1%.
 
@@ -13968,7 +13968,7 @@ Attributes       : Include In Advanced Combat Log (72), Aura Points On Client (2
 Aura Interrupt   : Change Specialization (38), Change Talent (46)
 Effects          :
 #1 (id=1123972)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 8 | Scaled Value: 8 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 8 | Scaled Value: 8 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc434157
 Tooltip          : Your Strength is increased by $w1%.
 
@@ -15698,7 +15698,7 @@ Attributes       : Allow Cast While Dead (23), Allow While Mounted (24), Allow W
 Aura Interrupt   : Leave World (19)
 Effects          :
 #1 (id=1141359)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | Stat: Str | Target: Self (1)
 Description      : While Nazgrim is active, gain Apocalyptic Conquest, increasing your Strength by $s1%.
 Tooltip          : Your Strength is increased by $w1%.
 
@@ -16868,7 +16868,7 @@ Triggered By     : Death Knight Frost 11.0 Class Set 4pc (453631)
 Attributes       : Disable Aura While Dead (226), Aura Points On Client (268)
 Effects          :
 #1 (id=1162061)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 10 | Scaled Value: 10 | PvP Coefficient: 0.5 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 10 | Scaled Value: 10 | PvP Coefficient: 0.5 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc453631
 Tooltip          : Your Strength is increased by $s1%.
 
@@ -17262,7 +17262,7 @@ Proc Chance      : 101%
 Attributes       : No Aura Cancel (31), Aura Points On Client (268), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=1168229)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc458753
 Tooltip          : Strength increased by ${$W1}.1%.
 
@@ -17326,7 +17326,7 @@ Attributes       : Include In Advanced Combat Log (72), Aura Points On Client (2
 Aura Interrupt   : Change Specialization (38), Change Talent (46)
 Effects          :
 #1 (id=1169307)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 12 | Scaled Value: 12 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 12 | Scaled Value: 12 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc434157
 Tooltip          : Your Strength is increased by $w1%.
 
@@ -17475,7 +17475,7 @@ Labels           : 16: Class Spells
 Attributes       : Aura Points On Client (268), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=1183338)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 10 | Scaled Value: 10 | Misc Value 2: 0x1 | Target: Self (1)
+                   Base Value: 10 | Scaled Value: 10 | Stat: Str | Target: Self (1)
 Description      : $@spelldesc443560
 Tooltip          : Strength increased by $w1%.
 

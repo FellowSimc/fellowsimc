@@ -199,7 +199,7 @@ Labels           : 16: Class Spells
 Attributes       : Not Shapeshifted (16), No Threat (42), No AutoCast (AI) (49), Include In Advanced Combat Log (72), Not On Player Controlled NPC (168), Vehicle Immunity Category (218), Aura Points On Client (268), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=459)      : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 3 | Scaled Value: 3 | Misc Value 2: 0x8 | Radius: 100 yards | Target: Friendly or Raid (118)
+                   Base Value: 3 | Scaled Value: 3 | Stat: Int | Radius: 100 yards | Target: Friendly or Raid (118)
 Description      : Infuses the target with brilliance, increasing their Intellect by $s1% for $d.  
 
 If the target is in your party or raid, all party and raid members will be affected.
@@ -1807,7 +1807,7 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Not In Spellbook (143), Requires Equipped Inv Types (276), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=92639)    : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Misc Value 2: 0x8 | Target: Self (1)
+                   Base Value: 5 | Scaled Value: 5 | SP Coefficient: 0.25 | Stat: Int | Target: Self (1)
 Description      : Increases your Intellect by $s1%.
 
 Name             : Altered Form (desc=Racial Passive) (id=94293) [Passive, Hidden] 
@@ -6667,7 +6667,7 @@ Effects          :
 #1 (id=809011)   : Apply Aura (6) | Modify Spell Crit% (57)
                    Base Value: 5 | Scaled Value: 5 | Target: Friendly (21)
 #2 (id=875454)   : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 5 | Scaled Value: 5 | Misc Value 2: 0x8 | Target: Friendly (21)
+                   Base Value: 5 | Scaled Value: 5 | Stat: Int | Target: Friendly (21)
 Description      : $@spelldesc321358
 Tooltip          : Intellect and spell critical strike chance increased by $w1%.
 
@@ -7474,7 +7474,7 @@ Proc Chance      : 101%
 Attributes       : Do Not Display (Spellbook, Aura Icon, Combat Log) (7), No Aura Icon (60), Limit N (165), Aura Points On Client (268), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=829955)   : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 1 | Scaled Value: 1 | Misc Value 2: 0x8 | Target: Friendly (21)
+                   Base Value: 1 | Scaled Value: 1 | Stat: Int | Target: Friendly (21)
 Description      : $@spelldesc321358
 Tooltip          : Intellect increased by $w1%.
 
@@ -8346,7 +8346,7 @@ Attributes       : Do Not Log (8), No Aura Cancel (31), Ignore Line of Sight (66
 Aura Interrupt   : Change Specialization (38), Change Talent (46), Change Glyph (47)
 Effects          :
 #1 (id=879789)   : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 4 | Scaled Value: 4 | Misc Value 2: 0x8 | Target: Self (1)
+                   Base Value: 4 | Scaled Value: 4 | Stat: Int | Target: Self (1)
 Description      : $@spelldesc1463
 Tooltip          : Increases Intellect by $w1%.
 
@@ -10314,7 +10314,7 @@ Attributes       : Aura Points On Client (268)
 Aura Interrupt   : Change Specialization (38)
 Effects          :
 #1 (id=1016732)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 2 | Scaled Value: 2 | PvP Coefficient: 0.5 | Misc Value 2: 0x8 | Target: Self (1)
+                   Base Value: 2 | Scaled Value: 2 | PvP Coefficient: 0.5 | Stat: Int | Target: Self (1)
 Description      : $@spelldesc384187
 Tooltip          : Intellect increased by $s1%
 
@@ -15818,7 +15818,7 @@ Stacks           : 5 maximum
 Proc Chance      : 101%
 Effects          :
 #1 (id=1170073)  : Apply Aura (6) | Modify Total Stat% (137)
-                   Base Value: 1 | Scaled Value: 1 | Misc Value 2: 0x8 | Target: Self (1)
+                   Base Value: 1 | Scaled Value: 1 | Stat: Int | Target: Self (1)
 Description      : $@spelldesc461261
 Tooltip          : Your Intellect is increased by $s1%.
 

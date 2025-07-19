@@ -11504,6 +11504,7 @@ struct legion_of_souls_t : public death_knight_spell_t
     set_target( p() );
 
     death_knight_spell_t::execute();
+    p()->buffs.legion_of_souls->trigger();
 
     for ( auto& target : sim->target_list )
     {
@@ -15424,6 +15425,11 @@ void death_knight_t::create_buffs()
   buffs.reaping_buff = make_fallback( talent.unholy.reaping.ok(), this, "reaping", spell.reaping_buff );
 
   buffs.desecrate_buff = make_fallback( talent.unholy.desecrate.ok(), this, "desecrate", spell.desecrate_buff );
+
+  buffs.legion_of_souls =
+      make_fallback( talent.unholy.legion_of_souls.ok(), this, "legion_of_souls", talent.unholy.legion_of_souls )
+          ->set_period( 0_ms )
+          ->set_cooldown( 0_ms );
 
   buffs.unholy_commander = make_fallback( sets->has_set_bonus( DEATH_KNIGHT_UNHOLY, TWW1, B4 ), this,
                                           "unholy_commander", spell.unholy_commander );

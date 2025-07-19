@@ -4705,6 +4705,18 @@ struct trollbane_pet_t final : public horseman_pet_t
       consumed_km = false;
     }
 
+  double composite_da_multiplier( const action_state_t* state ) const override
+  {
+    double m = horseman_melee_t::composite_da_multiplier( state );
+    // Copy of logic used in obliterate_strike_t to apply mastery
+    if ( dk()->spec.frostreaper->ok() && get_school() == SCHOOL_FROST )
+    {
+      m *= 1.0 + dk()->cache.mastery_value();
+    }
+
+    return m;
+  }
+
  public:
     bool consumed_km;
   };
@@ -4714,8 +4726,10 @@ struct trollbane_pet_t final : public horseman_pet_t
     frostscythe_trollbane_t( std::string_view name, horseman_pet_t* p )
       : horseman_melee_t( p, name, p->dk()->pet_spell.trollbane_frostscythe )
     {
+      base_multiplier     = dk()->spell.tww3_4pc_rider->effectN( 1 ).percent();
       aoe = -1;
       reduced_aoe_targets = data().effectN( 5 ).base_value();
+      parse_effects( dk()->mastery.frozen_heart );
     }
   };
 

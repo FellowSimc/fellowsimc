@@ -1554,7 +1554,8 @@ public:
     const spell_data_t* dark_empowerment;
     // All Will Serve
     const spell_data_t* blighted_arrow;
-    const spell_data_t* blighted_arrow_buff;
+    const spell_data_t* blighted_arrow_aoe_buff;
+    const spell_data_t* blighted_arrow_st_buff;
     // Magus of the Dead
     const spell_data_t* frostbolt;
     const spell_data_t* shadow_bolt;
@@ -3487,11 +3488,11 @@ struct risen_skulker_pet_t : public death_knight_pet_t
   struct blighted_arrow_t : public pet_spell_t<risen_skulker_pet_t>
   {
     blighted_arrow_t( std::string_view n, risen_skulker_pet_t* p )
-      : pet_spell_t( p, n, p->dk()->pet_spell.blighted_arrow ), mult( 0 )
+      : pet_spell_t( p, n, p->dk()->pet_spell.blighted_arrow ), was_instant( false )
     {
       background = true;
       repeating  = true;
-      parse_effects( p->blighted_arrow_buff );
+      parse_effects( p->blighted_arrow_aoe_buff );
     }
 
     void schedule_execute( action_state_t* state ) override
@@ -3502,32 +3503,40 @@ struct risen_skulker_pet_t : public death_knight_pet_t
       player->started_waiting = sim->current_time();
     }
 
-    void reset() override
-    {
-      pet_spell_t::reset();
-      mult = 0;
-    }
-
     void execute() override
     {
+      was_instant = false;
       pet_spell_t::execute();
-      if ( mult > 0 )
-        stats->add_execute( 0_ms, target );
-      mult = 0;
-      pet()->blighted_arrow_buff->decrement();
+      pet()->blighted_arrow_aoe_buff->decrement();
+      if ( pet()->blighted_arrow_st_buff->check() )
+      {
+        was_instant = true;
+        pet()->blighted_arrow_st_buff->decrement();
+      }
+    }
+
+    double execute_time_pct_multiplier() const override
+    {
+      double m = pet_spell_t::execute_time_pct_multiplier();
+
+      if ( pet()->blighted_arrow_st_buff->check() )
+        m *= 0;
+
+      return m;
     }
 
     double composite_da_multiplier( const action_state_t* state ) const override
     {
       double m = pet_spell_t::composite_da_multiplier( state );
 
-      m *= 1.0 + mult;
+      if ( was_instant )
+        m *= dk()->talent.unholy.all_will_serve->effectN( 1 ).percent();
 
       return m;
     }
 
-  public:
-    double mult;
+  private:
+    bool was_instant;
   };
 
   void acquire_target( retarget_source event, player_t* context ) override
@@ -3560,7 +3569,8 @@ struct risen_skulker_pet_t : public death_knight_pet_t
   {
     death_knight_pet_t::create_buffs();
 
-    blighted_arrow_buff = make_buff( this, "blighted_arrow", dk()->pet_spell.blighted_arrow_buff );
+    blighted_arrow_aoe_buff = make_buff( this, "blighted_arrow_aoe", dk()->pet_spell.blighted_arrow_aoe_buff );
+    blighted_arrow_st_buff  = make_buff( this, "blighted_arrow_st", dk()->pet_spell.blighted_arrow_st_buff );
   }
 
   void create_actions() override
@@ -3593,7 +3603,8 @@ struct risen_skulker_pet_t : public death_knight_pet_t
 
 public:
   blighted_arrow_t* blighted_arrow;
-  propagate_const<buff_t*> blighted_arrow_buff;
+  propagate_const<buff_t*> blighted_arrow_aoe_buff;
+  propagate_const<buff_t*> blighted_arrow_st_buff;
 };
 
 // ==========================================================================
@@ -8478,7 +8489,7 @@ struct death_coil_damage_t final : public death_knight_spell_t
       if ( p()->talent.unholy.all_will_serve.ok() && p()->pets.risen_skulker.active_pet() != nullptr )
       {
         pets::risen_skulker_pet_t* skulker = p()->pets.risen_skulker.active_pet();
-        skulker->blighted_arrow->mult      = p()->talent.unholy.all_will_serve->effectN( 1 ).percent();
+        skulker->blighted_arrow_st_buff->trigger();
       }
     }
 
@@ -8984,7 +8995,7 @@ struct epidemic_t final : public death_knight_spell_t
       if ( p()->talent.unholy.all_will_serve.ok() && p()->pets.risen_skulker.active_pet() != nullptr )
       {
         pets::risen_skulker_pet_t* skulker = p()->pets.risen_skulker.active_pet();
-        skulker->blighted_arrow_buff->trigger();
+        skulker->blighted_arrow_aoe_buff->trigger();
       }
     }
     else
@@ -14472,7 +14483,8 @@ void death_knight_t::spell_lookups()
   pet_spell.dark_empowerment = conditional_spell_lookup( talent.unholy.summon_gargoyle.ok(), 211947 );
   // Risen Skulker (all will serve)
   pet_spell.blighted_arrow      = conditional_spell_lookup( talent.unholy.all_will_serve.ok(), 1239356 );
-  pet_spell.blighted_arrow_buff = conditional_spell_lookup( talent.unholy.all_will_serve.ok(), 1239385 );
+  pet_spell.blighted_arrow_aoe_buff = conditional_spell_lookup( talent.unholy.all_will_serve.ok(), 1239385 );
+  pet_spell.blighted_arrow_st_buff  = conditional_spell_lookup( talent.unholy.all_will_serve.ok(), 1239422 );
   // Magus of the dead (army of the damned)
   pet_spell.frostbolt =
       conditional_spell_lookup( talent.unholy.magus_of_the_dead.ok() || talent.unholy.doomed_bidding.ok(), 317792 );

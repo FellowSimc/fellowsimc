@@ -4173,6 +4173,11 @@ void paladin_t::create_buffs()
   // Not going to implement this "correctly", too much overhead for too little informational gain
   buffs.lightsmith.lesser_bulwark = make_buff<buffs::lesser_bulwark_buff_t>( this );
   buffs.lightsmith.lesser_weapon = make_buff( this, "lesser_weapon", find_spell( 1239091 ) );
+  buffs.lightsmith.fake_tww3_ls_bh = make_buff( this, "fake_tww3_ls_bh" )
+                                         ->set_duration( 5_s )
+                                         ->set_chance( 1 )
+                                         ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS )
+                                         ->set_max_stack( 5 );
   buffs.lightsmith.blessed_assurance =
       make_buff( this, "blessed_assurance", find_spell( 433019 ) )->set_default_value_from_effect( 1 );
   buffs.lightsmith.divine_guidance = make_buff( this, "divine_guidance", find_spell( 433106 ) )->set_max_stack( 5 );

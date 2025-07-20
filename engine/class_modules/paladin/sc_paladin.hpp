@@ -267,7 +267,7 @@ public:
       buff_t* masterwork;
       buff_t* lesser_weapon;
       absorb_buff_t* lesser_bulwark;
-      buff_t* fake_lesser_weapon;
+      buff_t* fake_tww3_ls_bh;
     } lightsmith;
 
     struct

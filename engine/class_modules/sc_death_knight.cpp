@@ -2673,7 +2673,8 @@ struct death_knight_pet_t : public pet_t
   {
     pet_t::create_buffs();
     grave_mastery = make_buff( this, "grave_mastery", dk()->pet_spell.grave_mastery_buff )
-                        ->set_default_value_from_effect_type( A_MOD_CRIT_DAMAGE_BONUS );
+                        ->set_default_value_from_effect_type( A_MOD_CRIT_DAMAGE_BONUS )
+                        ->set_quiet( true );
 
     blood_rush = make_buff( this, "blood_rush", dk()->spell.blood_rush )
                      ->set_default_value_from_effect( 1 )

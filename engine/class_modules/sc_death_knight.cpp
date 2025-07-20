@@ -14633,6 +14633,11 @@ void death_knight_t::init_blizzard_action_list()
 parsed_assisted_combat_rule_t death_knight_t::parse_assisted_combat_rule(
     const assisted_combat_rule_data_t& rule, const assisted_combat_step_data_t& step ) const
 {
+  if ( rule.condition_type == AURA_MISSING_PLAYER && rule.condition_value_1 == 1252004 )
+  {
+    return { "!talent.apocalypse" };
+  }
+
   return player_t::parse_assisted_combat_rule( rule, step );
 }
 

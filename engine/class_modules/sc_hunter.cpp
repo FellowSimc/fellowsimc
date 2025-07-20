@@ -1372,7 +1372,7 @@ public:
         {
           if ( ab::data().effectN( i ).subtype() == effect_subtype_t::A_PERIODIC_DAMAGE &&
             ab::data().get_school_type() == SCHOOL_PHYSICAL &&
-            ab::data().effectN( i ).mechanic() == MECHANIC_BLEED )
+            ( ab::data().effectN( i ).mechanic() == MECHANIC_BLEED || ab::data().mechanic() == MECHANIC_BLEED ) )
           {
             dire_beast_chance = p()->talents.dire_beast->effectN( 1 ).percent();
             break;
@@ -2585,8 +2585,8 @@ public:
         for ( size_t i = 1; i <= ab::data().effect_count(); i++ )
         {
           if ( ab::data().effectN( i ).subtype() == effect_subtype_t::A_PERIODIC_DAMAGE &&
-            ab::data().effectN( i ).school_type() == SCHOOL_PHYSICAL &&
-            ab::data().effectN( i ).mechanic() == MECHANIC_BLEED )
+            ab::data().get_school_type() == SCHOOL_PHYSICAL &&
+            ( ab::data().effectN( i ).mechanic() == MECHANIC_BLEED || ab::data().mechanic() == MECHANIC_BLEED ) )
           {
             dire_beast_chance = o()->talents.dire_beast->effectN( 1 ).percent();
             break;
@@ -2596,7 +2596,7 @@ public:
     }
 
     if ( dire_beast_chance > 0 )
-      ab::sim->print_debug( "{} action {} set to trigger Dire Beast", ab::player->name(), ab::name() );
+      ab::sim->print_debug( "{} action {} set to trigger Dire Beast with {}% chance", ab::player->name(), ab::name(), dire_beast_chance * 100 );
   }
 
   double composite_da_multiplier( const action_state_t* s ) const override
@@ -3177,9 +3177,9 @@ struct bloodshed_t : hunter_pet_attack_t<hunter_main_pet_base_t>
   bloodshed_t( hunter_main_pet_base_t* p ) : hunter_pet_attack_t( "bloodshed", p, p->o()->talents.bloodshed_dot )
   {
     background = true;
+    // Seems to be ~10% based on a log of 2472 Bloodshed ticks giving 258 Dire Beast summons.
+    dire_beast_chance = 0.1;
   }
-
-  // TODO custom dire_beast_chance in tick() to trigger Dire Beast with an increased chance.
 };
 
 // Bestial Wrath ===========================================================
@@ -5366,7 +5366,9 @@ struct barbed_shot_t: public hunter_ranged_attack_t
 
 struct laceration_t : public residual_bleed_base_t
 {
-  laceration_t( hunter_t* p ) : residual_bleed_base_t( "laceration", p, p->talents.laceration_bleed ) {}
+  laceration_t( hunter_t* p ) : residual_bleed_base_t( "laceration", p, p->talents.laceration_bleed ) {
+    dire_beast_chance = -1;
+  }
 };
 
 // Barbed Shot (Empowered) (The War Within Season 2 2 Piece Set Bonus) ==============
@@ -7140,11 +7142,12 @@ struct dire_beast_summon_t final : hunter_spell_t
       p()->buffs.huntmasters_call->trigger();
       if ( p()->buffs.huntmasters_call->at_max_stacks() )
       {
+        p()->buffs.huntmasters_call->expire();
         if ( rng().roll( 0.5 ) )
         {
           p()->buffs.summon_fenryr->trigger();
           p()->pets.fenryr.despawn();
-          p()->pets.fenryr.spawn( p()->buffs.summon_fenryr->buff_duration() );
+          make_event( p()->sim, [ this ]() { p()->pets.fenryr.spawn( p()->buffs.summon_fenryr->buff_duration() ); } );
         }
         else
         {
@@ -7152,7 +7155,6 @@ struct dire_beast_summon_t final : hunter_spell_t
           p()->pets.hati.despawn();
           p()->pets.hati.spawn( p()->buffs.summon_hati->buff_duration() );
         }
-        p()->buffs.huntmasters_call->expire();
       }
     }
   }

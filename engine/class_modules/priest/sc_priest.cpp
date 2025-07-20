@@ -4032,7 +4032,6 @@ void priest_t::create_buffs()
 
           if ( !new_ )
           {
-            buffs.voidheart->expire();
             buffs.darkening_horizon->expire();
             background_actions.collapsing_void->trigger( state.last_entropic_rift_target,
                                                          buffs.collapsing_void->check() );
@@ -4043,6 +4042,7 @@ void priest_t::create_buffs()
               buffs.overflowing_void->trigger( 1, value );
             }
             buffs.collapsing_void->expire();
+            buffs.voidheart->expire();
           }
         } );
   }

@@ -924,6 +924,9 @@ struct player_t : public actor_t
     player_option_t<std::string> jastor_diamond_ally_stat = "none";
     double suspicious_energy_drink_bonus_chance           = 0;
     timespan_t additional_gcd_time                        = 0_s;
+    // Alchemical Chaos Flask
+    player_option_t<std::string> alchemical_initial_stat    = "none";  // Initial stat for Alchemical Chaos Flask
+    player_option_t<std::string> alchemical_initial_penalty = "none";  // Initial penalty for Alchemical Chaos Flask
   } thewarwithin_opts;
 
 private:

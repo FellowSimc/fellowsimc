@@ -272,6 +272,7 @@ void flask_of_alchemical_chaos( special_effect_t& effect )
   struct flask_of_alchemical_chaos_buff_t : public consumable_buff_t<buff_t>
   {
     std::vector<std::pair<buff_t*, buff_t*>> buff_list;
+    std::unordered_map<stat_e, std::pair<buff_t*, buff_t*>> stat_map;
 
     flask_of_alchemical_chaos_buff_t( const special_effect_t& e ) : consumable_buff_t( e.player, e.name(), e.driver() )
     {
@@ -279,13 +280,21 @@ void flask_of_alchemical_chaos( special_effect_t& effect )
       auto penalty = -( e.driver()->effectN( 6 ).average( e ) );
 
       auto add_vers = create_buff<stat_buff_t>( e.player, "flask_of_alchemical_chaos_vers", e.driver() )
-        ->add_stat( STAT_VERSATILITY_RATING, bonus )->set_name_reporting( "Vers" );
+                          ->add_stat( STAT_VERSATILITY_RATING, bonus )
+                          ->set_name_reporting( "Vers" )
+                          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
       auto add_mastery = create_buff<stat_buff_t>( e.player, "flask_of_alchemical_chaos_mastery", e.driver() )
-        ->add_stat( STAT_MASTERY_RATING, bonus )->set_name_reporting( "Mastery" );
+                             ->add_stat( STAT_MASTERY_RATING, bonus )
+                             ->set_name_reporting( "Mastery" )
+                             ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
       auto add_haste = create_buff<stat_buff_t>( e.player, "flask_of_alchemical_chaos_haste", e.driver() )
-        ->add_stat( STAT_HASTE_RATING, bonus )->set_name_reporting( "Haste" );
+                           ->add_stat( STAT_HASTE_RATING, bonus )
+                           ->set_name_reporting( "Haste" )
+                           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
       auto add_crit = create_buff<stat_buff_t>( e.player, "flask_of_alchemical_chaos_crit", e.driver() )
-        ->add_stat( STAT_CRIT_RATING, bonus )->set_name_reporting( "Crit" );
+                          ->add_stat( STAT_CRIT_RATING, bonus )
+                          ->set_name_reporting( "Crit" )
+                          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
       auto sub_vers = create_buff<stat_buff_t>( e.player, "alchemical_chaos_vers_penalty", e.driver() )
         ->add_stat( STAT_VERSATILITY_RATING, penalty )->set_quiet( true );
@@ -301,16 +310,110 @@ void flask_of_alchemical_chaos( special_effect_t& effect )
       buff_list.emplace_back( add_haste, sub_haste );
       buff_list.emplace_back( add_crit, sub_crit );
 
-      set_tick_callback( [ this ]( buff_t*, int, timespan_t ) {
+      stat_map[ STAT_VERSATILITY_RATING ] = std::make_pair( add_vers, sub_vers );
+      stat_map[ STAT_MASTERY_RATING ]     = std::make_pair( add_mastery, sub_mastery );
+      stat_map[ STAT_HASTE_RATING ]       = std::make_pair( add_haste, sub_haste );
+      stat_map[ STAT_CRIT_RATING ]        = std::make_pair( add_crit, sub_crit );
+
+      std::string opt_initial_stat = source->thewarwithin_opts.alchemical_initial_stat;
+      stat_e initial_stat          = STAT_NONE;
+
+      if ( util::str_compare_ci( opt_initial_stat, "versatility" ) || util::str_compare_ci( opt_initial_stat, "vers" ) )
+        initial_stat = STAT_VERSATILITY_RATING;
+      else if ( util::str_compare_ci( opt_initial_stat, "mastery" ) )
+        initial_stat = STAT_MASTERY_RATING;
+      else if ( util::str_compare_ci( opt_initial_stat, "haste" ) )
+        initial_stat = STAT_HASTE_RATING;
+      else if ( util::str_compare_ci( opt_initial_stat, "critical_strike" ) ||
+                util::str_compare_ci( opt_initial_stat, "crit" ) )
+        initial_stat = STAT_CRIT_RATING;
+
+      std::string opt_initial_penalty = source->thewarwithin_opts.alchemical_initial_penalty;
+      stat_e initial_penalty_1        = STAT_NONE;
+      stat_e initial_penalty_2        = STAT_NONE;
+
+      auto splits = util::string_split<std::string_view>( opt_initial_penalty, "/" );
+      for ( auto s : splits )
+      {
+        if ( util::str_compare_ci( s, "vers" ) || util::str_compare_ci( s, "versatility" ) )
+        {
+          if ( initial_penalty_1 == STAT_NONE )
+            initial_penalty_1 = STAT_VERSATILITY_RATING;
+          else if ( initial_penalty_2 == STAT_NONE )
+            initial_penalty_2 = STAT_VERSATILITY_RATING;
+        }
+        else if ( util::str_compare_ci( s, "mastery" ) )
+        {
+          if ( initial_penalty_1 == STAT_NONE )
+            initial_penalty_1 = STAT_MASTERY_RATING;
+          else if ( initial_penalty_2 == STAT_NONE )
+            initial_penalty_2 = STAT_MASTERY_RATING;
+        }
+        else if ( util::str_compare_ci( s, "haste" ) )
+        {
+          if ( initial_penalty_1 == STAT_NONE )
+            initial_penalty_1 = STAT_HASTE_RATING;
+          else if ( initial_penalty_2 == STAT_NONE )
+            initial_penalty_2 = STAT_HASTE_RATING;
+        }
+        else if ( util::str_compare_ci( s, "crit" ) || util::str_compare_ci( s, "critical_strike" ) )
+        {
+          if ( initial_penalty_1 == STAT_NONE )
+            initial_penalty_1 = STAT_CRIT_RATING;
+          else if ( initial_penalty_2 == STAT_NONE )
+            initial_penalty_2 = STAT_CRIT_RATING;
+        }
+
+        if( initial_stat == initial_penalty_1 )
+          initial_penalty_1 = STAT_NONE;  // don't allow the bonus stat to be a penalty
+        if ( initial_stat == initial_penalty_2 )
+          initial_penalty_2 = STAT_NONE;  // don't allow the bonus stat to be a penalty
+      }
+        
+      set_tick_callback( [ this, initial_stat, initial_penalty_1, initial_penalty_2 ]( buff_t* b, int, timespan_t ) {
         rng().shuffle( buff_list.begin(), buff_list.end() );
-        buff_list[ 0 ].first->trigger();   // bonus
-        buff_list[ 0 ].second->expire();
-        buff_list[ 1 ].first->expire();
-        buff_list[ 1 ].second->trigger();  // penalty
-        buff_list[ 2 ].first->expire();
-        buff_list[ 2 ].second->trigger();  // penalty
-        buff_list[ 3 ].first->expire();
-        buff_list[ 3 ].second->expire();
+        if ( b->current_tick == 0 && initial_stat != STAT_NONE )
+        {
+          stat_map[ initial_stat ].first->trigger();
+
+          auto it = std::find( buff_list.begin(), buff_list.end(),
+                               std::make_pair( stat_map[ initial_stat ].first, stat_map[ initial_stat ].second ) );
+          std::rotate( buff_list.begin(), it, std::next( it ) );
+
+          if ( initial_penalty_1 == STAT_NONE && initial_penalty_2 == STAT_NONE )
+          {
+            buff_list[ 1 ].second->trigger();
+            buff_list[ 2 ].second->trigger();
+            return;
+          }
+
+          if ( initial_penalty_1 != STAT_NONE )
+            stat_map[ initial_penalty_1 ].second->trigger();
+
+          if ( initial_penalty_2 != STAT_NONE && initial_penalty_1 != initial_penalty_2 )
+            stat_map[ initial_penalty_2 ].second->trigger();
+          else
+          {
+            for ( auto& pair : buff_list )
+            {
+              if ( pair.first->check() || pair.second->check() )
+                continue;
+              pair.second->trigger();
+              break;
+            }
+          }
+        }
+        else
+        {
+          buff_list[ 0 ].first->trigger();  // bonus
+          buff_list[ 0 ].second->expire();
+          buff_list[ 1 ].first->expire();
+          buff_list[ 1 ].second->trigger();  // penalty
+          buff_list[ 2 ].first->expire();
+          buff_list[ 2 ].second->trigger();  // penalty
+          buff_list[ 3 ].first->expire();
+          buff_list[ 3 ].second->expire();
+        }
       } );
     }
 

@@ -13490,6 +13490,9 @@ void player_t::create_options()
   add_option( opt_float( "thewarwithin.suspicious_energy_drink_bonus_chance",
                          thewarwithin_opts.suspicious_energy_drink_bonus_chance, 0, 1 ) );
   add_option( opt_timespan( "thewarwithin.additional_gcd_time", thewarwithin_opts.additional_gcd_time, 0_s, 10_s ) );
+  add_option( opt_string( "thewarwithin.alchemical_chaos_initial_stat", thewarwithin_opts.alchemical_initial_stat ) );
+  add_option( opt_string( "thewarwithin.alchemical_chaos_initial_penalty_stats",
+                          thewarwithin_opts.alchemical_initial_penalty ) );
 }
 
 player_t* player_t::create( sim_t*, const player_description_t& )

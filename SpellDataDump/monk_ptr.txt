@@ -1,4 +1,4 @@
-SimulationCraft 1115-02 for World of Warcraft 11.2.0.62049 PTR
+SimulationCraft 1115-02 for World of Warcraft 11.2.0.62136 PTR
 Name             : Dual Wield (desc=Passive) (id=674) [Passive] 
 Class            : Frost Death Knight, Warrior, Hunter, Rogue, Monk, Demon Hunter
 School           : Physical
@@ -769,8 +769,9 @@ Labels           : 16: Class Spells
 Attributes       : Aura Unique (43), Ignore Line of Sight (66), Do Not Display Range (126), No Cast Log (128), Aura Points On Client (268), Do Not Log Aura Refresh (291), Aura Always Shown (438)
 Effects          :
 #1 (id=126739)   : Apply Aura (6) | Modify Damage Taken% (87)
-                   Base Value: 8 | Scaled Value: 8 | Misc Value: 0x1 | Target: Enemy (6)
+                   Base Value: 5 | Scaled Value: 5 | Misc Value: 0x1 | Target: Enemy (6)
                    Affected School(s): Physical
+Hotfixed         : Base Value (8 -> 5)
 Description      : $@spelldesc8647
 Tooltip          : Physical damage taken increased by $w1%.
 

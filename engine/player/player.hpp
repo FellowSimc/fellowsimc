@@ -914,9 +914,9 @@ struct player_t : public actor_t
     // time to pick up Fury of the Stormrook lightning orb
     timespan_t fury_of_the_stormrook_pickup_delay  = 3_s;
     timespan_t fury_of_the_stormrook_pickup_stddev = 0.75_s;
-    // Chance that an ally is ignored for Mereldar's Toll Evaluation. This is set high becauee pets exist and its
+    // Chance that an ally is ignored for Mereldar's Toll Evaluation. This is set high because pets exist and its
     // currently bugged to trigger on them.
-    double mereldars_toll_ally_trigger_chance             = 0.7;
+    double mereldars_toll_ally_trigger_chance             = 0.6;
     double sureki_zealots_insignia_rppm_multiplier        = 0.9;
     player_option_t<std::string> windsingers_passive_stat = "";
     // Mister Lock-n-Stalk mode of operation

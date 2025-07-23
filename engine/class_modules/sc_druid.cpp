@@ -639,9 +639,11 @@ struct druid_t final : public parse_player_effects_t
     action_t* treants_of_the_moon_mf;
 
     // Hero sets
-    action_t* starsurge_tww3;  // EC TWW3 2pc
-    action_t* dryad_tww3;      // KOTG TWW3 2pc proxy
-    action_t* dryads_favor;    // KOTG TWW3 4pc splash
+    action_t* starsurge_tww3;          // EC TWW3 2pc
+    action_t* dryad_tww3;              // KOTG TWW3 2pc proxy
+    action_t* dryads_favor;            // KOTG TWW3 4pc splash
+    action_t* bloodseeker_vines_tww3;  // WS TWW3 2pc TF proc
+    action_t* bursting_growth_tww3;    // WS TWW3 4pc
   } active;
 
   // Pets
@@ -1322,6 +1324,7 @@ struct druid_t final : public parse_player_effects_t
   void activate() override;
   void init() override;
   bool validate_fight_style( fight_style_e ) const override;
+  bool validate_actor() override;
   void init_absorb_priority() override;
   void init_action_list() override;
   std::string aura_expr_from_spell_id( unsigned int spell_id, bool on_self = true ) const override;
@@ -2481,10 +2484,10 @@ struct bloodseeker_vine_rng_t : public proc_rng_t
   int trigger() override { return 0; }
   void reset( reset_type_e /* reset_type */) override { count = 0.0; }
 
-  bool trigger( double scale, unsigned shift )
+  bool trigger( double scale, unsigned shift, double bonus )
   {
     count += scale;
-    auto chance = std::max( 0.0, 0.6 - std::pow( 1.13, scale * shift - count ) );
+    auto chance = std::max( 0.0, 0.6 - std::pow( 1.13, scale * shift - count ) + bonus );
     auto result = player->rng().roll( chance );
 
     if ( player->sim->debug )
@@ -2503,6 +2506,7 @@ struct trigger_thriving_growth_t : public BASE
 protected:
   target_specific_t<bloodseeker_vine_rng_t> vine_rng;
   double vine_scale = 0.0;
+  double vine_bonus = 0.0;
   unsigned vine_shift = 0;
 
   using base_t = trigger_thriving_growth_t<BASE>;
@@ -2510,7 +2514,10 @@ protected:
 public:
   trigger_thriving_growth_t( std::string_view n, druid_t* p, const spell_data_t* s, flag_e f = flag_e::NONE )
     : BASE( n, p, s, f ), vine_rng( false )
-  {}
+  {
+    if ( p->sets->has_set_bonus( HERO_WILDSTALKER, TWW3, B2 ) )
+      vine_bonus = 0.175;  // TODO: wild ass guess, results in ~38.5% more executes
+  }
 
   void tick( dot_t* d ) override
   {
@@ -2526,7 +2533,7 @@ public:
       d->target->register_on_demise_callback( BASE::p(), [ _rng ]( player_t* ) { _rng->reset( reset_type_e::COMBAT ); } );
     }
 
-    if ( _rng->trigger( vine_scale, vine_shift ) )
+    if ( _rng->trigger( vine_scale, vine_shift, vine_bonus ) )
     {
       BASE::p()->active.bloodseeker_vines->execute_on_target( d->target );
 
@@ -4550,9 +4557,12 @@ struct bloodseeker_vines_t final : public cat_attack_t
 {
   timespan_t orig_dur;
   double twin_pct;
+  double tww3_pct;
 
   bloodseeker_vines_t( druid_t* p, std::string_view n )
-    : cat_attack_t( n, p, p->spec.bloodseeker_vines ), twin_pct( p->talent.twin_sprouts->effectN( 1 ).percent() )
+    : cat_attack_t( n, p, p->spec.bloodseeker_vines ),
+      twin_pct( p->talent.twin_sprouts->effectN( 1 ).percent() ),
+      tww3_pct( p->sets->set( HERO_WILDSTALKER, TWW3, B4 )->effectN( 1 ).percent() )
   {
     dot_max_stack = 1;
 
@@ -4582,6 +4592,14 @@ struct bloodseeker_vines_t final : public cat_attack_t
       if ( auto tar = p()->get_smart_target( tl, &druid_td_t::dots_t::bloodseeker_vines, exclude ) )
         execute_on_target( tar );
     }
+  }
+
+  void tick( dot_t* d ) override
+  {
+    cat_attack_t::tick( d );
+
+    if ( p()->active.bursting_growth && rng().roll( tww3_pct ) )
+      p()->active.bursting_growth->execute_on_target( d->target );
   }
 
   double composite_target_multiplier( player_t* t ) const override
@@ -4621,11 +4639,19 @@ struct brutal_slash_t final : public trigger_claw_rampage_t<DRUID_FERAL,
 // Bursting Growth ==========================================================
 struct bursting_growth_t final : public cat_attack_t
 {
-  bursting_growth_t( druid_t* p ) : cat_attack_t( "bursting_growth", p, p->find_spell( 440122 ) )
+  bursting_growth_t( druid_t* p, std::string_view n ) : cat_attack_t( n, p, p->find_spell( 440122 ) )
   {
     background = proc = true;
     aoe = -1;
     reduced_aoe_targets = 5;  // TODO: not in data, from tooltip
+
+    if ( const auto& eff = p->sets->set( HERO_WILDSTALKER, TWW3, B4 )->effectN( 5 ); eff.percent() )
+    {
+      add_parse_entry( target_multiplier_effects )
+        .set_func( d_fn( &druid_td_t::dots_t::bloodseeker_vines ) )
+        .set_value( eff.percent() )
+        .set_eff( &eff );
+    }
   }
 };
 
@@ -4798,7 +4824,7 @@ struct ferocious_bite_base_t : public cat_finisher_t
     if ( p()->talent.sabertooth.ok() )
       td( s->target )->debuff.sabertooth->trigger( this, cp( s ) );
 
-    if ( p()->talent.bursting_growth.ok() )
+    if ( p()->active.bursting_growth )
       p()->active.bursting_growth->execute_on_target( s->target );
 
     if ( rampant_ferocity && s->result_amount > 0 && !rampant_ferocity->target_list().empty() )
@@ -5395,7 +5421,10 @@ struct swipe_cat_t final : public trigger_claw_rampage_t<DRUID_FERAL,
 // Tiger's Fury =============================================================
 struct tigers_fury_t final : public cat_attack_t
 {
-  DRUID_ABILITY( tigers_fury_t, cat_attack_t, "tigers_fury", p->talent.tigers_fury )
+  size_t tww3_vines;
+
+  DRUID_ABILITY( tigers_fury_t, cat_attack_t, "tigers_fury", p->talent.tigers_fury ),
+    tww3_vines( as<size_t>( p->sets->set( HERO_WILDSTALKER, TWW3, B2 )->effectN( 2 ).base_value() ) )
   {
     harmful = false;
     energize_type = action_energize::ON_CAST;
@@ -5419,6 +5448,23 @@ struct tigers_fury_t final : public cat_attack_t
     {
       p()->buff.killing_strikes_combat->expire();
       p()->buff.ravage_fb->trigger();
+    }
+
+    if ( p()->active.bloodseeker_vines_tww3 )
+    {
+      auto tl = target_list();  // make a copy
+
+      range::erase_remove( tl, [ this ]( player_t* t ) {
+        return !td( t )->dots.rake->is_ticking() && !td( t )->dots.rip->is_ticking();
+      } );
+
+      rng().shuffle( tl.begin(), tl.end() );
+
+      if ( tl.size() > tww3_vines )
+        tl.resize( tww3_vines );
+
+      for ( auto t : tl )
+        p()->active.bloodseeker_vines_tww3->execute_on_target( t );
     }
   }
 };
@@ -12290,7 +12336,21 @@ void druid_t::create_actions()
     active.boundless_moonlight_heal = get_secondary_action<boundless_moonlight_heal_t>( "boundless_moonlight_heal" );
 
   if ( talent.bursting_growth.ok() && talent.thriving_growth.ok() )
-    active.bursting_growth = get_secondary_action<bursting_growth_t>( "bursting_growth" );
+  {
+    auto burst = get_secondary_action<bursting_growth_t>( "bursting_growth" );
+
+    if ( auto set = sets->set( HERO_WILDSTALKER, TWW3, B4 ); set->ok() )
+    {
+      auto tww3 = get_secondary_action<bursting_growth_t>( "bursting_growth_tww3" );
+      tww3->name_str_reporting = "bursting_growth";
+      tww3->base_multiplier = set->effectN( 3 ).percent();
+      active.bursting_growth_tww3 = tww3;
+
+      burst->replace_stats( tww3 );
+    }
+
+    active.bursting_growth = burst;
+  }
 
   if ( talent.dream_surge.ok() && talent.force_of_nature.ok() )
     active.dream_burst = get_secondary_action<dream_burst_t>( "dream_burst" );
@@ -12323,6 +12383,16 @@ void druid_t::create_actions()
       vines->replace_stats( implant );
     }
 
+    if ( sets->has_set_bonus( HERO_WILDSTALKER, TWW3, B2 ) )
+    {
+      auto tww3 = get_secondary_action<bloodseeker_vines_t>( "bloodseeker_vines_tww3" );
+      tww3->name_str_reporting = "bloodseeker_vines";
+      tww3->twin_pct = 0.0;  // does not work with twin sprouts
+      active.bloodseeker_vines_tww3 = tww3;
+
+      vines->replace_stats( tww3 );
+    }
+
     active.bloodseeker_vines = vines;
   }
 
@@ -12350,6 +12420,8 @@ void druid_t::create_actions()
       if ( sets->has_set_bonus( HERO_KEEPER_OF_THE_GROVE, TWW3, B4 ) )
       {
         active.dryads_favor = get_secondary_action<dryads_favor_t>( "dryads_favor" );
+        if ( active.dryad_tww3 )
+          active.dryad_tww3->add_child( active.dryads_favor );
       }
       break;
 
@@ -12621,6 +12693,25 @@ bool druid_t::validate_fight_style( fight_style_e style ) const
 
     default:
       break;
+  }
+
+  return true;
+}
+
+bool druid_t::validate_actor()
+{
+  if ( talent.thriving_growth.ok() )
+  {
+    if ( sim->fight_style == FIGHT_STYLE_DUNGEON_ROUTE || sim->fight_style == FIGHT_STYLE_DUNGEON_SLICE ||
+         sim->desired_targets > 1 )
+    {
+      sim->error( "The effect of multipler targets on Bloodseeker Vines is unknown. Results will be incorrect." );
+    }
+
+    if ( sets->has_set_bonus( HERO_WILDSTALKER, TWW3, B2 ) )
+    {
+      sim->error( "The benefit from 2pc bonus of TWW Season 3 set for Wildstalker is unknown. Results will be incorrect." );
+    }
   }
 
   return true;

@@ -1877,8 +1877,7 @@ public:
       td->debuff.vanguard_of_justice->trigger();
     }
 
-    if ( ab::result_is_hit( s->result ) && p->buffs.herald_of_the_sun.dawnlight->up() &&
-         p->talents.herald_of_the_sun.dawnlight->ok() )
+    if ( ab::result_is_hit( s->result ) && p->buffs.herald_of_the_sun.dawnlight->up() )
     {
       p->active.dawnlight->execute_on_target( s->target );
       p->buffs.herald_of_the_sun.dawnlight->decrement();

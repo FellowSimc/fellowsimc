@@ -4272,7 +4272,7 @@ void paladin_t::create_buffs()
                                                 buffs.herald_of_the_sun.suns_avatar->expire();
                                           } );
 
-  if ( sets->has_set_bonus( HERO_HERALD_OF_THE_SUN, TWW3, B4 ) )
+  if ( sets->has_set_bonus( HERO_HERALD_OF_THE_SUN, TWW3, B4 ) && talents.herald_of_the_sun.dawnlight->ok() )
   {
     int solar_wrath_dawnlight_stacks = sets->set( HERO_HERALD_OF_THE_SUN, TWW3, B4 )->effectN( 2 ).base_value();
     if ( talents.radiant_glory->ok() )

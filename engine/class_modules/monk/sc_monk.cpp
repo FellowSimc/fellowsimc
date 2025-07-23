@@ -6488,7 +6488,8 @@ void monk_t::parse_player_effects()
   parse_effects( tier.tww3.coc_4pc_jade_serpents_blessing );
 
   effect_mask_t em = tier.tww3.coc_4pc->ok() ? effect_mask_t( true ) : effect_mask_t( true ).disable( 8 );
-  parse_effects( buff.heart_of_the_jade_serpent_cdr, em );
+  parse_effects( buff.heart_of_the_jade_serpent_cdr, em,
+                 [ & ] { return !buff.heart_of_the_jade_serpent_cdr_celestial->check(); } );
   parse_effects( buff.heart_of_the_jade_serpent_cdr_celestial, em );
   parse_effects( tier.tww3.coc_2pc_heart_of_the_jade_serpent, em );
 

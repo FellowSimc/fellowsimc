@@ -512,15 +512,15 @@ bool set_bonus_t::new_parse_set_bonus_option( util::string_view opt_str, set_bon
     }
     if ( util::str_compare_ci( value_pair[ 0 ], "hero_tree" ) )
     {
-      hero          = util::parse_hero_talent_type( value_pair[ 1 ] );
+      hero = util::parse_hero_talent_type( value_pair[ 1 ] );
       bool is_valid = false;
 
-      if( hero != HERO_NONE )
-        is_valid = util::is_valid_hero_tree_for_class( hero, actor->type );
+      if ( hero != HERO_NONE )
+        is_valid = trait_data_t::is_hero_tree_valid( hero, actor->_spec, actor->dbc->ptr );
 
       if ( !is_valid && hero != HERO_NONE )
-        actor->sim->error( "Invalid hero tree set bonus '{}' for class '{}'.", value_pair[ 1 ],
-                           util::player_type_string( actor->type ) );
+        actor->sim->error( "Invalid hero tree set bonus '{}' for '{}'.", value_pair[ 1 ],
+                           util::specialization_string( actor->_spec ) );
 
       if ( hero == HERO_NONE || !is_valid )
         return false;

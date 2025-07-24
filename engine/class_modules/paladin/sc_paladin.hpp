@@ -2002,8 +2002,7 @@ public:
       }
     }
 
-    // 2024-08-04 Currently, Hammer of Light doesn't affect Righteous Protector at all
-    if ( p->talents.righteous_protector->ok() && ( ( is_hammer_of_light_driver && !p->bugs ) || !is_hammer_of_light ) )
+    if ( p->talents.righteous_protector->ok() && ( !is_hammer_of_light || is_hammer_of_light_driver) )
     {
       // 23-03-23 Not sure when this bug was introduced, but free Holy Power Spenders ignore RP ICD
       if ( p->cooldowns.righteous_protector_icd->up() ||
@@ -2016,6 +2015,12 @@ public:
         ab::sim->print_debug(
             "Righteous protector reduced the cooldown of Avenging Wrath and Guardian of Ancient Kings by {} sec",
             num_hopo_spent );
+
+        if ( p->bugs && is_hammer_of_light_driver && p->buffs.divine_purpose->up() )
+        {
+          // 24.07.25 Fluttershy - Hammer of Light reduces the cooldowns by 4s, if Divine Purpose was up. Probably because of Ret+Prot cost being 8 Holy Power total.
+          reduction = -4_s;
+        }
 
         p->cooldowns.avenging_wrath->adjust( reduction );
         p->cooldowns.sentinel->adjust( reduction );

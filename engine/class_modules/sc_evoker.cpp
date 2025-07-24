@@ -3304,10 +3304,12 @@ struct dracthyr_commando_t : evoker_pet_t
     evoker_pet_t::create_buffs();
 
     flying_buff = make_buff( this, "deep_breath", evoker()->talent.scalecommander.commando_deep_breath_buff )
-                      ->set_tick_callback( [ this ]( buff_t*, int tick, timespan_t ) {
-                        if ( tick <= 4 )
+                      ->set_tick_callback( [ this ]( buff_t* b, int, timespan_t ) {
+                        if ( b->current_tick <= 3 )
                           commando_pyre->execute();
-                      } );
+                      } )
+                      ->set_tick_on_application( true )
+                      ->set_cooldown( 0_s );
 
     grounded_buff =
         make_buff( this, "grounded" )

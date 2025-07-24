@@ -12113,6 +12113,7 @@ void druid_t::create_buffs()
 
   auto kotg_tww3_2pc = sets->set( HERO_KEEPER_OF_THE_GROVE, TWW3, B2 );
   buff.dryad = make_fallback( kotg_tww3_2pc->ok(), this, "dryad", find_trigger( kotg_tww3_2pc ).trigger() )
+    ->set_default_value( 0.0 )
     ->set_expire_callback( [ this ]( buff_t* b, int, timespan_t ) {
       buff.dryads_favor->trigger( -1, b->current_value );
     } );
@@ -13317,17 +13318,21 @@ void druid_t::init_special_effects()
 
       void execute( action_t*, action_state_t* s ) override
       {
-        p()->buff.dryad->current_value += s->result_total * mul;
+        if ( s->result_amount )
+        {
+          p()->buff.dryad->current_value += s->result_amount * mul;
 
-        auto cap = p()->cache.intellect() * 25.0;  // not in spell data, per blue post
-        if ( p()->buff.dryad->current_value > cap )
-          p()->buff.dryad->current_value = cap;
+          auto cap = p()->cache.intellect() * 25.0;  // not in spell data, per blue post
+          if ( p()->buff.dryad->current_value > cap )
+            p()->buff.dryad->current_value = cap;
+        }
       }
     };
 
     const auto driver = new special_effect_t( this );
     driver->name_str = "dryads_favor";
     driver->spell_id = set->id();
+    driver->proc_flags2_ = PF2_ALL_HIT;
     special_effects.push_back( driver );
 
     auto cb = new dryads_favor_cb_t( this, *driver, set );

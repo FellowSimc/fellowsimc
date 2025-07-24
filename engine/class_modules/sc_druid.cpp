@@ -3694,7 +3694,7 @@ struct preparing_to_strike_buff_t final : public druid_buff_t
     return true;
   }
 
-  void expire_override( int s, timespan_t d ) override
+  void expire_override( int, timespan_t ) override
   {
     assert( ravage_action && ravage_target );
 
@@ -13315,7 +13315,7 @@ void druid_t::init_special_effects()
           mul( s->effectN( p->specialization() == DRUID_BALANCE ? 4 : 3 ).percent() )
       {}
 
-      void execute( action_t* a, action_state_t* s ) override
+      void execute( action_t*, action_state_t* s ) override
       {
         p()->buff.dryad->current_value += s->result_total * mul;
 

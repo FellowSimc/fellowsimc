@@ -198,7 +198,7 @@ const spell_data_t* set_bonus_t::set( specialization_e spec, set_bonus_type_e se
 {
   if ( dbc::spec_idx( spec ) < 0 )
     return spell_data_t::nil();
-  hero_talent_e hero_tree = HERO_NONE;
+  [[maybe_unused]] hero_talent_e hero_tree = HERO_NONE;
 #ifndef NDEBUG
   assert( set_bonus_spec_data.size() > static_cast<unsigned>( set_bonus ) );
   assert( set_bonus_spec_data[ set_bonus ].size() > as<unsigned>( composite_idx( spec, hero_tree ) ) );

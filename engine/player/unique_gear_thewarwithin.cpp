@@ -8241,9 +8241,6 @@ void diamantine_voidcore( special_effect_t& effect )
                   ->set_stat_from_effect_type( A_MOD_STAT, effect.driver()->effectN( 1 ).average( effect ) )
                   ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS );
 
-  auto mana_threshold = effect.driver()->effectN( 2 ).percent();
-  auto rppm_boost     = effect.driver()->effectN( 3 ).percent();
-
   effect.custom_buff = buff;
   
   struct diamantine_voidcore_cb_t : public dbc_proc_callback_t
@@ -8611,7 +8608,7 @@ void eradicating_arcanocore( special_effect_t& effect )
                   ->set_expire_at_max_stack( true );
   auto damage = create_proc_action<eradicating_arcanocore_t>( "eradicating_arcanocore", effect, buff );
 
-  buff->set_expire_callback( [ damage ]( buff_t* b, int, timespan_t d ) {
+  buff->set_expire_callback( [ damage ]( buff_t* b, int, timespan_t ) {
     if ( !b->source->sim->canceled )
       damage->execute();
   } );
@@ -9694,7 +9691,7 @@ void voidglass_shards( special_effect_t& effect )
       damage->base_dd_min = damage->base_dd_max = e.driver()->effectN( 1 ).average( e );
       damage->base_multiplier *= role_mult( e );
     }
-    void execute( action_t* a, action_state_t* s ) override
+    void execute( action_t*, action_state_t* s ) override
     {
       // Implementing as a 50/50 split between damage and absorb for now, need more data to confirm
       if ( rng().roll( 0.5 ) )
@@ -11708,7 +11705,7 @@ void charged_bolts( special_effect_t& effect )
   new dbc_proc_callback_t( effect.player, effect );
 }
 
-void cauterizing_bolts( special_effect_t& effect )
+void cauterizing_bolts( special_effect_t& )
 {
   // NYI: Healing effect lol
 }
@@ -11885,7 +11882,7 @@ void electric_current( special_effect_t& effect )
   } );
 }
 
-void charged_touch( special_effect_t& effect )
+void charged_touch( special_effect_t& )
 {
   // NYI: Healing effect lol
 }
@@ -11919,7 +11916,7 @@ void energy_shield( special_effect_t& effect )
     {
       auto b = absorb_t::create_buff( s );
 
-      b->set_expire_callback( [ this, s ]( buff_t* b, int, timespan_t d ) {
+      b->set_expire_callback( [ this ]( buff_t* b, int, timespan_t d ) {
         // Dont bother executing energy wave if the absorb is entirely consumed
         if ( d == timespan_t::zero() )
         {

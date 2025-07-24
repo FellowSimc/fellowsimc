@@ -3917,6 +3917,8 @@ damage_buff_t* damage_buff_t::apply_dynamic_buff_multiplier( buff_t* buff )
         }
       }
     }
+
+    return false;
   };
 
   parse_dynamic_buff_multiplier_for_mod( direct_mod );

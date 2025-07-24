@@ -9095,6 +9095,9 @@ void essence_hunters_eyeglass( special_effect_t& effect )
 // 1235633 damage
 void soulbinders_embrace( special_effect_t& effect )
 {
+  if ( effect.player->sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
+    return;
+
   unsigned equip_id = 1235218;
   auto equip = find_special_effect( effect.player, equip_id );
   assert( equip && "Soulbinder's Embrace missing equip effect" );

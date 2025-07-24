@@ -3913,7 +3913,7 @@ void print_html_player_results_spec_gear( report::sc_html_stream& os, const play
       {
         int curr_tier = set_bonus_type_e::SET_BONUS_NONE;
 
-        os << "<tr class=\"left\"><th>Set Bonus</th><td><ul class=\"float\">\n";
+        os << "<tr class=\"left nowrap\"><th>Set Bonus</th><td><ul class=\"float\">\n";
 
         for ( auto bonus : bonuses )
         {

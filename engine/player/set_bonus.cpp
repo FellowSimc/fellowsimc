@@ -286,16 +286,17 @@ void set_bonus_t::initialize()
 void set_bonus_t::enable_all_sets()
 {
   auto set_bonuses = item_set_bonus_t::data( actor->dbc->ptr );
+  auto hero_tree_ids = trait_data_t::get_valid_hero_tree_ids( actor->_spec, actor->dbc->ptr );
 
-  // assume class & spec matching bonuses are tier
-  // or actor has the correct trait_sub_tree
+  // assume class & spec matching bonuses are tier or hero tree is available to spec
   for ( const auto& bonus : set_bonuses )
   {
     bool has_class = bonus.class_id == -1 || bonus.class_id == util::class_id( actor->type );
     bool has_spec  = bonus.spec == -1 || bonus.spec == static_cast<int>( actor->_spec );
-    bool has_trait_sub_tree = bonus.trait_sub_tree == -1 ? true : range::contains( actor->player_sub_trees, as<unsigned>( bonus.trait_sub_tree ) );
+    bool has_trait_sub_tree =
+      bonus.trait_sub_tree == -1 || range::contains( hero_tree_ids, as<unsigned>( bonus.trait_sub_tree ) );
 
-    if ( has_class && ( has_spec || has_trait_sub_tree ) )
+    if ( has_class && has_spec && has_trait_sub_tree )
     {
       set_bonus_spec_data[ bonus.enum_id ][ composite_idx( bonus, actor ) ][ bonus.bonus - 1 ].overridden = 1;
     }

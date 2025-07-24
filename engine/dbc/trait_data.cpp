@@ -6,6 +6,7 @@
 
 #include "config.hpp"
 
+#include "dbc/dbc.hpp"
 #include "util/util.hpp"
 
 #include "trait_data.hpp"
@@ -258,6 +259,30 @@ bool trait_data_t::is_granted( const trait_data_t* trait, player_e type, special
   }
 
   return false;
+}
+
+std::vector<unsigned> trait_data_t::get_valid_hero_tree_ids( specialization_e spec, bool ptr )
+{
+  auto class_id = util::class_id( dbc::get_class_from_spec( spec ) );
+  auto _data = data( class_id, talent_tree::SELECTION, ptr );
+
+  std::vector<unsigned> id_list;
+
+  for ( const auto& entry : _data )
+  {
+    for ( const auto& spec_entry : entry.id_spec )
+    {
+      if ( spec_entry == static_cast<unsigned>( spec ) )
+      {
+        id_list.push_back( entry.id_sub_tree );
+      }
+    }
+  }
+
+  auto it = range::unique( id_list );
+  id_list.erase( it, id_list.end() );
+
+  return id_list;
 }
 
 util::span<const trait_definition_effect_entry_t> trait_definition_effect_entry_t::data( bool ptr )

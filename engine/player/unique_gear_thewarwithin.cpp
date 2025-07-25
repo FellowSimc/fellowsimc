@@ -8304,11 +8304,13 @@ void unyielding_netherprism( special_effect_t& effect )
     buff_t* stacking;
 
     unyielding_netherprism_damage_t( const special_effect_t& e, const spell_data_t* equip, buff_t* stacking_buff )
-      : generic_aoe_proc_t( e, "unyielding_netherprism", e.player->find_spell( 1239674 ), true ),
+      : generic_aoe_proc_t( e, "unyielding_netherprism_damage", e.player->find_spell( 1239674 ), true ),
         stacking( stacking_buff )
     {
       base_dd_min = base_dd_max = equip->effectN( 1 ).average( e );
       base_multiplier *= role_mult( e );
+
+      name_str_reporting = "unyielding_netherprism";
     }
 
     void execute() override
@@ -8324,15 +8326,16 @@ void unyielding_netherprism( special_effect_t& effect )
   auto equip            = new special_effect_t( effect.player );
   equip->name_str       = fmt::format( "{}_{}", equip_driver->name_cstr(), "equip" );
   equip->spell_id       = equip_driver->id();
-  equip->execute_action = create_proc_action<unyielding_netherprism_damage_t>( "unyielding_netherprism", effect, equip_driver, stacking_buff );
+  equip->execute_action = create_proc_action<unyielding_netherprism_damage_t>( "unyielding_netherprism_damage", effect,
+                                                                               equip_driver, stacking_buff );
   effect.player->special_effects.push_back( equip );
 
   auto cb = new dbc_proc_callback_t( effect.player, *equip );
   cb->initialize();
   cb->activate();
 
-  effect.execute_action = create_proc_action<unyielding_netherprism_use_t>( "unyielding_netherprism_use", effect,
-                                                                            stacking_buff, equip_driver );
+  effect.execute_action =
+    create_proc_action<unyielding_netherprism_use_t>( "unyielding_netherprism", effect, stacking_buff, equip_driver );
 
   effect.stat = effect.player->convert_hybrid_stat( STAT_STR_AGI );
   effect.has_use_buff_override = true;

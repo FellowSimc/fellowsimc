@@ -9353,6 +9353,27 @@ void chaotic_nethergate( special_effect_t& effect )
   effect.execute_action = create_proc_action<chaotic_nethergate_t>( "chaotic_nethergate", effect, coeff->driver() );
 }
 
+// manaforged aethercell
+// 1244405 driver
+// 1245397 buff
+void manaforged_aethercell( special_effect_t& effect )
+{
+  auto buff_data = effect.trigger();
+  auto buff_seconds = buff_data->duration().total_seconds();
+
+  // in-game, buff only has one stack and is scripted to decay. for simc purposes we make it a 15 stack reverse buff
+  auto val = effect.driver()->effectN( 1 ).average( effect ) / buff_seconds;
+
+  auto buff = create_buff<stat_buff_t>( effect.player, effect.trigger() )
+    ->add_stat_from_effect_type( A_MOD_RATING, val )
+    ->set_max_stack( as<int>( buff_seconds ) )
+    ->set_reverse( true );
+
+  effect.custom_buff = buff;
+
+  new dbc_proc_callback_t( effect.player, effect );
+}
+
 // Weapons
 
 // 443384 driver
@@ -12401,6 +12422,7 @@ void register_special_effects()
   register_special_effect( 1235500, items::alldevouring_nucleus );
   register_special_effect( 1244008, items::chaotic_nethergate );
   register_special_effect( 1246837, DISABLED_EFFECT );  // chaotic nethergate
+  register_special_effect( 1244405, items::manaforged_aethercell );
   reset_version_check();
 
   // Weapons

@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.62136
-static const std::array<spelltext_data_t, 28015> __ptr_spelltext_data { {
+static const std::array<spelltext_data_t, 28021> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -20036,7 +20036,9 @@ static const std::array<spelltext_data_t, 28015> __ptr_spelltext_data { {
   {  392615, "Launch a concealed grenade toward the target location, dealing $s1 Nature damage and coating the ground in a sticky substance for $d that slows enemy units within by $384485M1%.", 0, 0 },
   {  392661, "Wear a djaradin's trophy mask, made from the skull of a defeated dragon.", "You are wearing a djaradin's trophy mask.", 0 },
   {  392690, "Wear a djaradin's trophy mask.", "You are wearing a djaradin's trophy mask.", 0 },
+  {  392714, "$@spelltooltip191634", 0, 0 },
   {  392761, "The shattered essence envelops you, increasing your Haste by $s1 $?pc103305[and Enchanting skiill while crafting with this essence by $s2 ][]for $d.", "Haste increased by $w1.$?e1[\r\nEnchanting skill when crafting with Air essences increased by $w2.][]", 0 },
+  {  392763, "$@spelltooltip191634", 0, 0 },
   {  392776, "$@spelldesc389306", 0, 0 },
   {  392777, "Critical strike chance increased by $s1% and critical strike damage of Execute increased by $s2%. ", 0, 0 },
   {  392778, "$@spelldesc382946", "Auto attack speed increased.", 0 },
@@ -20068,6 +20070,8 @@ static const std::array<spelltext_data_t, 28015> __ptr_spelltext_data { {
   {  392958, "Rising Sun Kick has a chance equal to $s2% of your haste to trigger a second time, dealing $392959s1 Physical damage and restoring $s3 Chi.", 0, 0 },
   {  392959, "Kick upwards, dealing $s1 Physical damage.", 0, 0 },
   {  392961, "Consuming Infusion of Light reduces the cooldown of Holy Shock by ${$s1/-1000}.1 sec.", 0, 0 },
+  {  392962, "$@spelltooltip47568", 0, 0 },
+  {  392963, "$@spelltooltip47568", 0, 0 },
   {  392972, "$@spelldesc279918", 0, 0 },
   {  392973, "$@spelldesc279918", "Returns $w1 chi.", 0 },
   {  392979, "Whenever you deal damage to a target with Fists of Fury, you gain a stack of Chi Energy up to a maximum of $m2 stacks.\r\n\r\nUsing Spinning Crane Kick will cause the energy to detonate in a Chi Explosion, dealing $393056s1 Nature damage to all enemies within $393056A1 yards, reduced beyond $s3 targets. The damage is increased by $393057m1% for each stack of Chi Energy.", 0, 0 },
@@ -20463,6 +20467,8 @@ static const std::array<spelltext_data_t, 28015> __ptr_spelltext_data { {
   {  395160, "Cause a violent eruption beneath an enemy's feet, dealing $s1 Volcanic damage split between them and nearby enemies.$?s395153[\r\n\r\nIncreases the duration of your active Ebon Might effects by ${$395153s1/1000} sec.][]", 0, "Black" },
   {  395175, "Impale yourself with the splinter, immediately suffering $s1 Nature damage but letting its slime loose over your body. The slime absorbs $s3% of damage taken, up to $s2 total damage, for $d.", "Absorbing $s3% of damage taken, up to $w2 total damage.", 0 },
   {  395180, "$@spelldesc148039", "Absorbs $w1 damage.", 0 },
+  {  395182, "$@spellname394809 prevents all incoming damage.\r\n\r\nThe effect of $@spellname394834 is reduced.", "$@spellname394809 prevents all incoming damage but the effect of $@spellname394834 is reduced.", 0 },
+  {  395183, "$@spellname394834 applies a bleed to enemies.\r\n\r\n$@spellname394809 no longer prevents damage.", "$@spellname394834 applies a bleed to opponents but $@spellname394809 no longer prevents damage", 0 },
   {  395192, "$@spelldesc381930", 0, 0 },
   {  395197, "$@spelldesc381930", "Benefiting from Mana Spring.", 0 },
   {  395266, "$@spelldesc356684", 0, 0 },

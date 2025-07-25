@@ -3438,7 +3438,7 @@ class SpellDataGenerator(DataGenerator):
         # with spell ###### and should be included.
         for spell_id, spell_data in self.db('Spell').items():
             if spell_data.desc:
-                r = re.match(r"\$@spell(?:aura|desc)([0-9]{1,7})", spell_data.desc)
+                r = re.match(r"\$@spell(?:aura|desc|name|tooltip)(\d+)", spell_data.desc)
                 if r and (id := int(r.group(1))) in ids:
                     self.process_spell(spell_id, ids, ids[id]['mask_class'], ids[id]['mask_race'])
 

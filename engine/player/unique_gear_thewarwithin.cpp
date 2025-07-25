@@ -9069,6 +9069,61 @@ void soulbinders_embrace( special_effect_t& effect )
   effect.execute_action = damage;
 }
 
+// brand of ceaseless ire
+// 1235225 driver
+// 1235879 counter
+// 1235946 damage
+// 1235973 shield
+void brand_of_ceaseless_ire( special_effect_t& effect )
+{
+  struct brand_of_ceaseless_ire_t : public generic_aoe_proc_t
+  {
+    buff_t* counter;
+    buff_t* shield;
+    double shield_amount;
+
+    brand_of_ceaseless_ire_t( const special_effect_t& e )
+      : generic_aoe_proc_t( e, "brand_of_ceaseless_ire", 1235946, true ),
+        shield_amount( e.driver()->effectN( 1 ).average( e ) )
+    {
+      base_dd_min = base_dd_max = e.driver()->effectN( 2 ).average( e );
+
+      shield = create_buff<absorb_buff_t>( e.player, e.player->find_spell( 1235973 ) );
+      counter = create_buff<buff_t>( e.player, e.trigger() )
+        ->set_freeze_stacks( true )
+        ->set_tick_callback( [ p = e.player ]( buff_t* b, int, timespan_t ) {
+          if ( !p->in_combat )
+            make_event( *p->sim, [ b ] { b->decrement(); } );
+        } );
+    }
+
+    void execute() override
+    {
+      generic_aoe_proc_t::execute();
+
+      shield->trigger( -1, shield_amount * ( 1 + counter->check() ) );
+      counter->trigger();
+    }
+
+    double action_multiplier() const override
+    {
+      return generic_aoe_proc_t::action_multiplier() * ( 1 + counter->check() );
+    }
+  };
+
+  effect.execute_action = create_proc_action<brand_of_ceaseless_ire_t>( "brand_of_ceaseless_ire", effect );
+
+  // assume full uptime in dungeons since we're always getting hit
+  if ( effect.player->sim->fight_style == FIGHT_STYLE_DUNGEON_SLICE ||
+       effect.player->sim->fight_style == FIGHT_STYLE_DUNGEON_ROUTE )
+  {
+    effect.proc_flags_ = PF_MELEE_ABILITY;
+    effect.proc_flags2_ = PF2_LANDED;
+  }
+
+  new dbc_proc_callback_t( effect.player, effect );
+}
+
 // Weapons
 
 // 443384 driver
@@ -12110,6 +12165,7 @@ void register_special_effects()
   register_special_effect( 1244402, items::essence_hunters_eyeglass );
   register_special_effect( 1235425, items::soulbinders_embrace );
   register_special_effect( 1235218, DISABLED_EFFECT );  // soulbinder's embrace
+  register_special_effect( 1235225, items::brand_of_ceaseless_ire );
   reset_version_check();
 
   // Weapons

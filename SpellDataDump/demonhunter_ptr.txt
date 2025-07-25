@@ -1,4 +1,4 @@
-SimulationCraft 1115-02 for World of Warcraft 11.2.0.62136 PTR
+SimulationCraft 1115-02 for World of Warcraft 11.2.0.62253 PTR
 Name             : Dual Wield (desc=Passive) (id=674) [Passive] 
 Class            : Frost Death Knight, Warrior, Hunter, Rogue, Monk, Demon Hunter
 School           : Physical
@@ -1587,13 +1587,13 @@ Labels           : 16: Class Spells
 Attributes       : Passive (6), Do Not Log (8), Mastery Affects Points (285), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=300566)   : Apply Aura (6) | Dummy (4)
-                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 1.8 | Target: Self (1)
+                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 1.5 | Target: Self (1)
 #2 (id=300914)   : Apply Aura (6) | Add Flat Modifier (107): Spell Effect 2 (12)
-                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 1.8 | Misc Value: 12 | Target: Self (1)
+                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 1.5 | Misc Value: 12 | Target: Self (1)
                    Affected Spells: Demon Spikes (203819)
                    Family Flags: 7
 #3 (id=1031403)  : Apply Aura (6) | Modify Armor by Primary Stat% (268)
-                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 1.8 | Misc Value: 1
+                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 1.5 | Misc Value: 1
 Description      : Increases Armor by ${$s1}.1% of your Agility. Armor bonus is doubled while Demon Spikes is active.$?s321299[
 
 Also increases your attack power by ${$321299s1}.1%.][]
@@ -3126,11 +3126,11 @@ Labels           : 16: Class Spells
 Attributes       : Is Ability (4), Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7), Do Not Log (8), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=315250)   : Apply Aura (6) | Add Percent Modifier (108): Spell Direct Amount (0)
-                   Base Value: 42 | Scaled Value: 42 | Target: Self (1)
+                   Base Value: 53 | Scaled Value: 53 | Target: Self (1)
                    Affected Spells: Chaos Nova (179057), Infernal Strike (189112), Vengeful Retreat (198813), Shear (203782), Fiery Brand (204021), Throw Glaive (204157), Sigil of Flame (204598), Soul Carver (207407), Fiery Brand (207771), Fel Devastation (212105), Felblade (213243), Soul Carver (214743), Fracture (225919), Fracture (225921), Soul Cleave (228478), Spirit Bomb (247455), Immolation Aura (258921), Immolation Aura (258922), Infernal Armor (273239), Essence Sever (279450), Elysian Decree (307046), Sinful Brand (317009), Infernal Armor (320334), Bulk Extraction (320341), The Hunt (323802), Elysian Decree (339893), Elysian Decree (339894), The Hunt (345335), Throw Glaive (346665), The Hunt (370966), The Hunt (370969), Sigil of Spite (389860), Eye Beam (391058), Demon Spikes (391159), Sigil of Flame (425672), Immolation Aura (427904), Immolation Aura (427905), Immolation Aura (427906), Immolation Aura (427907), Immolation Aura (427908), Immolation Aura (427910), Immolation Aura (427911), Immolation Aura (427916), Blazing Nova (436899), Blazing Nova (436964), Reaver's Glaive (442294), Demonsurge (451266), Demonsurge (452416), Burning Blades (453177), Sigil of Doom (462030)
                    Family Flags: 70
 #2 (id=315251)   : Apply Aura (6) | Add Percent Modifier (108): Spell Periodic Amount (22)
-                   Base Value: 42 | Scaled Value: 42 | Misc Value: 22 | Target: Self (1)
+                   Base Value: 53 | Scaled Value: 53 | Misc Value: 22 | Target: Self (1)
                    Affected Spells: Chaos Nova (179057), Infernal Strike (189112), Vengeful Retreat (198813), Shear (203782), Fiery Brand (204021), Throw Glaive (204157), Sigil of Flame (204598), Soul Carver (207407), Fiery Brand (207771), Fel Devastation (212105), Felblade (213243), Soul Carver (214743), Fracture (225919), Fracture (225921), Soul Cleave (228478), Spirit Bomb (247455), Immolation Aura (258921), Immolation Aura (258922), Infernal Armor (273239), Essence Sever (279450), Elysian Decree (307046), Sinful Brand (317009), Infernal Armor (320334), Bulk Extraction (320341), The Hunt (323802), Elysian Decree (339893), Elysian Decree (339894), The Hunt (345335), Throw Glaive (346665), The Hunt (370966), The Hunt (370969), Sigil of Spite (389860), Eye Beam (391058), Demon Spikes (391159), Sigil of Flame (425672), Immolation Aura (427904), Immolation Aura (427905), Immolation Aura (427906), Immolation Aura (427907), Immolation Aura (427908), Immolation Aura (427910), Immolation Aura (427911), Immolation Aura (427916), Blazing Nova (436899), Blazing Nova (436964), Reaver's Glaive (442294), Demonsurge (451266), Demonsurge (452416), Burning Blades (453177), Sigil of Doom (462030)
                    Family Flags: 70
 #3 (id=315252)   : Apply Aura (6) | Hasted Global Cooldown (417)
@@ -3160,7 +3160,7 @@ Effects          :
                    Affected Spells: Shear (203782), Fracture (225919), Fracture (225921)
                    Family Flags: 22, 69
 #10 (id=315259)  : Apply Aura (6) | Modify Auto Attack Damage Done% (344)
-                   Base Value: 10 | Scaled Value: 10 | Target: Self (1)
+                   Base Value: 18 | Scaled Value: 18 | Target: Self (1)
 #11 (id=1013113) : Apply Aura (6) | Modify Pet Damage Done% (429)
                    Base Value: 18 | Scaled Value: 18 | Target: Self (1)
 #12 (id=1013114) : Apply Aura (6) | Modify Guardian Damage Done% (531)

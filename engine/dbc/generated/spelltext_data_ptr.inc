@@ -1,4 +1,4 @@
-// Spell text, wow build 11.2.0.62136
+// Spell text, wow build 11.2.0.62253
 static const std::array<spelltext_data_t, 28021> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
@@ -22597,7 +22597,7 @@ static const std::array<spelltext_data_t, 28021> __ptr_spelltext_data { {
   {  431192, "$@spelldesc359073", 0, "Blue" },
   {  431250, "$@spelldesc429529", "The damage of your next Arcane ability is increased by $w1%.", 0 },
   {  431284, "Increases an Ally's Agility, Intellect and Strength by $s1 for $d, stacking up to 3 times.", "Agility, Intellect and Strength increased by $w1.", 0 },
-  {  431377, "Casting $?c1[Holy Prism or Barrier of Faith]?c3[Wake of Ashes][] causes your next $431522u Holy Power spending abilities to apply Dawnlight on your target, dealing $431380o1 Radiant damage or $431381o1 healing over $431380d.\r\n\r\n$431581s1% of Dawnlight's damage and healing radiates to nearby allies or enemies, reduced beyond $431581s2 targets.$?c1[\r\n\r\nDawnlight's healing does not transfer to Beacon of Light.][]", 0, 0 },
+  {  431377, "Casting $?c1[Holy Prism or Barrier of Faith]?c3[Wake of Ashes][] causes your next $431522s1 Holy Power spending abilities to apply Dawnlight on your target, dealing $431380o1 Radiant damage or $431381o1 healing over $431380d.\r\n\r\n$431581s1% of Dawnlight's damage and healing radiates to nearby allies or enemies, reduced beyond $431581s2 targets.$?c1[\r\n\r\nDawnlight's healing does not transfer to Beacon of Light.][]", 0, 0 },
   {  431380, "$@spelldesc431377", "Dealing $w1 Radiant damage and radiating $431581s1% of this damage to nearby enemies every $t1 sec.$?e2[\r\n\r\nMovement speed reduced by $w3%.][]", 0 },
   {  431381, "$@spelldesc431377", "Healing $w1 and radiating $431581s1% of this healing to nearby allies every $t1 sec.$?e2[\r\n\r\nMovement speed increased by $w3%.][]", 0 },
   {  431382, "$@spelldesc431377", 0, 0 },
@@ -27717,7 +27717,7 @@ static const std::array<spelltext_data_t, 28021> __ptr_spelltext_data { {
   { 1236366, "While flying during $?s403631[Breath of Eons][Deep Breath] and for $s1 seconds after, you command a squadron of $s2 Dracthyr who will attack your targets with Disintegrate and Pyre.", 0, 0 },
   { 1236367, "While your squadron is active, your $?c1[Mass Disintegrate][Mass Eruption] strikes up to $s1 additional $Ltarget;targets. In addition, your squadron assists you for ${$s2/1000} additional sec.", 0, 0 },
   { 1236368, "Tip the Scales' cooldown is reduced by ${$s1/-1000} sec.", 0, 0 },
-  { 1236369, "Temporal Burst causes Chrono Flames to strike $s3 additional $Ltarget:targets; and repeat $s1% additional damage or healing, up to a maximum of $<cap>.", 0, 0 },
+  { 1236369, "Temporal Burst causes Chrono Flames to strike $s3 additional $Ltarget:targets; and repeat $s1% additional damage or healing, up to a maximum of $<cap>, and increases Essence ability damage and healing by $s4%.", 0, 0 },
   { 1236370, "Black Arrow arrow damage increased by $s1% and Bleak Powder damage increased by $s2%. The cooldown of $?c1[Call of the Wild][Trueshot] is reduced by $?c1[${-$s4/1000}][${-$s3/1000}] sec.", 0, 0 },
   { 1236371, "Withering Fire's Black Arrow damage increased by $s1%. Consuming Deathblow has a $?c1[$s2][$s3]% chance to cause all Black Arrow barrages during your next Withering Fire to fire $1236975s1 additional Black Arrow.", 0, 0 },
   { 1236372, "Pet damage increased by $?c1[$s1][$s2]% and Beast damage increased by $s3%. Summoning a Beast grants $1236564s1% haste, mastery, or critical strike chance based on the Beast summoned for $1236564d.", 0, 0 },
@@ -27749,7 +27749,7 @@ static const std::array<spelltext_data_t, 28021> __ptr_spelltext_data { {
   { 1236404, "Unseen Blade deals $s1% increased damage and has a $s2% chance to strike twice.", 0, 0 },
   { 1236405, "Coup de Grace may now be activated a second time within $s2 sec, dealing $s1% of normal damage.", 0, 0 },
   { 1236406, "Ancestral Swiftness summons an empowered Ancestor for $1238269d that deals $1238285s1% increased damage and healing.", 0, 0 },
-  { 1236407, "Ancestral Swiftness reduces the cast time of your spells by $1238279s1%, the mana cost of your spells by $1238279s2%, and increases the recharge rate of Lava Burst$?s137039[ and Riptide][] by $1238279s6% for $1238279d.", 0, 0 },
+  { 1236407, "Ancestral Swiftness increases the damage and healing of your spells by $1238279s1%, reduces the mana cost of your spells by $1238279s2%, and increases the recharge rate of Lava Burst$?s137039[ and Riptide][] by $1238279s6% for $1238279d.", 0, 0 },
   { 1236408, "Ascendance has a $?c1[$s7][$s6]% chance to grant a charge of Tempest and every $?c1[$s3][$s4] Awakening Storms now activates Ascendance for $?c2[${$s1/1000}.1][${$s5/1000}.1] sec.", 0, 0 },
   { 1236409, "Nature damage increased by $?c2[${$s1}.1][${$s3}.1]%, and Ascendance empowers your next $?c2[$s5][$s6] Tempests to gather a storm above that deals $?c2[$1235840s1][$1235840s2] Nature damage to its primary target and reduced damage to nearby enemies after $1235836d.", 0, 0 },
   { 1236410, "After you consume all the Whirling Element Motes, $?c2[your Surging Totem casts Primordial Storm at $s1%][you cast Downpour at $s2%] effectiveness at $?c2[its][your Surging Totem's] location.", 0, 0 },
@@ -27848,7 +27848,7 @@ static const std::array<spelltext_data_t, 28021> __ptr_spelltext_data { {
   { 1238133, "$@spelldesc455129", "$s1 Awakening $lStorm:Storms; accumulated. Upon reaching $u stacks, your Lightning Bolt is replaced with Tempest.", 0 },
   { 1238156, "$@spelldesc", 0, 0 },
   { 1238269, "$@spelldesc443450", 0, 0 },
-  { 1238279, "$@spelldesc1236407", "Cast time of your damage and healing spells reduced by $s1%.\r\nMana cost of healing spells reduced by $s2%\r\nRecharge time of Lava Burst$?s137039[ and Riptide][] reduced by $s6%", 0 },
+  { 1238279, "$@spelldesc1236407", "Damage and healing of your spells increased by $s1%.\r\nMana cost of healing spells reduced by $s2%\r\nRecharge time of Lava Burst$?s137039[ and Riptide][] reduced by $s6%", 0 },
   { 1238281, "Empower Rune Weapon causes your next damaging Rune spending ability to cost no Runes, but now generates ${$s1/-10} less Runic Power.", 0, 0 },
   { 1238285, "$@spelldesc1236407", "Cast time of your damage and healing spells reduced by $s1%.\r\nMana cost of healing spells reduced by $s2%\r\nRecharge time of Lava Burst$?s137039[ and Riptide][] reduced by $s6%", 0 },
   { 1238462, "$@spelldesc1236361", "$?a212613[Soul Cleave][Chaos Strike] damage is increased by $w1%.", 0 },
@@ -28023,12 +28023,11 @@ static const std::array<spelltext_data_t, 28021> __ptr_spelltext_data { {
   { 1252096, "$@spelldesc1236422", "Thunder Blast damage increased by $w1%.", 0 },
 } };
 
-// spelltext hotfix entries, wow build 11.2.0.62136
-static constexpr std::array<hotfix::client_hotfix_entry_t, 1> __ptr_spelltext_hotfix_data { {
-  { 1236231,  1, "Haste increased by ${$w1}.1%.", "Haste increased by $?c1[$w1][$w2]%." },
+// spelltext hotfix entries, wow build 11.2.0.62253
+static constexpr std::array<hotfix::client_hotfix_entry_t, 0> __ptr_spelltext_hotfix_data { {
 } };
 
-// Spell description variables, wow build 11.2.0.62136
+// Spell description variables, wow build 11.2.0.62253
 static const std::array<spelldesc_vars_data_t, 671> __ptr_spelldesc_vars_data { {
   {      53, "$mult=${($max(0,$min($pl-10,10))*11+260)/370}" },
   {     120, "$arctic1=$?s31674[${1.01}][${1}]\r\n$arctic2=$?s31675[${1.02}][${$<arctic1>}]\r\n$arctic3=$?s31676[${1.03}][${$<arctic2>}]\r\n$arctic4=$?s31677[${1.04}][${$<arctic3>}]\r\n$arctic5=$?s31678[${1.05}][${$<arctic4>}]\r\n$piercing1=$?s11151[${1.02}][${1}]\r\n$piercing2=$?s12952[${1.04}][${$<piercing1>}]\r\n$piercing3=$?s12953[${1.06}][${$<piercing2>}]\r\n$mult=${$<arctic5>*$<piercing3>}" },
@@ -28703,7 +28702,7 @@ static const std::array<spelldesc_vars_data_t, 671> __ptr_spelldesc_vars_data { 
   { 1249658, "$CAP=$?$OWB==0[${$AP*0.98}][${($AP+$OAP)*2/3}]--2H, DW" },
 } };
 
-// spelldesc_vars hotfix entries, wow build 11.2.0.62136
+// spelldesc_vars hotfix entries, wow build 11.2.0.62253
 static constexpr std::array<hotfix::client_hotfix_entry_t, 0> __ptr_spelldesc_vars_hotfix_data { {
 } };
 

@@ -1,4 +1,4 @@
-SimulationCraft 1115-02 for World of Warcraft 11.2.0.62136 PTR
+SimulationCraft 1115-02 for World of Warcraft 11.2.0.62253 PTR
 Name             : Eye of Kilrogg (id=126) [Spell Family (5)] 
 Class            : Warlock
 School           : Shadow
@@ -3492,7 +3492,7 @@ Effects          :
                    Base Value: -24 | Scaled Value: -24 | Misc Value: 22 | Misc Value 2: 3445 (Label) | Target: Self (1)
                    Affected Spells (Label): Wither (445474)
 #8 (id=261059)   : Apply Aura (6) | Apply Percent Modifier w/ Label (218): Spell Direct Amount (0)
-                   Base Value: 103 | Scaled Value: 103 | Misc Value 2: 3456 (Label) | Target: Self (1)
+                   Base Value: 143 | Scaled Value: 143 | Misc Value 2: 3456 (Label) | Target: Self (1)
                    Affected Spells (Label): Blackened Soul (445736)
 #9 (id=261060)   : Apply Aura (6) | Apply Flat Modifier w/ Label (219): Spell Effect 2 (12)
                    Base Value: -10 | Scaled Value: -10 | Misc Value: 12 | Misc Value 2: 4045 (Label) | Target: Self (1)
@@ -4780,7 +4780,7 @@ Family Flags     : 90
 Attributes       : Bouncy Chain Missiles (146), Treat as Area Effect (175), Allow Class Ability Procs (416)
 Effects          :
 #1 (id=302984)   : School Damage (2): shadow | Attributes: Add Target (Dest) Combat Reach to AOE (11)
-                   Base Value: 0 | Scaled Value: 0 (delta=0.05) | SP Coefficient: 1.00215 | Target: Enemy (6)
+                   Base Value: 0 | Scaled Value: 0 (delta=0.05) | SP Coefficient: 1.3529 | PvP Coefficient: 0.740742 | Target: Enemy (6)
 Description      : Fires an eye beam that deals $s1 Shadow damage.
 
 Name             : Phantom Singularity (id=205246) [Spell Family (5)] 
@@ -7506,7 +7506,7 @@ Effects          :
 #1 (id=800325)   : Dummy (3)
                    Base Value: 3447 | Scaled Value: 3447 | Target: Enemy (6)
 #2 (id=800326)   : Apply Aura (6) | Periodic Damage (3): shadow every 2 seconds
-                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 0.865583 | PvP Coefficient: 1.25 | Target: Enemy (6)
+                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 1.16854 | PvP Coefficient: 1.25 | Target: Enemy (6)
 #3 (id=800327)   : Dummy (3)
                    Base Value: 10 | Scaled Value: 10 | Target: Enemy (6)
 #4 (id=1087592)  : Apply Aura (6) | Modify Damage Taken% from Caster's Spells (271)
@@ -11994,7 +11994,7 @@ Labels           : 16: Class Spells
 Attributes       : Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log) (7)
 Effects          :
 #1 (id=1043910)  : Apply Aura (6) | Dummy (4)
-                   Base Value: 40 | Scaled Value: 40 | PvP Coefficient: 0.25 | Misc Value: 1 | Target: Self (1)
+                   Base Value: 80 | Scaled Value: 80 | PvP Coefficient: 0.08 | Misc Value: 1 | Target: Self (1)
 Description      : Malefic Rapture deals $s1% increased damage to targets suffering from Unstable Affliction.
 
 Name             : Chosen Identity (desc=Racial) (id=403617) [Hidden] 
@@ -13152,6 +13152,10 @@ Effects          :
                    Base Value: 1 | Scaled Value: 1 | Target: Self (1)
 #2 (id=1181008)  : Apply Aura (6) | Dummy (4)
                    Base Value: 1 | Scaled Value: 1 | Target: Self (1)
+#3 (id=1260223)  : Apply Aura (6) | Dummy (4)
+                   Base Value: -20 | Scaled Value: -20 | Target: Self (1)
+#4 (id=1260224)  : Apply Aura (6) | Dummy (4)
+                   Base Value: 15 | Scaled Value: 15 | Target: Self (1)
 Description      : $?s137044[Spending a Soul Shard on a damaging spell grants Diabolic Ritual for $431944d. While Diabolic Ritual is active, each Soul Shard spent on a damaging spell reduces its duration by $s1 sec.][Casting Chaos Bolt, Rain of Fire, or Shadowburn grants Diabolic Ritual for $431944d. If Diabolic Ritual is already active, its duration is reduced by $s2 sec instead.]
 
 When Diabolic Ritual expires you gain Demonic Art, causing your next $?s137044[Hand of Gul'dan][Chaos Bolt, Rain of Fire, or Shadowburn] to summon an Overlord, Mother of Chaos, or Pit Lord that unleashes a devastating attack against your enemies.
@@ -17191,6 +17195,9 @@ Attributes       : Passive (6), Do Not Display (Spellbook, Aura Icon, Combat Log
 Effects          :
 #1 (id=1232340)  : Apply Aura (6) | Dummy (4)
                    Base Value: 10 | Scaled Value: 10 | PvP Coefficient: 0.5 | Target: Self (1)
+#2 (id=1259837)  : Apply Aura (6) | Apply Percent Modifier w/ Label (218): Spell Direct Amount (0)
+                   Base Value: -45 | Scaled Value: -45 | Misc Value 2: 5180 (Label) | Target: Self (1)
+                   Affected Spells (Label): Eye Blast (1239510)
 Description      : $?a137044[Hand of Gul'dan cast at full power][Casting Chaos Bolt, Rain of Fire, or Shadowburn] summons a Demonic Oculus, up to $1238810u. Consuming Demonic Art flings your Demonic Oculi at your current target, exploding for $1239510s1 Fire damage and $1239510s2 Fire damage to enemies within $1239510a2 yds.
 
 Name             : Warlock Diabolist 11.2 Class Set 4pc (id=1236418) [Spell Family (5), Passive, Hidden] 
@@ -17239,7 +17246,7 @@ Labels           : 16: Class Spells
                  : 292
                  : 295
                  : 5061
-                 : 5180: Mastery: Master Demonologist (77219 effect#6)
+                 : 5180: Mastery: Master Demonologist (77219 effect#6), Warlock Diabolist 11.2 Class Set 2pc (1236417 effect#2)
 Attributes       : Do Not Display Range (126)
 Effects          :
 #1 (id=1237335)  : School Damage (2): fire

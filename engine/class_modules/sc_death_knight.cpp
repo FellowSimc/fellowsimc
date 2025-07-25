@@ -8860,7 +8860,7 @@ struct empower_rune_weapon_t final : public death_knight_spell_t
   {
     death_knight_spell_t::execute();
 
-    make_event<delayed_execute_event_t>( *sim, p(), projectile, execute_state->target, 200_ms );
+    projectile->execute_on_target( execute_state->target );
   }
 
 private:

@@ -4076,7 +4076,7 @@ public:
     if ( !has_flag( flag_e::CONVOKE ) )
       p()->buff.overflowing_power->expire( this );
 
-    if ( !dual && p()->buff.winning_streak->check() && rng().roll( loser_pct ) )
+    if ( !dual && p()->buff.winning_streak->check() && !p()->buff.big_winner->check() && rng().roll( loser_pct ) )
     {
       p()->buff.winning_streak->expire();
       loser_proc->occur();

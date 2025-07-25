@@ -9194,6 +9194,30 @@ void symbiotic_ethergauze( special_effect_t& effect )
   new symbiotic_ethergauze_cb_t( effect );
 }
 
+// veiling mana shroud
+// 1231217 coeff
+// 1231220 driver
+// 1231221 buff
+void veiling_mana_shroud( special_effect_t& effect )
+{
+  unsigned coeff_id = 1231217;
+  auto coeff = find_special_effect( effect.player, coeff_id );
+  assert( coeff && "Veiling Mana Shround missing coeff effect" );
+
+  effect.custom_buff = create_buff<stat_buff_t>( effect.player, effect.trigger() )
+    ->add_stat_from_effect_type( A_MOD_RATING, coeff->driver()->effectN( 1 ).average( effect ) );
+
+  // assume full uptime in dungeons since we're always getting hit
+  if ( effect.player->sim->fight_style == FIGHT_STYLE_DUNGEON_SLICE ||
+       effect.player->sim->fight_style == FIGHT_STYLE_DUNGEON_ROUTE )
+  {
+    effect.proc_flags_ = PF_MELEE_ABILITY;
+    effect.proc_flags2_ = PF2_LANDED;
+  }
+
+  new dbc_proc_callback_t( effect.player, effect );
+}
+
 // Weapons
 
 // 443384 driver
@@ -12237,6 +12261,8 @@ void register_special_effects()
   register_special_effect( 1235218, DISABLED_EFFECT );  // soulbinder's embrace
   register_special_effect( 1235225, items::brand_of_ceaseless_ire );
   register_special_effect( 1244406, items::symbiotic_ethergauze );
+  register_special_effect( 1231220, items::veiling_mana_shroud );
+  register_special_effect( 1231217, DISABLED_EFFECT );  // veiling mana shroud
   reset_version_check();
 
   // Weapons

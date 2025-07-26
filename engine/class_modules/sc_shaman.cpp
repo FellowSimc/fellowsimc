@@ -9283,6 +9283,8 @@ public:
     p()->buff.voltaic_blaze->decrement();
 
     p()->buff.whirling_earth->decrement();
+
+    p()->trigger_tww3_totemic_enh_2pc( execute_state );
   }
 
   void impact( action_state_t* state ) override

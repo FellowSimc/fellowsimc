@@ -7415,6 +7415,12 @@ struct coup_de_grace_t : public rogue_attack_t
         bonus_attack->last_cp = cast_state( state )->get_combo_points();
         bonus_attack->execute_on_target( state->target );
       }
+
+      // 2025-07-25 -- See bug notes in the main coup_de_grace_t below
+      if ( p()->bugs )
+      {
+        p()->buffs.finality_eviscerate->expire();
+      }
     }
 
     bool procs_main_gauche() const override
@@ -7506,6 +7512,10 @@ struct coup_de_grace_t : public rogue_attack_t
 
     // 2025-03-11 -- Similar to the Black Powder shadow damage timing, Finality affects every CdG additional attack
     //               The initial hit will reapply the buff, causing the 2nd and 3rd impacts to always have it
+    // 2025-07-25 -- At some point recently, this behavior was broken again and the above no longer applies
+    //               The first impact from CdG will expire the buff if it is up
+    //               If the buff is down, the first hit will apply it and the second impact will expire the buff
+    //               Bugged expiration is handled in coup_de_grace_damage_t above
     if ( p()->spec.finality_eviscerate_buff->ok() )
     {
       if ( !p()->buffs.finality_eviscerate->check() )
@@ -7518,7 +7528,7 @@ struct coup_de_grace_t : public rogue_attack_t
       else
       {
         // Delay the expiration so that it works on all three impacts
-        p()->buffs.finality_eviscerate->expire( 1_s );
+        p()->buffs.finality_eviscerate->expire( p()->bugs ? 1_ms : 1_s );
       }
     }
 

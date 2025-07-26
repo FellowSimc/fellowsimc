@@ -81,7 +81,8 @@ enum flag_e : uint32_t
   // misc
   UMBRAL       = 0x10000000,  // umbral embrace talent
 
-  FREE_PROCS = CONVOKE | FIRMAMENT | FLASHING | GALACTIC | ORBIT | TWIN | TREANT | LIGHTOFELUNE | THRASHING | STACKED | JACKPOT,
+  FREE_PROCS = CONVOKE | FIRMAMENT | FLASHING | GALACTIC | ORBIT | TWIN | TREANT | LIGHTOFELUNE | THRASHING | STACKED |
+               JACKPOT | TWW3SET,
   FREE_CASTS = APEX | TOOTHANDCLAW
 };
 
@@ -8913,7 +8914,7 @@ struct starfire_base_t : public use_fluid_form_t<MOONKIN_FORM, ap_generator_t>
   void schedule_travel( action_state_t* s ) override
   {
     // eclipse is handled after cast but before impact
-    if ( s->chain_target == 0 )
+    if ( !has_flag( flag_e::FREE_PROCS ) && s->chain_target == 0 )
       p()->eclipse_handler.cast_starfire();
 
     base_t::schedule_travel( s );
@@ -9515,7 +9516,8 @@ struct wrath_base_t : public use_fluid_form_t<MOONKIN_FORM, ap_generator_t>
   void schedule_travel( action_state_t* s ) override
   {
     // eclipse is handled after cast but before travel
-    p()->eclipse_handler.cast_wrath();
+    if ( !has_flag( flag_e::FREE_PROCS ) )
+      p()->eclipse_handler.cast_wrath();
 
     base_t::schedule_travel( s );
   }

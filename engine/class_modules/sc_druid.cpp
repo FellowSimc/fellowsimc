@@ -1332,6 +1332,7 @@ struct druid_t final : public parse_player_effects_t
   void init_action_list() override;
   void init_blizzard_action_list() override;
   std::string aura_expr_from_spell_id( unsigned int spell_id, bool on_self = true ) const override;
+  void parse_assisted_combat_step( const assisted_combat_step_data_t&, action_priority_list_t* ) override;
   parsed_assisted_combat_rule_t parse_assisted_combat_rule( const assisted_combat_rule_data_t&,
                                                             const assisted_combat_step_data_t& ) const override;
   void init_base_stats() override;
@@ -13405,6 +13406,7 @@ void druid_t::init_action_list()
 // druid_t::init_blizzard_action_list =======================================
 void druid_t::init_blizzard_action_list()
 {
+  auto pre = get_action_priority_list( "precombat" );
   auto def = get_action_priority_list( "default" );
   auto cd = get_action_priority_list( "cooldowns" );
 
@@ -13415,15 +13417,19 @@ void druid_t::init_blizzard_action_list()
 
   cd->add_action( "use_items" );
 
-  if ( specialization() == DRUID_BALANCE )
+  switch ( specialization() )
   {
-    cd->add_action( "celestial_alignment,if=!buff.celestial_alignment.up" );
-    cd->add_action( "incarnation,if=!buff.incarnation.up" );
-  }
-  else if ( specialization() == DRUID_FERAL || specialization() == DRUID_GUARDIAN )
-  {
-    cd->add_action( "berserk" );
-    cd->add_action( "incarnation" );
+    case DRUID_BALANCE:
+      cd->add_action( "celestial_alignment,if=!buff.celestial_alignment.up" );
+      cd->add_action( "incarnation,if=!buff.incarnation.up" );
+      break;
+    case DRUID_FERAL:
+      pre->add_action( "prowl" );  // fallthru
+    case DRUID_GUARDIAN:
+      cd->add_action( "berserk" );
+      cd->add_action( "incarnation" );
+      break;
+    default: break;
   }
 
   cd->add_action( "convoke_the_spirits" );
@@ -13436,6 +13442,15 @@ std::string druid_t::aura_expr_from_spell_id( unsigned int spell_id, bool on_sel
     return "buff.apex_predators_craving";
 
   return player_t::aura_expr_from_spell_id( spell_id, on_self );
+}
+
+// druid_t::parse_assisted_combat_step ======================================
+void druid_t::parse_assisted_combat_step( const assisted_combat_step_data_t& step, action_priority_list_t* apl )
+{
+  if ( step.order_index == 0 && ( step.spell_id == 768 || step.spell_id == 5487 || step.spell_id == 24858 ) )
+    player_t::parse_assisted_combat_step( step, get_action_priority_list( "precombat" ) );
+  else
+    player_t::parse_assisted_combat_step( step, apl );
 }
 
 // druid_t::parse_assisted_combat_rule ======================================

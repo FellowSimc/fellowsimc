@@ -15284,6 +15284,7 @@ void druid_t::parse_action_effects( action_t* action )
       break;
 
     case DRUID_FERAL:
+      _a->parse_effects( buff.ravage_rampage );
       break;
 
     case DRUID_GUARDIAN:

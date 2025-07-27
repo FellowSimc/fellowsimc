@@ -4222,12 +4222,9 @@ struct adaptive_swarm_t final : public cat_attack_t
   struct adaptive_swarm_base_t : public BASE
   {
     adaptive_swarm_base_t<OTHER, BASE>* other = nullptr;
-    double tf_mul;
     bool heal = false;
 
-    adaptive_swarm_base_t( druid_t* p, std::string_view n, const spell_data_t* s )
-      : BASE( n, p, s ),
-        tf_mul( find_effect( p->talent.tigers_fury, this, A_ADD_PCT_MODIFIER, P_TICK_DAMAGE ).percent() )
+    adaptive_swarm_base_t( druid_t* p, std::string_view n, const spell_data_t* s ) : BASE( n, p, s )
     {
       BASE::dual = BASE::background = BASE::proc = true;
       BASE::dot_behavior = dot_behavior_e::DOT_CLIP;
@@ -4419,13 +4416,8 @@ struct adaptive_swarm_t final : public cat_attack_t
 
     double composite_persistent_multiplier( const action_state_t* s ) const override
     {
-      double pm = adaptive_swarm_base_t::composite_persistent_multiplier( s );
-
-      // inherits from druid_spell_t so does not get automatic persistent multiplier parsing
-      if ( !state( s )->jump && p()->buff.tigers_fury->up() )
-        pm *= 1.0 + tf_mul;
-
-      return pm;
+      // jumped swarm does not snapshot TF
+      return state( s )->jump ? 1.0 : adaptive_swarm_base_t::composite_persistent_multiplier( s );
     }
   };
 

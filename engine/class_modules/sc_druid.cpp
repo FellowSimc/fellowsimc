@@ -1331,6 +1331,7 @@ struct druid_t final : public parse_player_effects_t
   void init_absorb_priority() override;
   void init_action_list() override;
   void init_blizzard_action_list() override;
+  std::vector<std::string> action_names_from_spell_id( unsigned int ) const;
   std::string aura_expr_from_spell_id( unsigned int spell_id, bool on_self = true ) const override;
   void parse_assisted_combat_step( const assisted_combat_step_data_t&, action_priority_list_t* ) override;
   parsed_assisted_combat_rule_t parse_assisted_combat_rule( const assisted_combat_rule_data_t&,
@@ -13438,6 +13439,15 @@ void druid_t::init_blizzard_action_list()
 
     default: break;
   }
+}
+
+// druid_t::action_names_from_spell_id ======================================
+std::vector<std::string> druid_t::action_names_from_spell_id( unsigned int spell_id ) const
+{
+  if ( spell_id == 274281 )
+    return { "new_moon", "half_moon", "full_moon" };
+
+  return player_t::action_names_from_spell_id( spell_id );
 }
 
 // druid_t::aura_expr_from_spell_id =========================================

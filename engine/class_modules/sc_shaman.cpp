@@ -2687,17 +2687,8 @@ public:
 
     if ( this->exec_type == spell_variant::THORIMS_INVOCATION )
     {
-      // On PTR (11.2), Tempest is allowed to consume up to 10 charges
-      if ( p()->dbc->ptr )
-      {
-        mw_stacks = std::min( mw_stacks,
-          as<int>( this->p()->talent.thorims_invocation->effectN( 6 ).base_value() ) );
-      }
-      else
-      {
-        mw_stacks = std::min( mw_stacks,
-          as<int>( this->p()->talent.thorims_invocation->effectN( 1 ).base_value() ) );
-      }
+      mw_stacks = std::min( mw_stacks,
+        as<int>( this->p()->talent.thorims_invocation->effectN( 1 ).base_value() ) );
     }
 
     return mw_stacks;
@@ -11337,6 +11328,33 @@ struct tempest_t : public shaman_spell_t
         affected_by_master_of_the_elements = true;
         break;
     }
+  }
+
+  int maelstrom_weapon_stacks() const override
+  {
+    if ( !benefit_from_maelstrom_weapon() )
+    {
+      return 0;
+    }
+
+    auto mw_stacks = std::min( mw_consume_max_stack, this->p()->buff.maelstrom_weapon->check() );
+
+    if ( this->exec_type == spell_variant::THORIMS_INVOCATION )
+    {
+      // On PTR (11.2), Tempest is allowed to consume up to 10 charges
+      if ( p()->dbc->ptr )
+      {
+        mw_stacks = std::min( mw_stacks,
+          as<int>( this->p()->talent.thorims_invocation->effectN( 6 ).base_value() ) );
+      }
+      else
+      {
+        mw_stacks = std::min( mw_stacks,
+          as<int>( this->p()->talent.thorims_invocation->effectN( 1 ).base_value() ) );
+      }
+    }
+
+    return mw_stacks;
   }
 
   void init() override

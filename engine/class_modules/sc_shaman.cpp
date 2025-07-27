@@ -11110,7 +11110,7 @@ struct primordial_storm_t : public shaman_spell_t
 
       // 2025-01-27 Primordial Frost apparently double-dips on Legacy of the Frost Witch buff due to
       // being flagged with families 24 and 58.
-      if ( p()->bugs && id == 1218116 && exec_type != spell_variant::TWW3 )
+      if ( p()->bugs && id == 1218116 )
       {
         m *= 1.0 + p()->buff.legacy_of_the_frost_witch->value();
       }

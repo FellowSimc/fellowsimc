@@ -2810,7 +2810,7 @@ struct kill_command_bm_t: public hunter_pet_attack_t<hunter_main_pet_base_t>
           {
             double amount = phantom_pain.replicate_amount * s->result_amount;
             o()->actions.phantom_pain->execute_on_target( t, amount );
-            if ( ++target_count = phantom_pain.max_targets )
+            if ( ++target_count == phantom_pain.max_targets )
               break;
           }
         }

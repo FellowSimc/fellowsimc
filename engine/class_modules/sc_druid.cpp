@@ -644,7 +644,6 @@ struct druid_t final : public parse_player_effects_t
     // Hero sets
     action_t* starsurge_tww3;          // EC TWW3 2pc
     action_t* dryad_tww3;              // KOTG TWW3 2pc proxy
-    action_t* dryads_favor;            // KOTG TWW3 4pc splash
     action_t* bloodseeker_vines_tww3;  // WS TWW3 2pc TF proc
     action_t* bursting_growth_tww3;    // WS TWW3 4pc
   } active;
@@ -1962,6 +1961,26 @@ public:
 
     if ( !ab::use_off_gcd && p()->buff.stacked_deck->check() && p()->buff.stacked_deck->trigger( this ))
       p()->active.stacked_deck->execute();
+  }
+
+  // NOTE: this calls ab::target_list() and not this->target_list() so any overrides between the ultimate derived class
+  // and spell_t/heal_t/attack_t will be lost
+  std::vector<player_t*>& splash_target_list( player_t* primary = nullptr,
+                                              std::function<bool( player_t* )> fn = nullptr ) const
+  {
+    if ( !primary )
+      return ab::target_list();
+
+    ab::target_cache.is_valid = false;
+
+    auto& tl = ab::target_list();
+
+    if ( fn )
+      range::erase_remove( tl, std::move( fn ) );
+    else
+      range::erase_remove( tl, primary );
+
+    return tl;
   }
 
   bool can_trigger_lunation() const
@@ -4749,13 +4768,7 @@ struct ferocious_bite_base_t : public cat_finisher_t
 
     std::vector<player_t*>& target_list() const override
     {
-      target_cache.is_valid = false;
-
-      auto& tl = cat_attack_t::target_list();
-
-      range::erase_remove( tl, [ this ]( player_t* t ) { return !td( t )->dots.rip->is_ticking() || t == target; } );
-
-      return tl;
+      return splash_target_list();
     }
 
     double composite_da_multiplier( const action_state_t* s ) const override
@@ -4766,7 +4779,7 @@ struct ferocious_bite_base_t : public cat_finisher_t
     }
   };
 
-  cat_attack_t* rampant_ferocity = nullptr;
+  rampant_ferocity_t* rampant_ferocity = nullptr;
   double excess_energy = 0.0;
   double max_excess_energy;
   double saber_jaws_mul;
@@ -4839,18 +4852,25 @@ struct ferocious_bite_base_t : public cat_finisher_t
     if ( p()->active.bursting_growth )
       p()->active.bursting_growth->execute_on_target( s->target );
 
-    if ( rampant_ferocity && s->result_amount > 0 && !rampant_ferocity->target_list().empty() )
+    if ( rampant_ferocity && s->result_amount > 0 )
     {
-      rampant_ferocity->snapshot_and_execute( s, false, [ this ]( const action_state_t* from, action_state_t* to ) {
-        auto state = debug_cast<rampant_ferocity_t*>( rampant_ferocity )->cast_state( to );
-        state->combo_points = cp( from );
-
-        // TODO: RF from apex/convoke currently does not scale with excess energy, unlike hardcasted FB
-        if ( p()->bugs && is_free() )
-          state->energy_mul = 1.0;
-        else
-          state->energy_mul = 1.0 + ( energy_modifier( from ) * rf_energy_mod_pct );
+      auto splash_list = rampant_ferocity->splash_target_list( s->target, [ this, primary = s->target ]( player_t* t ) {
+        return t == primary || !td( t )->dots.rip->is_ticking();
       } );
+
+      if ( !splash_list.empty() )
+      {
+        rampant_ferocity->snapshot_and_execute( s, false, [ this ]( const action_state_t* from, action_state_t* to ) {
+          auto state = debug_cast<rampant_ferocity_t*>( rampant_ferocity )->cast_state( to );
+          state->combo_points = cp( from );
+
+          // TODO: RF from apex/convoke currently does not scale with excess energy, unlike hardcasted FB
+          if ( p()->bugs && is_free() )
+            state->energy_mul = 1.0;
+          else
+            state->energy_mul = 1.0 + ( energy_modifier( from ) * rf_energy_mod_pct );
+        } );
+      }
     }
   }
 
@@ -7413,14 +7433,40 @@ struct consume_dryads_favor_t : public BASE
     bool consumed = false;
   };
 
+  struct dryads_favor_t final : public druid_residual_action_t<druid_spell_t>
+  {
+    dryads_favor_t( druid_t* p ) : base_t( "dryads_favor", p, p->find_spell( 1236851 ) )
+    {
+      background = proc = true;
+      aoe = -1;
+
+      // tooltip goes off buff spell data (1236807) but actual in-game goes off unused aura spell (1252024)
+      auto splash_data = p->bugs ? p->find_spell( 1252024 ) : &p->buff.dryads_favor->data();
+      residual_mul = splash_data->effectN( p->specialization() == DRUID_RESTORATION ? 3 : 2 ).percent();
+      reduced_aoe_targets = splash_data->effectN( 4 ).base_value();
+
+      p->active.dryad_tww3->add_child( this );
+    }
+
+    std::vector<player_t*>& target_list() const override
+    {
+      return splash_target_list();
+    }
+  };
+
 protected:
   using base_t = consume_dryads_favor_t<BASE>;
   using state_t = druid_action_state_t<dryads_favor_data_t>;
 
 public:
+  dryads_favor_t* splash = nullptr;
+
   consume_dryads_favor_t( std::string_view n, druid_t* p, const spell_data_t* s, flag_e f = flag_e::NONE )
     : BASE( n, p, s, f )
-  {}
+  {
+    if ( p->sets->has_set_bonus( HERO_KEEPER_OF_THE_GROVE, TWW3, B4 ) )
+      splash = p->get_secondary_action<dryads_favor_t>( "dryads_favor" );
+  }
 
   double bonus_da( const action_state_t* s ) const override
   {
@@ -7456,8 +7502,8 @@ public:
   {
     BASE::impact( s );
 
-    if ( cast_state( s )->consumed )
-      BASE::p()->active.dryads_favor->execute_on_target( s->target, s->result_amount );
+    if ( cast_state( s )->consumed && splash && splash->splash_target_list( s->target ).empty() )
+      splash->execute_on_target( s->target, s->result_amount );
   }
 };
 
@@ -7641,31 +7687,6 @@ struct dream_burst_t final : public druid_spell_t
     background = proc = true;
     aoe = -1;
     reduced_aoe_targets = data().effectN( 2 ).base_value();
-  }
-};
-
-// Dryad's Favor (KOTG TWW3 4pc) ============================================
-struct dryads_favor_t final : public druid_residual_action_t<druid_spell_t>
-{
-  dryads_favor_t( druid_t* p ) : base_t( "dryads_favor", p, p->find_spell( 1236851 ) )
-  {
-    proc = true;
-    aoe = -1;
-
-    // tooltip goes off buff spell data (1236807) but actual in-game goes off unused aura spell (1252024)
-    auto splash_data = p->bugs ? p->find_spell( 1252024 ) : &p->buff.dryads_favor->data();
-    residual_mul = splash_data->effectN( p->specialization() == DRUID_RESTORATION ? 3 : 2 ).percent();
-    reduced_aoe_targets = splash_data->effectN( 4 ).base_value();
-  }
-
-  std::vector<player_t*>& target_list() const override
-  {
-    auto& tl = base_t::target_list();
-
-    // target is set to initial starsurge target via execute_on_target() so remove it
-    range::erase_remove( tl, target );
-
-    return tl;
   }
 };
 
@@ -9101,7 +9122,8 @@ struct starsurge_tww3_t final : public BASE
   {
     starsurge_splash_t( druid_t* p ) : base_t( "starsurge_splash", p, p->find_spell( 1236917 ) )
     {
-      proc = true;
+      background = proc = true;
+      name_str_reporting = "Splash";
 
       auto set = p->sets->set( HERO_ELUNES_CHOSEN, TWW3, B4 );
       aoe = as<int>( set->effectN( 1 ).base_value() );
@@ -9114,10 +9136,8 @@ struct starsurge_tww3_t final : public BASE
 
     std::vector<player_t*>& target_list() const override
     {
-      auto& tl = base_t::target_list();
+      auto& tl = splash_target_list();
 
-      // target is set to initial starsurge target via execute_on_target() so remove it
-      range::erase_remove( tl, target );
       // hits random targets
       rng().shuffle( tl.begin(), tl.end() );
 
@@ -9171,7 +9191,7 @@ struct starsurge_tww3_t final : public BASE
   {
     BASE::impact( s );
 
-    if ( splash )
+    if ( splash && !splash->splash_target_list( s->target ).empty() )
       splash->execute_on_target( s->target, s->result_amount );
   }
 };
@@ -12434,12 +12454,6 @@ void druid_t::create_actions()
       if ( sets->has_set_bonus( HERO_KEEPER_OF_THE_GROVE, TWW3, B2 ) )
       {
         active.dryad_tww3 = get_secondary_action<dryad_tww3_t>( "dryad" );
-      }
-      if ( sets->has_set_bonus( HERO_KEEPER_OF_THE_GROVE, TWW3, B4 ) )
-      {
-        active.dryads_favor = get_secondary_action<dryads_favor_t>( "dryads_favor" );
-        if ( active.dryad_tww3 )
-          active.dryad_tww3->add_child( active.dryads_favor );
       }
       break;
 

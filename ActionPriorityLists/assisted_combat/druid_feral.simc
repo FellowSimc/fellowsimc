@@ -1,6 +1,8 @@
 
 # Executed before combat begins. Accepts non-harmful actions only.
 actions.precombat=snapshot_stats
+actions.precombat+=/cat_form,if=buff.cat_form.down
+actions.precombat+=/prowl
 
 # Executed every time the actor is available.
 actions=auto_attack
@@ -8,8 +10,7 @@ actions+=/call_action_list,name=cooldowns
 actions+=/call_action_list,name=assisted_combat
 
 # This is the default action priority list from the game's Assisted Combat system.
-actions.assisted_combat=cat_form,if=buff.cat_form.down
-actions.assisted_combat+=/tigers_fury,if=combo_points>=5&target.distance<=8&cooldown.rip.ready
+actions.assisted_combat=tigers_fury,if=combo_points>=5&target.distance<=8&cooldown.rip.ready
 actions.assisted_combat+=/rake,if=buff.prowl.up
 actions.assisted_combat+=/primal_wrath,if=target.distance<=10&active_enemies>3&!dot.rip.ticking&combo_points>=5
 actions.assisted_combat+=/rip,if=!dot.rip.ticking&combo_points>=5
@@ -39,4 +40,3 @@ actions.cooldowns+=/ancestral_call
 actions.cooldowns+=/use_items
 actions.cooldowns+=/berserk
 actions.cooldowns+=/incarnation
-actions.cooldowns+=/convoke_the_spirits

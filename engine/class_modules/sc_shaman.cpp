@@ -11095,6 +11095,7 @@ struct primordial_storm_t : public shaman_spell_t
         // Note, 11.2 totemic set bonus spells do not benefit from Maelstrom Weapon
         case spell_variant::TWW3:
           base_multiplier *= p()->sets->set( HERO_TOTEMIC, TWW3, B2 )->effectN( 1 ).percent();
+          may_proc_flametongue = may_proc_windfury = may_proc_stormsurge = may_proc_flowing_spirits = false;
           break;
         default:
           // Inherit Maelstrom Weapon stacks from the parent cast for normal casts

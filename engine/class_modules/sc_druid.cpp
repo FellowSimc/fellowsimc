@@ -5983,8 +5983,26 @@ struct maul_t final : public maul_base_t
     ravage_maul_t( druid_t* p, std::string_view n, flag_e f ) : base_t( n, p, p->find_spell( 441605 ), f ) {}
   };
 
+  struct ravage_maul_echo_t final : public ravage_base_t<maul_base_t, use_dot_list_t<bear_attack_t>>
+  {
+    ravage_maul_echo_t( druid_t* p, std::string_view n ) : base_t( n, p, p->find_spell( 441605 ), flag_e::TWW3SET )
+    {
+      background = proc = true;
+      name_str_reporting = "TWW3 Set";
+      base_multiplier = p->sets->set( HERO_DRUID_OF_THE_CLAW, TWW3, B4 )->effectN( 3 ).percent();
+    }
+
+    void execute() override
+    {
+      base_t::execute();
+
+      // echo consumes vicious cycle despite not matching proc flags
+      p()->buff.vicious_cycle_maul->expire();
+    }
+  };
+
   ravage_maul_t* ravage = nullptr;
-  ravage_maul_t* ravage_echo = nullptr;
+  ravage_maul_echo_t* ravage_echo = nullptr;
 
   DRUID_ABILITY( maul_t, maul_base_t, "maul", p->talent.maul )
   {
@@ -5993,12 +6011,9 @@ struct maul_t final : public maul_base_t
       ravage = p->get_secondary_action<ravage_maul_t>( "ravage_" + name_str, f );
       add_child( ravage );
 
-      if ( auto set = p->sets->set( HERO_DRUID_OF_THE_CLAW, TWW3, B4 ); set->ok() )
+      if ( p->sets->has_set_bonus( HERO_DRUID_OF_THE_CLAW, TWW3, B4 ) )
       {
-        ravage_echo =  p->get_secondary_action<ravage_maul_t>( "ravage_tww3_" + name_str, flag_e::TWW3SET );
-        ravage_echo->proc = true;
-        ravage_echo->name_str_reporting = "TWW3 Set";
-        ravage_echo->base_multiplier = set->effectN( 3 ).percent();
+        ravage_echo = p->get_secondary_action<ravage_maul_echo_t>( "ravage_tww3_" + name_str );
         add_child( ravage_echo );
       }
     }
@@ -15310,12 +15325,11 @@ void druid_t::parse_action_effects( action_t* action )
   _a->parse_effects( buff.gory_fur, EXPIRE_BUFF );
   _a->parse_effects( buff.rage_of_the_sleeper );
   _a->parse_effects( buff.vicious_cycle_mangle, USE_DEFAULT, EXPIRE_BUFF );
+  _a->parse_effects( buff.vicious_cycle_maul, USE_DEFAULT, EXPIRE_BUFF );
 
+  // bear ravage echo is not buffed by tnc
   if ( auto tmp = dynamic_cast<druid_action_data_t*>( action ); tmp && !tmp->has_flag( flag_e::TWW3SET ) )
-  {
     _a->parse_effects( buff.tooth_and_claw );
-    _a->parse_effects( buff.vicious_cycle_maul, USE_DEFAULT, EXPIRE_BUFF );
-  }
 
   _a->parse_effects( buff.guardians_tenacity );
   // effects#5 and #6 are ignored regardless of lunar calling

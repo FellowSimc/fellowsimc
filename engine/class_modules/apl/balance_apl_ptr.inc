@@ -102,7 +102,8 @@ st->add_action( "wild_mushroom,if=!prev_gcd.1.wild_mushroom&dot.fungal_growth.re
 st->add_action( "starfire,if=talent.lunar_calling" );
 st->add_action( "wrath" );
 
-aoe->add_action( "wrath,if=variable.enter_lunar&eclipse.in_eclipse&variable.eclipse_remains<cast_time","AOE" );
+aoe->add_action( "starsurge,if=buff.dryads_favor.up","Spend Dryads Favor on AoE (this is wonky)" );
+aoe->add_action( "wrath,if=variable.enter_lunar&eclipse.in_eclipse&variable.eclipse_remains<cast_time" );
 aoe->add_action( "starfire,if=!variable.enter_lunar&eclipse.in_eclipse&variable.eclipse_remains<cast_time" );
 aoe->add_action( "starfall,if=astral_power.deficit<=variable.passive_asp+6" );
 aoe->add_action( "moonfire,target_if=refreshable&(target.time_to_die-remains)>6&(!talent.treants_of_the_moon|spell_targets-active_dot.moonfire_dmg>6|cooldown.force_of_nature.remains>3&!buff.harmony_of_the_grove.up),if=fight_style.dungeonroute|fight_style.dungeonslice" );

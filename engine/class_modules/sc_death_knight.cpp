@@ -1827,6 +1827,7 @@ public:
   void init_special_effects() override;
   void init_finished() override;
   bool validate_fight_style( fight_style_e style ) const override;
+  bool validate_actor() override;
   double composite_attribute( attribute_e ) const override;
   double composite_bonus_armor() const override;
   void combat_begin() override;
@@ -9714,7 +9715,7 @@ private:
 struct glacial_advance_damage_t final : public death_knight_spell_t
 {
   glacial_advance_damage_t( std::string_view name, death_knight_t* p, bool aa = false )
-    : death_knight_spell_t( name, p, p->spell.glacial_advance_damage ), is_arctic_assault( aa )
+    : death_knight_spell_t( name, p, p->spell.glacial_advance_damage ), is_arctic_assault( aa ), targets_max_razorice( 0 )
   {
     aoe        = -1;  // TODO: Fancier targeting .. make it aoe for now
     background = true;
@@ -9733,6 +9734,7 @@ struct glacial_advance_damage_t final : public death_knight_spell_t
 
   void execute() override
   {
+    targets_max_razorice = 0;
     death_knight_spell_t::execute();
 
     // Killing Machine glacial advcances currently does not trigger Obliteration rune generation
@@ -9762,6 +9764,12 @@ struct glacial_advance_damage_t final : public death_knight_spell_t
         p()->background_actions.frostscythe_proc->execute();
       }
     }
+
+    const int other_targets = execute_state->n_targets - targets_max_razorice;
+    // 11.2 TODO find actual proc chance
+    // This is a very dumb formula that is only here to emulate a very high proc chance when 3+ targets have 5 stacks
+    if ( p()->rng().roll( std::min( .10 * other_targets + .275 * targets_max_razorice, .95 ) ) )
+      p()->buffs.frostbane->trigger();    
   }
 
   void impact( action_state_t* state ) override
@@ -9787,13 +9795,15 @@ struct glacial_advance_damage_t final : public death_knight_spell_t
                                 state->result_amount * p()->talent.frost.hyperpyrexia->effectN( 1 ).percent() );
     }
 
-    // 11.2 TODO find actual proc chance
-    if ( p()->rng().roll( .05 * razorice->check() ) )
-      p()->buffs.frostbane->trigger();
+    if ( razorice->at_max_stacks() )
+    {
+      targets_max_razorice++;
+    }
   }
 
 private:
   bool is_arctic_assault;
+  int targets_max_razorice;
 };
 
 struct glacial_advance_t final : public death_knight_spell_t
@@ -15721,6 +15731,20 @@ bool death_knight_t::validate_fight_style( fight_style_e fight ) const
     }
   }
   return false;
+}
+
+// death_kight_t::validate_actor ======================================
+bool death_knight_t::validate_actor()
+{
+  if ( talent.frost.frostbane.ok() )
+  {
+    sim->error( "****** UNRELIABLE SIM ****** UNRELIABLE SIM ****** UNRELIABLE SIM ******" );
+    sim->error( "!! The precise proc chance of Frostbane is unknown.    !!" );
+    sim->error( "!! Results will be incorrect.                                         !!" );
+    sim->error( "****** UNRELIABLE SIM ****** UNRELIABLE SIM ****** UNRELIABLE SIM ******" );
+  }
+
+  return true;
 }
 
 // death_knight_t::activate =================================================

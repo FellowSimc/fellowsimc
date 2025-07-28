@@ -583,6 +583,7 @@ struct druid_t final : public parse_player_effects_t
     unsigned adaptive_swarm_melee_targets = 7;
     unsigned adaptive_swarm_ranged_targets = 12;
     std::string adaptive_swarm_prepull_setup = "";
+    double ws_tww3_2pc_bonus = 0.16;
 
     // Guardian
 
@@ -2549,7 +2550,7 @@ public:
       aoe_scale = 0.375;
 
     if ( p->sets->has_set_bonus( HERO_WILDSTALKER, TWW3, B2 ) )
-      vine_bonus = 0.16;  // TODO: wild ass guess, results in ~36.6% more executes
+      vine_bonus = p->options.ws_tww3_2pc_bonus;  // TODO: wild ass guess, results in ~36.6% more executes
   }
 
   void tick( dot_t* d ) override
@@ -14193,6 +14194,7 @@ void druid_t::create_options()
   add_option( opt_uint( "druid.adaptive_swarm_melee_targets", options.adaptive_swarm_melee_targets, 1U, 29U ) );
   add_option( opt_uint( "druid.adaptive_swarm_ranged_targets", options.adaptive_swarm_ranged_targets, 1U, 29U ) );
   add_option( opt_func( "druid.adaptive_swarm_prepull_setup", parse_swarm_setup ) );
+  add_option( opt_float( "druid.ws_tww3_2pc_bonus", options.ws_tww3_2pc_bonus ) );
 
   // Guardian
 

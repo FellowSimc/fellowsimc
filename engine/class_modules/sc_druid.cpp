@@ -15311,7 +15311,7 @@ void druid_t::parse_action_effects( action_t* action )
   _a->parse_effects( buff.rage_of_the_sleeper );
   _a->parse_effects( buff.vicious_cycle_mangle, USE_DEFAULT, EXPIRE_BUFF );
 
-  if ( !dynamic_cast<druid_action_data_t*>( action )->has_flag( flag_e::TWW3SET ) )
+  if ( auto tmp = dynamic_cast<druid_action_data_t*>( action ); tmp && !tmp->has_flag( flag_e::TWW3SET ) )
   {
     _a->parse_effects( buff.tooth_and_claw );
     _a->parse_effects( buff.vicious_cycle_maul, USE_DEFAULT, EXPIRE_BUFF );

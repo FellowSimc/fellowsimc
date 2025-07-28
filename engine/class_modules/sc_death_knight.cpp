@@ -15315,7 +15315,8 @@ void death_knight_t::create_buffs()
   buffs.bonegrinder_crit =
       make_fallback( talent.frost.bonegrinder.ok(), this, "bonegrinder_crit", spell.bonegrinder_crit_buff )
           ->set_default_value_from_effect_type( A_MOD_ALL_CRIT_CHANCE )
-          ->set_cooldown( talent.frost.bonegrinder->internal_cooldown() );
+          ->set_cooldown( talent.frost.bonegrinder->internal_cooldown() )
+          ->set_max_stack( spell.bonegrinder_crit_buff->max_stacks() - 1 );
 
   buffs.bonegrinder_frost =
       make_fallback( talent.frost.bonegrinder.ok(), this, "bonegrinder_frost", spell.bonegrinder_frost_buff )

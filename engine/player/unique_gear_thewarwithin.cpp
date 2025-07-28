@@ -9358,6 +9358,9 @@ void chaotic_nethergate( special_effect_t& effect )
 // 1245397 buff
 void manaforged_aethercell( special_effect_t& effect )
 {
+  if ( unique_gear::create_fallback_buffs( effect, { "manaforged_aethercell" } ) )
+    return;
+
   auto buff_data = effect.trigger();
   auto buff_seconds = buff_data->duration().total_seconds();
 
@@ -12461,7 +12464,7 @@ void register_special_effects()
   register_special_effect( 1235500, items::alldevouring_nucleus );
   register_special_effect( 1244008, items::chaotic_nethergate );
   register_special_effect( 1246837, DISABLED_EFFECT );  // chaotic nethergate
-  register_special_effect( 1244405, items::manaforged_aethercell );
+  register_special_effect( 1244405, items::manaforged_aethercell, true );
   register_special_effect( 1234022, items::automatic_footbomb_dispenser );
   reset_version_check();
 

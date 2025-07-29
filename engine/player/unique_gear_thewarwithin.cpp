@@ -9383,6 +9383,18 @@ void manaforged_aethercell( special_effect_t& effect )
 
   effect.custom_buff = buff;
 
+  if ( effect.player->specialization() == PRIEST_SHADOW )
+  {
+    effect.player->callbacks.register_callback_trigger_function(
+        effect.spell_id, dbc_proc_callback_t::trigger_fn_type::CONDITION,
+        []( const dbc_proc_callback_t*, action_t* a, const action_state_t* ) {
+          // Renew or Flashheal
+          if ( a->id == 139 || a->id == 2061 )
+            return true;
+          return false;
+        } );
+  }
+
   new dbc_proc_callback_t( effect.player, effect );
 }
 

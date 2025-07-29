@@ -8226,6 +8226,7 @@ void gigazaps_zapcap( special_effect_t& effect )
 // Diamantine Voidcore
 // 1234996 Driver
 // 1239221 Buff
+// 1239233 low mana rppm modifier script
 void diamantine_voidcore( special_effect_t& effect )
 {
   auto buff = create_buff<stat_buff_t>( effect.player, effect.player->find_spell( 1239221 ) )
@@ -8233,22 +8234,28 @@ void diamantine_voidcore( special_effect_t& effect )
                   ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS );
 
   effect.custom_buff = buff;
-  
+
   struct diamantine_voidcore_cb_t : public dbc_proc_callback_t
   {
     double mana_threshold;
-    double rppm_boost;
+    double rppm_mod_orig;
+    double rppm_mod_boost;
+
     diamantine_voidcore_cb_t( const special_effect_t& e )
       : dbc_proc_callback_t( e.player, e ),
         mana_threshold( e.driver()->effectN( 2 ).percent() ),
-        rppm_boost( e.driver()->effectN( 3 ).percent() )
-    {
-    }
+        rppm_mod_orig( e.rppm_modifier() ),
+        rppm_mod_boost( e.player->dbc->real_ppm_modifier( e.driver()->id(), e.player, e.item->item_level(), 1239233 ) )
+    {}
 
     void trigger( action_t* a, action_state_t* state ) override
     {
       if ( listener->resources.active_resource[ RESOURCE_MANA ] )
-        rppm->set_modifier( listener->resources.pct( RESOURCE_MANA ) <= mana_threshold ? 1.0 + rppm_boost : 1.0 );
+      {
+        rppm->set_modifier( listener->resources.pct( RESOURCE_MANA ) <= mana_threshold ? rppm_mod_boost
+                                                                                       : rppm_mod_orig );
+      }
+
       dbc_proc_callback_t::trigger( a, state );
     }
   };

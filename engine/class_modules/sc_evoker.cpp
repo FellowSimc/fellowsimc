@@ -2577,7 +2577,7 @@ struct essence_base_t : public BASE
     {
       if ( BASE::p()->sets->has_set_bonus( HERO_FLAMESHAPER, TWW3, B4 ) && BASE::execute_state )
       {
-        for ( int i = 0; i < BASE::p()->buff.essence_burst->check(); i++ )
+        for ( int i = 0; i < BASE::p()->buff.inner_flame->check(); i++ )
           BASE::p()->action.essence_bomb->execute_on_target( BASE::execute_state->target );
       }
       if ( BASE::p()->talent.momentum_shift.ok() )

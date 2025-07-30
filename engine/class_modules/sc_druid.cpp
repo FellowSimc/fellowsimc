@@ -7447,88 +7447,6 @@ public:
   }
 };
 
-template <typename BASE>
-struct consume_dryads_favor_t : public BASE
-{
-  struct dryads_favor_data_t
-  {
-    bool consumed = false;
-  };
-
-  struct dryads_favor_t final : public druid_residual_action_t<druid_spell_t>
-  {
-    dryads_favor_t( druid_t* p ) : base_t( "dryads_favor", p, p->find_spell( 1236851 ) )
-    {
-      background = proc = true;
-      aoe = -1;
-
-      // tooltip goes off buff spell data (1236807) but actual in-game goes off unused aura spell (1252024)
-      auto splash_data = p->bugs ? p->find_spell( 1252024 ) : &p->buff.dryads_favor->data();
-      residual_mul = splash_data->effectN( p->specialization() == DRUID_RESTORATION ? 3 : 2 ).percent();
-      reduced_aoe_targets = splash_data->effectN( 4 ).base_value();
-
-      p->active.dryad_tww3->add_child( this );
-    }
-
-    std::vector<player_t*>& target_list() const override
-    {
-      return splash_target_list();
-    }
-  };
-
-protected:
-  using base_t = consume_dryads_favor_t<BASE>;
-  using state_t = druid_action_state_t<dryads_favor_data_t>;
-
-public:
-  dryads_favor_t* splash = nullptr;
-
-  consume_dryads_favor_t( std::string_view n, druid_t* p, const spell_data_t* s, flag_e f = flag_e::NONE )
-    : BASE( n, p, s, f )
-  {
-    if ( p->sets->has_set_bonus( HERO_KEEPER_OF_THE_GROVE, TWW3, B4 ) )
-      splash = p->get_secondary_action<dryads_favor_t>( "dryads_favor" );
-  }
-
-  double bonus_da( const action_state_t* s ) const override
-  {
-    return BASE::bonus_da( s ) + BASE::p()->buff.dryads_favor->check_value();
-  }
-
-  action_state_t* new_state() override
-  { return new state_t( this, BASE::target ); }
-
-  state_t* cast_state( action_state_t* s )
-  { return static_cast<state_t*>( s ); }
-
-  const state_t* cast_state( const action_state_t* s ) const
-  { return static_cast<const state_t*>( s ); }
-
-  void snapshot_state( action_state_t* s, result_amount_type rt ) override
-  {
-    BASE::snapshot_state( s, rt );
-
-    if ( BASE::p()->buff.dryads_favor->check() && BASE::p()->buff.dryads_favor->can_expire( this ) )
-      cast_state( s )->consumed = true;
-  }
-
-  void execute() override
-  {
-    BASE::execute();
-
-    if ( cast_state( BASE::execute_state )->consumed )
-      BASE::p()->buff.dryads_favor->decrement();
-  }
-
-  void impact( action_state_t* s ) override
-  {
-    BASE::impact( s );
-
-    if ( cast_state( s )->consumed && splash && !splash->splash_target_list( s->target ).empty() )
-      splash->execute_on_target( s->target, s->result_amount );
-  }
-};
-
 // Astral Smolder ===========================================================
 struct astral_smolder_t
   : public residual_action::residual_periodic_action_t<trigger_waning_twilight_t<druid_spell_t>>
@@ -9098,46 +9016,8 @@ struct starsurge_base_t : public ap_spender_t
   }
 };
 
-struct starsurge_t final : public consume_dryads_favor_t<starsurge_base_t>
-{
-  DRUID_ABILITY( starsurge_t, base_t, "starsurge", p->talent.starsurge ) {}
-
-  void init() override
-  {
-    base_t::init();
-
-    if ( is_precombat )
-    {
-      moonkin_form_in_precombat = range::any_of( p()->precombat_action_list, []( action_t* a ) {
-        return util::str_compare_ci( a->name(), "moonkin_form" );
-      } );
-
-      // hardcode travel time to 100ms
-      travel_speed = 0.0;
-      min_travel_time = 0.1;
-    }
-  }
-
-  bool ready() override
-  {
-    if ( !is_precombat )
-      return base_t::ready();
-
-    // in precombat, so hijack standard ready() procedure
-    // emulate performing check_form_restriction()
-    if ( !moonkin_form_in_precombat )
-      return false;
-
-    // emulate performing resource_available( current_resource(), cost() )
-    if ( !p()->talent.natures_balance.ok() && p()->options.initial_astral_power < cost() )
-      return false;
-
-    return true;
-  }
-};
-
 template <typename BASE>
-struct starsurge_tww3_t final : public BASE
+struct starsurge_ec_tww3_t final : public BASE
 {
   struct starsurge_splash_t final : public druid_residual_action_t<druid_spell_t>
   {
@@ -9169,7 +9049,7 @@ struct starsurge_tww3_t final : public BASE
   starsurge_splash_t* splash = nullptr;
   double chance = 0.0;
 
-  starsurge_tww3_t( druid_t* p, const spell_data_t* s ) : BASE( "starsurge_tww3", p, s, flag_e::TWW3SET )
+  starsurge_ec_tww3_t( druid_t* p, const spell_data_t* s ) : BASE( "starsurge_tww3", p, s, flag_e::TWW3SET )
   {
     BASE::proc = true;
     BASE::name_str_reporting = "TWW3 Set";
@@ -9214,6 +9094,124 @@ struct starsurge_tww3_t final : public BASE
 
     if ( splash && !splash->splash_target_list( s->target ).empty() )
       splash->execute_on_target( s->target, s->result_amount );
+  }
+};
+
+struct starsurge_kotg_tww3_t final : public starsurge_base_t
+{
+  struct dryads_favor_t final : public druid_residual_action_t<druid_spell_t>
+  {
+    dryads_favor_t( druid_t* p ) : base_t( "dryads_favor", p, p->find_spell( 1236851 ) )
+    {
+      background = proc = true;
+      aoe = -1;
+
+      // tooltip goes off buff spell data (1236807) but actual in-game goes off unused aura spell (1252024)
+      auto splash_data = p->bugs ? p->find_spell( 1252024 ) : &p->buff.dryads_favor->data();
+      residual_mul = splash_data->effectN( 2 ).percent();
+      reduced_aoe_targets = splash_data->effectN( 4 ).base_value();
+
+      p->active.dryad_tww3->add_child( this );
+    }
+
+    std::vector<player_t*>& target_list() const override
+    {
+      return splash_target_list();
+    }
+  };
+
+  dryads_favor_t* splash = nullptr;
+
+  starsurge_kotg_tww3_t( druid_t* p, std::string_view n, const spell_data_t* s, flag_e f )
+    : starsurge_base_t( n, p, s, f )
+  {
+    name_str_reporting = "Dryad's Favor";
+
+    if ( p->sets->has_set_bonus( HERO_KEEPER_OF_THE_GROVE, TWW3, B4 ) )
+      splash = p->get_secondary_action<dryads_favor_t>( "dryads_favor" );
+  }
+
+  double bonus_da( const action_state_t* s ) const override
+  {
+    return starsurge_base_t::bonus_da( s ) + p()->buff.dryads_favor->check_value();
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    starsurge_base_t::impact( s );
+
+    if ( splash && !splash->splash_target_list( s->target ).empty() )
+      splash->execute_on_target( s->target, s->result_amount );
+  }
+};
+
+struct starsurge_t final : public starsurge_base_t
+{
+  starsurge_kotg_tww3_t* dryad_starsurge = nullptr;
+
+  DRUID_ABILITY( starsurge_t, starsurge_base_t, "starsurge", p->talent.starsurge )
+  {
+    if ( !p->buff.dryads_favor->is_fallback )
+    {
+      dryad_starsurge = p->get_secondary_action<starsurge_kotg_tww3_t>( "dryad_" + name_str, &data(), f );
+      add_child( dryad_starsurge );
+    }
+  }
+
+  void init() override
+  {
+    starsurge_base_t::init();
+
+    if ( is_precombat )
+    {
+      moonkin_form_in_precombat = range::any_of( p()->precombat_action_list, []( action_t* a ) {
+        return util::str_compare_ci( a->name(), "moonkin_form" );
+      } );
+
+      // hardcode travel time to 100ms
+      travel_speed = 0.0;
+      min_travel_time = 0.1;
+    }
+
+    // copy characteristic to dryad's favor version, specifically for convoke as get_convoke_action will set variables
+    // post construction.
+    if ( dryad_starsurge )
+    {
+      dryad_starsurge->gain = gain;
+      dryad_starsurge->proc = proc;
+      dryad_starsurge->trigger_gcd = trigger_gcd;
+      dryad_starsurge->action_flags |= action_flags;
+    }
+  }
+
+  bool ready() override
+  {
+    if ( !is_precombat )
+      return starsurge_base_t::ready();
+
+    // in precombat, so hijack standard ready() procedure
+    // emulate performing check_form_restriction()
+    if ( !moonkin_form_in_precombat )
+      return false;
+
+    // emulate performing resource_available( current_resource(), cost() )
+    if ( !p()->talent.natures_balance.ok() && p()->options.initial_astral_power < cost() )
+      return false;
+
+    return true;
+  }
+
+  void execute() override
+  {
+    if ( p()->buff.dryads_favor->check() && p()->buff.dryads_favor->can_expire( this ) )
+    {
+      p()->last_foreground_action = dryad_starsurge;
+      dryad_starsurge->execute_on_target( target );
+      p()->buff.dryads_favor->decrement();
+      return;
+    }
+
+    starsurge_base_t::execute();
   }
 };
 
@@ -12483,7 +12481,7 @@ void druid_t::create_actions()
       if ( sets->has_set_bonus( HERO_ELUNES_CHOSEN, TWW3, B2 ) )
       {
         active.starsurge_tww3 =
-          get_secondary_action<starsurge_tww3_t<starsurge_base_t>>( "starsurge_tww3", find_spell( 78674 ) );
+          get_secondary_action<starsurge_ec_tww3_t<starsurge_base_t>>( "starsurge_tww3", find_spell( 78674 ) );
       }
       if ( sets->has_set_bonus( HERO_KEEPER_OF_THE_GROVE, TWW3, B2 ) )
       {
@@ -12518,7 +12516,7 @@ void druid_t::create_actions()
       if ( sets->has_set_bonus( HERO_ELUNES_CHOSEN, TWW3, B2 ) )
       {
         active.starsurge_tww3 =
-          get_secondary_action<starsurge_tww3_t<starsurge_offspec_t>>( "starsurge_tww3", find_spell( 197626 ) );
+          get_secondary_action<starsurge_ec_tww3_t<starsurge_offspec_t>>( "starsurge_tww3", find_spell( 197626 ) );
       }
       break;
 

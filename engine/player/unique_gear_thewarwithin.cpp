@@ -8092,7 +8092,7 @@ void imperfect_ascendancy_serum( special_effect_t& effect )
   };
 
   auto buff_spell = effect.driver();
-  buff_t* buff    = create_buff<stat_buff_t>( effect.player, buff_spell )
+  buff_t* buff    = create_buff<stat_buff_t>( effect.player, "ascension_trinket", buff_spell )
                      ->add_stat_from_effect( 1, effect.driver()->effectN( 1 ).average( effect ) )
                      ->add_stat_from_effect( 2, effect.driver()->effectN( 2 ).average( effect ) )
                      ->add_stat_from_effect( 4, effect.driver()->effectN( 4 ).average( effect ) )

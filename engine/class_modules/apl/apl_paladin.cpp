@@ -127,7 +127,10 @@ void protection( player_t* p )
   standard->add_action( "blessed_hammer,if=buff.blessed_assurance.up&spell_targets.shield_of_the_righteous<3" );
   standard->add_action( "crusader_strike,if=buff.blessed_assurance.up&spell_targets.shield_of_the_righteous<2&!buff.avenging_wrath.up" );
   standard->add_action( "consecration,if=buff.divine_guidance.stack=5" );
-  standard->add_action( "holy_armaments,if=next_armament=sacred_weapon&((!buff.sacred_weapon.up|(buff.sacred_weapon.remains<6&!buff.avenging_wrath.up&cooldown.avenging_wrath.remains<=30))&(!set_bonus.thewarwithin_season_3_4pc|buff.masterwork.stack=5))" );
+  if ( p->sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
+    standard->add_action( "holy_armaments,if=next_armament=sacred_weapon&((!buff.sacred_weapon.up|(buff.sacred_weapon.remains<6&!buff.avenging_wrath.up&cooldown.avenging_wrath.remains<=30))&(!set_bonus.thewarwithin_season_3_4pc|buff.masterwork.stack=5))" );
+  else
+    standard->add_action("holy_armaments,if=next_armament=sacred_weapon&(!buff.sacred_weapon.up|(buff.sacred_weapon.remains<6&!buff.avenging_wrath.up&cooldown.avenging_wrath.remains<=30))" );
   standard->add_action( "hammer_of_wrath" );
   standard->add_action( "divine_toll,if=(!raid_event.adds.exists|raid_event.adds.in>10)" );
   standard->add_action( "judgment,target_if=min:debuff.judgment.remains,if=(buff.avenging_wrath.up&talent.hammer_and_anvil.enabled)" );

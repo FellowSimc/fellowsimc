@@ -2515,7 +2515,7 @@ struct bloodseeker_vines_rng_t : public proc_rng_t
     }
   }
 
-  int trigger( action_t* ) override { return 0; }
+  int trigger( action_state_t* ) override { return 0; }
 
   void reset( reset_type_e r_type ) override
   {

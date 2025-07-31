@@ -22,7 +22,7 @@ simple_proc_t::simple_proc_t( std::string_view n, player_t* p, double c )
   : proc_rng_t( rng_type, n, p ), chance( c )
 {}
 
-int simple_proc_t::trigger( action_t* )
+int simple_proc_t::trigger( action_state_t* )
 {
   return player->rng().roll( chance );
 }
@@ -97,7 +97,7 @@ void real_ppm_t::reset( reset_type_e /* reset_type */)
   accumulated_blp = 0_ms;
 }
 
-int real_ppm_t::trigger( action_t* )
+int real_ppm_t::trigger( action_state_t* )
 {
   if ( freq <= 0 )
     return false;
@@ -152,7 +152,7 @@ void shuffled_rng_t::reset( reset_type_e /* reset_type */)
   position = entries.begin();
 }
 
-int shuffled_rng_t::trigger( action_t* )
+int shuffled_rng_t::trigger( action_state_t* )
 {
   if ( position == entries.end() )
     reset( reset_type_e::COMBAT );
@@ -184,14 +184,14 @@ void accumulated_rng_t::reset( reset_type_e /* reset_type */)
   trigger_count = initial_count;
 }
 
-int accumulated_rng_t::trigger( action_t* a )
+int accumulated_rng_t::trigger( action_state_t* state )
 {
   if ( proc_chance <= 0 )
     return false;
 
   trigger_count++;
 
-  auto chance = accumulator_fn ? accumulator_fn( proc_chance, trigger_count, a ) : proc_chance * trigger_count;
+  auto chance = accumulator_fn ? accumulator_fn( proc_chance, trigger_count, state ) : proc_chance * trigger_count;
   auto result = player->rng().roll( chance );
 
   if ( player->sim->debug )
@@ -231,12 +231,12 @@ double threshold_rng_t::get_increment_max()
   return increment_max;
 }
 
-int threshold_rng_t::trigger( action_t* a )
+int threshold_rng_t::trigger( action_state_t* state )
 {
   if ( increment_max <= 0 )
     return false;
 
-  auto result = accumulator_fn ? accumulator_fn( increment_max, a ) : player->rng().range( increment_max );
+  auto result = accumulator_fn ? accumulator_fn( increment_max, state ) : player->rng().range( increment_max );
 
   if ( player->sim->debug )
   {

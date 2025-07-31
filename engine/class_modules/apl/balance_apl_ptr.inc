@@ -42,10 +42,10 @@ def->add_action( "run_action_list,name=kotg_st,if=variable.tww3_keeper_4pc&spell
 
 kotg_st->add_action( "warrior_of_elune,if=variable.eclipse_remains<=7","Make Warrior of Elune work if talented (don't talent this)" );
 kotg_st->add_action( "wait,if=buff.dryad.up&buff.dryad.remains<gcd.max,sec=buff.dryad.remains" );
-kotg_st->add_action( "wrath,if=variable.enter_lunar&eclipse.in_eclipse&variable.eclipse_remains<cast_time","Enter Eclipse if variable.enter_lunar is true or false" );
-kotg_st->add_action( "starfire,if=!variable.enter_lunar&eclipse.in_eclipse&variable.eclipse_remains<cast_time&!buff.dryads_favor.up" );
+kotg_st->add_action( "wrath,if=variable.enter_lunar&eclipse.in_eclipse&variable.eclipse_remains<cast_time|variable.kotg_ca_condition&buff.parting_skies.up&(variable.eclipse_remains<cast_time|eclipse.in_none)","Enter Eclipse if variable.enter_lunar is true or false" );
+kotg_st->add_action( "starfire,if=!variable.enter_lunar&eclipse.in_eclipse&variable.eclipse_remains<cast_time&!buff.dryads_favor.up&!variable.kotg_ca_condition" );
 kotg_st->add_action( "moonfire,target_if=(remains<3&(!talent.treants_of_the_moon|cooldown.force_of_nature.remains>3&!buff.harmony_of_the_grove.up))|!dot.moonfire.ticking","Use dots if less than 3 seconds remaining or if you're about to use CDs" );
-kotg_st->add_action( "sunfire,target_if=remains<3|refreshable&variable.kotg_ca_condition&!buff.ca_inc.up" );
+kotg_st->add_action( "sunfire,target_if=remains<3|remains<(12>?buff.ca_inc.duration)&variable.kotg_ca_condition&!buff.ca_inc.up" );
 kotg_st->add_action( "call_action_list,name=kotg_pre_cd","Run kotg_pre_cd list for cooldwns" );
 kotg_st->add_action( "celestial_alignment,if=variable.kotg_ca_condition","Cooldowns" );
 kotg_st->add_action( "incarnation,if=variable.kotg_ca_condition" );
@@ -54,8 +54,8 @@ kotg_st->add_action( "wrath,if=variable.enter_lunar&(eclipse.in_none|variable.ec
 kotg_st->add_action( "starfire,if=!variable.enter_lunar&(eclipse.in_none|variable.eclipse_remains<cast_time)" );
 kotg_st->add_action( "stellar_flare,if=remains<=buff.ca_inc.duration&variable.pool_for_cd|remains<=buff.ca_inc.up&!buff.dryads_favor.up","Use Stellar Flare if you're about to use CDs and the duration is less than the duration of your CDs" );
 kotg_st->add_action( "wrath,if=variable.pool_for_cd","Wrath to pool AP before using CDs" );
-kotg_st->add_action( "force_of_nature,if=buff.dryad.up&buff.harmony_of_the_grove.duration>buff.dryad.remains+gcd.max*2|cooldown.force_of_nature.duration<cooldown.convoke_the_spirits.remains+(15*talent.control_of_the_dream)|fight_remains<buff.harmony_of_the_grove.duration","Use Treants if Dryad is up and the duration is less than Treants duration + 2 globals" );
-kotg_st->add_action( "fury_of_elune,if=5+variable.passive_asp<astral_power.deficit","Proceed with rotation" );
+kotg_st->add_action( "force_of_nature,if=buff.dryad.up&buff.harmony_of_the_grove.duration>buff.dryad.remains+gcd.max*2|cooldown.force_of_nature.duration<cooldown.convoke_the_spirits.remains+(15*talent.control_of_the_dream)|fight_remains<buff.harmony_of_the_grove.duration+gcd.max","Use Treants if Dryad is up and the duration is less than Treants duration + 2 globals" );
+kotg_st->add_action( "fury_of_elune,if=5+variable.passive_asp<astral_power.deficit&(cooldown.convoke_the_spirits.remains>buff.fury_of_elune.duration|!talent.convoke_the_spirits)|fight_remains<8+gcd.max","Proceed with rotation" );
 kotg_st->add_action( "starfall,if=buff.starweavers_warp.up" );
 kotg_st->add_action( "starsurge,if=talent.starlord&buff.starlord.stack<3&!variable.pool_in_ca" );
 kotg_st->add_action( "sunfire,target_if=refreshable" );
@@ -64,8 +64,12 @@ kotg_st->add_action( "starsurge,if=cooldown.convoke_the_spirits.remains<gcd.max*
 kotg_st->add_action( "convoke_the_spirits,if=variable.convoke_condition&buff.harmony_of_the_grove.up","Convoke when Convoke variable is true and Harmony of the Grove is up" );
 kotg_st->add_action( "stellar_flare,target_if=refreshable&(target.time_to_die-remains-target>7+spell_targets)&!buff.ca_inc.up" );
 kotg_st->add_action( "starsurge,if=(buff.starlord.remains>4&variable.boat_stacks>=3|fight_remains<4)&!variable.pool_in_ca" );
+kotg_st->add_action( "new_moon,if=astral_power.deficit>variable.passive_asp+energize_amount|fight_remains<20|cooldown.ca_inc.remains>15" );
+kotg_st->add_action( "half_moon,if=astral_power.deficit>variable.passive_asp+energize_amount&(buff.eclipse_lunar.remains>execute_time|buff.eclipse_solar.remains>execute_time)|fight_remains<20|cooldown.ca_inc.remains>15" );
+kotg_st->add_action( "full_moon,if=astral_power.deficit>variable.passive_asp+energize_amount&(buff.eclipse_lunar.remains>execute_time|buff.eclipse_solar.remains>execute_time)|fight_remains<20|cooldown.ca_inc.remains>15" );
 kotg_st->add_action( "starsurge,if=buff.starweavers_weft.up|buff.touch_the_cosmos.up" );
 kotg_st->add_action( "starsurge,if=(astral_power.deficit<variable.passive_asp+action.wrath.energize_amount+(action.starfire.energize_amount+variable.passive_asp)*(buff.eclipse_solar.remains<(gcd.max*2)))&!variable.pool_in_ca" );
+kotg_st->add_action( "wild_mushroom,if=!prev_gcd.1.wild_mushroom&dot.fungal_growth.remains<2" );
 kotg_st->add_action( "wrath" );
 
 kotg_pre_cd->add_action( "potion,if=buff.ca_inc.up","11.2 Keeper pre_cd list to align cooldowns and trinkets" );

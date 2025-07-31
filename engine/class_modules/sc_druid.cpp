@@ -1333,7 +1333,7 @@ struct druid_t final : public parse_player_effects_t
   void init_absorb_priority() override;
   void init_action_list() override;
   void init_blizzard_action_list() override;
-  std::vector<std::string> action_names_from_spell_id( unsigned int ) const;
+  std::vector<std::string> action_names_from_spell_id( unsigned int ) const override;
   std::string aura_expr_from_spell_id( unsigned int spell_id, bool on_self = true ) const override;
   void parse_assisted_combat_step( const assisted_combat_step_data_t&, action_priority_list_t* ) override;
   parsed_assisted_combat_rule_t parse_assisted_combat_rule( const assisted_combat_rule_data_t&,
@@ -2489,32 +2489,54 @@ struct ravage_base_t : public BASE
   }
 };
 
-// Proc chance:
-//   0.6 - 1.13 ^ ( A * B - C )
-// where:
-//   A = percent value of corresponding effect index on the talent spell data
-//   B = 3 - base_tick_time in seconds
-//   C = cumulative count value where each failure adds A to the value
-// via community testing (~257k ticks)
+// community testing (~257k ticks) memorial
 // https://docs.google.com/spreadsheets/d/1lPDhmfqe03G_eFetGJEbSLbXMcfkzjhzyTaQ8mdxADM/edit?gid=385734241
-struct bloodseeker_vine_rng_t : public proc_rng_t
+struct bloodseeker_vines_rng_t : public proc_rng_t
 {
   static constexpr rng_type_e rng_type = RNG_CUSTOM;
-  double count = 0.0;
+  static constexpr double threshold = 1000.0;
 
-  bloodseeker_vine_rng_t( std::string_view n, player_t* p ) : proc_rng_t( rng_type, n, p ) {}
+  double count = 0.0;
+  double dot_exp = 0.62;
+  double scale_mul = 1.0;
+
+  bloodseeker_vines_rng_t( std::string_view n, player_t* p ) : proc_rng_t( rng_type, n, p )
+  {
+    if ( p->specialization() == DRUID_RESTORATION )
+    {
+      dot_exp = static_cast<druid_t*>( p )->talent.thriving_growth->effectN( 7 ).percent();
+      scale_mul = 1.0 + p->sets->set( HERO_WILDSTALKER, TWW3, B2 )->effectN( 4 ).percent();
+    }
+    else
+    {
+      dot_exp = static_cast<druid_t*>( p )->talent.thriving_growth->effectN( 6 ).percent();
+      scale_mul = 1.0 + p->sets->set( HERO_WILDSTALKER, TWW3, B2 )->effectN( 1 ).percent();
+    }
+  }
 
   int trigger() override { return 0; }
-  void reset( reset_type_e ) override { count = 0.0; }
 
-  bool trigger( double scale, unsigned shift, double bonus, double mult )
+  void reset( reset_type_e r_type ) override
   {
-    count += scale;
-    auto chance = std::max( 0.0, 0.6 - std::pow( 1.13, scale * shift - count ) + bonus ) * mult;
-    auto result = player->rng().roll( chance );
+    if ( r_type == reset_type_e::COMBAT )
+      count -= threshold;
+    else
+      count = 0.0;
+  }
+
+  bool trigger( double scale, double num_dots )
+  {
+    auto raw = scale * scale_mul / std::pow( num_dots, dot_exp );
+    auto val = player->rng().range( 0.0, raw * 2.0 );
+    count += val;
+
+    bool result = count >= threshold;
 
     if ( player->sim->debug )
-      player->sim->print_debug( "{} RNG: count={} scale={} chance={:.5f}%", name(), count, scale, chance * 100.0 );
+    {
+      player->sim->print_debug( "{} RNG: scale={} num_dots={} raw={} value={} count={} result={}",
+                                name(), scale, num_dots, raw, val, count, result );
+    }
 
     if ( result )
       reset( reset_type_e::COMBAT );
@@ -2527,25 +2549,16 @@ template <typename BASE>
 struct trigger_thriving_growth_t : public BASE
 {
 protected:
-  bloodseeker_vine_rng_t vine_rng;
+  bloodseeker_vines_rng_t* vine_rng;
   double vine_scale = 0.0;
-  double vine_bonus = 0.0;
-  double aoe_scale;
-  unsigned vine_shift = 0;
 
   using base_t = trigger_thriving_growth_t<BASE>;
 
 public:
   trigger_thriving_growth_t( std::string_view n, druid_t* p, const spell_data_t* s, flag_e f = flag_e::NONE )
-    : BASE( n, p, s, f ), vine_rng( "bloodseeker_vine", p )
+    : BASE( n, p, s, f ), vine_rng( p->get_rng<bloodseeker_vines_rng_t>( "bloodseeker_vines" ) )
   {
-    if ( p->is_ptr() )
-      aoe_scale = p->talent.thriving_growth->effectN( 7 ).percent() * 0.5;
-    else
-      aoe_scale = 0.375;
-
-    if ( p->sets->has_set_bonus( HERO_WILDSTALKER, TWW3, B2 ) )
-      vine_bonus = p->options.ws_tww3_2pc_bonus;  // TODO: wild ass guess, results in ~36.6% more executes
+    static_assert( std::is_pointer_v<decltype( BASE::dot_list )> );
   }
 
   void tick( dot_t* d ) override
@@ -2555,26 +2568,7 @@ public:
     if ( !vine_scale )
       return;
 
-    size_t extra = 0;
-    size_t total_dots = 0;
-    size_t num_rake = BASE::p()->dot_lists.rake.size();
-    size_t num_rip = BASE::p()->dot_lists.rip.size();
-
-    if ( num_rake > 1 )
-    {
-      extra += num_rake - 1;
-      total_dots += num_rake;
-    }
-
-    if ( num_rip > 1 )
-    {
-      extra += num_rip - 1;
-      total_dots += num_rip;
-    }
-
-    double mult = !total_dots ? 1.0 : 1.0 / total_dots;
-
-    if ( vine_rng.trigger( vine_scale + aoe_scale * extra, vine_shift, vine_bonus, mult ) )
+    if ( vine_rng->trigger( vine_scale, as<double>( BASE::dot_list->size() ) ) )
       BASE::p()->active.bloodseeker_vines->execute_on_target( d->target );
   }
 };
@@ -5144,7 +5138,7 @@ struct rake_t final : public use_fluid_form_t<CAT_FORM, trigger_call_of_the_elde
 
       dot_name = "rake";
       dot_list = &p->dot_lists.rake;
-      vine_scale = p->talent.thriving_growth->effectN( 2 ).percent();
+      vine_scale = p->talent.thriving_growth->effectN( 2 ).base_value();
     }
   };
 
@@ -5252,8 +5246,7 @@ struct rip_t final : public trigger_thriving_growth_t<use_dot_list_t<trigger_wan
   {
     dot_name = "rip";
     dot_list = &p->dot_lists.rip;
-    vine_scale = p->talent.thriving_growth->effectN( 1 ).percent();
-    vine_shift = 1;
+    vine_scale = p->talent.thriving_growth->effectN( 1 ).base_value();
 
     if ( p->talent.rip_and_tear.ok() )
     {
@@ -12796,26 +12789,6 @@ bool druid_t::validate_fight_style( fight_style_e style ) const
 
 bool druid_t::validate_actor()
 {
-  if ( talent.thriving_growth.ok() )
-  {
-    if ( sim->fight_style == FIGHT_STYLE_DUNGEON_ROUTE || sim->fight_style == FIGHT_STYLE_DUNGEON_SLICE ||
-         sim->desired_targets > 1 )
-    {
-      sim->error( "****** UNRELIABLE SIM ****** UNRELIABLE SIM ****** UNRELIABLE SIM ******" );
-      sim->error( "!! The effect of multiple targets on Bloodseeker Vines is unknown.    !!" );
-      sim->error( "!! Results will be incorrect.                                         !!" );
-      sim->error( "****** UNRELIABLE SIM ****** UNRELIABLE SIM ****** UNRELIABLE SIM ******" );
-    }
-
-    if ( sets->has_set_bonus( HERO_WILDSTALKER, TWW3, B2 ) )
-    {
-      sim->error( "****** UNRELIABLE SIM ****** UNRELIABLE SIM ****** UNRELIABLE SIM ******" );
-      sim->error( "!! The effect of 11.2 Wildstalker 2-piece set bonus is unknown.       !!" );
-      sim->error( "!! Results will be incorrect.                                         !!" );
-      sim->error( "****** UNRELIABLE SIM ****** UNRELIABLE SIM ****** UNRELIABLE SIM ******" );
-    }
-  }
-
   return true;
 }
 

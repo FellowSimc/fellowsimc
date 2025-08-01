@@ -13,11 +13,7 @@ std::string potion( const player_t* p )
 
 std::string flask( const player_t* p )
 {
-  switch ( p->specialization() )
-  {
-    default:
-      return ( p->true_level > 79 ) ? "flask_of_alchemical_chaos_3" : "iced_phial_of_corrupting_rage_3";
-  }
+  return ( p->true_level > 79 ) ? "flask_of_alchemical_chaos_3" : "iced_phial_of_corrupting_rage_3";
 }
 
 std::string food( const player_t* p )

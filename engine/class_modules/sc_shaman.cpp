@@ -11328,6 +11328,7 @@ struct tempest_t : public shaman_spell_t
         {
           ws_action->add_child( this );
         }
+        break;
       }
       default:
         affected_by_master_of_the_elements = true;

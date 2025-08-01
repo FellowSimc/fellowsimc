@@ -9562,10 +9562,10 @@ struct frost_strike_t final : public death_knight_melee_attack_t
       oh( p->background_actions.frost_strike_offhand ),
       mh_sb( p->background_actions.frost_strike_sb_main ),
       oh_sb( p->background_actions.frost_strike_sb_offhand ),
-      mh_delay( 0_ms ),
-      oh_delay( 0_ms ),
       frostbane( new frostbane_t( "frostbane", p ) ),
       frostreaper( p->background_actions.frostreaper ),
+      mh_delay( 0_ms ),
+      oh_delay( 0_ms ),
       sb( false )
   {
     parse_options( options_str );

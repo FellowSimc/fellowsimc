@@ -578,7 +578,7 @@ struct druid_t final : public parse_player_effects_t
     double initial_astral_power = 0.0;
     int initial_moon_stage = static_cast<int>( moon_stage_e::NEW_MOON );
     int initial_orbit_breaker_stacks = -1;
-    double dryads_favor_cap_multiplier = 25.0;
+    double dryads_favor_cap_multiplier = 6.0;
 
     // Feral
     double adaptive_swarm_jump_distance_melee = 5.0;

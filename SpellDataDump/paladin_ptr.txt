@@ -15865,8 +15865,8 @@ Family Flags     : 41, 46
 Attributes       : Extra Initial Period (169), Spell Haste Affects Periodic (173), Periodic Can Crit (265), Aura Points On Client (268)
 Effects          :
 #1 (id=1119176)  : Apply Aura (6) | Periodic Heal (8): every 1 seconds
-                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 0.27 | Target: Friendly (21)
-Hotfixed         : SP Coefficient (0.135 -> 0.27)
+                   Base Value: 0 | Scaled Value: 0 | SP Coefficient: 0.135 | Target: Friendly (21)
+Hotfixed         : SP Coefficient (0.27 -> 0.135)
 Description      : $@spelldesc431377
 Tooltip          : Healing $w1 every $t1 sec.
 

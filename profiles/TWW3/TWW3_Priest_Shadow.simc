@@ -5,7 +5,7 @@ level=80
 race=maghar_orc
 role=spell
 position=ranged_back
-talents=CIQAAAAAAAAAAAAAAAAAAAAAAMDmZeAAAAAAAAAAAAAjxGMzMLbbMzYmZmZZwsxMzMjZjBGjhZxsN1MDWgZmBACwsNbLBzGLA2mB
+talents=CIQAAAAAAAAAAAAAAAAAAAAAAMDMzDAAAAAAAAAAAAYM2GMzMLbbMzYmZmZZwsxMzMjZjBGjhZxsN1MDWgZmBACwsNbLBzGbA2mB
 
 # Default consumables
 potion=tempered_potion_3
@@ -149,7 +149,7 @@ wrists=consecrated_cuffs,id=222815,bonus_id=8793/11109,ilevel=720,gem_id=213497
 hands=dying_stars_caress,id=237710,ilevel=723
 waist=singularity_cincture,id=237559,ilevel=723,gem_id=213470
 legs=dying_stars_leggings,id=237708,ilevel=723,enchant=sunset_spellthread_3
-feet=interlopers_silken_striders,id=243305,ilevel=723
+feet=interlopers_silken_striders,id=243305,bonus_id=13504,ilevel=723
 finger1=logic_gate_omega,id=237570,ilevel=723,gem_id=213494/213494,enchant=radiant_mastery_3
 finger2=logic_gate_alpha,id=237567,ilevel=723,gem_id=213494/213494,enchant=radiant_mastery_3
 trinket1=azhiccaran_parapodia,id=242497,ilevel=723

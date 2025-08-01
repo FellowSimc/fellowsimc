@@ -3721,22 +3721,13 @@ bool action_has_damage( const action_t* action )
     return false;
 
   // check direct damage
-  if ( action->has_direct_damage_effect( action->data() ) ||
-       action->base_dd_min > 0 ||
-       action->spell_power_mod.direct > 0 ||
-       action->attack_power_mod.direct > 0 ||
-       action->weapon_multiplier > 0 )
+  if ( action->does_direct_damage() )
   {
     return true;
   }
 
   // check periodic damage
-  if ( action->has_periodic_damage_effect( action->data() ) ||
-       ( action->dot_duration > 0_ms &&
-         ( action->base_td > 0 ||
-           action->spell_power_mod.tick > 0 ||
-           action->attack_power_mod.tick > 0 ||
-           action->rolling_periodic ) ) )
+  if ( action->does_periodic_damage() )
   {
     return true;
   }

@@ -1163,28 +1163,10 @@ struct wake_of_ashes_t : public paladin_spell_t
 
   void execute() override
   {
-    paladin_spell_t::execute();
-
-    if ( p()->talents.seething_flames->ok() )
-    {
-      for ( int i = 0; i < as<int>( p()->talents.seething_flames->effectN( 1 ).base_value() ); i++ )
-      {
-        make_event<seething_flames_event_t>( *sim, p(), execute_state->target, seething_flames[i], timespan_t::from_millis( 500 * (i + 1) ) );
-      }
-    }
-    if ( p()->talents.templar.lights_guidance->ok() )
-    {
-      p()->buffs.templar.hammer_of_light_ready->trigger();
-    }
-
-    if ( p()->talents.templar.sacrosanct_crusade->ok() )
-    {
-      p()->buffs.templar.sacrosanct_crusade->trigger();
-    }
-
     if ( p()->talents.radiant_glory->ok() )
     {
-      bool do_avatar = p()->talents.herald_of_the_sun.suns_avatar->ok() && !( p()->buffs.avenging_wrath->up() || p()->buffs.crusade->up() );
+      bool do_avatar = p()->talents.herald_of_the_sun.suns_avatar->ok() &&
+                       !( p()->buffs.avenging_wrath->up() || p()->buffs.crusade->up() );
       if ( p()->talents.crusade->ok() )
       {
         if ( !p()->buffs.crusade->up() )
@@ -1207,6 +1189,25 @@ struct wake_of_ashes_t : public paladin_spell_t
       {
         p()->apply_avatar_dawnlights();
       }
+    }
+
+    paladin_spell_t::execute();
+
+    if ( p()->talents.seething_flames->ok() )
+    {
+      for ( int i = 0; i < as<int>( p()->talents.seething_flames->effectN( 1 ).base_value() ); i++ )
+      {
+        make_event<seething_flames_event_t>( *sim, p(), execute_state->target, seething_flames[i], timespan_t::from_millis( 500 * (i + 1) ) );
+      }
+    }
+    if ( p()->talents.templar.lights_guidance->ok() )
+    {
+      p()->buffs.templar.hammer_of_light_ready->trigger();
+    }
+
+    if ( p()->talents.templar.sacrosanct_crusade->ok() )
+    {
+      p()->buffs.templar.sacrosanct_crusade->trigger();
     }
 
     if ( p()->talents.herald_of_the_sun.dawnlight->ok() )

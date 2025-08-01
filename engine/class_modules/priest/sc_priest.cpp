@@ -155,7 +155,7 @@ public:
   mind_blast_base_t( priest_t& p, util::string_view options_str, const spell_data_t* s )
     : priest_spell_t( s->name_cstr(), p, s ),
       child_expiation( nullptr ),
-      void_blast_cdr( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } ? p.find_spell( 450404 )->effectN( 3 ).percent() : 0.0 )
+      void_blast_cdr( p.find_spell( 450404 )->effectN( 3 ).percent() )
   {
     parse_options( options_str );
     affected_by_shadow_weaving   = true;
@@ -288,7 +288,7 @@ public:
 
       if ( priest().talents.shadow.shadowy_apparitions.enabled() )
       {
-        priest().trigger_shadowy_apparitions( priest().procs.shadowy_apparition_mb, s->result == RESULT_CRIT );
+        priest().trigger_shadowy_apparitions( priest().procs.shadowy_apparition_mb );
       }
 
       priest().trigger_psychic_link( s );
@@ -1364,15 +1364,6 @@ struct summon_fiend_t final : public priest_spell_t
       priest().buffs.shadow_covenant->trigger();
     }
   }
-
-  void impact( action_state_t* s ) override
-  {
-    priest_spell_t::impact( s );
-    if ( priest().talents.shadow.idol_of_yshaarj.enabled() && sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
-    {
-      make_event( sim, [ this, s ] { priest().trigger_idol_of_yshaarj( s->target ); } );
-    }
-  }
 };
 
 // ==========================================================================
@@ -1558,9 +1549,8 @@ struct shadow_word_death_t final : public priest_spell_t
 protected:
   struct swd_data
   {
-    int chain_number  = 0;
-    int max_chain     = 2;
-    bool deathspeaker = false;
+    int chain_number = 0;
+    int max_chain    = 2;
   };
   using state_t = priest_action_state_t<swd_data>;
   using ab      = priest_spell_t;
@@ -1568,7 +1558,6 @@ protected:
 public:
   double execute_percent;
   double execute_modifier;
-  double deathspeaker_mult;
   propagate_const<shadow_word_death_self_damage_t*> shadow_word_death_self_damage;
   timespan_t depth_of_shadows_duration;
   double depth_of_shadows_threshold;
@@ -1584,21 +1573,12 @@ public:
               ? ( data().effectN( 3 ).base_value() + priest().talents.shadow.deathspeaker->effectN( 2 ).base_value() )
               : data().effectN( 3 ).base_value() ),
       execute_modifier( data().effectN( 4 ).percent() + priest().specs.shadow_priest->effectN( 25 ).percent() ),
-      deathspeaker_mult( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 }
-                             ? 0.0
-                             : ( p.talents.shadow.deathspeaker.enabled()
-                                     ? 1 + p.buffs.deathspeaker->data().effectN( 2 ).percent()
-                                     : 1.0 ) ),
       shadow_word_death_self_damage( new shadow_word_death_self_damage_t( p ) ),
       depth_of_shadows_duration(
-          sim->dbc->wowv() >= wowv_t{ 11, 2, 0 }
-              ? timespan_t::from_seconds( p.talents.voidweaver.depth_of_shadows->effectN( 1 ).base_value() ) *
-                    ( 1.0 + p.talents.shadow.subservient_shadows->effectN( 2 ).percent() )
-              : timespan_t::from_seconds( p.talents.voidweaver.depth_of_shadows->effectN( 1 ).base_value() ) ),
-      depth_of_shadows_threshold( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 }
-                                      ? p.talents.voidweaver.depth_of_shadows->effectN( 2 ).base_value() +
-                                            priest().talents.shadow.deathspeaker->effectN( 5 ).base_value()
-                                      : p.talents.voidweaver.depth_of_shadows->effectN( 2 ).base_value() ),
+          timespan_t::from_seconds( p.talents.voidweaver.depth_of_shadows->effectN( 1 ).base_value() ) *
+          ( 1.0 + p.talents.shadow.subservient_shadows->effectN( 2 ).percent() ) ),
+      depth_of_shadows_threshold( p.talents.voidweaver.depth_of_shadows->effectN( 2 ).base_value() +
+                                  priest().talents.shadow.deathspeaker->effectN( 5 ).base_value() ),
       child_expiation( nullptr ),
       child_searing_light( priest().background_actions.searing_light ),
       execute_override( execute_override )
@@ -1632,10 +1612,7 @@ public:
       spell_power_mod.direct += data().effectN( 1 ).sp_coeff();
     }
 
-    if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
-    {
-      apply_affecting_aura( priest().talents.shadow.deathspeaker );
-    }
+    apply_affecting_aura( priest().talents.shadow.deathspeaker );
   }
 
   shadow_word_death_t( priest_t& p, util::string_view options_str ) : shadow_word_death_t( p )
@@ -1668,11 +1645,6 @@ public:
 
   void snapshot_state( action_state_t* s, result_amount_type rt ) override
   {
-    if ( cast_state( s )->chain_number == 0 && sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
-    {
-      cast_state( s )->deathspeaker = p().buffs.deathspeaker->check();
-    }
-
     ab::snapshot_state( s, rt );
   }
 
@@ -1680,12 +1652,12 @@ public:
   {
     double m = ab::composite_da_multiplier( s );
 
-    if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && cast_state( s )->chain_number > 0 )
+    if ( cast_state( s )->chain_number > 0 )
     {
       m *= priest().talents.shadow.deaths_torment->effectN( 2 ).percent();
     }
 
-    if ( s->target->health_percentage() < execute_percent || cast_state( s )->deathspeaker )
+    if ( s->target->health_percentage() < execute_percent )
     {
       if ( sim->debug )
       {
@@ -1693,11 +1665,6 @@ public:
                           execute_modifier * 100 );
       }
       m *= 1 + execute_modifier;
-    }
-
-    if ( cast_state( s )->deathspeaker )
-    {
-      m *= deathspeaker_mult;
     }
 
     return m;
@@ -1712,18 +1679,12 @@ public:
       // Cooldown is reset only if you have't already gotten a reset
       if ( !priest().buffs.death_and_madness_reset->check() )
       {
-        if ( target->health_percentage() <= execute_percent &&
-             ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } || !priest().buffs.deathspeaker->check() ) )
+        if ( target->health_percentage() <= execute_percent )
         {
           priest().buffs.death_and_madness_reset->trigger();
           cooldown->reset( false );
         }
       }
-    }
-
-    if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } && priest().talents.shadow.deathspeaker.enabled() )
-    {
-      priest().buffs.deathspeaker->expire();
     }
   }
 
@@ -1746,7 +1707,7 @@ public:
     if ( priest().talents.shared.inescapable_torment.enabled() )
     {
       auto mod = 1.0;
-      if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && cast_state( s )->chain_number > 0 )
+      if ( cast_state( s )->chain_number > 0 )
       {
         mod *= priest().talents.shadow.deaths_torment->effectN( 2 ).percent();
       }
@@ -1761,22 +1722,20 @@ public:
       {
         double chance = 0.9;
         // TODO: Find out the actual chance, this is a guess
-        if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && cast_state( s )->chain_number > 0 )
+        if ( cast_state( s )->chain_number > 0 )
         {
           chance *= priest().talents.shadow.deaths_torment->effectN( 2 ).percent();
         }
 
         // TODO: Find out the chance. Placeholder value of 90%. It is not 100% but it is is extremely high.
-        if ( ( ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } && priest().buffs.deathspeaker->check() ) ||
-               save_health_percentage <= depth_of_shadows_threshold ) &&
-             rng().roll( chance ) )
+        if ( ( save_health_percentage <= depth_of_shadows_threshold ) && rng().roll( chance ) )
         {
           priest().procs.depth_of_shadows->occur();
           priest().get_current_main_pet().spawn( depth_of_shadows_duration );
         }
       }
 
-      if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && priest().talents.shadow.deaths_torment.enabled() )
+      if ( priest().talents.shadow.deaths_torment.enabled() )
       {
         int number_of_chains;
         state_t* curr_state = cast_state( s );
@@ -2874,10 +2833,7 @@ priest_td_t::priest_td_t( player_t* target, priest_t& p ) : actor_target_data_t(
   buffs.resonant_energy = make_buff_fallback( p.talents.archon.resonant_energy.enabled(), *this, "resonant_energy",
                                               p.talents.archon.resonant_energy_shadow );
 
-  if ( p.sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
-  {
-    buffs.horrific_visions = make_buff( *this, "horrific_visions", p.talents.shadow.horrific_visions );
-  }
+  buffs.horrific_visions = make_buff( *this, "horrific_visions", p.talents.shadow.horrific_visions );
 }
 
 void priest_td_t::reset()
@@ -3022,12 +2978,6 @@ void priest_t::create_procs()
   procs.inescapable_torment_missed_swd = get_proc( "Inescapable Torment expired when Shadow Word: Death was ready" );
   procs.shadowy_apparition_crit        = get_proc( "Shadowy Apparitions that dealt 100% more damage" );
   procs.depth_of_shadows               = get_proc( "Depth of Shadows spawns of your main pet" );
-
-  if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
-  {
-    procs.idol_of_yshaarj_extra_duration = get_proc( "Idol of Y'Shaarj Devoured Violence procs" );
-    procs.deathspeaker                   = get_proc( "Shadow Word: Death resets from Deathspeaker" );
-  }
   // Holy
   procs.divine_favor_chastise = get_proc( "Smite procs Holy Fire via Divine Favor: Chastise" );
   procs.divine_image          = get_proc( "Divine Image from Holy Words" );
@@ -3267,17 +3217,12 @@ double priest_t::composite_spell_haste() const
     h *= 1.0 / ( 1.0 + buffs.dark_reveries->current_value );
   }
 
-  if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } && buffs.devoured_anger->check() )
-  {
-    h *= 1.0 / ( 1.0 + buffs.devoured_anger->check_value() );
-  }
-
-  if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && buffs.call_of_the_void->check() )
+  if ( buffs.call_of_the_void->check() )
   {
     h *= 1.0 / ( 1.0 + buffs.call_of_the_void->check_value() );
   }
 
-  if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && buffs.overburdened_mind->check() )
+  if ( buffs.overburdened_mind->check() )
   {
     h *= 1.0 / ( 1.0 + buffs.overburdened_mind->check_value() );
   }
@@ -3293,11 +3238,6 @@ double priest_t::composite_spell_haste() const
 double priest_t::composite_melee_haste() const
 {
   double h = player_t::composite_melee_haste();
-
-  if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } && buffs.devoured_anger->check() )
-  {
-    h *= 1.0 / ( 1.0 + buffs.devoured_anger->check_value() );
-  }
 
   if ( buffs.borrowed_time->check() )
   {
@@ -3324,8 +3264,7 @@ double priest_t::composite_player_pet_damage_multiplier( const action_state_t* s
   {
     m *= ( 1.0 + specs.shadow_priest->effectN( 4 ).percent() );
     m *= ( 1.0 + specs.discipline_priest->effectN( 15 ).percent() );
-    if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
-      m *= ( 1.0 + talents.shadow.subservient_shadows->effectN( 1 ).percent() );
+    m *= ( 1.0 + talents.shadow.subservient_shadows->effectN( 1 ).percent() );
   }
   else
   {
@@ -3339,11 +3278,6 @@ double priest_t::composite_player_pet_damage_multiplier( const action_state_t* s
     m *= ( 1.0 + buffs.devouring_chorus->check_stack_value() );
   }
 
-  // Auto parsing does not cover melee attacks, and other attacks double dip with this
-  if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } && buffs.devoured_pride->check() )
-  {
-    m *= ( 1.0 + talents.shadow.devoured_pride->effectN( 2 ).percent() );
-  }
   return m;
 }
 
@@ -4209,11 +4143,7 @@ void priest_t::apply_affecting_auras_late( action_t& action )
   action.apply_affecting_aura( talents.shadow.mental_decay );
   action.apply_affecting_aura( talents.shadow.instilled_doubt );
   action.apply_affecting_aura( talents.shadow.subservient_shadows );
-
-  if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
-  {
-    action.apply_affecting_aura( talents.shadow.dark_evangelism );
-  }
+  action.apply_affecting_aura( talents.shadow.dark_evangelism );
 
   // Discipline Talents
   action.apply_affecting_aura( talents.discipline.dark_indulgence );
@@ -4375,7 +4305,7 @@ void priest_t::init_action_list()
   switch ( specialization() )
   {
     case PRIEST_SHADOW:
-      if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
+      if ( sim->dbc->wowv() > wowv_t{ 11, 2, 0 } )
       {
         priest_apl::shadow_ptr( this );
       }
@@ -4483,14 +4413,7 @@ parsed_assisted_combat_rule_t priest_t::parse_assisted_combat_rule( const assist
   // vampiric touch action checks if shadow crash is available
   if ( rule.condition_type == AURA_MISSING_PLAYER && rule.condition_value_1 == 1243723 )
   {
-    if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
-    {
-      return { "(!action.shadow_crash.in_flight|!talent.whispering_shadows)" };
-    }
-    else
-    {
-      return { "(!action.shadow_crash.in_flight)" };
-    }
+    return { "(!action.shadow_crash.in_flight)" };
   }
 
   // instead of checking for hidden void blast buff we check for entropic rift

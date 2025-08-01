@@ -242,7 +242,6 @@ public:
     propagate_const<buff_t*> surge_of_insanity;
     propagate_const<buff_t*> mind_flay_insanity;
     propagate_const<buff_t*> mind_spike_insanity;
-    propagate_const<buff_t*> deathspeaker;
     propagate_const<buff_t*> dark_ascension;
     propagate_const<buff_t*> last_shadowy_apparition_crit;
     propagate_const<buff_t*> call_of_the_void;
@@ -776,7 +775,6 @@ public:
   struct realppm_t
   {
     propagate_const<real_ppm_t*> idol_of_cthun;
-    propagate_const<real_ppm_t*> deathspeaker;
     propagate_const<real_ppm_t*> power_of_the_dark_side;
     propagate_const<real_ppm_t*> idol_of_yshaarj;
   } rppm;
@@ -836,11 +834,9 @@ public:
     propagate_const<proc_t*> shadowy_insight_overflow;
     propagate_const<proc_t*> shadowy_insight_missed;
     propagate_const<proc_t*> thing_from_beyond;
-    propagate_const<proc_t*> deathspeaker;
     propagate_const<proc_t*> idol_of_nzoth_swp;
     propagate_const<proc_t*> idol_of_nzoth_vt;
     propagate_const<proc_t*> mind_flay_insanity_wasted;
-    propagate_const<proc_t*> idol_of_yshaarj_extra_duration;
     propagate_const<proc_t*> void_torrent_ticks_no_mastery;
     propagate_const<proc_t*> mindgames_casts_no_mastery;
     propagate_const<proc_t*> inescapable_torment_missed_mb;
@@ -1069,14 +1065,13 @@ public:
   void trigger_atonement( action_state_t*, double );
   void trigger_divine_aegis( action_state_t* );
   void spawn_idol_of_cthun( action_state_t* );
-  void trigger_shadowy_apparitions( proc_t* proc, bool gets_crit_mod );
+  void trigger_shadowy_apparitions( proc_t* proc );
   int number_of_echoing_voids_active();
   void trigger_psychic_link( action_state_t* );
   void trigger_shadow_weaving( action_state_t* );
   void trigger_void_shield( double result_amount );
   void refresh_insidious_ire_buff( action_state_t* s );
   void spawn_thing_from_beyond();
-  void trigger_idol_of_nzoth( player_t* target, proc_t* proc );
   void trigger_idol_of_nzoth( player_t* target, int stacks );
   double shadow_weaving_active_dots( const player_t* target, const unsigned int spell_id ) const;
   double shadow_weaving_multiplier( const player_t* target, const unsigned int spell_id ) const;
@@ -1318,20 +1313,8 @@ public:
                      p().talents.archon.perfected_form );
       parse_effects( p().buffs.shadowform );
       parse_effects( p().buffs.mind_devourer );
-
-      if ( p().sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
-      {
-        parse_effects( p().buffs.dark_evangelism, p().talents.shadow.dark_evangelism );
-        parse_effects( p().buffs.devoured_pride );  // Spell Direct and Periodic amount
-        parse_effects( p().buffs.mind_melt,
-                       p().talents.shadow.mind_melt );  // Mind Blast instant cast and Crit increase
-        parse_effects( p().buffs.unfurling_darkness );
-      }
-      if ( p().sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
-      {
-        parse_effects( p().buffs.shattered_psyche,
-                       p().talents.shadow.shattered_psyche );  // Mind Blast critical strike chance
-      }
+      parse_effects( p().buffs.shattered_psyche,
+                     p().talents.shadow.shattered_psyche );  // Mind Blast critical strike chance
 
       parse_effects( p().buffs.dark_ascension, effect_mask_t( true ).disable( 4 ), IGNORE_STACKS,  // Skip E4 for AM
                      p().talents.archon.perfected_form );  // Buffs non-periodic spells
@@ -1731,8 +1714,7 @@ struct priest_spell_t : public priest_action_t<spell_t>
       }
     }
 
-    if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && priest().talents.shadow.idol_of_nzoth.enabled() &&
-         idol_of_nzoth_execute_stacks > 0 )
+    if ( priest().talents.shadow.idol_of_nzoth.enabled() && idol_of_nzoth_execute_stacks > 0 )
     {
       priest().trigger_idol_of_nzoth( target, idol_of_nzoth_execute_stacks );
     }
@@ -1758,9 +1740,8 @@ struct priest_spell_t : public priest_action_t<spell_t>
         p().trigger_atonement( s, composite_atonement_multiplier( s ) );
       }
 
-      // Double check that this cant proc while the buff or debuff is active
-      if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && priest().talents.shadow.idol_of_yshaarj.enabled() &&
-           !priest().buffs.call_of_the_void->check() && !priest().buffs.overburdened_mind->check() )
+      if ( priest().talents.shadow.idol_of_yshaarj.enabled() && !priest().buffs.call_of_the_void->check() &&
+           !priest().buffs.overburdened_mind->check() )
       {
         if ( priest().rppm.idol_of_yshaarj->trigger() )
         {
@@ -1779,8 +1760,7 @@ struct priest_spell_t : public priest_action_t<spell_t>
       p().trigger_atonement( d->state, composite_atonement_multiplier( d->state ) );
     }
 
-    if ( sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } && priest().talents.shadow.idol_of_nzoth.enabled() &&
-         idol_of_nzoth_tick_stacks > 0 )
+    if ( priest().talents.shadow.idol_of_nzoth.enabled() && idol_of_nzoth_tick_stacks > 0 )
     {
       priest().trigger_idol_of_nzoth( d->target, idol_of_nzoth_tick_stacks );
     }

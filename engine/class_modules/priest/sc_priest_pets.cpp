@@ -295,11 +295,6 @@ struct priest_pet_spell_t : public parse_action_effects_t<spell_t>
       parse_effects( p().o().buffs.shadowform );
       parse_effects( p().o().buffs.dark_ascension, effect_mask_t( true ).disable( 4 ), IGNORE_STACKS,  // Skip E4 for AM
                      p().o().talents.archon.perfected_form );  // Buffs non-periodic spells
-
-      if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
-      {
-        parse_effects( p().o().buffs.devoured_pride );
-      }
     }
 
     if ( p().o().talents.shadow.ancient_madness.enabled() )
@@ -1209,52 +1204,11 @@ void priest_t::trigger_inescapable_torment( player_t* target, bool echo, double 
     auto extend = talents.shared.inescapable_torment->effectN( 2 ).time_value() * mod;
     buffs.shadow_covenant->extend_duration( this, extend );
 
-    if ( sim->dbc->wowv() < wowv_t{ 11, 2, 0 } )
-    {
-      buffs.devoured_pride->extend_duration( this, extend );
-      buffs.devoured_anger->extend_duration( this, extend );
-      buffs.devoured_despair->extend_duration( this, extend );
-    }
-
     for ( auto a_pet : get_current_main_pet() )
     {
       auto pet = debug_cast<fiend::base_fiend_pet_t*>( a_pet );
       assert( pet->inescapable_torment );
       pet->inescapable_torment->trigger( target, echo, mod );
-    }
-  }
-}
-
-void priest_t::trigger_idol_of_yshaarj( player_t* target )
-{
-  if ( !talents.shadow.idol_of_yshaarj.enabled() || sim->dbc->wowv() >= wowv_t{ 11, 2, 0 } )
-  {
-    return;
-  }
-
-  // TODO: Use Spell Data. Health threshold from blizzard post, no spell data yet.
-  if ( ( target->buffs.stunned->check() && options.forced_yshaarj_type == "default" ) ||
-       options.forced_yshaarj_type == "despair" )
-  {
-    buffs.devoured_despair->trigger();
-  }
-  else if ( ( target->health_percentage() >= 80.0 && options.forced_yshaarj_type == "default" ) ||
-            options.forced_yshaarj_type == "pride" )
-  {
-    buffs.devoured_pride->trigger();
-  }
-  else if ( options.forced_yshaarj_type == "anger" )
-  {
-    buffs.devoured_anger->trigger();
-  }
-  else
-  {
-    auto duration = timespan_t::from_seconds( talents.shadow.devoured_violence->effectN( 1 ).base_value() );
-
-    for ( auto pet : get_current_main_pet() )
-    {
-      pet->adjust_duration( duration );
-      procs.idol_of_yshaarj_extra_duration->occur();
     }
   }
 }

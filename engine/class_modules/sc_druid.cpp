@@ -548,6 +548,7 @@ struct druid_t final : public parse_player_effects_t
   moon_stage_e moon_stage;
   std::vector<event_t*> persistent_event_delay;
   event_t* astral_power_decay;
+
   struct dot_list_t
   {
     std::vector<dot_t*> moonfire;
@@ -560,6 +561,12 @@ struct druid_t final : public parse_player_effects_t
     std::vector<dot_t*> regrowth;
     std::vector<dot_t*> efflorescence;
   } dot_lists;
+
+  // buffs that delay application if certain spells are queued after
+  struct queued_buffs_t
+  {
+    bool gathering_moonlight;
+  } queued_buffs;
   // !!!==========================================================================!!!
 
   // Options
@@ -1397,6 +1404,7 @@ struct druid_t final : public parse_player_effects_t
   druid_td_t* get_target_data( player_t* target ) const override;
   void copy_from( player_t* ) override;
   void moving() override;
+  action_t* execute_action() override;
 
   // utility functions
   void init_beast_weapon( weapon_t&, double );
@@ -9092,7 +9100,7 @@ struct starsurge_ec_tww3_t final : public BASE
     if ( BASE::rng().roll( chance ) )
     {
       BASE::execute();
-      BASE::p()->buff.gathering_moonlight->trigger();
+      BASE::p()->queued_buffs.gathering_moonlight = true;
     }
   }
 
@@ -13572,6 +13580,7 @@ void druid_t::reset()
   dot_lists.rip.clear();
   dot_lists.thrash_bear.clear();
   dot_lists.dreadful_wound.clear();
+  queued_buffs.gathering_moonlight = false;
 }
 
 // druid_t::merge ===========================================================
@@ -15082,6 +15091,25 @@ void druid_t::moving()
 {
   if ( ( executing && !executing->usable_moving() ) || ( channeling && !channeling->usable_moving() ) )
     player_t::interrupt();
+}
+
+action_t* druid_t::execute_action()
+{
+  auto a = player_t::execute_action();
+
+  // if the previous action triggered gathering moonlight and the new action is fury of elune, the application of gathering moonlight it sequenced
+  if ( queued_buffs.gathering_moonlight && a->type != ACTION_OTHER && a->type != ACTION_CALL &&
+       a->type != ACTION_SEQUENCE )
+  {
+    queued_buffs.gathering_moonlight = false;
+
+    if ( a->id == 202770 )
+      make_event( *sim, [ this ]() { buff.gathering_moonlight->trigger(); } );
+    else
+      buff.gathering_moonlight->trigger();
+  }
+
+  return a;
 }
 
 // ==========================================================================

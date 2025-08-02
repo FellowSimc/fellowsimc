@@ -7,13 +7,23 @@ actions=call_action_list,name=cooldowns
 actions+=/call_action_list,name=assisted_combat
 
 # This is the default action priority list from the game's Assisted Combat system.
-actions.assisted_combat=ambush,if=buff.stealth.up&target.distance<=40
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.wound_poison.down&buff.pvp_rules_enabled_hardcoded.up')
+actions.assisted_combat=apply_poison,lethal=wound,if=1&buff.pvp_rules_enabled_hardcoded.up
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.instant_poison.down&buff.pvp_rules_enabled_hardcoded.down')
+actions.assisted_combat+=/apply_poison,lethal=instant,if=1&buff.pvp_rules_enabled_hardcoded.down
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.atrophic_poison.down')
+actions.assisted_combat+=/apply_poison,nonlethal=atrophic,if=1
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.numbing_poison.down')
+actions.assisted_combat+=/apply_poison,nonlethal=numbing,if=1
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.numbing_poison.down&buff.atrophic_poison.down&buff.crippling_poison.down')
+actions.assisted_combat+=/apply_poison,nonlethal=crippling,if=1&1&1
+actions.assisted_combat+=/ambush,if=buff.stealth.up&target.distance<=40
 actions.assisted_combat+=/ambush,if=buff.stealth.up&target.distance<=40
 actions.assisted_combat+=/ambush,if=buff.vanish.up&target.distance<=40
 actions.assisted_combat+=/roll_the_bones,if=buff.broadside.down&buff.ruthless_precision.down&buff.grand_melee.down&buff.true_bearing.down&buff.buried_treasure.down&buff.skull_and_crossbones.down
 actions.assisted_combat+=/blade_flurry,if=active_enemies>2&buff.blade_flurry.down
 actions.assisted_combat+=/cold_blood,if=combo_points>=5&cooldown.dispatch.ready
-actions.assisted_combat+=/killing_spree,if=combo_points>=5
+actions.assisted_combat+=/killing_spree,if=combo_points>=5&active_enemies>1
 actions.assisted_combat+=/between_the_eyes,if=buff.subterfuge.up&combo_points>=5&talent.crackshot
 actions.assisted_combat+=/between_the_eyes,if=buff.stealth.up&combo_points>=5&talent.crackshot
 actions.assisted_combat+=/between_the_eyes,if=buff.vanish.up&combo_points>=5&talent.crackshot
@@ -36,3 +46,6 @@ actions.cooldowns+=/blood_fury
 actions.cooldowns+=/berserking
 actions.cooldowns+=/fireblood
 actions.cooldowns+=/ancestral_call
+actions.cooldowns+=/adrenaline_rush,if=!buff.adrenaline_rush.up
+actions.cooldowns+=/vanish
+actions.cooldowns+=/keep_it_rolling,if=rtb_buffs>=4

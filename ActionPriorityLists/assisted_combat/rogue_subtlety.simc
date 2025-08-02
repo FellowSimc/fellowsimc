@@ -7,8 +7,16 @@ actions=call_action_list,name=cooldowns
 actions+=/call_action_list,name=assisted_combat
 
 # This is the default action priority list from the game's Assisted Combat system.
-# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.instant_poison.down')
-actions.assisted_combat=apply_poison,nonlethal=instant,if=1
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.wound_poison.down&buff.pvp_rules_enabled_hardcoded.up')
+actions.assisted_combat=apply_poison,lethal=wound,if=1&buff.pvp_rules_enabled_hardcoded.up
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.instant_poison.down&buff.pvp_rules_enabled_hardcoded.down')
+actions.assisted_combat+=/apply_poison,lethal=instant,if=1&buff.pvp_rules_enabled_hardcoded.down
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.atrophic_poison.down')
+actions.assisted_combat+=/apply_poison,nonlethal=atrophic,if=1
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.numbing_poison.down')
+actions.assisted_combat+=/apply_poison,nonlethal=numbing,if=1
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.numbing_poison.down&buff.atrophic_poison.down&buff.crippling_poison.down')
+actions.assisted_combat+=/apply_poison,nonlethal=crippling,if=1&1&1
 actions.assisted_combat+=/goremaws_bite,if=combo_points<=2&buff.cold_blood.down
 actions.assisted_combat+=/flagellation,if=combo_points>=5&buff.cold_blood.down
 actions.assisted_combat+=/symbols_of_death,if=cooldown.shadow_dance.ready&buff.symbols_of_death.down&active_enemies>1

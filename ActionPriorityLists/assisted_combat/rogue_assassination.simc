@@ -7,10 +7,26 @@ actions=call_action_list,name=cooldowns
 actions+=/call_action_list,name=assisted_combat
 
 # This is the default action priority list from the game's Assisted Combat system.
-# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.deadly_poison.down')
-actions.assisted_combat=apply_poison,nonlethal=deadly,if=1
-# Checks if the automatically learned passive Cut to the Chase is known. Assumed to be strictly true. (Overridden from 'buff.slice_and_dice.down&combo_points>=1&buff.cut_to_the_chase.up')
-actions.assisted_combat+=/slice_and_dice,if=buff.slice_and_dice.down&combo_points>=1&1
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.deadly_poison.down&talent.dragontempered_blades')
+actions.assisted_combat=apply_poison,lethal=deadly,if=1&talent.dragontempered_blades
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.deadly_poison.down&buff.wound_poison.down&!talent.dragontempered_blades')
+actions.assisted_combat+=/apply_poison,lethal=deadly,if=1&1&!talent.dragontempered_blades
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.amplifying_poison.down&talent.dragontempered_blades&buff.pvp_rules_enabled_hardcoded.down')
+actions.assisted_combat+=/apply_poison,lethal=amplifying,if=1&talent.dragontempered_blades&buff.pvp_rules_enabled_hardcoded.down
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.amplifying_poison.down&talent.dragontempered_blades&buff.wound_poison.down&buff.pvp_rules_enabled_hardcoded.up')
+actions.assisted_combat+=/apply_poison,lethal=amplifying,if=1&talent.dragontempered_blades&1&buff.pvp_rules_enabled_hardcoded.up
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.wound_poison.down&buff.pvp_rules_enabled_hardcoded.up&buff.amplifying_poison.down&talent.dragontempered_blades')
+actions.assisted_combat+=/apply_poison,lethal=wound,if=1&buff.pvp_rules_enabled_hardcoded.up&1&talent.dragontempered_blades
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.amplifying_poison.down&talent.dragontempered_blades&buff.wound_poison.down&buff.instant_poison.down')
+actions.assisted_combat+=/apply_poison,lethal=instant,if=1&talent.dragontempered_blades&1&1
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.atrophic_poison.down')
+actions.assisted_combat+=/apply_poison,nonlethal=atrophic,if=1
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.numbing_poison.down')
+actions.assisted_combat+=/apply_poison,nonlethal=numbing,if=1
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'talent.dragontempered_blades&buff.crippling_poison.down')
+actions.assisted_combat+=/apply_poison,nonlethal=crippling,if=talent.dragontempered_blades&1
+# apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status., apply_poison may only be executed once per iteration, so we do not need to condition based on poison status. (Overridden from 'buff.numbing_poison.down&buff.atrophic_poison.down&buff.crippling_poison.down&!talent.dragontempered_blades')
+actions.assisted_combat+=/apply_poison,nonlethal=crippling,if=1&1&1&!talent.dragontempered_blades
 actions.assisted_combat+=/ambush,if=target.distance<=40&buff.stealth.up&!talent.improved_garrote
 actions.assisted_combat+=/ambush,if=target.distance<=40&buff.stealth.up&!talent.improved_garrote
 actions.assisted_combat+=/ambush,if=target.distance<=40&buff.vanish.up&!talent.improved_garrote

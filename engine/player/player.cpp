@@ -2979,6 +2979,35 @@ static void enable_default_talents( player_t* player )
   }
 }
 
+static void enable_hero_tree( player_t* player, unsigned hero_tree_id )
+{
+  player->sim->print_debug( "Loading all {} hero tree talents for {}.",
+                            trait_data_t::get_hero_tree_name( hero_tree_id ), *player );
+
+  auto traits = trait_data_t::data( util::class_id( player->type ), talent_tree::SELECTION, player->is_ptr() );
+  for ( const auto& trait : traits )
+  {
+    if ( trait.id_sub_tree == hero_tree_id && range::contains( trait.id_spec, player->specialization() ) )
+    {
+      player->player_traits.emplace_back( talent_tree::SELECTION, trait.id_trait_node_entry, trait.max_ranks );
+      player->player_sub_trees.insert( hero_tree_id );
+      player->sim->print_debug( "{} activating sub tree {} ({})", *player,
+                                trait_data_t::get_hero_tree_name( hero_tree_id, player->is_ptr() ), hero_tree_id );
+    }
+  }
+
+  traits = trait_data_t::data( util::class_id( player->type ), talent_tree::HERO, player->is_ptr() );
+  for ( const auto& trait : traits )
+  {
+    // assume 'off-screen' nodes are invalid
+    if ( trait.row <= 0 || trait.col <= 0 || trait.max_ranks <= 0 )
+      continue;
+
+    player->player_traits.emplace_back( talent_tree::HERO, trait.id_trait_node_entry, trait.max_ranks );
+    player->sim->print_debug( "{} adding hero talent {}", *player, trait.name );
+  }
+}
+
 void player_t::init_talents()
 {
   sim->print_debug( "Initializing talents for {}.", *this );
@@ -3006,7 +3035,16 @@ void player_t::init_talents()
 
   parse_traits( talent_tree::CLASS, class_talents_str, this );
   parse_traits( talent_tree::SPECIALIZATION, spec_talents_str, this );
-  parse_traits( talent_tree::HERO, hero_talents_str, this );
+
+  if ( auto hero_tree_id = trait_data_t::get_hero_tree_id( hero_talents_str, is_ptr() );
+       trait_data_t::is_hero_tree_valid( static_cast<hero_talent_e>( hero_tree_id ), specialization(), is_ptr() ) )
+  {
+    enable_hero_tree( this, hero_tree_id );
+  }
+  else
+  {
+    parse_traits( talent_tree::HERO, hero_talents_str, this );
+  }
 
   // Add selection traits for any manually added hero traits from new trees
   if ( player_sub_trees.size() > parsed_sub_trees.size() )

@@ -1823,7 +1823,14 @@ public:
 
       if ( const auto& effect = p()->talent.aldrachi_reaver.art_of_the_glaive->effectN( idx );
            effect.ok() && in_whitelist() )
-        add_parse_entry( ab::da_multiplier_effects ).set_buff( buff ).set_value( effect.percent() ).set_eff( &effect );
+      {
+        auto added_entry = add_parse_entry( ab::da_multiplier_effects )
+                               .set_buff( buff )
+                               .set_value( effect.percent() )
+                               .set_eff( &effect );
+        ab::debug_message( added_entry, "direct damage", fmt::format( "{:.1f}%", effect.base_value() ), false,
+                           &buff->data(), idx );
+      }
     };
     std::vector<int> art_of_the_glaive_glaive_flurry_affected_list  = { 199552, 200685, 391374, 391378, 210153,
                                                                         210155, 393054, 393055, 228478 };
@@ -2276,7 +2283,8 @@ struct art_of_the_glaive_trigger_t : public BASE
       second_ability = !BASE::p()->buff.glaive_flurry->up();
 
       int second_ability_increase =
-          BASE::p()->is_ptr() ? as<int>( BASE::p()->talent.aldrachi_reaver.reavers_mark->effectN( 2 ).base_value() ) : 1;
+          BASE::p()->is_ptr() ? as<int>( BASE::p()->talent.aldrachi_reaver.reavers_mark->effectN( 2 ).base_value() )
+                              : 1;
 
       int first_ability_amount = 1;
       int second_ability_amount =
@@ -5214,6 +5222,11 @@ struct blade_dance_base_t
       }
 
       return am;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      return demon_hunter_attack_t::composite_da_multiplier( s );
     }
 
     void impact( action_state_t* s ) override

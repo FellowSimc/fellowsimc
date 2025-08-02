@@ -33,7 +33,6 @@ actions.db_cds=reapers_mark
 actions.db_cds+=/dancing_rune_weapon
 actions.db_cds+=/bonestorm,if=buff.bone_shield.stack>=5&(!talent.shattering_bone.enabled|death_and_decay.ticking)
 actions.db_cds+=/tombstone,if=buff.bone_shield.stack>=8&(!talent.shattering_bone.enabled|death_and_decay.ticking)&cooldown.dancing_rune_weapon.remains>=25
-actions.db_cds+=/abomination_limb,if=!buff.dancing_rune_weapon.up
 
 actions.deathbringer=death_strike,if=runic_power.deficit<variable.rp_deficit_threshold+(pet.dancing_rune_weapon.active*3)+(talent.everlasting_bond*3)
 actions.deathbringer+=/marrowrend,if=buff.exterminate.react
@@ -60,8 +59,7 @@ actions.high_prio_actions+=/blood_boil,if=dot.blood_plague.remains<gcd.max*2
 actions.high_prio_actions+=/soul_reaper,if=active_enemies=1&(target.time_to_pct_35<5)&target.time_to_die>(dot.soul_reaper.remains+5)&(!hero_tree.sanlayn|pet.dancing_rune_weapon.remains<5)
 actions.high_prio_actions+=/rune_tap,use_off_gcd=1,if=rune>3
 
-actions.san_cds=abomination_limb,if=!buff.dancing_rune_weapon.up
-actions.san_cds+=/dancing_rune_weapon
+actions.san_cds=dancing_rune_weapon
 actions.san_cds+=/bonestorm,if=buff.death_and_decay.up&buff.bone_shield.stack>5&cooldown.dancing_rune_weapon.remains>15
 actions.san_cds+=/tombstone,if=(!buff.dancing_rune_weapon.up&buff.death_and_decay.up)&buff.bone_shield.stack>5&runic_power.deficit>=30&cooldown.dancing_rune_weapon.remains>25
 

@@ -14035,7 +14035,7 @@ Effects          :
 #1 (id=1156956)  : Apply Aura (6) | Dummy (4)
                    Base Value: 1 | Scaled Value: 1 | Target: Self (1)
 #2 (id=1156957)  : Apply Aura (6) | Dummy (4)
-                   Base Value: 10 | Scaled Value: 10 | Target: Self (1)
+                   Base Value: 15 | Scaled Value: 15 | Target: Self (1)
 Description      : When your Fatebound Coin flips the same face for the seventh time in a row, keep the lucky coin to gain $452562s1% Agility until you leave combat for $s2 seconds. If you already have a lucky coin, it instead deals $461818s1 Cosmic damage to your target.
 
 Name             : Fate Intertwined (id=454429) [Spell Family (8), Passive] 

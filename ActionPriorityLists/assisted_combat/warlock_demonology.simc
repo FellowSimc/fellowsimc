@@ -17,7 +17,6 @@ actions.assisted_combat+=/summon_vilefiend
 actions.assisted_combat+=/call_dreadstalkers
 actions.assisted_combat+=/bilescourge_bombers
 actions.assisted_combat+=/grimoire_felguard
-actions.assisted_combat+=/guillotine
 actions.assisted_combat+=/ruination,if=soul_shard>=3
 actions.assisted_combat+=/hand_of_guldan,if=soul_shard>=3
 actions.assisted_combat+=/demonic_strength

@@ -4737,6 +4737,7 @@ struct trollbane_pet_t final : public horseman_pet_t
       base_multiplier     = dk()->spell.tww3_4pc_rider->effectN( 1 ).percent();
       aoe = -1;
       reduced_aoe_targets = data().effectN( 5 ).base_value();
+      background          = true;
     }
   };
 
@@ -4775,7 +4776,7 @@ struct trollbane_pet_t final : public horseman_pet_t
 
 public:
   obliterate_background_trollbane_t* obliterate;
-  frostscythe_trollbane_t* frostscythe;
+  action_t* frostscythe;
 };
 
 // ==========================================================================
@@ -9343,7 +9344,9 @@ struct frostscythe_t : public frostscythe_base_t
 
     if ( p()->sets->has_set_bonus( HERO_RIDER_OF_THE_APOCALYPSE, TWW3, B4 ) &&
          p()->pets.trollbane.active_pet() != nullptr )
-      p()->pets.trollbane.active_pet()->frostscythe->execute_on_target( target );
+      // 11.2 TODO check delays again between patch launch and season launch
+      make_event<delayed_execute_event_t>( *sim, p(), p()->pets.trollbane.active_pet()->frostscythe,
+                                           execute_state->target, p()->rng().gauss( 200_ms, 50_ms ) );
 
     if ( p()->buffs.exterminate->up() )
     {
@@ -16148,6 +16151,7 @@ void pets::pet_action_t<T_PET, Base>::apply_pet_action_effects()
   parse_effects( dk()->mastery.frozen_heart );
   parse_effects( dk()->buffs.remorseless_winter, dk()->talent.cleaving_strikes );  // Affects Trollbane's Frostscythe
   parse_effects( dk()->buffs.frozen_dominion_remorseless_winter, dk()->talent.cleaving_strikes );
+  parse_effects( dk()->buffs.killing_machine, dk()->talent.frost.killing_streak );
 
   // Unholy
   parse_effects( dk()->buffs.unholy_assault );

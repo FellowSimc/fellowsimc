@@ -4269,15 +4269,6 @@ struct cold_blood_t : public rogue_spell_t
     rogue_spell_t::execute();
     p()->buffs.cold_blood->trigger();
   }
-
-  bool ready() override
-  {
-    // Cooldown does not start in-game until the buff is entirely consumed
-    if ( p()->buffs.cold_blood->check() )
-      return false;
-
-    return rogue_spell_t::ready();
-  }
 };
 
 // Crimson Tempest ==========================================================
@@ -5058,7 +5049,6 @@ struct killing_spree_tick_t : public rogue_attack_t
   killing_spree_tick_t( util::string_view name, rogue_t* p, const spell_data_t* s ) :
     rogue_attack_t( name, p, s )
   {
-    direct_tick = true;
   }
 
   void impact( action_state_t* state ) override
@@ -5093,7 +5083,7 @@ struct killing_spree_t : public rogue_attack_t
     attack_mh( nullptr ), attack_oh( nullptr )
   {
     channeled = tick_zero = true;
-    interrupt_auto_attack = p->is_ptr(); // 2025-06-28 -- TOCHECK: Auto attacks are now interrupted on PTR
+    interrupt_auto_attack = true; // 2025-06-28 -- TOCHECK: Auto attacks are now interrupted on PTR
 
     // Assume we can react to the ending of Killing Spree faster than the 250ms channel_lag setting
     // through the use of [nochannel] macros, or in some cases reacting to the combo point generation
@@ -5105,7 +5095,7 @@ struct killing_spree_t : public rogue_attack_t
     add_child( attack_mh );
     add_child( attack_oh );
 
-    snapshot_flags |= STATE_HASTE;
+    snapshot_flags |= STATE_HASTE; // Core handling of this fails even though it is channeled due to no base dot_duration
   }
 
   void init() override
@@ -5152,8 +5142,8 @@ struct killing_spree_t : public rogue_attack_t
 
     // 06-28-2025 -- TOCHECK: On 11.2 PTR both hits target random enemies
     // Additionally, the new damage spell 1248604 is not currently being used but contains the 0-9 yard cone
-    attack_mh->execute_on_target( p()->is_ptr() ? rng().range( sim->target_non_sleeping_list ) : d->target );
-    attack_oh->execute_on_target( p()->is_ptr() ? rng().range( sim->target_non_sleeping_list ) : d->target );
+    attack_mh->execute_on_target( rng().range( sim->target_non_sleeping_list ) );
+    attack_oh->execute_on_target( rng().range( sim->target_non_sleeping_list ) );
 
     if ( p()->spec.killing_spree_energize->ok() && d->current_tick > 0 )
     {
@@ -9711,6 +9701,13 @@ void actions::rogue_action_t<Base>::trigger_nimble_flurry( const action_state_t*
     return;
 
   double multiplier = p()->talent.trickster.nimble_flurry->effectN( 3 ).percent();
+
+  // 2025-08-02 -- Not yet in spell data descriptions, but in patch notes and appears to work
+  if ( p()->buffs.shadow_blades->check() )
+  {
+    multiplier *= 1.0 + p()->buffs.shadow_blades->check_value();
+  }
+
   p()->active.trickster.nimble_flurry->trigger_residual_action( state, multiplier );
 }
 
@@ -11489,7 +11486,7 @@ void rogue_t::init_spells()
   // TOCHECK -- Killing Spree spell ids could change over 11.2 PTR, new spell 1248604 exists but not used in logs yet
   spec.killing_spree_mh_attack = talent.outlaw.killing_spree->ok() ? find_spell( 57841 ) : spell_data_t::not_found();
   spec.killing_spree_oh_attack = talent.outlaw.killing_spree->ok() ? find_spell( 57842 ) : spell_data_t::not_found();
-  spec.killing_spree_energize = talent.outlaw.killing_spree->ok() && is_ptr() ? find_spell( 1235074 ) : spell_data_t::not_found();
+  spec.killing_spree_energize = talent.outlaw.killing_spree->ok() ? find_spell( 1235074 ) : spell_data_t::not_found();
   spec.opportunity_buff = talent.outlaw.opportunity->ok() ? find_spell( 195627 ) : spell_data_t::not_found();
   spec.sinister_strike_extra_attack = talent.outlaw.opportunity->ok() ? find_spell( 197834 ) : spell_data_t::not_found();
   spec.summarily_dispatched_buff = talent.outlaw.summarily_dispatched->ok() ? find_spell( 386868 ) : spell_data_t::not_found();
@@ -12103,11 +12100,7 @@ void rogue_t::create_buffs()
     ->set_cooldown( timespan_t::zero() )
     ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
     ->set_duration( sim->max_time / 2 )
-    ->set_initial_stack( buffs.cold_blood->max_stack() )
-    ->set_stack_change_callback( [ this ]( buff_t*, int, int new_ ) {
-      if ( new_ == 0 )
-        cooldowns.cold_blood->start();
-    } );
+    ->set_initial_stack( buffs.cold_blood->max_stack() );
 
   buffs.subterfuge = new buffs::subterfuge_t( this );
 
@@ -12149,28 +12142,13 @@ void rogue_t::create_buffs()
   buffs.fatebound_coin_heads = make_buff<damage_buff_t>( this, "fatebound_coin_heads", spell.fatebound_coin_heads_buff, false );
   if ( spell.fatebound_coin_heads_buff->ok() && spell.fatebound_coin_heads_stacking_buff->ok() )
   {
-    if ( is_ptr() )
-    {
-      // Combine the 2% per additional stack buff (which we use as the stacking base buff) and 8% from initial stack buff (the fatebound_coin_heads_stacking_buff)
-      buffs.fatebound_coin_heads->set_direct_mod( spell.fatebound_coin_heads_buff, 1, spell.fatebound_coin_heads_buff->effectN( 1 ).percent(),
-                                                  1.0 + spell.fatebound_coin_heads_stacking_buff->effectN( 1 ).percent() );
-      buffs.fatebound_coin_heads->set_periodic_mod( spell.fatebound_coin_heads_buff, 2, spell.fatebound_coin_heads_buff->effectN( 2 ).percent(),
-                                                    1.0 + spell.fatebound_coin_heads_stacking_buff->effectN( 2 ).percent() );
-      buffs.fatebound_coin_heads->set_auto_attack_mod( spell.fatebound_coin_heads_buff, 5, spell.fatebound_coin_heads_buff->effectN( 5 ).percent(),
-                                                       1.0 + spell.fatebound_coin_heads_stacking_buff->effectN( 3 ).percent() );
-    }
-    else
-    {
-      // Combine the 1% per additional stack buff (which we use as the stacking base buff) and 3% from initial stack buff (the fatebound_coin_heads_stacking_buff)
-      buffs.fatebound_coin_heads->set_direct_mod( spell.fatebound_coin_heads_buff, 1, spell.fatebound_coin_heads_buff->effectN( 1 ).percent(),
-                                                  1.0 + spell.fatebound_coin_heads_stacking_buff->effectN( 1 ).percent() - spell.fatebound_coin_heads_buff->effectN( 1 ).percent() );
-      buffs.fatebound_coin_heads->set_periodic_mod( spell.fatebound_coin_heads_buff, 2, spell.fatebound_coin_heads_buff->effectN( 2 ).percent(),
-                                                    1.0 + spell.fatebound_coin_heads_stacking_buff->effectN( 2 ).percent() - spell.fatebound_coin_heads_buff->effectN( 2 ).percent() );
-      // TODO: fatebound_coin_heads_stacking_buff modifies fatebound_coin_heads_buff for the periodic and direct damage effects, but has an inline 3% auto attack damage effect
-      //  Are we getting an extra 1% AA damage for free? We may never know. Assuming we don't for now.
-      buffs.fatebound_coin_heads->set_auto_attack_mod( spell.fatebound_coin_heads_buff, 5, spell.fatebound_coin_heads_buff->effectN( 5 ).percent(),
-                                                       1.0 + spell.fatebound_coin_heads_stacking_buff->effectN( 3 ).percent() - spell.fatebound_coin_heads_buff->effectN( 5 ).percent() );
-    }
+    // Combine the 2% per additional stack buff (which we use as the stacking base buff) and 8% from initial stack buff (the fatebound_coin_heads_stacking_buff)
+    buffs.fatebound_coin_heads->set_direct_mod( spell.fatebound_coin_heads_buff, 1, spell.fatebound_coin_heads_buff->effectN( 1 ).percent(),
+                                                1.0 + spell.fatebound_coin_heads_stacking_buff->effectN( 1 ).percent() );
+    buffs.fatebound_coin_heads->set_periodic_mod( spell.fatebound_coin_heads_buff, 2, spell.fatebound_coin_heads_buff->effectN( 2 ).percent(),
+                                                  1.0 + spell.fatebound_coin_heads_stacking_buff->effectN( 2 ).percent() );
+    buffs.fatebound_coin_heads->set_auto_attack_mod( spell.fatebound_coin_heads_buff, 5, spell.fatebound_coin_heads_buff->effectN( 5 ).percent(),
+                                                      1.0 + spell.fatebound_coin_heads_stacking_buff->effectN( 3 ).percent() );
   }
   buffs.fatebound_coin_heads
     ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )

@@ -11215,30 +11215,7 @@ void rogue_t::init_spells()
   talent.outlaw.hidden_opportunity = find_talent_spell( talent_tree::SPECIALIZATION, "Hidden Opportunity" );
   talent.outlaw.crackshot = find_talent_spell( talent_tree::SPECIALIZATION, "Crackshot" );
   talent.outlaw.keep_it_rolling = find_talent_spell( talent_tree::SPECIALIZATION, "Keep it Rolling" );
-  
-  // TODO: ghostly_strike is duplicated in `trait_data_ptr.inc`, making the talent unable to be loaded by name (since there are two `Ghostly Strike` talents!)
-  //  `find_talent_spell` normally uses the id of the first match, but in this case, it's broken, and it's the second match that works. So we do the data
-  //  load manually to prefer the second, functional, talent node.
   talent.outlaw.ghostly_strike = find_talent_spell( talent_tree::SPECIALIZATION, "Ghostly Strike" );
-  if ( specialization() == ROGUE_OUTLAW && !talent.outlaw.ghostly_strike->ok() )
-  {
-    uint32_t class_idx, spec_idx;
-    dbc->spec_idx( ROGUE_OUTLAW, class_idx, spec_idx );
-    auto traits = trait_data_t::find_by_spell( talent_tree::SPECIALIZATION, 196937, class_idx, ROGUE_OUTLAW, dbc->ptr );
-    for ( auto trait : traits )
-    {
-      auto it = range::find_if( player_traits, [ trait ]( const auto& entry ) {
-        return std::get<1>( entry ) == trait->id_trait_node_entry;
-      } );
-
-      if ( it != player_traits.end() && std::get<2>( *it ) != 0U )
-      {
-        talent.outlaw.ghostly_strike = find_talent_spell( trait->id_trait_node_entry );
-        break;
-      }
-    }
-  }
-
   talent.outlaw.greenskins_wickers = find_talent_spell( talent_tree::SPECIALIZATION, "Greenskin's Wickers" );
 
   // Subtlety Talents

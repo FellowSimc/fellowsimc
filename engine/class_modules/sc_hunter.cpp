@@ -5146,7 +5146,7 @@ struct stampede_t : hunter_ranged_attack_t
   {
     damage_t( util::string_view n, hunter_t* p ) : hunter_ranged_attack_t( n, p, p->tier_set.tww_s3_pack_leader_4pc_stampede_damage )
     {
-      aoe = as<int>( p->tier_set.tww_s3_pack_leader_4pc->effectN( 3 ).base_value() );
+      aoe = p->bugs ? -1 : as<int>( p->tier_set.tww_s3_pack_leader_4pc->effectN( 3 ).base_value() );
       background = dual = true;
     }
   };

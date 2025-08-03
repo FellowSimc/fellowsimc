@@ -4603,10 +4603,11 @@ void player_t::create_buffs()
   // Infinite-Stacking Buffs and De-Buffs for everyone
   buffs.stunned = make_buff( this, "stunned" )
     ->set_max_stack( 1 )
-    ->set_stack_change_callback( [ this ]( buff_t*, int, int new_ ) {
-      if ( new_ == 0 )
-        schedule_ready();
-    } );
+    ->set_expire_callback( [ this ]( buff_t*, int, timespan_t d ) 
+      {
+        if ( !sim->event_mgr.canceled && d > timespan_t::zero() )
+          trigger_ready();
+      } );
 
   buffs.rooted = make_buff( this, "rooted" )->set_max_stack( 1 )->set_quiet( true );
 
@@ -6845,12 +6846,15 @@ void player_t::trigger_ready()
     return;
   if ( !active_during_iteration )
     return;
+  if ( sim->event_mgr.canceled )
+    return;
 
   if ( buffs.stunned->check() )
     return;
+  if ( is_moving() )
+    return;
 
-  sim->print_debug( "{} is triggering ready, interval={}", *this,
-                           ( sim->current_time() - started_waiting ) );
+  sim->print_debug( "{} is triggering ready, interval={}", *this, ( sim->current_time() - started_waiting ) );
 
   iteration_waiting_time += sim->current_time() - started_waiting;
   started_waiting = timespan_t::min();
@@ -7164,7 +7168,9 @@ void player_t::arise()
     acquire_target( retarget_source::SELF_ARISE );
   }
 
-  if ( has_foreground_actions( *this ) )
+  // ready_type READY_TRIGGER may already have scheduled a ready event, so we need to check if we are already
+  // readying.
+  if ( !readying && has_foreground_actions( *this ) )
     schedule_ready();
 
   active_during_iteration = true;

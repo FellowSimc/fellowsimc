@@ -2590,6 +2590,7 @@ struct death_knight_pet_t : public pet_t
       return;
 
     this->trigger_movement( dist, movement_direction_type::TOWARDS );
+    this->interrupt();
     auto dur = this->time_to_move();
     make_event( *sim, dur, [ &, dur ] { update_movement( dur ); } );
   }
@@ -2944,6 +2945,7 @@ struct base_ghoul_pet_t : public death_knight_pet_t
   timespan_t stun_duration;
   double spawn_distance;
   double spawn_radius;
+  bool army_ghoul;
   base_ghoul_pet_t( death_knight_t* owner, std::string_view name, bool guardian = false, bool dynamic = true )
     : death_knight_pet_t( owner, name, guardian, true, dynamic ),
       stun_duration( 4.5_s ),
@@ -2954,12 +2956,18 @@ struct base_ghoul_pet_t : public death_knight_pet_t
     main_hand_weapon.type       = WEAPON_BEAST;
     stun_duration               = dk()->pet_spell.pet_stun->duration();
     spawn_radius                = dk()->spell.apocalypse_duration->effectN( 1 ).radius();
+    army_ghoul                  = name_str == "army_ghoul";
   }
 
   void init_finished() override
   {
     death_knight_pet_t::init_finished();
-    buffs.stunned->set_expire_callback( [ & ]( buff_t*, int, timespan_t ) { trigger_pet_movement( spawn_distance ); } );
+    buffs.stunned->set_expire_callback( [ & ]( buff_t*, int, timespan_t d ) {
+      if ( !sim->event_mgr.canceled && d > timespan_t::zero() )
+      {
+        trigger_pet_movement( spawn_distance );
+      }
+    } );
   }
 
   attack_t* create_main_hand_auto_attack() override
@@ -2995,16 +3003,13 @@ struct base_ghoul_pet_t : public death_knight_pet_t
   void arise() override
   {
     death_knight_pet_t::arise();
+
     double dist    = precombat_spawn ? 0 : rng().range( -spawn_radius, spawn_radius );
     spawn_distance = std::max( 0.0, dk()->base.distance + dist );
-    if ( name_str == "army_ghoul" )
-    {
+    if ( army_ghoul )
       trigger_summon_stun( stun_duration );
-    }
     else
-    {
       trigger_pet_movement( spawn_distance );
-    }
   }
 
   resource_e primary_resource() const override
@@ -3014,17 +3019,16 @@ struct base_ghoul_pet_t : public death_knight_pet_t
 
   timespan_t available() const override
   {
-    if ( is_moving() )
-      return time_to_move();
+    if ( buffs.stunned->check() )
+      return buffs.stunned->remains();
 
     double energy = resources.current[ RESOURCE_ENERGY ];
 
-    // Cheapest Ability need 40 Energy
-    if ( energy >= 40 )
+    if ( energy >= resource_thresholds.front() )
       return death_knight_pet_t::available();
 
     timespan_t time_to_next =
-        timespan_t::from_seconds( ( 40 - energy ) / resource_regen_per_second( RESOURCE_ENERGY ) );
+        timespan_t::from_seconds( ( resource_thresholds.front() - energy ) / resource_regen_per_second( RESOURCE_ENERGY ) );
 
     return std::max( time_to_next, death_knight_pet_t::available() );
   }

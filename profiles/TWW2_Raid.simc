@@ -6,8 +6,8 @@ default_actions=1
 # TWW2_Death_Knight_Frost.simc
 # TWW2_Death_Knight_Frost_Rider.simc
 # TWW2_Death_Knight_Frost_Deathbringer.simc
-# TWW2_Death_Knight_Unholy.simc
-# TWW2_Death_Knight_Unholy_Rider.simc
+TWW2_Death_Knight_Unholy.simc
+TWW2_Death_Knight_Unholy_Rider.simc
 
 TWW2_Demon_Hunter_Havoc.simc
 TWW2_Demon_Hunter_Havoc_Fel-Scarred.simc

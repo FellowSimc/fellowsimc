@@ -5,7 +5,7 @@ level=80
 race=orc
 role=spell
 position=ranged_back
-talents=CIQAAAAAAAAAAAAAAAAAAAAAAAMmZAAAAAAAAAAAAAGmFDzMzitZmZGjZmZZwsxMzMjZjBGjhZxsN1MDWgxMDAEgZbW2CmNWA
+talents=CIQAAAAAAAAAAAAAAAAAAAAAAMDMzDAAAAAAAAAAAAYM2GMzMLbbMzYmZmZZwsxMzMjZjBGjhZxsN1MDWgZmBACwsNbLBzGbA2mB
 
 # Default consumables
 potion=tempered_potion_3
@@ -148,7 +148,7 @@ chest=arachnofrost_vest,id=221176,ilevel=593,enchant=crystalline_radiance_2
 wrists=vitriolic_veinwoven_wraps,id=221182,ilevel=593
 hands=punctured_apiary_gloves,id=221067,ilevel=593
 waist=honorbound_retainers_sash,id=221121,ilevel=593
-legs=archaic_venomancers_footwraps,id=221164,ilevel=593,enchant=sunset_spellthread_2
+legs=archaic_venomancers_legwraps,id=221164,ilevel=593,enchant=sunset_spellthread_2
 feet=membranous_slippers,id=221149,ilevel=593
 finger1=wicks_golden_loop,id=221099,ilevel=593,enchant=radiant_mastery_2
 finger2=85year_tenure_ring,id=221198,ilevel=593,enchant=radiant_mastery_2

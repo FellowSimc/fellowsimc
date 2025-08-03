@@ -4,7 +4,7 @@ race=maghar_orc
 spec=shadow
 role=spell
 position=ranged_back
-talents=CIQAAAAAAAAAAAAAAAAAAAAAAAmxYAAAAAAAAAAAAMMbmxMzswMzMjxMzsMY2YmZmxsxAjxwsY2mamBLwMzMAQAmtZbJY2YBA
+talents=CIQAAAAAAAAAAAAAAAAAAAAAAMDMzDAAAAAAAAAAAAYM2GMzMLbbMzYmZmZZwsxMzMjZjBGjhZxsN1MDWgZmBACwsNbLBzGbA2mB
 
 head=confessors_unshakable_halo,id=229334,ilevel=684,gem_id=213743,enchant_id=7933
 neck=semicharmed_amulet,id=228841,ilevel=684,gem_id=213482/213458
@@ -31,7 +31,7 @@ race=maghar_orc
 spec=shadow
 role=spell
 position=ranged_back
-talents=CIQAAAAAAAAAAAAAAAAAAAAAAgBmZAAAAAAAAAAAAMMLegxMzsNGzMzMGzsMY2YmZmxsxAjxwsY2mamBLYGAzsZZ0sZAIjxCAA
+talents=CIQAAAAAAAAAAAAAAAAAAAAAAMMMGAAAAAAAAAAAAjxygZmZbZjZmZmZmZZwsxMzMjZjBGjhZxsN1MDWwMAzsZZ0sZAIjxCAsNA
 
 head=confessors_unshakable_halo,id=229334,ilevel=684,gem_id=213743,enchant_id=7933
 neck=semicharmed_amulet,id=228841,ilevel=684,gem_id=213482/213458

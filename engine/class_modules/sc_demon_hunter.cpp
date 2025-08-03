@@ -6172,8 +6172,7 @@ struct fracture_t : public felblade_trigger_t<
 
   fracture_damage_t *mh, *oh;
 
-  fracture_t( demon_hunter_t* p, util::string_view options_str )
-    : base_t( "fracture", p, p->talent.vengeance.fracture, options_str )
+  fracture_t( demon_hunter_t* p ) : base_t( "fracture", p, p->talent.vengeance.fracture, "" )
   {
     int number_of_soul_fragments_to_spawn = as<int>( data().effectN( 1 ).base_value() );
     // divide the number in 2 as half come from main hand, half come from offhand.
@@ -6270,8 +6269,29 @@ struct inner_demon_t : public demon_hunter_spell_t
 struct shear_t : public felblade_trigger_t<
                      art_of_the_glaive_trigger_t<art_of_the_glaive_ability::RENDING_STRIKE, demon_hunter_attack_t>>
 {
-  shear_t( demon_hunter_t* p, util::string_view options_str ) : base_t( "shear", p, p->spec.shear, options_str )
+  fracture_t* fracture;
+
+  shear_t( demon_hunter_t* p, util::string_view options_str )
+    : base_t( "shear", p, p->spec.shear, options_str ), fracture( nullptr )
   {
+    if ( p->talent.vengeance.fracture->ok() )
+    {
+      fracture = new fracture_t( p );
+      cooldown = fracture->cooldown;
+      stats = fracture->stats;
+    }
+  }
+
+  void execute() override
+  {
+    if ( p()->talent.vengeance.fracture->ok() )
+    {
+      fracture->execute_on_target( target );
+//      stats->add_execute( 0_ms, target );
+      return;
+    }
+
+    base_t::execute();
   }
 
   void impact( action_state_t* s ) override
@@ -6313,12 +6333,14 @@ struct shear_t : public felblade_trigger_t<
     return ea;
   }
 
-  bool verify_actor_spec() const override
+  bool ready() override
   {
     if ( p()->talent.vengeance.fracture->ok() )
-      return false;
+    {
+      return fracture->ready();
+    }
 
-    return demon_hunter_attack_t::verify_actor_spec();
+    return demon_hunter_action_t::ready();
   }
 };
 
@@ -7888,8 +7910,6 @@ action_t* demon_hunter_t::create_action( util::string_view name, util::string_vi
     return new felblade_t( this, options_str );
   if ( name == "fel_rush" )
     return new fel_rush_t( this, options_str );
-  if ( name == "fracture" )
-    return new fracture_t( this, options_str );
   if ( name == "shear" )
     return new shear_t( this, options_str );
   if ( name == "soul_cleave" )
@@ -8628,7 +8648,7 @@ void demon_hunter_t::init_spells()
   spec.demon_spikes        = find_specialization_spell( "Demon Spikes" );
   spec.infernal_strike     = find_specialization_spell( "Infernal Strike" );
   spec.soul_cleave         = find_specialization_spell( "Soul Cleave" );
-  spec.shear               = find_specialization_spell( "Shear" );
+  spec.shear               = find_spell( 203782, DEMON_HUNTER_VENGEANCE );
   spec.soul_cleave_2       = find_rank_spell( "Soul Cleave", "Rank 2" );
   spec.riposte             = find_specialization_spell( "Riposte" );
   spec.soul_fragments_buff = find_spell( 203981, DEMON_HUNTER_VENGEANCE );

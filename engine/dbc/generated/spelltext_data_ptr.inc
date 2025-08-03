@@ -1,5 +1,5 @@
 // Spell text, wow build 11.2.0.62253
-static constexpr std::array<spelltext_data_t, 28027> __ptr_spelltext_data { {
+static constexpr std::array<spelltext_data_t, 28029> __ptr_spelltext_data { {
   {      17, "Shields an ally for $d, absorbing $s1 damage.", "Absorbs $w1 damage.", 0 },
   {      53, "Stab the target, causing ${$s2*$<mult>} Physical damage. Damage increased by $s4% when you are behind your target$?s319949[, and critical strikes apply Find Weakness for $319949s1 sec][].\r\n\r\n|cFFFFFFFFAwards $s3 combo $lpoint:points;.|r", 0, 0 },
   {      56, "Stuns target for $d.", "Stunned.", 0 },
@@ -27950,6 +27950,8 @@ static constexpr std::array<spelltext_data_t, 28027> __ptr_spelltext_data { {
   { 1242270, "$@spelldesc322740", 0, 0 },
   { 1242326, "Channel for $1241801s5 sec to invoke the wrath of the idol, increasing your Critical Strike by $1241801s1 for $1241806d. The force slams the earth, dealing $1241801s2 Nature damage to all nearby enemies and increasing Critical Strike by $1241801s3 per enemy hit, up to a maximum of $1241801s4.", 0, 0 },
   { 1242347, "Increases $pri by $s1 for $d. Augment Rune. Persists through death.", "$pri increased by $w1. Persists through death.", 0 },
+  { 1242352, "Stomps the ground, dealing $s1 Physical damage to all nearby enemies.", 0, 0 },
+  { 1242373, "Stomps the ground, dealing $s1 Physical damage to your target. Deals reduced damage to secondary targets.", 0, 0 },
   { 1242666, "Increases Shadow Crash damage by $s1%.", 0, 0 },
   { 1242779, "Increases the critical strike chance of Shadowy Apparitions by $s1% and their critical strike damage by $s2%.", 0, 0 },
   { 1242862, "Increases the critical strike chance of Vampiric Touch and Shadow Word: Pain by $s1% and their critical strike damage by $s2%.", 0, 0 },

@@ -4469,7 +4469,10 @@ struct explosive_shot_base_t : public hunter_ranged_attack_t
     p()->buffs.bombardier->decrement();
 
     if ( p()->talents.shrapnel_shot.ok() )
+    {
       p()->buffs.lock_and_load->trigger();
+      p()->cooldowns.aimed_shot->reset( false );
+    }
   }
 
   double cost_pct_multiplier() const override
@@ -5863,6 +5866,10 @@ struct aimed_shot_t : public aimed_shot_base_t
     if ( double_tap && p()->buffs.double_tap->up() )
     {
       double_tap->execute_on_target( target );
+      
+      if ( aspect_of_the_hydra && tl.size() > 1 )
+        aspect_of_the_hydra->execute_on_target( tl[ 1 ] );
+
       p()->buffs.double_tap->expire();
     }
 
@@ -8032,7 +8039,7 @@ action_t* hunter_t::create_action( util::string_view name, util::string_view opt
       return new arcane_shot_t( this, options_str );
   }
 
-  if ( name == "kill_shot" )
+  if ( name == "kill_shot" || name == "black_arrow" )
   {
     if ( talents.black_arrow.ok() )
       return new black_arrow_t( this, options_str );
@@ -9796,10 +9803,8 @@ void hunter_t::create_options()
   player_t::create_options();
 
   add_option( opt_string( "summon_pet", options.summon_pet_str ) );
-  add_option( opt_timespan( "hunter.pet_attack_speed", options.pet_attack_speed,
-                            0.5_s, 4_s ) );
-  add_option( opt_timespan( "hunter.pet_basic_attack_delay", options.pet_basic_attack_delay,
-                            0_ms, 0.6_s ) );
+  add_option( opt_timespan( "hunter.pet_attack_speed", options.pet_attack_speed, 0.5_s, 4_s ) );
+  add_option( opt_timespan( "hunter.pet_basic_attack_delay", options.pet_basic_attack_delay, 0_ms, 0.6_s ) );
   add_option( opt_bool( "max_prio_damage", options.max_prio_damage ) );
 }
 

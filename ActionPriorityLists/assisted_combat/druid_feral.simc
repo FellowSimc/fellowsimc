@@ -37,6 +37,5 @@ actions.cooldowns+=/blood_fury
 actions.cooldowns+=/berserking
 actions.cooldowns+=/fireblood
 actions.cooldowns+=/ancestral_call
-actions.cooldowns+=/use_items
 actions.cooldowns+=/berserk
 actions.cooldowns+=/incarnation

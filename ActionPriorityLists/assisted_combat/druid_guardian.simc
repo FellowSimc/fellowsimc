@@ -28,7 +28,6 @@ actions.cooldowns+=/blood_fury
 actions.cooldowns+=/berserking
 actions.cooldowns+=/fireblood
 actions.cooldowns+=/ancestral_call
-actions.cooldowns+=/use_items
 actions.cooldowns+=/berserk
 actions.cooldowns+=/incarnation
 actions.cooldowns+=/rage_of_the_sleeper

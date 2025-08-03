@@ -14649,6 +14649,7 @@ void death_knight_t::init_blizzard_action_list()
       break;
     case DEATH_KNIGHT_FROST:
       cooldowns->add_action( "breath_of_sindragosa" );
+      cooldowns->add_action( "raise_dead" );
       break;
     case DEATH_KNIGHT_UNHOLY:
       cooldowns->add_action( "raise_abomination" );

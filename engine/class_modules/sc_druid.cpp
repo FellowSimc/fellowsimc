@@ -594,6 +594,7 @@ struct druid_t final : public parse_player_effects_t
     unsigned adaptive_swarm_melee_targets = 7;
     unsigned adaptive_swarm_ranged_targets = 12;
     std::string adaptive_swarm_prepull_setup = "";
+    bool disable_ready_trigger = false;
 
     // Guardian
 
@@ -11348,6 +11349,11 @@ void druid_t::init_base_stats()
   resources.base_regen_per_second[ RESOURCE_ENERGY ] *=
     1.0 + find_effect( talent.tireless_energy, A_MOD_POWER_REGEN_PERCENT ).percent();
 
+  if ( options.disable_ready_trigger )
+    ready_type = ready_e::READY_POLL;
+  else if ( specialization() == DRUID_FERAL )
+    ready_type = ready_e::READY_TRIGGER;
+
   base_gcd = 1.5_s;
 }
 
@@ -12704,7 +12710,6 @@ void druid_t::apl_guardian_ptr()
 #include "class_modules/apl/guardian_apl_ptr.inc"
 }
 
-
 void druid_t::apl_restoration()
 {
 #include "class_modules/apl/restoration_druid_apl.inc"
@@ -13491,8 +13496,6 @@ void druid_t::init_blizzard_action_list()
 
   player_t::init_blizzard_action_list();
 
-  cd->add_action( "use_items" );
-
   switch ( specialization() )
   {
     case DRUID_BALANCE:
@@ -13680,15 +13683,16 @@ double druid_t::resource_gain( resource_e r, double amount, gain_t* g, action_t*
 // druid_t::available =======================================================
 timespan_t druid_t::available() const
 {
-  if ( primary_resource() != RESOURCE_ENERGY )
+  if ( ready_type != ready_e::READY_TRIGGER )
     return player_t::available();
 
   double energy = resources.current[ RESOURCE_ENERGY ];
 
-  if ( energy > 25 )
-    return 100_ms;
+  if ( energy >= 20 )
+    return player_t::available();
 
-  return std::max( timespan_t::from_seconds( ( 25 - energy ) / resource_regen_per_second( RESOURCE_ENERGY ) ), 100_ms );
+  return std::max( timespan_t::from_seconds( ( 20 - energy ) / resource_regen_per_second( RESOURCE_ENERGY ) ),
+                   player_t::available() );
 }
 
 // druid_t::precombat_init (called before precombat apl)=======================
@@ -14235,6 +14239,7 @@ void druid_t::create_options()
   add_option( opt_uint( "druid.adaptive_swarm_melee_targets", options.adaptive_swarm_melee_targets, 1U, 29U ) );
   add_option( opt_uint( "druid.adaptive_swarm_ranged_targets", options.adaptive_swarm_ranged_targets, 1U, 29U ) );
   add_option( opt_func( "druid.adaptive_swarm_prepull_setup", parse_swarm_setup ) );
+  add_option( opt_bool( "druid.disable_ready_trigger", options.disable_ready_trigger ) );
 
   // Guardian
 

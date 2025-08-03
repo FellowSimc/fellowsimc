@@ -332,7 +332,7 @@ void pet_t::create_buffs()
       ->set_max_stack( 1 )
       ->set_expire_callback( [ this ]( buff_t*, int, timespan_t d )
       {
-        if ( !sim->event_mgr.canceled && d > timespan_t::zero() )
+        if ( !sim->event_mgr.canceled && d == timespan_t::zero() )
           trigger_ready();
       } );
 

@@ -1433,6 +1433,7 @@ private:
   void apl_balance();
   void apl_balance_ptr();
   void apl_guardian();
+  void apl_guardian_ptr();
   void apl_restoration();
 
   target_specific_t<druid_td_t> target_data;
@@ -2534,8 +2535,8 @@ struct thriving_growth_rng_t : public proc_rng_t
                        ? 1.0 + p->sets->set( HERO_WILDSTALKER, TWW3, B2 )->effectN( 4 ).percent()
                        : 1.0;
 
-    auto vine_exp  = p->is_ptr() ? p->talent.thriving_growth->effectN( 6 ).percent() : 0.75;
-    auto bloom_exp = p->is_ptr() ? p->talent.thriving_growth->effectN( 7 ).percent() : 0.75;
+    auto vine_exp  = p->talent.thriving_growth->effectN( 6 ).percent();
+    auto bloom_exp = p->talent.thriving_growth->effectN( 7 ).percent();
 
     c_rip  = { &p->dot_lists.rip, p->active.bloodseeker_vines, p->talent.thriving_growth->effectN( 1 ).base_value(),
                vine_mul, vine_exp };
@@ -12698,6 +12699,12 @@ void druid_t::apl_guardian()
 #include "class_modules/apl/guardian_apl.inc"
 }
 
+void druid_t::apl_guardian_ptr()
+{
+#include "class_modules/apl/guardian_apl_ptr.inc"
+}
+
+
 void druid_t::apl_restoration()
 {
 #include "class_modules/apl/restoration_druid_apl.inc"
@@ -13460,11 +13467,11 @@ void druid_t::init_action_list()
 
   switch ( specialization() )
   {
-    case DRUID_FERAL:       is_ptr() ? apl_feral_ptr() : apl_feral();     break;
-    case DRUID_BALANCE:     is_ptr() ? apl_balance_ptr() : apl_balance(); break;
-    case DRUID_GUARDIAN:    apl_guardian();                               break;
-    case DRUID_RESTORATION: apl_restoration();                            break;
-    default:                apl_default();                                break;
+    case DRUID_FERAL:       apl_feral();       break;
+    case DRUID_BALANCE:     apl_balance();     break;
+    case DRUID_GUARDIAN:    apl_guardian();    break;
+    case DRUID_RESTORATION: apl_restoration(); break;
+    default:                apl_default();     break;
   }
 
   use_default_action_list = true;

@@ -1,4 +1,4 @@
-SimulationCraft 1120-01 for World of Warcraft 11.2.0.62253 Live
+SimulationCraft 1120-01 for World of Warcraft 11.2.0.62387 Live
 Name             : Block (desc=Passive) (id=107) [Passive] 
 Class            : Warrior, Paladin, Shaman
 School           : Physical
@@ -15866,7 +15866,6 @@ Attributes       : Extra Initial Period (169), Spell Haste Affects Periodic (173
 Effects          :
 #1 (id=1119176)  : Apply Aura (6) | Periodic Heal (8): every 1 seconds
                    Base Value: 0 | Scaled Value: 0 | SP Coefficient: 0.135 | Target: Friendly (21)
-Hotfixed         : SP Coefficient (0.27 -> 0.135)
 Description      : $@spelldesc431377
 Tooltip          : Healing $w1 every $t1 sec.
 

@@ -232,10 +232,12 @@ void set_bonus_t::initialize()
   if ( actor->sim->disable_set_bonuses == 1 )  // Or if global disable set bonus override is used.
     return;
 
-  initialize_items();
-
   if ( actor->sim->enable_all_sets )
     enable_all_sets();
+  else if ( !actor->set_bonus_str.empty() )
+    parse_set_bonus_string();
+
+  initialize_items();
 
   // Enable set bonuses then. This is a combination of item-based enablation
   // (enough items to enable a set bonus), and override based set bonus
@@ -255,7 +257,10 @@ void set_bonus_t::initialize()
         bool is_overridden = data.overridden > 0;
         bool is_in_range = set_bonus_spec_count[ idx ][ spec_idx ] >= data.bonus->bonus && data.overridden == -1;
         bool is_allowed_spec = data.bonus->has_spec( actor->_spec );
-        bool is_allowed_trait_sub_tree = data.bonus->trait_sub_tree != -1 ? range::contains( actor->player_sub_trees, as<unsigned>( data.bonus->trait_sub_tree ) ) : false;
+        bool is_allowed_trait_sub_tree =
+          data.bonus->trait_sub_tree != -1
+            ? range::contains( actor->player_sub_trees, as<unsigned>( data.bonus->trait_sub_tree ) )
+            : false;
         bool is_equippable = is_allowed_spec || is_allowed_trait_sub_tree;
 
         bool enable_2_set = util::str_compare_ci( actor->sim->enable_2_set, data.bonus->tier );
@@ -285,6 +290,72 @@ void set_bonus_t::initialize()
   }
 
   actor->sim->print_debug( "Initialized set bonus: {}", *this );
+}
+
+void set_bonus_t::parse_set_bonus_string()
+{
+  auto do_error = [ this ]( std::string_view value ) {
+    actor->sim->error( error_level_e::MODERATE, "{} invalid 'set_bonus' option {}, available options: {}", *actor,
+                       value, generate_set_bonus_options() );
+    actor->sim->cancel();
+  };
+
+  auto split = util::string_split<std::string_view>( actor->set_bonus_str, "/" );
+
+  for ( auto value : split )
+  {
+    set_bonus_type_e tier = SET_BONUS_NONE;
+    set_bonus_e bonus = B_NONE;
+    bool enabled = false;
+    specialization_e spec = SPEC_NONE;
+    hero_talent_e hero = HERO_NONE;
+
+    if ( parse_set_bonus_option_verbose( value, tier, bonus, enabled, spec, hero ) )
+    {
+      set_bonus_spec_data[ tier ][ dbc::composite_idx( spec, hero, actor->dbc->ptr ) ][ bonus ].overridden = enabled;
+      continue;
+    }
+
+    auto set_bonus_split = util::string_split<std::string_view>( value, "=" );
+
+    if ( set_bonus_split.size() != 2 )
+    {
+      do_error( value );
+      return;
+    }
+
+    int opt_val = util::to_int( set_bonus_split[ 1 ] );
+    if ( opt_val != 0 && opt_val != 1 )
+    {
+      do_error( value );
+      return;
+    }
+
+    if ( !parse_set_bonus_option( set_bonus_split[ 0 ], tier, bonus, hero ) )
+    {
+      do_error( value );
+      return;
+    }
+
+    if ( hero != HERO_NONE )
+    {
+      set_bonus_spec_data[ tier ][ dbc::composite_idx( spec, hero, actor->dbc->ptr ) ][ bonus ].overridden = opt_val;
+      continue;
+    }
+
+    const auto* item_set_bonus = set_bonus_spec_data[ tier ][ dbc::spec_idx( spec, actor->dbc->ptr ) ][ bonus ].bonus;
+
+    if ( !item_set_bonus || item_set_bonus->trait_sub_tree != -1 )
+    {
+      actor->sim->error(
+        "The unspecified set bonus option does not support tier sets enabled by TraitSubTree! Check Equipment page of "
+        "wiki for alternative syntax." );
+      actor->sim->cancel();
+      return;
+    }
+
+    set_bonus_spec_data[ tier ][ dbc::spec_idx( spec, actor->dbc->ptr ) ][ bonus ].overridden = opt_val;
+  }
 }
 
 void set_bonus_t::enable_all_sets()

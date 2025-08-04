@@ -838,64 +838,19 @@ bool parse_source( sim_t* sim, std::string_view, std::string_view value )
 
 bool parse_set_bonus( sim_t* sim, std::string_view, std::string_view value )
 {
-  static constexpr const char* error_str = "{} invalid 'set_bonus' option value '{}' given, available options: {}";
-
   player_t* p = sim->active_player;
 
-  set_bonus_type_e tier = SET_BONUS_NONE;
-  set_bonus_e bonus = B_NONE;
-  bool enabled = false;
-  specialization_e spec = SPEC_NONE;
-  hero_talent_e hero = HERO_NONE;
-
-  if ( p->sets->parse_set_bonus_option_verbose( value, tier, bonus, enabled, spec, hero ) )
+  if ( !p->set_bonus_str.empty() )
   {
-    p->sets->set_bonus_spec_data[ tier ][ dbc::composite_idx( spec, hero, sim->dbc->ptr ) ][ bonus ].overridden =
-      enabled;
-    return true;
+    sim->error( error_level_e::MODERATE,
+                "Starting with 12.0, multiples lines of the 'set_bonus=' option must be either A) on a single line, delimited by '/', or B) have extra lines concatenated by using 'set_bonus+=', note the '+='." );
+
+    p->set_bonus_str += fmt::format( "/{}", value );
   }
-
-  auto set_bonus_split = util::string_split<std::string_view>( value, "=" );
-
-  if ( set_bonus_split.size() != 2 )
+  else
   {
-    sim->error( error_str, p->name(), value, p->sets->generate_set_bonus_options() );
-    return false;
+    p->set_bonus_str = std::string{ value };
   }
-
-  int opt_val = util::to_int( set_bonus_split[ 1 ] );
-  if ( opt_val != 0 && opt_val != 1 )
-  {
-    sim->error( error_str, p->name(), value, p->sets->generate_set_bonus_options() );
-    return false;
-  }
-
-  if ( !p->sets->parse_set_bonus_option( set_bonus_split[ 0 ], tier, bonus, hero ) )
-  {
-    sim->error( error_str, p->name(), value, p->sets->generate_set_bonus_options() );
-    return false;
-  }
-
-  if ( hero != HERO_NONE )
-  {
-    p->sets->set_bonus_spec_data[ tier ][ dbc::composite_idx( spec, hero, sim->dbc->ptr ) ][ bonus ].overridden =
-      opt_val;
-    return true;
-  }
-
-  const auto* item_set_bonus =
-    p->sets->set_bonus_spec_data[ tier ][ dbc::spec_idx( p->specialization(), sim->dbc->ptr ) ][ bonus ].bonus;
-
-  if ( !item_set_bonus || item_set_bonus->trait_sub_tree != -1 )
-  {
-    p->sim->error(
-      "The unspecified set bonus option does not support tier sets enabled by TraitSubTree! Check Equipment page of "
-      "wiki for alternative syntax." );
-    return false;
-  }
-
-  p->sets->set_bonus_spec_data[ tier ][ dbc::spec_idx( p->specialization(), sim->dbc->ptr ) ][ bonus ].overridden =
-    opt_val;
 
   return true;
 }

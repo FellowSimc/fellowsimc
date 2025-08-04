@@ -63,6 +63,9 @@ struct set_bonus_t
   // Initialize set bonuses in earnest
   void initialize();
 
+  // Override equipped gear and enable/disable bonuses via set_bonus= option
+  void parse_set_bonus_string();
+
   // Override all set bonuses to be enabled
   void enable_all_sets();
 

@@ -450,6 +450,7 @@ struct player_t : public actor_t
   gear_stats_t gear, enchant; // Option based stats
   gear_stats_t total_gear; // composite of gear, enchant and for non-pets sim -> enchant
   std::unique_ptr<set_bonus_t> sets;
+  std::string set_bonus_str;
   meta_gem_e meta_gem;
   bool matching_gear;
   std::unique_ptr<cooldown_t> item_cooldown;

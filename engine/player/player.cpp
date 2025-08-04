@@ -3545,6 +3545,8 @@ void player_t::parse_assisted_combat_step( const assisted_combat_step_data_t& st
   std::string comment = "";
   bool show_diff = false;
   bool cooldown_allow_casting_success = false;
+  bool allow_duplicates = true;
+
   for ( const auto& rule : assisted_combat_rule_data_t::data( step.id, is_ptr() ) )
   {
     if ( rule.condition_type == COOLDOWN_ALLOW_CASTING_SUCCESS )
@@ -3557,6 +3559,9 @@ void player_t::parse_assisted_combat_step( const assisted_combat_step_data_t& st
       expr += expr.empty() ? derived_combat_rule.expr : "&" + derived_combat_rule.expr;
     if ( !derived_combat_rule.comment.empty() )
       comment += comment.empty() ? derived_combat_rule.comment : ", " + derived_combat_rule.comment;
+    if ( !derived_combat_rule.allow_duplicates )
+      allow_duplicates = false;
+
     if ( !base_combat_rule.expr.empty() )
       base_expr += base_expr.empty() ? base_combat_rule.expr : "&" + base_combat_rule.expr;
 
@@ -3578,6 +3583,10 @@ void player_t::parse_assisted_combat_step( const assisted_combat_step_data_t& st
 
     if ( cooldown_allow_casting_success )
       action_str += ",cooldown_allow_casting_success=1";
+
+    // Optional duplicate filtering for messy action lists or duplicated overriden criteria
+    if ( !allow_duplicates && range::contains( assisted_combat->action_list, action_str, []( const auto& entry ) { return entry.action_; } ) )
+      continue;
 
     assisted_combat->add_action( action_str, comment );
   }

@@ -115,21 +115,28 @@ struct parsed_assisted_combat_rule_t
   std::string expr;
   std::string comment;
   bool show_diff;
+  bool allow_duplicates;
 
   parsed_assisted_combat_rule_t( const char* expr )
-    : expr( expr ), comment( {} ), show_diff( false ) {}
+    : expr( expr ), comment( {} ), show_diff( false ), allow_duplicates( true ) {}
 
   parsed_assisted_combat_rule_t( std::string expr )
-    : expr( expr ), comment( {} ), show_diff( false ) {}
+    : expr( expr ), comment( {} ), show_diff( false ), allow_duplicates( true ) {}
 
   parsed_assisted_combat_rule_t( std::string expr, bool show_diff )
-    : expr( expr ), comment( {} ), show_diff( show_diff ) {}
+    : expr( expr ), comment( {} ), show_diff( show_diff ), allow_duplicates( true ) {}
 
   parsed_assisted_combat_rule_t( std::string expr, const char* comment )
-    : expr( expr ), comment( comment ), show_diff( true ) {}
+    : expr( expr ), comment( comment ), show_diff( true ), allow_duplicates( true ) {}
 
   parsed_assisted_combat_rule_t( std::string expr, std::string comment, bool show_diff )
-    : expr( expr ), comment( comment ), show_diff( show_diff ) {}
+    : expr( expr ), comment( comment ), show_diff( show_diff ), allow_duplicates( true ) {}
+
+  parsed_assisted_combat_rule_t( std::string expr, const char* comment, bool show_diff, bool allow_duplicates )
+    : expr( expr ), comment( comment ), show_diff( show_diff ), allow_duplicates( allow_duplicates ) {}
+
+  parsed_assisted_combat_rule_t( std::string expr, std::string comment, bool show_diff, bool allow_duplicates )
+    : expr( expr ), comment( comment ), show_diff( show_diff ), allow_duplicates( allow_duplicates ) {}
 
   operator std::string() { return expr; }
 };

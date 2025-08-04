@@ -10297,6 +10297,8 @@ std::vector<std::string> rogue_t::action_names_from_spell_id( unsigned int spell
 
   if ( spell_id == 1752 && specialization() == ROGUE_ASSASSINATION )
     return { "mutilate" };
+  if ( spell_id == 1752 && specialization() == ROGUE_SUBTLETY )
+    return { "backstab", "gloomblade" };
 
   return player_t::action_names_from_spell_id( spell_id );
 }
@@ -10324,6 +10326,10 @@ parsed_assisted_combat_rule_t rogue_t::parse_assisted_combat_rule( const assiste
         break;
     }
   }
+
+  if ( rule.condition_type == TARGET_COUNT_NEAR_TARGET_GREATER ||
+       rule.condition_type == TARGET_COUNT_NEAR_PLAYER_GREATER )
+    return fmt::format( "active_enemies>={}", rule.condition_value_1 );
 
   if ( rule.condition_type == COMBO_POINTS_GREATER )
     return fmt::format( "effective_combo_points>={}", rule.condition_value_1 );
@@ -10371,6 +10377,9 @@ void rogue_t::init_blizzard_action_list()
         cooldowns->add_action( "adrenaline_rush,if=!buff.adrenaline_rush.up" );
         cooldowns->add_action( "vanish,if=!stealthed.all" );
         cooldowns->add_action( "keep_it_rolling,if=rtb_buffs>=4" );
+        break;
+      case ROGUE_SUBTLETY:
+        cooldowns->add_action( "shadow_blades,if=buff.shadow_dance.up" );
         break;
       default:
         break;

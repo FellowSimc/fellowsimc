@@ -4376,6 +4376,7 @@ struct explosive_shot_base_t : public hunter_ranged_attack_t
 
   timespan_t grenade_juggler_reduction = 0_s;
   damage_t* explosion = nullptr;
+  bool triggers_shrapnel_shot_lnl = true;
 
   explosive_shot_base_t( util::string_view n, hunter_t* p, const spell_data_t* s ) : hunter_ranged_attack_t( n, p, s )
   {
@@ -4468,7 +4469,7 @@ struct explosive_shot_base_t : public hunter_ranged_attack_t
     p()->cooldowns.wildfire_bomb->adjust( -grenade_juggler_reduction );
     p()->buffs.bombardier->decrement();
 
-    if ( p()->talents.shrapnel_shot.ok() )
+    if ( triggers_shrapnel_shot_lnl && p()->talents.shrapnel_shot.ok() )
     {
       p()->buffs.lock_and_load->trigger();
       p()->cooldowns.aimed_shot->reset( false );
@@ -5731,7 +5732,10 @@ struct aimed_shot_t : public aimed_shot_base_t
 
   struct explosive_shot_tww_s2_mm_4pc_t : public explosive_shot_background_t
   {
-    explosive_shot_tww_s2_mm_4pc_t( util::string_view n, hunter_t* p ) : explosive_shot_background_t( n, p ) {}
+    explosive_shot_tww_s2_mm_4pc_t( util::string_view n, hunter_t* p ) : explosive_shot_background_t( n, p )
+    {
+      triggers_shrapnel_shot_lnl = false;
+    }
 
     double composite_persistent_multiplier( const action_state_t *state ) const override
     {
@@ -5877,11 +5881,10 @@ struct aimed_shot_t : public aimed_shot_base_t
     {
       p()->buffs.lock_and_load->decrement();
       p()->cooldowns.explosive_shot->adjust( -p()->talents.magnetic_gunpowder->effectN( 2 ).time_value() );
-    }
 
-    // The Explosive Shot can trigger Lock and Load with Shrapnel Shot.
-    if ( lock_and_loaded && tww_s2_mm_4pc )
-      tww_s2_mm_4pc->execute_on_target( target );
+      if ( tww_s2_mm_4pc )
+        tww_s2_mm_4pc->execute_on_target( target );
+    }
 
     lock_and_loaded = false;
   }
@@ -9019,7 +9022,8 @@ void hunter_t::create_buffs()
 
   buffs.eyes_closed = make_buff( this, "eyes_closed", talents.eyes_closed->effectN( 1 ).trigger() );
 
-  buffs.lunar_storm_ready = make_buff( this, "lunar_storm_ready", talents.lunar_storm_ready_buff );
+  buffs.lunar_storm_ready = make_buff( this, "lunar_storm_ready", talents.lunar_storm_ready_buff )
+    ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
   
   buffs.lunar_storm_cooldown = make_buff( this, "lunar_storm_cooldown", talents.lunar_storm_cooldown_buff )
     ->set_stack_change_callback(

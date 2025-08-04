@@ -337,24 +337,14 @@ void set_bonus_t::parse_set_bonus_string()
       return;
     }
 
+    int _idx = 0;
+
     if ( hero != HERO_NONE )
-    {
-      set_bonus_spec_data[ tier ][ dbc::composite_idx( spec, hero, actor->dbc->ptr ) ][ bonus ].overridden = opt_val;
-      continue;
-    }
+      _idx = dbc::composite_idx( spec, hero, actor->dbc->ptr );
+    else
+      _idx = dbc::spec_idx( actor->specialization(), actor->dbc->ptr );
 
-    const auto* item_set_bonus = set_bonus_spec_data[ tier ][ dbc::spec_idx( spec, actor->dbc->ptr ) ][ bonus ].bonus;
-
-    if ( !item_set_bonus || item_set_bonus->trait_sub_tree != -1 )
-    {
-      actor->sim->error(
-        "The unspecified set bonus option does not support tier sets enabled by TraitSubTree! Check Equipment page of "
-        "wiki for alternative syntax." );
-      actor->sim->cancel();
-      return;
-    }
-
-    set_bonus_spec_data[ tier ][ dbc::spec_idx( spec, actor->dbc->ptr ) ][ bonus ].overridden = opt_val;
+    set_bonus_spec_data[ tier ][ _idx ][ bonus ].overridden = opt_val;
   }
 }
 
@@ -524,16 +514,13 @@ bool set_bonus_t::parse_set_bonus_option( util::string_view opt_str, set_bonus_t
 
   auto bonus_offset = split.back().find( "pc" );
   if ( bonus_offset == std::string::npos )
-  {
     return false;
-  }
 
-  auto b = util::to_unsigned( split.back().substr( 0, bonus_offset ) );
-  if ( b > B_MAX )
-  {
+  auto bonus_value = util::to_unsigned( split.back().substr( 0, bonus_offset ) );
+  if ( bonus_value > B_MAX )
     return false;
-  }
-  bonus = static_cast<set_bonus_e>( b - 1 );
+
+  bonus = static_cast<set_bonus_e>( bonus_value - 1 );
 
   auto set_name_long = opt_str.substr( 0, opt_str.size() - split.back().size() - 1 );
   auto set_name_short = split.front();
@@ -545,32 +532,43 @@ bool set_bonus_t::parse_set_bonus_option( util::string_view opt_str, set_bonus_t
     if ( bonus.class_id != -1 && bonus.class_id != util::class_id( actor->type ) )
       continue;
 
-    if ( util::str_compare_ci( set_name_long, bonus.set_opt_name ) ||
-         util::str_compare_ci( set_name_long, bonus.tier ) )
+    // process hero sets
+    if ( bonus.trait_sub_tree != -1 && util::str_compare_ci( set_name_short, bonus.tier ) )
     {
-      tier = static_cast<set_bonus_type_e>( bonus.enum_id );
-      break;
-    }
-
-    // check hero set syntax `<tier>_<tokenized hero tree>_#pc`
-    if ( bonus.trait_sub_tree != -1 && split.size() >= 3 && util::str_compare_ci( set_name_short, bonus.tier ) &&
-         trait_data_t::is_hero_tree_valid( static_cast<hero_talent_e>( bonus.trait_sub_tree ), actor->_spec,
-                                           actor->dbc->ptr ) )
-    {
-      auto hero_name =
-        opt_str.substr( set_name_short.size() + 1, opt_str.size() - split.back().size() - set_name_short.size() - 2 );
-      int hero_tree_id = trait_data_t::get_hero_tree_id( hero_name, actor->dbc->ptr );
-
-      if ( bonus.trait_sub_tree == hero_tree_id )
+      // check standard syntax `<tier>_#pc` against player's hero tree
+      if ( split.size() == 2 && range::contains( actor->player_sub_trees, bonus.trait_sub_tree ) )
       {
         tier = static_cast<set_bonus_type_e>( bonus.enum_id );
-        hero = static_cast<hero_talent_e>( hero_tree_id );
-        break;
+        hero = static_cast<hero_talent_e>( bonus.trait_sub_tree );
+        return true;
       }
+      // check hero set syntax `<tier>_<tokenized hero tree>_#pc`
+      else if ( split.size() >= 3 &&
+                trait_data_t::is_hero_tree_valid( static_cast<hero_talent_e>( bonus.trait_sub_tree ), actor->_spec,
+                                                  actor->dbc->ptr ) )
+      {
+        auto hero_name =
+          opt_str.substr( set_name_short.size() + 1, opt_str.size() - split.back().size() - set_name_short.size() - 2 );
+        int hero_tree_id = trait_data_t::get_hero_tree_id( hero_name, actor->dbc->ptr );
+
+        if ( bonus.trait_sub_tree == hero_tree_id )
+        {
+          tier = static_cast<set_bonus_type_e>( bonus.enum_id );
+          hero = static_cast<hero_talent_e>( hero_tree_id );
+          return true;
+        }
+      }
+    }
+    // process normal sets
+    else if ( util::str_compare_ci( set_name_long, bonus.set_opt_name ) ||
+              util::str_compare_ci( set_name_long, bonus.tier ) )
+    {
+      tier = static_cast<set_bonus_type_e>( bonus.enum_id );
+      return true;
     }
   }
 
-  return tier != SET_BONUS_NONE && bonus != B_NONE;
+  return false;
 }
 
 bool set_bonus_t::parse_set_bonus_option_verbose( util::string_view opt_str, set_bonus_type_e& tier, set_bonus_e& bonus,

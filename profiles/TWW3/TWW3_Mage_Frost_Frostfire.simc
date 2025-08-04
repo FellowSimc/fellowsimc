@@ -1,3 +1,18 @@
+mage="TWW3_Mage_Frost_Frostfire"
+source=default
+spec=frost
+level=80
+race=tauren
+role=spell
+position=ranged_back
+talents=CAEAAAAAAAAAAAAAAAAAAAAAAYGbmtZwMMmFDmZGNGzMmhhZmZYmZmZmxMzMzMzMDMzyMNzsNLAAAoFAAAAAAMAAAAAAAAA
+
+# Default consumables
+potion=tempered_potion_3
+flask=flask_of_alchemical_chaos_3
+food=beledars_bounty
+augmentation=crystallized
+temporary_enchant=main_hand:algari_mana_oil_3
 
 # This default action priority list is automatically created based on your character.
 # It is a attempt to provide you with a action list that is both simple and practicable,
@@ -195,3 +210,33 @@ actions.ss_st+=/ice_lance,if=remaining_winters_chill
 actions.ss_st+=/shifting_power,if=equipped.arazs_ritual_forge&buff.icy_veins.down&cooldown.flurry.charges<2&cooldown.icy_veins.remains>8
 actions.ss_st+=/frostbolt
 actions.ss_st+=/call_action_list,name=movement
+
+head=augurs_ephemeral_widebrim,id=237718,ilevel=723,gem_id=213743
+neck=ornately_engraved_amplifier,id=185842,ilevel=723,gem_id=213497/213461
+shoulders=augurs_ephemeral_orbs_of_power,id=237716,ilevel=723
+back=reshii_wraps,id=235499,bonus_id=9893/12239,gem_id=238045
+chest=zealous_wardens_raiment,id=221126,ilevel=723,enchant_id=7364
+wrists=consecrated_cuffs,id=222815,bonus_id=11109/8960/8795,ilevel=720,gem_id=213470,enchant_id=7397,crafted_stats=36/40
+hands=augurs_ephemeral_mitts,id=237719,ilevel=723
+waist=cord_of_the_dark_word,id=178822,bonus_id=4786/523/10032/12361,gem_id=213485
+legs=augurs_ephemeral_trousers,id=237717,ilevel=723,enchant_id=7531
+feet=interlopers_silken_striders,id=243305,bonus_id=13504,ilevel=723,enchant_id=7418
+finger1=signet_of_collapsing_stars,id=185813,ilevel=723,gem_id=213512/213470,enchant_id=7352
+finger2=high_nerubian_signet,id=221141,ilevel=723,gem_id=213470/213470,enchant_id=7352
+trinket1=arazs_ritual_forge,id=242402,bonus_id=4800/4786/1533/12361
+trinket2=azhiccaran_parapodia,id=242497,bonus_id=4786/3215/12361
+main_hand=voidglass_kris,id=237728,bonus_id=4800/4786/1533/12361,enchant_id=7448
+off_hand=vagabonds_torch,id=222566,bonus_id=11300/8960/8795,ilevel=720
+
+# Gear Summary
+# gear_ilvl=723.06
+# gear_stamina=663349
+# gear_intellect=97727
+# gear_crit_rating=14843
+# gear_haste_rating=18339
+# gear_mastery_rating=7565
+# gear_versatility_rating=17766
+# gear_speed_rating=1250
+# gear_armor=25542
+# set_bonus=name=thewarwithin_season_3,pc=2,hero_tree=frostfire,enable=1
+# set_bonus=name=thewarwithin_season_3,pc=4,hero_tree=frostfire,enable=1

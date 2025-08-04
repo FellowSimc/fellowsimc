@@ -1,3 +1,18 @@
+mage="TWW3_Mage_Fire_Sunfury"
+source=default
+spec=fire
+level=80
+race=tauren
+role=spell
+position=ranged_back
+talents=C8DAAAAAAAAAAAAAAAAAAAAAAYGYxgZYmZxwYmhpxMjZGAAAAAADEwMz0yssMDAwmxMYMzYmxsYWGDzMMz2MWmZZYAAAAAAAA
+
+# Default consumables
+potion=tempered_potion_3
+flask=flask_of_tempered_swiftness_3
+food=beledars_bounty
+augmentation=crystallized
+temporary_enchant=main_hand:algari_mana_oil_3
 
 # This default action priority list is automatically created based on your character.
 # It is a attempt to provide you with a action list that is both simple and practicable,
@@ -123,3 +138,34 @@ actions.sf_filler+=/meteor,if=active_enemies>=2
 actions.sf_filler+=/phoenix_flames,if=buff.heating_up.react|action.fire_blast.cooldown_react|action.phoenix_flames.charges_fractional>1.5|buff.born_of_flame.react
 actions.sf_filler+=/scorch,if=scorch_execute.active
 actions.sf_filler+=/fireball
+
+head=elysian_flame_crown,id=221131,bonus_id=4786/523/3215/12361,gem_id=213743
+neck=duskblazes_desperation,id=237569,bonus_id=4800/4786/1533/12361/8781,gem_id=213470/213494
+shoulders=augurs_ephemeral_orbs_of_power,id=237716,ilevel=723
+back=reshii_wraps,id=235499,bonus_id=9893/12239,gem_id=238045,enchant_id=7415
+chest=augurs_ephemeral_habiliments,id=237721,ilevel=723,enchant_id=7364
+wrists=consecrated_cuffs,id=222815,bonus_id=11109/8960/8792,ilevel=720,gem_id=213470,enchant_id=7397,crafted_stats=36/40
+hands=augurs_ephemeral_mitts,id=237719,bonus_id=4800/4786/1533/12361
+waist=forgeweavers_journal_holster,id=237538,bonus_id=4800/4786/523/1533/12361,gem_id=213494
+legs=augurs_ephemeral_trousers,id=237717,ilevel=723,enchant_id=7534
+feet=interlopers_silken_striders,id=243305,bonus_id=13504,ilevel=723,enchant_id=7418
+finger1=signet_of_collapsing_stars,id=185813,bonus_id=4786/10035/12361/8781,gem_id=213494/213494,enchant_id=7352
+finger2=band_of_the_shattered_soul,id=242405,bonus_id=4800/4786/1533/12361/8781,gem_id=213485/213455,enchant_id=7352
+trinket1=azhiccaran_parapodia,id=242497,ilevel=723
+trinket2=diamantine_voidcore,id=242392,ilevel=723
+main_hand=voidglass_sovereigns_blade,id=237735,bonus_id=4800/4786/1533/12361,enchant_id=7448
+off_hand=vagabonds_torch,id=222566,bonus_id=11300/8960/8792,ilevel=720
+
+# Gear Summary
+# gear_ilvl=723.06
+# gear_stamina=664039
+# gear_intellect=97727
+# gear_crit_rating=2816
+# gear_haste_rating=35696
+# gear_mastery_rating=10133
+# gear_versatility_rating=10014
+# gear_speed_rating=1500
+# gear_armor=25542
+# set_bonus=name=thewarwithin_season_3,pc=2,hero_tree=sunfury,enable=1
+# set_bonus=name=thewarwithin_season_3,pc=4,hero_tree=sunfury,enable=1
+# set_bonus=shards_of_the_void_2pc=1

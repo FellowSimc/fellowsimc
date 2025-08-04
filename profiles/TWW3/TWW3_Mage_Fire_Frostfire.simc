@@ -1,3 +1,18 @@
+mage="TWW3_Mage_Fire_Frostfire"
+source=default
+spec=fire
+level=80
+race=tauren
+role=spell
+position=ranged_back
+talents=C8DAAAAAAAAAAAAAAAAAAAAAAYGMbzgZ8AjZzwYmhpxMjZAAAAAAYmlZamZZWgAAAWMmBzMzYmZmFzyYMzDgZWmBzCDAAAAAAA
+
+# Default consumables
+potion=tempered_potion_3
+flask=flask_of_alchemical_chaos_3
+food=beledars_bounty
+augmentation=crystallized
+temporary_enchant=main_hand:algari_mana_oil_3
 
 # This default action priority list is automatically created based on your character.
 # It is a attempt to provide you with a action list that is both simple and practicable,
@@ -123,3 +138,33 @@ actions.sf_filler+=/meteor,if=active_enemies>=2
 actions.sf_filler+=/phoenix_flames,if=buff.heating_up.react|action.fire_blast.cooldown_react|action.phoenix_flames.charges_fractional>1.5|buff.born_of_flame.react
 actions.sf_filler+=/scorch,if=scorch_execute.active
 actions.sf_filler+=/fireball
+
+head=augurs_ephemeral_widebrim,id=237718,ilevel=723,gem_id=213743
+neck=chrysalis_of_sundered_souls,id=237568,bonus_id=4800/4786/1533/12361/8781,gem_id=213494/213455
+shoulders=augurs_ephemeral_orbs_of_power,id=237716,ilevel=723
+back=reshii_wraps,id=235499,bonus_id=9893/12239,gem_id=238045,enchant_id=7415
+chest=augurs_ephemeral_habiliments,id=237721,ilevel=723,enchant_id=7364
+wrists=consecrated_cuffs,id=222815,bonus_id=11109/8960/8792,ilevel=720,gem_id=213470,enchant_id=7397,crafted_stats=36/40
+hands=augurs_ephemeral_mitts,id=237719,bonus_id=4800/4786/1533/12361
+waist=forgeweavers_journal_holster,id=237538,bonus_id=4800/4786/523/1533/12361,gem_id=213485
+legs=stellar_navigation_slacks,id=237542,ilevel=723,enchant_id=7534
+feet=interlopers_silken_striders,id=243305,bonus_id=13504,ilevel=723,enchant_id=7418
+finger1=devout_zealots_ring,id=221136,bonus_id=4786/3215/12361/8781,gem_id=213461/213461,enchant_id=7340
+finger2=signet_of_collapsing_stars,id=185813,bonus_id=4786/10035/12361/8781,gem_id=213461/213461,enchant_id=7340
+trinket1=azhiccaran_parapodia,id=242497,ilevel=723
+trinket2=arazs_ritual_forge,id=242402,bonus_id=4800/4786/1533/12361
+main_hand=voidglass_sovereigns_blade,id=237735,bonus_id=4800/4786/1533/12361,enchant_id=7445
+off_hand=vagabonds_torch,id=222566,bonus_id=11300/8960/8792,ilevel=720
+
+# Gear Summary
+# gear_ilvl=723.06
+# gear_stamina=664039
+# gear_intellect=97727
+# gear_crit_rating=13588
+# gear_haste_rating=26296
+# gear_mastery_rating=2569
+# gear_versatility_rating=16207
+# gear_speed_rating=1500
+# gear_armor=25542
+# set_bonus=name=thewarwithin_season_3,pc=2,hero_tree=frostfire,enable=1
+# set_bonus=name=thewarwithin_season_3,pc=4,hero_tree=frostfire,enable=1

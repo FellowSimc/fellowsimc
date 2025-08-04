@@ -4456,6 +4456,18 @@ parsed_assisted_combat_rule_t paladin_t::parse_assisted_combat_rule( const assis
   if ( rule.condition_type == AURA_MISSING_PLAYER && rule.condition_value_1 == 427441 )
     return { "!(buff.hammer_of_light_ready.up|buff.hammer_of_light_free.up)", true };
 
+  if ( step.spell_id == 53600 )
+  {
+    parsed_assisted_combat_rule_t derived_combat_rule = player_t::parse_assisted_combat_rule( rule, step );
+    if ( !derived_combat_rule.expr.empty() )
+    {
+      derived_combat_rule.expr.append( "&!buff.hammer_of_light_ready.up" );
+      derived_combat_rule.comment +=
+          "Do not use SotR if Hammer of Light is ready, the One Button Rotation doesn't, either.";
+    }
+    return derived_combat_rule;
+  }
+
   return player_t::parse_assisted_combat_rule( rule, step );
 }
 

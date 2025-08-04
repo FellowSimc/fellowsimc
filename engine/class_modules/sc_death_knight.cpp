@@ -4749,6 +4749,7 @@ struct trollbane_pet_t final : public horseman_pet_t
       aoe = -1;
       reduced_aoe_targets = data().effectN( 5 ).base_value();
       background          = true;
+      _player = dk();
     }
   };
 

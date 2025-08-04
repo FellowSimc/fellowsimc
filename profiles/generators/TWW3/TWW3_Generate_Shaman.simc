@@ -56,59 +56,86 @@
 
 # save=TWW3_Shaman_Elemental.simc
 
-# shaman="TWW3_Shaman_Enhancement"
-# level=80
-# race=maghar_orc
-# spec=enhancement
-# role=attack
-# position=back
-# talents=CcQAAAAAAAAAAAAAAAAAAAAAAMzMjZGGDzMzMzMbzMWGAAAAAAAAAAgFYDmxiGbDgZC2AwsMZGYZZMzMDmZmNjlZmJbsMMmZAAGA
+shaman="TWW3_Shaman_Enhancement"
+level=80
+race=maghar_orc
+spec=enhancement
+role=attack
+position=back
+talents=CcQAAAAAAAAAAAAAAAAAAAAAAMzMDmZGjtZmZGsNzYZYAAAAAAAAAAbA2MjhNyCMDDNYBAWmmZglFzMzMMmZ2GWmZmGYYWmZAAGD
 
-# head=gale_sovereigns_charged_hood,id=229262,ilevel=684,gem_id=213743,enchant_id=7933
-# neck=semicharmed_amulet,id=228841,ilevel=684,gem_id=213470/213470
-# shoulders=gale_sovereigns_zephyrs,id=229260,ilevel=684
-# back=consecrated_cloak,id=222817,bonus_id=12040/9627/12373/12043/8793/1485/11303,ilevel=681,crafted_stats=49/36,enchant=chant_of_burrowing_rapidity_3
-# chest=blazer_of_glory,id=228852,ilevel=684,enchant=crystalline_radiance_3
-# wrists=glyphetched_vambraces,id=219342,bonus_id=12040/9627/12373/12043/8793/1485/11303,ilevel=681,crafted_stats=49/36,gem_id=213470,enchant=chant_of_armored_speed_3
-# hands=gale_sovereigns_grasps,id=229263,ilevel=684
-# waist=shalebiter_interlinked_chain,id=159361,ilevel=684,gem_id=213491
-# legs=gale_sovereigns_pantaloons,id=229261,ilevel=684,enchant=stormbound_armor_kit_3
-# feet=shrapnelridden_sabatons,id=228862,ilevel=684,enchant=scouts_march_3
-# finger1=the_jastor_diamond,id=231265,ilevel=684,gem_id=213473/213482,enchant=radiant_haste_3
-# finger2=miniature_roulette_wheel,id=228843,bonus_id=12376/8781/1533/11964,crafted_stats=49/36,ilevel=684,gem_id=213458/213455,enchant=radiant_haste_3
-# trinket1=house_of_cards,id=230027,ilevel=684
-# trinket2=improvised_seaforium_pacemaker,id=232541,ilevel=684
-# main_hand=gallywixs_iron_thumb,id=228899,ilevel=684,enchant=authority_of_the_depths_3
-# off_hand=gallywixs_iron_thumb,id=228899,ilevel=684,enchant=authority_of_the_depths_3
+head=aspect_of_channeled_fury,id=237637,ilevel=723,gem_id=213743
+neck=cabochon_of_the_infinite_flight,id=185820,ilevel=723,gem_id=213470/213470
+shoulders=fangs_of_channeled_fury,id=237635,ilevel=723
+back=reshii_wraps,id=235499,bonus_id=12401/9893,gem_id=238045
+chest=harvested_attendants_uniform,id=237529,ilevel=723,enchant=crystalline_radiance_3,enchant_id=7364
+wrists=glyphetched_vambraces,id=219342,bonus_id=10421/9633/8902/9627/12043/8793/12040/12056/12373/11109/8960,ilevel=720,gem_id=213743,enchant_id=7391,crafted_stats=36/49
+hands=claws_of_channeled_fury,id=237638,ilevel=723
+waist=clasp_of_furious_freedom,id=237554,ilevel=723,gem_id=213491
+legs=tassets_of_channeled_fury,id=237636,ilevel=723,enchant=stormbound_armor_kit_3,enchant_id=7601
+feet=interlopers_chain_boots,id=243308,bonus_id=13504,ilevel=723,enchant=scouts_march_3,enchant_id=7418
+finger1=logic_gate_omega,id=237570,ilevel=723,gem_id=213473/213482,enchant=radiant_haste_3,enchant_id=7352
+finger2=whispers_of_karesh,id=242491,ilevel=723,gem_id=213473/213482,enchant=radiant_haste_3,enchant_id=7352
+trinket1=arazs_ritual_forge,id=242402,ilevel=723
+trinket2=astral_antenna,id=242395,bonus_id=1533/12361/12239
+main_hand=fatebreaker_destroyer_of_futures,id=185823,ilevel=723,enchant_id=7439
+off_hand=charged_slicer,id=222451,bonus_id=10421/9633/8902/9627/8793/12040/12043/11300/8960/12373,ilevel=720,enchant_id=7439,crafted_stats=49/32
 
-# save=TWW3_Shaman_Enhancement.simc
+save=TWW3_Shaman_Enhancement.simc
 
-# shaman="TWW3_Shaman_Enhancement_Stormbringer"
-# level=80
-# race=maghar_orc
-# spec=enhancement
-# role=attack
-# position=back
-# talents=CcQAAAAAAAAAAAAAAAAAAAAAAMzwCmZmx2MzMD2mZsMbDAAAAAAAAAwGgFzYYjsAzwQDWAwsMZGYZZmZmZYmZGGLzMT2YZYYGAgxA
+shaman="TWW3_Shaman_Enhancement_DRE"
+level=80
+race=goblin
+spec=enhancement
+role=attack
+position=back
+talents=CcQAAAAAAAAAAAAAAAAAAAAAAMzMDmZGjtZmZGsMzYbYAAAAAAAAAALA2MjhNyCMDDNYBAWmMzYssYmZmhZmZMsMzMNMGGmBAYMA
 
-# head=gale_sovereigns_charged_hood,id=229262,ilevel=684,gem_id=213743,enchant_id=7933
-# neck=strapped_rescuekeg,id=221060,ilevel=684,gem_id=213491/213473
-# shoulders=gale_sovereigns_zephyrs,id=229260,ilevel=684
-# back=consecrated_cloak,id=222817,bonus_id=12040/9627/12373/12043/8793/1485/11303,ilevel=681,crafted_stats=49/36,enchant=chant_of_burrowing_rapidity_3
-# chest=gale_sovereigns_clouded_hauberk,id=229265,ilevel=684,enchant=crystalline_radiance_3
-# wrists=glyphetched_vambraces,id=219342,bonus_id=12040/9627/12373/12043/8793/1485/11303,ilevel=681,crafted_stats=49/36,gem_id=213470,enchant=chant_of_armored_speed_3
-# hands=gale_sovereigns_grasps,id=229263,ilevel=684
-# waist=gale_sovereigns_ritual_belt,id=229259,ilevel=684,gem_id=213470
-# legs=chemical_blasters_legguards,id=158341,ilevel=684,enchant=stormbound_armor_kit_3
-# feet=dubious_tablerunners,id=228883,ilevel=684,enchant=scouts_march_3
-# finger1=the_jastor_diamond,id=231265,ilevel=684,gem_id=213470/213494,enchant=radiant_haste_3
-# finger2=miniature_roulette_wheel,id=228843,bonus_id=12376/8781/1533/11964,crafted_stats=36/49,ilevel=684,gem_id=213482/213458,enchant=radiant_haste_3
-# trinket1=eye_of_kezan,id=230198,ilevel=684
-# trinket2=improvised_seaforium_pacemaker,id=232541,ilevel=684
-# main_hand=gallywixs_iron_thumb,id=228899,ilevel=684,enchant=authority_of_the_depths_3
-# off_hand=gallywixs_iron_thumb,id=228899,ilevel=684,enchant=authority_of_the_depths_3
+head=aspect_of_channeled_fury,id=237637,ilevel=723,gem_id=213743
+neck=duskblazes_desperation,id=237569,ilevel=723,gem_id=213470/213470
+shoulders=fangs_of_channeled_fury,id=237635,ilevel=723
+back=reshii_wraps,id=235499,bonus_id=12401/9893,gem_id=238045
+chest=harvested_attendants_uniform,id=237529,ilevel=723,enchant=crystalline_radiance_3,enchant_id=7364
+wrists=glyphetched_vambraces,id=219342,bonus_id=10421/9633/8902/9627/12043/8793/12040/12056/12373/11109/8960,ilevel=720,gem_id=213743,enchant_id=7391,crafted_stats=36/49
+hands=claws_of_channeled_fury,id=237638,ilevel=723
+waist=portable_power_generator,id=234501,ilevel=723,gem_id=213491
+legs=tassets_of_channeled_fury,id=237636,ilevel=723,enchant=stormbound_armor_kit_3,enchant_id=7601
+feet=interlopers_chain_boots,id=243308,bonus_id=13504,ilevel=723,enchant=scouts_march_3,enchant_id=7418
+finger1=whispers_of_karesh,id=242491,ilevel=723,gem_id=213473/213482,enchant=radiant_haste_3,enchant_id=7334
+finger2=signet_of_the_false_accuser,id=178824,ilevel=723,gem_id=213473/213482,enchant=radiant_haste_3,enchant_id=7346
+trinket1=arakara_sacbrood,id=219314,ilevel=723
+trinket2=astral_antenna,id=242395,bonus_id=1533/12361/12239
+main_hand=fatebreaker_destroyer_of_futures,id=185823,ilevel=723,enchant_id=7445
+off_hand=charged_slicer,id=222451,bonus_id=10421/9633/8902/9627/8793/12040/12043/11300/8960/12373,ilevel=720,enchant_id=7448,crafted_stats=49/32
 
-# save=TWW3_Shaman_Enhancement_Stormbringer.simc
+save=TWW3_Shaman_Enhancement_DRE.simc
+
+shaman="TWW3_Shaman_Enhancement_Totemic"
+level=80
+race=maghar_orc
+spec=enhancement
+role=attack
+position=back
+talents=CcQAAAAAAAAAAAAAAAAAAAAAAMzMjZGGDzMzMzMbzMWGAAAAAAAAAAgFYDmxiGbDgZC2AglpZmBLLmZmZYMzsNsMzMBGmlZGAgBA
+
+head=aspect_of_channeled_fury,id=237637,ilevel=723,gem_id=213743,enchant_id=7933
+neck=salhadaars_folly,id=242406,bonus_id=1533/12361/12239/8781,gem_id=213455/213455
+shoulders=fangs_of_channeled_fury,id=237635,ilevel=723
+back=reshii_wraps,id=235499,bonus_id=12401/9893,gem_id=238046
+chest=soaring_decimators_hauberk,id=178815,ilevel=723,enchant_id=7364
+wrists=glyphetched_vambraces,id=219342,bonus_id=10421/9633/8902/9627/12043/8793/12040/12056/12373/11109/8960,ilevel=720,gem_id=213455,enchant_id=7391,crafted_stats=36/49
+hands=claws_of_channeled_fury,id=237638,ilevel=723
+waist=portable_power_generator,id=234501,ilevel=723,gem_id=213491
+legs=tassets_of_channeled_fury,id=237636,ilevel=723,enchant=stormbound_armor_kit_3,enchant_id=7601
+feet=interlopers_chain_boots,id=243308,bonus_id=13504,ilevel=723,enchant=scouts_march_3,enchant_id=7418
+finger1=whispers_of_karesh,id=242491,ilevel=723,gem_id=213473/213482,enchant=radiant_haste_3,enchant_id=7334
+finger2=high_nerubian_signet,id=221141,bonus_id=3215/12361/12239/8781,gem_id=213455/213455,enchant_id=7352
+trinket1=improvised_seaforium_pacemaker,id=232541,ilevel=723
+trinket2=arazs_ritual_forge,id=242402,bonus_id=6652/10356/12361/1533/10255,ilevel=723
+main_hand=fatebreaker_destroyer_of_futures,id=185823,bonus_id=3215/12361/12239,ilevel=723,enchant_id=7439
+off_hand=charged_slicer,id=222451,bonus_id=10421/9633/8902/9627/8793/12040/12043/11300/8960/12373,ilevel=720,enchant_id=7448,crafted_stats=49/32
+
+save=TWW3_Shaman_Enhancement_Totemic.simc
 
 # # shaman="TWW3_Shaman_Restoration"
 # # level=70

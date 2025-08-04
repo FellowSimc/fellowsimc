@@ -279,7 +279,7 @@ enum player_e
   PLAYER_MAX
 };
 
-enum hero_talent_e
+enum hero_tree_e
 {
   HERO_NONE                      = 0,
   HERO_VOIDWEAVER                = 18,

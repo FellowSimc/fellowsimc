@@ -851,7 +851,7 @@ namespace
 {
 struct hero_tree_index_map_t
 {
-  std::array<int8_t, hero_talent_e::HERO_MAX> data;
+  std::array<int8_t, hero_tree_e::HERO_MAX> data;
 
 private:
   std::array<int8_t, MAX_SPEC_CLASS> classes;
@@ -875,7 +875,7 @@ public:
     }
   }
 
-  constexpr int8_t operator[]( hero_talent_e hero_tree ) const
+  constexpr int8_t operator[]( hero_tree_e hero_tree ) const
   {
     assert( hero_tree < std::size( data ) );
     return data[ hero_tree ];
@@ -883,7 +883,7 @@ public:
 };
 }  // namespace
 
-int dbc::hero_idx( hero_talent_e hero_talent, bool ptr )
+int dbc::hero_idx( hero_tree_e hero_talent, bool ptr )
 {
 #if SC_USE_PTR
   static constexpr hero_tree_index_map_t hero_tree_index_map;
@@ -895,7 +895,7 @@ int dbc::hero_idx( hero_talent_e hero_talent, bool ptr )
 #endif
 }
 
-int dbc::composite_idx( specialization_e spec, hero_talent_e hero, bool ptr )
+int dbc::composite_idx( specialization_e spec, hero_tree_e hero, bool ptr )
 {
   assert( ( spec != SPEC_NONE ) != ( hero != HERO_NONE ) );
   int index = 0;

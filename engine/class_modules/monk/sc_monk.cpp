@@ -6743,7 +6743,7 @@ bool monk_t::validate_actor()
           const trait_data_t *trait = trait_data_t::find( std::get<1>( entry ), is_ptr );
           if ( !trait )
             return false;
-          return static_cast<hero_talent_e>( trait->id_sub_tree ) == HERO_CONDUIT_OF_THE_CELESTIALS;
+          return static_cast<hero_tree_e>( trait->id_sub_tree ) == HERO_CONDUIT_OF_THE_CELESTIALS;
         } );
 
     // Report without counting the hidden talent that activates the subtree

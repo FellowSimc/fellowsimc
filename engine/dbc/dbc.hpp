@@ -76,8 +76,8 @@ school_e get_school_type( uint32_t school_id );
 bool is_school( school_e s, school_e s2 );
 bool has_common_school( school_e s1, school_e s2 );
 int spec_idx( specialization_e spec, bool ptr = false );
-int hero_idx( hero_talent_e hero_talent, bool ptr = false );
-int composite_idx( specialization_e spec, hero_talent_e hero, bool ptr = false );
+int hero_idx( hero_tree_e hero_talent, bool ptr = false );
+int composite_idx( specialization_e spec, hero_tree_e hero, bool ptr = false );
 
 // Data Access
 const char* wow_ptr_status( bool ptr );

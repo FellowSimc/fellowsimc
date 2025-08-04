@@ -78,12 +78,12 @@ int set_bonus_t::spec_idx( specialization_e spec ) const
   return dbc::spec_idx( spec, actor->dbc->ptr );
 }
 
-int set_bonus_t::hero_idx( hero_talent_e hero ) const
+int set_bonus_t::hero_idx( hero_tree_e hero ) const
 {
   return dbc::hero_idx( hero, actor->dbc->ptr );
 }
 
-int set_bonus_t::composite_idx( specialization_e spec, hero_talent_e hero ) const
+int set_bonus_t::composite_idx( specialization_e spec, hero_tree_e hero ) const
 {
   return dbc::composite_idx( spec, hero, actor->dbc->ptr );
 }
@@ -107,7 +107,7 @@ int set_bonus_t::composite_idx( const item_set_bonus_t& bonus ) const
     if ( bonus.trait_sub_tree == -1 )
       index += 0;
     else
-      index += hero_idx( static_cast<hero_talent_e>( bonus.trait_sub_tree ) );
+      index += hero_idx( static_cast<hero_tree_e>( bonus.trait_sub_tree ) );
 
     return index;
   }
@@ -200,14 +200,14 @@ const spell_data_t* set_bonus_t::set( specialization_e spec, set_bonus_type_e ti
 
 #ifndef NDEBUG
   assert( set_bonus_spec_data.size() > static_cast<unsigned>( tier ) );
-  assert( set_bonus_spec_data[ tier ].size() > as<unsigned>( composite_idx( spec, hero_talent_e::HERO_NONE ) ) );
+  assert( set_bonus_spec_data[ tier ].size() > as<unsigned>( composite_idx( spec, hero_tree_e::HERO_NONE ) ) );
   assert( set_bonus_spec_data[ tier ][ spec_idx( spec ) ].size() > static_cast<unsigned>( bonus ) );
 #endif
 
   return set_bonus_spec_data[ tier ][ spec_idx( spec ) ][ bonus ].spell;
 }
 
-const spell_data_t* set_bonus_t::set( hero_talent_e hero, set_bonus_type_e tier, set_bonus_e bonus ) const
+const spell_data_t* set_bonus_t::set( hero_tree_e hero, set_bonus_type_e tier, set_bonus_e bonus ) const
 {
   if ( hero_idx( hero ) < 0 )
     return spell_data_t::nil();
@@ -308,7 +308,7 @@ void set_bonus_t::parse_set_bonus_string()
     set_bonus_e bonus = B_NONE;
     bool enabled = false;
     specialization_e spec = SPEC_NONE;
-    hero_talent_e hero = HERO_NONE;
+    hero_tree_e hero = HERO_NONE;
 
     if ( parse_set_bonus_option_verbose( value, tier, bonus, enabled, spec, hero ) )
     {
@@ -380,7 +380,7 @@ void set_bonus_t::enable_set_bonus( specialization_e spec, set_bonus_type_e tier
   entry.quiet = quiet;
 }
 
-void set_bonus_t::enable_set_bonus( hero_talent_e hero, set_bonus_type_e tier, set_bonus_e bonus, bool quiet )
+void set_bonus_t::enable_set_bonus( hero_tree_e hero, set_bonus_type_e tier, set_bonus_e bonus, bool quiet )
 {
   if ( hero_idx( hero ) < 0 )
     return;
@@ -400,7 +400,7 @@ bool set_bonus_t::has_set_bonus( specialization_e spec, set_bonus_type_e tier, s
   return set_bonus_spec_data[ tier ][ spec_idx( spec ) ][ bonus ].enabled;
 }
 
-bool set_bonus_t::has_set_bonus( hero_talent_e hero, set_bonus_type_e tier, set_bonus_e bonus ) const
+bool set_bonus_t::has_set_bonus( hero_tree_e hero, set_bonus_type_e tier, set_bonus_e bonus ) const
 {
   if ( hero_idx( hero ) < 0 )
     return false;
@@ -486,7 +486,7 @@ std::unique_ptr<expr_t> set_bonus_t::create_expression( const player_t*, util::s
 
   set_bonus_type_e tier = SET_BONUS_NONE;
   set_bonus_e bonus = B_NONE;
-  hero_talent_e hero = HERO_NONE;
+  hero_tree_e hero = HERO_NONE;
 
   if ( !parse_set_bonus_option( type, tier, bonus, hero ) )
   {
@@ -500,7 +500,7 @@ std::unique_ptr<expr_t> set_bonus_t::create_expression( const player_t*, util::s
 }
 
 bool set_bonus_t::parse_set_bonus_option( util::string_view opt_str, set_bonus_type_e& tier, set_bonus_e& bonus,
-                                          hero_talent_e& hero )
+                                          hero_tree_e& hero )
 {
   tier = SET_BONUS_NONE;
   bonus = B_NONE;
@@ -541,12 +541,12 @@ bool set_bonus_t::parse_set_bonus_option( util::string_view opt_str, set_bonus_t
       // check standard syntax `<tier>_#pc` against player's hero tree
       if ( split.size() == 2 && range::contains( actor->player_sub_trees, bonus.trait_sub_tree ) )
       {
-        hero = static_cast<hero_talent_e>( bonus.trait_sub_tree );
+        hero = static_cast<hero_tree_e>( bonus.trait_sub_tree );
         return true;
       }
       // check hero set syntax `<tier>_<tokenized hero tree>_#pc`
       else if ( split.size() >= 3 &&
-                trait_data_t::is_hero_tree_valid( static_cast<hero_talent_e>( bonus.trait_sub_tree ), actor->_spec,
+                trait_data_t::is_hero_tree_valid( static_cast<hero_tree_e>( bonus.trait_sub_tree ), actor->_spec,
                                                   actor->dbc->ptr ) )
       {
         auto hero_name =
@@ -555,7 +555,7 @@ bool set_bonus_t::parse_set_bonus_option( util::string_view opt_str, set_bonus_t
 
         if ( bonus.trait_sub_tree == hero_tree_id )
         {
-          hero = static_cast<hero_talent_e>( hero_tree_id );
+          hero = static_cast<hero_tree_e>( hero_tree_id );
           return true;
         }
       }
@@ -584,7 +584,7 @@ bool set_bonus_t::parse_set_bonus_option( util::string_view opt_str, set_bonus_t
 }
 
 bool set_bonus_t::parse_set_bonus_option_verbose( util::string_view opt_str, set_bonus_type_e& tier, set_bonus_e& bonus,
-                                                  bool& enabled, specialization_e& spec, hero_talent_e& hero )
+                                                  bool& enabled, specialization_e& spec, hero_tree_e& hero )
 {
   tier = SET_BONUS_NONE;
   bonus     = B_NONE;
@@ -620,7 +620,7 @@ bool set_bonus_t::parse_set_bonus_option_verbose( util::string_view opt_str, set
     }
     if ( util::str_compare_ci( value_pair[ 0 ], "hero_tree" ) )
     {
-      hero = static_cast<hero_talent_e>( trait_data_t::get_hero_tree_id( value_pair[ 1 ], actor->dbc->ptr ) );
+      hero = static_cast<hero_tree_e>( trait_data_t::get_hero_tree_id( value_pair[ 1 ], actor->dbc->ptr ) );
       bool is_valid = false;
 
       if ( hero != HERO_NONE )
@@ -673,7 +673,7 @@ std::string set_bonus_t::generate_set_bonus_options() const
     {
       opt = fmt::format( "{}_{}pc", bonus.set_opt_name, bonus.bonus );
     }
-    else if ( trait_data_t::is_hero_tree_valid( static_cast<hero_talent_e>( bonus.trait_sub_tree ), actor->_spec,
+    else if ( trait_data_t::is_hero_tree_valid( static_cast<hero_tree_e>( bonus.trait_sub_tree ), actor->_spec,
                                                 actor->dbc->ptr ) )
     {
       opt = util::tokenize_fn( fmt::format( "{}_{}_{}pc", bonus.tier,

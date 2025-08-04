@@ -2991,7 +2991,7 @@ void player_t::init_talents()
   {
     // enable all hero tree, tokenized name
     if ( auto hero_tree_id = trait_data_t::get_hero_tree_id( hero_talents_str, is_ptr() );
-         trait_data_t::is_hero_tree_valid( static_cast<hero_talent_e>( hero_tree_id ), specialization(), is_ptr() ) )
+         trait_data_t::is_hero_tree_valid( static_cast<hero_tree_e>( hero_tree_id ), specialization(), is_ptr() ) )
     {
       enable_hero_tree( this, hero_tree_id );
     }

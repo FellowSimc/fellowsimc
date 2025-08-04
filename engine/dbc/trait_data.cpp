@@ -324,7 +324,7 @@ std::vector<unsigned> trait_data_t::get_valid_hero_tree_ids( specialization_e sp
   return id_list;
 }
 
-bool trait_data_t::is_hero_tree_valid( hero_talent_e hero, specialization_e spec, bool ptr )
+bool trait_data_t::is_hero_tree_valid( hero_tree_e hero, specialization_e spec, bool ptr )
 {
   return range::contains( get_valid_hero_tree_ids( spec, ptr ), static_cast<unsigned>( hero ) );
 }

@@ -14542,14 +14542,6 @@ struct bloodseeker_vines_debuff_t : public buffs::druid_buff_t
 
   void decrement( int s, double v ) override
   {
-    // if this is not a real expiration but scripted decrement, burst happens before the decrement gaining bonuses of
-    // the pre-decrement number of stacks
-    if ( current_stack - s > 0 )
-    {
-      if ( p()->active.bursting_growth )
-        p()->active.bursting_growth->execute_on_target( player );
-    }
-
     // if the initial dot is doubled via twin sprouts, only one is decremented after 6s. it's possible to have remaining
     // stacks upon dot expiration so handle this by completely removing all stacks if the dot is no longer ticking.
     if ( !target_data->dots.bloodseeker_vines->is_ticking() )
@@ -14560,6 +14552,14 @@ struct bloodseeker_vines_debuff_t : public buffs::druid_buff_t
     {
       s = 1;
       initial_twin_sprouts = false;
+    }
+
+    // if this is not a real expiration but scripted decrement, burst happens before the decrement gaining bonuses of
+    // the pre-decrement number of stacks
+    if ( auto dec = current_stack - s; dec > 0 && p()->active.bursting_growth )
+    {
+      while ( dec-- )
+        p()->active.bursting_growth->execute_on_target( player );
     }
 
     buffs::druid_buff_t::decrement( s, v );

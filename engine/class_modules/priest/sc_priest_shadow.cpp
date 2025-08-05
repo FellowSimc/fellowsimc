@@ -2843,29 +2843,6 @@ void priest_t::trigger_shadowy_apparitions( proc_t* proc )
 }
 
 // ==========================================================================
-// Trigger Shadowy Apparitions on all targets affected by vampiric touch
-// ==========================================================================
-int priest_t::number_of_echoing_voids_active()
-{
-  int echoing_voids_active = 0;
-
-  if ( !talents.shadow.idol_of_nzoth.enabled() )
-  {
-    return echoing_voids_active;
-  }
-
-  for ( priest_td_t* priest_td : _target_data.get_entries() )
-  {
-    if ( priest_td && priest_td->buffs.echoing_void->check() )
-    {
-      echoing_voids_active++;
-    }
-  }
-
-  return echoing_voids_active;
-}
-
-// ==========================================================================
 // Trigger Psychic Link on any targets that weren't the original target and have Vampiric Touch ticking on them
 // ==========================================================================
 void priest_t::trigger_psychic_link( action_state_t* s )

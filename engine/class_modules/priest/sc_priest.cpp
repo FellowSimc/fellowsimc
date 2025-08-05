@@ -1367,92 +1367,6 @@ struct summon_fiend_t final : public priest_spell_t
 };
 
 // ==========================================================================
-// Echoing Void
-// TODO: move to sc_priest_shadow.cpp
-// ==========================================================================
-struct echoing_void_demise_t final : public priest_spell_t
-{
-  int stacks;
-
-  echoing_void_demise_t( priest_t& p )
-    : priest_spell_t( "echoing_void_demise", p, p.talents.shadow.echoing_void ), stacks( 1 )
-  {
-    background          = true;
-    proc                = false;
-    callbacks           = true;
-    may_miss            = false;
-    harmful             = false;
-    aoe                 = -1;
-    range               = data().effectN( 1 ).radius_max();
-    reduced_aoe_targets = data().effectN( 2 ).base_value();
-
-    affected_by_shadow_weaving = true;
-  }
-
-  // Demise action does not hit the target we are triggering it on, only using it for the proper radius
-  std::vector<player_t*>& target_list() const override
-  {
-    target_cache.is_valid = false;
-
-    std::vector<player_t*>& tl = priest_spell_t::target_list();
-
-    range::erase_remove( tl, target );
-
-    return tl;
-  }
-
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = priest_spell_t::composite_da_multiplier( s );
-
-    m *= stacks;
-
-    return m;
-  }
-
-  // Demise trigger for Idol of N'Zoth
-  // When something dies that has stacks it explodes around that target
-  // based on how many stacks it has. 10 stacks == 1 explosion 10x more powerful
-  void trigger( player_t* target, int trigger_stacks )
-  {
-    if ( trigger_stacks == 0 )
-    {
-      return;
-    }
-
-    stacks = trigger_stacks;
-    sim->print_debug( "{} dies. Triggering {} stacks of echoing_void", target->name(), trigger_stacks );
-    set_target( target );
-    execute();
-  }
-};
-
-struct echoing_void_t final : public priest_spell_t
-{
-  stats_t* child_action_stats;
-
-  echoing_void_t( priest_t& p )
-    : priest_spell_t( "echoing_void", p, p.talents.shadow.echoing_void ), child_action_stats( nullptr )
-  {
-    background          = true;
-    proc                = false;
-    callbacks           = true;
-    may_miss            = false;
-    aoe                 = -1;
-    range               = data().effectN( 1 ).radius_max();
-    reduced_aoe_targets = data().effectN( 2 ).base_value();
-
-    affected_by_shadow_weaving = true;
-
-    child_action_stats = priest().get_stats( "echoing_void_demise" );
-    if ( child_action_stats )
-    {
-      stats->add_child( child_action_stats );
-    }
-  }
-};
-
-// ==========================================================================
 // Fade
 // ==========================================================================
 struct fade_t final : public priest_spell_t
@@ -1753,11 +1667,12 @@ public:
 
         if ( curr_state->chain_number < curr_state->max_chain )
         {
-          shadow_word_death_t* child_death = priest().background_actions.shadow_word_death.get();
-          state_t* state                   = child_death->cast_state( child_death->get_state() );
-          state->target                    = s->target;
-          state->chain_number              = curr_state->chain_number + 1;
-          state->max_chain                 = number_of_chains;
+          shadow_word_death_t* child_death          = priest().background_actions.shadow_word_death.get();
+          child_death->idol_of_nzoth_execute_stacks = 1;
+          state_t* state                            = child_death->cast_state( child_death->get_state() );
+          state->target                             = s->target;
+          state->chain_number                       = curr_state->chain_number + 1;
+          state->max_chain                          = number_of_chains;
 
           child_death->snapshot_state( state, child_death->amount_type( state ) );
 
@@ -2792,23 +2707,6 @@ priest_td_t::priest_td_t( player_t* target, priest_t& p ) : actor_target_data_t(
   buffs.schism = make_buff( *this, "schism", p.talents.discipline.schism_debuff )
                      ->apply_affecting_aura( p.talents.discipline.malicious_intent );
   buffs.death_and_madness_debuff = make_buff<buffs::death_and_madness_debuff_t>( *this );
-  buffs.echoing_void             = make_buff( *this, "echoing_void", p.talents.shadow.echoing_void_debuff );
-
-  // TODO: stacks generated mid-collapse need to get re-triggered to collapse
-  buffs.echoing_void_collapse = make_buff( *this, "echoing_void_collapse" )
-                                    ->set_quiet( true )
-                                    ->set_refresh_behavior( buff_refresh_behavior::DURATION )
-                                    ->set_tick_behavior( buff_tick_behavior::REFRESH )
-                                    ->set_period( timespan_t::from_seconds( 1.0 ) )
-                                    ->set_tick_callback( [ this, &p, target ]( buff_t* b, int, timespan_t ) {
-                                      if ( buffs.echoing_void->check() )
-                                        p.background_actions.echoing_void->execute_on_target( target );
-                                      buffs.echoing_void->decrement();
-                                      if ( !buffs.echoing_void->check() )
-                                      {
-                                        make_event( b->sim, [ b ] { b->cancel(); } );
-                                      }
-                                    } );
   buffs.apathy =
       make_buff( *this, "apathy", p.talents.apathy->effectN( 1 ).trigger() )->set_default_value_from_effect( 1 );
 
@@ -2857,15 +2755,6 @@ void priest_td_t::target_demise()
       double amount =
           priest().talents.throes_of_pain->effectN( 5 ).percent() / 100.0 * priest().resources.max[ RESOURCE_MANA ];
       priest().resource_gain( RESOURCE_MANA, amount, priest().gains.throes_of_pain );
-    }
-  }
-
-  // Stacks of Idol of N'Zoth will detonate on death
-  if ( priest().talents.shadow.idol_of_nzoth.enabled() )
-  {
-    if ( buffs.echoing_void->check() )
-    {
-      priest().background_actions.echoing_void_demise->trigger( target, buffs.echoing_void->check() );
     }
   }
 
@@ -3804,11 +3693,6 @@ void priest_t::init_spells()
   talents.void_shift                   = CT( "Void Shift" );     // NYI
   talents.phantom_reach                = CT( "Phantom Reach" );  // NYI
 
-  // Shadow Talents
-  // TODO: move this to sc_priest_shadow.cpp
-  talents.shadow.echoing_void        = find_spell( 373304 );
-  talents.shadow.echoing_void_debuff = find_spell( 373281 );
-
   // PvP Talents
   talents.pvp.mindgames                  = find_spell( 375901 );
   talents.pvp.mindgames_healing_reversal = find_spell( 323707 );  // TODO: Swap to new DF spells
@@ -4084,9 +3968,7 @@ void priest_t::init_background_actions()
 {
   player_t::init_background_actions();
 
-  background_actions.echoing_void        = new actions::spells::echoing_void_t( *this );
   background_actions.shadow_word_death   = new actions::spells::shadow_word_death_t( *this, 200_ms );
-  background_actions.echoing_void_demise = new actions::spells::echoing_void_demise_t( *this );
   background_actions.essence_devourer    = new actions::heals::essence_devourer_t( *this );
   background_actions.atonement           = new actions::heals::atonement_t( *this );
   background_actions.halo                = new actions::spells::halo_t( *this, true );

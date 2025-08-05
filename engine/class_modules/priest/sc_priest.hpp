@@ -56,8 +56,6 @@ namespace actions::spells
 struct shadowy_apparition_spell_t;
 struct psychic_link_t;
 struct shadow_weaving_t;
-struct echoing_void_t;
-struct echoing_void_demise_t;
 struct shadow_word_death_t;
 struct idol_of_cthun_t;
 struct shadow_word_pain_t;
@@ -108,8 +106,6 @@ public:
   {
     propagate_const<buff_t*> schism;
     propagate_const<buff_t*> death_and_madness_debuff;
-    propagate_const<buff_t*> echoing_void;
-    propagate_const<buff_t*> echoing_void_collapse;
     propagate_const<buff_t*> apathy;
     propagate_const<buff_t*> psychic_horror;
     buff_t* atonement;
@@ -443,8 +439,6 @@ public:
       player_talent_t idol_of_nzoth;
       player_talent_t idol_of_yoggsaron;
       player_talent_t idol_of_cthun;
-      const spell_data_t* echoing_void;
-      const spell_data_t* echoing_void_debuff;
       const spell_data_t* horrific_visions;        // enemy debuff
       const spell_data_t* horrific_vision_damage;  // 50 stack damage
       const spell_data_t* vision_of_nzoth_damage;  // 100 stack damage
@@ -854,9 +848,7 @@ public:
     propagate_const<actions::spells::psychic_link_t*> psychic_link;
     propagate_const<actions::spells::shadow_weaving_t*> shadow_weaving;
     propagate_const<actions::spells::shadowy_apparition_spell_t*> shadowy_apparitions;
-    propagate_const<actions::spells::echoing_void_t*> echoing_void;
     propagate_const<actions::spells::shadow_word_death_t*> shadow_word_death;
-    propagate_const<actions::spells::echoing_void_demise_t*> echoing_void_demise;
     propagate_const<actions::spells::idol_of_cthun_t*> idol_of_cthun;
     propagate_const<actions::spells::shadow_word_pain_t*> shadow_word_pain;
     propagate_const<actions::spells::mental_fortitude_t*> mental_fortitude;
@@ -1066,7 +1058,6 @@ public:
   void trigger_divine_aegis( action_state_t* );
   void spawn_idol_of_cthun( action_state_t* );
   void trigger_shadowy_apparitions( proc_t* proc );
-  int number_of_echoing_voids_active();
   void trigger_psychic_link( action_state_t* );
   void trigger_shadow_weaving( action_state_t* );
   void trigger_void_shield( double result_amount );

@@ -92,13 +92,13 @@ actions.fel_dev_prep=potion,use_off_gcd=1,if=prev_gcd.1.fiery_brand
 actions.fel_dev_prep+=/sigil_of_flame,if=!variable.hold_sof_for_precombat&!variable.hold_sof_for_student&!variable.hold_sof_for_dot
 actions.fel_dev_prep+=/fiery_brand,if=talent.fiery_demise&((fury+variable.fel_dev_passive_fury_gen)>=120)&(variable.can_spburst|variable.can_spburst_soon|soul_fragments.total>=4)&active_dot.fiery_brand=0&((cooldown.metamorphosis.remains<(execute_time+action.fel_devastation.execute_time+(gcd.max*2)))|variable.fiery_brand_back_before_meta)
 actions.fel_dev_prep+=/fel_devastation,if=((fury+variable.fel_dev_passive_fury_gen)>=120)&(variable.can_spburst|variable.can_spburst_soon|soul_fragments.total>=4)
-actions.fel_dev_prep+=/sigil_of_spite,if=(!talent.cycle_of_binding|(cooldown.sigil_of_spite.duration<(cooldown.metamorphosis.remains+18)))&(soul_fragments.total<=1|(!(variable.can_spburst|variable.can_spburst_soon|soul_fragments.total>=4)&action.fracture.charges_fractional<1))
-actions.fel_dev_prep+=/soul_carver,if=(!talent.cycle_of_binding|cooldown.metamorphosis.remains>20)&(soul_fragments.total<=1|(!(variable.can_spburst|variable.can_spburst_soon|soul_fragments.total>=4)&action.fracture.charges_fractional<1))&!prev_gcd.1.sigil_of_spite&!prev_gcd.2.sigil_of_spite
+actions.fel_dev_prep+=/sigil_of_spite,if=(!talent.cycle_of_binding|(cooldown.sigil_of_spite.duration<(cooldown.metamorphosis.remains+18)))&(soul_fragments.total<=1|(!(variable.can_spburst|variable.can_spburst_soon|soul_fragments.total>=4)&(!talent.fracture|action.shear.charges_fractional<1)))
+actions.fel_dev_prep+=/soul_carver,if=(!talent.cycle_of_binding|cooldown.metamorphosis.remains>20)&(soul_fragments.total<=1|(!(variable.can_spburst|variable.can_spburst_soon|soul_fragments.total>=4)&(!talent.fracture|action.shear.charges_fractional<1)))&!prev_gcd.1.sigil_of_spite&!prev_gcd.2.sigil_of_spite
 actions.fel_dev_prep+=/felblade,if=!((fury+variable.fel_dev_passive_fury_gen)>=120)&(variable.can_spburst|variable.can_spburst_soon|soul_fragments.total>=4)
 actions.fel_dev_prep+=/shear,if=talent.fracture&!(variable.can_spburst|variable.can_spburst_soon|soul_fragments.total>=4)|!((fury+variable.fel_dev_passive_fury_gen)>=120)
 actions.fel_dev_prep+=/felblade
 actions.fel_dev_prep+=/shear,if=talent.fracture
-actions.fel_dev_prep+=/wait,sec=0.1,if=(!(variable.can_spburst|variable.can_spburst_soon|soul_fragments.total>=4)|!((fury+variable.fel_dev_passive_fury_gen)>=120))&action.fracture.charges_fractional>=0.7
+actions.fel_dev_prep+=/wait,sec=0.1,if=(!(variable.can_spburst|variable.can_spburst_soon|soul_fragments.total>=4)|!((fury+variable.fel_dev_passive_fury_gen)>=120))&(!talent.fracture|action.shear.charges_fractional>=0.7)
 actions.fel_dev_prep+=/fel_devastation
 actions.fel_dev_prep+=/soul_cleave,if=((fury+variable.fel_dev_passive_fury_gen)>=150)
 actions.fel_dev_prep+=/throw_glaive
@@ -195,13 +195,13 @@ actions.metamorphosis+=/soul_cleave,if=buff.demonsurge_soul_sunder.up&!buff.demo
 actions.metamorphosis+=/spirit_bomb,if=variable.can_spburst&(talent.fiery_demise&dot.fiery_brand.ticking|variable.big_aoe)&buff.metamorphosis.remains>(gcd.max*2)
 actions.metamorphosis+=/felblade,if=fury<40&(variable.can_spburst|variable.can_spburst_soon)&(buff.demonsurge_spirit_burst.up|talent.fiery_demise&dot.fiery_brand.ticking|variable.big_aoe)
 actions.metamorphosis+=/shear,if=talent.fracture&fury<40&(variable.can_spburst|variable.can_spburst_soon|variable.can_spburst_one_gcd)&(buff.demonsurge_spirit_burst.up|talent.fiery_demise&dot.fiery_brand.ticking|variable.big_aoe)
-actions.metamorphosis+=/shear,if=talent.fracture&variable.can_spburst_one_gcd&(buff.demonsurge_spirit_burst.up|variable.big_aoe)&!prev_gcd.1.fracture
+actions.metamorphosis+=/shear,if=talent.fracture&variable.can_spburst_one_gcd&(buff.demonsurge_spirit_burst.up|variable.big_aoe)&!prev_gcd.1.shear
 actions.metamorphosis+=/soul_cleave,if=variable.single_target&!variable.dont_soul_cleave
 actions.metamorphosis+=/spirit_bomb,if=variable.can_spburst&buff.metamorphosis.remains>(gcd.max*2)
 actions.metamorphosis+=/felblade,if=fury.deficit>=40
 actions.metamorphosis+=/soul_cleave,if=!variable.dont_soul_cleave&!(variable.big_aoe&(variable.can_spburst|variable.can_spburst_soon))
 actions.metamorphosis+=/felblade
-actions.metamorphosis+=/shear,if=talent.fracture&!prev_gcd.1.fracture
+actions.metamorphosis+=/shear,if=talent.fracture&!prev_gcd.1.shear
 
 head=impalers_of_the_hypogeal_nemesis,id=212065,bonus_id=8780,ilevel=639,gem_id=213470
 neck=sureki_zealots_insignia,id=225577,ilevel=639,gem_id=213485/213743

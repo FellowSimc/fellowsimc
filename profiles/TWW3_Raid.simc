@@ -29,12 +29,12 @@ TWW3_Demon_Hunter_Vengeance_Aldrachi_Reaver.simc
 # TWW3_Hunter_Marksmanship.simc
 # TWW3_Hunter_Survival.simc
 
-# TWW3_Mage_Arcane.simc
-# TWW3_Mage_Arcane_Sunfury.simc
-# TWW3_Mage_Fire.simc
-# TWW3_Mage_Fire_Sunfury.simc
-# TWW3_Mage_Frost.simc
-# TWW3_Mage_Frost_Spellslinger.simc
+TWW3_Mage_Arcane.simc
+TWW3_Mage_Arcane_Spellslinger.simc
+TWW3_Mage_Fire.simc
+TWW3_Mage_Fire_Frostfire.simc
+TWW3_Mage_Frost.simc
+TWW3_Mage_Frost_Frostfire.simc
 
 # TWW3_Monk_Brewmaster.simc
 # TWW3_Monk_Windwalker.simc

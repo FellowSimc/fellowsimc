@@ -2469,7 +2469,7 @@ struct hunter_main_pet_t final : public hunter_main_pet_base_t
     const auto remains = std::max( time_to_cd, time_to_fc );
     const auto delay_mean = o() -> options.pet_basic_attack_delay;
     const auto delay_stddev = 100_ms;
-    const auto lag = o()->bugs ? rng().gauss( delay_mean, delay_stddev ) : 0_ms;
+    const auto lag = rng().gauss( delay_mean, delay_stddev );
     return std::max( remains + lag, 100_ms );
   }
 

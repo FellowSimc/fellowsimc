@@ -417,11 +417,13 @@ struct simplified_player_t : public player_t
           { "40s_cds_gcd_two",        0.4,  1.5_s,  40_s, 7_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE },
           { "80s_cds_lingering",      0.5,   20_s,  80_s, 3_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE }
       } } },
-      { "dk_frost",{ ROLE_SPELL,  9.5,  true, 1.5_s, 0.45,  -1, 8, 1, 0.0, 13900.0, 0.0011, 0.05, 0.35, {
-        { "90s_window",            0.15,  20_s, 90_s, 3_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE },
-        { "90s_window_rider",      0.15,  25_s, 90_s, 3_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE },
-        { "pillar_of_frost",       0.75,  18_s, 45_s, 2_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE },
-        { "pillar_of_frost_rider", 0.5,   15_s, 45_s, 2_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE },
+      { "dk_frost",{ ROLE_SPELL,  9.6,  true, 1.5_s, 0.45,  -1, 8, 1, 0.0, 13900.0, 0.0011, 0.05, 0.35, {
+        { "120s_trinket",               0.15,  20_s, 45_s*3, 3_s, bob_buff_type_e::BUFF_BASE_PRIMARY },
+        { "90s_window",                 0.1,   20_s,   90_s, 3_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE },
+        { "90s_window_rider",           0.25,  30_s,   90_s, 3_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE },
+        { "pillar_of_frost",            0.4,   18_s,   45_s, 3_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE },
+        { "pillar_of_frost_smoothing",  0.15,  38_s,   45_s, 3_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE },
+        { "pillar_of_frost_rider",      0.35,  15_s,   45_s, 3_s, bob_buff_type_e::BUFF_PERCENT_DAMAGE },
       } } },
   };
 

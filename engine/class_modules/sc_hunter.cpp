@@ -739,6 +739,7 @@ public:
     spell_data_ptr_t kill_command_bm_pet;
 
     spell_data_ptr_t cobra_shot;
+    spell_data_ptr_t cobra_shot_data;
     spell_data_ptr_t animal_companion;
     spell_data_ptr_t solitary_companion;
     spell_data_ptr_t barbed_shot;
@@ -5210,15 +5211,14 @@ struct multishot_bm_t: public hunter_ranged_attack_t
 
 // Cobra Shot =================================================================
 
-struct cobra_shot_t: public hunter_ranged_attack_t
+struct cobra_shot_base_t: public hunter_ranged_attack_t
 {
   const timespan_t kill_command_reduction;
 
-  cobra_shot_t( hunter_t* p, util::string_view options_str ):
-    hunter_ranged_attack_t( "cobra_shot", p, p -> talents.cobra_shot ),
+  cobra_shot_base_t( hunter_t* p, util::string_view n, const spell_data_t* s ): 
+    hunter_ranged_attack_t( n, p, s ),
     kill_command_reduction( -timespan_t::from_seconds( data().effectN( 3 ).base_value() ) )
   {
-    parse_options( options_str );
   }
 
   int n_targets() const override
@@ -5270,12 +5270,19 @@ struct cobra_shot_t: public hunter_ranged_attack_t
   }
 };
 
+struct cobra_shot_t : public cobra_shot_base_t
+{
+  cobra_shot_t( hunter_t* p, util::string_view options_str ) : cobra_shot_base_t( p, "cobra_shot", p->talents.cobra_shot )
+  {
+    parse_options( options_str );
+  }
+};
+
 // Cobra Shot (Snakeskin Quiver)
 
-struct cobra_shot_snakeskin_quiver_t: public cobra_shot_t
+struct cobra_shot_snakeskin_quiver_t : public cobra_shot_base_t
 {
-  cobra_shot_snakeskin_quiver_t( hunter_t* p ):
-    cobra_shot_t( p, "" )
+  cobra_shot_snakeskin_quiver_t( hunter_t* p ): cobra_shot_base_t( p, "cobra_shot_snakeskin_quiver", p->talents.cobra_shot_data )
   {
     background = dual = true;
     base_costs[ RESOURCE_FOCUS ] = 0;
@@ -8259,6 +8266,7 @@ void hunter_t::init_spells()
     talents.kill_command_bm_pet               = talents.kill_command_bm_player.ok() ? find_spell( 83381 ) : spell_data_t::not_found();
 
     talents.cobra_shot                        = find_talent_spell( talent_tree::SPECIALIZATION, "Cobra Shot", HUNTER_BEAST_MASTERY );
+    talents.cobra_shot_data                   = find_spell( 193455 );
     talents.animal_companion                  = find_talent_spell( talent_tree::SPECIALIZATION, "Animal Companion", HUNTER_BEAST_MASTERY );
     talents.solitary_companion                = find_talent_spell( talent_tree::SPECIALIZATION, "Solitary Companion", HUNTER_BEAST_MASTERY );
     talents.barbed_shot                       = find_talent_spell( talent_tree::SPECIALIZATION, "Barbed Shot", HUNTER_BEAST_MASTERY );

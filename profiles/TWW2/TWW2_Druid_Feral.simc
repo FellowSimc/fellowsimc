@@ -13,7 +13,7 @@ potion=tempered_potion_3
 flask=flask_of_alchemical_chaos_3
 food=beledars_bounty
 augmentation=crystallized
-temporary_enchant=main_hand:ironclaw_whetstone_3
+temporary_enchant=main_hand:algari_mana_oil_3
 
 # This default action priority list is automatically created based on your character.
 # It is a attempt to provide you with a action list that is both simple and practicable,
@@ -212,9 +212,8 @@ main_hand=bestinslots,id=232526,bonus_id=6652/10356/9418/12376/1533/10255,enchan
 # gear_ilvl=684.07
 # gear_agility=59931
 # gear_stamina=425466
-# gear_attack_power=469
-# gear_crit_rating=6743
-# gear_haste_rating=15459
+# gear_crit_rating=6975
+# gear_haste_rating=15691
 # gear_mastery_rating=17280
 # gear_versatility_rating=2196
 # gear_leech_rating=4438

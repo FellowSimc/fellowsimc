@@ -2282,9 +2282,7 @@ struct art_of_the_glaive_trigger_t : public BASE
     {
       second_ability = !BASE::p()->buff.glaive_flurry->up();
 
-      int second_ability_increase =
-          BASE::p()->is_ptr() ? as<int>( BASE::p()->talent.aldrachi_reaver.reavers_mark->effectN( 2 ).base_value() )
-                              : 1;
+      int second_ability_increase = as<int>( BASE::p()->talent.aldrachi_reaver.reavers_mark->effectN( 2 ).base_value() );
 
       int first_ability_amount = 1;
       int second_ability_amount =

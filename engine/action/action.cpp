@@ -542,17 +542,17 @@ action_t::action_t( action_e ty, util::string_view token, player_t* p, const spe
     background = true;
   }
 
-  add_option( opt_string( "if", option.if_expr_str ) );
-  add_option( opt_string( "interrupt_if", option.interrupt_if_expr_str ) );
-  add_option( opt_string( "early_chain_if", option.early_chain_if_expr_str ) );
-  add_option( opt_string( "cancel_if", option.cancel_if_expr_str ) );
+  add_option( opt_string_warn( "if", option.if_expr_str ) );
+  add_option( opt_string_warn( "interrupt_if", option.interrupt_if_expr_str ) );
+  add_option( opt_string_warn( "early_chain_if", option.early_chain_if_expr_str ) );
+  add_option( opt_string_warn( "cancel_if", option.cancel_if_expr_str ) );
   add_option( opt_bool( "interrupt", option.interrupt ) );
   add_option( opt_bool( "interrupt_global", interrupt_global ) );
   add_option( opt_bool( "chain", option.chain ) );
   add_option( opt_bool( "cycle_targets", option.cycle_targets ) );
   add_option( opt_bool( "cycle_players", option.cycle_players ) );
   add_option( opt_int( "max_cycle_targets", option.max_cycle_targets ) );
-  add_option( opt_string( "target_if", option.target_if_str ) );
+  add_option( opt_string_warn( "target_if", option.target_if_str ) );
   add_option( opt_bool( "moving", option.moving ) );
   add_option( opt_string( "sync", option.sync_str ) );
   add_option( opt_bool( "wait_on_ready", option.wait_on_ready ) );
@@ -998,8 +998,13 @@ void action_t::parse_options( util::string_view options_str )
         // .. otherwise, just warn that there's an unknown option
         if ( status == opts::parse_status::NOT_FOUND )
         {
-          sim->error( "Warning: Unknown '{}' option '{}' with value '{}' for {}, ignoring",
-            this->name(), name, value, player->name() );
+          sim->error( "{} {} unknown option '{}' with value '{}', ignoring.", *player, *this, name, value );
+        }
+
+        // warn on if= overwriting a previous if=
+        if ( status == opts::parse_status::WARNING )
+        {
+          sim->error( "{} {} option '{}' with value '{}' overwriting previous value.", *player, *this, name, value );
         }
 
         return status;

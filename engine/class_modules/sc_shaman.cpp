@@ -4030,8 +4030,6 @@ struct pet_spell_t : public pet_action_t<T_PET, parse_action_effects_t<spell_t>>
                util::string_view options = {} )
     : pet_action_t<T_PET, parse_action_effects_t<spell_t>>( pet, name, spell, options )
   {
-    this->parse_options( options );
-
     if ( this->data().ok() )
     {
       this->o()->apply_action_effects( this );

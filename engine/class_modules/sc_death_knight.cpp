@@ -9385,11 +9385,13 @@ struct frostscythe_t : public frostscythe_base_t
 
     // The way this works in spell data: ERW has effects modified by Obliteration, which in turn modify the actions
     // We do not have automated parsing for energize, so manually zero the cost.
-    // 11.2 TODO in game behavior is that Obliterate COSTS 8 rp, but this will be painful to implement
-    if ( p()->talent.frost.obliteration.ok() && p()->buffs.pillar_of_frost->check() &&
-         p()->buffs.empower_rune_weapon->check() )
+    if ( p()->buffs.empower_rune_weapon->check() )
     {
       m = 0;
+    }
+    if ( p()->buffs.exterminate->check() )
+    {
+      m *= .5;
     }
 
     return m;
@@ -10617,10 +10619,13 @@ struct obliterate_t final : public death_knight_melee_attack_t
 
     // The way this works in spell data: ERW has effects modified by Obliteration, which in turn modify the actions
     // We do not have automated parsing for energize, so manually zero the cost.
-    // 11.2 TODO in game behavior is that Obliterate COSTS 8 rp, but this will be painful to implement 
-    if ( p()->talent.frost.obliteration.ok() && p()->buffs.pillar_of_frost->check() && p()->buffs.empower_rune_weapon->check() )
+    if ( p()->buffs.empower_rune_weapon->check() )
     {
       m = 0;
+    }
+    if ( p()->buffs.exterminate->check() )
+    {
+      m *= .5;
     }
 
     return m;
@@ -16295,12 +16300,7 @@ void death_knight_action_t<Base>::apply_action_effects()
   parse_effects( p()->buffs.icy_onslaught );
   parse_effects( p()->buffs.remorseless_winter, p()->talent.cleaving_strikes );
   parse_effects( p()->buffs.frozen_dominion_remorseless_winter, p()->talent.cleaving_strikes );
-  parse_effects( p()->buffs.empower_rune_weapon, [ & ]( double v )
-  {
-    if ( !p()->buffs.pillar_of_frost->check() )
-      v = 0;
-    return v;
-  }, p()->talent.frost.obliteration->effectN( 1 ).trigger() );
+  parse_effects( p()->buffs.empower_rune_weapon, p()->talent.frost.obliteration->effectN( 1 ).trigger() );
 
   // Unholy
   parse_effects( p()->buffs.unholy_assault );

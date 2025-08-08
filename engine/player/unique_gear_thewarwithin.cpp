@@ -8270,7 +8270,7 @@ void diamantine_voidcore( special_effect_t& effect )
 // 1239675 Stacking buff
 void unyielding_netherprism( special_effect_t& effect )
 {
-  if ( unique_gear::create_fallback_buffs( effect, { "latent_energy" } ) )
+  if ( unique_gear::create_fallback_buffs( effect, { "latent_energy", "unyielding_netherprism" } ) )
     return;
 
   auto equip_driver = effect.player->find_spell( 1233553 );

@@ -33,7 +33,7 @@ actions.cds+=/potion,if=buff.trueshot.up&(buff.bloodlust.up|target.health.pct<20
 
 # ################# 2 targets (2+ without trickshots)
 actions.cleave=explosive_shot,if=talent.precision_detonation&action.aimed_shot.in_flight&(buff.trueshot.down|!talent.windrunner_quiver)
-actions.cleave+=/black_arrow,if=talent.black_arrow&buff.precise_shots.up&buff.moving_target.down&variable.trueshot_ready
+actions.cleave+=/kill_shot,if=talent.black_arrow&buff.precise_shots.up&buff.moving_target.down&variable.trueshot_ready
 actions.cleave+=/volley,if=(talent.double_tap&buff.double_tap.down|!talent.aspect_of_the_hydra)&(buff.precise_shots.down|buff.moving_target.up)
 actions.cleave+=/rapid_fire,if=talent.bulletstorm&buff.bulletstorm.down&(!talent.double_tap|buff.double_tap.up|!talent.aspect_of_the_hydra&buff.trick_shots.remains>execute_time)&(buff.precise_shots.down|buff.moving_target.up|!talent.volley)
 actions.cleave+=/volley,if=!talent.double_tap&(buff.precise_shots.down|buff.moving_target.up)
@@ -43,7 +43,7 @@ actions.cleave+=/rapid_fire,if=talent.lunar_storm&buff.lunar_storm_cooldown.down
 # Sentinel
 actions.cleave+=/kill_shot,target_if=max:debuff.spotters_mark.down|action.aimed_shot.in_flight_to_target|max_prio_damage,if=!talent.black_arrow&(talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)|!talent.headshot&buff.razor_fragments.up)
 # Dark Ranger
-actions.cleave+=/black_arrow,target_if=min:dot.black_arrow_dot.ticking|max_prio_damage,if=talent.black_arrow&(talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)|!talent.headshot&buff.razor_fragments.up)
+actions.cleave+=/kill_shot,target_if=min:dot.black_arrow_dot.ticking|max_prio_damage,if=talent.black_arrow&(talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)|!talent.headshot&buff.razor_fragments.up)
 actions.cleave+=/multishot,target_if=max:debuff.spotters_mark.down|action.aimed_shot.in_flight_to_target|max_prio_damage,if=buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)&!talent.aspect_of_the_hydra&(talent.symphonic_arsenal|talent.small_game_hunter)
 actions.cleave+=/arcane_shot,target_if=max:debuff.spotters_mark.down|action.aimed_shot.in_flight_to_target|max_prio_damage,if=buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)
 actions.cleave+=/aimed_shot,target_if=max:debuff.spotters_mark.up,if=(buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up)&full_recharge_time<action.rapid_fire.execute_time+cast_time&(!talent.bulletstorm|buff.bulletstorm.up)&talent.windrunner_quiver
@@ -65,7 +65,7 @@ actions.st+=/rapid_fire,if=talent.lunar_storm&buff.lunar_storm_cooldown.down
 # Sentinel
 actions.st+=/kill_shot,if=!talent.black_arrow&(talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)|!talent.headshot&buff.razor_fragments.up)
 # Dark Ranger
-actions.st+=/black_arrow,if=talent.black_arrow&(!talent.headshot|talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down))
+actions.st+=/kill_shot,if=talent.black_arrow&(!talent.headshot|talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down))
 actions.st+=/arcane_shot,if=buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)
 actions.st+=/aimed_shot,if=(buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up)&full_recharge_time<action.rapid_fire.execute_time+cast_time&(!talent.bulletstorm|buff.bulletstorm.up)&talent.windrunner_quiver
 actions.st+=/rapid_fire
@@ -82,7 +82,7 @@ actions.trickshots+=/rapid_fire,if=hero_tree.sentinel&buff.lunar_storm_cooldown.
 # Dark Ranger
 actions.trickshots+=/steady_shot,if=talent.black_arrow&focus+cast_regen<focus.max&action.aimed_shot.in_flight&!buff.deathblow.react&buff.trueshot.down&cooldown.trueshot.remains
 # Dark Ranger
-actions.trickshots+=/black_arrow,if=talent.black_arrow&(!talent.headshot|buff.precise_shots.up|buff.trick_shots.down)
+actions.trickshots+=/kill_shot,if=talent.black_arrow&(!talent.headshot|buff.precise_shots.up|buff.trick_shots.down)
 actions.trickshots+=/multishot,target_if=max:debuff.spotters_mark.down|action.aimed_shot.in_flight_to_target,if=buff.precise_shots.up&buff.moving_target.down|buff.trick_shots.down
 actions.trickshots+=/trueshot,if=variable.trueshot_ready&buff.double_tap.down
 actions.trickshots+=/volley,if=buff.double_tap.down&(!talent.salvo|!talent.precision_detonation|(buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up))

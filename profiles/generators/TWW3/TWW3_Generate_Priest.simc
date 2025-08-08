@@ -4,9 +4,7 @@ race=maghar_orc
 spec=shadow
 role=spell
 position=ranged_back
-# BUG: Deathspeaker does not work
-# talents=CIQAAAAAAAAAAAAAAAAAAAAAAMDmZeAAAAAAAAAAAAAjxGMzMLbbMzYmZmZZwsxMzMjZjBGjhZxsN1MDWgZmBACwsNbLBzGLA2mB
-talents=CIQAAAAAAAAAAAAAAAAAAAAAAMDMzDAAAAAAAAAAAAYM2GMzMLbbMzYmZmZZwsxMzMjZjBGjhZxsN1MDWgZmBACwsNbLBzGbA2mB
+talents=CIQAAAAAAAAAAAAAAAAAAAAAAMDmZeAAAAAAAAAAAAAjxGMzMLbbMzYmZmZZwsxMzMjZjBGjhZxsN1MDWgZmBACwsNbLBzGLA2mB
 
 head=dying_stars_veil,id=237709,ilevel=723,gem_id=213743
 neck=chrysalis_of_sundered_souls,id=237568,ilevel=723,gem_id=213482/213458

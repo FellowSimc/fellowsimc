@@ -1483,7 +1483,7 @@ public:
   shadow_word_death_t( priest_t& p, timespan_t execute_override = timespan_t::min() )
     : ab( "shadow_word_death", p, p.talents.shadow_word_death ),
       execute_percent(
-          ( priest().talents.shadow.deathspeaker.enabled() && !priest().bugs )
+          priest().talents.shadow.deathspeaker.enabled()
               ? ( data().effectN( 3 ).base_value() + priest().talents.shadow.deathspeaker->effectN( 2 ).base_value() )
               : data().effectN( 3 ).base_value() ),
       execute_modifier( data().effectN( 4 ).percent() + priest().specs.shadow_priest->effectN( 25 ).percent() ),

@@ -4664,6 +4664,7 @@ struct bloodseeker_vines_t final : public cat_attack_t
   timespan_t orig_dur;
   double twin_pct;
   double tww3_pct;
+  int dot_stacks = 1;
 
   bloodseeker_vines_t( druid_t* p, std::string_view n )
     : cat_attack_t( n, p, p->spec.bloodseeker_vines ),
@@ -4685,7 +4686,7 @@ struct bloodseeker_vines_t final : public cat_attack_t
   {
     cat_attack_t::trigger_dot( s );
 
-    int stacks = 1;
+    int stacks = dot_stacks;
 
     // execute() instead of trigger() to avoid proc delay, and add 1ms to ensure final tick is buffed
     if ( rng().roll( twin_pct ) && orig_dur == dot_duration )
@@ -10682,21 +10683,27 @@ void druid_t::activate()
   if ( talent.resilient_flourishing.ok() && talent.thriving_growth.ok() )
   {
     register_on_kill_callback( [ this ]( player_t* t ) {
-      if ( auto dur = get_target_data( t )->dots.bloodseeker_vines->remains(); dur > 0_ms )
+      auto td = get_target_data( t );
+      auto stacks = td->debuff.bloodseeker_vines->check();
+      auto dur = td->dots.bloodseeker_vines->remains();
+      if ( stacks && dur > 0_ms )
       {
-        const auto& tl = active.bloodseeker_vines->target_list();
+        auto vines = debug_cast<cat_attacks::bloodseeker_vines_t*>( active.bloodseeker_vines );
+        const auto& tl = vines->target_list();
         if ( auto tar = get_smart_target( tl, &druid_td_t::dots_t::bloodseeker_vines, t ) )
         {
           // TODO: ugly hack. possibly use custom action_state
-          auto orig_dur = active.bloodseeker_vines->dot_duration;
+          auto orig_dur = vines->dot_duration;
 
-          active.bloodseeker_vines->dot_duration = dur;
-          active.bloodseeker_vines->dual = true;
+          vines->dot_duration = dur;
+          vines->dual = true;
+          vines->dot_stacks = stacks;
 
-          active.bloodseeker_vines->execute_on_target( tar );
+          vines->execute_on_target( tar );
 
-          active.bloodseeker_vines->dot_duration = orig_dur;
-          active.bloodseeker_vines->dual = false;
+          vines->dot_duration = orig_dur;
+          vines->dual = false;
+          vines->dot_stacks = 1;
         }
       }
     } );
@@ -12548,7 +12555,6 @@ void druid_t::create_actions()
     {
       auto tww3 = get_secondary_action<bloodseeker_vines_t>( "bloodseeker_vines_tww3" );
       tww3->name_str_reporting = "bloodseeker_vines";
-      tww3->twin_pct = 0.0;  // does not work with twin sprouts
       active.bloodseeker_vines_tww3 = tww3;
 
       vines->replace_stats( tww3 );

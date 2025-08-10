@@ -25,7 +25,7 @@ def->add_action( "variable,name=eclipse_remains,value=buff.eclipse_lunar.remains
 def->add_action( "variable,name=enter_lunar,value=talent.lunar_calling|spell_targets.starfire>3-(talent.umbral_intensity|talent.soul_of_the_forest)","Variable used to enter Eclipse. Negate variable.enter_lunar to enter Solar Eclipse." );
 def->add_action( "variable,name=boat_stacks,value=buff.balance_of_all_things_arcane.stack+buff.balance_of_all_things_nature.stack","Variable used for Balance of All Things stacks" );
 def->add_action( "variable,name=tww3_keeper_4pc,value=hero_tree.keeper_of_the_grove&set_bonus.tww3_4pc","This APL is worse than original after the changes so no point running it" );
-def->add_action( "variable,name=kotg_ca_condition,value=variable.tww3_keeper_4pc&astral_power.deficit<=50&(variable.on_use_trinket=1&trinket.1.cooldown.ready|variable.on_use_trinket=2&trinket.2.cooldown.ready|variable.on_use_trinket=0|variable.on_use_trinket=3&(trinket.1.cooldown.ready|trinket.2.cooldown.ready))&cooldown.force_of_nature.remains<gcd.max*4&(cooldown.ca_inc.full_recharge_time<buff.dryad.duration|!buff.ca_inc.up&(cooldown.convoke_the_spirits.remains<gcd.max*4|!talent.convoke_the_spirits))|buff.harmony_of_the_grove.up&(buff.dryad.remains<gcd.max&buff.dryad.up|buff.dryads_favor.up)|fight_remains<buff.ca_inc.duration","Keeper 11.2 CA condition" );
+def->add_action( "variable,name=kotg_ca_condition,value=variable.tww3_keeper_4pc&astral_power.deficit<=50&(variable.on_use_trinket=1&trinket.1.cooldown.ready|variable.on_use_trinket=2&trinket.2.cooldown.ready|variable.on_use_trinket=0|variable.on_use_trinket=3&(trinket.1.cooldown.ready|trinket.2.cooldown.ready))&cooldown.force_of_nature.remains<gcd.max*4&(cooldown.ca_inc.full_recharge_time<buff.dryad.duration|!buff.ca_inc.up&(cooldown.convoke_the_spirits.remains<gcd.max*4|!talent.convoke_the_spirits))|buff.harmony_of_the_grove.up&(buff.dryad.remains<gcd.max&buff.dryad.up|buff.dryads_favor.up)|fight_remains<20","Keeper 11.2 CA condition" );
 def->add_action( "variable,name=pool_for_cd,value=astral_power<action.starsurge.cost*3&(variable.on_use_trinket=1&trinket.1.cooldown.ready|variable.on_use_trinket=2&trinket.2.cooldown.ready|variable.on_use_trinket=3&(trinket.1.cooldown.ready|trinket.2.cooldown.ready)|variable.on_use_trinket=0)&(cooldown.convoke_the_spirits.ready|!talent.convoke_the_spirits)&!buff.ca_inc.up","Variable to pool Astral Power for CA with 11.2 4pc" );
 def->add_action( "variable,name=pool_in_ca,value=buff.dryad.up&((astral_power-action.starsurge.cost)+((0<?(buff.dryad.remains-gcd.max))*(action.wrath.energize_amount%action.wrath.execute_time))+variable.passive_asp)<action.starsurge.cost*2","Variable to pool Astral Power for Dryads Favor with 11.2 4pc" );
 def->add_action( "use_item,name=imperfect_ascendancy_serum,if=dot.sunfire.remains>4&(dot.moonfire.remains>4|talent.treants_of_the_moon&(cooldown.force_of_nature.remains<3|buff.harmony_of_the_grove.up)&variable.ca_effective_cd<1|fight_remains<20|fight_remains<variable.ca_effective_cd&(buff.harmony_of_the_grove.up|cooldown.convoke_the_spirits.ready))&buff.spymasters_report.stack<=29","Lines for trinkets that require specific use-cases" );
@@ -54,26 +54,26 @@ kotg_st->add_action( "wrath,if=variable.enter_lunar&(eclipse.in_none|variable.ec
 kotg_st->add_action( "starfire,if=!variable.enter_lunar&(eclipse.in_none|variable.eclipse_remains<cast_time)" );
 kotg_st->add_action( "stellar_flare,if=remains<=buff.ca_inc.duration&variable.pool_for_cd|remains<=buff.ca_inc.up&!buff.dryads_favor.up","Use Stellar Flare if you're about to use CDs and the duration is less than the duration of your CDs" );
 kotg_st->add_action( "wrath,if=variable.pool_for_cd","Wrath to pool AP before using CDs" );
-kotg_st->add_action( "force_of_nature,if=buff.dryad.up&buff.harmony_of_the_grove.duration>buff.dryad.remains+gcd.max*2|cooldown.force_of_nature.duration<cooldown.convoke_the_spirits.remains+(15*talent.control_of_the_dream)|fight_remains<buff.harmony_of_the_grove.duration+gcd.max","Use Treants if Dryad is up and the duration is less than Treants duration + 2 globals" );
+kotg_st->add_action( "starsurge,if=buff.dryad.remains>8&buff.dryad.up","Use Treants if Dryad is up and the duration is less than Treants duration + 2 globals" );
+kotg_st->add_action( "force_of_nature,if=buff.dryad.up&buff.harmony_of_the_grove.duration>buff.dryad.remains+gcd.max*2|cooldown.force_of_nature.duration<cooldown.convoke_the_spirits.remains+(15*talent.control_of_the_dream)|fight_remains<20" );
 kotg_st->add_action( "fury_of_elune,if=5+variable.passive_asp<astral_power.deficit&(cooldown.convoke_the_spirits.remains>buff.fury_of_elune.duration|!talent.convoke_the_spirits)|fight_remains<8+gcd.max","Proceed with rotation" );
 kotg_st->add_action( "starfall,if=buff.starweavers_warp.up" );
 kotg_st->add_action( "starsurge,if=talent.starlord&buff.starlord.stack<3&!variable.pool_in_ca" );
 kotg_st->add_action( "sunfire,target_if=refreshable" );
 kotg_st->add_action( "moonfire,target_if=refreshable&(!talent.treants_of_the_moon|cooldown.force_of_nature.remains>3&!buff.harmony_of_the_grove.up)" );
-kotg_st->add_action( "starsurge,if=cooldown.convoke_the_spirits.remains<gcd.max*2&variable.convoke_condition&astral_power.deficit<50&buff.dryad.remains>8&buff.dryad.up" );
 kotg_st->add_action( "convoke_the_spirits,if=variable.convoke_condition&buff.harmony_of_the_grove.up","Convoke when Convoke variable is true and Harmony of the Grove is up" );
 kotg_st->add_action( "stellar_flare,target_if=refreshable&(target.time_to_die-remains-target>7+spell_targets)&!buff.ca_inc.up" );
-kotg_st->add_action( "starsurge,if=(buff.starlord.remains>4&variable.boat_stacks>=3|fight_remains<4)&!variable.pool_in_ca" );
-kotg_st->add_action( "new_moon,if=astral_power.deficit>variable.passive_asp+energize_amount|fight_remains<20|cooldown.ca_inc.remains>15" );
-kotg_st->add_action( "half_moon,if=astral_power.deficit>variable.passive_asp+energize_amount&(buff.eclipse_lunar.remains>execute_time|buff.eclipse_solar.remains>execute_time)|fight_remains<20|cooldown.ca_inc.remains>15" );
-kotg_st->add_action( "full_moon,if=astral_power.deficit>variable.passive_asp+energize_amount&(buff.eclipse_lunar.remains>execute_time|buff.eclipse_solar.remains>execute_time)|fight_remains<20|cooldown.ca_inc.remains>15" );
+kotg_st->add_action( "starsurge,if=(buff.starlord.remains>4&variable.boat_stacks>=7|fight_remains<4)&!variable.pool_in_ca" );
+kotg_st->add_action( "new_moon,if=astral_power.deficit>variable.passive_asp+energize_amount&((buff.harmony_of_the_grove.up&!buff.ca_inc.up|buff.ca_inc.up&!cooldown.ca_inc.ready)|cooldown.new_moon.full_recharge_time<cooldown.convoke_the_spirits.remains)|fight_remains<20" );
+kotg_st->add_action( "half_moon,if=astral_power.deficit>variable.passive_asp+energize_amount&((buff.harmony_of_the_grove.up&!buff.ca_inc.up|buff.ca_inc.up&!cooldown.ca_inc.ready)|cooldown.new_moon.full_recharge_time<cooldown.convoke_the_spirits.remains)|fight_remains<20" );
+kotg_st->add_action( "full_moon,if=astral_power.deficit>variable.passive_asp+energize_amount&((buff.harmony_of_the_grove.up&!buff.ca_inc.up|buff.ca_inc.up&!cooldown.ca_inc.ready)|cooldown.new_moon.full_recharge_time<cooldown.convoke_the_spirits.remains)|fight_remains<20" );
 kotg_st->add_action( "starsurge,if=buff.starweavers_weft.up|buff.touch_the_cosmos.up" );
 kotg_st->add_action( "starsurge,if=(astral_power.deficit<variable.passive_asp+action.wrath.energize_amount+(action.starfire.energize_amount+variable.passive_asp)*(buff.eclipse_solar.remains<(gcd.max*2)))&!variable.pool_in_ca" );
 kotg_st->add_action( "wild_mushroom,if=!prev_gcd.1.wild_mushroom&dot.fungal_growth.remains<2" );
 kotg_st->add_action( "wrath" );
 
 kotg_pre_cd->add_action( "potion,if=buff.ca_inc.up","11.2 Keeper pre_cd list to align cooldowns and trinkets" );
-kotg_pre_cd->add_action( "use_items,if=buff.ca_inc.up|fight_remains<15" );
+kotg_pre_cd->add_action( "use_items,if=buff.ca_inc.up|fight_remains<20" );
 kotg_pre_cd->add_action( "fury_of_elune,if=!buff.ca_inc.up&variable.kotg_ca_condition|cooldown.convoke_the_spirits.remains>cooldown.fury_of_elune.duration" );
 
 st->add_action( "warrior_of_elune,if=talent.lunar_calling|!talent.lunar_calling&variable.eclipse_remains<=7","ST" );

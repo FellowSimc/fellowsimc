@@ -8456,7 +8456,7 @@ void astral_antenna( special_effect_t& effect )
                  ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS )
                  ->set_stack_change_callback( [ buff ]( buff_t* b, int, int new_ ) {
                    if ( new_ )
-                     make_event( *b->source->sim, b->source->rng().range( 500_ms, 3500_ms ), [ b, buff ] {
+                     make_event( *b->source->sim, b->source->rng().gauss_ab( 5_s, 1_s, 500_ms, 19999_ms ), [ b, buff ] {
                        buff->trigger();
                        b->decrement();
                      } );

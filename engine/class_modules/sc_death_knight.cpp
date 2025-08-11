@@ -15110,7 +15110,7 @@ void death_knight_t::create_buffs()
                               ->set_default_value_from_effect_type( A_MOD_TOTAL_STAT_PERCENTAGE )
                               ->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
 
-  buffs.stoneskin_gargoyle = make_buff( this, "stoneskin_gargoyle", find_spell( 53365 ) )
+  buffs.stoneskin_gargoyle = make_buff( this, "stoneskin_gargoyle", find_spell( 62157 ) )
                                  ->set_default_value_from_effect_type( A_MOD_TOTAL_STAT_PERCENTAGE )
                                  ->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH )
                                  ->set_pct_buff_type( STAT_PCT_BUFF_STAMINA )

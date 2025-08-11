@@ -15860,6 +15860,32 @@ struct druid_module_t final : public module_t
       .operation( hotfix::HOTFIX_SET )
       .modifier( 40 )
       .verification_value( 80 );
+
+    hotfix::register_effect( "Druid", "8-11-2025", "Ferocious Bite damage increased by 6%", 12790, hotfix::HOTFIX_FLAG_PTR )
+      .field( "ap_coefficient" )
+      .operation( hotfix::HOTFIX_SET )
+      .modifier( 1.466 )
+      .verification_value( 1.383 );
+    hotfix::register_effect( "Druid", "8-11-2025", "Ravage primary target damage increased by 6%", 1136153, hotfix::HOTFIX_FLAG_PTR )
+      .field( "ap_coefficient" )
+      .operation( hotfix::HOTFIX_SET )
+      .modifier( 2.5778 )
+      .verification_value( 2.4319 );
+    hotfix::register_effect( "Druid", "8-11-2025", "Shred damage increased by 5%", 1136153, hotfix::HOTFIX_FLAG_PTR )
+      .field( "ap_coefficient" )
+      .operation( hotfix::HOTFIX_SET )
+      .modifier( 1.848 )
+      .verification_value( 1.76 );
+    hotfix::register_effect( "Druid", "8-11-2025", "Sabertooth causes Ferocious Bite to increase damage taken from your bleeds and other periodic effects by 6% per combo point", 753677, hotfix::HOTFIX_FLAG_PTR )
+      .field( "base_value" )
+      .operation( hotfix::HOTFIX_SET )
+      .modifier( 6 )
+      .verification_value( 5);
+    hotfix::register_effect( "Druid", "8-11-2025", "Bloodseeker Vines damage increased by 5%", 1132874, hotfix::HOTFIX_FLAG_PTR )
+      .field( "ap_coefficient" )
+      .operation( hotfix::HOTFIX_SET )
+      .modifier( 0.4253 )
+      .verification_value( 0.405 );
   }
 
   void combat_begin( sim_t* ) const override {}

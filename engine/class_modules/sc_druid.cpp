@@ -14150,6 +14150,30 @@ std::unique_ptr<expr_t> druid_t::create_expression( std::string_view name )
       else if ( util::str_compare_ci( splits[ 1 ], "wrath_counter" ) )
         return make_fn_expr( name, [ this ]() { return eclipse_handler.wrath_counter; } );
     }
+
+    static constexpr std::array<std::string_view, 4> control_cooldowns{
+      { "force_of_nature", "incarnation_chosen_of_elune", "celestial_alignment", "convoke_the_spirits" }
+    };
+
+    if ( talent.control_of_the_dream.ok() && splits.size() == 3 && dbc->ptr &&
+         util::str_compare_ci( splits[ 0 ], "cooldown" ) &&
+         util::str_compare_ci( splits[ 2 ], "duration" ) &&
+         range::any_of( control_cooldowns, [ s = splits[ 1 ] ]( std::string_view cd ) {
+           return util::str_compare_ci( s, cd );
+         } ) )
+    {
+      if ( auto _cd = get_cooldown( splits[ 1 ] ); _cd && _cd->charges == _cd->current_charge )
+      {
+        timespan_t max_diff = timespan_t::from_seconds( talent.control_of_the_dream->effectN( 1 ).base_value() );
+
+        return make_fn_expr( name, [ _cd, max_diff, this ] {
+          auto dur = cooldown_t::cooldown_duration( _cd );
+          auto diff = std::min( max_diff, sim->current_time() - _cd->ready );
+          assert( dur - diff > 0_ms );
+          return dur - diff;
+        } );
+      }
+    }
   }
   else if ( specialization() == DRUID_FERAL )
   {

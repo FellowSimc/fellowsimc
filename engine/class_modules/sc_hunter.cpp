@@ -4684,6 +4684,12 @@ struct kill_shot_base_t : hunter_ranged_attack_t
     debug_cast<state_t*>( s )->razor_fragments_up = p()->buffs.razor_fragments->check();
     debug_cast<state_t*>( s )->empowered_by_precise_shots = p()->talents.headshot.ok() && p()->buffs.precise_shots->up();
   }
+
+  bool ready() override
+  {
+    // Force the cooldown reset reaction because apparently that was just implemented for apl checks :/
+    return hunter_ranged_attack_t::ready() && cooldown->reset_react <= sim->current_time();
+  }
 };
 
 struct kill_shot_t : public kill_shot_base_t

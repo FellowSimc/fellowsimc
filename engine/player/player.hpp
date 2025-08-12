@@ -934,6 +934,7 @@ struct player_t : public actor_t
     // Alchemical Chaos Flask
     player_option_t<std::string> alchemical_initial_stat    = "none";  // Initial stat for Alchemical Chaos Flask
     player_option_t<std::string> alchemical_initial_penalty = "none";  // Initial penalty for Alchemical Chaos Flask
+    bool incorporeal_essence_gorger_ethereal = false; // Whether or not to use lowest or highest (ethereal) secondary stat
   } thewarwithin_opts;
 
 private:

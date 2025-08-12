@@ -8927,7 +8927,14 @@ void incorporeal_essence_gorger( special_effect_t& effect )
     void impact( action_state_t* s ) override
     {
       generic_proc_t::impact( s );
-      buffs.at( util::lowest_stat( player, secondary_ratings ) )->trigger();
+      if ( player->thewarwithin_opts.incorporeal_essence_gorger_ethereal )
+      {
+        buffs.at( util::highest_stat( player, secondary_ratings ) )->trigger();
+      }
+      else
+      {
+        buffs.at( util::lowest_stat( player, secondary_ratings ) )->trigger();
+      }
     }
   };
 

@@ -584,7 +584,7 @@ struct druid_t final : public parse_player_effects_t
     double initial_astral_power = 0.0;
     int initial_moon_stage = static_cast<int>( moon_stage_e::NEW_MOON );
     int initial_orbit_breaker_stacks = -1;
-    double dryads_favor_cap_multiplier = 6.0;
+    double dryads_favor_cap_multiplier = 10.0;
     bool enable_dungeon_slice_for_balance = false;
 
     // Feral
@@ -1333,12 +1333,6 @@ struct druid_t final : public parse_player_effects_t
 
     regen_caches[ CACHE_HASTE ]        = true;
     regen_caches[ CACHE_ATTACK_HASTE ] = true;
-
-    if ( sim->dbc->ptr && options.dryads_favor_cap_multiplier == 6.0 )
-    {
-      options.dryads_favor_cap_multiplier = 10.0;
-      sim->error( "Using upcoming tuning to Dryad's Favor cap." );
-    }
   }
 
   // hide player_t::is_ptr()
@@ -15846,83 +15840,6 @@ struct druid_module_t final : public module_t
       .operation( hotfix::HOTFIX_SET )
       .modifier( 0 )
       .verification_value( 47 );
-
-    hotfix::register_effect( "Druid", "8-8-2025", "All direct damage increased by 8%", 179696, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 27 )
-      .verification_value( 18 );
-    hotfix::register_effect( "Druid", "8-8-2025", "All periodic damage increased by 8%", 191146, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 27 )
-      .verification_value( 18 );
-    hotfix::register_effect( "Druid", "8-8-2025", "All pet damage increased by 8%", 191147, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 27 )
-      .verification_value( 18 );
-    hotfix::register_effect( "Druid", "8-8-2025", "All guardian damage increased by 8%", 872569, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 27 )
-      .verification_value( 9 );
-    hotfix::register_effect( "Druid", "8-8-2025", "Wildstalker 4-piece now accumulates 3% of damage done", 1232833, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 3 )
-      .verification_value( 2 );
-    hotfix::register_effect( "Druid", "8-8-2025", "Dryad's Favor splashes 15% of its damage onto nearby enemies", 1256963, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 15 )
-      .verification_value( 20 );
-    hotfix::register_effect( "Druid", "8-8-2025", "Elune's Chosen 2-piece Starfire damage increase changed to 20%", 1232239, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 20 )
-      .verification_value( 25 );
-    hotfix::register_effect( "Druid", "8-8-2025", "Elune's Chosen 2-piece has a 40% chance to launch a Starsurge", 1233008, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 40 )
-      .verification_value( 50 );
-    hotfix::register_effect( "Druid", "8-8-2025", "Elune's Chosen 2-piece launches Starsurge at 45% effectiveness", 1233011, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 45 )
-      .verification_value( 50 );
-    hotfix::register_effect( "Druid", "8-8-2025", "Elune's Chosen 4-piece Split Starsurges deal damage at 40% effectiveness", 1233014, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 40 )
-      .verification_value( 80 );
-
-    hotfix::register_effect( "Druid", "8-11-2025", "Ferocious Bite damage increased by 6%", 12790, hotfix::HOTFIX_FLAG_PTR )
-      .field( "ap_coefficient" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 1.466 )
-      .verification_value( 1.383 );
-    hotfix::register_effect( "Druid", "8-11-2025", "Ravage primary target damage increased by 6%", 1136153, hotfix::HOTFIX_FLAG_PTR )
-      .field( "ap_coefficient" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 2.5778 )
-      .verification_value( 2.4319 );
-    hotfix::register_effect( "Druid", "8-11-2025", "Shred damage increased by 5%", 1859, hotfix::HOTFIX_FLAG_PTR )
-      .field( "ap_coefficient" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 1.848 )
-      .verification_value( 1.76 );
-    hotfix::register_effect( "Druid", "8-11-2025", "Sabertooth causes Ferocious Bite to increase damage taken from your bleeds and other periodic effects by 6% per combo point", 753677, hotfix::HOTFIX_FLAG_PTR )
-      .field( "base_value" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 6 )
-      .verification_value( 5);
-    hotfix::register_effect( "Druid", "8-11-2025", "Bloodseeker Vines damage increased by 5%", 1132874, hotfix::HOTFIX_FLAG_PTR )
-      .field( "ap_coefficient" )
-      .operation( hotfix::HOTFIX_SET )
-      .modifier( 0.4253 )
-      .verification_value( 0.405 );
   }
 
   void combat_begin( sim_t* ) const override {}

@@ -63,7 +63,7 @@ actions.drst+=/black_arrow,if=!talent.headshot|talent.headshot&buff.precise_shot
 actions.drst+=/aimed_shot,if=buff.trueshot.up&buff.precise_shots.down|buff.lock_and_load.up&buff.moving_target.up
 actions.drst+=/rapid_fire,if=!buff.deathblow.react
 actions.drst+=/trueshot,if=variable.trueshot_ready&buff.double_tap.down&buff.deathblow.down
-actions.drst+=/arcane_shot,if=buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)&buff.deathblow.down
+actions.drst+=/arcane_shot,if=buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)
 actions.drst+=/aimed_shot,if=buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up
 actions.drst+=/explosive_shot,if=talent.shrapnel_shot&buff.lock_and_load.down
 actions.drst+=/steady_shot

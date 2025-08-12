@@ -566,9 +566,14 @@ bool parse_effects_t::parse_effect( pack_t<U>& pack, size_t i, bool force )
   double val_mul = 0.01;
 
   if ( mastery )
+  {
     val = eff.mastery_value();
+    pack.data.base_mastery = eff.percent();
+  }
   else
+  {
     val = eff.base_value();
+  }
 
   if constexpr ( is_detected_v<detect_buff, U> && is_detected_v<detect_type, U> )
   {
@@ -720,7 +725,10 @@ double parse_effects_t::get_effect_value_full( const player_effect_t& i, bool be
   }
 
   if ( i.mastery )
+  {
     eff_val *= _player->cache.mastery();
+    eff_val += i.base_mastery;
+  }
 
   callback_idx |= i.idx;
 

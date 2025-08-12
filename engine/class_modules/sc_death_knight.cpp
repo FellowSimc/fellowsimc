@@ -1043,6 +1043,7 @@ public:
     const spell_data_t* blood_shield;  // Blood
     const spell_data_t* frozen_heart;  // Frost
     const spell_data_t* dreadblade;    // Unholy
+    const spell_data_t* dreadblade_pet_crit;  // Unholy, pet crit mastery
   } mastery;
 
   // Talents
@@ -2421,6 +2422,7 @@ struct death_knight_pet_t : public pet_t
   double commander_value;
   bool affected_by_grave_mastery;
   buff_t* grave_mastery;
+  buff_t* mastery_dreadblade_crit;
 
   death_knight_pet_t( death_knight_t* player, std::string_view name, bool guardian = true, bool auto_attack = true,
                       bool dynamic = true )
@@ -2438,7 +2440,8 @@ struct death_knight_pet_t : public pet_t
       is_magus( false ),
       commander_value( 0 ),
       affected_by_grave_mastery( false ),
-      grave_mastery( nullptr )
+      grave_mastery( nullptr ),
+      mastery_dreadblade_crit( nullptr )
   {
     if ( auto_attack )
     {
@@ -2470,6 +2473,32 @@ struct death_knight_pet_t : public pet_t
 
     return td;
   }
+
+  struct mastery_dreadblade_crit_t : public buff_t
+  {
+    mastery_dreadblade_crit_t( death_knight_pet_t* p )
+      : buff_t( p, "mastery_dreadblade", p->dk()->mastery.dreadblade_pet_crit )
+    {
+      set_quiet( true );
+    }
+
+    death_knight_pet_t* pet() const
+    {
+      return debug_cast<death_knight_pet_t*>( source );
+    }
+
+    double value() override
+    {
+      return pet()->dk()->mastery.dreadblade->effectN( 6 ).percent() +
+             ( pet()->dk()->mastery.dreadblade->effectN( 6 ).sp_coeff() * pet()->dk()->cache.mastery_value() );
+    }
+
+    double check_value() const override
+    {
+      return pet()->dk()->mastery.dreadblade->effectN( 6 ).percent() +
+             ( pet()->dk()->mastery.dreadblade->effectN( 6 ).sp_coeff() * pet()->dk()->cache.mastery_value() );
+    }
+  };
 
   void init_finished() override
   {
@@ -2536,9 +2565,8 @@ struct death_knight_pet_t : public pet_t
 
     m *= 1.0 + grave_mastery->check_value();
 
-    if ( dk()->mastery.dreadblade->ok() )
-      m *= 1.0 + dk()->mastery.dreadblade->effectN( 6 ).percent() +
-           ( dk()->mastery.dreadblade->effectN( 6 ).sp_coeff() * dk()->composite_mastery() / 100 );
+    if ( mastery_dreadblade_crit->check() )
+      m *= 1.0 + mastery_dreadblade_crit->check_value();
 
     return m;
   }
@@ -2561,6 +2589,10 @@ struct death_knight_pet_t : public pet_t
   void arise() override
   {
     pet_t::arise();
+
+    if ( dk()->mastery.dreadblade->ok() )
+      mastery_dreadblade_crit->trigger();
+
     dk()->dk_active_pets.push_back( this );
     if ( decomposition_can_extend )
     {
@@ -2686,6 +2718,8 @@ struct death_knight_pet_t : public pet_t
     blood_rush = make_buff( this, "blood_rush", dk()->spell.blood_rush )
                      ->set_default_value_from_effect( 1 )
                      ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS );
+
+    mastery_dreadblade_crit = make_buff<mastery_dreadblade_crit_t>( this );
   }
 
   void init_action_list() override
@@ -5007,12 +5041,6 @@ struct death_knight_action_t : public parse_action_effects_t<Base>
 
   struct
   {
-    bool mastery_dreadblade_crit_bonus_5;
-    bool mastery_dreadblade_crit_bonus_7;
-    bool exterminate_energize_reduction_3;
-    bool exterminate_energize_reduction_4;
-    bool erw_energize_reduction_3;
-    bool erw_energize_reduction_4;
   } affected_by;
 
   death_knight_action_t( std::string_view n, death_knight_t* p, const spell_data_t* s = spell_data_t::nil() )
@@ -5020,7 +5048,7 @@ struct death_knight_action_t : public parse_action_effects_t<Base>
       gain( nullptr ),
       hasted_gcd( false ),
       rp_per_tick( 0 ),
-      affected_by{ false, false }
+      affected_by{}
   {
     this->may_glance = false;
     if ( this->cooldown->duration > 0_s )
@@ -5082,23 +5110,6 @@ struct death_knight_action_t : public parse_action_effects_t<Base>
         this->not_a_proc = true;
       }
     }
-
-    affected_by.mastery_dreadblade_crit_bonus_5 =
-        p->mastery.dreadblade->ok() && this->data().affected_by( p->mastery.dreadblade->effectN( 5 ) );
-    affected_by.mastery_dreadblade_crit_bonus_7 =
-        p->mastery.dreadblade->ok() && this->data().affected_by( p->mastery.dreadblade->effectN( 7 ) );
-
-    affected_by.exterminate_energize_reduction_3 =
-        p->spell.exterminate_buff->ok() && this->data().affected_by( p->spell.exterminate_buff->effectN( 3 ) );
-
-    affected_by.exterminate_energize_reduction_4 =
-        p->spell.exterminate_buff->ok() && this->data().affected_by( p->spell.exterminate_buff->effectN( 4 ) );
-
-    affected_by.erw_energize_reduction_3 = p->spell.empower_rune_weapon_buff->ok() &&
-                                           this->data().affected_by( p->spell.empower_rune_weapon_buff->effectN( 3 ) );
-
-    affected_by.erw_energize_reduction_4 = p->spell.empower_rune_weapon_buff->ok() &&
-                                           this->data().affected_by( p->spell.empower_rune_weapon_buff->effectN( 4 ) );
   }
 
   std::string full_name() const
@@ -5276,21 +5287,6 @@ struct death_knight_action_t : public parse_action_effects_t<Base>
     }
 
     return amount;
-  }
-
-  double composite_crit_damage_bonus_multiplier() const override
-  {
-    auto cd = action_base_t::composite_crit_damage_bonus_multiplier();
-
-    if ( p()->mastery.dreadblade->ok() && affected_by.mastery_dreadblade_crit_bonus_5 )
-      cd *= 1.0 + p()->mastery.dreadblade->effectN( 5 ).percent() +
-            ( p()->mastery.dreadblade->effectN( 5 ).sp_coeff() * p()->cache.mastery_value() );
-
-    if ( p()->mastery.dreadblade->ok() && affected_by.mastery_dreadblade_crit_bonus_7 )
-      cd *= 1.0 + p()->mastery.dreadblade->effectN( 7 ).percent() +
-            ( p()->mastery.dreadblade->effectN( 7 ).sp_coeff() * p()->cache.mastery_value() );
-
-    return cd;
   }
 
   void init() override
@@ -14396,6 +14392,7 @@ void death_knight_t::init_spells()
   mastery.blood_shield = find_mastery_spell( DEATH_KNIGHT_BLOOD );
   mastery.frozen_heart = find_mastery_spell( DEATH_KNIGHT_FROST );
   mastery.dreadblade   = find_mastery_spell( DEATH_KNIGHT_UNHOLY );
+  mastery.dreadblade_pet_crit = conditional_spell_lookup( mastery.dreadblade->ok(), 1250728 );  // Dreadblade's Pet Crit
 
   spell_lookups();
   set_icds();
@@ -16427,8 +16424,8 @@ void death_knight_action_t<Base>::apply_action_effects()
   parse_effects( p()->buffs.sudden_doom, p()->talent.unholy.harbinger_of_doom );
   parse_effects( p()->buffs.plaguebringer, p()->talent.unholy.plaguebringer );
   parse_effects( p()->buffs.commander_of_the_dead, p()->talent.unholy.commander_of_the_dead );
-  // Dont parse effect 5 and 6 due to the way this effect works. Manually handled where necessaray.
-  parse_effects( p()->mastery.dreadblade, effect_mask_t( true ).disable( 5, 6, 7 ) );
+  // Dont parse effect 6 due to the way this effect works.
+  parse_effects( p()->mastery.dreadblade, effect_mask_t( true ).disable( 6 ) );
   parse_effects( p()->buffs.winning_streak_unholy, [ & ]( double v ) {
     v *= 0.1;  // Divides by 10 in spell data
     if ( p()->buffs.dark_transformation->check() )
@@ -16857,6 +16854,7 @@ struct death_knight_module_t : public module_t
     unique_gear::register_special_effect( 326982, runeforge::unending_thirst );
   }
 
+  /*
   void register_hotfixes() const override
   {
     hotfix::register_effect( "Death Knight", "2025-8-11", "Obliterate (MH) nerfed 5% ", 331344,
@@ -16900,7 +16898,7 @@ struct death_knight_module_t : public module_t
         .operation( hotfix::HOTFIX_SET )
         .modifier( 4.07974 )
         .verification_value( 3.70886 );
-  }
+  }*/
 
   void init( player_t* ) const override
   {

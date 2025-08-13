@@ -31,7 +31,7 @@ void fury( player_t* p )
   precombat->add_action( "variable,name=treacherous_transmitter_precombat_cast,value=2" );
   precombat->add_action( "use_item,name=treacherous_transmitter" );
   precombat->add_action( "recklessness,if=!equipped.fyralath_the_dreamrender" );
-  precombat->add_action( "avatar" );
+  precombat->add_action( "avatar,if=!equipped.cursed_stone_idol" );
 
   default_->add_action( "auto_attack" );
   default_->add_action( "charge,if=time<=0.5|movement.distance>5" );
@@ -115,7 +115,7 @@ void fury( player_t* p )
   thane->add_action( "whirlwind" );
 
   trinkets->add_action( "do_treacherous_transmitter_task", "Trinkets" );
-  trinkets->add_action( "use_item,name=cursed_stone_idol,if=cooldown.avatar.remains<1" );
+  trinkets->add_action( "use_item,name=cursed_stone_idol,if=cooldown.avatar.remains<2" );
   trinkets->add_action( "use_item,name=unyielding_netherprism,if=cooldown.avatar.remains<=85" );
   trinkets->add_action( "use_item,slot=trinket1,if=variable.trinket_1_buffs&!variable.trinket_1_manual&(!buff.avatar.up&trinket.1.cast_time>0|!trinket.1.cast_time>0)&buff.avatar.up&(variable.trinket_2_exclude|!trinket.2.has_cooldown|trinket.2.cooldown.remains|variable.trinket_priority=1)|trinket.1.proc.any_dps.duration>=fight_remains", "Trinkets The trinket with the highest estimated value, will be used first and paired with Avatar." );
   trinkets->add_action( "use_item,slot=trinket2,if=variable.trinket_2_buffs&!variable.trinket_2_manual&(!buff.avatar.up&trinket.2.cast_time>0|!trinket.2.cast_time>0)&buff.avatar.up&(variable.trinket_1_exclude|!trinket.1.has_cooldown|trinket.1.cooldown.remains|variable.trinket_priority=2)|trinket.2.proc.any_dps.duration>=fight_remains" );
@@ -353,7 +353,7 @@ void arms( player_t* p )
   slayer_sweep->add_action( "storm_bolt,if=buff.bladestorm.up" );
 
   trinkets->add_action( "do_treacherous_transmitter_task", "Trinkets" );
-  trinkets->add_action( "use_item,name=cursed_stone_idol,if=cooldown.avatar.remains<1" );
+  trinkets->add_action( "use_item,name=cursed_stone_idol,if=cooldown.avatar.remains<2" );
   trinkets->add_action( "use_item,slot=trinket1,if=variable.trinket_1_buffs&!variable.trinket_1_manual&(!buff.avatar.up&trinket.1.cast_time>0|!trinket.1.cast_time>0)&buff.avatar.up&(variable.trinket_2_exclude|!trinket.2.has_cooldown|trinket.2.cooldown.remains|variable.trinket_priority=1)|trinket.1.proc.any_dps.duration>=fight_remains", "Trinkets The trinket with the highest estimated value, will be used first and paired with Avatar." );
   trinkets->add_action( "use_item,slot=trinket2,if=variable.trinket_2_buffs&!variable.trinket_2_manual&(!buff.avatar.up&trinket.2.cast_time>0|!trinket.2.cast_time>0)&buff.avatar.up&(variable.trinket_1_exclude|!trinket.1.has_cooldown|trinket.1.cooldown.remains|variable.trinket_priority=2)|trinket.2.proc.any_dps.duration>=fight_remains" );
   trinkets->add_action( "use_item,slot=trinket1,if=!variable.trinket_1_buffs&(trinket.1.cast_time>0&!buff.avatar.up|!trinket.1.cast_time>0)&!variable.trinket_1_manual&(!variable.trinket_1_buffs&(trinket.2.cooldown.remains|!variable.trinket_2_buffs)|(trinket.1.cast_time>0&!buff.avatar.up|!trinket.1.cast_time>0)|cooldown.avatar.remains_expected>20)", "If only one on use trinket provides a buff, use the other on cooldown. Or if neither trinket provides a buff, use both on cooldown." );

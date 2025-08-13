@@ -229,7 +229,7 @@ actions.slayer_sweep+=/storm_bolt,if=buff.bladestorm.up
 
 # Trinkets
 actions.trinkets=do_treacherous_transmitter_task
-actions.trinkets+=/use_item,name=cursed_stone_idol,if=cooldown.avatar.remains<1
+actions.trinkets+=/use_item,name=cursed_stone_idol,if=cooldown.avatar.remains<2
 # Trinkets The trinket with the highest estimated value, will be used first and paired with Avatar.
 actions.trinkets+=/use_item,slot=trinket1,if=variable.trinket_1_buffs&!variable.trinket_1_manual&(!buff.avatar.up&trinket.1.cast_time>0|!trinket.1.cast_time>0)&buff.avatar.up&(variable.trinket_2_exclude|!trinket.2.has_cooldown|trinket.2.cooldown.remains|variable.trinket_priority=1)|trinket.1.proc.any_dps.duration>=fight_remains
 actions.trinkets+=/use_item,slot=trinket2,if=variable.trinket_2_buffs&!variable.trinket_2_manual&(!buff.avatar.up&trinket.2.cast_time>0|!trinket.2.cast_time>0)&buff.avatar.up&(variable.trinket_1_exclude|!trinket.1.has_cooldown|trinket.1.cooldown.remains|variable.trinket_priority=2)|trinket.2.proc.any_dps.duration>=fight_remains

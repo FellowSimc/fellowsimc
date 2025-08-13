@@ -38,7 +38,7 @@ actions.precombat+=/variable,name=trinket_2_manual,value=trinket.2.is.algethar_p
 actions.precombat+=/variable,name=treacherous_transmitter_precombat_cast,value=2
 actions.precombat+=/use_item,name=treacherous_transmitter
 actions.precombat+=/recklessness,if=!equipped.fyralath_the_dreamrender
-actions.precombat+=/avatar
+actions.precombat+=/avatar,if=!equipped.cursed_stone_idol
 
 # Executed every time the actor is available.
 actions=auto_attack
@@ -124,7 +124,7 @@ actions.thane+=/whirlwind
 
 # Trinkets
 actions.trinkets=do_treacherous_transmitter_task
-actions.trinkets+=/use_item,name=cursed_stone_idol,if=cooldown.avatar.remains<1
+actions.trinkets+=/use_item,name=cursed_stone_idol,if=cooldown.avatar.remains<2
 actions.trinkets+=/use_item,name=unyielding_netherprism,if=cooldown.avatar.remains<=85
 # Trinkets The trinket with the highest estimated value, will be used first and paired with Avatar.
 actions.trinkets+=/use_item,slot=trinket1,if=variable.trinket_1_buffs&!variable.trinket_1_manual&(!buff.avatar.up&trinket.1.cast_time>0|!trinket.1.cast_time>0)&buff.avatar.up&(variable.trinket_2_exclude|!trinket.2.has_cooldown|trinket.2.cooldown.remains|variable.trinket_priority=1)|trinket.1.proc.any_dps.duration>=fight_remains

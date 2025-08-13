@@ -10047,10 +10047,10 @@ void voidglass_shards( special_effect_t& effect )
 
     void execute( action_t*, action_state_t* s ) override
     {
-      if ( s->result_type == result_amount_type::HEAL_DIRECT || s->result_type == result_amount_type::HEAL_OVER_TIME )
-        return;
-
-      damage->execute_on_target( s->target );
+      if ( s->result_type == result_amount_type::DMG_DIRECT || s->result_type == result_amount_type::DMG_OVER_TIME )
+      {
+        damage->execute_on_target( s->target );
+      }
     }
   };
 

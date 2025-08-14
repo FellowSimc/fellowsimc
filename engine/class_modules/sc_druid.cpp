@@ -15497,6 +15497,9 @@ void druid_t::parse_action_effects( action_t* action )
 
   // dot damage is buffed via script so copy da_mult entries to ta_mult
   _a->parse_effects( spec.elunes_favored, &_a->ta_multiplier_effects, effect_mask_t( false ).enable( 1 ) );
+  // only buff thrash direct damage with lunar calling
+  if ( talent.lunar_calling.ok() )
+    _a->parse_effects( spec.elunes_favored, effect_mask_t( false ).enable( 3 ) );
   // always buffs thrash dot damage
   _a->parse_effects( spec.elunes_favored, effect_mask_t( false ).enable( 4 ) );
 

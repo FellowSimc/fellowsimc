@@ -4657,7 +4657,8 @@ struct kill_shot_base_t : hunter_ranged_attack_t
   {
     timespan_t g = hunter_ranged_attack_t::gcd();
 
-    g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
+    if ( p()->buffs.precise_shots->check() )
+      g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
 
     return std::max( min_gcd, g );
   }
@@ -5502,7 +5503,8 @@ struct multishot_mm_t: public hunter_ranged_attack_t
   {
     timespan_t g = hunter_ranged_attack_t::gcd();
 
-    g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
+    if ( p()->buffs.precise_shots->check() )
+      g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
 
     return std::max( min_gcd, g );
   }

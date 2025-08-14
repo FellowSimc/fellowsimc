@@ -4255,12 +4255,7 @@ struct arcane_shot_t : public arcane_shot_base_t
     timespan_t g = arcane_shot_base_t::gcd();
 
     if ( p()->buffs.precise_shots->check() )
-    {
-      // TODO 30/7/25: Not giving the gcd reduction if the buff was just applied, so a queued cast immediately following
-      // an Aimed Shot will consume the buff but incur a full gcd.
-      if ( !p()->bugs || p()->buffs.precise_shots->elapsed( sim->current_time() ) > sim->queue_lag.mean )
-        g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
-    }
+      g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
     
     return std::max( min_gcd, g );
   }
@@ -4662,13 +4657,7 @@ struct kill_shot_base_t : hunter_ranged_attack_t
   {
     timespan_t g = hunter_ranged_attack_t::gcd();
 
-    if ( p()->buffs.precise_shots->check() )
-    {
-      // TODO 30/7/25: Not giving the gcd reduction if the buff was just applied, so a queued cast immediately following
-      // an Aimed Shot will consume the buff but incur a full gcd.
-      if ( !p()->bugs || p()->buffs.precise_shots->elapsed( sim->current_time() ) > sim->queue_lag.mean )
-        g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
-    }
+    g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
 
     return std::max( min_gcd, g );
   }
@@ -5513,13 +5502,7 @@ struct multishot_mm_t: public hunter_ranged_attack_t
   {
     timespan_t g = hunter_ranged_attack_t::gcd();
 
-    if ( p()->buffs.precise_shots->check() )
-    {
-      // TODO 30/7/25: Not giving the gcd reduction if the buff was just applied, so a queued cast immediately following
-      // an Aimed Shot will consume the buff but incur a full gcd.
-      if ( !p()->bugs || p()->buffs.precise_shots->elapsed( sim->current_time() ) > sim->queue_lag.mean )
-        g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
-    }
+    g *= 1 + p()->talents.precise_shots_buff->effectN( 6 ).percent();
 
     return std::max( min_gcd, g );
   }

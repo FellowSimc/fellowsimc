@@ -2395,7 +2395,7 @@ public:
 
     if ( p()->sets->has_set_bonus( HERO_FLAMESHAPER, TWW3, B2 ) )
     {
-      parse_effects( p()->buff.inner_flame, IGNORE_STACKS );
+      parse_effects( p()->buff.inner_flame, IGNORE_STACKS, p()->spec.devastation );
     }
   }
 

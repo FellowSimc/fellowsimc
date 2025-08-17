@@ -993,6 +993,7 @@ struct evoker_t : public player_t
     int fire_breath_default_rank                               = 0;
     int eternity_surge_default_rank                            = 0;
     int upheaval_default_rank                                  = 0;
+    bool allow_precombat_buffs_for_debug                       = false;
   } option;
 
   // Action pointers
@@ -10305,6 +10306,7 @@ void evoker_t::create_options()
   add_option( opt_int( "evoker.fire_breath_default_rank", option.fire_breath_default_rank, 0, 5 ) );
   add_option( opt_int( "evoker.eternity_surge_default_rank", option.eternity_surge_default_rank, 0, 5 ) );
   add_option( opt_int( "evoker.upheaval_default_rank", option.upheaval_default_rank, 0, 5 ) );
+  add_option( opt_bool( "evoker.allow_precombat_buffs_for_debug", option.allow_precombat_buffs_for_debug ) );
 }
 
 void evoker_t::analyze( sim_t& sim )
@@ -10345,21 +10347,24 @@ void evoker_t::combat_begin()
 {
   player_t::combat_begin();
 
-  if ( talent.prescience.enabled() )
+  if ( !option.allow_precombat_buffs_for_debug )
   {
-    while ( !allies_with_my_prescience.empty() )
+    if ( talent.prescience.enabled() )
     {
-      find_target_data( *allies_with_my_prescience.begin() )->buffs.prescience->cancel();
+      while ( !allies_with_my_prescience.empty() )
+      {
+        find_target_data( *allies_with_my_prescience.begin() )->buffs.prescience->cancel();
+      }
     }
-  }
 
-  if ( talent.ebon_might.enabled() )
-  {
-    while ( !allies_with_my_ebon.empty() )
+    if ( talent.ebon_might.enabled() )
     {
-      find_target_data( *allies_with_my_ebon.begin() )->buffs.prescience->cancel();
+      while ( !allies_with_my_ebon.empty() )
+      {
+        find_target_data( *allies_with_my_ebon.begin() )->buffs.prescience->cancel();
+      }
+      buff.ebon_might_self_buff->cancel();
     }
-    buff.ebon_might_self_buff->cancel();
   }
 
   if ( talent.ancient_flame.enabled() && option.remove_precombat_ancient_flame )

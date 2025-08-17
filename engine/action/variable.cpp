@@ -380,6 +380,20 @@ void variable_t::execute()
   }
 }
 
+bool variable_t::action_ready()
+{
+  if ( !select_target() )
+    return false;
+
+  if ( line_cooldown->down() )
+    return false;
+
+  if ( if_expr && !if_expr->success() )
+    return false;
+
+  return true;
+}
+
 void cycling_variable_t::execute()
 {
   if (sim->target_non_sleeping_list.size() > 1)

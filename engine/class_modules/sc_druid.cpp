@@ -5049,6 +5049,10 @@ struct ferocious_bite_t final : public ferocious_bite_base_t
     {
       auto pers = base_t::composite_persistent_multiplier( s );
 
+      // TODO: bugged to only apply to the primary damage, and not the aoe
+      if ( s->chain_target > 0 )
+        return pers;
+
       if ( echo_buff()->bloodtalons )
         pers *= 1.0 + p()->buff.bloodtalons->data().effectN( 1 ).percent();
 

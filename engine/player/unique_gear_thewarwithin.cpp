@@ -8462,7 +8462,7 @@ void astral_antenna( special_effect_t& effect )
   auto orb = create_buff<buff_t>( effect.player, "astral_antenna_orb", effect.player->find_spell( 1239640 ) )
                  ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS )
                  ->set_stack_change_callback( [ buff ]( buff_t* b, int, int new_ ) {
-                   if ( new_ )
+                   if ( new_ && !b->source->rng().roll( b->source->thewarwithin_opts.astral_antenna_miss_chance ) )
                      make_event( *b->source->sim, b->source->rng().gauss_ab( 5_s, 1_s, 500_ms, 19999_ms ), [ b, buff ] {
                        buff->trigger();
                        b->decrement();

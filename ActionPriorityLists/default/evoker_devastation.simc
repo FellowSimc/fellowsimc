@@ -73,7 +73,7 @@ actions.aoe+=/fire_breath,target_if=max:target.health.pct,empower_to=4,if=talent
 # R2 funny breath good default.
 actions.aoe+=/fire_breath,target_if=max:target.health.pct,empower_to=2,if=variable.can_use_empower&target.time_to_die>=duration
 # DR if mobs will live 15s or there are no add events or pull events.
-actions.aoe+=/dragonrage,target_if=max:target.time_to_die,if=target.time_to_die>=15|!raid_event.adds.exists&!raid_event.pull.exists
+actions.aoe+=/dragonrage,target_if=max:target.time_to_die,if=target.time_to_die>=15|!raid_event.adds.exists
 actions.aoe+=/call_action_list,name=es,if=(!talent.dragonrage|buff.dragonrage.up|cooldown.dragonrage.remains>variable.dr_prep_time_aoe|!talent.animosity)&(!buff.jackpot.up|!set_bonus.tww2_4pc|talent.mass_disintegrate)
 actions.aoe+=/deep_breath,if=!buff.dragonrage.up&essence.deficit>3
 # Engulf if Firebreath is up and Enkindle is up. Ruby embers is ignored here. Probably can improve this with a target_if=max:dot.fire_breath_damage.remains> etc. Make FB up = 3, others no special interaction so 1 is fine. In if recheck for >=4 value.
@@ -110,7 +110,7 @@ actions.green+=/verdant_embrace
 actions.st=deep_breath,if=talent.maneuverability&set_bonus.tww3_4pc,cancel_if=gcd.remains=0&ticks>=8&active_enemies=1
 actions.st+=/eternity_surge,empower_to=1,if=set_bonus.tww3_4pc&cooldown.dragonrage.up&cooldown.engulf.full_recharge_time<gcd.max*3
 # CD on CD
-actions.st+=/dragonrage,if=target.time_to_die>=30&(raid_event.adds.in>=60&raid_event.pull.in>=60)|!raid_event.adds.exists&!raid_event.pull.exists
+actions.st+=/dragonrage,if=target.time_to_die>=30&raid_event.adds.in>=60|!raid_event.adds.exists
 actions.st+=/living_flame,if=set_bonus.tww3_4pc&cooldown.engulf.remains<=execute_time*2&buff.essence_burst.stack<(2-talent.arcane_vigor.enabled)&buff.dragonrage.up&cooldown.fire_breath.remains<=execute_time*2
 # Flap wings
 actions.st+=/hover,use_off_gcd=1,if=raid_event.movement.in<6&!buff.hover.up&gcd.remains>=0.5|talent.slipstream&gcd.remains>=0.5

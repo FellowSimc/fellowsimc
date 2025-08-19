@@ -97,7 +97,7 @@ void devastation( player_t* p )
   aoe->add_action( "tip_the_scales,use_off_gcd=1,if=(!talent.dragonrage|buff.dragonrage.up)&cooldown.fire_breath.remains<cooldown.eternity_surge.remains", "Tip FB" );
   aoe->add_action( "fire_breath,target_if=max:target.health.pct,empower_to=4,if=talent.scorching_embers&variable.can_use_empower&target.time_to_die>=duration", "Engulf at R4 with Scorch." );
   aoe->add_action( "fire_breath,target_if=max:target.health.pct,empower_to=2,if=variable.can_use_empower&target.time_to_die>=duration", "R2 funny breath good default." );
-  aoe->add_action( "dragonrage,target_if=max:target.time_to_die,if=target.time_to_die>=15|!raid_event.adds.exists&!raid_event.pull.exists", "DR if mobs will live 15s or there are no add events or pull events." );
+  aoe->add_action( "dragonrage,target_if=max:target.time_to_die,if=target.time_to_die>=15|!raid_event.adds.exists", "DR if mobs will live 15s or there are no add events or pull events." );
   aoe->add_action( "call_action_list,name=es,if=(!talent.dragonrage|buff.dragonrage.up|cooldown.dragonrage.remains>variable.dr_prep_time_aoe|!talent.animosity)&(!buff.jackpot.up|!set_bonus.tww2_4pc|talent.mass_disintegrate)" );
   aoe->add_action( "deep_breath,if=!buff.dragonrage.up&essence.deficit>3" );
   aoe->add_action( "engulf,target_if=(dot.fire_breath_damage.remains>travel_time)&(dot.enkindle.remains>travel_time|!talent.enkindle)&(!talent.scorching_embers|dot.fire_breath_damage.duration<=6|fight_remains<=30)&(cooldown.dragonrage.remains>=cooldown.engulf.duration+full_recharge_time|!talent.dragonrage|buff.tip_the_scales.up&cooldown.fire_breath.up|buff.dragonrage.up|full_recharge_time<=cooldown.fire_breath.duration_expected)", "Engulf if Firebreath is up and Enkindle is up. Ruby embers is ignored here. Probably can improve this with a target_if=max:dot.fire_breath_damage.remains> etc. Make FB up = 3, others no special interaction so 1 is fine. In if recheck for >=4 value." );
@@ -122,7 +122,7 @@ void devastation( player_t* p )
 
   st->add_action( "deep_breath,if=talent.maneuverability&set_bonus.tww3_4pc,cancel_if=gcd.remains=0&ticks>=8&active_enemies=1" );
   st->add_action( "eternity_surge,empower_to=1,if=set_bonus.tww3_4pc&cooldown.dragonrage.up&cooldown.engulf.full_recharge_time<gcd.max*3" );
-  st->add_action( "dragonrage,if=target.time_to_die>=30&(raid_event.adds.in>=60&raid_event.pull.in>=60)|!raid_event.adds.exists&!raid_event.pull.exists", "CD on CD" );
+  st->add_action( "dragonrage,if=target.time_to_die>=30&raid_event.adds.in>=60|!raid_event.adds.exists", "CD on CD" );
   st->add_action( "living_flame,if=set_bonus.tww3_4pc&cooldown.engulf.remains<=execute_time*2&buff.essence_burst.stack<(2-talent.arcane_vigor.enabled)&buff.dragonrage.up&cooldown.fire_breath.remains<=execute_time*2" );
   st->add_action( "hover,use_off_gcd=1,if=raid_event.movement.in<6&!buff.hover.up&gcd.remains>=0.5|talent.slipstream&gcd.remains>=0.5", "Flap wings" );
   st->add_action( "tip_the_scales,use_off_gcd=1,if=buff.dragonrage.up&cooldown.fire_breath.remains<cooldown.eternity_surge.remains", "Become a faster dragon (for one empower)" );

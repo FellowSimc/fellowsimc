@@ -303,9 +303,9 @@ void marksmanship( player_t* p )
   trickshots->add_action( "rapid_fire,if=buff.trick_shots.remains>execute_time&(!talent.black_arrow|buff.deathblow.down)&(!talent.no_scope|debuff.spotters_mark.down)&(talent.no_scope|buff.bulletstorm.down)" );
   trickshots->add_action( "explosive_shot,if=talent.precision_detonation&talent.shrapnel_shot&buff.lock_and_load.down&(buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up)" );
   trickshots->add_action( "aimed_shot,if=(buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up)&buff.trick_shots.up" );
-  trickshots->add_action( "explosive_shot,if=!talent.shrapnel_shot" );
-  trickshots->add_action( "steady_shot,if=focus+cast_regen<focus.max" );
-  trickshots->add_action( "multishot" );
+  trickshots->add_action( "explosive_shot,if=talent.precision_detonation&!talent.shrapnel_shot" );
+  trickshots->add_action( "steady_shot,if=(talent.lunar_storm&focus+cast_regen<focus.max)|talent.black_arrow" );
+  trickshots->add_action( "multishot,if=!talent.black_arrow" );
 }
 //marksmanship_apl_end
 

@@ -168,34 +168,34 @@ void unending_thirst( special_effect_t& );  // Effect only procs on killing blow
 
 enum runeforge_apocalypse
 {
-  DEATH,
-  FAMINE,
-  PESTILENCE,
-  WAR,
-  MAX
+  DEATH = 0,
+  FAMINE = 1,
+  PESTILENCE = 2,
+  WAR = 3,
+  MAX = 4
 };
 
 enum rider_of_the_apocalypse
 {
-  NONE,
-  WHITEMANE,
-  TROLLBANE,
-  NAZGRIM,
-  MOGRAINE,
-  ALL_RIDERS
+  NONE = 0,
+  WHITEMANE = 1,
+  TROLLBANE = 2,
+  NAZGRIM = 3,
+  MOGRAINE = 4,
+  ALL_RIDERS = 5
 };
 
 enum drw_actions
 {
-  DRW_ACTION_BLOOD_BOIL,
-  DRW_ACTION_DEATHS_CARESS,
-  DRW_ACTION_DEATH_STRIKE,
-  DRW_ACTION_HEART_STRIKE,
-  DRW_ACTION_MARROWREND,
-  DRW_ACTION_SOUL_REAPER,
-  DRW_ACTION_CONSUMPTION,
-  DRW_ACTION_VAMPIRIC_STRIKE,
-  DRW_ACTION_MAX
+  DRW_ACTION_BLOOD_BOIL = 0,
+  DRW_ACTION_DEATHS_CARESS = 1,
+  DRW_ACTION_DEATH_STRIKE = 2,
+  DRW_ACTION_HEART_STRIKE = 3,
+  DRW_ACTION_MARROWREND = 4,
+  DRW_ACTION_SOUL_REAPER = 5,
+  DRW_ACTION_CONSUMPTION = 6,
+  DRW_ACTION_VAMPIRIC_STRIKE = 7,
+  DRW_ACTION_MAX = 8
 };
 
 // ==========================================================================

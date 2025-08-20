@@ -8515,7 +8515,7 @@ void screams_of_a_forgotten_sky( special_effect_t& effect )
       {
         buff = make_buff( actor_pair_t( t, player ), "abyssal_gravity", data().effectN( 2 ).trigger() );
         t->register_on_demise_callback( player, [ &, buff ]( player_t* tar ) {
-          if ( buff->check() )
+          if ( buff->check() && !sim->event_mgr.canceled )
             on_death->execute_on_target( tar, buff->check() * on_death_val );
         } );
       }
@@ -8569,7 +8569,20 @@ void screams_of_a_forgotten_sky( special_effect_t& effect )
 
     void execute( action_t*, action_state_t* s ) override
     {
-      actions[ rng().range( actions.size() ) ]->execute_on_target( s->target );
+      buff_t* debuff = actions[ 0 ]->get_debuff( s->target );
+      if ( !debuff )
+      {
+        listener->sim->error( "Screams of a Forgotten Sky: No debuff found for target {} for player {}",
+                              s->target->name(), listener->name() );
+        return;
+      }
+      if ( debuff->check() < 5 )
+        actions[ 0 ]->execute_on_target( s->target );
+      else if ( debuff->check() >= 5 && debuff->check() < 9 )
+        actions[ 1 ]->execute_on_target( s->target );
+      else
+        actions[ 2 ]->execute_on_target( s->target );
+
       proxy->stats->add_execute( 0_ms, s->target );
     }
   };

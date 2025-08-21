@@ -257,6 +257,7 @@ actions.single+=/stormstrike,if=charges_fractional>=2&(buff.maelstrom_weapon.sta
 actions.single+=/tempest,if=(buff.maelstrom_weapon.stack>=9&talent.ascendance.enabled)|(talent.deeply_rooted_elements.enabled&buff.maelstrom_weapon.stack>=8)
 actions.single+=/elemental_blast,if=((!talent.overflowing_maelstrom.enabled&buff.maelstrom_weapon.stack>=5)|(buff.maelstrom_weapon.stack>=9&talent.ascendance.enabled)|(talent.deeply_rooted_elements.enabled&buff.maelstrom_weapon.stack>=8))&!buff.arc_discharge.up
 actions.single+=/lightning_bolt,if=(buff.maelstrom_weapon.stack>=9&talent.ascendance.enabled)|(talent.deeply_rooted_elements.enabled&buff.maelstrom_weapon.stack>=8)
+actions.single+=/windstrike,if=!talent.thorims_invocation.enabled
 actions.single+=/stormstrike,if=!buff.tempest.up&tww3_procs_to_asc=1
 actions.single+=/crash_lightning,if=(buff.doom_winds.up&buff.electrostatic_wager.stack>1)|buff.electrostatic_wager.stack>8
 actions.single+=/ice_strike,if=(buff.tempest.up|(tempest_mael_count>=30&buff.tempest.up))&tww3_procs_to_asc=1

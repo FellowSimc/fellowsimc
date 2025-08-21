@@ -9500,6 +9500,18 @@ void nexuskings_command( special_effect_t& effect )
   // emulate this as a buff on player for APL purposes
   auto bound = create_buff<buff_t>( effect.player, effect.player->find_spell( 1239997 ) );
 
+  // for normal sims assume max 20 stack to represent 20 man raid. for dungeon sims limit to 5 stacks
+  if ( effect.player->sim->fight_style == FIGHT_STYLE_DUNGEON_SLICE ||
+       effect.player->sim->fight_style == FIGHT_STYLE_DUNGEON_ROUTE )
+  {
+    bound->set_max_stack( 5 );
+  }
+  else
+  {
+    bound->set_max_stack( 20 );
+  }
+
+  // always get a debuff every 30s regardless of combat
   effect.player->register_combat_begin( [ bound, dur = effect.driver()->effectN( 1 ).period() ]( player_t* ) {
     bound->trigger();
     make_event( *bound->sim, bound->rng().range( 0_ms, dur ), [ bound, dur ] {
@@ -9510,10 +9522,12 @@ void nexuskings_command( special_effect_t& effect )
 
   // assume you always heal the debuffed target
   effect.custom_buff = create_buff<stat_buff_t>( effect.player, effect.player->find_spell( 1240000 ) )
-    ->set_stat_from_effect_type( A_MOD_STAT, effect.driver()->effectN( 1 ).average( effect ) )
-    ->set_stack_change_callback( [ bound ]( buff_t*, int, int new_ ) {
-      if ( new_ )
-        bound->expire();
+    ->set_stat_from_effect_type( A_MOD_STAT, effect.driver()->effectN( 1 ).average( effect ) );
+
+  effect.player->callbacks.register_callback_execute_function( effect.driver()->id(),
+    [ bound ]( const dbc_proc_callback_t* cb, action_t*, const action_state_t* ) {
+      cb->proc_buff->trigger();
+      bound->decrement();
     } );
 
   auto cb = new dbc_proc_callback_t( effect.player, effect );

@@ -12932,6 +12932,8 @@ void death_knight_t::summon_rider(  timespan_t duration, bool random )
     return;
 
   std::vector<action_t*> summon_riders;
+  if( n == rider_of_the_apocalypse::ALL_RIDERS )
+    summon_riders.reserve( 4 );
 
   switch ( n )
   {
@@ -16255,6 +16257,28 @@ void death_knight_t::arise()
   if ( talent.rider.a_feast_of_souls.ok() )
   {
     start_a_feast_of_souls();
+  }
+
+  // Reserve space in the vector based on the maximum number of pets that can be active at once.
+  switch( specialization() )
+  {
+    case DEATH_KNIGHT_BLOOD:
+      dk_active_pets.reserve( 9 );
+      // Add some extra space for cantrip item pets.
+      active_pets.reserve( 12 );
+      break;
+    case DEATH_KNIGHT_FROST:
+      dk_active_pets.reserve( 6 );
+      // Add some extra space for cantrip item pets.
+      active_pets.reserve( 10 );
+      break;
+    case DEATH_KNIGHT_UNHOLY:
+      dk_active_pets.reserve( 32 );
+      // Add some extra space for cantrip item pets.
+      active_pets.reserve( 36 );
+      break;
+    default:
+      break;
   }
 }
 

@@ -9487,6 +9487,39 @@ void observers_soul_fetters( special_effect_t& effect )
     ->add_stat_from_effect_type( A_MOD_STAT, coeff->driver()->effectN( 1 ).average( effect ) );
 }
 
+// nexus-king's command
+// 1232776 driver
+// 1239997 debuff
+// 1240000 buff
+// 1240002 shield NYI
+void nexuskings_command( special_effect_t& effect )
+{
+  if ( unique_gear::create_fallback_buffs( effect, { "oathbound" } ) )
+    return;
+
+  // emulate this as a buff on player for APL purposes
+  auto bound = create_buff<buff_t>( effect.player, effect.player->find_spell( 1239997 ) );
+
+  effect.player->register_combat_begin( [ bound, dur = effect.driver()->effectN( 1 ).period() ]( player_t* ) {
+    bound->trigger();
+    make_event( *bound->sim, bound->rng().range( 0_ms, dur ), [ bound, dur ] {
+      bound->trigger();
+      make_repeating_event( *bound->sim, dur, [ bound ] { bound->trigger(); } );
+    } );
+  } );
+
+  // assume you always heal the debuffed target
+  effect.custom_buff = create_buff<stat_buff_t>( effect.player, effect.player->find_spell( 1240000 ) )
+    ->set_stat_from_effect_type( A_MOD_STAT, effect.driver()->effectN( 1 ).average( effect ) )
+    ->set_stack_change_callback( [ bound ]( buff_t*, int, int new_ ) {
+      if ( new_ )
+        bound->expire();
+    } );
+
+  auto cb = new dbc_proc_callback_t( effect.player, effect );
+  cb->activate_with_buff( bound );
+}
+
 // Weapons
 
 // 443384 driver
@@ -12559,6 +12592,7 @@ void register_special_effects()
   register_special_effect( 1234022, items::automatic_footbomb_dispenser );
   register_special_effect( 1230285, items::observers_soul_fetters );
   register_special_effect( 1230281, DISABLED_EFFECT );  // observer's soul fetters
+  register_special_effect( 1232776, items::nexuskings_command, true );
   reset_version_check();
 
   // Weapons

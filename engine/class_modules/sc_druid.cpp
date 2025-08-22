@@ -5378,7 +5378,7 @@ struct rip_t final : public trigger_thriving_growth_t<use_dot_list_t<trigger_wan
 
   double dot_duration_pct_multiplier( const action_state_t* s ) const override
   {
-    return base_t::dot_duration_pct_multiplier( s ) * cp( s ) + 1;
+    return base_t::dot_duration_pct_multiplier( s ) * ( 1.0 + cp( s ) );
   }
 
   void impact( action_state_t* s ) override

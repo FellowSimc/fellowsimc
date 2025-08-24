@@ -1347,7 +1347,6 @@ struct druid_t final : public parse_player_effects_t
   void init_action_list() override;
   void init_blizzard_action_list() override;
   std::vector<std::string> action_names_from_spell_id( unsigned int ) const override;
-  std::string aura_expr_from_spell_id( unsigned int spell_id, bool on_self = true ) const override;
   void parse_assisted_combat_step( const assisted_combat_step_data_t&, action_priority_list_t* ) override;
   parsed_assisted_combat_rule_t parse_assisted_combat_rule( const assisted_combat_rule_data_t&,
                                                             const assisted_combat_step_data_t& ) const override;
@@ -13633,15 +13632,6 @@ std::vector<std::string> druid_t::action_names_from_spell_id( unsigned int spell
   return player_t::action_names_from_spell_id( spell_id );
 }
 
-// druid_t::aura_expr_from_spell_id =========================================
-std::string druid_t::aura_expr_from_spell_id( unsigned int spell_id, bool on_self ) const
-{
-  if ( spell_id == 252752 && on_self )
-    return "buff.apex_predators_craving";
-
-  return player_t::aura_expr_from_spell_id( spell_id, on_self );
-}
-
 // druid_t::parse_assisted_combat_step ======================================
 void druid_t::parse_assisted_combat_step( const assisted_combat_step_data_t& step, action_priority_list_t* apl )
 {
@@ -13663,6 +13653,12 @@ parsed_assisted_combat_rule_t druid_t::parse_assisted_combat_rule( const assiste
     auto expr = rule.condition_value_1 == 326053 ? "eclipse.starfire_counter" : "eclipse.wrath_counter";
 
     return { fmt::format( "{}{}{}", expr, op, rule.condition_value_2 ), true };
+  }
+  else if ( rule.condition_type == AURA_ON_PLAYER && rule.condition_value_2 == 252752 )
+  {
+    auto new_rule = rule;  // make a copy
+    new_rule.condition_value_2 = rule.condition_value_1;
+    return { player_t::parse_assisted_combat_rule( new_rule, step ), true };
   }
 
   return player_t::parse_assisted_combat_rule( rule, step );

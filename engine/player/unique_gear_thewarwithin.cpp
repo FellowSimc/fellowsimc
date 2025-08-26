@@ -10126,6 +10126,14 @@ void voidglass_shards( special_effect_t& effect )
   new voidglass_shards_cb_t( effect );
 }
 
+// warplance strike
+// 1243411 driver
+void warplance_strike( special_effect_t& effect )
+{
+  effect.aoe = -1;
+  effect.discharge_amount = effect.driver()->effectN( 1 ).average( effect ) * role_mult( effect );
+}
+
 // Armor
 
 // 457815 driver
@@ -12632,6 +12640,7 @@ void register_special_effects()
   register_special_effect( 1224457, items::shadow_quake );
   set_min_version( wowv_t( 11, 2, 0 ) );
   register_special_effect( 1235136, items::voidglass_shards );
+  register_special_effect( 1243411, items::warplance_strike );
   reset_version_check();
 
   // Armor

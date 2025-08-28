@@ -7669,6 +7669,9 @@ struct celestial_alignment_base_t : public trigger_control_of_the_dream_t<druid_
   {
     base_t::execute();
 
+    if ( p()->eclipse_handler.in_both() )
+      p()->buff.dreamstate->trigger();
+
     buff->trigger();
 
     if ( p()->active.jackpot_mushroom )

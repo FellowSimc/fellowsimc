@@ -1738,7 +1738,7 @@ public:
     double average_cs_travel_time         = 0.4;
     timespan_t first_ams_cast             = 20_s;
     double horsemen_ams_absorb_percent    = 0.6;
-    double average_mograines_might_uptime = 0.6;
+    double average_mograines_might_uptime = 0.65;
   } options;
 
   // Runes
@@ -4415,8 +4415,9 @@ struct mograine_pet_t final : public horseman_pet_t
       buff_t::start( stacks, value, duration );
       if ( dk->talent.rider.mograines_might.ok() )
       {
-        dk->buffs.mograines_might->trigger();
-        dk->buffs.death_and_decay->trigger();
+        timespan_t dur = mograine()->dnd_duration();
+        dk->buffs.mograines_might->trigger( dur );
+        dk->buffs.death_and_decay->trigger( dur + 4_s );
       }
     }
 
@@ -4428,16 +4429,11 @@ struct mograine_pet_t final : public horseman_pet_t
     void expire_override( int expiration_stacks, timespan_t remaining_duration ) override
     {
       buff_t::expire_override( expiration_stacks, remaining_duration );
-      if ( dk->talent.rider.mograines_might.ok() )
-      {
-        dk->buffs.mograines_might->expire();
-        dk->buffs.death_and_decay->expire( 4_s );
-      }
       if ( mograine()->extended_by_apoc_now )
       {
         mograine()->extended_by_apoc_now = false;
         // Triggers again 100_ms after the buff expires
-        make_event( *sim, 100_ms, [ & ]() { trigger( mograine()->dnd_duration() ); } );
+        make_event( *sim, 100_ms, [ & ]() { trigger(); } );
       }
     }
 
@@ -4481,7 +4477,7 @@ struct mograine_pet_t final : public horseman_pet_t
   {
     horseman_pet_t::arise();
 
-    dnd_aura->trigger( dnd_duration() );
+    dnd_aura->trigger();
   }
 
   void init_action_list() override

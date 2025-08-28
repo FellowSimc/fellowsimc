@@ -1729,15 +1729,16 @@ public:
   // Death Knight Options
   struct options_t
   {
-    bool disable_aotd                  = false;
-    bool split_ghoul_regen             = false;
-    bool split_obliterate_schools      = true;
-    double ams_absorb_percent          = 0;
-    bool individual_pet_reporting      = false;
-    bool amz_specified                 = false;
-    double average_cs_travel_time      = 0.4;
-    timespan_t first_ams_cast          = 20_s;
-    double horsemen_ams_absorb_percent = 0.6;
+    bool disable_aotd                     = false;
+    bool split_ghoul_regen                = false;
+    bool split_obliterate_schools         = true;
+    double ams_absorb_percent             = 0;
+    bool individual_pet_reporting         = false;
+    bool amz_specified                    = false;
+    double average_cs_travel_time         = 0.4;
+    timespan_t first_ams_cast             = 20_s;
+    double horsemen_ams_absorb_percent    = 0.6;
+    double average_mograines_might_uptime = 0.6;
   } options;
 
   // Runes
@@ -4436,7 +4437,7 @@ struct mograine_pet_t final : public horseman_pet_t
       {
         mograine()->extended_by_apoc_now = false;
         // Triggers again 100_ms after the buff expires
-        make_event( *sim, 100_ms, [ & ]() { trigger(); } );
+        make_event( *sim, 100_ms, [ & ]() { trigger( mograine()->dnd_duration() ); } );
       }
     }
 
@@ -4469,10 +4470,18 @@ struct mograine_pet_t final : public horseman_pet_t
     off_hand_weapon.swing_time  = 2_s;
   }
 
+  timespan_t dnd_duration() const
+  {
+    timespan_t avg_dur = dk()->pet_spell.mograines_death_and_decay_aura->duration() * dk()->options.average_mograines_might_uptime;
+    timespan_t dur = rng().gauss_b( avg_dur, 2_s, dk()->pet_spell.mograines_death_and_decay_aura->duration() );
+    return dur;
+  }
+
   void arise() override
   {
     horseman_pet_t::arise();
-    dnd_aura->trigger();
+
+    dnd_aura->trigger( dnd_duration() );
   }
 
   void init_action_list() override
@@ -12384,6 +12393,7 @@ void death_knight_t::create_options()
   add_option(
       opt_timespan( "deathknight.first_ams_cast", options.first_ams_cast, timespan_t::zero(), timespan_t::max() ) );
   add_option( opt_float( "deathknight.horsemen_ams_absorb_percent", options.horsemen_ams_absorb_percent, 0.0, 1.0 ) );
+  add_option( opt_float( "deathknight.average_mograines_might_uptime", options.average_mograines_might_uptime, 0.0, 1.0 ) );
 }
 
 void death_knight_t::copy_from( player_t* source )
@@ -12866,16 +12876,16 @@ int death_knight_t::get_random_rider()
   std::vector<rider_of_the_apocalypse> available_riders;
   available_riders.reserve( rider_of_the_apocalypse::ALL_RIDERS );
 
-  if ( pets.mograine.active_pet() == nullptr && last_summoned_rider != rider_of_the_apocalypse::MOGRAINE )
+  if ( last_summoned_rider != rider_of_the_apocalypse::MOGRAINE )
     available_riders.push_back( rider_of_the_apocalypse::MOGRAINE );
 
-  if ( pets.nazgrim.active_pet() == nullptr && last_summoned_rider != rider_of_the_apocalypse::NAZGRIM )
+  if ( last_summoned_rider != rider_of_the_apocalypse::NAZGRIM )
     available_riders.push_back( rider_of_the_apocalypse::NAZGRIM );
 
-  if ( pets.trollbane.active_pet() == nullptr && last_summoned_rider != rider_of_the_apocalypse::TROLLBANE )
+  if ( last_summoned_rider != rider_of_the_apocalypse::TROLLBANE )
     available_riders.push_back( rider_of_the_apocalypse::TROLLBANE );
 
-  if ( pets.whitemane.active_pet() == nullptr && last_summoned_rider != rider_of_the_apocalypse::WHITEMANE )
+  if ( last_summoned_rider != rider_of_the_apocalypse::WHITEMANE )
     available_riders.push_back( rider_of_the_apocalypse::WHITEMANE );
 
 

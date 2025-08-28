@@ -10619,7 +10619,7 @@ public:
   astral_power_decay_event_t( druid_t* p )
     : event_t( *p, 500_ms ),
       p_( p ),
-      nb_cap( p->resources.base[ RESOURCE_ASTRAL_POWER ] * p->talent.natures_balance->effectN( 2 ).percent() )
+      nb_cap( p->talent.natures_balance->effectN( 2 ).base_value() )
   {}
 
   const char* name() const override { return "astral_power_decay"; }
@@ -11733,13 +11733,13 @@ void druid_t::create_buffs()
     buff.natures_balance->set_default_value( nb_eff.resource() / nb_eff.period().total_seconds() )
       ->set_tick_callback(
         [ ap = nb_eff.resource(),
-          cap = talent.natures_balance->effectN( 2 ).percent(),
+          cap = talent.natures_balance->effectN( 2 ).base_value(),
           g = get_gain( "Natures Balance" ),
           this ]
         ( buff_t*, int, timespan_t ) mutable {
           if ( !in_combat )
           {
-            if ( resources.current[ RESOURCE_ASTRAL_POWER ] < resources.base[ RESOURCE_ASTRAL_POWER ] * cap )
+            if ( resources.current[ RESOURCE_ASTRAL_POWER ] < cap )
               ap *= 3.0;
             else
               ap = 0;
@@ -13001,14 +13001,9 @@ void druid_t::init_resources( bool force )
   resources.current[ RESOURCE_COMBO_POINT ] = 0;
 
   if ( options.initial_astral_power == 0.0 && talent.natures_balance.ok() )
-  {
-    resources.current[ RESOURCE_ASTRAL_POWER ] =
-      resources.base[ RESOURCE_ASTRAL_POWER ] * talent.natures_balance->effectN( 2 ).percent();
-  }
+    resources.current[ RESOURCE_ASTRAL_POWER ] = talent.natures_balance->effectN( 2 ).base_value();
   else
-  {
     resources.current[ RESOURCE_ASTRAL_POWER ] = options.initial_astral_power;
-  }
 }
 
 
@@ -13869,8 +13864,7 @@ void druid_t::combat_begin()
 
     if ( in_boss_encounter )
     {
-      double cap =
-        std::max( resources.base[ RESOURCE_ASTRAL_POWER ] * talent.natures_balance->effectN( 2 ).percent(), 20.0 );
+      double cap = std::max( talent.natures_balance->effectN( 2 ).base_value(), 20.0 );
       double curr = resources.current[ RESOURCE_ASTRAL_POWER ];
 
       resources.current[ RESOURCE_ASTRAL_POWER ] = std::min( cap, curr );

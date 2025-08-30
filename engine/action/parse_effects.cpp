@@ -1475,8 +1475,13 @@ std::vector<player_effect_t>* parse_action_base_t::get_effect_vector( const spel
       tmp.type |= AFFECTED_OVERRIDE;
   }
 
-  if ( !force && !_action->data().affected_by_all( eff ) && !pack.ignore_whitelist )
-    return nullptr;
+  if ( !force )  // force_effect or positive affect_list_t will result in force == true
+  {
+    if ( pack.ignore_whitelist )  // if ignoring whitelist, anything not forced results in no match.
+      return nullptr;
+    else if ( !_action->data().affected_by_all( eff ) )  // standard DBC whitelist filter
+      return nullptr;
+  }
 
   if ( eff.subtype() == A_ADD_PCT_MODIFIER || eff.subtype() == A_ADD_PCT_LABEL_MODIFIER )
   {
@@ -1622,8 +1627,13 @@ std::vector<target_effect_t>* parse_action_base_t::get_effect_vector( const spel
       tmp.type |= AFFECTED_OVERRIDE;
   }
 
-  if ( !force && !_action->data().affected_by_all( eff ) && !pack.ignore_whitelist )
-    return nullptr;
+  if ( !force )  // force_effect or positive affect_list_t will result in force == true
+  {
+    if ( pack.ignore_whitelist )  // if ignoring whitelist, anything not forced results in no match.
+      return nullptr;
+    else if ( !_action->data().affected_by_all( eff ) )  // standard DBC whitelist filter
+      return nullptr;
+  }
 
   switch ( eff.subtype() )
   {

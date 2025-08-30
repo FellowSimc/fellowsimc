@@ -1475,7 +1475,7 @@ std::vector<player_effect_t>* parse_action_base_t::get_effect_vector( const spel
       tmp.type |= AFFECTED_OVERRIDE;
   }
 
-  if ( !force && !_action->data().affected_by_all( eff ) )
+  if ( !force && !_action->data().affected_by_all( eff ) && !pack.ignore_whitelist )
     return nullptr;
 
   if ( eff.subtype() == A_ADD_PCT_MODIFIER || eff.subtype() == A_ADD_PCT_LABEL_MODIFIER )
@@ -1622,7 +1622,7 @@ std::vector<target_effect_t>* parse_action_base_t::get_effect_vector( const spel
       tmp.type |= AFFECTED_OVERRIDE;
   }
 
-  if ( !force && !_action->data().affected_by_all( eff ) )
+  if ( !force && !_action->data().affected_by_all( eff ) && !pack.ignore_whitelist )
     return nullptr;
 
   switch ( eff.subtype() )

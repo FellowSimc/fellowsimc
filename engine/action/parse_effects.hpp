@@ -20,6 +20,7 @@ enum parse_flag_e : uint16_t
   ALLOW_ZERO        = 0x0008,
   CONSUME_BUFF      = 0x0010,
   ROUND_VALUE       = 0x0020,  // uses std::round (round to nearest integer, round half away from zero)
+  IGNORE_WHITELIST  = 0x0040,
   // internal flags that should not be used in parse_effects()
   VALUE_OVERRIDE    = 0x0100,
   AFFECTED_OVERRIDE = 0x0200,
@@ -298,6 +299,7 @@ struct pack_t
   std::vector<affect_list_t> affect_lists;
   parse_cb_t callback = nullptr;
   parse_callback_e callback_type = PARSE_CALLBACK_POST_EXECUTE;
+  bool ignore_whitelist = false;
 
   pack_t( const spell_data_t* s_data ) : spell( s_data ) {}
 
@@ -428,6 +430,12 @@ struct parse_base_t
           parse_callback_function( pack, mod );
           return;
         }
+      }
+
+      if ( mod == IGNORE_WHITELIST )
+      {
+        pack.ignore_whitelist = true;
+        return;
       }
     }
     else if constexpr ( std::is_floating_point_v<T> && is_detected_v<detect_value, U> )

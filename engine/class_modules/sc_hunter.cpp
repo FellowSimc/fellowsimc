@@ -4680,6 +4680,21 @@ struct kill_shot_base_t : hunter_ranged_attack_t
     // Force the cooldown reset reaction because apparently that was just implemented for apl checks :/
     return hunter_ranged_attack_t::ready() && cooldown->reset_react <= sim->current_time();
   }
+
+  std::unique_ptr<expr_t> create_expression( util::string_view expression_str ) override
+  {
+    if ( expression_str == "ready" )
+    {
+      return make_fn_expr( expression_str, [ this ] {
+        // Must meet both ready() and target_ready() conditions to be considered ready:
+        // ready(): Must either be off cooldown normally (does not need to be reacted to) or reset by a Deathblow (must be reacted to).
+        // target_ready(): Must either be within the proper health thresholds or have had an active Deathblow longer than the reaction period.
+        return ready() && target_ready( target );
+      } );
+    }
+
+    return hunter_ranged_attack_t::create_expression( expression_str );
+  }
 };
 
 struct kill_shot_t : public kill_shot_base_t

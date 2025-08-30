@@ -1025,7 +1025,8 @@ public:
   void snapshot_internal( action_state_t* s, unsigned fl, result_amount_type rt ) override
   {
     BASE::snapshot_internal( s, fl, rt );
-    trigger_callbacks( PARSE_CALLBACK_POST_SNAPSHOT, s );
+    if ( rt != result_amount_type::NONE )
+      trigger_callbacks( PARSE_CALLBACK_POST_SNAPSHOT, s );
   }
 
   void impact( action_state_t* s ) override

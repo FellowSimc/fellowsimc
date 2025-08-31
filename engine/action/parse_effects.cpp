@@ -680,7 +680,8 @@ bool parse_effects_t::parse_effect( pack_t<U>& pack, size_t i, bool force )
 
   if constexpr ( is_detected_v<detect_simple, U> )
   {
-    if ( tmp.func || tmp.value_func || tmp.type & USE_CURRENT || tmp.mastery || !tmp.use_stacks || pack.callback )
+    if ( tmp.func || tmp.value_func || tmp.type & USE_CURRENT || tmp.mastery || !tmp.use_stacks ||
+         pack.num_callbacks() )
     {
       tmp.simple = false;
     }
@@ -1395,14 +1396,14 @@ size_t parse_player_effects_t::total_effects_count()
 
 void parse_action_base_t::parse_callback_function( pack_t<player_effect_t>& pack, parse_cb_t cb )
 {
-  assert( pack.data.idx == 0 && "cannot parse multiple parse callbacks" );
-  // 32 max as parse_effects_t::callback_idx is uint32_t
-  assert( callback_list.size() < 32 && "cannot register more than 32 parse callbacks" );
+  // 8 max per type as parse_effects_t::callback_idx is uint32_t
+  assert( callback_list[ pack.callback_type ].size() < 8 && "cannot register more than 8 parse callbacks per type" );
 
   // set values on main pack, to be propagated to all copies
-  pack.callback = std::move( cb );
+  pack.callback[ pack.callback_type ] = std::move( cb );
   // this is set BEFORE the callback is added to the vector, so the idx will be 1bit left of size()
-  pack.data.idx = 1U << ( callback_list[ pack.callback_type ].size() );
+  pack.data.idx |=
+    1U << ( callback_list[ pack.callback_type ].size() + 8 * static_cast<unsigned>( pack.callback_type ) );
 }
 
 void parse_action_base_t::parse_callback_function( pack_t<player_effect_t>& pack, parse_flag_e type )
@@ -1419,19 +1420,27 @@ void parse_action_base_t::parse_callback_function( pack_t<player_effect_t>& pack
 
 void parse_action_base_t::register_callback_function( pack_t<player_effect_t>& pack )
 {
-  callback_list[ pack.callback_type ].push_back( std::move( pack.callback ) );
+  for ( size_t i = 0; i < pack.callback.size(); i++ )
+  {
+    if ( !pack.callback[ i ] )
+      continue;
 
-  _player->sim->print_debug( "action-effects: {} registering {} parse callback on {} {} ({})", *_action,
-                             opt_strings::parse_cb_str( pack.callback_type ), pack.data.buff ? "buff" : "spell",
-                             pack.spell->name_cstr(), pack.spell->id() );
+    callback_list[ i ].push_back( std::move( pack.callback[ i ] ) );
+    _player->sim->print_debug( "action-effects: {} registering {} parse callback ({:#010x}) on {} {} ({})", *_action,
+                               opt_strings::parse_cb_str( static_cast<parse_callback_e>( i ) ), pack.data.idx,
+                               pack.data.buff ? "buff" : "spell", pack.spell->name_cstr(), pack.spell->id() );
+  }
 }
 
 void parse_action_base_t::trigger_callbacks( parse_callback_e cb_type, action_state_t* state )
 {
   if ( callback_idx )
-    for ( size_t i = 0; i < callback_list[ cb_type ].size(); i++ )
-      if ( callback_idx & ( 1U << i ) )
-        callback_list[ cb_type ][ i ]( state );
+  {
+    auto i = 8 * static_cast<unsigned>( cb_type );
+    for ( const auto& cb : callback_list[ cb_type ] )
+      if ( callback_idx & ( 1U << i++ ) )
+        cb( state );
+  }
 }
 
 bool parse_action_base_t::is_valid_aura( const spelleffect_data_t& eff ) const

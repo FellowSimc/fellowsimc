@@ -297,7 +297,7 @@ struct pack_t
   uint32_t mask = 0U;
   std::vector<U>* copy = nullptr;
   std::vector<affect_list_t> affect_lists;
-  parse_cb_t callback = nullptr;
+  std::array<parse_cb_t, PARSE_CALLBACK_MAX> callback;;
   parse_callback_e callback_type = PARSE_CALLBACK_POST_EXECUTE;
   bool ignore_whitelist = false;
 
@@ -318,6 +318,11 @@ struct pack_t
     {
       spell = nullptr;
     }
+  }
+
+  size_t num_callbacks() const
+  {
+    return callback.size() - std::count( callback.begin(), callback.end(), nullptr );
   }
 };
 
@@ -392,8 +397,6 @@ struct parse_base_t
     }
     else if constexpr ( std::is_same_v<T, parse_callback_e> )
     {
-      assert( !pack.callback && "parse_callback_e argument must come before parse_cb_t argument" );
-
       pack.callback_type = mod;
     }
     else if constexpr ( std::is_same_v<T, parse_flag_e> )
@@ -652,7 +655,7 @@ public:
       has_entry = parse_effect( pack, i, false ) || has_entry;
     }
 
-    if ( has_entry && pack.callback )
+    if ( has_entry && pack.num_callbacks() )
       register_callback_function( pack );
   }
 
@@ -667,7 +670,7 @@ public:
     // parse mods and populate pack
     parse_spell_effect_mods( pack, mods... );
 
-    if ( parse_effect( pack, idx, true ) && pack.callback )
+    if ( parse_effect( pack, idx, true ) && pack.num_callbacks() )
       register_callback_function( pack );
   }
 

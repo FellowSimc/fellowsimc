@@ -124,5 +124,13 @@ actions.senttrickshots+=/explosive_shot,if=talent.precision_detonation&!talent.s
 actions.senttrickshots+=/steady_shot,if=focus+cast_regen<focus.max
 actions.senttrickshots+=/multishot
 
-actions.trinkets=use_items,slots=trinket1:trinket2,if=!this_trinket.has_use_buff|buff.trueshot.remains>13|cooldown.trueshot.remains>45
-actions.trinkets+=/use_item,name=unyielding_netherprism,if=buff.latent_energy.stack>5&(buff.trueshot.remains>13|buff.latent_energy.stack=18|fight_remains<25)
+# A buff trinket that lines up cleanly with Trueshot; use with Trueshot.
+actions.trinkets=use_items,check_existing=0,slots=trinket1:trinket2,if=!equipped.unyielding_netherprism&this_trinket.has_use_buff&this_trinket.cooldown.duration%%cooldown.trueshot.duration=0&buff.trueshot.remains>14
+# A buff trinket paired with a trinket that matches the above line; use with Trueshot if the other trinket is not ready or use without Trueshot if the other trinket will come up for the next Trueshot.
+actions.trinkets+=/use_items,check_existing=0,slots=trinket1:trinket2,if=!equipped.unyielding_netherprism&this_trinket.has_use_buff&other_trinket.cooldown.duration%%cooldown.trueshot.duration=0&(buff.trueshot.remains>14&other_trinket.cooldown.remains|cooldown.trueshot.remains>20&other_trinket.cooldown.remains<=cooldown.trueshot.remains)
+# Netherprism only; use with Trueshot if waiting for the next Trueshot will waste stacks or if it's the final Trueshot of the fight. Also use in the last ~20 seconds of the fight if there is no other buff trinket ready or if there are over 8 stacks.
+actions.trinkets+=/use_items,check_existing=0,slots=trinket1:trinket2,if=this_trinket.is.unyielding_netherprism&(buff.trueshot.remains>14&(buff.latent_energy.stack>(18-cooldown.trueshot.duration%10)|fight_remains<(cooldown.trueshot.duration+20))|fight_remains<22&(buff.latent_energy.stack>8|!other_trinket.has_use_buff|other_trinket.cooldown.remains))
+# A buff trinket that is not Netherprism; if the other trinket is Netherprism, use without Trueshot if there will only be one more Trueshot in the fight. Otherwise use with Trueshot or in the last ~20 seconds of the fight.
+actions.trinkets+=/use_items,check_existing=0,slots=trinket1:trinket2,if=!this_trinket.is.unyielding_netherprism&this_trinket.has_use_buff&(other_trinket.is.unyielding_netherprism&fight_remains<cooldown.trueshot.remains+cooldown.trueshot.duration+10&cooldown.trueshot.remains>20|buff.trueshot.remains>14|buff.trueshot.up&fight_remains<cooldown.trueshot.remains+15|fight_remains<21)
+# A damage trinket; use when Trueshot has at least 20 seconds remaining on its cooldown.
+actions.trinkets+=/use_items,check_existing=0,slots=trinket1:trinket2,if=this_trinket.has_use_damage&cooldown.trueshot.remains>20

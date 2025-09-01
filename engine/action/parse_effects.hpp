@@ -640,12 +640,12 @@ public:
   // Example 4: Parse buff3, only apply if my_player_t::check2() and my_player_t::check3() returns true:
   //   parse_effects( buff3, [ this ] { return p()->check2() && p()->check3(); } );
   template <typename T, typename... Ts>
-  void parse_effects( T data, Ts... mods )
+  bool parse_effects( T data, Ts... mods )
   {
     pack_t<player_effect_t> pack( data );
 
     if ( !pack.spell || !pack.spell->ok() )
-      return;
+      return false;
 
     // parse mods and populate pack
     parse_spell_effect_mods( pack, mods... );
@@ -662,21 +662,27 @@ public:
 
     if ( has_entry && pack.num_callbacks() )
       register_callback_function( pack );
+
+    return has_entry;
   }
 
   template <typename T, typename... Ts>
-  void force_effect( T data, unsigned idx, Ts... mods )
+  bool force_effect( T data, unsigned idx, Ts... mods )
   {
     pack_t<player_effect_t> pack( data );
 
     if ( !pack.spell || !pack.spell->ok() || !can_force( pack.spell->effectN( idx ) ) )
-      return;
+      return false;
 
     // parse mods and populate pack
     parse_spell_effect_mods( pack, mods... );
 
-    if ( parse_effect( pack, idx, true ) && pack.num_callbacks() )
+    bool has_entry = parse_effect( pack, idx, true );
+
+    if ( has_entry && pack.num_callbacks() )
       register_callback_function( pack );
+
+    return has_entry;
   }
 
   // Syntax: parse_target_effects( func, debuff[, spells|ignore_mask][,...] )

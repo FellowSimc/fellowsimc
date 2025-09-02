@@ -6126,7 +6126,7 @@ struct thrash_bear_t final : public trigger_claw_rampage_t<DRUID_GUARDIAN,
     if ( p->specialization() == DRUID_GUARDIAN )
       name_str_reporting = "thrash";
 
-    if ( p->active.starsurge_ec_tww3 && p->specialization() == DRUID_BALANCE )
+    if ( p->active.starsurge_ec_tww3 && p->specialization() == DRUID_GUARDIAN )
       ec_tww3_chance = p->sets->set( HERO_ELUNES_CHOSEN, TWW3, B2 )->effectN( 6 ).percent();
   }
 

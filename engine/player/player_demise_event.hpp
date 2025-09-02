@@ -17,10 +17,8 @@
  */
 struct player_demise_event_t : public player_event_t
 {
-  action_state_t* killing_blow;
-
-  player_demise_event_t(player_t& p, timespan_t delta_time = timespan_t::zero() /* Instantly kill the player */, action_state_t* s = nullptr) :
-    player_event_t(p, delta_time), killing_blow( s )
+  player_demise_event_t(player_t& p, timespan_t delta_time = timespan_t::zero() /* Instantly kill the player */) :
+    player_event_t(p, delta_time)
   {
     p.demise_event = this;
     if (sim().debug)

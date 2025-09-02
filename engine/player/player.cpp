@@ -8552,7 +8552,7 @@ void player_t::do_damage( action_state_t* incoming_state )
       }
       if ( sim->log )
         sim->out_log.printf( "%s has died.", name() );
-      make_event<player_demise_event_t>( *sim, *this, timespan_t::zero(), incoming_state );
+      make_event<player_demise_event_t>( *sim, *this );
     }
   }
 }

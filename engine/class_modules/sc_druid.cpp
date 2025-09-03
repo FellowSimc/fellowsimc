@@ -61,10 +61,10 @@ enum eclipse_e : uint8_t
 
 enum snapshot_e : uint8_t
 {
-  TIGERS_FURY   = 0x01,
-  BLOODTALONS   = 0x02,
-  SUDDEN_AMBUSH = 0x04,
-  CLEARCASTING  = 0x08,
+  TIGERS_FURY        = 0x01,
+  BLOODTALONS        = 0x02,
+  POUNCING_STRIKES   = 0x04,
+  MOMENT_OF_CLARITY  = 0x08,
 };
 
 enum flag_e : uint32_t
@@ -195,7 +195,7 @@ struct benefit_tracker_t
   }
 
   static constexpr std::array<std::string_view, 4> snapshot_list{
-    { "Tiger's Fury", "Bloodtalons", "Sudden Ambush", "Clearcasting" }
+    { "Tiger's Fury", "Bloodtalons", "Pouncing Strikes", "Moment of Clarity" }
   };
 };
 
@@ -2939,10 +2939,10 @@ struct cat_attack_data_t
         snap_str.push_back( "tigers_fury" );
       if ( data.snapshots & snapshot_e::BLOODTALONS )
         snap_str.push_back( "bloodtalons" );
-      if ( data.snapshots & snapshot_e::SUDDEN_AMBUSH )
-        snap_str.push_back( "sudden_ambush" );
-      if ( data.snapshots & snapshot_e::CLEARCASTING )
-        snap_str.push_back( "clearcasting" );
+      if ( data.snapshots & snapshot_e::POUNCING_STRIKES )
+        snap_str.push_back( "pouncing_strikes" );
+      if ( data.snapshots & snapshot_e::MOMENT_OF_CLARITY )
+        snap_str.push_back( "moment_of_clarity" );
       str.push_back( fmt::format( "snapshots={}", fmt::join( snap_str, "|" ) ) );
     }
     fmt::format_to( out, "{}{}", str.empty() ? "" : " ", fmt::join( str, " " ) );
@@ -2955,7 +2955,7 @@ struct cat_attack_t : public druid_attack_t<melee_attack_t>
   {
     bool tigers_fury;
     bool bloodtalons;
-    bool sudden_ambush;
+    bool pouncing_strikes;
     bool clearcasting;
   } snapshots;
 
@@ -2990,7 +2990,7 @@ struct cat_attack_t : public druid_attack_t<melee_attack_t>
         parse_persistent_effects( p->buff.clearcasting_cat, effect_mask_t( false ).enable( 3, 4 ),
           p->talent.moment_of_clarity->effectN( 4 ).percent(),
           PARSE_CALLBACK_POST_SNAPSHOT,
-          [ this ]( action_state_t* s ) { cast_state( s )->snapshots |= snapshot_e::CLEARCASTING; } );
+          [ this ]( action_state_t* s ) { cast_state( s )->snapshots |= snapshot_e::MOMENT_OF_CLARITY; } );
       }
     }
   }
@@ -3079,7 +3079,7 @@ struct cat_attack_t : public druid_attack_t<melee_attack_t>
     base_t::init();
 
     if ( ( data().ok() || has_flag( flag_e::AUTOATTACK ) ) &&
-         ( snapshots.tigers_fury || snapshots.bloodtalons || snapshots.sudden_ambush || snapshots.clearcasting ) )
+         ( snapshots.tigers_fury || snapshots.bloodtalons || snapshots.pouncing_strikes || snapshots.clearcasting ) )
     {
       tracker = benefit_tracker_t::get_tracker( p(), this, benefit_tracker_t::snapshot_list );
     }
@@ -5180,7 +5180,7 @@ struct rake_t final : public use_fluid_form_t<CAT_FORM, trigger_call_of_the_elde
 
       if ( p->talent.pouncing_strikes.ok() || p->spec.improved_prowl->ok() )
       {
-        snapshots.sudden_ambush = true;
+        snapshots.pouncing_strikes = true;
 
         const auto& eff = r->data().effectN( 4 );
         add_parse_entry( persistent_multiplier_effects )
@@ -5188,7 +5188,7 @@ struct rake_t final : public use_fluid_form_t<CAT_FORM, trigger_call_of_the_elde
           .set_func( [ this ] { return stealthed_any(); } )
           .set_eff( &eff )
           .add_parse_callback( this, PARSE_CALLBACK_POST_SNAPSHOT,
-            [ this ]( action_state_t* s ) { cast_state( s )->snapshots |= snapshot_e::SUDDEN_AMBUSH; } );
+            [ this ]( action_state_t* s ) { cast_state( s )->snapshots |= snapshot_e::POUNCING_STRIKES; } );
       }
     }
   };
@@ -5206,7 +5206,7 @@ struct rake_t final : public use_fluid_form_t<CAT_FORM, trigger_call_of_the_elde
 
       if ( p->talent.pouncing_strikes.ok() || p->spec.improved_prowl->ok() )
       {
-        snapshots.sudden_ambush = true;
+        snapshots.pouncing_strikes = true;
 
         const auto& eff = data().effectN( 4 );
         add_parse_entry( persistent_multiplier_effects )
@@ -5214,7 +5214,7 @@ struct rake_t final : public use_fluid_form_t<CAT_FORM, trigger_call_of_the_elde
           .set_func( [ this ] { return stealthed_any(); } )
           .set_eff( &eff )
           .add_parse_callback( this, PARSE_CALLBACK_POST_SNAPSHOT,
-            [ this ]( action_state_t* s ) { cast_state( s )->snapshots |= snapshot_e::SUDDEN_AMBUSH; } );
+            [ this ]( action_state_t* s ) { cast_state( s )->snapshots |= snapshot_e::POUNCING_STRIKES; } );
       }
     }
 
@@ -5427,7 +5427,7 @@ struct shred_t final : public use_fluid_form_t<CAT_FORM,
 
     if ( p->talent.pouncing_strikes.ok() )
     {
-      snapshots.sudden_ambush = true;
+      snapshots.pouncing_strikes = true;
       stealth_mul = data().effectN( 3 ).percent();
 
       add_parse_entry( da_multiplier_effects )
@@ -5435,7 +5435,7 @@ struct shred_t final : public use_fluid_form_t<CAT_FORM,
         .set_func( [ this ] { return stealthed_any(); } )
         .set_eff( &data().effectN( 3 ) )
         .add_parse_callback( this, PARSE_CALLBACK_POST_SNAPSHOT,
-          [ this ]( action_state_t* s ) { cast_state( s )->snapshots |= snapshot_e::SUDDEN_AMBUSH; } );
+          [ this ]( action_state_t* s ) { cast_state( s )->snapshots |= snapshot_e::POUNCING_STRIKES; } );
 
       if ( const auto& eff = p->find_spell( 343232 )->effectN( 1 ); energize && !energize->modified_by( eff ) )
       {

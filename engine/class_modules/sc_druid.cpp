@@ -2827,7 +2827,7 @@ struct cat_attack_data_t
       str.push_back( fmt::format( "combo_points={}", data.combo_points ) );
     if ( data.energy_mul != 1.0 )
       str.push_back( fmt::format( "energy_mul={}", data.energy_mul ) );
-    if ( data.snapshots && false )
+    if ( data.snapshots )
     {
       std::vector<std::string_view> snap_str;
       if ( data.snapshots & snapshot_e::TIGERS_FURY )

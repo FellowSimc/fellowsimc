@@ -111,6 +111,90 @@ struct lockable_t
   { if ( !locked ) data = o; return *this; }
 };
 
+struct benefit_tracker_t
+{
+  stats_t* stats;
+  std::vector<simple_sample_data_t> direct;
+  std::vector<simple_sample_data_t> tick;
+
+  benefit_tracker_t( stats_t* s, size_t z ) : stats( s )
+  {
+    direct.resize( z );
+    tick.resize( z );
+  }
+
+  void count_direct( unsigned bits )
+  {
+    for ( size_t i = 0; i < direct.size(); i++ )
+      direct[ i ].add( ( bits & ( 1U << i ) ) > 0 );
+  }
+
+  void count_tick( unsigned bits )
+  {
+    for ( size_t i = 0; i < tick.size(); i++ )
+      tick[ i ].add( ( bits & ( 1U << i ) ) > 0 );
+  }
+
+  void merge( const benefit_tracker_t& other )
+  {
+    for ( size_t i = 0; i < direct.size(); i++ )
+      direct[ i ].merge( other.direct[ i ] );
+
+    for ( size_t i = 0; i < tick.size(); i++ )
+      tick[ i ].merge( other.tick[ i ] );
+  }
+
+  template <typename T, typename U>
+  static benefit_tracker_t* get_tracker( T p, action_t* a, const U& type_list )
+  {
+    if ( p->sim->profileset_enabled )
+      return nullptr;
+
+    auto& tracker = p->trackers[ a->stats->action_list.front()->data().name_cstr() ];
+    if ( !tracker )
+      tracker = std::make_unique<benefit_tracker_t>( a->stats, type_list.size() );
+
+    return tracker.get();
+  }
+
+  template <typename T, typename U>
+  static void print_table( T p, report::sc_html_stream& os, std::string_view title, const U& type_list )
+  {
+    os.format( R"(<h3 class="toggle open">{}</h3>)", title );
+
+    // write header
+    os << R"(<div class="toggle-content"><table class="sc sort even"><thead><tr><th></th>)";
+    for ( auto type : type_list )
+      os.format( R"(<th colspan="2">{}</th>)", type );
+    os << "</tr>\n";
+
+    os << R"(<tr><th class="toggle-sort left" data-sortdir="asc" data-sorttype="alpha">Ability</th>)";
+    for ( [[maybe_unused]] auto type : type_list )
+      os << R"(<th class="toggle-sort">Direct</th><th class="toggle-sort">Tick</th>)";
+    os << "</tr></thead>\n";
+
+    for ( const auto& [ id, data ] : p->trackers )
+    {
+      assert( data->direct.size() == type_list.size() );
+
+      os.format( R"(<tr class="right"><td class="left">{}</td>)",
+                 report_decorators::decorated_action( *data->stats->action_list.front() ) );
+
+      for ( size_t i = 0; i < type_list.size(); i++ )
+      {
+        os.format( "<td>{}</td><td>{}</td>",
+                   data->direct[ i ].sum() ? fmt::format( "{:.2f}%", data->direct[ i ].mean() * 100 ) : "-",
+                   data->tick[ i ].sum() ? fmt::format( "{:.2f}%", data->tick[ i ].mean() * 100 ) : "-" );
+      }
+
+      os << "</tr>\n";
+    }
+
+    // write footer
+    os << "</table></div>\n";
+  }
+};
+
 struct druid_td_t final : public actor_target_data_t
 {
   struct dots_t
@@ -389,6 +473,7 @@ struct druid_t final : public parse_player_effects_t
 {
   form_e form = form_e::NO_FORM;  // Active druid form
   eclipse_handler_t eclipse_handler;
+  std::map<std::string_view, std::unique_ptr<benefit_tracker_t>> trackers;
   std::vector<std::tuple<unsigned, unsigned, timespan_t, timespan_t, double>> prepull_swarm;
   std::vector<player_t*> swarm_targets;
 

@@ -193,6 +193,10 @@ struct benefit_tracker_t
     // write footer
     os << "</table></div>\n";
   }
+
+  static constexpr std::array<std::string_view, 4> snapshot_list{
+    { "Tiger's Fury", "Bloodtalons", "Sudden Ambush", "Clearcasting" }
+  };
 };
 
 struct druid_td_t final : public actor_target_data_t
@@ -2955,6 +2959,8 @@ struct cat_attack_t : public druid_attack_t<melee_attack_t>
     bool clearcasting;
   } snapshots;
 
+  benefit_tracker_t* tracker = nullptr;
+
   std::vector<player_effect_t> persistent_periodic_effects;
   std::vector<player_effect_t> persistent_direct_effects;
 
@@ -3010,23 +3016,6 @@ struct cat_attack_t : public druid_attack_t<melee_attack_t>
   bool stealthed_any() const
   {
     return stealthed() || p()->buff.sudden_ambush->up();
-  }
-
-  void consume_resource() override
-  {
-    double eff_cost = base_cost();
-
-    base_t::consume_resource();
-
-    // Treat Omen of Clarity energy savings like an energy gain for tracking purposes.
-    if ( !is_free() && snapshots.clearcasting && current_resource() == RESOURCE_ENERGY &&
-         p()->buff.clearcasting_cat->up() )
-    {
-      // Base cost doesn't factor in but Omen of Clarity does net us less energy during it, so account for that here.
-      eff_cost *= 1.0 + p()->buff.incarnation_cat->check_value();
-
-      p()->gain.clearcasting->add( RESOURCE_ENERGY, eff_cost );
-    }
   }
 
   template <typename... Ts>
@@ -3087,17 +3076,15 @@ struct cat_attack_t : public druid_attack_t<melee_attack_t>
                                                       "Snapshots (Direct)" );
   }
 
-  void trigger_dot( action_state_t* s ) override
+  void init() override
   {
-    // tiger's fury can have different persistent multipliers for DMG_DIRECT vs DMG_OVER_TIME
-    // because the state is released after impact, there is no downstream concerns
-    if ( snapshots.tigers_fury && s->result_type != result_amount_type::DMG_OVER_TIME )
-    {
-      s->result_type = result_amount_type::DMG_OVER_TIME;
-      s->persistent_multiplier = composite_persistent_multiplier( s );
-    }
+    base_t::init();
 
-    base_t::trigger_dot( s );
+    if ( ( data().ok() || has_flag( flag_e::AUTOATTACK ) ) &&
+         ( snapshots.tigers_fury || snapshots.bloodtalons || snapshots.sudden_ambush || snapshots.clearcasting ) )
+    {
+      tracker = benefit_tracker_t::get_tracker( p(), this, benefit_tracker_t::snapshot_list );
+    }
   }
 
   void execute() override
@@ -3112,6 +3099,52 @@ struct cat_attack_t : public druid_attack_t<melee_attack_t>
       if ( special && base_costs[ RESOURCE_ENERGY ] > 0 )
         p()->buff.incarnation_cat->up();
     }
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    if ( tracker && s->result_amount > 0 )
+      tracker->count_direct( cast_state( s )->snapshots );
+  }
+
+  void trigger_dot( action_state_t* s ) override
+  {
+    // tiger's fury can have different persistent multipliers for DMG_DIRECT vs DMG_OVER_TIME
+    // because the state is released after impact, there is no downstream concerns
+    if ( snapshots.tigers_fury && s->result_type != result_amount_type::DMG_OVER_TIME )
+    {
+      s->result_type = result_amount_type::DMG_OVER_TIME;
+      s->persistent_multiplier = composite_persistent_multiplier( s );
+    }
+
+    base_t::trigger_dot( s );
+  }
+
+  void consume_resource() override
+  {
+    double eff_cost = base_cost();
+
+    base_t::consume_resource();
+
+    // Treat Omen of Clarity energy savings like an energy gain for tracking purposes.
+    if ( !is_free() && snapshots.clearcasting && current_resource() == RESOURCE_ENERGY &&
+         p()->buff.clearcasting_cat->up() )
+    {
+      // Base cost doesn't factor in but Omen of Clarity does net us less energy during it, so account for that here.
+      eff_cost *= 1.0 + p()->buff.incarnation_cat->check_value();
+
+      p()->gain.clearcasting->add( RESOURCE_ENERGY, eff_cost );
+    }
+  }
+
+  void tick( dot_t* d ) override
+  {
+    base_t::tick( d );
+
+    if ( tracker && d->state->result_amount > 0 )
+      tracker->count_tick( cast_state( d->state )->snapshots );
   }
 
   double composite_persistent_multiplier( const action_state_t* s ) const override
@@ -15480,6 +15513,8 @@ public:
 
     p.parsed_effects_html( os );
     modified_spell_data_t::parsed_effects_html( os, *p.sim, p.modified_spells );
+
+    benefit_tracker_t::print_table( &p, os, "Snapshot Tracker", benefit_tracker_t::snapshot_list );
 
     os << "</div>\n";
   }

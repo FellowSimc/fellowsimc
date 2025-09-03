@@ -9545,6 +9545,12 @@ void nexuskings_command( special_effect_t& effect )
   effect.custom_buff = create_buff<stat_buff_t>( effect.player, effect.player->find_spell( 1240000 ) )
     ->set_stat_from_effect_type( A_MOD_STAT, effect.driver()->effectN( 1 ).average( effect ) );
 
+  effect.player->callbacks.register_callback_trigger_function( effect.driver()->id(),
+    dbc_proc_callback_t::trigger_fn_type::CONDITION,
+    []( const dbc_proc_callback_t*, action_t* a, const action_state_t* ) {
+      return a->data().affected_by_label( LABEL_HEALING_SPELLS );
+    } );
+
   effect.player->callbacks.register_callback_execute_function( effect.driver()->id(),
     [ bound ]( const dbc_proc_callback_t* cb, action_t*, const action_state_t* ) {
       cb->proc_buff->trigger();

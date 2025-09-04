@@ -3781,12 +3781,15 @@ struct preparing_to_strike_buff_t final : public druid_buff_t
 {
   action_t* ravage_action = nullptr;
   player_t* ravage_target = nullptr;
+  proc_t* echo_proc;
   double energy_mod = 0.0;
   int combo_points = 0;
   bool bloodtalons = false;
   bool coiled_to_spring = false;
 
-  preparing_to_strike_buff_t( druid_t* p ) : base_t( p, "preparing_to_strike", p->find_spell( 1236342 ) )
+  preparing_to_strike_buff_t( druid_t* p )
+    : base_t( p, "preparing_to_strike", p->find_spell( 1236342 ) ),
+      echo_proc( p->get_proc( "Ravage Echo (4pc)" )->collect_interval()->collect_count() )
   {
     set_chance( p->sets->set( HERO_DRUID_OF_THE_CLAW, TWW3, B4 )->effectN( 1 ).percent() );
   }
@@ -3797,6 +3800,8 @@ struct preparing_to_strike_buff_t final : public druid_buff_t
 
     if ( !t->is_active() || check() || !trigger() )
       return false;
+
+    echo_proc->occur();
 
     ravage_action = a;
     ravage_target = t;
@@ -4609,6 +4614,7 @@ struct incarnation_cat_t final : public berserk_cat_base_t
 // Bloodseeker Vines ========================================================
 struct bloodseeker_vines_t final : public cat_attack_t
 {
+  proc_t* bursting_proc;
   timespan_t orig_dur;
   double twin_pct;
   double tww3_pct;
@@ -4616,6 +4622,7 @@ struct bloodseeker_vines_t final : public cat_attack_t
 
   bloodseeker_vines_t( druid_t* p, std::string_view n )
     : cat_attack_t( n, p, p->spec.bloodseeker_vines ),
+      bursting_proc( p->get_proc( "Bursting Proc (4pc)" )->collect_interval()->collect_count() ),
       twin_pct( p->talent.twin_sprouts->effectN( 1 ).percent() ),
       tww3_pct( p->sets->set( HERO_WILDSTALKER, TWW3, B4 )->effectN( 1 ).percent() )
   {
@@ -4668,7 +4675,10 @@ struct bloodseeker_vines_t final : public cat_attack_t
     cat_attack_t::tick( d );
 
     if ( p()->active.bursting_growth_tww3 && rng().roll( tww3_pct ) )
+    {
+      bursting_proc->occur();
       p()->active.bursting_growth_tww3->execute_on_target( d->target );
+    }
   }
 
   double composite_target_multiplier( player_t* t ) const override

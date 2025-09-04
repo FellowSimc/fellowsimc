@@ -278,21 +278,18 @@ void marksmanship( player_t* p )
   sentst->add_action( "explosive_shot,if=talent.precision_detonation|buff.trueshot.down" );
   sentst->add_action( "steady_shot" );
 
-  drcleave->add_action( "explosive_shot,if=buff.trueshot.down&talent.precision_detonation&(!talent.shrapnel_shot|buff.lock_and_load.down&cooldown.aimed_shot.charges_fractional<=1.1)", "2 targets (2+ without Trick Shots)" );
-  drcleave->add_action( "black_arrow,if=buff.precise_shots.up&buff.moving_target.down&variable.trueshot_ready" );
-  drcleave->add_action( "volley,if=(talent.double_tap&buff.double_tap.down|!talent.aspect_of_the_hydra)&(buff.precise_shots.down|buff.moving_target.up)&(!talent.shrapnel_shot|!talent.salvo|buff.lock_and_load.down)" );
-  drcleave->add_action( "rapid_fire,if=talent.bulletstorm&buff.bulletstorm.down&(!talent.double_tap|buff.double_tap.up|!talent.aspect_of_the_hydra&buff.trick_shots.remains>execute_time)&(buff.precise_shots.down|buff.moving_target.up|!talent.volley)" );
-  drcleave->add_action( "volley,if=!talent.double_tap&(buff.precise_shots.down|buff.moving_target.up)&(!talent.shrapnel_shot|buff.lock_and_load.down)" );
-  drcleave->add_action( "trueshot,if=variable.trueshot_ready&(buff.double_tap.down|!talent.volley)&(buff.precise_shots.down|buff.moving_target.up|!talent.volley)&(!talent.volley|!action.volley.ready)" );
-  drcleave->add_action( "steady_shot,if=variable.buffer_deathblow&buff.trueshot.down&cooldown.trueshot.remains" );
-  drcleave->add_action( "black_arrow,if=talent.headshot&buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)|!talent.headshot&buff.razor_fragments.up" );
-  drcleave->add_action( "aimed_shot,target_if=max:debuff.spotters_mark.up,if=buff.trueshot.up&buff.precise_shots.down|buff.lock_and_load.up&buff.moving_target.up" );
-  drcleave->add_action( "rapid_fire,if=!talent.bulletstorm|buff.bulletstorm.stack<=10|talent.aspect_of_the_hydra&buff.trick_shots.remains<action.aimed_shot.cast_time" );
-  drcleave->add_action( "arcane_shot,target_if=max:debuff.spotters_mark.down|action.aimed_shot.in_flight_to_target|max_prio_damage,if=buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)" );
-  drcleave->add_action( "aimed_shot,target_if=max:debuff.spotters_mark.up|max_prio_damage,if=buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up" );
-  drcleave->add_action( "rapid_fire" );
-  drcleave->add_action( "explosive_shot,if=talent.precision_detonation|buff.trueshot.down" );
-  drcleave->add_action( "black_arrow,if=!talent.headshot" );
+  drcleave->add_action( "wait,sec=0.05,if=talent.aspect_of_the_hydra&talent.shrapnel_shot&time=0&action.aimed_shot.in_flight", "2 targets (2+ without Trick Shots)  With Shrapnel Shot don't queue Explosive Shot after the precast since the Aspect of the Hydra secondary Aimed Shot will consume the Lock and Load." );
+  drcleave->add_action( "explosive_shot,if=buff.trueshot.down&talent.precision_detonation&(!talent.shrapnel_shot|buff.lock_and_load.down&cooldown.aimed_shot.charges_fractional<=1.1)" );
+  drcleave->add_action( "black_arrow,if=buff.precise_shots.up|!talent.headshot" );
+  drcleave->add_action( "rapid_fire,if=talent.bulletstorm&buff.bulletstorm.down&(talent.aspect_of_the_hydra|!talent.volley|cooldown.volley.remains)" );
+  drcleave->add_action( "volley,if=buff.double_tap.down&(!talent.double_tap|buff.precise_shots.down)&(!talent.shrapnel_shot|!talent.salvo|buff.lock_and_load.down)" );
+  drcleave->add_action( "trueshot,if=variable.trueshot_ready&buff.double_tap.down&(!talent.volley|cooldown.volley.remains)" );
+  drcleave->add_action( "steady_shot,if=variable.buffer_deathblow&buff.trueshot.down" );
+  drcleave->add_action( "aimed_shot,if=buff.trueshot.up&buff.precise_shots.down|buff.lock_and_load.up&buff.moving_target.up" );
+  drcleave->add_action( "rapid_fire,if=buff.double_tap.down" );
+  drcleave->add_action( "arcane_shot,if=buff.precise_shots.up&(debuff.spotters_mark.down|buff.moving_target.down)" );
+  drcleave->add_action( "aimed_shot,if=buff.precise_shots.down|debuff.spotters_mark.up&buff.moving_target.up" );
+  drcleave->add_action( "explosive_shot,if=!talent.shrapnel_shot|buff.lock_and_load.down" );
   drcleave->add_action( "steady_shot" );
 
   sentcleave->add_action( "explosive_shot,if=talent.precision_detonation&action.aimed_shot.in_flight&(buff.trueshot.down|!talent.windrunner_quiver)" );

@@ -3746,11 +3746,24 @@ void hunter_t::trigger_deathblow( bool activated )
     return;
 
   procs.deathblow->occur();
+  // Kill Shot/Black Arrow is set up by default to require reacting to Deathblow,
+  // and Deathblow by default is set to be reactable and non activated to force reactions and aura delay,
+  // so that needs to be temporarily flipped here for the one case it's considered immediately available after pressing Trueshot.
   if ( activated )
   {
-    buffs.deathblow->increment();
-    if ( talents.razor_fragments.ok() )
-      buffs.razor_fragments->increment();
+    buffs.deathblow->reactable = false;
+    buffs.deathblow->activated = true;
+    buffs.deathblow->trigger();
+    buffs.deathblow->reactable = true;
+    buffs.deathblow->activated = false;
+
+    // This should just need to avoid the aura delay.
+    if (talents.razor_fragments.ok())
+    {
+      buffs.razor_fragments->activated = true;
+      buffs.razor_fragments->trigger();
+      buffs.razor_fragments->activated = false;
+    }
   }
   else
   {
@@ -3759,7 +3772,7 @@ void hunter_t::trigger_deathblow( bool activated )
       buffs.razor_fragments->trigger();
   }
   
-  talents.black_arrow.ok() ? cooldowns.black_arrow->reset( true ) : cooldowns.kill_shot->reset( true );
+  talents.black_arrow.ok() ? cooldowns.black_arrow->reset( !activated ) : cooldowns.kill_shot->reset( !activated );
 }
 
 void hunter_t::trigger_sentinel( player_t* target, bool force, proc_t* proc )
@@ -8692,10 +8705,10 @@ void hunter_t::create_buffs()
 
   // Hunter Tree
 
-  buffs.deathblow =
-    make_buff( this, "deathblow", talents.deathblow_buff )
-      ->set_activated( false );
-  // Allows us to use may_react() in a ready check.
+  buffs.deathblow = make_buff( this, "deathblow", talents.deathblow_buff );
+  // By default, subject Deathblow to aura delay which allows queued casts to consume an existing Deathblow before a new Deathblow is applied.
+  buffs.deathblow->activated = false;
+  // By deafult, subject Deathblow to stack reaction, which allows may_react() in the ready().
   buffs.deathblow->reactable = true;
 
   // Marksmanship Tree

@@ -2849,16 +2849,16 @@ private:
 
 public:
   benefit_tracker_t* tracker = nullptr;
-  bool eclipse_solar = false;
-  bool eclipse_lunar = false;
+  bool track_solar = false;
+  bool track_lunar = false;
 
   druid_spell_t( std::string_view n, druid_t* p, const spell_data_t* s = spell_data_t::nil(), flag_e f = flag_e::NONE )
     : ab( n, p, s, f )
   {
     if ( data().ok() && p->eclipse_handler.enabled() )
     {
-      eclipse_solar = data().affected_by( p->spec.eclipse_solar->effectN( 1 ) );
-      eclipse_lunar = data().affected_by( p->spec.eclipse_lunar->effectN( 1 ) );
+      track_solar = data().affected_by( p->spec.eclipse_solar->effectN( 1 ) );
+      track_lunar = data().affected_by( p->spec.eclipse_lunar->effectN( 1 ) );
     }
   }
 
@@ -2866,7 +2866,7 @@ public:
   {
     ab::init_finished();
 
-    if ( eclipse_solar || eclipse_lunar )
+    if ( track_solar || track_lunar )
       tracker = benefit_tracker_t::get_tracker<ECLIPSE_TRACKER>( p(), this );
   }
 
@@ -8896,6 +8896,9 @@ struct starfall_t final : public ap_spender_t
 
       auto pre = name_str.substr( 0, name_str.find_last_of( '_' ) );
       damage = p->get_secondary_action<starfall_damage_t>( pre + "_damage", damage_spell, f );
+
+      track_solar = damage->track_solar;
+      track_lunar = damage->track_lunar;
     }
 
     // fake travel time to simulate execution delay for individual stars
@@ -8937,6 +8940,9 @@ struct starfall_t final : public ap_spender_t
       assert( driver->damage );
       replace_stats( driver, false );
       replace_stats( driver->damage );
+
+      track_solar = driver->track_solar;
+      track_lunar = driver->track_lunar;
     }
 
     weaver_buff = p->buff.starweaver_starfall;

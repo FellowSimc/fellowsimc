@@ -227,6 +227,7 @@ void marksmanship( player_t* p )
   precombat->add_action( "steady_shot" );
 
   default_->add_action( "variable,name=trueshot_ready,value=!talent.bullseye|fight_remains>cooldown.trueshot.duration+10|buff.bullseye.stack=buff.bullseye.max_stack|fight_remains<25", "Hold the final Trueshot for Bullseye stacks if necessary." );
+  default_->add_action( "variable,name=trueshot_ready,op=setif,condition=fight_style.dungeonroute,value_else=variable.trueshot_ready,value=raid_event.pull.remains>30|raid_event.pull.in>60", "For DungeonRoute, hold Trueshot at the end of pulls." );
   default_->add_action( "variable,name=buffer_deathblow,value=hero_tree.dark_ranger&action.aimed_shot.in_flight&!action.black_arrow.ready" );
   default_->add_action( "auto_shot" );
   default_->add_action( "call_action_list,name=cds" );

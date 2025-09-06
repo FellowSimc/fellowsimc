@@ -228,10 +228,6 @@ public:
       m *= 1 + priest().talents.shadow.insidious_ire->effectN( 1 ).percent();
     }
 
-    if ( priest().sets->has_set_bonus( PRIEST_SHADOW, T30, B2 ) && priest().buffs.shadowy_insight->check() )
-    {
-      m *= 1 + priest().sets->set( PRIEST_SHADOW, T30, B2 )->effectN( 1 ).percent();
-    }
     return m;
   }
 
@@ -2781,13 +2777,11 @@ priest_t::priest_t( sim_t* sim, util::string_view name, race_e r )
 /** Construct priest cooldowns */
 void priest_t::create_cooldowns()
 {
-  cooldowns.holy_fire                     = get_cooldown( "holy_fire" );
   cooldowns.holy_word_chastise            = get_cooldown( "holy_word_chastise" );
   cooldowns.holy_word_serenity            = get_cooldown( "holy_word_serenity" );
   cooldowns.holy_word_sanctify            = get_cooldown( "holy_word_sanctify" );
   cooldowns.void_bolt                     = get_cooldown( "void_bolt" );
   cooldowns.mind_blast                    = get_cooldown( "mind_blast" );
-  cooldowns.void_eruption                 = get_cooldown( "void_eruption" );
   cooldowns.shadow_word_death             = get_cooldown( "shadow_word_death" );
   cooldowns.power_word_shield             = get_cooldown( "power_word_shield" );
   cooldowns.mindbender                    = get_cooldown( "mindbender" );
@@ -2807,7 +2801,6 @@ void priest_t::create_gains()
   gains.shadowfiend                      = get_gain( "Shadowfiend" );
   gains.mindbender                       = get_gain( "Mindbender" );
   gains.voidwraith                       = get_gain( "Voidwraith" );
-  gains.power_word_solace                = get_gain( "Mana Gained from Power Word: Solace" );
   gains.throes_of_pain                   = get_gain( "Throes of Pain" );
   gains.insanity_idol_of_cthun_mind_flay = get_gain( "Insanity Gained from Idol of C'thun Mind Flay's" );
   gains.insanity_idol_of_cthun_mind_sear = get_gain( "Insanity Gained from Idol of C'thun Mind Sear's" );
@@ -3389,10 +3382,20 @@ void priest_t::init_base_stats()
       base.distance = 24.0;
     }
 
+    // Bug: Halo is a few yards short
+    // https://github.com/SimCMinMax/WoW-BugTracker/issues/1225
     if ( talents.halo.enabled() )
     {
-      base.distance = 30.0;
+      base.distance = ( bugs ? 28.0 : 30.0 ) + ( talents.archon.power_surge.enabled() ? 10.0 : 0.0 );
     }
+
+    if ( talents.phantom_reach.enabled() )
+    {
+      base.distance *= 1.0 + talents.phantom_reach->effectN( 1 ).percent();
+    }
+
+    // Going above 40 probably isn't a good idea
+    base.distance = std::max( base.distance, 40.00 );
   }
 
   base_t::init_base_stats();
@@ -3589,7 +3592,7 @@ void priest_t::init_spells()
 
   // Priest Tree Talents
   // Row 1
-  talents.renew        = CT( "Renew" );         // NYI
+  talents.renew        = CT( "Renew" );
   talents.dispel_magic = CT( "Dispel Magic" );  // NYI
   talents.shadowfiend  = CT( "Shadowfiend" );
   // Row 2
@@ -4035,9 +4038,6 @@ void priest_t::apply_affecting_auras_late( action_t& action )
   action.apply_affecting_aura( talents.holy.crisis_management );
   action.apply_affecting_aura( talents.holy.prismatic_echoes );
 
-  // Disc T31 2pc
-  action.apply_affecting_aura( sets->set( PRIEST_DISCIPLINE, T31, B2 ) );
-
   // Voidweaver Talents
   action.apply_affecting_aura( talents.voidweaver.inner_quietus );
 
@@ -4085,6 +4085,7 @@ void priest_t::init_items()
 {
   player_t::init_items();
 
+  // Special Handling for DF S4
   set_bonus_type_e tier_to_enable;
   switch ( specialization() )
   {

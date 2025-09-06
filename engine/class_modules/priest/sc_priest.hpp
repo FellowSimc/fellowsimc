@@ -728,7 +728,6 @@ public:
     // Shadow
     propagate_const<cooldown_t*> void_bolt;
     propagate_const<cooldown_t*> mind_blast;
-    propagate_const<cooldown_t*> void_eruption;
     propagate_const<cooldown_t*> maddening_touch_icd;
 
     // Discipline
@@ -736,7 +735,6 @@ public:
     propagate_const<cooldown_t*> ultimate_penitence;
 
     // Holy
-    propagate_const<cooldown_t*> holy_fire;
     propagate_const<cooldown_t*> holy_word_chastise;
     propagate_const<cooldown_t*> holy_word_serenity;
     propagate_const<cooldown_t*> holy_word_sanctify;
@@ -763,7 +761,6 @@ public:
     propagate_const<gain_t*> shadowfiend;
     propagate_const<gain_t*> voidwraith;
     propagate_const<gain_t*> power_of_the_dark_side;
-    propagate_const<gain_t*> power_word_solace;
     propagate_const<gain_t*> throes_of_pain;
     propagate_const<gain_t*> insanity_idol_of_cthun_mind_flay;
     propagate_const<gain_t*> insanity_idol_of_cthun_mind_sear;

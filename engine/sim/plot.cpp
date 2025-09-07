@@ -51,6 +51,9 @@ void plot_t::initialize()
     if ( dps_plot_stats.size() == 1 )
       rating = util::stat_to_rating( dps_plot_stats.begin()->first );
 
+    if ( rating == RATING_MAX )
+      rating = RATING_MELEE_HASTE;
+
     dps_plot_step = util::round( sim->dbc->combat_rating( rating, sim->max_player_level ) * 0.005 );
   }
 

@@ -6779,6 +6779,7 @@ struct nourish_t final : public druid_heal_t
 // Regrowth =================================================================
 struct regrowth_t final : public trigger_thriving_growth_t<use_dot_list_t<druid_heal_t>>
 {
+  buff_t* boon_of_the_oathsworn_hack = nullptr;
   timespan_t gcd_add;
   double bonus_crit;
   double sotf_mul;
@@ -6802,6 +6803,14 @@ struct regrowth_t final : public trigger_thriving_growth_t<use_dot_list_t<druid_
         .set_value( eff.percent() )
         .set_eff( &eff );
     }
+  }
+
+  void init() override
+  {
+    base_t::init();
+
+    if ( is_precombat && unique_gear::find_special_effect( player, 1232776 ) )
+      boon_of_the_oathsworn_hack = buff_t::find( player, "boon_of_the_oathsworn" );
   }
 
   timespan_t gcd() const override
@@ -6895,6 +6904,9 @@ struct regrowth_t final : public trigger_thriving_growth_t<use_dot_list_t<druid_
       else
         p()->buff.blooming_infusion_damage->trigger();
     }
+
+    if ( is_precombat && boon_of_the_oathsworn_hack && !boon_of_the_oathsworn_hack->check() )
+      boon_of_the_oathsworn_hack->trigger();
   }
 
   void last_tick( dot_t* d ) override

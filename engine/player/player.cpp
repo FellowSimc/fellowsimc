@@ -4948,7 +4948,7 @@ double player_t::composite_melee_haste() const
 {
   double h;
 
-  h = std::max( 0.0, composite_melee_haste_rating() ) / current.rating.attack_haste;
+  h = std::max( 0.0, composite_melee_haste_rating() ) * current.rating.attack_haste;
   h = apply_combat_rating_dr( RATING_MELEE_HASTE, h );
 
   h = 1.0 / ( 1.0 + h );
@@ -5103,7 +5103,7 @@ double player_t::composite_melee_crit_chance() const
 {
   double ac = current.attack_crit_chance;
 
-  ac += apply_combat_rating_dr( RATING_MELEE_CRIT, composite_melee_crit_rating() / current.rating.attack_crit );
+  ac += apply_combat_rating_dr( RATING_MELEE_CRIT, composite_melee_crit_rating() * current.rating.attack_crit );
 
   if ( current.attack_crit_per_agility )
     ac += ( cache.agility() / current.attack_crit_per_agility / 100.0 );
@@ -5118,7 +5118,7 @@ double player_t::composite_melee_expertise( const weapon_t* ) const
 {
   double e = current.expertise;
 
-  // e += composite_expertise_rating() / current.rating.expertise;
+  // e += composite_expertise_rating() * current.rating.expertise;
 
   return e;
 }
@@ -5127,7 +5127,7 @@ double player_t::composite_melee_hit() const
 {
   double ah = current.hit;
 
-  // ah += composite_melee_hit_rating() / current.rating.attack_hit;
+  // ah += composite_melee_hit_rating() * current.rating.attack_hit;
 
   return ah;
 }
@@ -5209,7 +5209,7 @@ double player_t::composite_block_dr( double extra_block ) const
   double total_block = current.block;
 
   // bonus_block is block from rating or other sources subject to DR (passed from class module via extra_block)
-  double bonus_block = composite_block_rating() / current.rating.block;
+  double bonus_block = composite_block_rating() * current.rating.block;
   bonus_block += extra_block;
 
   // bonus_block gets rounded because that's how blizzard rolls...
@@ -5239,7 +5239,7 @@ double player_t::composite_dodge() const
   double total_dodge = current.dodge;
 
   // bonus_dodge is from crit (through dodge rating) and bonus Agility
-  double bonus_dodge = composite_dodge_rating() / current.rating.dodge;
+  double bonus_dodge = composite_dodge_rating() * current.rating.dodge;
   if ( !is_enemy() )
   {
     bonus_dodge += ( cache.agility() - dbc->race_base( race ).agility -
@@ -5260,7 +5260,7 @@ double player_t::composite_parry() const
   double total_parry = current.parry;
 
   // bonus_parry is from rating and bonus Strength
-  double bonus_parry = composite_parry_rating() / current.rating.parry;
+  double bonus_parry = composite_parry_rating() * current.rating.parry;
   if ( !is_enemy() )
   {
     bonus_parry += ( cache.strength() - dbc->race_base( race ).strength -
@@ -5306,7 +5306,7 @@ double player_t::composite_spell_haste() const
 {
   double h;
 
-  h = std::max( 0.0, composite_spell_haste_rating() ) / current.rating.spell_haste;
+  h = std::max( 0.0, composite_spell_haste_rating() ) * current.rating.spell_haste;
   h = apply_combat_rating_dr( RATING_SPELL_HASTE, h );
 
   h = 1.0 / ( 1.0 + h );
@@ -5405,7 +5405,7 @@ double player_t::composite_spell_crit_chance() const
 {
   double sc = current.spell_crit_chance;
 
-  sc += apply_combat_rating_dr( RATING_SPELL_CRIT, composite_spell_crit_rating() / current.rating.spell_crit );
+  sc += apply_combat_rating_dr( RATING_SPELL_CRIT, composite_spell_crit_rating() * current.rating.spell_crit );
 
   if ( current.spell_crit_per_intellect > 0 )
   {
@@ -5425,7 +5425,7 @@ double player_t::composite_spell_hit() const
 {
   double sh = current.hit;
 
-  // sh += composite_spell_hit_rating() / current.rating.spell_hit;
+  // sh += composite_spell_hit_rating() * current.rating.spell_hit;
 
   sh += composite_melee_expertise();
 
@@ -5436,7 +5436,7 @@ double player_t::composite_mastery() const
 {
   double cm = current.mastery;
 
-  cm += apply_combat_rating_dr( RATING_MASTERY, composite_mastery_rating() / current.rating.mastery );
+  cm += apply_combat_rating_dr( RATING_MASTERY, composite_mastery_rating() * current.rating.mastery );
 
   for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_MASTERY ] )
     cm += b->check_stack_value();
@@ -5459,7 +5459,7 @@ double player_t::composite_damage_versatility() const
   double cdv = current.versatility;
 
   cdv += apply_combat_rating_dr( RATING_DAMAGE_VERSATILITY,
-           composite_damage_versatility_rating() / current.rating.damage_versatility );
+           composite_damage_versatility_rating() * current.rating.damage_versatility );
 
   for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_VERSATILITY ] )
     cdv += b->check_stack_value();
@@ -5480,7 +5480,7 @@ double player_t::composite_heal_versatility() const
   double chv = current.versatility;
 
   chv += apply_combat_rating_dr( RATING_HEAL_VERSATILITY,
-           composite_heal_versatility_rating() / current.rating.heal_versatility );
+           composite_heal_versatility_rating() * current.rating.heal_versatility );
 
   for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_VERSATILITY ] )
     chv += b->check_stack_value();
@@ -5501,7 +5501,7 @@ double player_t::composite_mitigation_versatility() const
   double cmv = current.versatility / 2;
 
   cmv += apply_combat_rating_dr( RATING_MITIGATION_VERSATILITY,
-           composite_mitigation_versatility_rating() / current.rating.mitigation_versatility );
+           composite_mitigation_versatility_rating() * current.rating.mitigation_versatility );
 
   for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_VERSATILITY ] )
     cmv += b->check_stack_value() / 2;
@@ -5519,13 +5519,13 @@ double player_t::composite_mitigation_versatility() const
 
 double player_t::composite_leech() const
 {
-  return current.leech + apply_combat_rating_dr( RATING_LEECH, composite_leech_rating() / current.rating.leech );
+  return current.leech + apply_combat_rating_dr( RATING_LEECH, composite_leech_rating() * current.rating.leech );
 }
 
 double player_t::composite_run_speed() const
 {
   // speed DRs using the following formula:
-  double pct = apply_combat_rating_dr( RATING_SPEED, composite_speed_rating() / current.rating.speed );
+  double pct = apply_combat_rating_dr( RATING_SPEED, composite_speed_rating() * current.rating.speed );
 
   double coefficient = std::exp( -.0003 * composite_speed_rating() );
 
@@ -5534,17 +5534,17 @@ double player_t::composite_run_speed() const
 
 double player_t::composite_avoidance() const
 {
-  return apply_combat_rating_dr( RATING_AVOIDANCE, composite_avoidance_rating() / current.rating.avoidance );
+  return apply_combat_rating_dr( RATING_AVOIDANCE, composite_avoidance_rating() * current.rating.avoidance );
 }
 
 double player_t::composite_corruption() const
 {
-  return composite_corruption_rating() / current.rating.corruption;
+  return composite_corruption_rating() * current.rating.corruption;
 }
 
 double player_t::composite_corruption_resistance() const
 {
-  return composite_corruption_resistance_rating() / current.rating.corruption_resistance;
+  return composite_corruption_resistance_rating() * current.rating.corruption_resistance;
 }
 
 double player_t::composite_total_corruption() const

@@ -42,12 +42,13 @@ struct player_resources_t
 
     // Init some resources to specific values at the beginning of the combat, defaults to 0.
     // The actual start-of-combat resource is min( computed_max, start_at ).
-    start_at[ RESOURCE_HEALTH     ] = std::numeric_limits<double>::max();
-    start_at[ RESOURCE_MANA       ] = std::numeric_limits<double>::max();
-    start_at[ RESOURCE_FOCUS      ] = std::numeric_limits<double>::max();
-    start_at[ RESOURCE_ENERGY     ] = std::numeric_limits<double>::max();
-    start_at[ RESOURCE_RUNE       ] = std::numeric_limits<double>::max();
-    start_at[ RESOURCE_ESSENCE    ] = std::numeric_limits<double>::max();
+    start_at[ RESOURCE_HEALTH ]     = std::numeric_limits<double>::max();
+    start_at[ RESOURCE_MANA ]       = std::numeric_limits<double>::max();
+    start_at[ RESOURCE_FOCUS ]      = std::numeric_limits<double>::max();
+    start_at[ RESOURCE_ENERGY ]     = std::numeric_limits<double>::max();
+    start_at[ RESOURCE_RUNE ]       = std::numeric_limits<double>::max();
+    start_at[ RESOURCE_ESSENCE ]    = std::numeric_limits<double>::max();
+    start_at[ RESOURCE_SPIRIT ]     = std::numeric_limits<double>::max();
     start_at[ RESOURCE_SOUL_SHARD ] = 3.0;
   }
 

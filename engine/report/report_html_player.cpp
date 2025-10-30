@@ -1620,7 +1620,7 @@ void print_html_stats( report::sc_html_stream& os, const player_t& p )
                  100 * ( 1 / p.composite_melee_auto_attack_speed() - 1 ),
                  p.composite_melee_haste_rating() );
     }
-    os.format( R"(<tr class="right"><th class="left">Versatility</th>)"
+    os.format( R"(<tr class="right"><th class="left">Expertise</th>)"
                "<td></td>"
                "<td></td>"
                "<td>{:.2f}%</td>"
@@ -1664,14 +1664,20 @@ void print_html_stats( report::sc_html_stream& os, const player_t& p )
                  p.composite_melee_attack_power() * p.composite_attack_power_multiplier(),
                  p.initial.stats.attack_power );
     }
-    os.format( R"(<tr class="right"><th class="left">Mastery</th>)"
+    os.format( R"(<tr class="right"><th class="left">Spirit Reset</th>)"
                "<td></td>"
                "<td></td>"
                "<td>{:.2f}%</td>"
                "<td>{:.2f}%</td>"
                "<td>{:.0f}</td></tr>\n",
-               100.0 * buffed_stats.mastery_value,
-               100.0 * p.cache.mastery_value(), p.composite_mastery_rating() );
+               100.0 * buffed_stats.mastery_value, 100.0 * p.cache.mastery_value(), p.composite_mastery_rating() );
+    os.format( R"(<tr class="right"><th class="left">Spirit</th>)"
+               "<td></td>"
+               "<td></td>"
+               "<td>{:.2f}%</td>"
+               "<td>{:.2f}%</td>"
+               "<td>{:.0f}</td></tr>\n",
+               100.0 * buffed_stats.mastery, 100.0 * p.cache.mastery(), p.composite_mastery_rating() );
     if ( buffed_stats.mh_attack_expertise > 7.5 )
     {
       if ( p.dual_wield() )

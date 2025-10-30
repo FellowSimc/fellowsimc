@@ -49,6 +49,7 @@ rgb class_color( player_e type )
     case HUNTER:
       return color::COLOR_HUNTER;
     case MAGE:
+    case RIME:
       return color::COLOR_MAGE;
     case MONK:
       return color::COLOR_MONK;

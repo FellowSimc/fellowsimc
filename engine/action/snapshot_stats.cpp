@@ -79,20 +79,21 @@ void snapshot_stats_t::execute()
 
   buffed_stats.resource = p->resources.max;
 
-  buffed_stats.spell_haste = p->cache.spell_haste();
-  buffed_stats.spell_cast_speed = p->cache.spell_cast_speed();
-  buffed_stats.attack_haste = p->cache.attack_haste();
-  buffed_stats.auto_attack_speed = p->cache.auto_attack_speed();
-  buffed_stats.mastery_value = p->cache.mastery_value();
-  buffed_stats.bonus_armor = p->composite_bonus_armor();
-  buffed_stats.damage_versatility = p->cache.damage_versatility();
-  buffed_stats.heal_versatility = p->cache.heal_versatility();
+  buffed_stats.spell_haste            = p->cache.spell_haste();
+  buffed_stats.spell_cast_speed       = p->cache.spell_cast_speed();
+  buffed_stats.attack_haste           = p->cache.attack_haste();
+  buffed_stats.auto_attack_speed      = p->cache.auto_attack_speed();
+  buffed_stats.mastery                = p->cache.mastery();
+  buffed_stats.mastery_value          = p->cache.mastery_value();
+  buffed_stats.bonus_armor            = p->composite_bonus_armor();
+  buffed_stats.damage_versatility     = p->cache.damage_versatility();
+  buffed_stats.heal_versatility       = p->cache.heal_versatility();
   buffed_stats.mitigation_versatility = p->cache.mitigation_versatility();
-  buffed_stats.run_speed = p->cache.run_speed();
-  buffed_stats.avoidance = p->cache.avoidance();
-  buffed_stats.corruption = p->cache.corruption();
-  buffed_stats.corruption_resistance = p->cache.corruption_resistance();
-  buffed_stats.leech = p->cache.leech();
+  buffed_stats.run_speed              = p->cache.run_speed();
+  buffed_stats.avoidance              = p->cache.avoidance();
+  buffed_stats.corruption             = p->cache.corruption();
+  buffed_stats.corruption_resistance  = p->cache.corruption_resistance();
+  buffed_stats.leech                  = p->cache.leech();
 
   buffed_stats.spell_power =
       static_cast<int>( p->cache.spell_power( SCHOOL_MAX ) * p->composite_spell_power_multiplier() );

@@ -1454,7 +1454,7 @@ sim_t::sim_t()
     save_prefix_str( "save_" ),
     save_talent_str( false ),
     stat_cache( 1 ),
-    max_aoe_enemies( 20 ),
+    max_aoe_enemies( 40 ),
     requires_regen_event( false ),
     single_actor_batch( false ),
     allow_experimental_specializations( false ),
@@ -3453,6 +3453,9 @@ std::unique_ptr<expr_t> sim_t::create_expression( util::string_view name_str )
   if ( name_str == "time" )
     return make_ref_expr( name_str, event_mgr.current_time );
 
+  if ( util::str_compare_ci( name_str, "average_combat_length" ) )
+    return make_ref_expr( name_str, max_time );
+
   if ( util::str_compare_ci( name_str, "expected_combat_length" ) )
     return make_ref_expr( name_str, expected_iteration_time );
 
@@ -3820,6 +3823,7 @@ void sim_t::create_options()
   add_option( opt_func( "warrior", parse_player ) );
   add_option( opt_func( "player_simplified", parse_player ) );
   add_option( opt_func( "mara", parse_player ) );
+  add_option( opt_func( "rime", parse_player ) );
   add_option( opt_func( "enemy", parse_player ) );
   add_option( opt_func( "tank_dummy", parse_player ) );
   add_option( opt_func( "pet", parse_player ) );

@@ -4926,6 +4926,47 @@ double player_t::resource_regen_per_second( resource_e r ) const
   return reg;
 }
 
+double player_t::apply_combat_rating_fellow_dr( double percent ) const
+{
+  const double breakPoints[] = { 0.10, 0.15, 0.20, 0.25 };
+
+  const double breakPointMultipliers[] = { 1, 0.95, 0.9, 0.85, 0.8 };
+
+  if ( percent <= breakPoints[ 0 ] )
+    return percent * breakPointMultipliers[ 0 ];
+
+  double out = breakPoints[ 0 ] * breakPointMultipliers[ 0 ];
+  percent -= out;
+
+  double current_breakpoint  = out;
+  double previous_breakpoint = 0.0;
+  size_t i                   = 1;
+
+  for ( ; i < std::size( breakPoints ); i++ )
+  {
+    previous_breakpoint = current_breakpoint;
+    current_breakpoint += ( breakPoints[ i ] - breakPoints[ i - 1 ] ) / breakPointMultipliers[ i ];
+    if ( percent <= current_breakpoint - previous_breakpoint )
+    {
+      out += percent * breakPointMultipliers[ i ];
+      return out;
+    }
+    else
+    {
+      double diff = ( current_breakpoint - previous_breakpoint );
+      out += diff * breakPointMultipliers[ i ];
+      percent -= diff;
+    }
+  }
+
+  if ( percent > 0 )
+  {
+    out += percent * breakPointMultipliers[ i ];
+  }
+
+  return out;
+}
+
 double player_t::apply_combat_rating_dr( rating_e rating, double value ) const
 {
   switch ( rating )
@@ -4934,8 +4975,16 @@ double player_t::apply_combat_rating_dr( rating_e rating, double value ) const
     case RATING_SPEED:
     case RATING_AVOIDANCE:
       return item_database::curve_point_value( *dbc, DIMINISHING_RETURN_TERTIARY_CR_CURVE, value * 100.0 ) / 100.0;
+    case RATING_HEAL_VERSATILITY:
+    case RATING_DAMAGE_VERSATILITY:
+    case RATING_MELEE_HASTE:
+    case RATING_SPELL_HASTE:
+    case RATING_RANGED_HASTE:
+    case RATING_MELEE_CRIT:
+    case RATING_SPELL_CRIT:
+    case RATING_RANGED_CRIT:
     case RATING_MASTERY:
-      return item_database::curve_point_value( *dbc, DIMINISHING_RETURN_SECONDARY_CR_CURVE, value );
+      return apply_combat_rating_fellow_dr( value );
     case RATING_MITIGATION_VERSATILITY:
       return item_database::curve_point_value( *dbc, DIMINISHING_RETURN_VERS_MITIG_CR_CURVE, value * 100.0 ) / 100.0;
     default:
@@ -4951,28 +5000,13 @@ double player_t::composite_melee_haste() const
   h = std::max( 0.0, composite_melee_haste_rating() ) * current.rating.attack_haste;
   h = apply_combat_rating_dr( RATING_MELEE_HASTE, h );
 
-  h = 1.0 / ( 1.0 + h );
-
   if ( !is_pet() && !is_enemy() && type != HEALING_ENEMY )
   {
     for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_HASTE ] )
-      h /= 1.0 + b->check_stack_value();
-
-    if ( buffs.bloodlust->check() )
-      h *= 1.0 / ( 1.0 + buffs.bloodlust->check_stack_value() );
-
-    if ( buffs.berserking->check() )
-      h *= 1.0 / ( 1.0 + buffs.berserking->data().effectN( 1 ).percent() );
-
-    h *= 1.0 / ( 1.0 + racials.nimble_fingers->effectN( 1 ).percent() );
-    h *= 1.0 / ( 1.0 + racials.time_is_money->effectN( 1 ).percent() );
-
-    if ( timeofday == NIGHT_TIME )
-      h *= 1.0 / ( 1.0 + racials.touch_of_elune->effectN( 1 ).percent() );
-
-    if ( buffs.power_infusion )
-      h *= 1.0 / ( 1.0 + buffs.power_infusion->check_value() );
+      h += b->check_stack_value();
   }
+
+  h = 1.0 / ( 1.0 + h );
 
   return h;
 }
@@ -5309,28 +5343,13 @@ double player_t::composite_spell_haste() const
   h = std::max( 0.0, composite_spell_haste_rating() ) * current.rating.spell_haste;
   h = apply_combat_rating_dr( RATING_SPELL_HASTE, h );
 
-  h = 1.0 / ( 1.0 + h );
-
   if ( !is_pet() && !is_enemy() && type != HEALING_ENEMY )
   {
     for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_HASTE ] )
-      h /= 1.0 + b->check_stack_value();
-
-    if ( buffs.bloodlust->check() )
-      h *= 1.0 / ( 1.0 + buffs.bloodlust->check_stack_value() );
-
-    if ( buffs.berserking->check() )
-      h *= 1.0 / ( 1.0 + buffs.berserking->data().effectN( 1 ).percent() );
-
-    h *= 1.0 / ( 1.0 + racials.nimble_fingers->effectN( 1 ).percent() );
-    h *= 1.0 / ( 1.0 + racials.time_is_money->effectN( 1 ).percent() );
-
-    if ( timeofday == NIGHT_TIME )
-      h *= 1.0 / ( 1.0 + racials.touch_of_elune->effectN( 1 ).percent() );
-
-    if ( buffs.power_infusion )
-      h *= 1.0 / ( 1.0 + buffs.power_infusion->check_value() );
+      h += b->check_stack_value();
   }
+  
+  h = 1.0 / ( 1.0 + h );
 
   return h;
 }
@@ -5341,24 +5360,6 @@ double player_t::composite_spell_haste() const
 double player_t::composite_spell_cast_speed() const
 {
   auto speed = cache.spell_haste();
-
-  if ( !is_pet() && !is_enemy() && type != HEALING_ENEMY )
-  {
-    if ( buffs.tempus_repit &&  buffs.tempus_repit->check() )
-    {
-      speed *= 1.0 / ( 1.0 + buffs.tempus_repit->check_stack_value() );
-    }
-
-    if ( buffs.nefarious_pact )
-    {
-      speed *= 1.0 / ( 1.0 + buffs.nefarious_pact->check_stack_value() );
-    }
-
-    if ( buffs.devils_due )
-    {
-      speed *= 1.0 - buffs.devils_due->check_stack_value();
-    }
-  }
 
   return speed;
 }
@@ -12101,7 +12102,7 @@ std::unique_ptr<expr_t> player_t::create_expression( util::string_view expressio
       if ( action )
       {
         return make_fn_expr( expression_str, [ this, action ] {
-          return !action->data().ok() ? 0 : get_active_dots( action->get_dot() );
+          return get_active_dots( action->get_dot() );
         } );
       }
       throw std::invalid_argument(fmt::format("Cannot find action '{}'.", splits[ 1 ]));
@@ -13135,6 +13136,12 @@ void player_t::copy_from( player_t* source )
   external_buffs = source->external_buffs;
 
   antumbra = source->antumbra;
+
+  for ( resource_e resource = RESOURCE_NONE; resource < RESOURCE_MAX; resource++ )
+  {
+    resources.initial_opt[ resource ] = source->resources.initial_opt[ resource ];
+  }
+
 }
 
 void player_t::create_options()

@@ -327,6 +327,8 @@ public:
   /// Formula used is <damage per target> = sqrt( reduced_aoe_targets / <number of targets> )
   double reduced_aoe_targets;
 
+  bool full_amount_targets_counted_for_sqrt;
+
   /// If reduced_aoe_targets > 0, the number of target(s) that will take full unreduced amount
   int full_amount_targets;
 
@@ -425,6 +427,8 @@ public:
 
   /// Whether or not the dot damage ignores number of stacks.
   bool dot_ignore_stack;
+  
+  bool dot_allow_partial_tick;
 
   /// Cost of using the ability.
   std::array<parsed_value_t<double>, RESOURCE_MAX> base_costs;

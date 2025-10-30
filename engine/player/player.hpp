@@ -1216,6 +1216,7 @@ public:
 
   virtual double resource_regen_per_second( resource_e ) const;
 
+  double apply_combat_rating_fellow_dr( double value ) const;
   double apply_combat_rating_dr( rating_e rating, double value ) const;
 
   virtual double composite_melee_haste() const;

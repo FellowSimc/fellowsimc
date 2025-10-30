@@ -84,7 +84,7 @@ private:
   unsigned scales_with;
   blp blp_state;
 
-  static constexpr timespan_t max_interval = 3.5_s;
+  static constexpr timespan_t max_interval = 30_s;
   static constexpr timespan_t max_bad_luck_prot = 1000_s;
 
 public:

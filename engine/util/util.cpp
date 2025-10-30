@@ -635,6 +635,7 @@ const char* util::player_type_string( player_e type )
     case WARLOCK:                 return "warlock";
     case WARRIOR:                 return "warrior";
     case MARA:                    return "mara";
+    case RIME:                    return "rime";
     case PLAYER_SIMPLIFIED:       return "player_simplified";
     case PLAYER_PET:              return "pet";
     case PLAYER_GUARDIAN:         return "guardian";
@@ -677,6 +678,7 @@ const char* util::player_type_string_long( player_e type )
     case WARLOCK:         return "Warlock";
     case WARRIOR:         return "Warrior";
     case MARA:            return "Mara";
+    case RIME:            return "Rime";
     case PLAYER_SIMPLIFIED:         return "Simplified Player";
     case PLAYER_PET:      return "Pet";
     case PLAYER_GUARDIAN: return "Guardian";
@@ -1003,6 +1005,8 @@ const char* util::resource_type_string( resource_e resource_type )
     case RESOURCE_INSANITY:      return "insanity";
     case RESOURCE_ESSENCE:       return "essence";
     case RESOURCE_SPIRIT:        return "spirit";
+    case RESOURCE_WINTER_ORB:    return "winter_orb";
+    case RESOURCE_ANIMA:         return "anima";
     default:                     return "unknown";
   }
 }
@@ -1029,6 +1033,9 @@ const char* util::resource_type_abbrev( resource_e resource_type )
     case RESOURCE_PAIN:          return "pain";
     case RESOURCE_INSANITY:      return "insanity";
     case RESOURCE_ESSENCE:       return "ess";
+    case RESOURCE_SPIRIT:        return "spirit";
+    case RESOURCE_WINTER_ORB:    return "worb";
+    case RESOURCE_ANIMA:         return "anima";
     default:                     return "unk";
   }
 }
@@ -1296,6 +1303,7 @@ item_subclass_armor util::matching_armor_type( player_e ptype )
     case MAGE:
     case PRIEST:
     case WARLOCK:
+    case RIME:
       return ITEM_SUBCLASS_ARMOR_CLOTH;
     default:
       return ITEM_SUBCLASS_ARMOR_MISC;

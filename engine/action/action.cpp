@@ -392,6 +392,7 @@ action_t::action_t( action_e ty, util::string_view token, player_t* p, const spe
     rolling_periodic(),
     split_aoe_damage(),
     reduced_aoe_targets( 0.0 ),
+    full_amount_targets_counted_for_sqrt( false ),
     full_amount_targets( 0 ),
     normalize_weapon_speed(),
     ground_aoe(),
@@ -421,6 +422,7 @@ action_t::action_t( action_e ty, util::string_view token, player_t* p, const spe
     hasted_dot_duration(),
     dot_max_stack( 1 ),
     dot_ignore_stack(),
+    dot_allow_partial_tick( true ),
     base_costs(),
     secondary_costs(),
     base_costs_per_tick(),
@@ -1513,7 +1515,10 @@ double action_t::calculate_direct_amount( action_state_t* state ) const
        state->action->reduced_aoe_targets > 0.0 &&
        as<double>( state->n_targets ) > state->action->reduced_aoe_targets )
   {
-    amount *= std::sqrt( state->action->reduced_aoe_targets / std::min<int>( sim->max_aoe_enemies, state->n_targets ) );
+    if ( full_amount_targets_counted_for_sqrt )
+      amount *= std::sqrt( state->action->reduced_aoe_targets / std::min<int>( sim->max_aoe_enemies, state->n_targets ) );
+    else if ( as<double>( state->n_targets ) > state->action->full_amount_targets )
+      amount *= std::sqrt( state->action->reduced_aoe_targets / std::min<int>( sim->max_aoe_enemies, state->n_targets - state->action->full_amount_targets ) );
   }
 
   amount *= composite_aoe_multiplier( state );
@@ -2047,22 +2052,27 @@ void action_t::tick( dot_t* d )
   }
   else
   {
-    d->state->result = RESULT_HIT;
+    auto factor      = d->get_tick_factor();
 
-    if ( tick_may_crit && rng().roll( d->state->composite_crit_chance() ) )
-      d->state->result = RESULT_CRIT;
+    if ( factor >= 1.0 || dot_allow_partial_tick )
+    {
+      d->state->result = RESULT_HIT;
 
-    auto stack = dot_ignore_stack ? 1 : d->current_stack();
+      if ( tick_may_crit && rng().roll( d->state->composite_crit_chance() ) )
+        d->state->result = RESULT_CRIT;
 
-    d->state->result_amount = calculate_tick_amount( d->state, d->get_tick_factor() * stack );
+      auto stack = dot_ignore_stack ? 1 : d->current_stack();
 
-    assess_damage( amount_type( d->state, true ), d->state );
+      d->state->result_amount = calculate_tick_amount( d->state, factor * stack );
 
-    if ( sim->debug )
-      d->state->debug();
+      assess_damage( amount_type( d->state, true ), d->state );
+
+      if ( sim->debug )
+        d->state->debug();
+    }
   }
 
-  if ( energize_type_() == action_energize::PER_TICK && d->get_tick_factor() >= 1.0)
+  if ( energize_type_() == action_energize::PER_TICK )
   {
     // Partial tick is not counted for resource gain
     gain_energize_resource( energize_resource_(), composite_energize_amount( d->state ), gain );

@@ -1,0 +1,137 @@
+report_details=1
+optimal_raid=0
+max_time=420
+target_error=0.05
+iterations=10000
+chart_show_relative_difference=1
+vary_combat_length=0.05
+single_actor_batch=1
+desired_targets=12
+
+mara="Mara"
+level=80
+
+apl/mara.simc
+
+gear_crit_rating=390
+gear_versatility_rating=390
+gear_haste_rating=390
+gear_mastery_rating=390
+
+legendary.vexiras_venom=1
+
+
+# copy="GB","Mara"
+# talent.gushing_blood=1
+
+# copy="DS","Mara"
+# talent.deadly_scheme=1
+
+# copy="CS","Mara"
+# talent.corrosive_spill=1
+
+# copy="FTS","Mara"
+# talent.from_the_shadows=1
+
+# copy="Hemo","Mara"
+# talent.hemotoxin=1
+
+# copy="DM","Mara"
+# talent.malevolence=1
+
+copy="FTS Hemo GB BR","Mara"
+talent.hemotoxin=1
+talent.from_the_shadows=1
+talent.gushing_blood=1
+talent.bloodrush=1
+
+copy="FTS DS GB BR AO","Mara"
+talent.deadly_scheme=1
+talent.from_the_shadows=1
+talent.gushing_blood=1
+talent.bloodrush=1
+talent.arachnid_onslaught=1
+
+copy="FTS AG GB BR AO","Mara"
+talent.assassins_guile=1
+talent.from_the_shadows=1
+talent.gushing_blood=1
+talent.bloodrush=1
+talent.arachnid_onslaught=1
+
+copy="FTS FTQ GB BR AO","Mara"
+talent.feed_the_queen=1
+talent.from_the_shadows=1
+talent.gushing_blood=1
+talent.bloodrush=1
+talent.arachnid_onslaught=1
+
+copy="FTS CS GB BR AO","Mara"
+talent.corrosive_spill=1
+talent.from_the_shadows=1
+talent.gushing_blood=1
+talent.bloodrush=1
+talent.arachnid_onslaught=1
+
+copy="DM DS AG VD BR","Mara"
+talent.malevolence=1
+talent.deadly_scheme=1
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.bloodrush=1
+
+copy="DM DS GB VD BR","Mara"
+talent.malevolence=1
+talent.deadly_scheme=1
+talent.gushing_blood=1
+talent.venomous_delight=1
+talent.bloodrush=1
+
+copy="DM DS CS VD BR","Mara"
+talent.malevolence=1
+talent.deadly_scheme=1
+talent.corrosive_spill=1
+talent.venomous_delight=1
+talent.bloodrush=1
+
+# copy="Assassins_Guile","Mara"
+# talent.assassins_guile=1
+
+# copy="Red_Ledger","Mara"
+# talent.red_ledger=1
+
+# copy="Corrosive_Spill_VD","Mara"
+# talent.corrosive_spill=1
+# talent.venomous_delight=1
+
+# copy="Assassins_Guile_VD","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+
+# copy="Red_Ledger_VD","Mara"
+# talent.red_ledger=1
+# talent.venomous_delight=1
+
+# copy="Corrosive_Spill_BR","Mara"
+# talent.corrosive_spill=1
+# talent.bloodrush=1
+
+# copy="Assassins_Guile_BR","Mara"
+# talent.assassins_guile=1
+# talent.bloodrush=1
+
+# copy="Red_Ledger_BR","Mara"
+# talent.red_ledger=1
+# talent.bloodrush=1
+
+# copy="Corrosive_Spill_EK","Mara"
+# talent.corrosive_spill=1
+# talent.efficient_killer=1
+
+# copy="Assassins_Guile_EK","Mara"
+# talent.assassins_guile=1
+# talent.efficient_killer=1
+
+# copy="Red_Ledger_EK","Mara"
+# talent.red_ledger=1
+# talent.efficient_killer=1

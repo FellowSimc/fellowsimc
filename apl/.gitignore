@@ -1,0 +1,4 @@
+./output/*
+*.txt
+*.html
+*.log

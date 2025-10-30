@@ -1,0 +1,99 @@
+report_details=1
+optimal_raid=0
+max_time=420
+target_error=0.05
+iterations=10000
+chart_show_relative_difference=1
+vary_combat_length=0.05
+single_actor_batch=1
+desired_targets=16
+
+mara="Mara"
+level=80
+
+apl/mara.simc
+
+gear_crit_rating=290
+gear_versatility_rating=290
+gear_haste_rating=290
+gear_mastery_rating=290
+
+
+copy="GB","Mara"
+talent.gushing_blood=1
+
+copy="DS","Mara"
+talent.deadly_scheme=1
+
+copy="CS","Mara"
+talent.corrosive_spill=1
+
+copy="GB DS","Mara"
+talent.gushing_blood=1
+talent.deadly_scheme=1
+
+copy="GB CS","Mara"
+talent.gushing_blood=1
+talent.corrosive_spill=1
+
+copy="GB BR VR","Mara"
+talent.gushing_blood=1
+talent.bloodrush=1
+talent.venomous_delight=1
+
+copy="DS CS","Mara"
+talent.deadly_scheme=1
+talent.corrosive_spill=1
+
+copy="DS BR VD","Mara"
+talent.deadly_scheme=1
+talent.bloodrush=1
+talent.venomous_delight=1
+
+copy="CS BR VD","Mara"
+talent.corrosive_spill=1
+talent.bloodrush=1
+talent.venomous_delight=1
+
+
+# copy="Assassins_Guile","Mara"
+# talent.assassins_guile=1
+
+# copy="Red_Ledger","Mara"
+# talent.red_ledger=1
+
+# copy="Corrosive_Spill_VD","Mara"
+# talent.corrosive_spill=1
+# talent.venomous_delight=1
+
+# copy="Assassins_Guile_VD","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+
+# copy="Red_Ledger_VD","Mara"
+# talent.red_ledger=1
+# talent.venomous_delight=1
+
+# copy="Corrosive_Spill_BR","Mara"
+# talent.corrosive_spill=1
+# talent.bloodrush=1
+
+# copy="Assassins_Guile_BR","Mara"
+# talent.assassins_guile=1
+# talent.bloodrush=1
+
+# copy="Red_Ledger_BR","Mara"
+# talent.red_ledger=1
+# talent.bloodrush=1
+
+# copy="Corrosive_Spill_EK","Mara"
+# talent.corrosive_spill=1
+# talent.efficient_killer=1
+
+# copy="Assassins_Guile_EK","Mara"
+# talent.assassins_guile=1
+# talent.efficient_killer=1
+
+# copy="Red_Ledger_EK","Mara"
+# talent.red_ledger=1
+# talent.efficient_killer=1

@@ -1,0 +1,14 @@
+# fight_style=dungeonslice
+
+desired_targets=1
+ignore_invulnerable_targets=1
+
+max_time=860
+
+raid_events=adds,name=SmallAdd,count=5,first=5,cooldown=90,duration=20,duration_stddev=2,last=540
+raid_events+=/adds,name=NormAdd,count=8,first=5,cooldown=90,duration=40,duration_stddev=3,last=540
+raid_events+=/adds,name=BigAdd,count=3,first=5,cooldown=90,duration=50,duration_stddev=0,last=540
+raid_events+=/adds,name=Boss,count=1,first=600,cooldown=600,duration=210,duration_stddev=5,type=add_boss
+
+enemy="Dungeon"
+sleeping=1

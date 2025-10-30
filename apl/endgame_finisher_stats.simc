@@ -1,0 +1,95 @@
+report_details=1
+optimal_raid=0
+max_time=420
+target_error=0.15
+iterations=10000
+chart_show_relative_difference=1
+vary_combat_length=0.05
+single_actor_batch=1
+desired_targets=1
+
+scale_agility=100
+scale_crit_rating=590
+scale_haste_rating=590
+scale_mastery_rating=590
+scale_versatility_rating=590
+positive_scale_delta=1
+calculate_scale_factors=1
+dps_plot_stat=haste,crit_rating,mastery,versatility
+dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+dps_plot_points=10
+dps_plot_step=300
+dps_plot_positive=1
+
+apl/dungeon.simc
+
+mara="Mara"
+level=80
+
+# initial_resource=spirit=100
+
+apl/mara.simc
+
+# gear_crit_rating=390
+# gear_versatility_rating=390
+# gear_haste_rating=390
+# gear_mastery_rating=390
+
+# gear_agility=1500
+
+# gear_haste_rating=452
+# # gear_haste_rating=0
+# gear_crit_rating=1812
+# gear_versatility_rating=2265
+# # gear_mastery_rating=452
+# gear_mastery_rating=0
+
+
+# gear_haste_rating=590
+# gear_crit_rating=1180
+# # gear_versatility_rating=590
+# gear_mastery_rating=590
+# gear_versatility_rating=1770
+# 1180
+# 1770
+# 2360
+# gear_mastery_rating=1500
+
+# legendary.final_stratagem_cdr=1
+
+# gear_mastery_rating=1800
+
+# legendary.vexiras_venom=1
+# legendary.spirit_procs_clones=1
+# legendary.drenched_in_blood=1
+
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.hemotoxin=1
+talent.malevolence=1
+talent.puncture=1
+talent.bloodrush=1
+
+# copy="Finisher No Hemo FTQ MD","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.corrosive_spill=1
+# talent.feed_the_queen=1
+# talent.maidens_doom=1
+
+copy="Vexiras","Mara"
+legendary.vexiras_venom=1
+
+# copy="Clones","Mara"
+# legendary.spirit_procs_clones=1
+# gear_crit_rating=590
+# gear_versatility_rating=1180
+# gear_mastery_rating=1770
+
+# copy="Drenched","Mara"
+# legendary.drenched_in_blood=1
+# gear_versatility_rating=1180
+# gear_mastery_rating=1180

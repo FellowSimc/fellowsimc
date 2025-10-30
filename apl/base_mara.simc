@@ -1,0 +1,954 @@
+report_details=1
+optimal_raid=0
+max_time=420
+target_error=0.05
+iterations=10000
+chart_show_relative_difference=1
+vary_combat_length=0.05
+single_actor_batch=1
+desired_targets=8
+
+mara="Mara_Bleed_Vexira"
+level=80
+
+apl/mara.simc
+
+gear_crit_rating=898
+gear_versatility_rating=589
+gear_haste_rating=589
+gear_mastery_rating=589
+
+# gear_crit_rating=290
+# gear_versatility_rating=290
+# gear_haste_rating=290
+# gear_mastery_rating=290
+
+# gear_haste_rating=3776
+
+talent.corrosive_spill=1
+#2
+legendary.vexiras_venom=1
+talent.deadly_scheme=1
+#4
+# talent.maidens_doom=1
+talent.bloodrush=1
+#5
+
+talent.gushing_blood=1
+#7
+talent.from_the_shadows=1
+#10
+# talent.red_ledger=1
+#12
+talent.arachnid_onslaught=1
+#13
+talent.assassins_guile=1
+
+# talent.gushing_blood=1
+# talent.bloodrush=1
+# talent.from_the_shadows=1
+# talent.arachnid_onslaught=1
+
+# copy="Mara_Bleed_Drenched","Mara_Bleed_Vexira"
+# legendary.vexiras_venom=0
+# legendary.drenched_in_blood=1
+
+# copy="Mara_Bleed_Alt_Drenched","Mara_Bleed_Vexira"
+# legendary.vexiras_venom=0
+# legendary.drenched_in_blood=1
+# talent.corrosive_spill=0
+# talent.hemotoxin=1
+# talent.arachnid_onslaught=0
+
+# copy="Mara_Bleed_Alt2_Drenched","Mara_Bleed_Vexira"
+# legendary.vexiras_venom=0
+# legendary.drenched_in_blood=1
+# talent.deadly_scheme=0
+# talent.hemotoxin=1
+# talent.arachnid_onslaught=0
+
+copy="Mara_Spender_Prio_Vexira","Mara_Bleed_Vexira"
+talent.from_the_shadows=0
+talent.malevolence=1
+talent.corrosive_spill=0
+talent.feed_the_queen=1
+
+copy="Mara_Spender_Vexira","Mara_Bleed_Vexira"
+talent.from_the_shadows=0
+talent.malevolence=1
+
+copy="Mara_Spender_Alt_Vexira","Mara_Bleed_Vexira"
+talent.from_the_shadows=0
+talent.malevolence=1
+talent.bloodrush=0
+talent.venomous_delight=1
+
+copy="Mara_Spender_Prio_Alt_Vexira","Mara_Bleed_Vexira"
+talent.from_the_shadows=0
+talent.malevolence=1
+talent.bloodrush=0
+talent.venomous_delight=1
+talent.corrosive_spill=0
+talent.feed_the_queen=1
+
+
+
+
+# gear_haste_rating=0
+# gear_crit_rating=1359
+# gear_versatility_rating=2717
+# gear_mastery_rating=453
+
+
+# copy="Mara_Gush_Spill_DS","Mara_Bleed_Vexira"
+# talent.from_the_shadows=0
+# talent.corrosive_spill=1
+# talent.deadly_scheme=1
+# talent.arachnid_onslaught=0
+
+# copy="Mara_Gush_Spill_Guile","Mara_Bleed_Vexira"
+# talent.from_the_shadows=0
+# talent.corrosive_spill=1
+# talent.assassins_guile=1
+# talent.arachnid_onslaught=0
+
+# copy="Mara_Gush_Spill_Ledger","Mara_Bleed_Vexira"
+# talent.from_the_shadows=0
+# talent.corrosive_spill=1
+# talent.red_ledger=1
+# talent.arachnid_onslaught=0
+
+# copy="Mara_Bleed_Hemo","Mara_Bleed_Vexira"
+# talent.from_the_shadows=0
+# talent.hemotoxin=1
+
+
+# copy="Mara_Bleed_Hemo_Maiden","Mara_Bleed_Vexira"
+# talent.from_the_shadows=0
+# talent.hemotoxin=1
+# talent.arachnid_onslaught=0
+# talent.maidens_doom=1
+
+# copy="Mara_Bleed_Hemo_VD","Mara_Bleed_Vexira"
+# talent.from_the_shadows=0
+# talent.hemotoxin=1
+# talent.arachnid_onslaught=0
+# talent.venomous_delight=1
+
+# copy="Mara_Bleed_Hemo_Puncture","Mara_Bleed_Vexira"
+# talent.from_the_shadows=0
+# talent.hemotoxin=1
+# talent.arachnid_onslaught=0
+# talent.puncture=1
+
+
+# copy="Mara_Spender_Gush_Vexira","Mara_Bleed_Vexira"
+# talent.bloodrush=0
+# talent.from_the_shadows=0
+# talent.arachnid_onslaught=0
+
+# talent.malevolence=1
+# #3
+# talent.deadly_scheme=1
+# #5 
+
+# copy="Mara_Spender_Vexira","Mara_Bleed_Vexira"
+# talent.gushing_blood=0
+# talent.bloodrush=0
+# talent.from_the_shadows=0
+# talent.arachnid_onslaught=0
+
+# talent.malevolence=1 
+# #3
+# talent.deadly_scheme=1
+# #5 
+# talent.venomous_delight=1
+# #6
+# talent.bloodrush=1
+#7
+
+# copy="Mara_Spender_Vexira_Guile","Mara_Bleed_Vexira"
+# talent.gushing_blood=0
+# talent.bloodrush=0
+# talent.from_the_shadows=0
+# talent.arachnid_onslaught=0
+
+# talent.malevolence=1 
+# #3
+# talent.deadly_scheme=1
+# #5 
+# talent.assassins_guile=1
+# #7
+
+
+# copy="Mara_Spender_Vexira_Spill","Mara_Bleed_Vexira"
+# talent.gushing_blood=0
+# talent.bloodrush=0
+# talent.from_the_shadows=0
+# talent.arachnid_onslaught=0
+
+# talent.malevolence=1 
+# #3
+# talent.deadly_scheme=1
+# #5 
+# talent.corrosive_spill=1
+# #7
+
+
+# copy="No Vexira","Mara_Spender_Vexira"
+# legendary.vexiras_venom=0
+
+# copy="No Deadly","Mara_Spender_Vexira"
+# talent.deadly_scheme=0
+
+# copy="No Guile","Mara_Spender_Vexira"
+# talent.assassins_guile=0
+
+# copy="No Deadly Malice","Mara_Spender_Vexira"
+# talent.malevolence=0
+
+# copy="Mara_Bleed_Drenched","Mara_Bleed_Vexira"
+# legendary.vexiras_venom=0
+# legendary.drenched_in_blood=1
+
+# copy="Mara_Spender_Drenched","Mara_Spender_Vexira"
+# legendary.vexiras_venom=0
+# legendary.drenched_in_blood=1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# copy="feed_the_queen","Mara_Crit"
+# talent.malevolence=1
+# talent.feed_the_queen=1
+
+
+# copy="guile over Ledger","Mara_Crit"
+# talent.red_ledger=0
+# talent.assassins_guile=1
+
+# copy="guile over Spill","Mara_Crit"
+# talent.corrosive_spill=0
+# talent.assassins_guile=1
+
+# copy="guile over AO Rush","Mara_Crit"
+# talent.bloodrush=0
+# talent.arachnid_onslaught=0
+# talent.assassins_guile=1
+
+
+# copy="guile over AO Ledger","Mara_Crit"
+# talent.red_ledger=0
+# talent.arachnid_onslaught=0
+# talent.assassins_guile=1
+
+# copy="guile over Rush Ledger","Mara_Crit"
+# talent.red_ledger=0
+# talent.bloodrush=0
+# talent.assassins_guile=1
+
+# copy="guile over AO FTS","Mara_Crit"
+# talent.from_the_shadows=0
+# talent.arachnid_onslaught=0
+# talent.assassins_guile=1
+
+
+# copy="No Ledger","Mara_Crit"
+# talent.red_ledger=0
+
+# copy="No Rush","Mara_Crit"
+# talent.bloodrush=0
+
+# copy="No Gushing","Mara_Crit"
+# talent.gushing_blood=0
+
+
+# copy="Tuzari Set"
+# sets.haste_buff_on_ability_use=1
+
+# copy="Tuzari Set no ICD"
+# sets.haste_buff_on_ability_use_cooldown=0
+
+# copy="Hemotoxin Variant1"
+# talent.gushing_blood=0
+# talent.arachnid_onslaught=0
+# talent.from_the_shadows=0
+# talent.red_ledger=0
+
+# talent.hemotoxin=1
+# talent.bloodrush=1
+# talent.venomous_delight=1
+# talent.assassins_guile=1
+
+# apl_variable.play_around_bloodrush_hemo=1
+
+# copy="Hemotoxin Variant2"
+# talent.venomous_delight=1
+# talent.assassins_guile=0
+# talent.red_ledger=1
+# talent.malevolence=1
+# talent.maidens_doom=0
+
+# copy="Hemotoxin Variant3","Hemotoxin Variant1"
+# apl_variable.play_around_bloodrush_hemo=0
+# talent.gushing_blood=1
+# talent.red_ledger=1
+# talent.assassins_guile=0
+# talent.maidens_doom=0
+
+# copy="Hemotoxin Variant4","Hemotoxin Variant1"
+# apl_variable.play_around_bloodrush_hemo=1
+# talent.gushing_blood=1
+# talent.red_ledger=1
+# talent.assassins_guile=0
+# talent.maidens_doom=0
+
+# copy="Hemotoxin Variant5","Hemotoxin Variant1"
+# apl_variable.play_around_bloodrush_hemo=0
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+# talent.assassins_guile=0
+# talent.maidens_doom=0
+# talent.venomous_delight=0
+
+# copy="Hemotoxin Variant6","Hemotoxin Variant1"
+# apl_variable.play_around_bloodrush_hemo=1
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+# talent.assassins_guile=0
+# talent.maidens_doom=0
+# talent.venomous_delight=0
+
+# # copy="Mara_Crit_Red_Ledger","Mara_Crit"
+# # talent.red_ledger=1
+
+# copy="Mara_Crit_malevolence","Mara_Crit"
+# talent.malevolence=1
+
+# # copy="Mara_Crit_Deadly_Scheme","Mara_Crit"
+# # talent.deadly_scheme=1
+
+# # copy="Mara_Crit_Bloodrush","Mara_Crit"
+# # talent.bloodrush=1
+
+# copy="Mara_Crit_Venomous_Delight","Mara_Crit"
+# talent.venomous_delight=1
+
+# copy="Mara_Crit_Efficient_Killer","Mara_Crit"
+# talent.efficient_killer=1
+
+# # copy="Mara_Crit_Gushing_Blood","Mara_Crit"
+# # talent.gushing_blood=1
+
+# # copy="Mara_Crit_Corrosive_Spill","Mara_Crit"
+# # talent.corrosive_spill=1
+
+# copy="Mara_Crit_Maidens_Doom","Mara_Crit"
+# talent.maidens_doom=1
+
+# # copy="Mara_Crit_From_the_Shadows","Mara_Crit"
+# # talent.from_the_shadows=1
+
+# copy="Mara_Crit_From_the_Shadows&Feed_the_Queen","Mara_Crit"
+# talent.from_the_shadows=1
+# talent.feed_the_queen=1
+
+# copy="Mara_Crit_Hemotoxin","Mara_Crit"
+# talent.hemotoxin=1
+
+# # copy="Mara_Crit_Hemotoxin&Bloodrush","Mara_Crit"
+# # talent.hemotoxin=1
+# # talent.bloodrush=1
+
+# # copy="Mara_Crit_Hemotoxin&Bloodrush&SingleDot","Mara_Crit"
+# # talent.hemotoxin=1
+# # talent.bloodrush=1
+# # apl_variable.play_around_bloodrush_hemo=1
+
+# copy="Mara_Crit_Guile","Mara_Crit"
+# talent.assassins_guile=1
+
+# copy="Mara_Crit_Guile&malevolence","Mara_Crit"
+# talent.assassins_guile=1
+# talent.malevolence=1
+
+# copy="Mara_Crit_Puncture","Mara_Crit"
+# talent.puncture=1
+
+
+# copy="Mara_Crit_Widow_+10","Mara_Crit"
+# options.widows_bite_extra_energy=10
+
+# copy="Mara_Crit_Puncture_Widow_+10","Mara_Crit"
+# talent.puncture=1
+# options.widows_bite_extra_energy=10
+
+# copy="Mara_Crit_Widow_+20","Mara_Crit"
+# options.widows_bite_extra_energy=20
+
+# copy="Mara_Crit_Puncture_Widow_+20","Mara_Crit"
+# talent.puncture=1
+# options.widows_bite_extra_energy=20
+
+# copy="Mara_Crit_Puncture_100%CC","Mara_Crit"
+# talent.puncture=1
+# talent.puncture_cc=1
+
+# copy="Mara_Crit_Puncture_Buff","Mara_Crit"
+# talent.puncture=1
+# talent.puncture_buff=1
+
+# copy="Mara_Crit_Puncture_Buff_50Tick","Mara_Crit"
+# talent.puncture=1
+# talent.puncture_buff=1
+# talent.puncture_buff_tickrate=0.5
+
+# copy="Mara_Crit_Puncture_Buff_50Tick_6s","Mara_Crit"
+# talent.puncture=1
+# talent.puncture_buff=1
+# talent.puncture_buff_tickrate=0.5
+# talent.puncture_buff_duration=6
+
+
+# copy="Mara_Crit_Puncture_Buff_50Tick_6s_50cc","Mara_Crit"
+# talent.puncture=1
+# talent.puncture_cc=0.5
+# talent.puncture_buff=1
+# talent.puncture_buff_tickrate=0.5
+# talent.puncture_buff_duration=6
+
+# copy="Mara_Crit_Arachnid_Onslaught","Mara_Crit"
+# talent.arachnid_onslaught=1
+
+# copy="Mara_Crit_Vexiras","Mara_Crit"
+# legendary.vexiras_venom=1
+
+# copy="Mara_Crit_Drenched","Mara_Crit"
+# legendary.drenched_in_blood=1
+
+# copy="Mara_Spirit","Mara_Crit"
+# gear_crit_rating=294
+# gear_versatility_rating=589
+# gear_haste_rating=589
+# gear_mastery_rating=1193
+# legendary.vexiras_venom=0
+# legendary.drenched_in_blood=1
+
+# # copy="Mara_Spirit_Red_Ledger","Mara_Spirit"
+# # talent.red_ledger=1
+
+# copy="Mara_Spirit_malevolence","Mara_Spirit"
+# talent.malevolence=1
+
+# # copy="Mara_Spirit_Deadly_Scheme","Mara_Spirit"
+# # talent.deadly_scheme=1
+
+# # copy="Mara_Spirit_Bloodrush","Mara_Spirit"
+# # talent.bloodrush=1
+
+# copy="Mara_Spirit_Venomous_Delight","Mara_Spirit"
+# talent.venomous_delight=1
+
+# copy="Mara_Spirit_Efficient_Killer","Mara_Spirit"
+# talent.efficient_killer=1
+
+# # copy="Mara_Spirit_Gushing_Blood","Mara_Spirit"
+# # talent.gushing_blood=1
+
+# # copy="Mara_Spirit_Corrosive_Spill","Mara_Spirit"
+# # talent.corrosive_spill=1
+
+# copy="Mara_Spirit_Maidens_Doom","Mara_Spirit"
+# talent.maidens_doom=1
+
+# # copy="Mara_Spirit_From_the_Shadows","Mara_Spirit"
+# # talent.from_the_shadows=1
+
+# copy="Mara_Spirit_From_the_Shadows&Feed_the_Queen","Mara_Spirit"
+# talent.from_the_shadows=1
+# talent.feed_the_queen=1
+
+# copy="Mara_Spirit_Hemotoxin","Mara_Spirit"
+# talent.hemotoxin=1
+
+# # copy="Mara_Spirit_Hemotoxin&Bloodrush","Mara_Spirit"
+# # talent.hemotoxin=1
+# # talent.bloodrush=1
+
+# # copy="Mara_Spirit_Hemotoxin&Bloodrush&SingleDot","Mara_Spirit"
+# # talent.hemotoxin=1
+# # talent.bloodrush=1
+# # apl_variable.play_around_bloodrush_hemo=1
+
+# copy="Mara_Spirit_Guile","Mara_Spirit"
+# talent.assassins_guile=1
+
+# copy="Mara_Spirit_Guile&malevolence","Mara_Spirit"
+# talent.assassins_guile=1
+# talent.malevolence=1
+
+# copy="Mara_Spirit_Puncture","Mara_Spirit"
+# talent.puncture=1
+
+# # copy="Mara_Spirit_Arachnid_Onslaught","Mara_Spirit"
+# # talent.arachnid_onslaught=1
+
+# # copy="Mara_Spirit_Drenched","Mara_Spirit"
+# # legendary.drenched_in_blood=1
+
+# # copy="Mara_Spirit_Vexiras","Mara_Spirit"
+# # legendary.vexiras_venom=1
+
+
+# copy="full spender build","test_mara"
+# #2
+# talent.deadly_scheme=1
+# #4
+# talent.malevolence=1
+# #5
+# talent.venomous_delight=1
+# #8
+# talent.assassins_guile=1
+# #9
+# talent.bloodrush=1
+# #12
+# talent.hemotoxin=1
+# #13
+# talent.maidens_doom=1
+# legendary.vexiras_venom=1
+# gear_haste_rating=453
+# gear_crit_rating=2264
+# gear_versatility_rating=1812
+# gear_mastery_rating=0
+
+# #2
+# talent.gushing_blood=1
+# #3
+# talent.arachnid_onslaught=1
+# #5
+# talent.deadly_scheme=1
+# #6
+# talent.venomous_delight=1
+# legendary.vexiras_venom=1
+# #9
+# talent.assassins_guile=1
+# #11
+# talent.malevolence=1
+# #13
+# talent.corrosive_spill=1
+
+# copy="no deadly","test_mara"
+# talent.deadly_scheme=0
+
+# copy="no venomous_delight","test_mara"
+# talent.venomous_delight=0
+
+# copy="no guile sub"
+# talent.assassins_guile=0
+# talent.malevolence=0
+
+# copy="Ledger over Gushing"
+# talent.gushing_blood=0
+# talent.red_ledger=1
+# #3
+# talent.arachnid_onslaught=1
+# #5
+# talent.deadly_scheme=1
+# #6
+# talent.venomous_delight=1
+# legendary.vexiras_venom=1
+# #9
+# talent.assassins_guile=1
+# #11
+# talent.malevolence=1
+# #13
+# talent.corrosive_spill=1
+
+# copy="Ledger Rush over Guile"
+# talent.gushing_blood=1
+# talent.red_ledger=1
+# talent.bloodrush=1
+# #3
+# talent.arachnid_onslaught=1
+# #5
+# talent.deadly_scheme=1
+# #6
+# talent.venomous_delight=1
+# legendary.vexiras_venom=1
+# #9
+# talent.assassins_guile=0
+# #11
+# talent.malevolence=1
+# #13
+# talent.corrosive_spill=1
+
+
+
+# #12
+# talent.bloodrush=1
+# #13
+# talent.maidens_doom=1
+
+# copy="red_ledger","test_mara"
+# talent.red_ledger=1
+
+# copy="malevolence","test_mara"
+# talent.malevolence=1
+
+# copy="deadly_scheme","test_mara"
+# talent.deadly_scheme=1
+
+# copy="bloodrush","test_mara"
+# talent.bloodrush=1
+
+# copy="venomous_delight","test_mara"
+# talent.venomous_delight=1
+
+# copy="efficient_killer","test_mara"
+# talent.efficient_killer=1
+
+# copy="gushing_blood","test_mara"
+# talent.gushing_blood=1
+
+# copy="corrosive_spill","test_mara"
+# talent.corrosive_spill=1
+
+# copy="maidens_doom","test_mara"
+# talent.maidens_doom=1
+
+# copy="from_the_shadows","test_mara"
+# talent.from_the_shadows=1
+
+
+# copy="from_the_shadows&feed_the_queen","test_mara"
+# talent.from_the_shadows=1
+# talent.feed_the_queen=1
+
+# copy="hemotoxin","test_mara"
+# talent.hemotoxin=1
+
+# copy="guile","test_mara"
+# talent.assassins_guile=1
+# copy="guile&malevolence","test_mara"
+# talent.assassins_guile=1
+# talent.malevolence=1
+
+# copy="puncture","test_mara"
+# talent.puncture=1
+
+# copy="arachnid_onslaught","test_mara"
+# talent.arachnid_onslaught=1
+
+# copy="vexiras_venom","test_mara"
+# legendary.vexiras_venom=1
+
+
+
+# copy="Walek Setup","test_mara"
+# #2
+# talent.deadly_scheme=1
+# #4
+# talent.malevolence=1
+# #5
+# talent.venomous_delight=1
+# #8 Assassins Guile
+# talent.assassins_guile=1
+# #9
+# talent.bloodrush=1
+# #11
+# talent.corrosive_spill=1
+# #13
+# talent.red_ledger=1
+# legendary.vexiras_venom=1
+
+# copy="No Synergy"
+# talent.deadly_scheme=0
+# talent.malevolence=0
+# talent.assassins_guile=0
+# copy="No Synergy No Lego"
+# talent.deadly_scheme=0
+# talent.malevolence=0
+# talent.assassins_guile=0
+# legendary.vexiras_venom=0
+
+# copy="Hemotoxin Ledger Variant","test_mara"
+# #2
+# talent.deadly_scheme=1
+# #4
+# talent.red_ledger=1
+# #5
+# talent.venomous_delight=1
+# #8
+# talent.assassins_guile=1
+# #9
+# talent.bloodrush=1
+# #12
+# talent.hemotoxin=1
+# #13
+# talent.maidens_doom=1
+# legendary.vexiras_venom=1
+
+# copy="Hemotoxin malevolence Variant","test_mara"
+# #2
+# talent.deadly_scheme=1
+# #4
+# talent.malevolence=1
+# #5
+# talent.venomous_delight=1
+# #8
+# talent.assassins_guile=1
+# #9
+# talent.bloodrush=1
+# #12
+# talent.hemotoxin=1
+# #13
+# talent.maidens_doom=1
+# legendary.vexiras_venom=1
+
+
+# copy="Hemotoxin Ledger malevolence no deadly Variant","test_mara"
+# #2
+# talent.red_ledger=1
+# #4
+# talent.malevolence=1
+# #5
+# talent.venomous_delight=1
+# #8
+# talent.assassins_guile=1
+# #9
+# talent.bloodrush=1
+# #12
+# talent.hemotoxin=1
+# #13
+# talent.maidens_doom=1
+# legendary.vexiras_venom=1
+
+# copy="Walek Setup 20% Crit + 10% Rest"
+# gear_crit_rating=898
+# gear_versatility_rating=589
+# gear_haste_rating=589
+# gear_mastery_rating=589
+
+# copy="From the Shadows Stealth Lego 6pt","test_mara"
+# talent.assassins_guile=1
+# talent.from_the_shadows=1
+# copy="From the Shadows 3pt","test_mara"
+# talent.from_the_shadows=1
+# copy="Stealth Lego 3pt","test_mara"
+# talent.assassins_guile=1
+
+
+# copy="Deadly Stealth Lego 5pt","test_mara"
+# talent.deadly_scheme=1
+# talent.assassins_guile=1
+
+# copy="Deadly Vexira Stealth Lego 5pt","test_mara"
+# talent.deadly_scheme=1
+# legendary.vexiras_venom=1
+# talent.assassins_guile=1
+
+# copy="Deadly Sub Vexira Stealth Lego 7pt","test_mara"
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# legendary.vexiras_venom=1
+# talent.assassins_guile=1
+
+
+# copy="Deadly VD Vexira Stealth Lego 6pt","test_mara"
+# talent.deadly_scheme=1
+# legendary.vexiras_venom=1
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+
+# copy="Deadly Sub VD Vexira Stealth Lego 8pt","test_mara"
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# legendary.vexiras_venom=1
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+
+
+# #2
+# talent.deadly_scheme=1
+# #3
+# talent.venomous_delight=1
+# #4
+# talent.bloodrush=1
+# #7
+# talent.hemotoxin=1
+# legendary.vexiras_venom=1
+# #9
+# talent.red_ledger=1
+
+# copy="Deadly Scheme Venmous Delight 3pt","test_mara"
+# talent.deadly_scheme=1
+# talent.venomous_delight=1
+
+# copy="Deadly Scheme Vexiras 2pt","test_mara"
+# talent.deadly_scheme=1
+# legendary.vexiras_venom=1
+
+# copy="Deadly Scheme Venmous Delight 3pt Vexiras","test_mara"
+# talent.deadly_scheme=1
+# talent.venomous_delight=1
+# legendary.vexiras_venom=1
+
+
+# copy="malevolence 2pt","test_mara"
+# talent.malevolence=1
+# copy="Red Ledger 2pt","test_mara"
+# talent.red_ledger=1
+# copy="Deadly Scheme 2pt","test_mara"
+# talent.deadly_scheme=1
+# copy="Bloodrush 1pt","test_mara"
+# talent.bloodrush=1
+# copy="Vile Venoms 1pt","test_mara"
+# talent.vile_venoms=1
+# copy="Venomous Delight 1pt","test_mara"
+# talent.venomous_delight=1
+# copy="Efficient Killer 1pt","test_mara"
+# talent.efficient_killer=1
+
+# copy="Red Ledger Deadly 4pt","test_mara"
+# talent.red_ledger=1
+# talent.deadly_scheme=1
+
+# copy="Red Ledger Deadly VV 5pt","test_mara"
+# talent.red_ledger=1
+# talent.deadly_scheme=1
+# talent.vile_venoms=1
+
+
+# copy="Gushing Wound 2pt","test_mara"
+# talent.gushing_wound=1
+# copy="Corrosive Spill 2pt","test_mara"
+# talent.corrosive_spill=1
+
+# copy="Feed the Queen 2pt","test_mara"
+# talent.feed_the_queen=1
+
+# copy="Nightstalker 1pt","test_mara"
+# talent.nightstalker=1
+
+
+# copy="From the Shadows 3pt","test_mara"
+# talent.from_the_shadows=1
+
+# copy="From the Shadows 12% 3pt","test_mara"
+# talent.from_the_shadows=1
+# talent.from_the_shadows_chance=0.12
+
+# copy="From the Shadows 16% 3pt","test_mara"
+# talent.from_the_shadows=1
+# talent.from_the_shadows_chance=0.16
+
+# copy="From the Shadows 20% 3pt","test_mara"
+# talent.from_the_shadows=1
+# talent.from_the_shadows_chance=0.2
+
+# copy="From the Shadows 25% 3pt","test_mara"
+# talent.from_the_shadows=1
+# talent.from_the_shadows_chance=0.25
+
+# copy="From the Shadows Bloodrush 4pt","test_mara"
+# talent.from_the_shadows=1
+# talent.bloodrush=1
+
+# copy="From the Shadows Bloodrush 12% 4pt","test_mara"
+# talent.from_the_shadows=1
+# talent.from_the_shadows_chance=0.12
+# talent.bloodrush=1
+
+
+# copy="From the Shadows Bloodrush 16% 4pt","test_mara"
+# talent.from_the_shadows=1
+# talent.from_the_shadows_chance=0.16
+# talent.bloodrush=1
+
+
+# copy="From the Shadows Bloodrush 20% 4pt","test_mara"
+# talent.from_the_shadows=1
+# talent.from_the_shadows_chance=0.2
+# talent.bloodrush=1
+
+
+# copy="From the Shadows Bloodrush 25% 4pt","test_mara"
+# talent.from_the_shadows=1
+# talent.from_the_shadows_chance=0.25
+# talent.bloodrush=1
+
+
+
+# copy="Hemotoxin 3pt","test_mara"
+# talent.hemotoxin=1
+
+# copy="Hemotoxin Bloodrush 4pt","test_mara"
+# talent.hemotoxin=1
+# talent.bloodrush=1
+
+# copy="Hemotoxin Bloodrush VV 5pt","test_mara"
+# talent.hemotoxin=1
+# talent.bloodrush=1
+# talent.vile_venoms=1
+
+# copy="Hemotoxin Bloodrush Red Deadly 6pt","test_mara"
+# talent.hemotoxin=1
+# talent.bloodrush=1
+# talent.deadly_scheme=1
+
+# copy="Hemotoxin Bloodrush Red Ledger 6pt","test_mara"
+# talent.hemotoxin=1
+# talent.bloodrush=1
+# talent.red_ledger=1
+
+# copy="Hemotoxin Bloodrush Red Ledger VV 7pt","test_mara"
+# talent.hemotoxin=1
+# talent.bloodrush=1
+# talent.red_ledger=1
+# talent.vile_venoms=1
+
+# copy="Hemotoxin Bloodrush Red Ledger VV Deadly 9pt","test_mara"
+# talent.hemotoxin=1
+# talent.bloodrush=1
+# talent.red_ledger=1
+# talent.vile_venoms=1
+# talent.deadly_scheme=1
+
+# copy="Hemotoxin Bloodrush Red Ledger VV malevolence 9pt","test_mara"
+# talent.hemotoxin=1
+# talent.bloodrush=1
+# talent.red_ledger=1
+# talent.vile_venoms=1
+# talent.malevolence=1
+
+# copy="Maidens Doom 3pt","test_mara"
+# talent.maidens_doom=1
+
+# copy="Puncture 1pt","test_mara"
+# talent.puncture=1
+
+# copy="Arachnid Onslaught 1pt","test_mara"
+# talent.arachnid_onslaught=1

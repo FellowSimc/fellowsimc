@@ -1,0 +1,51 @@
+report_details=1
+optimal_raid=0
+max_time=420
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=2
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_agility=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+
+mara="Mara"
+level=80
+
+# initial_resource=spirit=100
+
+apl/mara.simc
+
+# gear_crit_rating=390
+# gear_versatility_rating=390
+# gear_haste_rating=390
+# gear_mastery_rating=390
+
+gear_agility=1500
+
+gear_haste_rating=452
+# gear_haste_rating=0
+gear_crit_rating=1812
+gear_versatility_rating=2265
+# gear_mastery_rating=452
+gear_mastery_rating=0
+
+legendary.vexiras_venom=1
+
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.malevolence=1
+talent.corrosive_spill=1
+talent.feed_the_queen=1
+talent.puncture=1

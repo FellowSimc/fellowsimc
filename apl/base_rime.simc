@@ -36,50 +36,37 @@ talent.avalanche=1
 talent.coalescing_frost=1
 talent.burstbolter=1
 
-copy="CF WE GA IF AV CoF ST","Rime"
+copy="Molmar","Rime"
 talent.chilling_finesse=1
 talent.winters_embrace=1
-talent.glacial_assault=1
-talent.icy_flow=1
-talent.avalanche=1
-talent.coalescing_frost=1
-talent.supreme_torrent=1
-
-copy="CF WE GA IF AV CoF NK","Rime"
-talent.chilling_finesse=1
-talent.winters_embrace=1
-talent.glacial_assault=1
-talent.icy_flow=1
-talent.avalanche=1
-talent.coalescing_frost=1
 talent.navirs_keeper=1
-
-copy="CF WE GA IF AV CoF GGB","Rime"
-talent.chilling_finesse=1
-talent.winters_embrace=1
-talent.glacial_assault=1
-talent.icy_flow=1
-talent.avalanche=1
 talent.coalescing_frost=1
 talent.greater_glacial_blast=1
-
-copy="CF WE GA IF AV CoF BC","Rime"
-talent.chilling_finesse=1
-talent.winters_embrace=1
-talent.glacial_assault=1
-talent.icy_flow=1
-talent.avalanche=1
-talent.coalescing_frost=1
+talent.cascading_blitz=1
 talent.biting_cold=1
+talent.wisdom_of_the_north=1
+legendary.skandis_decree=1
 
-copy="CF WE GA IF AV CoF WOTN","Rime"
+copy="Toonic Molmar Variant","Rime"
 talent.chilling_finesse=1
 talent.winters_embrace=1
-talent.glacial_assault=1
-talent.icy_flow=1
-talent.avalanche=1
+talent.supreme_torrent=1
 talent.coalescing_frost=1
+talent.greater_glacial_blast=1
+talent.soulfrost_torrent=1
+talent.biting_cold=1
 talent.wisdom_of_the_north=1
+legendary.skandis_decree=1
+
+copy="Beam Build","Rime"
+talent.soulfrost_torrent=1
+talent.burstbolter=1
+talent.winters_embrace=1
+talent.coalescing_frost=1
+talent.cascading_blitz=1
+talent.supreme_torrent=1
+talent.biting_cold=1
+legendary.frostwyrms_spite=1
 
 copy="SFT BB WE CoF CB CF","Rime"
 talent.soulfrost_torrent=1
@@ -97,63 +84,63 @@ talent.coalescing_frost=1
 talent.cascading_blitz=1
 talent.glacial_assault=1
 
-copy="SFT BB WE CoF CB AV","Rime"
-talent.soulfrost_torrent=1
-talent.burstbolter=1
-talent.winters_embrace=1
-talent.coalescing_frost=1
-talent.cascading_blitz=1
-talent.avalanche=1
-
-copy="SFT BB WE CoF FWW CF","Rime"
-talent.soulfrost_torrent=1
-talent.burstbolter=1
-talent.winters_embrace=1
-talent.coalescing_frost=1
-talent.frostweavers_wrath=1
-talent.chilling_finesse=1
-
-copy="SFT BB WE CoF CB ST NK","Rime"
-talent.soulfrost_torrent=1
-talent.burstbolter=1
-talent.winters_embrace=1
-talent.coalescing_frost=1
-talent.cascading_blitz=1
-talent.supreme_torrent=1
-talent.navirs_keeper=1
-
-copy="SFT BB WE CoF CB ST GGB","Rime"
-talent.soulfrost_torrent=1
-talent.burstbolter=1
-talent.winters_embrace=1
-talent.coalescing_frost=1
-talent.cascading_blitz=1
-talent.supreme_torrent=1
-talent.greater_glacial_blast=1
-
-copy="SFT BB WE CoF CB ST BC","Rime"
-talent.soulfrost_torrent=1
-talent.burstbolter=1
-talent.winters_embrace=1
-talent.coalescing_frost=1
-talent.cascading_blitz=1
-talent.supreme_torrent=1
-talent.biting_cold=1
-
-copy="SFT BB WE CoF CB ST WOTN","Rime"
-talent.soulfrost_torrent=1
-talent.burstbolter=1
-talent.winters_embrace=1
-talent.coalescing_frost=1
-talent.cascading_blitz=1
-talent.supreme_torrent=1
-talent.wisdom_of_the_north=1
-
-copy="SFT BB WE CoF CB BC WOTN","Rime"
-talent.soulfrost_torrent=1
-talent.burstbolter=1
-talent.winters_embrace=1
-talent.coalescing_frost=1
-talent.cascading_blitz=1
-talent.biting_cold=1
-talent.wisdom_of_the_north=1
+# copy="SFT BB WE CoF CB AV","Rime"
+# talent.soulfrost_torrent=1
+# talent.burstbolter=1
+# talent.winters_embrace=1
+# talent.coalescing_frost=1
+# talent.cascading_blitz=1
+# talent.avalanche=1
+# 
+# copy="SFT BB WE CoF FWW CF","Rime"
+# talent.soulfrost_torrent=1
+# talent.burstbolter=1
+# talent.winters_embrace=1
+# talent.coalescing_frost=1
+# talent.frostweavers_wrath=1
+# talent.chilling_finesse=1
+# 
+# copy="SFT BB WE CoF CB ST NK","Rime"
+# talent.soulfrost_torrent=1
+# talent.burstbolter=1
+# talent.winters_embrace=1
+# talent.coalescing_frost=1
+# talent.cascading_blitz=1
+# talent.supreme_torrent=1
+# talent.navirs_keeper=1
+# 
+# copy="SFT BB WE CoF CB ST GGB","Rime"
+# talent.soulfrost_torrent=1
+# talent.burstbolter=1
+# talent.winters_embrace=1
+# talent.coalescing_frost=1
+# talent.cascading_blitz=1
+# talent.supreme_torrent=1
+# talent.greater_glacial_blast=1
+# 
+# copy="SFT BB WE CoF CB ST BC","Rime"
+# talent.soulfrost_torrent=1
+# talent.burstbolter=1
+# talent.winters_embrace=1
+# talent.coalescing_frost=1
+# talent.cascading_blitz=1
+# talent.supreme_torrent=1
+# talent.biting_cold=1
+# 
+# copy="SFT BB WE CoF CB ST WOTN","Rime"
+# talent.soulfrost_torrent=1
+# talent.burstbolter=1
+# talent.winters_embrace=1
+# talent.coalescing_frost=1
+# talent.cascading_blitz=1
+# talent.supreme_torrent=1
+# talent.wisdom_of_the_north=1
+# 
+# copy="SFT BB WE CoF CB BC WOTN","Rime"
+# talent.soulfrost_torrent=1
+# talent.burstbolter=1
+# talent.winters_embrace=1
+# talent.coalescing_frost=1
+# talent.cascading_blitz=1
+# talent.biting_cold=1
+# talent.wisdom_of_the_north=1

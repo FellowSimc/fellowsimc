@@ -96,6 +96,8 @@ public:
     buff_t* winters_blessing;
     buff_t* soulfrost_torrent;
     buff_t* frostweavers_wrath;
+    buff_t* frostwyrms_spite;
+    buff_t* undulating_spirit_proc;
   } buffs;
 
   struct cooldowns_t
@@ -188,6 +190,16 @@ public:
 
   struct legendary_t
   {
+    bool frostwyrms_spite = false;
+    double frostwyrms_spite_dmg_per_stack = 0.20;
+    int frostwyrms_spite_max_stacks       = 30;
+    timespan_t frostwyrms_spite_duration  = 15_s;
+
+    bool skandis_decree                      = false;
+    timespan_t skandis_decree_duration_bonus = 2_s;
+
+    bool undulating_spirit          = false;
+    double undulating_spirit_chance = 0.10;
   } legendary;
 
   struct options_t
@@ -734,6 +746,14 @@ public:
         p()->buffs.soulfrost_torrent->trigger();
       }
     }
+
+    if ( !is_secondary_action() && !ab::background && p()->legendary.undulating_spirit )
+    {
+      if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
+      {
+        p()->buffs.undulating_spirit_proc->trigger();
+      }
+    }
   }
 
   void schedule_travel( action_state_t* state ) override
@@ -1085,10 +1105,24 @@ struct cold_snap_t : public rime_spell_t
     energize_type     = action_energize::ON_CAST;
     energize_resource = RESOURCE_WINTER_ORB;
     energize_amount   = 1;
+
+    if ( p->legendary.frostwyrms_spite )
+    {
+      aoe                 = -1;
+      reduced_aoe_targets = 3;
+    }
   }
 
   void execute() override
   {
+    if ( p()->legendary.frostwyrms_spite )
+    {
+      if ( p()->buffs.frostwyrms_spite->check() > 0 )
+      {
+        p()->buffs.frostwyrms_spite->expire();
+      }
+    }
+
     rime_spell_t::execute();
 
     if ( p()->buffs.flight_of_the_navir->check() )
@@ -1105,6 +1139,31 @@ struct cold_snap_t : public rime_spell_t
 
     if ( p()->talents.chilling_finesse )
       p()->cooldowns.freezing_torrent->adjust( -p()->talents.chilling_finesse_torrent_cdr_per_snap, true, false );
+  }
+
+  int n_targets() const override
+  {
+    int n = rime_spell_t::n_targets();
+    if ( p()->legendary.frostwyrms_spite )
+    {
+      n += p()->buffs.frostwyrms_spite->check();
+    }
+    return n;
+  }
+
+  double composite_da_multiplier( const action_state_t* state ) const override
+  {
+    double m = rime_spell_t::composite_da_multiplier( state );
+
+    if ( p()->legendary.frostwyrms_spite )
+    {
+      int spite_stacks = p()->buffs.frostwyrms_spite->check();
+      if ( spite_stacks > 0 )
+      {
+        m *= ( 1.0 + spite_stacks * p()->legendary.frostwyrms_spite_dmg_per_stack );
+      }
+    }
+    return m;
   }
 };
 
@@ -1157,6 +1216,12 @@ struct bursting_ice_t : public rime_spell_t
     add_child( tick_action );
 
     dot_duration           = 3_s;
+
+    if ( p->legendary.skandis_decree )
+    {
+      dot_duration += p->legendary.skandis_decree_duration_bonus;
+    }
+
     base_tick_time         = 0.5_s;
     hasted_ticks           = true;
     dot_allow_partial_tick = true;
@@ -1285,6 +1350,11 @@ struct freezing_torrent_base_t : public rime_spell_t
   {
     base_t::tick( d );
 
+    if ( p()->legendary.frostwyrms_spite )
+    {
+      p()->buffs.frostwyrms_spite->trigger();
+    }
+
     if ( p()->talents.coalescing_frost )
     {
       if ( result_is_hit( d->state->result ) )
@@ -1355,6 +1425,11 @@ struct soulfrost_torrent_t : public rime_spell_t
   void tick( dot_t* d ) override
   {
     base_t::tick( d );
+
+    if ( p()->legendary.frostwyrms_spite )
+    {
+      p()->buffs.frostwyrms_spite->trigger();
+    }
 
     if ( p()->talents.coalescing_frost )
     {
@@ -1938,6 +2013,13 @@ void rime_t::create_buffs()
                                ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
 
   buffs.winters_embrace = make_buff<rime_buff_t>( this, "winters_embrace" )->set_default_value( 0.2 );
+
+  buffs.frostwyrms_spite = make_buff<rime_buff_t>( this, "frostwyrms_spite" )
+                               ->set_duration( legendary.frostwyrms_spite_duration )
+                               ->set_max_stack( legendary.frostwyrms_spite_max_stacks )
+                               ->set_refresh_behavior( buff_refresh_behavior::DURATION );
+
+  buffs.undulating_spirit_proc = make_buff<rime_buff_t>( this, "undulating_spirit_proc" )->set_max_stack( 1 );
 }
 
 // rime_t::invalidate_cache =========================================
@@ -1971,6 +2053,10 @@ void rime_t::create_options()
 
   add_option( opt_bool( "talent.biting_cold", talents.biting_cold ) );
   add_option( opt_bool( "talent.wisdom_of_the_north", talents.wisdom_of_the_north ) );
+
+  add_option( opt_bool( "legendary.frostwyrms_spite", legendary.frostwyrms_spite ) );
+  add_option( opt_bool( "legendary.skandis_decree", legendary.skandis_decree ) );
+  add_option( opt_bool( "legendary.undulating_spirit", legendary.undulating_spirit ) );
 }
 
 // rime_t::copy_from =======================================================
@@ -2191,10 +2277,20 @@ void actions::rime_action_t<Base>::spend_winter_orbs( const action_state_t* s )
   if ( orbs_spent <= 0 )
     return;
 
+  bool refunded = false;
+
+  if ( p()->legendary.undulating_spirit && p()->buffs.undulating_spirit_proc->check() )
+  {
+    p()->buffs.undulating_spirit_proc->expire();
+    p()->sim->print_debug( "{} proc'd Undulating Spirit Refund", *p() );
+    trigger_spirit_refund( s, orbs_spent );
+    refunded = true;
+  }
+
   double spirit_decimal = p()->cache.mastery();
   double refund_chance = spirit_decimal / ( 1.0 + spirit_decimal );
 
-  if ( p()->rng().roll( refund_chance ) )
+  if ( !refunded && p()->rng().roll( refund_chance ) )
   {
     p()->sim->print_debug( "{} proc'd Spirit Orb Refund (Chance: {:.2f}%)", *p(), refund_chance * 100.0 );
 

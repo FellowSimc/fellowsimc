@@ -58,7 +58,7 @@ talent.biting_cold=1
 talent.wisdom_of_the_north=1
 legendary.skandis_decree=1
 
-copy="Beam Build","Rime"
+copy="Beam Build - Frostwyrms","Rime"
 talent.soulfrost_torrent=1
 talent.burstbolter=1
 talent.winters_embrace=1
@@ -67,6 +67,26 @@ talent.cascading_blitz=1
 talent.supreme_torrent=1
 talent.biting_cold=1
 legendary.frostwyrms_spite=1
+
+copy="Beam Build - Skandis","Rime"
+talent.soulfrost_torrent=1
+talent.burstbolter=1
+talent.winters_embrace=1
+talent.coalescing_frost=1
+talent.cascading_blitz=1
+talent.supreme_torrent=1
+talent.biting_cold=1
+legendary.skandis_decree=1
+
+copy="Beam Build - Undulating","Rime"
+talent.soulfrost_torrent=1
+talent.burstbolter=1
+talent.winters_embrace=1
+talent.coalescing_frost=1
+talent.cascading_blitz=1
+talent.supreme_torrent=1
+talent.biting_cold=1
+legendary.undulating_spirit=1
 
 copy="SFT BB WE CoF CB CF","Rime"
 talent.soulfrost_torrent=1

@@ -72,6 +72,8 @@ public:
     actions::rime_spell_t* frost_swallow_cascading;
     actions::rime_spell_t* cold_snap;
     actions::rime_spell_t* freezing_torrent;
+    actions::rime_spell_t* freezing_torrent_base;
+    actions::rime_spell_t* soulfrost_torrent;
     actions::rime_spell_t* glacial_blast;
     actions::rime_spell_t* frost_bolt;
     actions::rime_spell_t* bursting_ice;
@@ -724,6 +726,14 @@ public:
   void execute() override
   {
     ab::execute();
+
+    if ( !is_secondary_action() && !ab::background && p()->talents.soulfrost_torrent )
+    {
+      if ( p()->rppm.soulfrost_torrent->trigger() )
+      {
+        p()->buffs.soulfrost_torrent->trigger();
+      }
+    }
   }
 
   void schedule_travel( action_state_t* state ) override
@@ -754,7 +764,7 @@ public:
 };
 
 // ==========================================================================
-// Rogue Attack Classes
+// Rime Ability Classes
 // ==========================================================================
 
 struct rime_heal_t : public rime_action_t<fellowship::actions::fs_player_action_t<heal_t>>
@@ -992,8 +1002,6 @@ struct winters_blessing_t : public rime_spell_t
 
     name_str_reporting = "Winters Blessing";
 
-    //add_child( p->actions.frost_swallow_cascading );
-
     trigger_gcd = timespan_t::zero();
 
     cooldown->duration = 60_s;
@@ -1047,6 +1055,8 @@ struct wrath_of_winter_t : public rime_spell_t
 
     resource_current              = RESOURCE_SPIRIT;
     base_costs[ RESOURCE_SPIRIT ] = 100;
+
+    base_execute_time = 1.5_s;
   }
 
   void execute() override
@@ -1114,9 +1124,12 @@ struct bursting_ice_tick_t : public rime_spell_t
 
     spell_power_mod.direct = 0.55;
 
-    energize_type     = action_energize::ON_CAST;
-    energize_resource = RESOURCE_ANIMA;
-    energize_amount   = 1;
+    if ( name != "bursting_ice_burstbolter" )
+    {
+      energize_type     = action_energize::ON_CAST;
+      energize_resource = RESOURCE_ANIMA;
+      energize_amount   = 1;
+    }
   }
 
   double composite_da_multiplier( const action_state_t* s ) const override
@@ -1147,6 +1160,8 @@ struct bursting_ice_t : public rime_spell_t
     base_tick_time         = 0.5_s;
     hasted_ticks           = true;
     dot_allow_partial_tick = true;
+
+    base_execute_time = 2_s;
 
     cooldown->duration = 10_s;
     cooldown->hasted   = false;
@@ -1201,8 +1216,50 @@ struct freezing_torrent_t : public rime_spell_t
   freezing_torrent_t( util::string_view name, rime_t* p, util::string_view options_str = {} )
     : rime_spell_t( name, p, options_str )
   {
-    id = 13;
+    id                 = 13;
+    name_str_reporting = "Freezing Torrent";
 
+    channeled = false;
+
+    cooldown->duration = 15_s;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+  }
+
+  void init() override
+  {
+    rime_spell_t::init();
+    add_child( p()->actions.freezing_torrent_base );
+    add_child( p()->actions.soulfrost_torrent );
+  }
+
+  void execute() override
+  {
+    rime_spell_t::execute();
+
+    if ( p()->buffs.soulfrost_torrent->check() )
+    {
+      p()->actions.soulfrost_torrent->execute_on_target( target );
+      p()->buffs.soulfrost_torrent->decrement();
+    }
+    else
+    {
+      p()->actions.freezing_torrent_base->execute_on_target( target );
+    }
+  }
+
+  bool ready() override
+  {
+    return rime_spell_t::ready();
+  }
+};
+
+struct freezing_torrent_base_t : public rime_spell_t
+{
+  freezing_torrent_base_t( util::string_view name, rime_t* p, util::string_view options_str = {} )
+    : rime_spell_t( name, p, options_str )
+  {
+    id                 = 18;
     name_str_reporting = "Freezing Torrent";
 
     spell_power_mod.tick = 1.42;
@@ -1222,68 +1279,77 @@ struct freezing_torrent_t : public rime_spell_t
     energize_type     = action_energize::PER_TICK;
     energize_resource = RESOURCE_ANIMA;
     energize_amount   = 1;
-
-    cooldown->duration = 15_s;
-    cooldown->hasted   = false;
-    cooldown->charges  = 1;
   }
 
-  static const freezing_torrent_state_t<base_t>* cast_state( const action_state_t* st )
+  void tick( dot_t* d ) override
   {
-    return debug_cast<const freezing_torrent_state_t<base_t>*>( st );
+    base_t::tick( d );
+
+    if ( p()->talents.coalescing_frost )
+    {
+      if ( result_is_hit( d->state->result ) )
+      {
+        if ( d->state->result == RESULT_CRIT && rng().roll( p()->talents.coalescing_frost_crit_extra_chance ) )
+        {
+          p()->get_target_data( d->target )
+              ->debuffs.coalescing_frost->trigger( p()->talents.coalescing_frost_crit_stacks );
+        }
+        else
+        {
+          p()->get_target_data( d->target )->debuffs.coalescing_frost->trigger();
+        }
+      }
+    }
+
+    if ( p()->talents.chilling_finesse )
+    {
+      p()->cooldowns.bursting_ice->adjust( -p()->talents.chilling_finesse_bursting_ice_cdr_per_tick, false, false );
+    }
+
+    if ( p()->buffs.flight_of_the_navir->check() )
+    {
+      p()->actions.frost_swallow_navir->execute();
+    }
   }
+};
 
-  static freezing_torrent_state_t<base_t>* cast_state( action_state_t* st )
+struct soulfrost_torrent_t : public rime_spell_t
+{
+  soulfrost_torrent_t( util::string_view name, rime_t* p, util::string_view options_str = {} )
+    : rime_spell_t( name, p, options_str )
   {
-    return debug_cast<freezing_torrent_state_t<base_t>*>( st );
-  }
+    id                 = 195;
+    name_str_reporting = "Soulfrost Torrent";
 
-  action_state_t* new_state() override
-  {
-    return new freezing_torrent_state_t<base_t>( this, target );
-  }
+    spell_power_mod.tick = 1.42;
 
-  void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
-  {
-    base_t::update_state( state, flags, rt );
-  }
+    dot_duration           = 2_s;
+    base_tick_time         = 0.4_s;
+    hasted_ticks           = true;
+    dot_allow_partial_tick = true;
+    tick_on_application    = true;
+    channeled              = true;
 
-  void snapshot_state( action_state_t* state, result_amount_type rt ) override
-  {
-    auto rs = cast_state( state );
-    // rs->
+    if ( p->talents.supreme_torrent )
+    {
+      dot_duration += p->talents.supreme_torrent_duration;
+    }
 
-    rs->tick_time_mul = p()->buffs.soulfrost_torrent->check() ? 1.0 / p()->talents.soulfrost_torrent_tickrate_increase : 1.0;
-
-    base_t::snapshot_state( state, rt );
-  }
-
-  void execute() override
-  {
-    base_t::execute();
-
-    p()->buffs.soulfrost_torrent->decrement();
-  }
-
-  void init_finished() override
-  {
-    base_t::init_finished();
-
-    snapshot_flags &= ~STATE_HASTE;
+    energize_type     = action_energize::PER_TICK;
+    energize_resource = RESOURCE_ANIMA;
+    energize_amount   = 1;
   }
 
   double composite_crit_chance() const override
   {
-    return rime_spell_t::composite_crit_chance() + p()->buffs.soulfrost_torrent->check_value();
+    return rime_spell_t::composite_crit_chance() + p()->talents.soulfrost_torrent_crit_chance;
   }
 
-  double tick_time_pct_multiplier( const action_state_t* s ) const override
+  timespan_t tick_time( const action_state_t* state ) const override
   {
-    auto base = base_t::tick_time_pct_multiplier( s );
-
-    base *= cast_state( s )->tick_time_mul;
-
-    return base;
+    timespan_t tt = rime_spell_t::tick_time( state );
+    tt /= p()->talents.soulfrost_torrent_tickrate_increase;
+    return tt;
   }
 
   void tick( dot_t* d ) override
@@ -1324,10 +1390,10 @@ struct coalescing_frost_t : public rime_spell_t
   {
     id = 14;
 
-    name_str_reporting = "Bursting Ice (Tick)";
+    name_str_reporting = "Coalescing Frost";
 
     aoe                 = -1;
-    reduced_aoe_targets = 3;
+    reduced_aoe_targets = 5;
 
     background = true;
 
@@ -1967,6 +2033,8 @@ void rime_t::init_background_actions()
   actions.frost_swallow_cascading       = new actions::frost_swallow_t( "frost_swallow_cascading", this );
   actions.frost_swallow_navir           = new actions::frost_swallow_t( "frost_swallow_navir", this );
   actions.ice_comet_avalanche           = new actions::ice_comet_t( "ice_comet_avalanche", this, {}, secondary_trigger::AVALANCHE );
+  actions.freezing_torrent_base         = new actions::freezing_torrent_base_t( "freezing_torrent_base", this );
+  actions.soulfrost_torrent             = new actions::soulfrost_torrent_t( "soulfrost_torrent", this );
   actions.ice_comet_avalanche->background = true;
 }
 
@@ -2178,7 +2246,7 @@ stat_e rime_t::convert_hybrid_stat( stat_e s ) const
 void rime_t::create_cooldowns()
 {
   cooldowns.bursting_ice        = get_cooldown( "bursting_ice" );
-  cooldowns.cold_snap           = get_cooldown( "bursting_ice" );
+  cooldowns.cold_snap           = get_cooldown( "cold_snap" );
   cooldowns.flight_of_the_navir = get_cooldown( "flight_of_the_navir" );
   cooldowns.freezing_torrent    = get_cooldown( "freezing_torrent" );
   cooldowns.ice_blitz           = get_cooldown( "ice_blitz" );

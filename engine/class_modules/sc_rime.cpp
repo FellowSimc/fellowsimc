@@ -692,12 +692,6 @@ public:
       crit_bonus += p()->talents.biting_cold_crit_power;
     }
 
-    if ( state->crit_chance > 1.0 )
-    {
-      double overflow = state->crit_chance - 1.0;
-      crit_bonus += overflow;
-    }
-
     return crit_bonus;
   }
 
@@ -954,17 +948,14 @@ struct ice_comet_t : public rime_spell_t
 
     p()->buffs.frostweavers_wrath->decrement();
     p()->buffs.icy_flow->decrement();
-  }
 
-  void impact( action_state_t* s ) override
-  {
-    rime_spell_t::impact( s );
-
-    if ( is_secondary_action() )
+     if ( is_secondary_action() )
       return;
 
     if ( !p()->talents.avalanche )
       return;
+
+    action_state_t* s = this->execute_state;
 
     if ( p()->rng().roll( p()->talents.avalanche_double ) )
     {
@@ -977,6 +968,11 @@ struct ice_comet_t : public rime_spell_t
       p()->actions.ice_comet_avalanche->trigger_secondary_action( p()->actions.ice_comet_avalanche->get_state( s ),
                                                                   0.6_s );
     }
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    rime_spell_t::impact( s );
   }
 };
 

@@ -1,6 +1,6 @@
+#include "fs_player.hpp"
 #include "util/util.hpp"
 
-#include "fs_player.hpp"
 #include "simulationcraft.hpp"
 
 namespace fellowship
@@ -44,8 +44,7 @@ public:
 
 struct rime_buff_t : public fs_player_buff_t
 {
-  rime_buff_t( player_t* p, util::string_view name )
-    : fs_player_buff_t( p, name )
+  rime_buff_t( player_t* p, util::string_view name ) : fs_player_buff_t( p, name )
   {
   }
 
@@ -72,8 +71,6 @@ public:
     actions::rime_spell_t* frost_swallow_cascading;
     actions::rime_spell_t* cold_snap;
     actions::rime_spell_t* freezing_torrent;
-    actions::rime_spell_t* freezing_torrent_base;
-    actions::rime_spell_t* soulfrost_torrent;
     actions::rime_spell_t* glacial_blast;
     actions::rime_spell_t* frost_bolt;
     actions::rime_spell_t* bursting_ice;
@@ -159,7 +156,7 @@ public:
     timespan_t coalescing_frost_duration      = 3_s;
     double coalescing_frost_sp_coeff          = 0.43;
     double coalescing_frost_crit_extra_chance = 0.5;
-    int coalescing_frost_crit_stacks       = 2;
+    int coalescing_frost_crit_stacks          = 2;
     int coalescing_frost_max_stacks           = 30;
 
     bool greater_glacial_blast                       = false;
@@ -189,23 +186,25 @@ public:
   } talents;
 
   struct legendary_t
+
   {
     bool frostwyrms_spite = false;
     double frostwyrms_spite_dmg_per_stack = 0.20;
-    int frostwyrms_spite_max_stacks       = 30;
-    timespan_t frostwyrms_spite_duration  = 15_s;
+    int frostwyrms_spite_max_stacks = 30;
+    timespan_t frostwyrms_spite_duration = 15_s;
 
-    bool skandis_decree                      = false;
+    bool skandis_decree = false;
     timespan_t skandis_decree_duration_bonus = 2_s;
 
-    bool undulating_spirit          = false;
+    bool undulating_spirit = false;
     double undulating_spirit_chance = 0.10;
+
   } legendary;
 
   struct options_t
   {
   } options;
-   
+
   target_specific_t<rime_td_t> target_data;
 
   const rime_td_t* find_target_data( const player_t* target ) const override
@@ -244,7 +243,7 @@ public:
   void copy_from( player_t* source ) override;
   std::string create_profile( save_e stype ) override;
   void init_action_list() override;
- 
+
   void reset() override;
   void activate() override;
   void arise() override;
@@ -322,9 +321,7 @@ public:
     return "disabled";
   }
 
-  rime_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
-    : fs_player_t( sim, name, r, RIME ),
-      target_data()
+  rime_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE ) : fs_player_t( sim, name, r, RIME ), target_data()
   {
     create_cooldowns();
   }
@@ -341,10 +338,7 @@ struct secondary_action_trigger_t : public event_t
   player_t* target;
 
   secondary_action_trigger_t( action_state_t* s, timespan_t delay = timespan_t::zero() )
-    : event_t( *s->action->sim, delay ),
-      action( dynamic_cast<Base*>( s->action ) ),
-      state( s ),
-      target( nullptr )
+    : event_t( *s->action->sim, delay ), action( dynamic_cast<Base*>( s->action ) ), state( s ), target( nullptr )
   {
   }
 
@@ -413,7 +407,7 @@ public:
 
   std::ostringstream& debug_str( std::ostringstream& s ) override
   {
-    //action_state_t::debug_str( s ) << " base_cp=" << base_cp << " total_cp=" << total_cp;
+    // action_state_t::debug_str( s ) << " base_cp=" << base_cp << " total_cp=" << total_cp;
     return action_state_t::debug_str( s );
   }
 
@@ -446,8 +440,7 @@ public:
   // Init =====================================================================
 
   rime_action_t( util::string_view n, rime_t* p, util::string_view options = {} )
-    : ab( n, p, options ),
-      secondary_trigger_type( secondary_trigger::NONE )
+    : ab( n, p, options ), secondary_trigger_type( secondary_trigger::NONE )
   {
     ab::parse_options( options );
     ab::may_crit = ab::tick_may_crit = true;
@@ -739,7 +732,7 @@ public:
   {
     ab::execute();
 
-    if ( !is_secondary_action() && !ab::background && p()->talents.soulfrost_torrent )
+    if ( p()->talents.soulfrost_torrent && !is_secondary_action() && !ab::background && !ab::tick_action )
     {
       if ( p()->rppm.soulfrost_torrent->trigger() )
       {
@@ -747,12 +740,12 @@ public:
       }
     }
 
-    if ( !is_secondary_action() && !ab::background && p()->legendary.undulating_spirit )
-    {
-      if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
-      {
-        p()->buffs.undulating_spirit_proc->trigger();
-      }
+     if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background )
+     {
+       if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
+       {
+         p()->buffs.undulating_spirit_proc->trigger();
+       }
     }
   }
 
@@ -784,7 +777,7 @@ public:
 };
 
 // ==========================================================================
-// Rime Ability Classes
+// Rogue Attack Classes
 // ==========================================================================
 
 struct rime_heal_t : public rime_action_t<fellowship::actions::fs_player_action_t<heal_t>>
@@ -814,7 +807,7 @@ struct frost_bolt_t : public rime_spell_t
 
     name_str_reporting = "Frost Bolt";
 
-    energize_type = action_energize::ON_CAST;
+    energize_type     = action_energize::ON_CAST;
     energize_resource = RESOURCE_ANIMA;
     energize_amount   = p->talents.burstbolter ? 1 + p->talents.burstbolter_additional_anima : 1;
 
@@ -842,13 +835,13 @@ struct glacial_blast_t : public rime_spell_t
   glacial_blast_t( util::string_view name, rime_t* p, util::string_view options_str = {} )
     : rime_spell_t( name, p, options_str )
   {
-    id = 3;
+    id                 = 3;
     name_str_reporting = "Glacial Blast";
 
     resource_current                  = RESOURCE_WINTER_ORB;
     base_costs[ RESOURCE_WINTER_ORB ] = 2;
 
-    base_execute_time                 = 2_s;
+    base_execute_time = 2_s;
 
     spell_power_mod.direct = 9.9;
 
@@ -881,7 +874,6 @@ struct glacial_blast_t : public rime_spell_t
     return timespan_t::from_millis( std::round( static_cast<double>( base.total_millis() ) * mul ) );
   }
 
-  
   double cost() const override
   {
     if ( p()->buffs.glacial_assault->at_max_stacks() )
@@ -928,14 +920,14 @@ struct ice_comet_t : public rime_spell_t
                secondary_trigger st = secondary_trigger::NONE )
     : rime_spell_t( name, p, options_str )
   {
-    id                 = 3;
-    name_str_reporting = "Ice Comet";
+    id                     = 3;
+    name_str_reporting     = "Ice Comet";
     secondary_trigger_type = st;
-    
+
     resource_current                  = RESOURCE_WINTER_ORB;
     base_costs[ RESOURCE_WINTER_ORB ] = 2;
 
-    spell_power_mod.direct            = 4.51;
+    spell_power_mod.direct = 4.51;
 
     if ( st == secondary_trigger::NONE )
     {
@@ -1022,6 +1014,8 @@ struct winters_blessing_t : public rime_spell_t
 
     name_str_reporting = "Winters Blessing";
 
+    // add_child( p->actions.frost_swallow_cascading );
+
     trigger_gcd = timespan_t::zero();
 
     cooldown->duration = 60_s;
@@ -1073,10 +1067,10 @@ struct wrath_of_winter_t : public rime_spell_t
 
     name_str_reporting = "Wrath of Winter";
 
+    base_execute_time = 1.5_s;
+
     resource_current              = RESOURCE_SPIRIT;
     base_costs[ RESOURCE_SPIRIT ] = 100;
-
-    base_execute_time = 1.5_s;
   }
 
   void execute() override
@@ -1099,7 +1093,7 @@ struct cold_snap_t : public rime_spell_t
     cooldown->duration = 12_s;
     cooldown->hasted   = true;
     cooldown->charges  = 2;
-      
+
     spell_power_mod.direct = 3.04;
 
     energize_type     = action_energize::ON_CAST;
@@ -1108,13 +1102,15 @@ struct cold_snap_t : public rime_spell_t
 
     if ( p->legendary.frostwyrms_spite )
     {
-      aoe                 = -1;
       reduced_aoe_targets = 3;
     }
   }
 
   void execute() override
   {
+
+    rime_spell_t::execute();
+
     if ( p()->legendary.frostwyrms_spite )
     {
       if ( p()->buffs.frostwyrms_spite->check() > 0 )
@@ -1122,8 +1118,6 @@ struct cold_snap_t : public rime_spell_t
         p()->buffs.frostwyrms_spite->expire();
       }
     }
-
-    rime_spell_t::execute();
 
     if ( p()->buffs.flight_of_the_navir->check() )
     {
@@ -1169,26 +1163,22 @@ struct cold_snap_t : public rime_spell_t
 
 struct bursting_ice_tick_t : public rime_spell_t
 {
-  bursting_ice_tick_t( util::string_view name, rime_t* p )
-    : rime_spell_t( name, p )
+  bursting_ice_tick_t( util::string_view name, rime_t* p ) : rime_spell_t( name, p )
   {
     id = 11;
 
     name_str_reporting = "Bursting Ice (Tick)";
 
-    aoe = -1;
+    aoe                 = -1;
     reduced_aoe_targets = 5;
 
     background = true;
 
     spell_power_mod.direct = 0.55;
 
-    if ( name != "bursting_ice_burstbolter" )
-    {
-      energize_type     = action_energize::ON_CAST;
-      energize_resource = RESOURCE_ANIMA;
-      energize_amount   = 1;
-    }
+    energize_type     = action_energize::ON_CAST;
+    energize_resource = RESOURCE_ANIMA;
+    energize_amount   = 1;
   }
 
   double composite_da_multiplier( const action_state_t* s ) const override
@@ -1215,6 +1205,7 @@ struct bursting_ice_t : public rime_spell_t
     tick_action        = new bursting_ice_tick_t( "bursting_ice_tick", p );
     add_child( tick_action );
 
+    base_execute_time      = 2_s;
     dot_duration           = 3_s;
 
     if ( p->legendary.skandis_decree )
@@ -1225,8 +1216,6 @@ struct bursting_ice_t : public rime_spell_t
     base_tick_time         = 0.5_s;
     hasted_ticks           = true;
     dot_allow_partial_tick = true;
-
-    base_execute_time = 2_s;
 
     cooldown->duration = 10_s;
     cooldown->hasted   = false;
@@ -1281,155 +1270,95 @@ struct freezing_torrent_t : public rime_spell_t
   freezing_torrent_t( util::string_view name, rime_t* p, util::string_view options_str = {} )
     : rime_spell_t( name, p, options_str )
   {
-    id                 = 13;
+    id = 13;
+
     name_str_reporting = "Freezing Torrent";
 
-    channeled = false;
+    spell_power_mod.tick = 1.42;
+
+    dot_duration           = 2_s;
+    base_tick_time         = 0.4_s;
+    hasted_ticks           = true;
+    dot_allow_partial_tick = true;
+    tick_on_application    = true;
+    channeled              = true;
+
+    if ( p->talents.supreme_torrent )
+    {
+      dot_duration += p->talents.supreme_torrent_duration;
+    }
+
+    energize_type     = action_energize::PER_TICK;
+    energize_resource = RESOURCE_ANIMA;
+    energize_amount   = 1;
 
     cooldown->duration = 15_s;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
   }
 
-  void init() override
+  static const freezing_torrent_state_t<base_t>* cast_state( const action_state_t* st )
   {
-    rime_spell_t::init();
-    add_child( p()->actions.freezing_torrent_base );
-    add_child( p()->actions.soulfrost_torrent );
+    return debug_cast<const freezing_torrent_state_t<base_t>*>( st );
+  }
+
+  static freezing_torrent_state_t<base_t>* cast_state( action_state_t* st )
+  {
+    return debug_cast<freezing_torrent_state_t<base_t>*>( st );
+  }
+
+  action_state_t* new_state() override
+  {
+    return new freezing_torrent_state_t<base_t>( this, target );
+  }
+
+  void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
+  {
+    base_t::update_state( state, flags, rt );
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    auto rs = cast_state( state );
+    // rs->
+
+    rs->tick_time_mul =
+        p()->buffs.soulfrost_torrent->check() ? 1.0 / p()->talents.soulfrost_torrent_tickrate_increase : 1.0;
+
+    base_t::snapshot_state( state, rt );
   }
 
   void execute() override
   {
-    rime_spell_t::execute();
+    base_t::execute();
 
-    if ( p()->buffs.soulfrost_torrent->check() )
-    {
-      p()->actions.soulfrost_torrent->execute_on_target( target );
-      p()->buffs.soulfrost_torrent->decrement();
-    }
-    else
-    {
-      p()->actions.freezing_torrent_base->execute_on_target( target );
-    }
+    p()->buffs.soulfrost_torrent->decrement();
   }
 
-  bool ready() override
+  void init_finished() override
   {
-    return rime_spell_t::ready();
-  }
-};
+    base_t::init_finished();
 
-struct freezing_torrent_base_t : public rime_spell_t
-{
-  freezing_torrent_base_t( util::string_view name, rime_t* p, util::string_view options_str = {} )
-    : rime_spell_t( name, p, options_str )
-  {
-    id                 = 18;
-    name_str_reporting = "Freezing Torrent";
-
-    spell_power_mod.tick = 1.42;
-
-    dot_duration           = 2_s;
-    base_tick_time         = 0.4_s;
-    hasted_ticks           = true;
-    dot_allow_partial_tick = true;
-    tick_on_application    = true;
-    channeled              = true;
-
-    if ( p->talents.supreme_torrent )
-    {
-      dot_duration += p->talents.supreme_torrent_duration;
-    }
-
-    energize_type     = action_energize::PER_TICK;
-    energize_resource = RESOURCE_ANIMA;
-    energize_amount   = 1;
-  }
-
-  void tick( dot_t* d ) override
-  {
-    base_t::tick( d );
-
-    if ( p()->legendary.frostwyrms_spite )
-    {
-      p()->buffs.frostwyrms_spite->trigger();
-    }
-
-    if ( p()->talents.coalescing_frost )
-    {
-      if ( result_is_hit( d->state->result ) )
-      {
-        if ( d->state->result == RESULT_CRIT && rng().roll( p()->talents.coalescing_frost_crit_extra_chance ) )
-        {
-          p()->get_target_data( d->target )
-              ->debuffs.coalescing_frost->trigger( p()->talents.coalescing_frost_crit_stacks );
-        }
-        else
-        {
-          p()->get_target_data( d->target )->debuffs.coalescing_frost->trigger();
-        }
-      }
-    }
-
-    if ( p()->talents.chilling_finesse )
-    {
-      p()->cooldowns.bursting_ice->adjust( -p()->talents.chilling_finesse_bursting_ice_cdr_per_tick, false, false );
-    }
-
-    if ( p()->buffs.flight_of_the_navir->check() )
-    {
-      p()->actions.frost_swallow_navir->execute();
-    }
-  }
-};
-
-struct soulfrost_torrent_t : public rime_spell_t
-{
-  soulfrost_torrent_t( util::string_view name, rime_t* p, util::string_view options_str = {} )
-    : rime_spell_t( name, p, options_str )
-  {
-    id                 = 195;
-    name_str_reporting = "Soulfrost Torrent";
-
-    spell_power_mod.tick = 1.42;
-
-    dot_duration           = 2_s;
-    base_tick_time         = 0.4_s;
-    hasted_ticks           = true;
-    dot_allow_partial_tick = true;
-    tick_on_application    = true;
-    channeled              = true;
-
-    if ( p->talents.supreme_torrent )
-    {
-      dot_duration += p->talents.supreme_torrent_duration;
-    }
-
-    energize_type     = action_energize::PER_TICK;
-    energize_resource = RESOURCE_ANIMA;
-    energize_amount   = 1;
+    snapshot_flags &= ~STATE_HASTE;
   }
 
   double composite_crit_chance() const override
   {
-    return rime_spell_t::composite_crit_chance() + p()->talents.soulfrost_torrent_crit_chance;
+    return rime_spell_t::composite_crit_chance() + p()->buffs.soulfrost_torrent->check_value();
   }
 
-  timespan_t tick_time( const action_state_t* state ) const override
+  double tick_time_pct_multiplier( const action_state_t* s ) const override
   {
-    timespan_t tt = rime_spell_t::tick_time( state );
-    tt /= p()->talents.soulfrost_torrent_tickrate_increase;
-    return tt;
+    auto base = base_t::tick_time_pct_multiplier( s );
+
+    base *= cast_state( s )->tick_time_mul;
+
+    return base;
   }
 
   void tick( dot_t* d ) override
   {
     base_t::tick( d );
-
-    if ( p()->legendary.frostwyrms_spite )
-    {
-      p()->buffs.frostwyrms_spite->trigger();
-    }
 
     if ( p()->talents.coalescing_frost )
     {
@@ -1455,6 +1384,11 @@ struct soulfrost_torrent_t : public rime_spell_t
     if ( p()->buffs.flight_of_the_navir->check() )
     {
       p()->actions.frost_swallow_navir->execute();
+    }
+
+    if ( p()->legendary.frostwyrms_spite )
+    {
+      p()->buffs.frostwyrms_spite->trigger();
     }
   }
 };
@@ -1465,10 +1399,10 @@ struct coalescing_frost_t : public rime_spell_t
   {
     id = 14;
 
-    name_str_reporting = "Coalescing Frost";
+    name_str_reporting = "Bursting Ice (Tick)";
 
     aoe                 = -1;
-    reduced_aoe_targets = 5;
+    reduced_aoe_targets = 3;
 
     background = true;
 
@@ -1499,30 +1433,29 @@ struct frost_swallow_t : public rime_spell_t
   }
 };
 
-//struct vexiras_venom_t : public residual_action::residual_periodic_action_t<rime_spell_t>
+// struct vexiras_venom_t : public residual_action::residual_periodic_action_t<rime_spell_t>
 //{
-//  vexiras_venom_t( util::string_view name, rime_t* p ) : residual_action_t( name, p )
-//  {
-//    id = 16;
+//   vexiras_venom_t( util::string_view name, rime_t* p ) : residual_action_t( name, p )
+//   {
+//     id = 16;
 //
-//    name_str_reporting = "Vexiras Venom";
+//     name_str_reporting = "Vexiras Venom";
 //
-//    tick_may_crit = false;
-//        
-//    dot_duration   = p->legendary.vexiras_venom_duration;
-//    dot_behavior   = DOT_REFRESH_DURATION;
-//    base_tick_time = p->legendary.vexiras_venom_period;
-//    hasted_ticks   = true;
-//  }
+//     tick_may_crit = false;
 //
-//  void init() override
-//  {
-//    base_t::init();
-//    snapshot_flags |= STATE_HASTE;
-//    update_flags &= ~STATE_HASTE;
-//  }
-//};
-
+//     dot_duration   = p->legendary.vexiras_venom_duration;
+//     dot_behavior   = DOT_REFRESH_DURATION;
+//     base_tick_time = p->legendary.vexiras_venom_period;
+//     hasted_ticks   = true;
+//   }
+//
+//   void init() override
+//   {
+//     base_t::init();
+//     snapshot_flags |= STATE_HASTE;
+//     update_flags &= ~STATE_HASTE;
+//   }
+// };
 
 }  // namespace actions
 
@@ -1530,9 +1463,10 @@ struct frost_swallow_t : public rime_spell_t
 // Rogue Targetdata Definitions
 // ==========================================================================
 
-rime_td_t::rime_td_t( player_t* target, rime_t* source ) : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
+rime_td_t::rime_td_t( player_t* target, rime_t* source )
+  : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
 {
-  dots.bursting_ice = target->get_dot( "bursting_ice", source );
+  dots.bursting_ice     = target->get_dot( "bursting_ice", source );
   dots.freezing_torrent = target->get_dot( "freezing_torrent", source );
 
   debuffs.coalescing_frost = make_buff( *this, "coalescing_frost" )
@@ -1717,7 +1651,7 @@ action_t* rime_t::create_action( util::string_view name, util::string_view optio
 
 std::unique_ptr<expr_t> rime_t::create_action_expression( action_t& action, std::string_view name_str )
 {
-  //auto split = util::string_split<util::string_view>( name_str, "." );
+  // auto split = util::string_split<util::string_view>( name_str, "." );
 
   return fs_player_t::create_action_expression( action, name_str );
 }
@@ -1738,104 +1672,55 @@ std::unique_ptr<expr_t> rime_t::create_expression( util::string_view name_str )
       return make_fn_expr( name_str,
                            [ this ] { return resources.max[ RESOURCE_WINTER_ORB ] - this->current_worbs( true ); } );
     }
-  }
-  /*else if ( util::str_compare_ci( split[ 0 ], "talent" ) )
+  } 
+  else if ( util::str_compare_ci( split[ 0 ], "talent" ) )
   {
     if ( split.size() == 2 )
     {
-      if ( util::str_compare_ci( split[ 1 ], "red_ledger" ) )
-      {
-        return make_ref_expr( name_str, talents.red_ledger );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "malevolence" ) )
-      {
-        return make_ref_expr( name_str, talents.malevolence );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "deadly_scheme" ) )
-      {
-        return make_ref_expr( name_str, talents.deadly_scheme );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "bloodrush" ) )
-      {
-        return make_ref_expr( name_str, talents.bloodrush );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "venomous_delight" ) )
-      {
-        return make_ref_expr( name_str, talents.venomous_delight );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "vile_venoms" ) )
-      {
-        return make_ref_expr( name_str, talents.vile_venoms );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "efficient_killer" ) )
-      {
-        return make_ref_expr( name_str, talents.efficient_killer );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "gushing_blood" ) )
-      {
-        return make_ref_expr( name_str, talents.gushing_blood );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "corrosive_spill" ) )
-      {
-        return make_ref_expr( name_str, talents.corrosive_spill );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "feed_the_queen" ) )
-      {
-        return make_ref_expr( name_str, talents.feed_the_queen );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "nightstalker" ) )
-      {
-        return make_ref_expr( name_str, talents.nightstalker );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "from_the_shadows" ) )
-      {
-        return make_ref_expr( name_str, talents.from_the_shadows );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "hemotoxin" ) )
-      {
-        return make_ref_expr( name_str, talents.hemotoxin );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "maidens_doom" ) )
-      {
-        return make_ref_expr( name_str, talents.maidens_doom );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "puncture" ) )
-      {
-        return make_ref_expr( name_str, talents.puncture );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "arachnid_onslaught" ) )
-      {
-        return make_ref_expr( name_str, talents.arachnid_onslaught );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "assassins_guile" ) )
-      {
-        return make_ref_expr( name_str, talents.assassins_guile );
-      }
+      if ( util::str_compare_ci( split[ 1 ], "chilling_finesse" ) )
+        return make_ref_expr( name_str, talents.chilling_finesse );
+      if ( util::str_compare_ci( split[ 1 ], "winters_embrace" ) )
+        return make_ref_expr( name_str, talents.winters_embrace );
+      if ( util::str_compare_ci( split[ 1 ], "glacial_assault" ) )
+        return make_ref_expr( name_str, talents.glacial_assault );
+      if ( util::str_compare_ci( split[ 1 ], "burstbolter" ) )
+        return make_ref_expr( name_str, talents.burstbolter );
+      if ( util::str_compare_ci( split[ 1 ], "supreme_torrent" ) )
+        return make_ref_expr( name_str, talents.supreme_torrent );
+      if ( util::str_compare_ci( split[ 1 ], "navirs_keeper" ) )
+        return make_ref_expr( name_str, talents.navirs_keeper );
+      if ( util::str_compare_ci( split[ 1 ], "icy_flow" ) )
+        return make_ref_expr( name_str, talents.icy_flow );
+      if ( util::str_compare_ci( split[ 1 ], "avalanche" ) )
+        return make_ref_expr( name_str, talents.avalanche );
+      if ( util::str_compare_ci( split[ 1 ], "coalescing_frost" ) )
+        return make_ref_expr( name_str, talents.coalescing_frost );
+      if ( util::str_compare_ci( split[ 1 ], "greater_glacial_blast" ) )
+        return make_ref_expr( name_str, talents.greater_glacial_blast );
+      if ( util::str_compare_ci( split[ 1 ], "cascading_blitz" ) )
+        return make_ref_expr( name_str, talents.cascading_blitz );
+      if ( util::str_compare_ci( split[ 1 ], "frostweavers_wrath" ) )
+        return make_ref_expr( name_str, talents.frostweavers_wrath );
+      if ( util::str_compare_ci( split[ 1 ], "soulfrost_torrent" ) )
+        return make_ref_expr( name_str, talents.soulfrost_torrent );
+      if ( util::str_compare_ci( split[ 1 ], "biting_cold" ) )
+        return make_ref_expr( name_str, talents.biting_cold );
+      if ( util::str_compare_ci( split[ 1 ], "wisdom_of_the_north" ) )
+        return make_ref_expr( name_str, talents.wisdom_of_the_north );
     }
   }
   else if ( util::str_compare_ci( split[ 0 ], "legendary" ) )
   {
     if ( split.size() == 2 )
     {
-      if ( util::str_compare_ci( split[ 1 ], "vexiras_venom" ) )
-      {
-        return make_ref_expr( name_str, legendary.vexiras_venom );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "drenched_in_blood" ) )
-      {
-        return make_ref_expr( name_str, legendary.drenched_in_blood );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "final_stratagem_cdr" ) )
-      {
-        return make_ref_expr( name_str, legendary.final_stratagem_cdr );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "spirit_procs_clones" ) )
-      {
-        return make_ref_expr( name_str, legendary.spirit_procs_clones );
-      }
+      if ( util::str_compare_ci( split[ 1 ], "frostwyrms_spite" ) )
+        return make_ref_expr( name_str, legendary.frostwyrms_spite );
+      if ( util::str_compare_ci( split[ 1 ], "skandis_decree" ) )
+        return make_ref_expr( name_str, legendary.skandis_decree );
+      if ( util::str_compare_ci( split[ 1 ], "undulating_spirit" ) )
+        return make_ref_expr( name_str, legendary.undulating_spirit );
     }
-  }*/
-  // Split expressions
+  }
 
   return fs_player_t::create_expression( name_str );
 }
@@ -1874,7 +1759,7 @@ void rime_t::init_spells()
 {
   fs_player_t::init_spells();
 
-  //actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
+  // actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
 }
 
 // rime_t::init_talents ====================================================
@@ -1982,7 +1867,7 @@ void rime_t::create_buffs()
                        ->set_max_stack( talents.icy_flow_max_stacks );
 
   buffs.flight_of_the_navir = make_buff<rime_buff_t>( this, "flight_of_the_navir" )->set_duration( 20_s );
-  
+
   buffs.frostweavers_wrath = make_buff<rime_buff_t>( this, "frostweaver_wrath" )
                                  ->set_duration( talents.frostweavers_wrath_buff_duration )
                                  ->set_default_value( talents.frostweavers_wrath_added_cc );
@@ -2118,9 +2003,8 @@ void rime_t::init_background_actions()
   actions.frost_swallow                 = new actions::frost_swallow_t( "frost_swallow", this );
   actions.frost_swallow_cascading       = new actions::frost_swallow_t( "frost_swallow_cascading", this );
   actions.frost_swallow_navir           = new actions::frost_swallow_t( "frost_swallow_navir", this );
-  actions.ice_comet_avalanche           = new actions::ice_comet_t( "ice_comet_avalanche", this, {}, secondary_trigger::AVALANCHE );
-  actions.freezing_torrent_base         = new actions::freezing_torrent_base_t( "freezing_torrent_base", this );
-  actions.soulfrost_torrent             = new actions::soulfrost_torrent_t( "soulfrost_torrent", this );
+  actions.ice_comet_avalanche =
+      new actions::ice_comet_t( "ice_comet_avalanche", this, {}, secondary_trigger::AVALANCHE );
   actions.ice_comet_avalanche->background = true;
 }
 
@@ -2144,7 +2028,7 @@ void rime_t::arise()
 {
   fs_player_t::arise();
 
-  resources.current[ RESOURCE_ANIMA ] = 0;
+  resources.current[ RESOURCE_ANIMA ]      = 0;
   resources.current[ RESOURCE_WINTER_ORB ] = 0;
 }
 
@@ -2210,56 +2094,57 @@ double rime_t::stacking_movement_modifier() const
   return ms;
 }
 
-//template <typename Base>
-//void actions::rime_action_t<Base>::trigger_combo_point_gain( int cp, gain_t* gain )
+// template <typename Base>
+// void actions::rime_action_t<Base>::trigger_combo_point_gain( int cp, gain_t* gain )
 //{
-//  p()->resource_gain( RESOURCE_COMBO_POINT, cp, gain, this );
-//}
+//   p()->resource_gain( RESOURCE_COMBO_POINT, cp, gain, this );
+// }
 //
-//template <typename Base>
-//void actions::rime_action_t<Base>::trigger_auto_attack( const action_state_t* /* state */ )
+// template <typename Base>
+// void actions::rime_action_t<Base>::trigger_auto_attack( const action_state_t* /* state */ )
 //{
-//  if ( !p()->main_hand_attack || p()->main_hand_attack->execute_event )
-//    return;
+//   if ( !p()->main_hand_attack || p()->main_hand_attack->execute_event )
+//     return;
 //
-//  p()->actions.auto_attack->schedule_execute();
-//}
+//   p()->actions.auto_attack->schedule_execute();
+// }
 //
-//template <typename Base>
-//void actions::rime_action_t<Base>::spend_combo_points( const action_state_t* state )
+// template <typename Base>
+// void actions::rime_action_t<Base>::spend_combo_points( const action_state_t* state )
 //{
-//  if ( ab::base_costs[ RESOURCE_COMBO_POINT ] == 0 )
-//    return;
+//   if ( ab::base_costs[ RESOURCE_COMBO_POINT ] == 0 )
+//     return;
 //
-//  if ( !ab::hit_any_target )
-//    return;
+//   if ( !ab::hit_any_target )
+//     return;
 //
-//  const auto rs    = cast_state( state );
-//  double max_spend = std::min( p()->current_worbs(), p()->consume_cp_max() );
-//  ab::stats->consume_resource( RESOURCE_COMBO_POINT, max_spend );
-//  p()->resource_loss( RESOURCE_COMBO_POINT, max_spend );
+//   const auto rs    = cast_state( state );
+//   double max_spend = std::min( p()->current_worbs(), p()->consume_cp_max() );
+//   ab::stats->consume_resource( RESOURCE_COMBO_POINT, max_spend );
+//   p()->resource_loss( RESOURCE_COMBO_POINT, max_spend );
 //
-//  p()->sim->print_log( "{} consumes {} {} for {} ({})", *p(), max_spend,
-//                       util::resource_type_string( RESOURCE_COMBO_POINT ), *this, p()->current_worbs() );
+//   p()->sim->print_log( "{} consumes {} {} for {} ({})", *p(), max_spend,
+//                        util::resource_type_string( RESOURCE_COMBO_POINT ), *this, p()->current_worbs() );
 //
-//  trigger_poison_bomb( state, max_spend );
-//    
-//  if ( p()->legendary.final_stratagem_cdr )
-//  {
-//    p()->cooldowns.final_stratagem->adjust( -max_spend * p()->legendary.final_stratagem_cdr_reduction_per_cp, false, false );
-//  }
+//   trigger_poison_bomb( state, max_spend );
 //
-//  if ( p()->talents.efficient_killer )
-//  {
-//    p()->resource_gain( RESOURCE_ENERGY, p()->talents.efficient_killer_energy_per_cp * max_spend,
-//                        p()->gains.efficient_killer, this );
-//  }
+//   if ( p()->legendary.final_stratagem_cdr )
+//   {
+//     p()->cooldowns.final_stratagem->adjust( -max_spend * p()->legendary.final_stratagem_cdr_reduction_per_cp, false,
+//     false );
+//   }
 //
-//  if ( p()->rng().roll( p()->cache.mastery_value() ) )
-//  {
-//    trigger_spirit_refund( state, max_spend );
-//  }
-//}
+//   if ( p()->talents.efficient_killer )
+//   {
+//     p()->resource_gain( RESOURCE_ENERGY, p()->talents.efficient_killer_energy_per_cp * max_spend,
+//                         p()->gains.efficient_killer, this );
+//   }
+//
+//   if ( p()->rng().roll( p()->cache.mastery_value() ) )
+//   {
+//     trigger_spirit_refund( state, max_spend );
+//   }
+// }
 
 template <typename Base>
 void actions::rime_action_t<Base>::trigger_spirit_refund( const action_state_t* state, double orbs_refunded )
@@ -2288,7 +2173,7 @@ void actions::rime_action_t<Base>::spend_winter_orbs( const action_state_t* s )
   }
 
   double spirit_decimal = p()->cache.mastery();
-  double refund_chance = spirit_decimal / ( 1.0 + spirit_decimal );
+  double refund_chance  = spirit_decimal / ( 1.0 + spirit_decimal );
 
   if ( !refunded && p()->rng().roll( refund_chance ) )
   {
@@ -2317,7 +2202,6 @@ void actions::rime_action_t<Base>::gain_anima( int gain )
 {
 }
 
-
 // rime_t::convert_hybrid_stat ==============================================
 
 stat_e rime_t::convert_hybrid_stat( stat_e s ) const
@@ -2342,7 +2226,7 @@ stat_e rime_t::convert_hybrid_stat( stat_e s ) const
 void rime_t::create_cooldowns()
 {
   cooldowns.bursting_ice        = get_cooldown( "bursting_ice" );
-  cooldowns.cold_snap           = get_cooldown( "cold_snap" );
+  cooldowns.cold_snap           = get_cooldown( "bursting_ice" );
   cooldowns.flight_of_the_navir = get_cooldown( "flight_of_the_navir" );
   cooldowns.freezing_torrent    = get_cooldown( "freezing_torrent" );
   cooldowns.ice_blitz           = get_cooldown( "ice_blitz" );
@@ -2386,7 +2270,7 @@ public:
 };
 
 }  // namespace rime
-}
+}  // namespace fellowship
 
 const module_t* module_t::rime()
 {

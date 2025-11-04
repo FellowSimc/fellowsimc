@@ -5,24 +5,13 @@ actions.precombat+=/frost_bolt
 actions=run_action_list,name=aoe,if=active_enemies>=4
 actions+=/run_action_list,name=st
 
-actions.aoe=wrath_of_winter
-actions.aoe+=/ice_comet,if=buff.winters_embrace.up
-actions.aoe+=/flight_of_the_navir
-actions.aoe+=/ice_blitz,if=buff.flight_of_the_navir.up
-actions.aoe+=/winters_blessing,if=worb>=2
-actions.aoe+=/freezing_torrent
-actions.aoe+=/bursting_ice
-actions.aoe+=/cold_snap,if=full_recharge_time<=gcd.max
-actions.aoe+=/ice_comet
-actions.aoe+=/cold_snap,if=buff.flight_of_the_navir.up|cooldown.flight_of_the_navir.remains>=cooldown.cold_snap.duration*2
-actions.aoe+=/frost_bolt
+actions.aoe=frost_bolt
 
 actions.st=wrath_of_winter
 actions.st+=/flight_of_the_navir
 actions.st+=/ice_blitz,if=buff.flight_of_the_navir.up
 actions.st+=/winters_blessing,if=worb>=2
 actions.st+=/bursting_ice
-actions.st+=/freezing_torrent,if=buff.winters_embrace.up
 actions.st+=/cold_snap,if=full_recharge_time<=gcd.max
 actions.st+=/glacial_blast
 actions.st+=/freezing_torrent

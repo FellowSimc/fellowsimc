@@ -4,14 +4,14 @@ actions.precombat+=/frost_bolt
 
 actions=run_action_list,name=main
 
-actions.main=wrath_of_winter
-actions.main+=/flight_of_the_navir
-actions.main+=/ice_blitz,if=buff.flight_of_the_navir.up
-actions.main+=/winters_blessing,if=worb>=2
+actions.main=wrath_of_winter,if=target.time_to_die>=12|fight_remains<=20
+actions.main+=/flight_of_the_navir,if=target.time_to_die>=12|fight_remains<=20
+actions.main+=/ice_blitz,if=buff.flight_of_the_navir.up&(target.time_to_die>=12|fight_remains<=20)
+actions.main+=/winters_blessing,if=worb>=2&(target.time_to_die>=12|fight_remains<=20)
 actions.main+=/bursting_ice
 actions.main+=/cold_snap,if=full_recharge_time<=gcd.max&worb<5
 actions.main+=/glacial_blast,if=active_enemies<=2&(worb>=5|!talent.winters_embrace|buff.winters_embrace.up)
 actions.main+=/ice_comet,if=active_enemies>2&(worb>=5|!talent.winters_embrace|buff.winters_embrace.up)
 actions.main+=/freezing_torrent
-actions.main+=/cold_snap,if=buff.flight_of_the_navir.up|cooldown.flight_of_the_navir.remains>=cooldown.cold_snap.duration*2
+actions.main+=/cold_snap,if=buff.flight_of_the_navir.up|cooldown.flight_of_the_navir.remains>=cooldown.cold_snap.duration*2|target.time_to_die<=12
 actions.main+=/frost_bolt

@@ -133,7 +133,7 @@ public:
     double glacial_assault_amp = 0.4;
 
     bool burstbolter                    = false;
-    int burstbolter_additional_anima    = 2;
+    int burstbolter_additional_anima    = 1;
     int burstbolter_bursting_ice_pulses = 1;
 
     bool supreme_torrent                = false;
@@ -811,7 +811,10 @@ struct frost_bolt_t : public rime_spell_t
 
     energize_type     = action_energize::ON_CAST;
     energize_resource = RESOURCE_ANIMA;
-    energize_amount   = p->talents.burstbolter ? 1 + p->talents.burstbolter_additional_anima : 1;
+    energize_amount   = 1.0;
+
+    if ( p->talents.burstbolter )
+      energize_amount += p->talents.burstbolter_additional_anima;
 
     base_execute_time = 1.5_s;
   }

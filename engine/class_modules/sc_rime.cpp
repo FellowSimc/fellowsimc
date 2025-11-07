@@ -814,7 +814,10 @@ struct frost_bolt_t : public rime_spell_t
     energize_amount   = 1.0;
 
     if ( p->talents.burstbolter )
+    {
       energize_amount += p->talents.burstbolter_additional_anima;
+      add_child( p->actions.bursting_ice_tick_burstbolter );
+    }
 
     base_execute_time = 1.5_s;
   }
@@ -933,6 +936,8 @@ struct ice_comet_t : public rime_spell_t
     base_costs[ RESOURCE_WINTER_ORB ] = 2;
 
     spell_power_mod.direct = 4.51;
+    aoe                    = -1;
+    reduced_aoe_targets    = 8;
 
     if ( st == secondary_trigger::NONE )
     {
@@ -1016,8 +1021,6 @@ struct winters_blessing_t : public rime_spell_t
     id = 7;
 
     name_str_reporting = "Winters Blessing";
-
-    // add_child( p->actions.frost_swallow_cascading );
 
     trigger_gcd = timespan_t::zero();
 

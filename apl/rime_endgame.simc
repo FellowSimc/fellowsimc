@@ -8,26 +8,26 @@ vary_combat_length=0.05
 single_actor_batch=1
 desired_targets=1
 
-apl/dungeon.simc
+apl/chuey_dungeon.simc
 
 rime="Rime"
 level=80
 
 apl/rime.simc
 
-scale_crit_rating=590
-scale_haste_rating=590
-scale_mastery_rating=590
-scale_versatility_rating=590
-positive_scale_delta=1
-calculate_scale_factors=1
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
 
 gear_intellect=1500
 
-gear_haste_rating=452
-gear_crit_rating=1812
-gear_versatility_rating=2265
-gear_mastery_rating=0
+# gear_haste_rating=452
+# gear_crit_rating=1812
+# gear_versatility_rating=2265
+# gear_mastery_rating=0
 
 # legendary.skandis_decree=1
 # #1
@@ -88,6 +88,43 @@ gear_mastery_rating=0
 # copy="Undulating Spirit","Rime"
 # legendary.undulating_spirit=1
 
+# copy="Beam Build - Frostwyrms","Rime"
+# talent.soulfrost_torrent=1
+# talent.burstbolter=1
+# talent.winters_embrace=1
+# talent.coalescing_frost=1
+# talent.cascading_blitz=1
+# talent.supreme_torrent=1
+# talent.biting_cold=1
+# legendary.frostwyrms_spite=1
+
+# copy="Boosters Build - Skandis","Rime"
+# talent.chilling_finesse=1
+# talent.winters_embrace=1
+# talent.burstbolter=1
+# talent.avalanche=1
+# talent.cascading_blitz=1
+# talent.biting_cold=1
+# talent.wisdom_of_the_north=1
+# legendary.skandis_decree=1
+
+
+
+
+gear_haste_rating=2717
+gear_crit_rating=453
+gear_versatility_rating=1359
+gear_mastery_rating=0
+
+copy="Sael Build","Rime"
+talent.winters_embrace=1
+legendary.skandis_decree=1
+talent.burstbolter=1
+talent.icy_flow=1
+talent.avalanche=1
+talent.cascading_blitz=1
+talent.frostweavers_wrath=1
+
 copy="Beam Build - Frostwyrms","Rime"
 talent.soulfrost_torrent=1
 talent.burstbolter=1
@@ -107,13 +144,3 @@ talent.cascading_blitz=1
 talent.biting_cold=1
 talent.wisdom_of_the_north=1
 legendary.skandis_decree=1
-
-
-copy="Sael Build","Rime"
-talent.winters_embrace=1
-legendary.skandis_decree=1
-talent.burstbolter=1
-talent.icy_flow=1
-talent.avalanche=1
-talent.cascading_blitz=1
-talent.frostweavers_wrath=1

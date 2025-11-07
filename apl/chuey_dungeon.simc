@@ -1,0 +1,15 @@
+fight_style=DungeonRoute
+max_time=771
+enemy="Stormwatch"
+ignore_invulnerable_targets=1
+
+raid_events+=/pull,pull=1,delay=004,enemies="large_1":1250000|"med_1":1250000|"med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"med_6":1250000|"med_7":1250000|"med_8":1250000|"med_9":1250000|"med_10":1250000|"med_11":1250000|"med_12":1250000|"med_13":1250000
+raid_events+=/pull,pull=2,delay=015,enemies="med_1":1250000|"med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000|"small_6":650000|"small_7":650000|"small_8":650000
+raid_events+=/pull,pull=3,delay=003,enemies="large_1":1250000|"med_1":1250000|"med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"med_6":1250000|"med_7":1250000|"med_8":1250000
+raid_events+=/pull,pull=4,delay=008,enemies="BOSS_Warlord_Brogg":1800000|"med_1":1250000|"med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"med_6":1250000|"med_7":1250000
+raid_events+=/pull,pull=5,delay=001,enemies="med_1":1250000|"med_2":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000
+raid_events+=/pull,pull=6,delay=001,enemies="med_1":1250000|"med_2":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000|"small_6":650000
+raid_events+=/pull,pull=7,delay=007,enemies="large_1":1250000|"med_1":1250000|"med_2":1250000|"med_3":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000|"small_6":650000|"small_7":650000|"small_8":650000|"small_9":650000|"small_10":650000
+raid_events+=/pull,pull=8,delay=001,enemies="med_1":1250000|"med_2":1250000|"small_1":650000|"small_2":650000
+raid_events+=/pull,pull=9,delay=001,enemies="BOSS_Warlord_Brogg":7200000
+raid_events+=/adds,pull=9,count=2,cooldown=75,cooldown_stddev=5,duration=30,health=150000

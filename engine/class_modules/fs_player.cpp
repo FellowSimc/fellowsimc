@@ -353,6 +353,7 @@ void fs_player_t::copy_from( player_t* source )
 
   fs_sets    = fs_player->fs_sets;
   fs_options = fs_player->fs_options;
+  fs_gems    = fs_player->fs_gems;
 }
 
 // fs_player_t::create_profile  =================================================

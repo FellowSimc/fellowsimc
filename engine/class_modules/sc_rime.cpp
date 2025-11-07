@@ -1128,7 +1128,7 @@ struct cold_snap_t : public rime_spell_t
     if ( p()->buffs.flight_of_the_navir->check() )
     {
       for ( auto i = 0; i < 5; i++ )
-        p()->actions.frost_swallow->execute();
+        p()->actions.frost_swallow_navir->execute();
     }
 
     if ( p()->talents.glacial_assault )
@@ -1301,6 +1301,11 @@ struct freezing_torrent_t : public rime_spell_t
     if ( p->talents.supreme_torrent )
     {
       dot_duration += p->talents.supreme_torrent_duration;
+    }
+
+    if ( p->talents.coalescing_frost )
+    {
+      add_child( p->actions.coalescing_frost );
     }
 
     energize_type     = action_energize::PER_TICK;
@@ -1567,6 +1572,9 @@ double rime_t::matching_gear_multiplier( attribute_e attr ) const
 double rime_t::composite_player_multiplier( school_e school ) const
 {
   double m = fs_player_t::composite_player_multiplier( school );
+  
+  m *= 1.0 + buffs.ice_blitz->check_value();
+  m *= 1.0 + buffs.ultimate_buff_window->check_value();
 
   return m;
 }
@@ -1886,7 +1894,10 @@ void rime_t::create_buffs()
                               ->set_default_value( talents.glacial_assault_amp )
                               ->set_max_stack( talents.glacial_assault_stacks );
 
-  buffs.ice_blitz = make_buff<rime_buff_t>( this, "ice_blitz" )->set_duration( 20_s )->set_default_value( 0.2 );
+  buffs.ice_blitz = make_buff<rime_buff_t>( this, "ice_blitz" )
+                        ->set_duration( 20_s )
+                        ->set_default_value( 0.2 )
+                        ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
 
   buffs.soulfrost_torrent = make_buff<rime_buff_t>( this, "soulfrost_torrent" )
                                 ->set_duration( talents.soulfrost_torrent_buff_duration )
@@ -1900,7 +1911,8 @@ void rime_t::create_buffs()
           ->set_tick_on_application( true )
           ->set_tick_callback( [ this ]( buff_t*, int, timespan_t ) {
             resource_gain( RESOURCE_WINTER_ORB, 1.0, gains.ult_worbs, actions.wrath_of_winter );
-          } );
+          } )
+          ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
 
   buffs.winters_blessing = make_buff<rime_buff_t>( this, "winters_blessing" )
                                ->set_duration( 20_s )

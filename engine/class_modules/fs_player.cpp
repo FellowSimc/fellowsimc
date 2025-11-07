@@ -8,7 +8,7 @@ namespace fellowship
 {  // UNNAMED NAMESPACE
 
 // ==========================================================================
-// Rogue Targetdata Definitions
+// FS Targetdata Definitions
 // ==========================================================================
 
 fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source ) : actor_target_data_t( target, source ), dots(), debuffs()
@@ -16,8 +16,16 @@ fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source ) : actor_
 }
 
 // ==========================================================================
-// Rogue Character Definition
+// FS Character Definition
 // ==========================================================================
+
+fs_player_t::fs_player_t( sim_t* sim, util::string_view name, race_e r, player_e p )
+  : player_t( sim, p, name, r ), target_data(), fs_gems()
+{
+  // resource_regeneration              = regen_type::DYNAMIC;
+  // regen_caches[ CACHE_HASTE ]        = true;
+  // regen_caches[ CACHE_ATTACK_HASTE ] = true;
+}
 
 // fs_player_t::composite_attribute_multiplier ==================================
 
@@ -327,6 +335,13 @@ void fs_player_t::create_options()
   add_option( opt_float( "sets.haste_buff_on_ability_use_haste", fs_sets.haste_buff_on_ability_use_haste ) );
   add_option( opt_timespan( "sets.haste_buff_on_ability_use_duration", fs_sets.haste_buff_on_ability_use_duration ) );
   add_option( opt_timespan( "sets.haste_buff_on_ability_use_cooldown", fs_sets.haste_buff_on_ability_use_cooldown ) );
+
+  add_option( opt_float( "gems.ruby_power", fs_gems.gem_powers[ GEM_RUBY ] ) );
+  add_option( opt_float( "gems.amethyst_power", fs_gems.gem_powers[ GEM_AMETHYST ] ) );
+  add_option( opt_float( "gems.diamond_power", fs_gems.gem_powers[ GEM_DIAMOND ] ) );
+  add_option( opt_float( "gems.topaz_power", fs_gems.gem_powers[ GEM_TOPAZ ] ) );
+  add_option( opt_float( "gems.emerald_power", fs_gems.gem_powers[ GEM_EMERALD ] ) );
+  add_option( opt_float( "gems.sapphire_power", fs_gems.gem_powers[ GEM_SAPPHIRE ] ) );
 }
 
 // fs_player_t::copy_from =======================================================
@@ -394,11 +409,6 @@ void fs_player_t::init_special_effects()
     effect->custom_buff = haste_buff;
 
     auto dbc = new dbc_proc_callback_t( this, *effect );
-
-    auto rppm = get_rppm( effect->name(), effect->rppm(), effect->rppm_modifier(), effect->rppm_scale() );
-    rppm->set_blp_state( static_cast<real_ppm_t::blp>( effect->rppm_blp_ ) );
-
-    rppm->set_scaling( RPPM_NONE );
 
     dbc->initialize();
     dbc->activate();

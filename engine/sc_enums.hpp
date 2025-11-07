@@ -12,6 +12,17 @@
 // Enumerations =============================================================
 // annex _e to enumerations
 
+enum gem_type_e : unsigned
+{
+  GEM_NONE = 0,
+  GEM_RUBY,
+  GEM_AMETHYST,
+  GEM_TOPAZ,
+  GEM_EMERALD,
+  GEM_SAPPHIRE,
+  GEM_DIAMOND,
+  GEM_MAX
+};
 
 // Type of internal execution of an action
 enum class execute_type : unsigned

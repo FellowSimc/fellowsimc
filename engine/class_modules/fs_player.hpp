@@ -102,6 +102,11 @@ public:
 
   } fs_sets;
 
+  struct fs_gems_t
+  {
+    std::array<double, GEM_MAX> gem_powers;
+  } fs_gems;
+
   target_specific_t<fs_player_td_t> target_data;
 
   virtual const fs_player_td_t* find_target_data( const player_t* target ) const override
@@ -211,14 +216,7 @@ public:
     return "disabled";
   }
 
-  fs_player_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE, player_e p = PLAYER_NONE )
-    : player_t( sim, p, name, r ),
-      target_data()
-  {
-    //resource_regeneration              = regen_type::DYNAMIC;
-    //regen_caches[ CACHE_HASTE ]        = true;
-    //regen_caches[ CACHE_ATTACK_HASTE ] = true;
-  }
+  fs_player_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE, player_e p = PLAYER_NONE );
 
   // Secondary Action Tracking
 private:

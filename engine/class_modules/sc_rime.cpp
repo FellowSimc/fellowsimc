@@ -683,7 +683,7 @@ public:
 
     if ( p()->talents.biting_cold )
     {
-      cm += 1.0 + p()->talents.biting_cold_crit_power;
+      cm *= 1.0 + p()->talents.biting_cold_crit_power;
     }
 
     return cm;

@@ -1,8 +1,11 @@
 # [SimulationCraft](https://www.simulationcraft.org/) [![CI](https://github.com/simulationcraft/simc/workflows/CI/badge.svg)](https://github.com/simulationcraft/simc/actions?query=workflow%3ACI)
 ## What is This
 Fork of Simulationcraft for the Game Fellowship.
+
 Heavy work in progress.
+
 WoW code has yet to be pruned.
+
 
 ## Overview
 
@@ -16,39 +19,8 @@ SimulationCraft allows raid/party creation of arbitrary size, generating detaile
 
 A simple graphical interface is included with the tool, allowing players to download and analyze characters from the Armory. It can also be run from the command-line in which case the player profiles are specified via parameter files. 
 
-## How Can I Use It?
-
-Go to the [downloads page](https://www.simulationcraft.org/download.html) and get the package for your particular platform.
-The Windows package offers both a formal install and a archive that can be extracted on to your desktop. There is no Linux release since it is so ridiculously easy to build it yourself on that platform. Releases occur quite frequently so be sure to check the release notes.
-
-Two executables are shipped: *simc* uses a command-line interface whereas *SimulationCraft* sports a simple graphical user interface. The graphical user interface is largely unmaintained and it's highly recommended that you use the command-line interface.
-
-A [starters guide](../../wiki/StartersGuide) can be found on our wiki.
-
-
-## How Can I Get Help?
-
-Detailed documentation material can be found on our [wiki pages](../../wiki/). Here you will find a list of features, a starters guide, as well as answers to frequently asked questions.
-
-If your question is not answered there, then see the [Community](#community) section below on how to reach other users via Discord. We periodically scan the WoW, MMO, and Wowhead forums as well, but we cannot promise swift responses in those arenas.
-
-If you have detailed questions that need to be answered in real time then I recommend you visit the Discord server detailed in the [Community](#community) section below. There are active SimulationCraft developers on the server 24hrs a day.
-
-If you believe that the reported analysis is incorrect please open an [issue](../../issues). If you are unable to download your character, please open an [issue](../../issues). If you feel that the tool is missing features/directives necessary for analysis, please open an [issue](../../issues). Opening an [issue](../../issues) (as opposed to an email, forum post, chat msg, etc) is by far the most effective method of getting a swift resolution to your problem.
-
-Also make sure to check our [common issues wiki](../../wiki/CommonIssues).
-
-
 ## How Can I Contribute?
 See [Contributing](CONTRIBUTING.md).
-
-## Community
-
-Discord: [SimCMinMax](https://discord.gg/tFR2uvK) (#simulationcraft)
-
-## Important Notice
-
-SimulationCraft is different from SimCraft. Please use the full name SimulationCraft (or SimC) to refer to this project. Visit SimCraft if you are looking for full-motion simulators for SimRacing and FlightSim.
 
 ## External Libraries
 

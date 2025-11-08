@@ -137,6 +137,18 @@ double fs_player_t::composite_player_multiplier( school_e school ) const
 {
   double m = player_t::composite_player_multiplier( school );
 
+  if ( in_boss_encounter )
+  {
+    if ( fs_gems.gem_powers[ GEM_RUBY ] >= 2640 )
+    {
+      m *= 1.12;
+    }
+    else if ( fs_gems.gem_powers[ GEM_RUBY ] >= 960 )
+    {
+      m *= 1.04;
+    }
+  }
+
   return m;
 }
 
@@ -437,6 +449,15 @@ void fs_player_t::init_special_effects()
 void fs_player_t::init_finished()
 {
   player_t::init_finished();
+
+  if ( fs_gems.gem_powers[ GEM_RUBY ] >= 960.0 )
+  {
+    sim->target_non_sleeping_list.register_callback(
+        [ this ]( player_t* p ) { 
+            if (p->is_boss())
+                cache.invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
+        } );
+  }
 }
 
 void fs_player_t::init_background_actions()

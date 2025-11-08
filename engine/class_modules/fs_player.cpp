@@ -176,6 +176,18 @@ double fs_player_t::composite_player_target_crit_chance( player_t* target ) cons
 {
   double c = player_t::composite_player_target_crit_chance( target );
 
+  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 120 && target->health_percentage() >= 50.0 )
+  {
+    if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 1200 )
+    {
+      c += 0.3;
+    }
+    else
+    {
+      c += 0.1;
+    }
+  }
+
   return c;
 }
 

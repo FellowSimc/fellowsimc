@@ -161,6 +161,7 @@ public:
   void regen( timespan_t periodicity ) override;
 
   double composite_attribute_multiplier( attribute_e attr ) const override;
+  double composite_player_critical_damage_multiplier( const action_state_t* /* s */ ) const override;
   double composite_melee_auto_attack_speed() const override;
   double composite_melee_haste() const override;
   double composite_melee_crit_chance() const override;

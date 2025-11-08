@@ -72,6 +72,22 @@ double fs_player_t::composite_melee_crit_chance() const
   return crit;
 }
 
+double fs_player_t::composite_player_critical_damage_multiplier( const action_state_t* s ) const
+{
+  double cdm = player_t::composite_player_critical_damage_multiplier( s );
+
+  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 2640 )
+  {
+    cdm *= 1.12;
+  }
+  else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 960 )
+  {
+    cdm *= 1.04;
+  }
+
+  return cdm;
+}
+
 // fs_player_t::composite_spell_crit_chance =========================================
 
 double fs_player_t::composite_spell_crit_chance() const

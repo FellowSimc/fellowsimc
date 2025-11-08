@@ -76,7 +76,8 @@ public:
   struct fs_buffs_t
   {
     fs_player_buff_t* spirit_of_heroism;
-
+    fs_player_buff_t* ancestral_surge;
+    fs_player_buff_t* first_strike;
   } fs_buffs;
 
   struct fs_cooldowns_t

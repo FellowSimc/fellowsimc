@@ -137,6 +137,24 @@ copy="Amethyst 2280","Rime"
 gems.amethyst_power=2280
 copy="Amethyst 2640","Rime"
 gems.amethyst_power=2640
+
+copy="Sapphire 120","Rime"
+gems.sapphire_power=120
+copy="Sapphire 240","Rime"
+gems.sapphire_power=240
+copy="Sapphire 720","Rime"
+gems.sapphire_power=720
+copy="Sapphire 960","Rime"
+gems.sapphire_power=960
+copy="Sapphire 1200","Rime"
+gems.sapphire_power=1200
+copy="Sapphire 1560","Rime"
+gems.sapphire_power=1560
+copy="Sapphire 2280","Rime"
+gems.sapphire_power=2280
+copy="Sapphire 2640","Rime"
+gems.sapphire_power=2640
+
 # copy="Ruby 960","Rime"
 # gems.ruby_power=960
 # copy="Ruby 2640","Rime"

@@ -358,6 +358,25 @@ void fs_player_t::create_buffs()
   auto heroism_buff          = make_buff<fs_player_buff_t>( this, "spirit_of_heroism" );
   fs_buffs.spirit_of_heroism = heroism_buff;
   fs_buffs.spirit_of_heroism->set_pct_buff_type( STAT_PCT_BUFF_HASTE )->set_default_value( 0.3 )->set_duration( 20_s );
+
+  auto ancestral_surge     = make_buff<fs_player_buff_t>( this, "ancestral_surge" );
+  fs_buffs.ancestral_surge = ancestral_surge;
+  fs_buffs.ancestral_surge->set_default_value( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1200.0 ? 0.24 : 0.08 );
+
+  switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
+  {
+    case STAT_INTELLECT:
+      fs_buffs.ancestral_surge->set_pct_buff_type( STAT_PCT_BUFF_INTELLECT );
+      break;
+    case STAT_AGILITY:
+      fs_buffs.ancestral_surge->set_pct_buff_type( STAT_PCT_BUFF_AGILITY );
+      break;
+    case STAT_STRENGTH:
+      fs_buffs.ancestral_surge->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+      break;
+    default:
+      break;
+  }
 }
 
 // fs_player_t::invalidate_cache =========================================
@@ -519,6 +538,29 @@ void fs_player_t::init_special_effects()
   else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
   {
     base.versatility += 0.03;
+  }
+
+  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 120 )
+  {
+    fs_buffs.spirit_of_heroism->add_stack_change_callback( [ this ]( buff_t*, int, int new_stack ) {
+      if ( new_stack )
+      {
+        fs_buffs.ancestral_surge->trigger();
+      }
+      else
+      {
+        fs_buffs.ancestral_surge->expire();
+      }
+    } );
+  }
+
+  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 2640 )
+  {
+    fs_buffs.spirit_of_heroism->base_buff_duration += 6_s;
+  }
+  else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 960 )
+  {
+    fs_buffs.spirit_of_heroism->base_buff_duration += 18_s;
   }
 
   if ( fs_sets.haste_buff_on_ability_use )

@@ -556,11 +556,11 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 2640 )
   {
-    fs_buffs.spirit_of_heroism->base_buff_duration += 6_s;
+    fs_buffs.spirit_of_heroism->base_buff_duration += 18_s;
   }
   else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 960 )
   {
-    fs_buffs.spirit_of_heroism->base_buff_duration += 18_s;
+    fs_buffs.spirit_of_heroism->base_buff_duration += 6_s;
   }
 
   if ( fs_sets.haste_buff_on_ability_use )

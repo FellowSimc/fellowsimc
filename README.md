@@ -1,4 +1,9 @@
 # [SimulationCraft](https://www.simulationcraft.org/) [![CI](https://github.com/simulationcraft/simc/workflows/CI/badge.svg)](https://github.com/simulationcraft/simc/actions?query=workflow%3ACI)
+## What is This
+Fork of Simulationcraft for the Game Fellowship.
+Heavy work in progress.
+WoW code has yet to be pruned.
+
 ## Overview
 
 SimulationCraft is a tool to explore combat mechanics in the popular MMO RPG World of Warcraft (tm).

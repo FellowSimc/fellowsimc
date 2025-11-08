@@ -1357,15 +1357,14 @@ struct freezing_torrent_t : public rime_spell_t
   {
     base_t::init_finished();
 
-    snapshot_flags &= ~STATE_HASTE;
+    update_flags &= ~STATE_HASTE;
   }
-
 
   double tick_time_pct_multiplier( const action_state_t* s ) const override
   {
     auto base = base_t::tick_time_pct_multiplier( s );
 
-    if ( cast_state( s )->soulfrost_torrent || p()->buffs.soulfrost_torrent->check() )
+    if ( cast_state( s )->soulfrost_torrent )
       base /= p()->talents.soulfrost_torrent_tickrate_increase;
 
     return base;

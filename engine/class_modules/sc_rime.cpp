@@ -1365,7 +1365,7 @@ struct freezing_torrent_t : public rime_spell_t
   {
     auto base = base_t::tick_time_pct_multiplier( s );
 
-    if ( cast_state( s )->soulfrost_torrent )
+    if ( cast_state( s )->soulfrost_torrent || p()->buffs.soulfrost_torrent->check() )
       base /= p()->talents.soulfrost_torrent_tickrate_increase;
 
     return base;
@@ -1844,7 +1844,7 @@ void rime_t::init_rng()
   fs_player_t::init_rng();
 
   if ( talents.soulfrost_torrent )
-    rppm.soulfrost_torrent = get_rppm( "soulfrost_torrent", talents.soulfrost_torrent_rppm );
+    rppm.soulfrost_torrent = get_rppm( "soulfrost_torrent", talents.soulfrost_torrent_rppm, 1.0, RPPM_HASTE );
 }
 
 // rime_t::init_scaling ====================================================

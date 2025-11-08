@@ -1113,7 +1113,7 @@ public:
   }
   simple_proc_t* get_simple_proc_rng( std::string_view name, double chance = 0.0 );
   real_ppm_t* get_rppm( std::string_view name, double frequency = 0.0, double modifier = 1.0,
-                        unsigned scales_with = RPPM_NONE, real_ppm_t::blp blp_state = real_ppm_t::blp::BLP_ENABLED );
+                        unsigned scales_with = RPPM_HASTE, real_ppm_t::blp blp_state = real_ppm_t::blp::BLP_DISABLED );
   real_ppm_t* get_rppm( std::string_view name, const spell_data_t* spell_data = nullptr, const item_t* item = nullptr );
   shuffled_rng_t* get_shuffled_rng( std::string_view name, shuffled_rng_t::initializer data = {} );
   shuffled_rng_t* get_shuffled_rng( std::string_view name, int success_entries = 0, int total_entries = 0 );

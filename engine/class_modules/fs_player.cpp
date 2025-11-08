@@ -452,11 +452,10 @@ void fs_player_t::init_finished()
 
   if ( fs_gems.gem_powers[ GEM_RUBY ] >= 960.0 )
   {
-    sim->target_non_sleeping_list.register_callback(
-        [ this ]( player_t* p ) { 
-            if (p->is_boss())
-                cache.invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
-        } );
+    sim->target_non_sleeping_list.register_callback( [ this ]( player_t* p ) {
+      if ( p->is_boss() )
+        cache.invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
+    } );
   }
 }
 

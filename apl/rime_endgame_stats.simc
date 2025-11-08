@@ -8,7 +8,7 @@ vary_combat_length=0.05
 single_actor_batch=1
 desired_targets=1
 
-apl/dungeon.simc
+apl/chuey_dungeon.simc
 
 rime="Rime"
 level=80

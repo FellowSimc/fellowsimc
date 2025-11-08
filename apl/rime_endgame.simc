@@ -6,7 +6,7 @@ iterations=10000
 chart_show_relative_difference=1
 vary_combat_length=0.05
 single_actor_batch=1
-desired_targets=2
+desired_targets=1
 
 # apl/chuey_dungeon.simc
 
@@ -107,9 +107,6 @@ gear_intellect=1500
 # talent.biting_cold=1
 # talent.wisdom_of_the_north=1
 # legendary.skandis_decree=1
-
-
-
 
 gear_haste_rating=2717
 gear_crit_rating=453

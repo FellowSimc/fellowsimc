@@ -3,13 +3,24 @@ max_time=1800
 enemy="Stormwatch"
 ignore_invulnerable_targets=1
 
-raid_events+=/pull,pull=1,delay=004,enemies="PRIO_large_1":1250000|"PRIO_med_1":1250000|"PRIO_med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"med_6":1250000|"med_7":1250000|"med_8":1250000|"med_9":1250000|"med_10":1250000|"med_11":1250000|"med_12":1250000|"med_13":1250000
-raid_events+=/pull,pull=2,delay=015,enemies="PRIO_med_1":1250000|"PRIO_med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000|"small_6":650000|"small_7":650000|"small_8":650000
-raid_events+=/pull,pull=3,delay=003,enemies="PRIO_large_1":1250000|"PRIO_med_1":1250000|"PRIO_med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"med_6":1250000|"med_7":1250000|"med_8":1250000
-raid_events+=/pull,pull=4,delay=008,enemies="BOSS_Warlord_Brogg":1800000|"med_1":1250000|"med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"med_6":1250000|"med_7":1250000
-raid_events+=/pull,pull=5,delay=001,enemies="PRIO_med_1":1250000|"PRIO_med_2":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000
-raid_events+=/pull,pull=6,delay=001,enemies="PRIO_med_1":1250000|"PRIO_med_2":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000|"small_6":650000
-raid_events+=/pull,pull=7,delay=007,enemies="PRIO_large_1":1250000|"PRIO_med_1":1250000|"PRIO_med_2":1250000|"med_3":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000|"small_6":650000|"small_7":650000|"small_8":650000|"small_9":650000|"small_10":650000
-raid_events+=/pull,pull=8,delay=001,enemies="PRIO_med_1":1250000|"PRIO_med_2":1250000|"small_1":650000|"small_2":650000
-raid_events+=/pull,pull=9,delay=001,enemies="BOSS_Warlord_Brogg":7200000
-raid_events+=/adds,pull=9,count=2,cooldown=75,cooldown_stddev=5,duration=30,health=150000
+# raid_events+=/pull,pull=1,delay=004,enemies="PRIO_large_1":1250000|"PRIO_med_1":1250000|"PRIO_med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"med_6":1250000|"med_7":1250000|"med_8":1250000|"med_9":1250000|"med_10":1250000|"med_11":1250000|"med_12":1250000|"med_13":1250000
+# raid_events+=/pull,pull=2,delay=015,enemies="PRIO_med_1":1250000|"PRIO_med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000|"small_6":650000|"small_7":650000|"small_8":650000
+# raid_events+=/pull,pull=3,delay=003,enemies="PRIO_large_1":1250000|"PRIO_med_1":1250000|"PRIO_med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"med_6":1250000|"med_7":1250000|"med_8":1250000
+# raid_events+=/pull,pull=4,delay=008,enemies="BOSS_Warlord_Brogg":1800000|"med_1":1250000|"med_2":1250000|"med_3":1250000|"med_4":1250000|"med_5":1250000|"med_6":1250000|"med_7":1250000
+# raid_events+=/pull,pull=5,delay=001,enemies="PRIO_med_1":1250000|"PRIO_med_2":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000
+# raid_events+=/pull,pull=6,delay=001,enemies="PRIO_med_1":1250000|"PRIO_med_2":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000|"small_6":650000
+# raid_events+=/pull,pull=7,delay=007,enemies="PRIO_large_1":1250000|"PRIO_med_1":1250000|"PRIO_med_2":1250000|"med_3":1250000|"small_1":650000|"small_2":650000|"small_3":650000|"small_4":650000|"small_5":650000|"small_6":650000|"small_7":650000|"small_8":650000|"small_9":650000|"small_10":650000
+# raid_events+=/pull,pull=8,delay=001,enemies="PRIO_med_1":1250000|"PRIO_med_2":1250000|"small_1":650000|"small_2":650000
+# raid_events+=/pull,pull=9,delay=001,enemies="BOSS_Warlord_Brogg":7200000
+# raid_events+=/adds,pull=9,count=2,cooldown=75,cooldown_stddev=5,duration=30,health=150000
+
+raid_events+=/pull,pull=1,delay=004,enemies="PRIO_large_1":1378800|"PRIO_med_1":884600|"PRIO_med_2":884600|"med_3":884600|"med_4":884600|"med_5":884600|"med_6":884600|"med_7":884600|"med_8":884600|"med_9":884600|"med_10":884600|"med_11":884600|"med_12":884600|"med_13":884600
+raid_events+=/pull,pull=2,delay=015,enemies="PRIO_med_1":884600|"PRIO_med_2":884600|"med_3":884600|"med_4":884600|"med_5":884600|"small_1":327720|"small_2":327720|"small_3":327720|"small_4":327720|"small_5":327720|"small_6":327720|"small_7":327720|"small_8":327720
+raid_events+=/pull,pull=3,delay=003,enemies="PRIO_large_1":1378800|"PRIO_med_1":884600|"PRIO_med_2":884600|"med_3":884600|"med_4":884600|"med_5":884600|"med_6":884600|"med_7":884600|"med_8":884600
+raid_events+=/pull,pull=4,delay=008,enemies="BOSS_Warlord_Brogg":2332000|"med_1":884600|"med_2":884600|"med_3":884600|"med_4":884600|"med_5":884600|"med_6":884600|"med_7":884600
+raid_events+=/pull,pull=5,delay=001,enemies="PRIO_med_1":884600|"PRIO_med_2":884600|"small_1":327720|"small_2":327720|"small_3":327720|"small_4":327720|"small_5":327720
+raid_events+=/pull,pull=6,delay=001,enemies="PRIO_med_1":884600|"PRIO_med_2":884600|"small_1":327720|"small_2":327720|"small_3":327720|"small_4":327720|"small_5":327720|"small_6":327720
+raid_events+=/pull,pull=7,delay=007,enemies="PRIO_large_1":1378800|"PRIO_med_1":884600|"PRIO_med_2":884600|"med_3":884600|"small_1":327720|"small_2":327720|"small_3":327720|"small_4":327720|"small_5":327720|"small_6":327720|"small_7":327720|"small_8":327720|"small_9":327720|"small_10":327720
+raid_events+=/pull,pull=8,delay=001,enemies="PRIO_med_1":884600|"PRIO_med_2":884600|"small_1":327720|"small_2":327720
+raid_events+=/pull,pull=9,delay=001,enemies="BOSS_Warlord_Brogg":9328000
+raid_events+=/adds,pull=9,count=2,cooldown=75,cooldown_stddev=5,duration=30,health=495000

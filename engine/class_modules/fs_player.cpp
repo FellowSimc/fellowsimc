@@ -51,6 +51,15 @@ double fs_player_t::composite_melee_haste() const
 {
   double h = player_t::composite_melee_haste();
 
+  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2280 )
+  {
+    h += 0.09;
+  }
+  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
+  {
+    h += 0.03;
+  }
+
   return h;
 }
 
@@ -59,6 +68,15 @@ double fs_player_t::composite_melee_haste() const
 double fs_player_t::composite_spell_haste() const
 {
   double h = player_t::composite_spell_haste();
+
+  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2280 )
+  {
+    h += 0.09;
+  }
+  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
+  {
+    h += 0.03;
+  }
 
   return h;
 }

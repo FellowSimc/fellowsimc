@@ -492,6 +492,35 @@ void fs_player_t::init_special_effects()
     passive.add_stat( STAT_STAMINA, 180 );
   }
 
+  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 2280 )
+  {
+    base.spell_crit_chance += 0.09;
+    base.attack_crit_chance += 0.09;
+  }
+  else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 720 )
+  {
+    base.spell_crit_chance += 0.03;
+    base.attack_crit_chance += 0.03;
+  }
+
+  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 2280 )
+  {
+    base.mastery += 0.09;
+  }
+  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
+  {
+    base.mastery += 0.03;
+  }
+
+  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 2280 )
+  {
+    base.versatility += 0.09;
+  }
+  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
+  {
+    base.versatility += 0.03;
+  }
+
   if ( fs_sets.haste_buff_on_ability_use )
   {
     auto effect                   = new special_effect_t( this );

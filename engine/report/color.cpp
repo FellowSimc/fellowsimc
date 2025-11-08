@@ -72,6 +72,7 @@ rgb class_color( player_e type )
     case ENEMY:
       return color::GREY;
     case ENEMY_ADD:
+    case ENEMY_ADD_PRIO:
       return color::GREY;
     case ENEMY_ADD_BOSS:
       return color::GREY;

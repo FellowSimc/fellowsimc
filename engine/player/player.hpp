@@ -971,7 +971,7 @@ public:
 
   // Static methods
   static player_t* create( sim_t* sim, const player_description_t& );
-  static bool _is_enemy( player_e t ) { return t == ENEMY || t == ENEMY_ADD || t == ENEMY_ADD_BOSS || t == TANK_DUMMY; }
+  static bool _is_enemy( player_e t ) { return t == ENEMY || t == ENEMY_ADD_PRIO || t == ENEMY_ADD || t == ENEMY_ADD_BOSS || t == TANK_DUMMY; }
   static bool _is_sleeping( const player_t* t ) { return t -> current.sleeping; }
 
   // Overrides
@@ -995,10 +995,11 @@ public:
   bool is_moving() const;
   double composite_block_dr( double extra_block ) const;
   bool is_player() const { return type > PLAYER_NONE && type < PLAYER_PET; }
-  bool is_pet() const { return type == PLAYER_PET || type == PLAYER_GUARDIAN || type == ENEMY_ADD || type == ENEMY_ADD_BOSS; }
+  bool is_pet() const { return type == PLAYER_PET || type == PLAYER_GUARDIAN || type == ENEMY_ADD || type == ENEMY_ADD_PRIO || type == ENEMY_ADD_BOSS; }
   bool is_enemy() const { return _is_enemy( type ); }
   bool is_boss() const { return type == ENEMY || type == ENEMY_ADD_BOSS || type == TANK_DUMMY; }
-  bool is_add() const { return type == ENEMY_ADD || type == ENEMY_ADD_BOSS; }
+  bool is_prio_target() const { return type == ENEMY_ADD_PRIO || is_boss(); }
+  bool is_add() const { return type == ENEMY_ADD || type == ENEMY_ADD_PRIO || type == ENEMY_ADD_BOSS; }
   bool is_sleeping() const { return _is_sleeping( this ); }
   bool is_my_pet( const player_t* t ) const;
   /// Is the actor active currently

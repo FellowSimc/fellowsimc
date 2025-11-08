@@ -11803,6 +11803,9 @@ std::unique_ptr<expr_t> player_t::create_expression( util::string_view expressio
   if ( expression_str == "is_boss" )
     return expr_t::create_constant( "is_boss", is_boss() );
 
+  if ( expression_str == "is_prio" )
+    return expr_t::create_constant( "is_prio", is_prio_target() );
+
   if ( expression_str == "is_enemy" )
     return expr_t::create_constant( "is_enemy", is_enemy() );
 

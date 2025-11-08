@@ -154,7 +154,7 @@ struct adds_event_t final : public raid_event_t
     {
       enemy_type = util::parse_player_type( enemy_type_str );
 
-      if ( !( enemy_type == ENEMY_ADD || enemy_type == ENEMY_ADD_BOSS ) )
+      if ( !( enemy_type == ENEMY_ADD || enemy_type == ENEMY_ADD_PRIO || enemy_type == ENEMY_ADD_BOSS ) )
       {
         throw std::invalid_argument( fmt::format( "could not parse enemy type from '{}'.", enemy_type_str ) );
       }
@@ -493,9 +493,10 @@ struct pull_event_t final : raid_event_t
   struct spawn_parameter
   {
     std::string name;
-    bool boss = false;
+    bool boss     = false;
+    bool prio     = false;
     double health = 0;
-    race_e race = RACE_HUMANOID;
+    race_e race   = RACE_HUMANOID;
   };
   std::vector<spawn_parameter> spawn_parameters;
 
@@ -578,6 +579,10 @@ struct pull_event_t final : raid_event_t
             {
               spawn.boss = true;
               has_boss   = true;
+            }
+            else if ( util::starts_with( splits[ 0 ], "PRIO_" ) )
+            {
+              spawn.prio = true;
             }
 
             spawn.name   = splits[ 0 ];
@@ -662,7 +667,7 @@ struct pull_event_t final : raid_event_t
       adds[ i ]->resources.infinite_resource[ RESOURCE_HEALTH ] = false;
       adds[ i ]->init_resources( true );
       adds[ i ]->pull_event = this;
-      adds[ i ]->type = spawn_parameters[ i ].boss ? ENEMY_ADD_BOSS : ENEMY_ADD;
+      adds[ i ]->type       = spawn_parameters[ i ].boss ? ENEMY_ADD_BOSS : spawn_parameters[ i ].prio ? ENEMY_ADD_PRIO : ENEMY_ADD;
       adds[ i ]->race = spawn_parameters[ i ].race;
       std::string mob_name = name + "_" + spawn_parameters[ i ].name;
       sim->print_log( "Renaming {} to {}", adds[ i ]->name_str, mob_name );

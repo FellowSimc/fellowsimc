@@ -641,6 +641,7 @@ const char* util::player_type_string( player_e type )
     case PLAYER_GUARDIAN:         return "guardian";
     case ENEMY:                   return "enemy";
     case ENEMY_ADD:               return "add";
+    case ENEMY_ADD_PRIO:          return "add_prio";
     case ENEMY_ADD_BOSS:          return "add_boss";
     case TANK_DUMMY:              return "tank_dummy";
     case PLAYER_SPECIAL_SCALE:    return "PLAYER_SPECIAL_SCALE";
@@ -684,6 +685,7 @@ const char* util::player_type_string_long( player_e type )
     case PLAYER_GUARDIAN: return "Guardian";
     case ENEMY:           return "Enemy";
     case ENEMY_ADD:       return "Add";
+    case ENEMY_ADD_PRIO:  return "Add Prio";
     case ENEMY_ADD_BOSS:  return "Add Boss";
     case TANK_DUMMY:      return "Tank Dummy";
     default:              return "Unknown";

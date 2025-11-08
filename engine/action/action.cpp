@@ -2123,13 +2123,12 @@ void action_t::assess_damage( result_amount_type rt, action_state_t* state )
   {
     if ( sim->fight_style == FIGHT_STYLE_DUNGEON_SLICE || sim->fight_style == FIGHT_STYLE_DUNGEON_ROUTE )
     {
-      if ( state->target->is_boss() )
+      if ( state->target->is_prio_target() )
       {
         player->priority_iteration_dmg += state->result_amount;
       }
     }
-    else if ( state->target == sim->target ||
-              ( sim->merge_enemy_priority_dmg && state->target->is_boss() ) )
+    else if ( state->target == sim->target || ( sim->merge_enemy_priority_dmg && state->target->is_prio_target() ) )
     {
       player->priority_iteration_dmg += state->result_amount;
     }

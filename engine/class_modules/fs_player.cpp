@@ -439,57 +439,57 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 1560 )
   {
-    passive.add_stat( STAT_CRIT_RATING, 100 );
-    passive.add_stat( STAT_STAMINA, 100 );
+    passive.add_stat( STAT_CRIT_RATING, 300 );
+    passive.add_stat( STAT_STAMINA, 300 );
   }
   else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 240 )
   {
-    passive.add_stat( STAT_CRIT_RATING, 300 );
-    passive.add_stat( STAT_STAMINA, 300 );
+    passive.add_stat( STAT_CRIT_RATING, 100 );
+    passive.add_stat( STAT_STAMINA, 100 );
   }
 
   if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 1560 )
   {
-    passive.add_stat( STAT_HASTE_RATING, 100 );
-    passive.add_stat( STAT_STAMINA, 100 );
+    passive.add_stat( STAT_HASTE_RATING, 300 );
+    passive.add_stat( STAT_STAMINA, 300 );
   }
   else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 240 )
   {
-    passive.add_stat( STAT_HASTE_RATING, 300 );
-    passive.add_stat( STAT_STAMINA, 300 );
+    passive.add_stat( STAT_HASTE_RATING, 100 );
+    passive.add_stat( STAT_STAMINA, 100 );
   }
 
   if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 1560 )
   {
-    passive.add_stat( STAT_VERSATILITY_RATING, 100 );
-    passive.add_stat( STAT_STAMINA, 100 );
+    passive.add_stat( STAT_VERSATILITY_RATING, 300 );
+    passive.add_stat( STAT_STAMINA, 300 );
   }
   else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 240 )
   {
-    passive.add_stat( STAT_VERSATILITY_RATING, 300 );
-    passive.add_stat( STAT_STAMINA, 300 );
+    passive.add_stat( STAT_VERSATILITY_RATING, 100 );
+    passive.add_stat( STAT_STAMINA, 100 );
   }
 
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1560 )
   {
-    passive.add_stat( STAT_MASTERY_RATING, 100 );
-    passive.add_stat( STAT_STAMINA, 100 );
+    passive.add_stat( STAT_MASTERY_RATING, 300 );
+    passive.add_stat( STAT_STAMINA, 300 );
   }
   else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 240 )
   {
-    passive.add_stat( STAT_MASTERY_RATING, 300 );
-    passive.add_stat( STAT_STAMINA, 300 );
+    passive.add_stat( STAT_MASTERY_RATING, 100 );
+    passive.add_stat( STAT_STAMINA, 100 );
   }
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1560 )
   {
-    passive.add_stat( STAT_STR_AGI_INT, 15 );
-    passive.add_stat( STAT_STAMINA, 60 );
+    passive.add_stat( STAT_STR_AGI_INT, 45 );
+    passive.add_stat( STAT_STAMINA, 180 );
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 240 )
   {
-    passive.add_stat( STAT_STR_AGI_INT, 45 );
-    passive.add_stat( STAT_STAMINA, 180 );
+    passive.add_stat( STAT_STR_AGI_INT, 15 );
+    passive.add_stat( STAT_STAMINA, 60 );
   }
 
   if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 2280 )

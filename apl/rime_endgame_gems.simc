@@ -121,14 +121,26 @@ talent.avalanche=1
 talent.cascading_blitz=1
 talent.frostweavers_wrath=1
 
+copy="Amethyst 120","Rime"
+gems.amethyst_power=120
+copy="Amethyst 240","Rime"
+gems.amethyst_power=240
+copy="Amethyst 720","Rime"
+gems.amethyst_power=720
 copy="Amethyst 960","Rime"
 gems.amethyst_power=960
+copy="Amethyst 1200","Rime"
+gems.amethyst_power=1200
+copy="Amethyst 1560","Rime"
+gems.amethyst_power=1560
+copy="Amethyst 2280","Rime"
+gems.amethyst_power=2280
 copy="Amethyst 2640","Rime"
 gems.amethyst_power=2640
-copy="Ruby 960","Rime"
-gems.ruby_power=960
-copy="Ruby 2640","Rime"
-gems.ruby_power=2640
+# copy="Ruby 960","Rime"
+# gems.ruby_power=960
+# copy="Ruby 2640","Rime"
+# gems.ruby_power=2640
 
 
 # copy="Beam Build - Frostwyrms","Rime"

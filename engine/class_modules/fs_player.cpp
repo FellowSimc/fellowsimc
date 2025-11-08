@@ -60,6 +60,15 @@ double fs_player_t::composite_melee_haste() const
     h += 0.03;
   }
 
+  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
+  {
+    h += 0.015;
+  }
+  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
+  {
+    h += 0.005;
+  }
+
   return h;
 }
 
@@ -76,6 +85,15 @@ double fs_player_t::composite_spell_haste() const
   else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
   {
     h += 0.03;
+  }
+
+  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
+  {
+    h += 0.015;
+  }
+  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
+  {
+    h += 0.005;
   }
 
   return h;
@@ -556,6 +574,21 @@ void fs_player_t::init_special_effects()
   else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
   {
     base.versatility += 0.03;
+  }
+
+  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
+  {
+    base.versatility += 0.015;
+    base.mastery += 0.015;
+    base.spell_crit_chance += 0.015;
+    base.attack_crit_chance += 0.015;
+  }
+  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
+  {
+    base.versatility += 0.005;
+    base.mastery += 0.005;
+    base.spell_crit_chance += 0.005;
+    base.attack_crit_chance += 0.005;
   }
 
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 120 )

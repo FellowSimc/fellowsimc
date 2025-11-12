@@ -30,6 +30,7 @@ public:
 
   struct
   {
+    buff_t* triggered_first_strike;
   } debuffs;
 
   fs_player_td_t( player_t* target, fs_player_t* source );
@@ -78,6 +79,9 @@ public:
     fs_player_buff_t* spirit_of_heroism;
     fs_player_buff_t* ancestral_surge;
     fs_player_buff_t* first_strike;
+    fs_player_buff_t* virtuoso;
+    fs_player_buff_t* adrenaline_rush;
+    fs_player_buff_t* might_of_the_minotaur;
   } fs_buffs;
 
   struct fs_cooldowns_t
@@ -149,6 +153,7 @@ public:
   void copy_from( player_t* source ) override;
   std::string create_profile( save_e stype ) override;
   void init_action_list() override;
+  void init_assessors() override;
 
   void reset() override;
   void activate() override;

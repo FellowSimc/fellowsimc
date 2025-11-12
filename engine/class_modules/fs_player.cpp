@@ -11,8 +11,10 @@ namespace fellowship
 // FS Targetdata Definitions
 // ==========================================================================
 
-fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source ) : actor_target_data_t( target, source ), dots(), debuffs()
+fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
+  : actor_target_data_t( target, source ), dots(), debuffs()
 {
+  debuffs.triggered_first_strike = make_buff( *this, "first_strike_triggered" );
 }
 
 // ==========================================================================
@@ -49,13 +51,13 @@ double fs_player_t::composite_melee_auto_attack_speed() const
 
 double fs_player_t::composite_melee_haste() const
 {
-  double h = player_t::composite_melee_haste();
+  double h = 1.0 / player_t::composite_melee_haste();
 
   if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2280 )
   {
     h += 0.09;
   }
-  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
+  else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 720 )
   {
     h += 0.03;
   }
@@ -69,20 +71,20 @@ double fs_player_t::composite_melee_haste() const
     h += 0.005;
   }
 
-  return h;
+  return 1.0 / h;
 }
 
 // fs_player_t::composite_spell_haste ==========================================
 
 double fs_player_t::composite_spell_haste() const
 {
-  double h = player_t::composite_spell_haste();
+  double h = 1.0 / player_t::composite_spell_haste();
 
   if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2280 )
   {
     h += 0.09;
   }
-  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
+  else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 720 )
   {
     h += 0.03;
   }
@@ -96,7 +98,7 @@ double fs_player_t::composite_spell_haste() const
     h += 0.005;
   }
 
-  return h;
+  return 1.0 / h;
 }
 
 // fs_player_t::composite_melee_crit_chance =========================================
@@ -413,6 +415,42 @@ void fs_player_t::create_buffs()
     default:
       break;
   }
+
+  auto adrenaline_rush     = make_buff<fs_player_buff_t>( this, "adrenaline_rush" );
+  fs_buffs.adrenaline_rush = adrenaline_rush;
+  fs_buffs.adrenaline_rush->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= 1200.0 ? 0.09 : 0.03 )
+      ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+      ->set_duration( 10_s );
+
+  auto virtuoso     = make_buff<fs_player_buff_t>( this, "virtuoso" );
+  fs_buffs.virtuoso = virtuoso;
+  fs_buffs.virtuoso->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2640.0 ? 0.09 : 0.03 )
+      ->set_pct_buff_type( STAT_PCT_BUFF_HASTE );
+
+  auto first_strike     = make_buff<fs_player_buff_t>( this, "first_strike" );
+  fs_buffs.first_strike = first_strike;
+  fs_buffs.first_strike->set_default_value( fs_gems.gem_powers[ GEM_EMERALD ] >= 1200.0 ? 0.015 : 0.05 )
+      ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+      ->set_duration( 15_s );
+
+  auto might_of_the_minotaur     = make_buff<fs_player_buff_t>( this, "might_of_the_minotaur" );
+  fs_buffs.might_of_the_minotaur = might_of_the_minotaur;
+  fs_buffs.might_of_the_minotaur->set_default_value( fs_gems.gem_powers[ GEM_RUBY ] >= 1200.0 ? 0.09 : 0.03 );
+
+  switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
+  {
+    case STAT_INTELLECT:
+      fs_buffs.might_of_the_minotaur->set_pct_buff_type( STAT_PCT_BUFF_INTELLECT );
+      break;
+    case STAT_AGILITY:
+      fs_buffs.might_of_the_minotaur->set_pct_buff_type( STAT_PCT_BUFF_AGILITY );
+      break;
+    case STAT_STRENGTH:
+      fs_buffs.might_of_the_minotaur->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+      break;
+    default:
+      break;
+  }
 }
 
 // fs_player_t::invalidate_cache =========================================
@@ -562,7 +600,7 @@ void fs_player_t::init_special_effects()
   {
     base.mastery += 0.09;
   }
-  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
+  else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 720 )
   {
     base.mastery += 0.03;
   }
@@ -591,6 +629,25 @@ void fs_player_t::init_special_effects()
     base.attack_crit_chance += 0.005;
   }
 
+  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 2280 )
+  {
+    base.attribute_multiplier[ STAT_STRENGTH ] += 0.06;
+    base.attribute_multiplier[ STAT_INTELLECT ] += 0.06;
+    base.attribute_multiplier[ STAT_AGILITY ] += 0.06;
+  }
+  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 720 )
+  {
+    base.attribute_multiplier[ STAT_STRENGTH ] += 0.02;
+    base.attribute_multiplier[ STAT_INTELLECT ] += 0.02;
+    base.attribute_multiplier[ STAT_AGILITY ] += 0.02;
+  }
+
+  // TODO: Implement as a health based check and buff that turns on & off.
+  if ( fs_gems.gem_powers[ GEM_RUBY ] >= 120 )
+  {
+    register_on_arise_callback( this, [ this ]() { fs_buffs.might_of_the_minotaur->trigger(); } );
+  }
+
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 120 )
   {
     fs_buffs.spirit_of_heroism->add_stack_change_callback( [ this ]( buff_t*, int, int new_stack ) {
@@ -601,6 +658,21 @@ void fs_player_t::init_special_effects()
       else
       {
         fs_buffs.ancestral_surge->expire();
+      }
+    } );
+  }
+
+  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 960 )
+  {
+    fs_buffs.spirit_of_heroism->add_stack_change_callback( [ this ]( buff_t*, int, int new_stack ) {
+      if ( new_stack )
+      {
+        fs_buffs.virtuoso->expire();
+      }
+      else
+      {
+        if ( !sim->is_canceled() )
+          fs_buffs.virtuoso->trigger();
       }
     } );
   }
@@ -642,6 +714,69 @@ void fs_player_t::init_special_effects()
     dbc->initialize();
     dbc->activate();
   }
+
+  struct first_strike_cb_t : dbc_proc_callback_t
+  {
+    buff_t* first_strike;
+    first_strike_cb_t( fs_player_t* p, const special_effect_t& e, buff_t* fs )
+      : dbc_proc_callback_t( p, e ), first_strike( fs )
+    {
+    }
+
+    fs_player_t* p() const
+    {
+      return static_cast<fs_player_t*>( listener );
+    }
+
+    void execute( action_t*, action_state_t* s ) override
+    {
+      if ( s->target->is_sleeping() )
+        return;
+
+      p()->get_target_data( s->target )->debuffs.triggered_first_strike->trigger();
+      first_strike->trigger();
+    }
+
+    void trigger( action_t* a, action_state_t* state ) override
+    {
+      if ( p()->get_target_data( state->target )->debuffs.triggered_first_strike->check() )
+        return;
+
+      dbc_proc_callback_t::trigger( a, state );
+    }
+  };
+
+  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 120.0 )
+  {
+    auto fs_effect                   = new special_effect_t( this );
+    fs_effect->spell_id              = 1318;
+    fs_effect->name_str              = "first_strike";
+    fs_effect->proc_flags_           = PF_ALL_DAMAGE;
+    fs_effect->proc_flags2_          = PF2_ALL_HIT;
+    fs_effect->proc_chance_          = 1.0;
+    fs_effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+    fs_effect->has_use_buff_override = true;
+
+    special_effects.push_back( fs_effect );
+
+    auto first_strike = new first_strike_cb_t( this, *fs_effect, fs_buffs.first_strike );
+    first_strike->initialize();
+    first_strike->activate();
+  }
+}
+
+void fs_player_t::init_assessors()
+{
+  player_t::init_assessors();
+
+  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 120 )
+  {
+    assessor_out_damage.add( assessor::TARGET_DAMAGE + 1, [ this ]( result_amount_type, action_state_t* s ) {
+      if ( s->target->health_percentage() < 30.0 )
+        fs_buffs.adrenaline_rush->trigger();
+      return assessor::CONTINUE;
+    } );
+  }
 }
 
 // fs_player_t::init_finished ===================================================
@@ -656,6 +791,15 @@ void fs_player_t::init_finished()
       if ( p->is_boss() )
         cache.invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
     } );
+  }
+
+  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 960.0 )
+  {
+    for ( auto action : action_list )
+    {
+      action->base_recharge_rate_multiplier /= fs_gems.gem_powers[ GEM_EMERALD ] >= 2640.0 ? 1.12 : 1.04;
+      action->cooldown->adjust_recharge_multiplier();
+    }
   }
 }
 

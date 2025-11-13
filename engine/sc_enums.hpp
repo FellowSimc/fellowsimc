@@ -24,6 +24,23 @@ enum gem_type_e : unsigned
   GEM_MAX
 };
 
+enum fsweapon_e : unsigned
+{
+    FSWEAPON_NONE = 0,
+    FSWEAPON_REPOSITORY_OF_FROZEN_LIGHT,
+    FSWEAPON_NATURES_FURY,
+    FSWEAPON_CHRONOSHIFT,
+    FSWEAPON_ALZERACS_SHACKLE,
+    FSWEAPON_TWILIGHT_SKYBOLT,
+    FSWEAPON_FATED_STRIKE,
+    FSWEAPON_ICICLES_OF_ANZHYR,
+    FSWEAPON_SAHRILS_AEGIS,
+    FSWEAPON_SAHRILS_WRATH,
+    FSWEAPON_VOIDBRINGERS_TOUCH,
+    FSWEAPON_MAX
+};
+
+
 // Type of internal execution of an action
 enum class execute_type : unsigned
 {

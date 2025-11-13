@@ -434,6 +434,23 @@ public:
     return ab::create_expression( name );
   }
 };
+
+template <typename Base>
+class fs_weapon_action_t : public fs_player_action_t<Base>
+{
+protected:
+  /// typedef for fs_weapon_action_t<action_base_t>
+  using base_t = fs_weapon_action_t<Base>;
+
+private:
+  /// typedef for the templated action type, eg. spell_t, attack_t, heal_t
+  using ab = Base;
+
+public:
+  fs_weapon_action_t( util::string_view n, fs_player_t* p, util::string_view options = {} ) : ab( n, p, options )
+  {
+  }
+};
 }  // namespace actions
 
 }  // namespace fellowship

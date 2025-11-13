@@ -1164,6 +1164,64 @@ const char* util::weapon_type_string( weapon_e type )
   }
 }
 
+// fsweapon_type_string =======================================================
+
+const char* util::fsweapon_string( fsweapon_e type )
+{
+  switch ( type )
+  {
+    case FSWEAPON_NONE:
+      return "none";
+    case FSWEAPON_REPOSITORY_OF_FROZEN_LIGHT:
+      return "repository_of_frozen_light";
+    case FSWEAPON_NATURES_FURY:
+      return "natures_fury";
+    case FSWEAPON_CHRONOSHIFT:
+      return "chronoshift";
+    case FSWEAPON_ALZERACS_SHACKLE:
+      return "alzeracs_shackle";
+    case FSWEAPON_TWILIGHT_SKYBOLT:
+      return "twilight_skybolt";
+    case FSWEAPON_FATED_STRIKE:
+      return "fated_strike";
+    case FSWEAPON_ICICLES_OF_ANZHYR:
+      return "icicles_of_anzhyr";
+    case FSWEAPON_SAHRILS_AEGIS:
+      return "sahrils_aegis";
+    case FSWEAPON_SAHRILS_WRATH:
+      return "sahrils_wrath";
+    case FSWEAPON_VOIDBRINGERS_TOUCH:
+      return "voidbringers_touch";
+    default:
+      return "unknown";
+  }
+}
+
+// gem_type_string =======================================================
+
+const char* util::gem_type_string( gem_type_e gem )
+{
+  switch ( gem )
+  {
+    case GEM_NONE:
+      return "none";
+    case GEM_RUBY:
+      return "ruby";
+    case GEM_AMETHYST:
+      return "amethyst";
+    case GEM_TOPAZ:
+      return "topaz";
+    case GEM_EMERALD:
+      return "emerald";
+    case GEM_SAPPHIRE:
+      return "sapphire";
+    case GEM_DIAMOND:
+      return "diamond";
+    default:
+      return "unknown";
+  }
+}
+
 // weapon_subclass_string ===================================================
 
 const char* util::weapon_subclass_string( int subclass )

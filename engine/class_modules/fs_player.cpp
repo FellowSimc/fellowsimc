@@ -763,6 +763,22 @@ void fs_player_t::init_special_effects()
     first_strike->initialize();
     first_strike->activate();
   }
+
+  double overcap = 0.0;
+
+  for ( auto gem_power : fs_gems.gem_powers )
+  {
+    overcap += std::max( 0.0, gem_power - 2640.0 );
+  }
+
+  if ( overcap > 0.0 )
+  {
+    auto mul = overcap * 0.00005;
+    base.attribute_multiplier[ STAT_STRENGTH ] += mul;
+    base.attribute_multiplier[ STAT_INTELLECT ] += mul;
+    base.attribute_multiplier[ STAT_AGILITY ] += mul;
+    base.attribute_multiplier[ STAT_STAMINA ] += mul;
+  }
 }
 
 void fs_player_t::init_assessors()

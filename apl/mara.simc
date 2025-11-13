@@ -1,7 +1,7 @@
 
 actions.precombat=variable,name=base_energy_generation_threshold,value=35,default=35,op=reset
 #-10*(fight_remains<=60)
-actions.precombat+=/variable,name=energy_generation_threshold,value=variable.base_energy_generation_threshold-5*talent.venomous_delight-10*(expected_combat_length<=60)-10*(raid_event.adds.exists),op=set
+actions.precombat+=/variable,name=energy_generation_threshold,value=variable.base_energy_generation_threshold-5*talent.venomous_delight-10*(expected_combat_length<=60),op=set
 actions.precombat+=/snapshot_stats
 
 actions=run_action_list,name=aoe,if=active_enemies>=4
@@ -20,12 +20,12 @@ actions.aoe+=/widows_bite,target_if=max:dot.seething_poison.remains,if=buff.broo
 actions.aoe+=/skittering_blades,if=buff.brooding_shadows.up
 actions.aoe+=/pool_resource,if=energy<=100&cooldown.maiden_of_death.remains<=6&!buff.maiden_of_death.up&action.widows_bite.charges<2&(!talent.gushing_blood|energy<=60)&(raid_event.adds.remains>=30|!talent.gushing_blood|!raid_event.adds.exists)
 actions.aoe+=/arachnid_assault,if=combo_points>=4&buff.spirit_procs_clones.up
-actions.aoe+=/queens_fang,if=combo_points>=1&talent.malevolence&!buff.malevolence_qf_buffs_aa.up&!buff.deadly_scheme.up&!buff.spirit_procs_clones.up
+actions.aoe+=/queens_fang,target_if=max:target.health,if=combo_points>=1&talent.malevolence&!buff.malevolence_qf_buffs_aa.up&!buff.deadly_scheme.up&!buff.spirit_procs_clones.up
 actions.aoe+=/hemorrhaging_strike,target_if=min:dot.hemorrhaging_strike.remains-100*(target.time_to_die>=20),if=combo_points>=4&refreshable&talent.gushing_blood&(active_dot.hemorrhaging_strike<=active_enemies-3|variable.low_duration_bleeds>=3)&buff.maiden_of_death.up&target.time_to_die>=18
 actions.aoe+=/hemorrhaging_strike,target_if=max:debuff.hemotoxin.up,if=talent.hemotoxin&combo_points>=4&debuff.hemotoxin.up
 actions.aoe+=/hemorrhaging_strike,target_if=min:dot.hemorrhaging_strike.remains-100*(target.time_to_die>=30),if=combo_points>=4&refreshable&!buff.deadly_scheme.up&(talent.from_the_shadows|energy%(variable.energy_generation_threshold-variable.energy_regen_estimate)<target.time_to_die&(variable.energy_generation_threshold-variable.energy_regen_estimate)>0)&(!talent.gushing_blood|cooldown.maiden_of_death.remains>10&(!legendary.final_stratagem_cdr|!talent.gushing_blood))&target.time_to_die>=18
 actions.aoe+=/arachnid_assault,if=combo_points>=4&(buff.deadly_scheme.up|buff.malevolence_qf_buffs_aa.at_max_stacks)
-actions.aoe+=/queens_fang,if=combo_points>=1&talent.malevolence
+actions.aoe+=/queens_fang,target_if=max:target.health,if=combo_points>=1&talent.malevolence
 actions.aoe+=/arachnid_assault,if=combo_points>=4
 actions.aoe+=/backstab,if=combo_points=4&energy.deficit>=120|talent.bloodrush&talent.hemotoxin&buff.maiden_of_death.up&combo_points<=2&active_enemies<=6
 actions.aoe+=/widows_bite,target_if=min:dot.hemorrhaging_strike.remains-100*(target.time_to_die>=15)-100*(target.time_to_die>=24),if=combo_points<=2&energy.deficit>=(100+talent.venomous_delight*20)|talent.bloodrush&talent.hemotoxin&(charges>1|buff.maiden_of_death.up)&combo_points<=2&energy.deficit>=60

@@ -813,7 +813,7 @@ void fs_player_t::init_finished()
   {
     for ( auto action : action_list )
     {
-      action->base_recharge_rate_multiplier /= fs_gems.gem_powers[ GEM_EMERALD ] >= 2640.0 ? 1.12 : 1.04;
+      action->base_recharge_rate_multiplier *= fs_gems.gem_powers[ GEM_EMERALD ] >= 2640.0 ? 0.88 : 0.96;
       action->cooldown->adjust_recharge_multiplier();
     }
   }

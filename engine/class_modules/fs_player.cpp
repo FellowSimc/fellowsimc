@@ -22,7 +22,7 @@ fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
 // ==========================================================================
 
 fs_player_t::fs_player_t( sim_t* sim, util::string_view name, race_e r, player_e p )
-  : player_t( sim, p, name, r ), target_data(), fs_gems(), fs_weapons()
+  : player_t( sim, p, name, r ), target_data(), fs_gems(), fs_weapons(), weapon_cd( nullptr )
 {
   // resource_regeneration              = regen_type::DYNAMIC;
   // regen_caches[ CACHE_HASTE ]        = true;
@@ -284,6 +284,9 @@ struct fated_strike_t : fs_weapon_action_t<attack_t>
     full_amount_targets = 1;
     reduced_aoe_targets = 3;
 
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_FATED_STRIKE )
+      active_weapon = true;
+
     parse_options( options );
   }
 
@@ -299,17 +302,9 @@ struct fated_strike_t : fs_weapon_action_t<attack_t>
     return m;
   }
 
-  bool ready() override
-  {
-    if ( fs_p()->fs_weapons.equipped_weapon != FSWEAPON_FATED_STRIKE )
-      return false;
-
-    return base_t::ready();
-  }
-
   void execute() override
   {
-    ab::execute();
+    base_t::execute();
     fs_p()->fs_buffs.fated_strike->trigger();
   }
 };
@@ -382,7 +377,7 @@ void fs_player_t::init_base_stats()
 
   base.mastery = 0.0;
 
-  resources.base[ RESOURCE_SPIRIT ]                  = 100;
+  resources.base[ RESOURCE_SPIRIT ] = resources.max[ RESOURCE_SPIRIT ] = 100;
   resources.start_at[ RESOURCE_SPIRIT ]              = 0;
   resources.base_regen_per_second[ RESOURCE_SPIRIT ] = 100.0 / 300 * 1.7;
 
@@ -411,6 +406,8 @@ void fs_player_t::init_talents()
 void fs_player_t::init_gains()
 {
   player_t::init_gains();
+
+  fs_gains.grandeur = get_gain( "Visions of Grandeur" );
 }
 
 // fs_player_t::init_procs ======================================================
@@ -586,7 +583,7 @@ void fs_player_t::create_options()
   add_option( opt_func( "weapon", parse_fsweapon ) );
 
   add_option( opt_uint( "weapon_trait.amethyst_splinters", fs_weapons.amethyst_splinters, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.brace_machinations", fs_weapons.brace_machinations, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.brave_machinations", fs_weapons.brave_machinations, 0, 4 ) );
   add_option( opt_uint( "weapon_trait.diamond_strike", fs_weapons.diamond_strike, 0, 4 ) );
   add_option( opt_uint( "weapon_trait.divine_mediation", fs_weapons.divine_mediation, 0, 4 ) );
   add_option( opt_uint( "weapon_trait.emerald_judgement", fs_weapons.emerald_judgement, 0, 4 ) );
@@ -954,6 +951,18 @@ void fs_player_t::init_finished()
       action->base_recharge_rate_multiplier *= fs_gems.gem_powers[ GEM_EMERALD ] >= 2640.0 ? 0.88 : 0.96;
       action->cooldown->adjust_recharge_multiplier();
     }
+  }
+}
+
+void fs_player_t::spirit_refund()
+{
+}
+
+void fs_player_t::used_ultimate()
+{
+  if ( fs_weapons.visions_of_grandeur > 0 && weapon_cd )
+  {
+    weapon_cd->reset( false, -1 );
   }
 }
 

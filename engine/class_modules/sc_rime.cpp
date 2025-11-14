@@ -1084,6 +1084,7 @@ struct wrath_of_winter_t : public rime_spell_t
     rime_spell_t::execute();
     p()->fs_buffs.spirit_of_heroism->trigger();
     p()->buffs.ultimate_buff_window->trigger();
+    p()->used_ultimate();
   }
 };
 
@@ -2123,6 +2124,8 @@ void actions::rime_action_t<Base>::trigger_spirit_refund( const action_state_t* 
     p()->resource_gain( RESOURCE_WINTER_ORB, orbs_refunded, p()->gains.spirit_procs, this );
     p()->sim->print_debug( "{} actually refunded {:.0f} Winter Orbs", *p(), orbs_refunded );
   } );
+  
+  p()->spirit_refund();
 }
 
 template <typename Base>

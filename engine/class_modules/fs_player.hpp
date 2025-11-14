@@ -91,6 +91,7 @@ public:
 
   struct fs_gains_t
   {
+    gain_t* grandeur;
   } fs_gains;
 
   struct options_t
@@ -119,7 +120,7 @@ public:
 
     // You know I should have made these into an enum and an array shouldn't I...
     unsigned amethyst_splinters       = 0;
-    unsigned brace_machinations       = 0;
+    unsigned brave_machinations       = 0;
     unsigned diamond_strike           = 0;
     unsigned divine_mediation         = 0;
     unsigned emerald_judgement        = 0;
@@ -146,6 +147,8 @@ public:
     unsigned visions_of_grandeur      = 0;
     unsigned willful_momentum         = 0;
   } fs_weapons;
+
+  cooldown_t* weapon_cd;
 
   target_specific_t<fs_player_td_t> target_data;
 
@@ -221,6 +224,8 @@ public:
   double non_stacking_movement_modifier() const override;
   double stacking_movement_modifier() const override;
   void invalidate_cache( cache_e ) override;
+  void spirit_refund();
+  void used_ultimate();
 
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
 
@@ -496,9 +501,132 @@ protected:
   using ab = fs_player_action_t<Base>;
 
 public:
-  fs_weapon_action_t( util::string_view n, fs_player_t* p, util::string_view options = {} ) : ab( n, p, options )
+  bool crit_any_target;
+  double grandeur_gain = 0.0;
+  bool active_weapon;
+
+  fs_weapon_action_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : ab( n, p, options ), crit_any_target( false ), active_weapon( false )
   {
+    if ( p->fs_weapons.brave_machinations )
+    {
+      switch ( p->fs_weapons.brave_machinations )
+      {
+        case 1:
+          ab::base_crit += 0.2;
+          break;
+        case 2:
+          ab::base_crit += 0.24;
+          break;
+        case 3:
+          ab::base_crit += 0.28;
+          break;
+        case 4:
+          ab::base_crit += 0.38;
+          break;
+      }
+    }
+
+    if ( p->fs_weapons.heroic_brand )
+    {
+      switch ( p->fs_weapons.heroic_brand )
+      {
+        case 1:
+          ab::base_multiplier *= 1.5;
+          break;
+        case 2:
+          ab::base_multiplier *= 1.6;
+          break;
+        case 3:
+          ab::base_multiplier *= 1.7;
+          break;
+        case 4:
+          ab::base_multiplier *= 1.8;
+          break;
+      }
+    }
   }
+
+  void init_finished() override
+  {
+    ab::init_finished();
+
+    unsigned grandeur = ab::fs_p()->fs_weapons.visions_of_grandeur;
+    double mul_from_cd = ab::cooldown->duration / 30_s;
+    double max_spirit  = ab::fs_p()->resources.max[ RESOURCE_SPIRIT ];
+
+    switch ( grandeur )
+    {
+      case 1:
+        grandeur_gain = 0.02 * max_spirit * mul_from_cd;
+        break;
+      case 2:
+        grandeur_gain = 0.024 * max_spirit * mul_from_cd;
+        break;
+      case 3:
+        grandeur_gain = 0.028 * max_spirit * mul_from_cd;
+        break;
+      case 4:
+        grandeur_gain = 0.032 * max_spirit * mul_from_cd;
+        break;
+    }
+
+    if ( active_weapon )
+    {
+      ab::fs_p()->weapon_cd = ab::cooldown;
+    }
+  }
+   
+  bool ready() override
+  {
+    if ( !active_weapon )
+      return false;
+
+    return ab::ready();
+  }
+
+  void reset() override
+  {
+    ab::reset();
+    crit_any_target = false;
+  }
+
+  void execute() override
+  {
+    crit_any_target = false;
+    ab::execute();
+
+    if ( crit_any_target && ab::fs_p()->fs_weapons.brave_machinations )
+    {
+      ab::cooldown->adjust( -ab::cooldown->duration * 0.3, false );
+    }
+
+    if ( ab::fs_p()->fs_weapons.visions_of_grandeur )
+    {
+      ab::fs_p()->resource_gain( RESOURCE_SPIRIT, grandeur_gain, ab::fs_p()->fs_gains.grandeur, this );
+    }
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ab::impact( s );
+
+    if ( s->result == RESULT_CRIT )
+      crit_any_target = true;
+  }
+
+
+  /*double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    double m = base_t::composite_da_multiplier( s );
+
+    if ( s->chain_target != 0 )
+    {
+      m *= cleave_ratio;
+    }
+
+    return m;
+  }*/
 };
 }  // namespace actions
 

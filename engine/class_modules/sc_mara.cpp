@@ -484,17 +484,15 @@ struct secondary_action_trigger_t : public event_t
   }
 };
 
-template <typename T_ACTION>
 struct mara_action_state_t : public action_state_t
 {
 private:
-  T_ACTION* action;
   int base_cp;
   int total_cp;
 
 public:
   mara_action_state_t( action_t* action, player_t* target )
-    : action_state_t( action, target ), action( dynamic_cast<T_ACTION*>( action ) ), base_cp( 0 ), total_cp( 0 )
+    : action_state_t( action, target ), base_cp( 0 ), total_cp( 0 )
   {
   }
 
@@ -517,11 +515,6 @@ public:
     const mara_action_state_t* rs = debug_cast<const mara_action_state_t*>( s );
     base_cp                       = rs->base_cp;
     total_cp                      = rs->total_cp;
-  }
-
-  T_ACTION* get_action() const
-  {
-    return action;
   }
 
   void set_combo_points( int base_cp, int total_cp )
@@ -584,14 +577,14 @@ public:
 
   // Type Wrappers ============================================================
 
-  static const mara_action_state_t<base_t>* cast_state( const action_state_t* st )
+  static const mara_action_state_t* cast_state( const action_state_t* st )
   {
-    return debug_cast<const mara_action_state_t<base_t>*>( st );
+    return debug_cast<const mara_action_state_t*>( st );
   }
 
-  static mara_action_state_t<base_t>* cast_state( action_state_t* st )
+  static mara_action_state_t* cast_state( action_state_t* st )
   {
-    return debug_cast<mara_action_state_t<base_t>*>( st );
+    return debug_cast<mara_action_state_t*>( st );
   }
 
   mara_t* p()
@@ -613,7 +606,7 @@ public:
 
   action_state_t* new_state() override
   {
-    return new mara_action_state_t<base_t>( this, ab::target );
+    return new mara_action_state_t( this, ab::target );
   }
 
   void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
@@ -1732,6 +1725,7 @@ struct matriach_macabre_t : public mara_spell_t
     mara_spell_t::execute();
     p()->fs_buffs.spirit_of_heroism->trigger();
     p()->buffs.ultimate_buff_window->trigger();
+    p()->used_ultimate();
   }
 };
 
@@ -1859,6 +1853,11 @@ struct vexiras_venom_t : public residual_action::residual_periodic_action_t<mara
     dot_behavior   = DOT_REFRESH_DURATION;
     base_tick_time = p->legendary.vexiras_venom_period;
     hasted_ticks   = true;
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    attack_t::snapshot_state( state, rt );
   }
 
   void init() override
@@ -2024,22 +2023,20 @@ struct arachnid_assault_t : public mara_attack_t
   }
 };
 
-template <typename T_ACTION>
-struct volatile_poison_state_t : public mara_action_state_t<T_ACTION>
+struct volatile_poison_state_t : public mara_action_state_t
 
 {
-  using base_t = mara_action_state_t<T_ACTION>;
 
   timespan_t dot_duration;
   timespan_t tick_time;
   volatile_poison_state_t( action_t* action, player_t* target )
-    : base_t( action, target ), dot_duration( 0_s ), tick_time( 0_s )
+    : mara_action_state_t( action, target ), dot_duration( 0_s ), tick_time( 0_s )
   {
   }
 
   void initialize() override
   {
-    base_t::initialize();
+    mara_action_state_t::initialize();
 
     dot_duration = 0_s;
     tick_time    = 0_s;
@@ -2047,12 +2044,13 @@ struct volatile_poison_state_t : public mara_action_state_t<T_ACTION>
 
   void copy_state( const action_state_t* s )
   {
-    base_t::copy_state( s );
+    mara_action_state_t::copy_state( s );
     const volatile_poison_state_t* rs = debug_cast<const volatile_poison_state_t*>( s );
 
     dot_duration = rs->dot_duration;
     tick_time    = rs->tick_time;
   }
+
 };
 
 struct volatile_poison_dot_t : public mara_poison_t
@@ -2092,19 +2090,19 @@ struct volatile_poison_dot_t : public mara_poison_t
   // Action State =============================================================
   // Type Wrappers ============================================================
 
-  static const volatile_poison_state_t<mara_poison_t>* cast_state( const action_state_t* st )
+  static const volatile_poison_state_t* cast_state( const action_state_t* st )
   {
-    return debug_cast<const volatile_poison_state_t<mara_poison_t>*>( st );
+    return debug_cast<const volatile_poison_state_t*>( st );
   }
 
-  static volatile_poison_state_t<mara_poison_t>* cast_state( action_state_t* st )
+  static volatile_poison_state_t* cast_state( action_state_t* st )
   {
-    return debug_cast<volatile_poison_state_t<mara_poison_t>*>( st );
+    return debug_cast<volatile_poison_state_t*>( st );
   }
 
   action_state_t* new_state() override
   {
-    return new volatile_poison_state_t<mara_poison_t>( this, target );
+    return new volatile_poison_state_t( this, target );
   }
 
   void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
@@ -3213,6 +3211,8 @@ void actions::mara_action_t<Base>::trigger_spirit_refund( const action_state_t* 
     p()->resource_gain( RESOURCE_ENERGY, energy_restored, p()->gains.spirit_procs, this);
     p()->resource_gain( RESOURCE_COMBO_POINT, max_spend, p()->gains.spirit_procs, this );
   } );
+
+  p()->spirit_refund();
 }
 
 template <typename Base>

@@ -135,9 +135,20 @@ gems.ruby_power=1200
 gems.sapphire_power=1200
 gems.amethyst_power=2640
 
-copy="Fated Strike","Mara"
-weapon=fated_strike
+# copy="Fated Strike","Mara"
+# weapon=fated_strike
 
+# copy="Fated Strike Brave4","Mara"
+# weapon=fated_strike
+# weapon_trait.brave_machinations=4
+
+# copy="Fated Strike heroic_brand4","Mara"
+# weapon=fated_strike
+# weapon_trait.heroic_brand=4
+
+# copy="Fated Strike Grandeur4","Mara"
+weapon=fated_strike
+weapon_trait.visions_of_grandeur=4
 
 # copy="Finisher No Hemo FTQ MD","Mara"
 # talent.assassins_guile=1

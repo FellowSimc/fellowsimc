@@ -22,7 +22,7 @@ fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
 // ==========================================================================
 
 fs_player_t::fs_player_t( sim_t* sim, util::string_view name, race_e r, player_e p )
-  : player_t( sim, p, name, r ), target_data(), fs_gems()
+  : player_t( sim, p, name, r ), target_data(), fs_gems(), fs_weapons()
 {
   // resource_regeneration              = regen_type::DYNAMIC;
   // regen_caches[ CACHE_HASTE ]        = true;
@@ -256,12 +256,74 @@ void fs_player_t::init_action_list()
   player_t::init_action_list();
 }
 
+namespace actions
+{
+
+struct fated_strike_t : fs_weapon_action_t<attack_t>
+{
+  double st_mod = 11.37;
+  double cleave_mod = 4.79;
+  double cleave_ratio = cleave_mod / st_mod;
+
+  fated_strike_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : fs_weapon_action_t( n, p, options )
+  {
+    id = 20001;
+
+    min_gcd                 = 0.5_s;
+    gcd_type                = gcd_haste_type::NONE;
+    base_execute_time       = 0.5_s;
+    attack_power_mod.direct = st_mod;
+
+    name_str_reporting = "Fated Strike";
+    cooldown->duration = 70_s;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    aoe                 = -1;
+    full_amount_targets = 1;
+    reduced_aoe_targets = 3;
+
+    parse_options( options );
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    double m = base_t::composite_da_multiplier( s );
+
+    if ( s->chain_target != 0 )
+    {
+      m *= cleave_ratio;
+    }
+
+    return m;
+  }
+
+  bool ready() override
+  {
+    if ( fs_p()->fs_weapons.equipped_weapon != FSWEAPON_FATED_STRIKE )
+      return false;
+
+    return base_t::ready();
+  }
+
+  void execute() override
+  {
+    ab::execute();
+    fs_p()->fs_buffs.fated_strike->trigger();
+  }
+};
+}
+
+
 // fs_player_t::create_action  ==================================================
 
 action_t* fs_player_t::create_action( util::string_view name, util::string_view options_str )
 {
   using namespace actions;
 
+  if ( name == "fated_strike" )
+    return new fated_strike_t( name, this, options_str );
 
   return player_t::create_action( name, options_str );
 }
@@ -451,6 +513,35 @@ void fs_player_t::create_buffs()
     default:
       break;
   }
+
+  struct fated_strike_buff_t : fs_player_buff_t
+  {
+    double cdr_mod = 3.0;
+    fated_strike_buff_t( player_t* pl ) : fs_player_buff_t( pl, "fated_strike" )
+    {
+      set_default_value( 0.2 )->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )->set_duration( 6_s );
+      add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
+        if ( _new )
+        {
+          for ( auto& action : p()->action_list )
+          {
+            action->base_recharge_rate_multiplier /= cdr_mod;
+            action->cooldown->adjust_recharge_multiplier();
+          }
+        }
+        else
+        {
+          for ( auto& action : p()->action_list )
+          {
+            action->base_recharge_rate_multiplier *= cdr_mod;
+            action->cooldown->adjust_recharge_multiplier();
+          }
+        }
+      } );
+    }
+  };
+
+  fs_buffs.fated_strike = make_buff<fated_strike_buff_t>( this );
 }
 
 // fs_player_t::invalidate_cache =========================================
@@ -458,6 +549,22 @@ void fs_player_t::create_buffs()
 void fs_player_t::invalidate_cache( cache_e c )
 {
   player_t::invalidate_cache( c );
+}
+
+bool parse_fsweapona( sim_t* sim, std::string_view, std::string_view value )
+{
+  auto& player = sim->active_player;
+  for ( fsweapon_e weapon = fsweapon_e::FSWEAPON_NONE; weapon < fsweapon_e::FSWEAPON_MAX; weapon++ )
+  {
+    if ( util::str_compare_ci( value, util::fsweapon_string( weapon ) ) )
+    {
+      static_cast<fs_player_t*>( player )->fs_weapons.equipped_weapon = weapon;
+      return true;
+    }
+  }
+
+  sim->error( "{} weapon string '{}' not valid.", sim->active_player->name(), value );
+  return false;
 }
 
 void fs_player_t::create_options()
@@ -475,6 +582,36 @@ void fs_player_t::create_options()
   add_option( opt_float( "gems.topaz_power", fs_gems.gem_powers[ GEM_TOPAZ ] ) );
   add_option( opt_float( "gems.emerald_power", fs_gems.gem_powers[ GEM_EMERALD ] ) );
   add_option( opt_float( "gems.sapphire_power", fs_gems.gem_powers[ GEM_SAPPHIRE ] ) );
+
+  add_option( opt_func( "weapon", parse_fsweapon ) );
+
+  add_option( opt_uint( "weapon_trait.amethyst_splinters", fs_weapons.amethyst_splinters, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.brace_machinations", fs_weapons.brace_machinations, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.diamond_strike", fs_weapons.diamond_strike, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.divine_mediation", fs_weapons.divine_mediation, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.emerald_judgement", fs_weapons.emerald_judgement, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.first_man_standing", fs_weapons.first_man_standing, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.grounded_spirit", fs_weapons.grounded_spirit, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.heart_of_stone", fs_weapons.heart_of_stone, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.heroic_brand", fs_weapons.heroic_brand, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.hidden_power", fs_weapons.hidden_power, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.hunters_focus", fs_weapons.hunters_focus, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.inspired_allegiance", fs_weapons.inspired_allegiance, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.iron_spikes", fs_weapons.iron_spikes, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.kindling", fs_weapons.kindling, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.king_of_the_hill", fs_weapons.king_of_the_hill, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.latent_resurgence", fs_weapons.latent_resurgence, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.martial_initiative", fs_weapons.martial_initiative, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.navigators_intuition", fs_weapons.navigators_intuition, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.patient_soul", fs_weapons.patient_soul, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.ruby_storm", fs_weapons.ruby_storm, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.sapphire_aurastone", fs_weapons.sapphire_aurastone, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.seized_opportunity", fs_weapons.seized_opportunity, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.stalwart_readiness", fs_weapons.stalwart_readiness, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.treasure_hunters_delight", fs_weapons.treasure_hunters_delight, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.vengeful_soul", fs_weapons.vengeful_soul, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.visions_of_grandeur", fs_weapons.visions_of_grandeur, 0, 4 ) );
+  add_option( opt_uint( "weapon_trait.willful_momentum", fs_weapons.willful_momentum, 0, 4 ) );
 }
 
 // fs_player_t::copy_from =======================================================
@@ -487,6 +624,7 @@ void fs_player_t::copy_from( player_t* source )
   fs_sets    = fs_player->fs_sets;
   fs_options = fs_player->fs_options;
   fs_gems    = fs_player->fs_gems;
+  fs_weapons = fs_player->fs_weapons;
 }
 
 // fs_player_t::create_profile  =================================================

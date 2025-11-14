@@ -1192,6 +1192,10 @@ const char* util::fsweapon_string( fsweapon_e type )
       return "sahrils_wrath";
     case FSWEAPON_VOIDBRINGERS_TOUCH:
       return "voidbringers_touch";
+    case FSWEAPON_ZERALETHS_HUNGER:
+      return "zeraleths_hunger";
+    case FSWEAPON_EARTHBREAKER:
+      return "earthbreaker";
     default:
       return "unknown";
   }

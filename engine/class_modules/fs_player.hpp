@@ -82,6 +82,7 @@ public:
     fs_player_buff_t* virtuoso;
     fs_player_buff_t* adrenaline_rush;
     fs_player_buff_t* might_of_the_minotaur;
+    fs_player_buff_t* fated_strike;
   } fs_buffs;
 
   struct fs_cooldowns_t
@@ -111,6 +112,40 @@ public:
   {
     std::array<double, GEM_MAX> gem_powers;
   } fs_gems;
+
+  struct fs_weapons_t
+  {
+    fsweapon_e equipped_weapon = fsweapon_e::FSWEAPON_NONE;
+
+    // You know I should have made these into an enum and an array shouldn't I...
+    unsigned amethyst_splinters       = 0;
+    unsigned brace_machinations       = 0;
+    unsigned diamond_strike           = 0;
+    unsigned divine_mediation         = 0;
+    unsigned emerald_judgement        = 0;
+    unsigned first_man_standing       = 0;
+    unsigned grounded_spirit          = 0;
+    unsigned heart_of_stone           = 0;
+    unsigned heroic_brand             = 0;
+    unsigned hidden_power             = 0;
+    unsigned hunters_focus            = 0;
+    unsigned inspired_allegiance      = 0;
+    unsigned iron_spikes              = 0;
+    unsigned kindling                 = 0;
+    unsigned king_of_the_hill         = 0;
+    unsigned latent_resurgence        = 0;
+    unsigned martial_initiative       = 0;
+    unsigned navigators_intuition     = 0;
+    unsigned patient_soul             = 0;
+    unsigned ruby_storm               = 0;
+    unsigned sapphire_aurastone       = 0;
+    unsigned seized_opportunity       = 0;
+    unsigned stalwart_readiness       = 0;
+    unsigned treasure_hunters_delight = 0;
+    unsigned vengeful_soul            = 0;
+    unsigned visions_of_grandeur      = 0;
+    unsigned willful_momentum         = 0;
+  } fs_weapons;
 
   target_specific_t<fs_player_td_t> target_data;
 
@@ -189,6 +224,21 @@ public:
 
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
 
+  static bool parse_fsweapon( sim_t* sim, std::string_view, std::string_view value )
+  {
+    fs_player_t* player = static_cast<fs_player_t*>( sim->active_player );
+    for ( fsweapon_e weapon = fsweapon_e::FSWEAPON_NONE; weapon < fsweapon_e::FSWEAPON_MAX; weapon++ )
+    {
+      if ( util::str_compare_ci( value, util::fsweapon_string( weapon ) ) )
+      {
+        player->fs_weapons.equipped_weapon = weapon;
+        return true;
+      }
+    }
+
+    sim->error( "{} weapon string '{}' not valid.", sim->active_player->name(), value );
+    return false;
+  }
 
   std::string default_flask() const override
   {
@@ -442,9 +492,8 @@ protected:
   /// typedef for fs_weapon_action_t<action_base_t>
   using base_t = fs_weapon_action_t<Base>;
 
-private:
   /// typedef for the templated action type, eg. spell_t, attack_t, heal_t
-  using ab = Base;
+  using ab = fs_player_action_t<Base>;
 
 public:
   fs_weapon_action_t( util::string_view n, fs_player_t* p, util::string_view options = {} ) : ab( n, p, options )

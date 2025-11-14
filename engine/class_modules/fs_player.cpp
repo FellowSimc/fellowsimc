@@ -1016,6 +1016,11 @@ double fs_player_t::resource_regen_per_second( resource_e r ) const
 
 double fs_player_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
+  if ( resource_type == RESOURCE_SPIRIT && source != gains.resource_regen[ RESOURCE_SPIRIT ] )
+  {
+    amount *= 1.0 + cache.mastery();
+  }
+
   double actual_amount = player_t::resource_gain( resource_type, amount, source, action );
 
   return actual_amount;

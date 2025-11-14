@@ -270,9 +270,9 @@ struct fated_strike_t : fs_weapon_action_t<attack_t>
   {
     id = 20001;
 
-    min_gcd                 = 0.5_s;
+    base_execute_time = trigger_gcd = min_gcd = 0.5_s;
+
     gcd_type                = gcd_haste_type::NONE;
-    base_execute_time       = 0.5_s;
     attack_power_mod.direct = st_mod;
 
     name_str_reporting = "Fated Strike";

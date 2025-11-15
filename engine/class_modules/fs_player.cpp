@@ -22,7 +22,12 @@ fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
 // ==========================================================================
 
 fs_player_t::fs_player_t( sim_t* sim, util::string_view name, race_e r, player_e p )
-  : player_t( sim, p, name, r ), target_data(), fs_gems(), fs_weapons(), weapon_cd( nullptr )
+  : player_t( sim, p, name, r ),
+    target_data(),
+    fs_gems(),
+    fs_weapons(),
+    weapon_cd( nullptr ),
+    brave_machinations_available( false )
 {
   // resource_regeneration              = regen_type::DYNAMIC;
   // regen_caches[ CACHE_HASTE ]        = true;
@@ -977,6 +982,7 @@ void fs_player_t::init_background_actions()
 void fs_player_t::reset()
 {
   player_t::reset();
+  brave_machinations_available = false;
 }
 
 // fs_player_t::activate ========================================================

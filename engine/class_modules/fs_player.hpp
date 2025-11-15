@@ -149,6 +149,7 @@ public:
   } fs_weapons;
 
   cooldown_t* weapon_cd;
+  bool brave_machinations_available;
 
   target_specific_t<fs_player_td_t> target_data;
 
@@ -501,12 +502,11 @@ protected:
   using ab = fs_player_action_t<Base>;
 
 public:
-  bool crit_any_target;
   double grandeur_gain = 0.0;
   bool active_weapon;
 
   fs_weapon_action_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
-    : ab( n, p, options ), crit_any_target( false ), active_weapon( false )
+    : ab( n, p, options ), active_weapon( false )
   {
     if ( p->fs_weapons.brave_machinations )
     {
@@ -571,7 +571,7 @@ public:
         break;
     }
 
-    if ( active_weapon )
+    if ( active_weapon && !ab::background )
     {
       ab::fs_p()->weapon_cd = ab::cooldown;
     }
@@ -579,29 +579,23 @@ public:
    
   bool ready() override
   {
-    if ( !active_weapon )
+    if ( !active_weapon && !ab::background )
       return false;
 
     return ab::ready();
   }
 
-  void reset() override
-  {
-    ab::reset();
-    crit_any_target = false;
-  }
 
   void execute() override
   {
-    crit_any_target = false;
-    ab::execute();
-
-    if ( crit_any_target && ab::fs_p()->fs_weapons.brave_machinations )
+    if ( !ab::background && ab::fs_p()->fs_weapons.brave_machinations )
     {
-      ab::cooldown->adjust( -ab::cooldown->duration * 0.3, false );
+      ab::fs_p()->brave_machinations_available = true;
     }
 
-    if ( ab::fs_p()->fs_weapons.visions_of_grandeur )
+    ab::execute();
+
+    if ( !ab::background && ab::fs_p()->fs_weapons.visions_of_grandeur )
     {
       ab::fs_p()->resource_gain( RESOURCE_SPIRIT, grandeur_gain, ab::fs_p()->fs_gains.grandeur, this );
     }
@@ -611,8 +605,13 @@ public:
   {
     ab::impact( s );
 
-    if ( s->result == RESULT_CRIT )
-      crit_any_target = true;
+    if ( ab::fs_p()->fs_weapons.brave_machinations && ab::fs_p()->brave_machinations_available &&
+         s->result == RESULT_CRIT )
+    {
+      ab::fs_p()->brave_machinations_available = false;
+
+      ab::fs_p()->weapon_cd->adjust( ab::fs_p()->weapon_cd->duration * 0.3, false );
+    }
   }
 
 

@@ -661,12 +661,12 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_RUBY ] >= 1560 )
   {
-    passive.add_stat( STAT_STR_AGI_INT, 24 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 24 );
     passive.add_stat( STAT_STAMINA, 420 );
   }
   else if ( fs_gems.gem_powers[ GEM_RUBY ] >= 240 )
   {
-    passive.add_stat( STAT_STR_AGI_INT, 8 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 8 );
     passive.add_stat( STAT_STAMINA, 140 );
   }
 
@@ -716,12 +716,12 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1560 )
   {
-    passive.add_stat( STAT_STR_AGI_INT, 45 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 45 );
     passive.add_stat( STAT_STAMINA, 180 );
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 240 )
   {
-    passive.add_stat( STAT_STR_AGI_INT, 15 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 15 );
     passive.add_stat( STAT_STAMINA, 60 );
   }
 

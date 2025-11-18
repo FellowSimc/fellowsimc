@@ -1876,7 +1876,7 @@ struct skittering_blades_t : public mara_attack_t
     id = 17;
 
     school                        = SCHOOL_PHYSICAL;
-    attack_power_mod.direct       = 0.60;
+    attack_power_mod.direct       = 0.672;
     resource_current              = RESOURCE_ENERGY;
     base_costs[ RESOURCE_ENERGY ] = 35;
 
@@ -1930,7 +1930,7 @@ struct arachnid_assault_t : public mara_attack_t
     reduced_aoe_targets = 8;
 
     school                             = SCHOOL_PHYSICAL;
-    attack_power_mod.direct            = 0.65;
+    attack_power_mod.direct            = 0.715;
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 45;
@@ -2067,7 +2067,7 @@ struct volatile_poison_dot_t : public mara_poison_t
 
     name_str_reporting = "Volatile Poison";
 
-    attack_power_mod.tick = 0.2;
+    attack_power_mod.tick = 0.26;
   }
 
   
@@ -2157,7 +2157,7 @@ struct volatile_poison_aoe_t : public mara_poison_t
     background = true;
     id         = 19;
 
-    attack_power_mod.direct = 0.4;
+    attack_power_mod.direct = 0.52;
 
     name_str_reporting = "Volatile Poison (AoE)";
 

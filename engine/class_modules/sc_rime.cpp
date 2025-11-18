@@ -1120,10 +1120,7 @@ struct cold_snap_t : public rime_spell_t
 
     if ( p()->legendary.frostwyrms_spite )
     {
-      if ( p()->buffs.frostwyrms_spite->check() > 0 )
-      {
-        p()->buffs.frostwyrms_spite->expire();
-      }
+      p()->buffs.frostwyrms_spite->expire();
     }
 
     if ( p()->buffs.flight_of_the_navir->check() )
@@ -1495,7 +1492,16 @@ rime_td_t::rime_td_t( player_t* target, rime_t* source )
 
                                      damage->set_target( b->player );
                                      action_state_t* damage_state = damage->get_state();
-                                     damage_state->target         = b->player;
+                                     if ( !b->player->is_sleeping() )
+                                     {
+                                       damage_state->target = b->player;
+                                     }
+                                     else
+                                     {
+                                       damage->select_target();
+                                       damage_state->target = damage->target;
+                                     }
+
                                      damage->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
                                      damage_state->da_multiplier *= old;
                                      damage->schedule_execute( damage_state );

@@ -851,7 +851,7 @@ struct glacial_blast_t : public rime_spell_t
 
     base_execute_time = 2_s;
 
-    spell_power_mod.direct = 9.9 * 1.2;
+    spell_power_mod.direct = 11.88;
 
     if ( p->talents.greater_glacial_blast )
     {
@@ -1101,7 +1101,7 @@ struct cold_snap_t : public rime_spell_t
     cooldown->hasted   = true;
     cooldown->charges  = 2;
 
-    spell_power_mod.direct = 3.04;
+    spell_power_mod.direct = 3.648;
 
     energize_type     = action_energize::ON_CAST;
     energize_resource = RESOURCE_WINTER_ORB;
@@ -1290,7 +1290,7 @@ struct freezing_torrent_t : public rime_spell_t
 
     name_str_reporting = "Freezing Torrent";
 
-    spell_power_mod.tick = 1.42 * 1.2;
+    spell_power_mod.tick = 1.562;
 
     dot_duration           = 2_s;
     base_tick_time         = 0.4_s;

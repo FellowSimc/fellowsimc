@@ -94,7 +94,7 @@ public:
     buff_t* soulfrost_torrent;
     buff_t* frostweavers_wrath;
     buff_t* frostwyrms_spite;
-    buff_t* undulating_spirit_proc;
+    buff_t* undulating_spirit;
   } buffs;
 
   struct cooldowns_t
@@ -746,7 +746,7 @@ public:
      {
        if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
        {
-         p()->buffs.undulating_spirit_proc->trigger();
+         p()->buffs.undulating_spirit->trigger();
        }
     }
   }
@@ -1157,7 +1157,7 @@ struct cold_snap_t : public rime_spell_t
 
     if ( p()->legendary.frostwyrms_spite )
     {
-      m *= 1.0 + p()->buffs.frostwyrms_spite->check_value();
+      m *= 1.0 + p()->buffs.frostwyrms_spite->check_stack_value();
     }
 
     return m;
@@ -1933,7 +1933,7 @@ void rime_t::create_buffs()
                                ->set_default_value( legendary.frostwyrms_spite_dmg_per_stack )
                                ->set_refresh_behavior( buff_refresh_behavior::DURATION );
 
-  buffs.undulating_spirit_proc = make_buff<rime_buff_t>( this, "undulating_spirit_proc" )->set_max_stack( 1 );
+  buffs.undulating_spirit = make_buff<rime_buff_t>( this, "undulating_spirit" )->set_max_stack( 1 );
 }
 
 // rime_t::invalidate_cache =========================================
@@ -2141,9 +2141,9 @@ void actions::rime_action_t<Base>::spend_winter_orbs( const action_state_t* s )
   if ( orbs_spent <= 0 )
     return;
 
-  if ( p()->legendary.undulating_spirit && p()->buffs.undulating_spirit_proc->check() )
+  if ( p()->legendary.undulating_spirit && p()->buffs.undulating_spirit->check() )
   {
-    p()->buffs.undulating_spirit_proc->expire();
+    p()->buffs.undulating_spirit->expire();
     p()->sim->print_debug( "{} proc'd Undulating Spirit Refund", *p() );
     trigger_spirit_refund( s, orbs_spent );
   }

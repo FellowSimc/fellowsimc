@@ -239,6 +239,12 @@ talent.soulfrost_torrent=1
 legendary.frostwyrms_spite=1
 talent.biting_cold=1
 
+gear_haste_rating=2017
+gear_crit_rating=1153
+gear_versatility_rating=1359
+gear_mastery_rating=0
+
+
 # copy="Beam Ava Build - Frostwyrms - GGB","Rime"
 # talent.winters_embrace=1
 # talent.burstbolter=1
@@ -259,6 +265,12 @@ talent.coalescing_frost=1
 talent.soulfrost_torrent=1
 legendary.skandis_decree=1
 talent.biting_cold=1
+
+gear_haste_rating=2017
+gear_crit_rating=1153
+gear_versatility_rating=1359
+gear_mastery_rating=0
+
 
 # copy="Beam Ava Build - Skandis - GGB","Rime"
 # talent.winters_embrace=1

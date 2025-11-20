@@ -102,12 +102,51 @@ public:
   struct fs_sets_t
   {
     // Tuzari
-    bool haste_buff_on_ability_use                = false;
-    double haste_buff_on_ability_use_ppm          = 0.8;
-    double haste_buff_on_ability_use_haste        = 0.25;
-    timespan_t haste_buff_on_ability_use_duration = 20_s;
-    timespan_t haste_buff_on_ability_use_cooldown = 0_s;
+    bool dark_prophecy                = false;
+    double dark_prophecy_ppm          = 0.8;
+    double dark_prophecy_haste        = 0.25;
+    timespan_t dark_prophecy_duration = 20_s;
+    timespan_t dark_prophecy_cooldown = 5_s;
 
+    bool deaths_grasp              = false;
+    double deaths_grasp_spirit     = 0.03;
+    double death_grasp_execute_amp = 0.15;
+
+    bool draconic_might                = false;
+    double draconic_might_ppm          = 0.9;
+    double draconic_might_amp          = 0.18;
+    timespan_t draconic_might_duration = 15_s;
+
+    bool drakheims_absolution                = false;
+    double drakheims_absolution_amp          = 0.20;
+    timespan_t drakheims_absolution_duration = 20_s;
+
+    bool eldrin_deceit                       = false;
+    double eldrin_deceit_crit                = 0.03;
+    // Threat Reduction
+
+    bool eldrin_fury        = false;
+    double eldrin_fury_crit = 0.03;
+    // Threat Generation
+
+    bool haunting_lament                 = false;
+    double haunting_lament_spirit        = 0.03;
+    double haunting_lament_max_mana      = 0.15;
+
+    bool sin_warding                     = false;
+    double sin_warding_expertise         = 0.03;
+
+    bool sintharas_veil                  = false;
+    double sintharas_veil_spirit         = 0.03;
+    double sintharas_veil_magic_dr       = 0.1;
+
+    bool torment_of_baelaurum            = false;
+    double torment_of_baelaurum_amp      = 0.04;
+    double torment_of_baelaurum_heal_pct = 0.35;
+
+    bool tuzari_grace                    = false;
+    double tuzari_grace_haste            = 0.03;
+    double tuzari_grace_movement_speed   = 0.2;
   } fs_sets;
 
   struct fs_gems_t

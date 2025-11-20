@@ -443,10 +443,28 @@ std::unique_ptr<expr_t> fs_player_t::create_expression( util::string_view name_s
   {
     if ( split.size() == 2 )
     {
-      if ( util::str_compare_ci( split[ 1 ], "haste_buff_on_ability_use" ) )
-      {
-        return make_ref_expr( name_str, fs_sets.haste_buff_on_ability_use );
-      }
+      if ( util::str_compare_ci( split[ 1 ], "dark_prophecy" ) )
+        return make_ref_expr( name_str, fs_sets.dark_prophecy );
+      else if ( util::str_compare_ci( split[ 1 ], "deaths_grasp" ) )
+        return make_ref_expr( name_str, fs_sets.deaths_grasp );
+      else if ( util::str_compare_ci( split[ 1 ], "draconic_might" ) )
+        return make_ref_expr( name_str, fs_sets.draconic_might );
+      else if ( util::str_compare_ci( split[ 1 ], "drakheims_absolution" ) )
+        return make_ref_expr( name_str, fs_sets.drakheims_absolution );
+      else if ( util::str_compare_ci( split[ 1 ], "eldrin_deceit" ) )
+        return make_ref_expr( name_str, fs_sets.eldrin_deceit );
+      else if ( util::str_compare_ci( split[ 1 ], "eldrin_fury" ) )
+        return make_ref_expr( name_str, fs_sets.eldrin_fury );
+      else if ( util::str_compare_ci( split[ 1 ], "haunting_lament" ) )
+        return make_ref_expr( name_str, fs_sets.haunting_lament );
+      else if ( util::str_compare_ci( split[ 1 ], "sin_warding" ) )
+        return make_ref_expr( name_str, fs_sets.sin_warding );
+      else if ( util::str_compare_ci( split[ 1 ], "sintharas_veil" ) )
+        return make_ref_expr( name_str, fs_sets.sintharas_veil );
+      else if ( util::str_compare_ci( split[ 1 ], "torment_of_baelaurum" ) )
+        return make_ref_expr( name_str, fs_sets.torment_of_baelaurum );
+      else if ( util::str_compare_ci( split[ 1 ], "tuzari_grace" ) )
+        return make_ref_expr( name_str, fs_sets.tuzari_grace );
     }
   }
   // Split expressions
@@ -699,10 +717,48 @@ void fs_player_t::create_options()
 {
   player_t::create_options();
 
-  add_option( opt_bool( "sets.haste_buff_on_ability_use", fs_sets.haste_buff_on_ability_use ) );
-  add_option( opt_float( "sets.haste_buff_on_ability_use_haste", fs_sets.haste_buff_on_ability_use_haste ) );
-  add_option( opt_timespan( "sets.haste_buff_on_ability_use_duration", fs_sets.haste_buff_on_ability_use_duration ) );
-  add_option( opt_timespan( "sets.haste_buff_on_ability_use_cooldown", fs_sets.haste_buff_on_ability_use_cooldown ) );
+  add_option( opt_bool( "sets.dark_prophecy", fs_sets.dark_prophecy ) );
+  add_option( opt_float( "sets.dark_prophecy_haste", fs_sets.dark_prophecy_haste ) );
+  add_option( opt_timespan( "sets.dark_prophecy_duration", fs_sets.dark_prophecy_duration ) );
+  add_option( opt_timespan( "sets.dark_prophecy_cooldown", fs_sets.dark_prophecy_cooldown ) );
+
+  add_option( opt_bool( "sets.deaths_grasp", fs_sets.deaths_grasp ) );
+  add_option( opt_float( "sets.deaths_grasp_spirit", fs_sets.deaths_grasp_spirit ) );
+  add_option( opt_float( "sets.death_grasp_execute_amp", fs_sets.death_grasp_execute_amp ) );
+
+  add_option( opt_bool( "sets.draconic_might", fs_sets.draconic_might ) );
+  add_option( opt_float( "sets.draconic_might_ppm", fs_sets.draconic_might_ppm ) );
+  add_option( opt_float( "sets.draconic_might_amp", fs_sets.draconic_might_amp ) );
+  add_option( opt_timespan( "sets.draconic_might_duration", fs_sets.draconic_might_duration ) );
+
+  add_option( opt_bool( "sets.drakheims_absolution", fs_sets.drakheims_absolution ) );
+  add_option( opt_float( "sets.drakheims_absolution_amp", fs_sets.drakheims_absolution_amp ) );
+  add_option( opt_timespan( "sets.drakheims_absolution_duration", fs_sets.drakheims_absolution_duration ) );
+
+  add_option( opt_bool( "sets.eldrin_deceit", fs_sets.eldrin_deceit ) );
+  add_option( opt_float( "sets.eldrin_deceit_crit", fs_sets.eldrin_deceit_crit ) );
+
+  add_option( opt_bool( "sets.eldrin_fury", fs_sets.eldrin_fury ) );
+  add_option( opt_float( "sets.eldrin_fury_crit", fs_sets.eldrin_fury_crit ) );
+
+  add_option( opt_bool( "sets.haunting_lament", fs_sets.haunting_lament ) );
+  add_option( opt_float( "sets.haunting_lament_spirit", fs_sets.haunting_lament_spirit ) );
+  add_option( opt_float( "sets.haunting_lament_max_mana", fs_sets.haunting_lament_max_mana ) );
+
+  add_option( opt_bool( "sets.sin_warding", fs_sets.sin_warding ) );
+  add_option( opt_float( "sets.sin_warding_expertise", fs_sets.sin_warding_expertise ) );
+
+  add_option( opt_bool( "sets.sintharas_veil", fs_sets.sintharas_veil ) );
+  add_option( opt_float( "sets.sintharas_veil_spirit", fs_sets.sintharas_veil_spirit ) );
+  add_option( opt_float( "sets.sintharas_veil_magic_dr", fs_sets.sintharas_veil_magic_dr ) );
+
+  add_option( opt_bool( "sets.torment_of_baelaurum", fs_sets.torment_of_baelaurum ) );
+  add_option( opt_float( "sets.torment_of_baelaurum_amp", fs_sets.torment_of_baelaurum_amp ) );
+  add_option( opt_float( "sets.torment_of_baelaurum_heal_pct", fs_sets.torment_of_baelaurum_heal_pct ) );
+
+  add_option( opt_bool( "sets.tuzari_grace", fs_sets.tuzari_grace ) );
+  add_option( opt_float( "sets.tuzari_grace_haste", fs_sets.tuzari_grace_haste ) );
+  add_option( opt_float( "sets.tuzari_grace_movement_speed", fs_sets.tuzari_grace_movement_speed ) );
 
   add_option( opt_float( "gems.ruby_power", fs_gems.gem_powers[ GEM_RUBY ] ) );
   add_option( opt_float( "gems.amethyst_power", fs_gems.gem_powers[ GEM_AMETHYST ] ) );
@@ -952,26 +1008,26 @@ void fs_player_t::init_special_effects()
     fs_buffs.spirit_of_heroism->base_buff_duration += 6_s;
   }
 
-  if ( fs_sets.haste_buff_on_ability_use )
+  if ( fs_sets.dark_prophecy )
   {
     auto effect                   = new special_effect_t( this );
     effect->spell_id              = 1317;
-    effect->name_str              = "haste_buff_on_ability_use";
+    effect->name_str              = "dark_prophecy";
     effect->proc_flags_           = PF_ALL_DAMAGE;
     effect->proc_flags2_          = PF2_ALL_HIT;
     effect->has_use_buff_override = true;
-    effect->cooldown_             = fs_sets.haste_buff_on_ability_use_cooldown;
-    effect->ppm_                  = -fs_sets.haste_buff_on_ability_use_ppm;
-    effect->rppm_scale_           = rppm_scale_e::RPPM_NONE;
+    effect->cooldown_             = fs_sets.dark_prophecy_cooldown;
+    effect->ppm_                  = -fs_sets.dark_prophecy_ppm;
+    effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
     effect->rppm_blp_             = real_ppm_t::BLP_DISABLED;
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
     special_effects.push_back( effect );
 
-    auto haste_buff = make_buff( this, "tuzari_haste_buff" )
+    auto haste_buff = make_buff( this, "dark_prophecy" )
                           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-                          ->set_duration( fs_sets.haste_buff_on_ability_use_duration )
-                          ->set_default_value( fs_sets.haste_buff_on_ability_use_haste );
+                          ->set_duration( fs_sets.dark_prophecy_duration )
+                          ->set_default_value( fs_sets.dark_prophecy_haste );
 
     effect->custom_buff = haste_buff;
 

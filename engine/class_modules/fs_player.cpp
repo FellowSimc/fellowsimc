@@ -605,9 +605,9 @@ void fs_player_t::create_buffs()
       break;
   }
 
-  auto drakheim_buff            = make_buff<fs_player_buff_t>( this, "drakheims_absolution" );
-  fs_buffs.drakheims_absolution = drakheim_buff;
-  fs_buffs.drakheims_absolution->set_default_value( fs_sets.drakheims_absolution_amp );
+  fs_buffs.drakheims_absolution = make_buff<fs_player_buff_t>( this, "drakheims_absolution" )
+                                      ->set_default_value( fs_sets.drakheims_absolution_amp )
+                                      ->set_duration( fs_sets.drakheims_absolution_duration );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -632,6 +632,21 @@ void fs_player_t::create_buffs()
   fs_buffs.draconic_might = make_buff( this, "draconic_might" )
                                 ->set_duration( fs_sets.draconic_might_duration )
                                 ->set_default_value( fs_sets.draconic_might_amp );
+
+  switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
+  {
+    case STAT_INTELLECT:
+      fs_buffs.draconic_might->set_pct_buff_type( STAT_PCT_BUFF_INTELLECT );
+      break;
+    case STAT_AGILITY:
+      fs_buffs.draconic_might->set_pct_buff_type( STAT_PCT_BUFF_AGILITY );
+      break;
+    case STAT_STRENGTH:
+      fs_buffs.draconic_might->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+      break;
+    default:
+      break;
+  }
 
   fs_buffs.adrenaline_rush = make_buff<fs_player_buff_t>( this, "adrenaline_rush" )
                                  ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= 1200.0 ? 0.09 : 0.03 )

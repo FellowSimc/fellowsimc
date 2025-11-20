@@ -318,14 +318,29 @@ struct chronoshift_pulse_t : fs_weapon_action_t<spell_t>
 {
   chronoshift_pulse_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
   {
-    background = true;
-    aoe        = -1;
-    school     = SCHOOL_ARCANE;
+    id                      = 1558;
+    name_str_reporting      = "Chronoshift (Pulse)";
+    background              = true;
+    aoe                     = -1;
+    school                  = SCHOOL_ARCANE;
+    reduced_aoe_targets     = 5;
 
-    spell_power_mod.direct = 5.769;
+    spell_power_mod.direct  = 5.769;
 
     if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT )
       active_weapon = true;
+  }
+
+   double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    double m = base_t::composite_da_multiplier( s );
+
+    if ( parent_dot )
+    {
+      m *= parent_dot->get_tick_factor();
+    }
+
+    return m;
   }
 };
 
@@ -336,11 +351,14 @@ struct chronoshift_t : fs_weapon_action_t<spell_t>
   {
     id = 1926;
 
-    name_str_reporting = "Chronoshift";
-    channeled      = true;
-    dot_duration   = 3.0_s;
-    base_tick_time = 1.5_s;
-    tick_zero      = false;
+    name_str_reporting      = "Chronoshift";
+    dot_duration            = 3.0_s;
+    base_tick_time          = 1.5_s;
+
+    channeled               = true;
+    hasted_ticks            = true;
+    tick_on_application     = true;
+    dot_allow_partial_tick  = true;
 
     aoe = 0;
 
@@ -351,6 +369,7 @@ struct chronoshift_t : fs_weapon_action_t<spell_t>
       active_weapon = true;
 
     tick_action = new chronoshift_pulse_t( "chronoshift_pulse", p );
+    add_child( tick_action );
 
     parse_options( options );
   }

@@ -313,6 +313,66 @@ struct fated_strike_t : fs_weapon_action_t<attack_t>
     fs_p()->fs_buffs.fated_strike->trigger();
   }
 };
+
+struct chronoshift_pulse_t : fs_weapon_action_t<spell_t>
+{
+  chronoshift_pulse_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
+  {
+    background = true;
+    aoe        = -1;
+    school     = SCHOOL_ARCANE;
+
+    spell_power_mod.direct = 5.769;
+
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT )
+      active_weapon = true;
+  }
+};
+
+struct chronoshift_t : fs_weapon_action_t<spell_t>
+{
+  chronoshift_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : fs_weapon_action_t( n, p, options )
+  {
+    id = 1926;
+
+    name_str_reporting = "Chronoshift";
+    channeled      = true;
+    dot_duration   = 3.0_s;
+    base_tick_time = 1.5_s;
+    tick_zero      = false;
+
+    aoe = 0;
+
+    school             = SCHOOL_ARCANE;
+    cooldown->duration = 200_s;
+
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT )
+      active_weapon = true;
+
+    tick_action = new chronoshift_pulse_t( "chronoshift_pulse", p );
+
+    parse_options( options );
+  }
+
+  void execute() override
+  {
+    fs_weapon_action_t::execute();
+    fs_p()->fs_buffs.chronoshift->trigger();
+  }
+
+  void cancel() override
+  {
+    fs_weapon_action_t::cancel();
+    fs_p()->fs_buffs.chronoshift->expire();
+  }
+
+  void last_tick( dot_t* d ) override
+  {
+    fs_weapon_action_t::last_tick( d );
+    fs_p()->fs_buffs.chronoshift->expire();
+  }
+};
 }
 
 
@@ -324,6 +384,8 @@ action_t* fs_player_t::create_action( util::string_view name, util::string_view 
 
   if ( name == "fated_strike" )
     return new fated_strike_t( name, this, options_str );
+  if ( name == "chronoshift" )
+    return new chronoshift_t( name, this, options_str );
 
   return player_t::create_action( name, options_str );
 }
@@ -543,7 +605,37 @@ void fs_player_t::create_buffs()
     }
   };
 
+  struct chronoshift_buff_t : fs_player_buff_t
+  {
+    double cdr_mod = 9.0;
+
+    chronoshift_buff_t( player_t* pl ) : fs_player_buff_t( pl, "chronoshift_barrier" )
+    {
+      set_duration( 3_s );
+
+      add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
+        if ( _new )
+        {
+          for ( auto& action : p()->action_list )
+          {
+            action->dynamic_recharge_rate_multiplier /= cdr_mod;
+            action->cooldown->adjust_recharge_multiplier();
+          }
+        }
+        else
+        {
+          for ( auto& action : p()->action_list )
+          {
+            action->dynamic_recharge_rate_multiplier *= cdr_mod;
+            action->cooldown->adjust_recharge_multiplier();
+          }
+        }
+      } );
+    }
+  };
+
   fs_buffs.fated_strike = make_buff<fated_strike_buff_t>( this );
+  fs_buffs.chronoshift  = make_buff<chronoshift_buff_t>( this );
 }
 
 // fs_player_t::invalidate_cache =========================================
@@ -553,7 +645,7 @@ void fs_player_t::invalidate_cache( cache_e c )
   player_t::invalidate_cache( c );
 }
 
-bool parse_fsweapona( sim_t* sim, std::string_view, std::string_view value )
+bool parse_fsweapon( sim_t* sim, std::string_view, std::string_view value )
 {
   auto& player = sim->active_player;
   for ( fsweapon_e weapon = fsweapon_e::FSWEAPON_NONE; weapon < fsweapon_e::FSWEAPON_MAX; weapon++ )

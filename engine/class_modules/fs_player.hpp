@@ -76,14 +76,17 @@ public:
 
   struct fs_buffs_t
   {
-    fs_player_buff_t* spirit_of_heroism;
-    fs_player_buff_t* ancestral_surge;
-    fs_player_buff_t* first_strike;
-    fs_player_buff_t* virtuoso;
-    fs_player_buff_t* adrenaline_rush;
-    fs_player_buff_t* might_of_the_minotaur;
-    fs_player_buff_t* fated_strike;
-    fs_player_buff_t* chronoshift;
+    buff_t* spirit_of_heroism;
+    buff_t* ancestral_surge;
+    buff_t* first_strike;
+    buff_t* virtuoso;
+    buff_t* adrenaline_rush;
+    buff_t* might_of_the_minotaur;
+    buff_t* fated_strike;
+    buff_t* chronoshift;
+    buff_t* drakheims_absolution;
+    buff_t* dark_prophecy;
+    buff_t* draconic_might;
   } fs_buffs;
 
   struct fs_cooldowns_t
@@ -116,6 +119,7 @@ public:
     double draconic_might_ppm          = 0.9;
     double draconic_might_amp          = 0.18;
     timespan_t draconic_might_duration = 15_s;
+    timespan_t draconic_might_cooldown  = 5_s;
 
     bool drakheims_absolution                = false;
     double drakheims_absolution_amp          = 0.20;

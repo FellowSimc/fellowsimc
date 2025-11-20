@@ -571,13 +571,13 @@ void fs_player_t::create_buffs()
 {
   player_t::create_buffs();
 
-  auto heroism_buff          = make_buff<fs_player_buff_t>( this, "spirit_of_heroism" );
-  fs_buffs.spirit_of_heroism = heroism_buff;
-  fs_buffs.spirit_of_heroism->set_pct_buff_type( STAT_PCT_BUFF_HASTE )->set_default_value( 0.3 )->set_duration( 20_s );
+  fs_buffs.spirit_of_heroism = make_buff<fs_player_buff_t>( this, "spirit_of_heroism" )
+                                   ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                                   ->set_default_value( 0.3 )
+                                   ->set_duration( 20_s );
 
-  auto ancestral_surge     = make_buff<fs_player_buff_t>( this, "ancestral_surge" );
-  fs_buffs.ancestral_surge = ancestral_surge;
-  fs_buffs.ancestral_surge->set_default_value( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1200.0 ? 0.24 : 0.08 );
+  fs_buffs.ancestral_surge = make_buff<fs_player_buff_t>( this, "ancestral_surge" )
+                                 ->set_default_value( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1200.0 ? 0.24 : 0.08 );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -593,27 +593,51 @@ void fs_player_t::create_buffs()
     default:
       break;
   }
+   
+  auto drakheim_buff     = make_buff<fs_player_buff_t>( this, "drakheims_absolution" );
+  fs_buffs.drakheims_absolution = drakheim_buff;
+  fs_buffs.drakheims_absolution->set_default_value( fs_sets.drakheims_absolution_amp );
 
-  auto adrenaline_rush     = make_buff<fs_player_buff_t>( this, "adrenaline_rush" );
-  fs_buffs.adrenaline_rush = adrenaline_rush;
-  fs_buffs.adrenaline_rush->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= 1200.0 ? 0.09 : 0.03 )
-      ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-      ->set_duration( 10_s );
+  switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
+  {
+    case STAT_INTELLECT:
+      fs_buffs.drakheims_absolution->set_pct_buff_type( STAT_PCT_BUFF_INTELLECT );
+      break;
+    case STAT_AGILITY:
+      fs_buffs.drakheims_absolution->set_pct_buff_type( STAT_PCT_BUFF_AGILITY );
+      break;
+    case STAT_STRENGTH:
+      fs_buffs.drakheims_absolution->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+      break;
+    default:
+      break;
+  }
 
-  auto virtuoso     = make_buff<fs_player_buff_t>( this, "virtuoso" );
-  fs_buffs.virtuoso = virtuoso;
-  fs_buffs.virtuoso->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2640.0 ? 0.09 : 0.03 )
-      ->set_pct_buff_type( STAT_PCT_BUFF_HASTE );
+  fs_buffs.dark_prophecy = make_buff( this, "dark_prophecy" )
+                        ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                        ->set_duration( fs_sets.dark_prophecy_duration )
+                        ->set_default_value( fs_sets.dark_prophecy_haste );
 
-  auto first_strike     = make_buff<fs_player_buff_t>( this, "first_strike" );
-  fs_buffs.first_strike = first_strike;
-  fs_buffs.first_strike->set_default_value( fs_gems.gem_powers[ GEM_EMERALD ] >= 1200.0 ? 0.015 : 0.05 )
-      ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
-      ->set_duration( 15_s );
+  fs_buffs.draconic_might = make_buff( this, "draconic_might" )
+                  ->set_duration( fs_sets.draconic_might_duration )
+                                ->set_default_value( fs_sets.draconic_might_amp );
 
-  auto might_of_the_minotaur     = make_buff<fs_player_buff_t>( this, "might_of_the_minotaur" );
-  fs_buffs.might_of_the_minotaur = might_of_the_minotaur;
-  fs_buffs.might_of_the_minotaur->set_default_value( fs_gems.gem_powers[ GEM_RUBY ] >= 1200.0 ? 0.09 : 0.03 );
+  fs_buffs.adrenaline_rush = make_buff<fs_player_buff_t>( this, "adrenaline_rush" )
+                                 ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= 1200.0 ? 0.09 : 0.03 )
+                                 ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                                 ->set_duration( 10_s );
+
+  fs_buffs.virtuoso = make_buff<fs_player_buff_t>( this, "virtuoso" )
+                          ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2640.0 ? 0.09 : 0.03 )
+                          ->set_pct_buff_type( STAT_PCT_BUFF_HASTE );
+
+  fs_buffs.first_strike = make_buff<fs_player_buff_t>( this, "first_strike" )
+                              ->set_default_value( fs_gems.gem_powers[ GEM_EMERALD ] >= 1200.0 ? 0.015 : 0.05 )
+                              ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+                              ->set_duration( 15_s );
+
+  fs_buffs.might_of_the_minotaur = make_buff<fs_player_buff_t>( this, "might_of_the_minotaur" )
+                                       ->set_default_value( fs_gems.gem_powers[ GEM_RUBY ] >= 1200.0 ? 0.09 : 0.03 );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -1024,12 +1048,32 @@ void fs_player_t::init_special_effects()
 
     special_effects.push_back( effect );
 
-    auto haste_buff = make_buff( this, "dark_prophecy" )
-                          ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-                          ->set_duration( fs_sets.dark_prophecy_duration )
-                          ->set_default_value( fs_sets.dark_prophecy_haste );
 
-    effect->custom_buff = haste_buff;
+    effect->custom_buff = fs_buffs.dark_prophecy;
+
+    auto dbc = new dbc_proc_callback_t( this, *effect );
+
+    dbc->initialize();
+    dbc->activate();
+  }
+
+  if ( fs_sets.draconic_might )
+  {
+    auto effect                   = new special_effect_t( this );
+    effect->spell_id              = 1318;
+    effect->name_str              = "draconic_might";
+    effect->proc_flags_           = PF_ALL_DAMAGE;
+    effect->proc_flags2_          = PF2_CRIT;
+    effect->has_use_buff_override = true;
+    effect->cooldown_             = fs_sets.draconic_might_cooldown;
+    effect->ppm_                  = -fs_sets.draconic_might_ppm;
+    effect->rppm_scale_           = rppm_scale_e::RPPM_CRIT;
+    effect->rppm_blp_             = real_ppm_t::BLP_DISABLED;
+    effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+    special_effects.push_back( effect );
+
+    effect->custom_buff = fs_buffs.draconic_might;
 
     auto dbc = new dbc_proc_callback_t( this, *effect );
 
@@ -1150,6 +1194,11 @@ void fs_player_t::used_ultimate()
   if ( fs_weapons.visions_of_grandeur > 0 && weapon_cd )
   {
     weapon_cd->reset( false, -1 );
+  }
+
+  if ( fs_sets.drakheims_absolution )
+  {
+    fs_buffs.drakheims_absolution->trigger();
   }
 }
 

@@ -614,7 +614,16 @@ public:
       ab::fs_p()->weapon_cd->adjust( ab::fs_p()->weapon_cd->duration * 0.3, false );
     }
   }
+    
+  double composite_total_spell_power() const override
+  {
+    return std::max( ab::composite_total_spell_power(), ab::composite_total_attack_power() );
+  }
 
+  double composite_total_attack_power() const override
+  {
+    return std::max( ab::composite_total_spell_power(), ab::composite_total_attack_power() );
+  }
 
   /*double composite_da_multiplier( const action_state_t* s ) const override
   {
@@ -627,6 +636,34 @@ public:
 
     return m;
   }*/
+};
+
+class fs_proc_spell_t : public fs_player_action_t<spell_t>
+{
+protected:
+  /// typedef for fs_weapon_action_t<action_base_t>
+  using base_t = fs_player_action_t<spell_t>;
+
+  /// typedef for the templated action type, eg. spell_t, attack_t, heal_t
+  using ab = fs_player_action_t<spell_t>;
+
+public:
+  fs_proc_spell_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : ab( n, p, options )
+  {
+    school = SCHOOL_MAGIC;
+    background = true;
+  }
+
+  double composite_total_spell_power() const override
+  {
+    return std::max( ab::composite_total_spell_power(), ab::composite_total_attack_power() );
+  }
+
+  double composite_total_attack_power() const override
+  {
+    return std::max( ab::composite_total_spell_power(), ab::composite_total_attack_power() );
+  }
 };
 }  // namespace actions
 

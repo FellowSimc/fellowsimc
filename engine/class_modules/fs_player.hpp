@@ -83,6 +83,7 @@ public:
     fs_player_buff_t* adrenaline_rush;
     fs_player_buff_t* might_of_the_minotaur;
     fs_player_buff_t* fated_strike;
+    fs_player_buff_t* chronoshift;
   } fs_buffs;
 
   struct fs_cooldowns_t

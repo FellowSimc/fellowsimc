@@ -1,0 +1,59 @@
+report_details=1
+optimal_raid=0
+max_time=420
+target_error=0.05
+iterations=10000
+chart_show_relative_difference=1
+vary_combat_length=0.05
+single_actor_batch=1
+desired_targets=1
+
+apl/chuey_dungeon.simc
+
+rime="Rime"
+level=80
+
+apl/rime.simc
+
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+
+gear_intellect=1500
+
+gear_haste_rating=2717
+gear_crit_rating=453
+gear_versatility_rating=1359
+gear_mastery_rating=0
+
+gems.topaz_power=2280
+gems.amethyst_power=2640
+gems.ruby_power=120
+
+talent.winters_embrace=1
+legendary.skandis_decree=1
+talent.burstbolter=1
+talent.chilling_finesse=1
+talent.cascading_blitz=1
+talent.frostweavers_wrath=1
+talent.biting_cold=1
+
+
+copy="Dark Prophecy","Rime"
+sets.dark_prophecy=1
+
+copy="Deaths Grasp","Rime"
+sets.deaths_grasp=1
+copy="Draconic Might","Rime"
+sets.draconic_might=1
+copy="Drakheims Absolution","Rime"
+sets.drakheims_absolution=1
+copy="Eldrin Deceit","Rime"
+sets.eldrin_deceit=1
+copy="Torment of BaelAurum","Rime"
+sets.torment_of_baelaurum=1
+copy="Tuzari Grace","Rime"
+sets.tuzari_grace=1

@@ -137,8 +137,9 @@ public:
     double haunting_lament_spirit        = 0.03;
     double haunting_lament_max_mana      = 0.15;
 
-    bool sin_warding                     = false;
-    double sin_warding_expertise         = 0.03;
+    bool sin_warding             = false;
+    double sin_warding_expertise = 0.03;
+    double sin_warding_max_hp    = 0.05;
 
     bool sintharas_veil                  = false;
     double sintharas_veil_spirit         = 0.03;

@@ -1,8 +1,9 @@
 #pragma once
+#include "fs_player.hpp"
+
 #include "util/util.hpp"
 
 #include "simulationcraft.hpp"
-#include "fs_player.hpp"
 
 namespace fellowship
 {  // UNNAMED NAMESPACE
@@ -76,6 +77,11 @@ double fs_player_t::composite_melee_haste() const
     h += 0.005;
   }
 
+  if ( fs_sets.tuzari_grace )
+  {
+    h += fs_sets.tuzari_grace_haste;
+  }
+
   return 1.0 / h;
 }
 
@@ -101,6 +107,11 @@ double fs_player_t::composite_spell_haste() const
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
   {
     h += 0.005;
+  }
+
+  if ( fs_sets.tuzari_grace )
+  {
+    h += fs_sets.tuzari_grace_haste;
   }
 
   return 1.0 / h;
@@ -210,6 +221,11 @@ double fs_player_t::composite_player_target_multiplier( player_t* target, school
 {
   double m = player_t::composite_player_target_multiplier( target, school );
 
+  if ( fs_sets.deaths_grasp && target->health_percentage() <= 35.0 )
+  {
+    m *= 1.0 + fs_sets.death_grasp_execute_amp;
+  }
+
   return m;
 }
 
@@ -266,8 +282,8 @@ namespace actions
 
 struct fated_strike_t : fs_weapon_action_t<attack_t>
 {
-  double st_mod = 11.37;
-  double cleave_mod = 4.79;
+  double st_mod       = 11.37;
+  double cleave_mod   = 4.79;
   double cleave_ratio = cleave_mod / st_mod;
 
   fated_strike_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
@@ -318,14 +334,14 @@ struct chronoshift_pulse_t : fs_weapon_action_t<spell_t>
 {
   chronoshift_pulse_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
   {
-    id                      = 1558;
-    name_str_reporting      = "Chronoshift (Pulse)";
-    background              = true;
-    aoe                     = -1;
-    school                  = SCHOOL_ARCANE;
-    reduced_aoe_targets     = 5;
+    id                  = 1558;
+    name_str_reporting  = "Chronoshift (Pulse)";
+    background          = true;
+    aoe                 = -1;
+    school              = SCHOOL_ARCANE;
+    reduced_aoe_targets = 5;
 
-    spell_power_mod.direct  = 5.769;
+    spell_power_mod.direct = 5.769;
 
     if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT )
       active_weapon = true;
@@ -364,15 +380,15 @@ struct chronoshift_t : fs_weapon_action_t<spell_t>
   {
     id = 1926;
 
-    name_str_reporting      = "Chronoshift";
-    dot_duration            = 3.0_s;
-    base_tick_time          = 1.5_s;
+    name_str_reporting = "Chronoshift";
+    dot_duration       = 3.0_s;
+    base_tick_time     = 1.5_s;
 
-    channeled               = true;
-    hasted_ticks            = true;
-    tick_on_application     = true;
-    dot_allow_partial_tick  = true;
-    may_crit                = false;
+    channeled              = true;
+    hasted_ticks           = true;
+    tick_on_application    = true;
+    dot_allow_partial_tick = true;
+    may_crit               = false;
 
     aoe = 0;
 
@@ -407,8 +423,7 @@ struct chronoshift_t : fs_weapon_action_t<spell_t>
     fs_p()->fs_buffs.chronoshift->expire();
   }
 };
-}
-
+}  // namespace actions
 
 // fs_player_t::create_action  ==================================================
 
@@ -430,7 +445,6 @@ std::unique_ptr<expr_t> fs_player_t::create_action_expression( action_t& action,
 {
   auto split = util::string_split<util::string_view>( name_str, "." );
 
-
   return player_t::create_action_expression( action, name_str );
 }
 
@@ -438,7 +452,6 @@ std::unique_ptr<expr_t> fs_player_t::create_expression( util::string_view name_s
 {
   auto split = util::string_split<util::string_view>( name_str, "." );
 
-  
   if ( util::str_compare_ci( split[ 0 ], "sets" ) )
   {
     if ( split.size() == 2 )
@@ -497,13 +510,13 @@ void fs_player_t::init_base_stats()
   base.mastery = 0.0;
 
   resources.base[ RESOURCE_SPIRIT ] = resources.max[ RESOURCE_SPIRIT ] = 100;
-  resources.start_at[ RESOURCE_SPIRIT ]              = 0;
-  resources.base_regen_per_second[ RESOURCE_SPIRIT ] = 100.0 / 300 * 1.7;
+  resources.start_at[ RESOURCE_SPIRIT ]                                = 0;
+  resources.base_regen_per_second[ RESOURCE_SPIRIT ]                   = 100.0 / 300 * 1.7;
 
-  //resources.base_regen_per_second[ RESOURCE_ENERGY ] = 10;
+  // resources.base_regen_per_second[ RESOURCE_ENERGY ] = 10;
 
-  //base_gcd = timespan_t::from_seconds( 1.0 );
-  //min_gcd  = timespan_t::from_seconds( 1.0 );
+  // base_gcd = timespan_t::from_seconds( 1.0 );
+  // min_gcd  = timespan_t::from_seconds( 1.0 );
 }
 
 // fs_player_t::init_spells =====================================================
@@ -548,8 +561,6 @@ void fs_player_t::init_scaling()
   scaling->disable( STAT_SPELL_POWER );
   scaling->disable( STAT_ATTACK_POWER );
 
-
-
   // Break out early if scaling is disabled on this player, or there's no
   // scaling stat
   if ( !scale_player || sim->scaling->scale_stat == STAT_NONE )
@@ -593,8 +604,8 @@ void fs_player_t::create_buffs()
     default:
       break;
   }
-   
-  auto drakheim_buff     = make_buff<fs_player_buff_t>( this, "drakheims_absolution" );
+
+  auto drakheim_buff            = make_buff<fs_player_buff_t>( this, "drakheims_absolution" );
   fs_buffs.drakheims_absolution = drakheim_buff;
   fs_buffs.drakheims_absolution->set_default_value( fs_sets.drakheims_absolution_amp );
 
@@ -614,12 +625,12 @@ void fs_player_t::create_buffs()
   }
 
   fs_buffs.dark_prophecy = make_buff( this, "dark_prophecy" )
-                        ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-                        ->set_duration( fs_sets.dark_prophecy_duration )
-                        ->set_default_value( fs_sets.dark_prophecy_haste );
+                               ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                               ->set_duration( fs_sets.dark_prophecy_duration )
+                               ->set_default_value( fs_sets.dark_prophecy_haste );
 
   fs_buffs.draconic_might = make_buff( this, "draconic_might" )
-                  ->set_duration( fs_sets.draconic_might_duration )
+                                ->set_duration( fs_sets.draconic_might_duration )
                                 ->set_default_value( fs_sets.draconic_might_amp );
 
   fs_buffs.adrenaline_rush = make_buff<fs_player_buff_t>( this, "adrenaline_rush" )
@@ -1032,6 +1043,45 @@ void fs_player_t::init_special_effects()
     fs_buffs.spirit_of_heroism->base_buff_duration += 6_s;
   }
 
+  if ( fs_sets.eldrin_deceit )
+  {
+    base.spell_crit_chance += fs_sets.eldrin_deceit_crit;
+    base.attack_crit_chance += fs_sets.eldrin_deceit_crit;
+  }
+
+  if ( fs_sets.eldrin_fury )
+  {
+    base.spell_crit_chance += fs_sets.eldrin_fury_crit;
+    base.attack_crit_chance += fs_sets.eldrin_fury_crit;
+  }
+
+  if ( fs_sets.deaths_grasp )
+  {
+    base.mastery += fs_sets.deaths_grasp_spirit;
+  }
+
+  if ( fs_sets.haunting_lament )
+  {
+    base.mastery += fs_sets.haunting_lament_spirit;
+    resources.base_multiplier[ RESOURCE_MANA ] += fs_sets.haunting_lament_max_mana;
+  }
+
+  if ( fs_sets.sintharas_veil )
+  {
+    base.mastery += fs_sets.sintharas_veil_spirit;
+  }
+
+  if ( fs_sets.sin_warding )
+  {
+    base.versatility += fs_sets.sin_warding_expertise;
+    resources.base_multiplier[ RESOURCE_HEALTH ] += fs_sets.sin_warding_max_hp;
+  }
+
+  if ( fs_sets.torment_of_baelaurum )
+  {
+    base.attribute_multiplier[ convert_hybrid_stat( STAT_STR_AGI_INT ) ] += fs_sets.torment_of_baelaurum_amp;
+  }
+
   if ( fs_sets.dark_prophecy )
   {
     auto effect                   = new special_effect_t( this );
@@ -1047,7 +1097,6 @@ void fs_player_t::init_special_effects()
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
     special_effects.push_back( effect );
-
 
     effect->custom_buff = fs_buffs.dark_prophecy;
 
@@ -1205,7 +1254,6 @@ void fs_player_t::used_ultimate()
 void fs_player_t::init_background_actions()
 {
   player_t::init_background_actions();
-
 }
 
 // fs_player_t::reset ===========================================================
@@ -1287,6 +1335,5 @@ void fs_player_t::regen( timespan_t periodicity )
 {
   player_t::regen( periodicity );
 }
-
 
 }  // namespace fellowship

@@ -331,7 +331,7 @@ struct chronoshift_pulse_t : fs_weapon_action_t<spell_t>
       active_weapon = true;
   }
 
-   double composite_da_multiplier( const action_state_t* s ) const override
+  double composite_da_multiplier( const action_state_t* s ) const override
   {
     double m = base_t::composite_da_multiplier( s );
 
@@ -341,6 +341,19 @@ struct chronoshift_pulse_t : fs_weapon_action_t<spell_t>
     }
 
     return m;
+  }
+
+  void execute() override
+  {
+    if ( target_list().size() > 1 )
+    {
+      target = target_list().front();
+    }
+
+    if ( pre_execute_state )
+      pre_execute_state->target = target;
+
+    base_t::execute();
   }
 };
 
@@ -359,6 +372,7 @@ struct chronoshift_t : fs_weapon_action_t<spell_t>
     hasted_ticks            = true;
     tick_on_application     = true;
     dot_allow_partial_tick  = true;
+    may_crit                = false;
 
     aoe = 0;
 
@@ -376,6 +390,7 @@ struct chronoshift_t : fs_weapon_action_t<spell_t>
 
   void execute() override
   {
+    target = player;
     fs_weapon_action_t::execute();
     fs_p()->fs_buffs.chronoshift->trigger();
   }

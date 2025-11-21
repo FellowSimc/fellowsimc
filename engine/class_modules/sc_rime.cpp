@@ -114,6 +114,11 @@ public:
     gain_t* ult_worbs;
   } gains;
 
+  struct procs_t
+  {
+    proc_t* coal_no_targets;
+  } procs;
+
   struct rppms_t
   {
     real_ppm_t* soulfrost_torrent;
@@ -736,7 +741,7 @@ public:
 
     if ( p()->talents.soulfrost_torrent && !is_secondary_action() && !ab::background && !ab::tick_action )
     {
-      if ( p()->rppm.soulfrost_torrent->trigger() )
+      if ( !p()->buffs.soulfrost_torrent->check() && p()->rppm.soulfrost_torrent->trigger() )
       {
         p()->buffs.soulfrost_torrent->trigger();
       }
@@ -1348,6 +1353,8 @@ struct freezing_torrent_t : public rime_spell_t
   {
     base_t::execute();
 
+    sim->print_debug( "{}'s should be executing a torrent", *p() );
+
     p()->buffs.soulfrost_torrent->decrement();
   }
 
@@ -1374,6 +1381,11 @@ struct freezing_torrent_t : public rime_spell_t
 
     if ( p()->talents.coalescing_frost )
     {
+      if ( !p()->get_target_data( d->target )->debuffs.coalescing_frost->check() )
+      {
+        sim->print_debug( "{}'s Freezing Torrent tick triggers Coalescing Frost on {}. Target is sleeping: {}", *p(),
+                          *d->target, d->target->is_sleeping() );
+      }
       if ( result_is_hit( d->state->result ) )
       {
         if ( d->state->result == RESULT_CRIT && rng().roll( p()->talents.coalescing_frost_crit_extra_chance ) )
@@ -1418,7 +1430,8 @@ struct coalescing_frost_t : public rime_spell_t
 
     background = true;
 
-    spell_power_mod.direct = 0.302816 * 1.42;
+    // Was 1.42, old beam value
+    spell_power_mod.direct = 0.302816 * 1.562;
   }
 };
 
@@ -1485,26 +1498,41 @@ rime_td_t::rime_td_t( player_t* target, rime_t* source )
                                  ->set_duration( source->talents.coalescing_frost_duration )
                                  ->set_refresh_behavior( buff_refresh_behavior::DURATION )
                                  ->set_max_stack( source->talents.coalescing_frost_max_stacks )
-                                 ->set_stack_change_callback( [ source ]( buff_t* b, int old, int _new ) {
+                                 ->add_stack_change_callback( [ source ]( buff_t* b, int old, int _new ) {
                                    if ( !_new && old )
                                    {
                                      auto damage = source->actions.coalescing_frost;
-
-                                     damage->set_target( b->player );
-                                     action_state_t* damage_state = damage->get_state();
                                      if ( !b->player->is_sleeping() )
                                      {
-                                       damage_state->target = b->player;
+                                       damage->set_target( b->player );
                                      }
                                      else
                                      {
-                                       damage->select_target();
-                                       damage_state->target = damage->target;
+                                       for ( auto& enemy : b->sim->target_non_sleeping_list )
+                                       {
+                                         if ( !enemy->is_sleeping() )
+                                         {
+                                           damage->set_target( enemy );
+                                           break;
+                                         }
+                                       }
                                      }
+                                     if ( !damage->target->is_sleeping() )
+                                     {
+                                       action_state_t* damage_state = damage->get_state();
+                                       damage_state->target         = damage->target;
 
-                                     damage->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
-                                     damage_state->da_multiplier *= old;
-                                     damage->schedule_execute( damage_state );
+                                       damage->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+                                       damage_state->da_multiplier *= old;
+                                       damage->schedule_execute( damage_state );
+                                     }
+                                     else
+                                     {
+                                       b->sim->print_debug( "{} tried to execute {} on {} but all targets were dead.",
+                                                            *b->source, *damage, *b->player );
+                                       source->procs.coal_no_targets->occur();
+                                       
+                                     }
                                    }
                                  } );
 }
@@ -1842,6 +1870,8 @@ void rime_t::init_gains()
 void rime_t::init_procs()
 {
   fs_player_t::init_procs();
+
+  procs.coal_no_targets = get_proc( "Coalescing Frost No Targets" );
 }
 
 // rime_t::init_rng ========================================================

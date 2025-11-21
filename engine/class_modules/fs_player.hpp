@@ -526,7 +526,7 @@ public:
   {
     double crit_bonus = ab::total_crit_bonus( state );
 
-    return crit_bonus + std::clamp( state->crit_chance + state->target_crit_chance - 1.0, 0.0, 99.0 );
+    return crit_bonus + std::clamp( state->composite_crit_chance() - 1.0, 0.0, 99.0 );
   }
 
 

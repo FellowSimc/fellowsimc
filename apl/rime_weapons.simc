@@ -41,14 +41,14 @@ talent.cascading_blitz=1
 talent.frostweavers_wrath=1
 talent.biting_cold=1
 
-copy="Chronoshift Brave4","Rime"
-weapon=chronoshift
+copy="Natures Fury Brave4","Rime"
+weapon=natures_fury
 weapon_trait.brave_machinations=4
 
-copy="Chronoshift heroic_brand4","Rime"
-weapon=chronoshift
+copy="Natures Fury heroic_brand4","Rime"
+weapon=natures_fury
 weapon_trait.heroic_brand=4
 
-copy="Chronoshift Grandeur4","Rime"
-weapon=chronoshift
+copy="Natures Fury Grandeur4","Rime"
+weapon=natures_fury
 weapon_trait.visions_of_grandeur=4

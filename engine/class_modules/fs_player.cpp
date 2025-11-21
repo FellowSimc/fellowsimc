@@ -423,6 +423,32 @@ struct chronoshift_t : fs_weapon_action_t<spell_t>
     fs_p()->fs_buffs.chronoshift->expire();
   }
 };
+
+struct natures_fury_t : fs_weapon_action_t<spell_t>
+{
+  natures_fury_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : fs_weapon_action_t( n, p, options )
+  {
+    id = 161;
+
+    name_str_reporting = "Nature's Fury";
+    school             = SCHOOL_NATURE;
+    base_execute_time  = 2_s;
+    base_crit += 0.30;
+
+    spell_power_mod.direct = 13.977;
+
+    aoe                 = 4;
+    full_amount_targets = 4;
+
+    cooldown->duration = 60_s;
+
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_NATURES_FURY )
+      active_weapon = true;
+
+    parse_options( options );
+  }
+};
 }  // namespace actions
 
 // fs_player_t::create_action  ==================================================
@@ -435,6 +461,8 @@ action_t* fs_player_t::create_action( util::string_view name, util::string_view 
     return new fated_strike_t( name, this, options_str );
   if ( name == "chronoshift" )
     return new chronoshift_t( name, this, options_str );
+  if ( name == "natures_fury" )
+    return new natures_fury_t( name, this, options_str );
 
   return player_t::create_action( name, options_str );
 }

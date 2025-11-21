@@ -12,7 +12,7 @@ actions.main+=/bursting_ice,target_if=max:target.health,if=refreshable
 actions.main+=/chronoshift,if=!cooldown.flight_of_the_navir.up&!cooldown.ice_blitz.up&!cooldown.winters_blessing.up&!cooldown.bursting_ice.up
 actions.main+=/cold_snap,target_if=max:target.health,if=full_recharge_time<=gcd.max*3&worb<5
 actions.main+=/ice_comet,if=active_enemies>=2&(worb>=5|!talent.winters_embrace|buff.undulating_spirit.react|buff.winters_embrace.up)
-actions.main+=/freezing_torrent,target_if=max:target.health,if=worb<5,interrupt_if=cooldown.bursting_ice.up&active_enemies>1&!talent.coalescing_frost,interrupt_immediate=1
+actions.main+=/freezing_torrent,target_if=max:target.health,if=worb<5&target.time_to_die>=7,interrupt_if=cooldown.bursting_ice.up&active_enemies>1&!talent.coalescing_frost,interrupt_immediate=1
 actions.main+=/glacial_blast,target_if=max:target.health,if=active_enemies=1&(worb>=5|buff.undulating_spirit.react|!talent.winters_embrace|buff.winters_embrace.up)
 actions.main+=/cold_snap,target_if=max:target.health,if=buff.flight_of_the_navir.up|cooldown.flight_of_the_navir.remains>=cooldown.cold_snap.duration*2|target.time_to_die<=12
 actions.main+=/frost_bolt,target_if=max:target.health

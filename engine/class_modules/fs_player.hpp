@@ -26,6 +26,7 @@ class fs_player_td_t : public actor_target_data_t
 public:
   struct dots_t
   {
+    dot_t* curse_of_anzhyr;
   } dots;
 
   struct

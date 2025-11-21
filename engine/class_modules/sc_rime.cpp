@@ -1430,7 +1430,8 @@ struct coalescing_frost_t : public rime_spell_t
 
     background = true;
 
-    spell_power_mod.direct = 0.302816 * 1.42;
+    // Was 1.42, old beam value
+    spell_power_mod.direct = 0.302816 * 1.562;
   }
 };
 

@@ -741,7 +741,7 @@ public:
 
     if ( p()->talents.soulfrost_torrent && !is_secondary_action() && !ab::background && !ab::tick_action )
     {
-      if ( p()->rppm.soulfrost_torrent->trigger() )
+      if ( !p()->buffs.soulfrost_torrent->check() && p()->rppm.soulfrost_torrent->trigger() )
       {
         p()->buffs.soulfrost_torrent->trigger();
       }

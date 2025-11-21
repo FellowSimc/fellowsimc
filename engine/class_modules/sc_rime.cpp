@@ -114,6 +114,11 @@ public:
     gain_t* ult_worbs;
   } gains;
 
+  struct procs_t
+  {
+    proc_t* coal_no_targets;
+  } procs;
+
   struct rppms_t
   {
     real_ppm_t* soulfrost_torrent;
@@ -1496,11 +1501,37 @@ rime_td_t::rime_td_t( player_t* target, rime_t* source )
                                    if ( !_new && old )
                                    {
                                      auto damage = source->actions.coalescing_frost;
-                                     action_state_t* damage_state = damage->get_state();
+                                     if ( !b->player->is_sleeping() )
+                                     {
+                                       damage->set_target( b->player );
+                                     }
+                                     else
+                                     {
+                                       for ( auto& enemy : b->sim->target_non_sleeping_list )
+                                       {
+                                         if ( !enemy->is_sleeping() )
+                                         {
+                                           damage->set_target( enemy );
+                                           break;
+                                         }
+                                       }
+                                     }
+                                     if ( !damage->target->is_sleeping() )
+                                     {
+                                       action_state_t* damage_state = damage->get_state();
+                                       damage_state->target         = damage->target;
 
-                                     damage->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
-                                     damage_state->da_multiplier *= old;
-                                     damage->schedule_execute( damage_state );
+                                       damage->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+                                       damage_state->da_multiplier *= old;
+                                       damage->schedule_execute( damage_state );
+                                     }
+                                     else
+                                     {
+                                       b->sim->print_debug( "{} tried to execute {} on {} but all targets were dead.",
+                                                            *b->source, *damage, *b->player );
+                                       source->procs.coal_no_targets->occur();
+                                       
+                                     }
                                    }
                                  } );
 }
@@ -1838,6 +1869,8 @@ void rime_t::init_gains()
 void rime_t::init_procs()
 {
   fs_player_t::init_procs();
+
+  procs.coal_no_targets = get_proc( "Coalescing Frost No Targets" );
 }
 
 // rime_t::init_rng ========================================================

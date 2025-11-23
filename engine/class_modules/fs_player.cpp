@@ -441,7 +441,6 @@ struct natures_fury_t : fs_weapon_action_t<spell_t>
     spell_power_mod.direct = 13.977;
 
     aoe                 = 4;
-    full_amount_targets = 4;
 
     cooldown->duration = 60_s;
 
@@ -452,82 +451,61 @@ struct natures_fury_t : fs_weapon_action_t<spell_t>
   }
 };
 
-struct curse_of_anzhyr_t : fs_weapon_action_t<spell_t>
-{
-  curse_of_anzhyr_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
-    : fs_weapon_action_t( n, p, options )
-  {
-    id                 = 1561;
-    name_str_reporting = "Curse of An'zhyr";
-    school             = SCHOOL_FROST;
-
-    spell_power_mod.direct = 0.256;
-    base_tick_time = 3.0_s;
-    dot_duration = 3600_s; // An hour enough?
-
-    hasted_ticks = true;
-    tick_may_crit = true;
-    background    = true;
-
-    aoe = -1;
-
-    parse_options( options );
-  }
-
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = base_t::composite_da_multiplier( s );
-
-    if ( parent_dot )
-    {
-      m *= parent_dot->get_tick_factor();
-    }
-
-    return m;
-  }
-};
-
-struct icicles_of_anzhyr_wave_t : fs_weapon_action_t<spell_t>
-{
-  icicles_of_anzhyr_wave_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
-  {
-    id                 = 20003;
-    name_str_reporting = "Icicles of An'zhyr (Wave)";
-    school             = SCHOOL_FROST;
-
-    spell_power_mod.direct = 0.96;
-
-    aoe        = -1;
-    background = true;
-  }
-
-  double action_multiplier() const override
-  {
-    double m = fs_weapon_action_t::action_multiplier();
-
-    if ( fs_p()->get_target_data( target )->dots.curse_of_anzhyr->is_ticking() )
-    {
-      m *= 3.0;
-    }
-
-    return m;
-  }
-
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = base_t::composite_da_multiplier( s );
-
-    if ( parent_dot )
-    {
-      m *= parent_dot->get_tick_factor();
-    }
-
-    return m;
-  }
-};
-
 struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
 {
+  struct curse_of_anzhyr_t : fs_weapon_action_t<spell_t>
+  {
+    curse_of_anzhyr_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+      : fs_weapon_action_t( n, p, options )
+    {
+      id                 = 1561;
+      name_str_reporting = "Curse of An'zhyr";
+      school             = SCHOOL_FROST;
+
+      spell_power_mod.direct = 0.256;
+      base_tick_time         = 3.0_s;
+      dot_duration           = sim->expected_iteration_time > 0_ms ? 2 * sim->expected_iteration_time
+                                                                   : 2 * sim->max_time * ( 1.0 + sim->vary_combat_length );
+
+      hasted_ticks           = true;
+      tick_may_crit          = true;
+      background             = true;
+      dot_allow_partial_tick = true;
+
+      aoe = -1;
+
+      parse_options( options );
+    }
+  };
+
+  struct icicles_of_anzhyr_wave_t : fs_weapon_action_t<spell_t>
+  {
+    icicles_of_anzhyr_wave_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
+    {
+      id                 = 20003;
+      name_str_reporting = "Icicles of An'zhyr (Wave)";
+      school             = SCHOOL_FROST;
+
+      spell_power_mod.direct = 0.96;
+
+      aoe        = -1;
+      background = true;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      double m = fs_weapon_action_t::composite_da_multiplier( s );
+      const fs_player_td_t* td = fs_p()->find_target_data( s->target );
+
+      if ( td && td->dots.curse_of_anzhyr && td->dots.curse_of_anzhyr->is_ticking() )
+      {
+        m *= 3.0;
+      }
+
+      return m;
+    }
+  };
+
   icicles_of_anzhyr_wave_t* wave_action;
 
   icicles_of_anzhyr_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
@@ -535,12 +513,6 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
   {
     id                 = 1932;
     name_str_reporting = "Icicles of An'zhyr";
-    school             = SCHOOL_FROST;
-
-    base_tick_time = 1.0_s;
-    dot_duration   = 3.0_s;
-    channeled = false;
-
     cooldown->duration = 40_s;
 
     wave_action  = new icicles_of_anzhyr_wave_t( "icicles_of_anzhyr_wave", p );
@@ -555,18 +527,26 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
     parse_options( options );
   }
 
-  void tick( dot_t* d ) override
+  void execute() override
   {
-    wave_action->set_target( target );
-    wave_action->execute();
+    fs_weapon_action_t::execute();
 
-    int total_ticks = (int)( dot_duration.total_seconds() / base_tick_time.total_seconds() );
-
-    if ( d->current_tick == total_ticks )
-    {
-      tick_action->set_target( target );
-      tick_action->execute();
-    }
+    make_event<ground_aoe_event_t>(
+        *sim, fs_p(),
+        ground_aoe_params_t()
+            .target( execute_state->target )
+            .action( wave_action )
+            .duration( 3.0_s )
+            .pulse_time( 1.0_s )
+            .n_pulses(3)
+            .state_callback( [ this ]( ground_aoe_params_t::state_type type, ground_aoe_event_t* e ) {
+              if ( type == ground_aoe_params_t::EVENT_STOPPED )
+              {
+                if ( e && e->params )
+                  tick_action->execute_on_target( e->params->target() );
+              }
+            } ),
+        true );
   }
 };
 }  // namespace actions

@@ -462,11 +462,10 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
       name_str_reporting = "Curse of An'zhyr";
       school             = SCHOOL_FROST;
 
-      spell_power_mod.direct = 0.256;
-      base_tick_time         = 3.0_s;
-      dot_duration           = sim->expected_iteration_time > 0_ms ? 2 * sim->expected_iteration_time
+      spell_power_mod.tick = 0.256;
+      base_tick_time       = 3.0_s;
+      dot_duration         = sim->expected_iteration_time > 0_ms ? 2 * sim->expected_iteration_time
                                                                    : 2 * sim->max_time * ( 1.0 + sim->vary_combat_length );
-
       hasted_ticks           = true;
       tick_may_crit          = true;
       background             = true;
@@ -507,6 +506,7 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
   };
 
   icicles_of_anzhyr_wave_t* wave_action;
+  curse_of_anzhyr_t* dot_action;
 
   icicles_of_anzhyr_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
     : fs_weapon_action_t( n, p, options )
@@ -516,10 +516,10 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
     cooldown->duration = 40_s;
 
     wave_action  = new icicles_of_anzhyr_wave_t( "icicles_of_anzhyr_wave", p );
-    tick_action = new curse_of_anzhyr_t( "curse_of_anzhyr", p );
+    dot_action  = new curse_of_anzhyr_t( "curse_of_anzhyr", p );
 
     add_child( wave_action );
-    add_child( tick_action );
+    add_child( dot_action );
 
     if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_ICICLES_OF_ANZHYR )
       active_weapon = true;
@@ -536,14 +536,12 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
         ground_aoe_params_t()
             .target( execute_state->target )
             .action( wave_action )
-            .duration( 3.0_s )
             .pulse_time( 1.0_s )
-            .n_pulses(3)
+            .n_pulses( 3 )
             .state_callback( [ this ]( ground_aoe_params_t::state_type type, ground_aoe_event_t* e ) {
-              if ( type == ground_aoe_params_t::EVENT_STOPPED )
+              if ( e && e->params && e->current_pulse == 3 )
               {
-                if ( e && e->params )
-                  tick_action->execute_on_target( e->params->target() );
+                dot_action->execute();
               }
             } ),
         true );
@@ -1363,10 +1361,8 @@ void fs_player_t::init_finished()
 
   if ( fs_gems.gem_powers[ GEM_RUBY ] >= 960.0 )
   {
-    sim->target_non_sleeping_list.register_callback( [ this ]( player_t* p ) {
-      if ( p->is_boss() )
-        cache.invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
-    } );
+    sim->target_non_sleeping_list.register_callback(
+        [ this ]( player_t* p ) { cache.invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER ); } );
   }
 
   if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 960.0 )

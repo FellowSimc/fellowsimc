@@ -52,3 +52,27 @@ weapon_trait.heroic_brand=4
 copy="Chronoshift Grandeur4","Rime"
 weapon=chronoshift
 weapon_trait.visions_of_grandeur=4
+
+copy="Icicles Brave4","Rime"
+weapon=icicles_of_anzhyr
+weapon_trait.brave_machinations=4
+
+copy="Icicles heroic_brand4","Rime"
+weapon=icicles_of_anzhyr
+weapon_trait.heroic_brand=4
+
+# copy="Icicles Grandeur4","Rime"
+# weapon=icicles_of_anzhyr
+# weapon_trait.visions_of_grandeur=4
+
+copy="Natures Fury Brave4","Rime"
+weapon=natures_fury
+weapon_trait.brave_machinations=4
+
+copy="Natures Fury heroic_brand4","Rime"
+weapon=natures_fury
+weapon_trait.heroic_brand=4
+
+copy="Natures Fury Grandeur4","Rime"
+weapon=natures_fury
+weapon_trait.visions_of_grandeur=4

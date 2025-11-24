@@ -15,6 +15,8 @@ namespace fellowship
 fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
   : actor_target_data_t( target, source ), dots(), debuffs()
 {
+  dots.curse_of_anzhyr   = target->get_dot( "curse_of_anzhyr", source );
+
   debuffs.triggered_first_strike = make_buff( *this, "first_strike_triggered" );
 }
 
@@ -423,6 +425,130 @@ struct chronoshift_t : fs_weapon_action_t<spell_t>
     fs_p()->fs_buffs.chronoshift->expire();
   }
 };
+
+struct natures_fury_t : fs_weapon_action_t<spell_t>
+{
+  natures_fury_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : fs_weapon_action_t( n, p, options )
+  {
+    id = 161;
+
+    name_str_reporting = "Nature's Fury";
+    school             = SCHOOL_NATURE;
+    base_execute_time  = 2_s;
+    base_crit += 0.30;
+
+    spell_power_mod.direct = 13.977;
+
+    aoe                 = 4;
+
+    cooldown->duration = 60_s;
+
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_NATURES_FURY )
+      active_weapon = true;
+
+    parse_options( options );
+  }
+};
+
+struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
+{
+  struct curse_of_anzhyr_t : fs_weapon_action_t<spell_t>
+  {
+    curse_of_anzhyr_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+      : fs_weapon_action_t( n, p, options )
+    {
+      id                 = 1561;
+      name_str_reporting = "Curse of An'zhyr";
+      school             = SCHOOL_FROST;
+
+      spell_power_mod.direct = 0.256;
+      base_tick_time         = 3.0_s;
+      dot_duration           = sim->expected_iteration_time > 0_ms ? 2 * sim->expected_iteration_time
+                                                                   : 2 * sim->max_time * ( 1.0 + sim->vary_combat_length );
+
+      hasted_ticks           = true;
+      tick_may_crit          = true;
+      background             = true;
+      dot_allow_partial_tick = true;
+
+      aoe = -1;
+
+      parse_options( options );
+    }
+  };
+
+  struct icicles_of_anzhyr_wave_t : fs_weapon_action_t<spell_t>
+  {
+    icicles_of_anzhyr_wave_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
+    {
+      id                 = 20003;
+      name_str_reporting = "Icicles of An'zhyr (Wave)";
+      school             = SCHOOL_FROST;
+
+      spell_power_mod.direct = 0.96;
+
+      aoe        = -1;
+      background = true;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      double m = fs_weapon_action_t::composite_da_multiplier( s );
+      const fs_player_td_t* td = fs_p()->find_target_data( s->target );
+
+      if ( td && td->dots.curse_of_anzhyr && td->dots.curse_of_anzhyr->is_ticking() )
+      {
+        m *= 3.0;
+      }
+
+      return m;
+    }
+  };
+
+  icicles_of_anzhyr_wave_t* wave_action;
+
+  icicles_of_anzhyr_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : fs_weapon_action_t( n, p, options )
+  {
+    id                 = 1932;
+    name_str_reporting = "Icicles of An'zhyr";
+    cooldown->duration = 40_s;
+
+    wave_action  = new icicles_of_anzhyr_wave_t( "icicles_of_anzhyr_wave", p );
+    tick_action = new curse_of_anzhyr_t( "curse_of_anzhyr", p );
+
+    add_child( wave_action );
+    add_child( tick_action );
+
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_ICICLES_OF_ANZHYR )
+      active_weapon = true;
+
+    parse_options( options );
+  }
+
+  void execute() override
+  {
+    fs_weapon_action_t::execute();
+
+    make_event<ground_aoe_event_t>(
+        *sim, fs_p(),
+        ground_aoe_params_t()
+            .target( execute_state->target )
+            .action( wave_action )
+            .duration( 3.0_s )
+            .pulse_time( 1.0_s )
+            .n_pulses(3)
+            .state_callback( [ this ]( ground_aoe_params_t::state_type type, ground_aoe_event_t* e ) {
+              if ( type == ground_aoe_params_t::EVENT_STOPPED )
+              {
+                if ( e && e->params )
+                  tick_action->execute_on_target( e->params->target() );
+              }
+            } ),
+        true );
+  }
+};
 }  // namespace actions
 
 // fs_player_t::create_action  ==================================================
@@ -435,6 +561,10 @@ action_t* fs_player_t::create_action( util::string_view name, util::string_view 
     return new fated_strike_t( name, this, options_str );
   if ( name == "chronoshift" )
     return new chronoshift_t( name, this, options_str );
+  if ( name == "natures_fury" )
+    return new natures_fury_t( name, this, options_str );
+  if ( name == "icicles_of_anzhyr" )
+    return new icicles_of_anzhyr_t( name, this, options_str );
 
   return player_t::create_action( name, options_str );
 }

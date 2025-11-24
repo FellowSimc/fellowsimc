@@ -1235,7 +1235,7 @@ void fs_player_t::init_special_effects()
     effect->has_use_buff_override = true;
     effect->cooldown_             = fs_sets.dark_prophecy_cooldown;
     effect->ppm_                  = -fs_sets.dark_prophecy_ppm;
-    effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
+    effect->rppm_scale_           = rppm_scale_e::RPPM_NONE;
     effect->rppm_blp_             = real_ppm_t::BLP_DISABLED;
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
 

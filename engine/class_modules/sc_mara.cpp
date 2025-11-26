@@ -193,15 +193,16 @@ public:
     bool gushing_blood                                = false;
     int gushing_blood_hemorrhaging_additional_targets = 4;
 
-    bool corrosive_spill                    = false;
-    double corrosive_spill_chance_per_cp    = 0.03;
-    timespan_t corrosive_spill_duration     = 3_s;
-    double corrosive_spill_damage           = 0.9;
-    timespan_t corrosive_spill_ticktime     = 1.5_s;
+    bool corrosive_spill                      = false;
+    double corrosive_spill_chance_per_cp      = 0.03;
+    timespan_t corrosive_spill_duration       = 3_s;
+    double corrosive_spill_damage             = 0.9;
+    timespan_t corrosive_spill_ticktime       = 1.5_s;
+    double corrosive_spill_cumulative_chance_per_tick_of_miss = 0.25;
 
     bool feed_the_queen                   = false;
-    int feed_the_queen_max_stacks         = 6;
-    double feed_the_queen_bonus_per_stack = 0.15;
+    int feed_the_queen_max_stacks         = 5;
+    double feed_the_queen_bonus_per_stack = 0.06;
 
     bool veil_of_shadows = false;
 
@@ -948,11 +949,6 @@ struct mara_attack_t : public mara_action_t<fellowship::actions::fs_player_actio
   {
     base_t::impact( state );
   }
-
-  void tick( dot_t* d ) override
-  {
-    base_t::tick( d );
-  }
 };
 
 // ==========================================================================
@@ -1183,7 +1179,7 @@ struct queens_fang_t : public mara_attack_t
     name_str_reporting = "Queens Fang";
 
     school                             = SCHOOL_PHYSICAL;
-    attack_power_mod.direct            = 1.6;
+    attack_power_mod.direct            = 1.91;
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 40;
@@ -1747,6 +1743,17 @@ struct corrosive_spill_dot_t : public mara_poison_t
 
     attack_power_mod.tick = p->talents.corrosive_spill_damage;
   }
+
+  void tick( dot_t* d ) override
+  {
+    bool misses = rng().roll( p()->talents.corrosive_spill_cumulative_chance_per_tick_of_miss * d->current_tick );
+
+    if ( !misses )
+      mara_poison_t::tick( d );
+
+    if ( misses )
+      d->cancel();
+  }
 };
 
 struct hemotoxin_dot_t : public mara_poison_t
@@ -1929,8 +1936,9 @@ struct arachnid_assault_t : public mara_attack_t
     aoe                 = -1;
     reduced_aoe_targets = 8;
 
-    school                             = SCHOOL_PHYSICAL;
-    attack_power_mod.direct            = 0.715;
+    school                  = SCHOOL_PHYSICAL;
+    attack_power_mod.direct = 0.715;
+    // attack_power_mod.direct            = 0.715;
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 45;
@@ -2069,8 +2077,6 @@ struct volatile_poison_dot_t : public mara_poison_t
 
     attack_power_mod.tick = 0.26;
   }
-
-  
 
   mara_t* p()
   {

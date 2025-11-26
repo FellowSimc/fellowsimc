@@ -1244,15 +1244,15 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 2280 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] += 0.06;
-    base.attribute_multiplier[ STAT_INTELLECT ] += 0.06;
-    base.attribute_multiplier[ STAT_AGILITY ] += 0.06;
+    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.06;
+    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.06;
+    base.attribute_multiplier[ STAT_AGILITY ] *= 1.06;
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 720 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] += 0.02;
-    base.attribute_multiplier[ STAT_INTELLECT ] += 0.02;
-    base.attribute_multiplier[ STAT_AGILITY ] += 0.02;
+    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.02;
+    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.02;
+    base.attribute_multiplier[ STAT_AGILITY ] *= 1.02;
   }
 
   // TODO: Implement as a health based check and buff that turns on & off.
@@ -1335,7 +1335,7 @@ void fs_player_t::init_special_effects()
 
   if ( fs_sets.torment_of_baelaurum )
   {
-    base.attribute_multiplier[ convert_hybrid_stat( STAT_STR_AGI_INT ) ] += fs_sets.torment_of_baelaurum_amp;
+    base.attribute_multiplier[ convert_hybrid_stat( STAT_STR_AGI_INT ) ] *= 1.0 + fs_sets.torment_of_baelaurum_amp;
   }
 
   if ( fs_sets.dark_prophecy )
@@ -1445,10 +1445,10 @@ void fs_player_t::init_special_effects()
   if ( overcap > 0.0 )
   {
     auto mul = overcap * 0.00005;
-    base.attribute_multiplier[ STAT_STRENGTH ] += mul;
-    base.attribute_multiplier[ STAT_INTELLECT ] += mul;
-    base.attribute_multiplier[ STAT_AGILITY ] += mul;
-    base.attribute_multiplier[ STAT_STAMINA ] += mul;
+    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + mul;
+    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + mul;
+    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + mul;
+    base.attribute_multiplier[ STAT_STAMINA ] *= 1.0 + mul;
   }
 
   if ( fs_weapons.willful_momentum > 0 )

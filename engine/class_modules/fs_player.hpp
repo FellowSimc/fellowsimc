@@ -96,6 +96,7 @@ public:
     buff_t* draconic_might;
     buff_t* willful_momentum;
     buff_t* vengeful_soul;
+    buff_t* seized_opportunity_stacking;
     buff_t* seized_opportunity;
     buff_t* martial_initiative;
     buff_t* hidden_power_stacking;
@@ -665,6 +666,15 @@ public:
     if ( !ab::background && ab::fs_p()->fs_weapons.brave_machinations )
     {
       ab::fs_p()->brave_machinations_available = true;
+    }
+
+    if ( !ab::background && ab::fs_p()->fs_weapons.martial_initiative )
+    {
+      ab::fs_p()->fs_buffs.martial_initiative->trigger(
+          1,
+          ab::fs_p()->weapon_cd->base_duration *
+              ab::fs_p()
+                  ->fs_weapon_trait_values.martial_initiative_duration[ ab::fs_p()->fs_weapons.martial_initiative ] );
     }
 
     ab::execute();

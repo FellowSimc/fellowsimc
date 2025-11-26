@@ -830,6 +830,91 @@ void fs_player_t::create_buffs()
       break;
   }
 
+  fs_buffs.vengeful_soul =
+      make_buff<fs_player_buff_t>( this, "vengeful_soul" )
+          ->set_default_value( fs_weapon_trait_values.vengeful_soul_amp[ fs_weapons.vengeful_soul ] )
+          ->set_duration( 6_s )
+          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+
+  switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
+  {
+    case STAT_INTELLECT:
+      fs_buffs.vengeful_soul->set_pct_buff_type( STAT_PCT_BUFF_INTELLECT );
+      break;
+    case STAT_AGILITY:
+      fs_buffs.vengeful_soul->set_pct_buff_type( STAT_PCT_BUFF_AGILITY );
+      break;
+    case STAT_STRENGTH:
+      fs_buffs.vengeful_soul->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+      break;
+    default:
+      break;
+  }
+
+  fs_buffs.martial_initiative =
+      make_buff<fs_player_buff_t>( this, "martial_initiative" )
+          ->set_default_value( 0.1 )
+          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+
+  switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
+  {
+    case STAT_INTELLECT:
+      fs_buffs.martial_initiative->set_pct_buff_type( STAT_PCT_BUFF_INTELLECT );
+      break;
+    case STAT_AGILITY:
+      fs_buffs.martial_initiative->set_pct_buff_type( STAT_PCT_BUFF_AGILITY );
+      break;
+    case STAT_STRENGTH:
+      fs_buffs.martial_initiative->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+      break;
+    default:
+      break;
+  }
+    
+  fs_buffs.hidden_power = make_buff<fs_player_buff_t>( this, "hidden_power" )
+                              ->set_default_value( fs_weapon_trait_values.hidden_power_amp[ fs_weapons.hidden_power ] )
+                              ->set_duration( 15_s );
+
+  switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
+  {
+    case STAT_INTELLECT:
+      fs_buffs.hidden_power->set_pct_buff_type( STAT_PCT_BUFF_INTELLECT );
+      break;
+    case STAT_AGILITY:
+      fs_buffs.hidden_power->set_pct_buff_type( STAT_PCT_BUFF_AGILITY );
+      break;
+    case STAT_STRENGTH:
+      fs_buffs.hidden_power->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+      break;
+    default:
+      break;
+  }
+
+  fs_buffs.hidden_power_stacking = make_buff<fs_player_buff_t>( this, "hidden_power_stacking" )
+                                       ->set_max_stack( 5 )
+                                       ->set_duration( 60_s )
+                                       ->set_expire_at_max_stack( true )
+                                       ->add_stack_change_callback( [ this ]( buff_t* b, int old, int _new ) {
+                                         if ( b->at_max_stacks() )
+                                           fs_buffs.hidden_power->trigger();
+                                       } );
+
+  fs_buffs.seized_opportunity_stacking = make_buff<fs_player_buff_t>( this, "seized_opportunity_stacking" )
+                                             ->set_max_stack( 20 )
+                                             ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                                             ->set_expire_at_max_stack( true )
+                                             ->add_stack_change_callback( [ this ]( buff_t* b, int old, int _new ) {
+                                               if ( b->at_max_stacks() )
+                                                 fs_buffs.seized_opportunity->trigger();
+                                             } );
+
+  fs_buffs.seized_opportunity =
+      make_buff<stat_buff_t>( this, "seized_opportunity" )
+          ->add_stat( STAT_CRIT_RATING,
+                      fs_weapon_trait_values.seized_opportunity_crit[ fs_weapons.seized_opportunity ] )
+          ->set_max_stack( 20 )
+          ->set_duration( 12_s );
+
   struct fated_strike_buff_t : fs_player_buff_t
   {
     double cdr_mod = 3.0;
@@ -1499,6 +1584,93 @@ void fs_player_t::init_special_effects()
     dbc->activate();
   }
 
+  struct stacking_proc_buff_t : dbc_proc_callback_t
+  {
+    buff_t* blocking_buff;
+    stacking_proc_buff_t( fs_player_t* p, const special_effect_t& e, buff_t* stacking, buff_t* blocking_buff )
+      : dbc_proc_callback_t( p, e )
+    {
+    }
+
+    fs_player_t* p() const
+    {
+      return static_cast<fs_player_t*>( listener );
+    }
+
+    void execute( action_t*, action_state_t* s ) override
+    {
+      proc_buff->trigger();
+    }
+
+    void trigger( action_t* a, action_state_t* state ) override
+    {
+      if ( blocking_buff && blocking_buff->check() )
+        return;
+
+      dbc_proc_callback_t::trigger( a, state );
+    }
+  };
+
+  if ( fs_weapons.hidden_power )
+  {
+    auto fs_effect                   = new special_effect_t( this );
+    fs_effect->spell_id              = 1341;
+    fs_effect->name_str              = "hidden_power";
+    fs_effect->proc_flags_           = PF_ALL_DAMAGE;
+    fs_effect->proc_flags2_          = PF2_ALL_HIT;
+    fs_effect->ppm_                  = -2.6;
+    fs_effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
+    fs_effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+    fs_effect->has_use_buff_override = true;
+
+    special_effects.push_back( fs_effect );
+
+    auto first_strike = new stacking_proc_buff_t( this, *fs_effect, fs_buffs.hidden_power_stacking, fs_buffs.hidden_power );
+    first_strike->initialize();
+    first_strike->activate();
+  }
+
+  if ( fs_weapons.seized_opportunity )
+  {
+    auto fs_effect                   = new special_effect_t( this );
+    fs_effect->spell_id              = 1342;
+    fs_effect->name_str              = "seized_opportunity";
+    fs_effect->proc_flags_           = PF_ALL_DAMAGE;
+    fs_effect->proc_flags2_          = PF2_CRIT;
+    fs_effect->proc_chance_          = 1.0;
+    fs_effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+    fs_effect->has_use_buff_override = true;
+
+    special_effects.push_back( fs_effect );
+
+    auto first_strike =
+        new stacking_proc_buff_t( this, *fs_effect, fs_buffs.seized_opportunity_stacking, fs_buffs.seized_opportunity );
+    first_strike->initialize();
+    first_strike->activate();
+  }
+
+  if ( fs_weapons.vengeful_soul )
+  {
+    auto effect                   = new special_effect_t( this );
+    effect->spell_id              = 1343;
+    effect->name_str              = "vengeful_soul";
+    effect->proc_flags_           = PF_ALL_DAMAGE;
+    effect->proc_flags2_          = PF2_CRIT;
+    effect->has_use_buff_override = true;
+    effect->ppm_                  = -2.0;
+    effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
+    effect->rppm_blp_             = real_ppm_t::BLP_DISABLED;
+    effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+    special_effects.push_back( effect );
+
+    effect->custom_buff = fs_buffs.vengeful_soul;
+
+    auto dbc = new dbc_proc_callback_t( this, *effect );
+
+    dbc->initialize();
+    dbc->activate();
+  }
 }
 
 void fs_player_t::init_assessors()

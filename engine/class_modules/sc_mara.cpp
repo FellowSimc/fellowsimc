@@ -202,7 +202,7 @@ public:
 
     bool feed_the_queen                   = false;
     int feed_the_queen_max_stacks         = 5;
-    double feed_the_queen_bonus_per_stack = 0.06;
+    double feed_the_queen_bonus_per_stack = 0.09;
 
     bool veil_of_shadows = false;
 

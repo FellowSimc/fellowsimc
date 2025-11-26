@@ -4930,7 +4930,8 @@ double player_t::apply_combat_rating_fellow_dr( double percent ) const
 {
   const double breakPoints[] = { 0.10, 0.15, 0.20, 0.25 };
 
-  const double breakPointMultipliers[] = { 1, 0.95, 0.9, 0.85, 0.8 };
+  //const double breakPointMultipliers[] = { 1, 0.95, 0.9, 0.85, 0.8 };
+  const double breakPointMultipliers[] = { 1, 0.95, 0.95 * 0.9, 0.95 * 0.9 * 0.85, 0.95 * 0.9 * 0.85 * 0.8 };
 
   if ( percent <= breakPoints[ 0 ] )
     return percent * breakPointMultipliers[ 0 ];

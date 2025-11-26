@@ -1,0 +1,433 @@
+report_details=1
+optimal_raid=0
+max_time=420
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=8
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_agility=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+
+mara="Mara"
+level=80
+
+# initial_resource=spirit=100
+
+apl/mara.simc
+
+# gear_crit_rating=390
+# gear_versatility_rating=390
+# gear_haste_rating=390
+# gear_mastery_rating=390
+
+gear_agility=1500
+
+gear_haste_rating=452
+# gear_haste_rating=0
+gear_crit_rating=1812
+gear_versatility_rating=2265
+# gear_mastery_rating=452
+gear_mastery_rating=0
+
+legendary.vexiras_venom=1
+
+# legendary.final_stratagem_cdr=1
+
+# legendary.spirit_procs_clones=1
+
+gems.ruby_power=1200
+gems.sapphire_power=1200
+gems.amethyst_power=2640
+
+weapon=fated_strike
+weapon_trait.visions_of_grandeur=4
+
+copy="Finisher FTQ Puncture MD Defensive","Mara"
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.feed_the_queen=1
+talent.malevolence=1
+talent.puncture=1
+talent.maidens_doom=1
+
+copy="Finisher RL Puncture MD Defensive","Mara"
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.red_ledger=1
+talent.malevolence=1
+talent.puncture=1
+talent.maidens_doom=1
+
+copy="Finisher CS Puncture MD Defensive","Mara"
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.corrosive_spill=1
+talent.malevolence=1
+talent.puncture=1
+talent.maidens_doom=1
+
+copy="Finisher HT Puncture Defensive","Mara"
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.malevolence=1
+talent.puncture=1
+talent.hemotoxin=1
+
+copy="Finisher HT BR Defensive","Mara"
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.malevolence=1
+talent.bloodrush=1
+talent.hemotoxin=1
+
+copy="Finisher RL GB Defensive","Mara"
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.red_ledger=1
+talent.malevolence=1
+talent.gushing_blood=1
+
+copy="Finisher AO Puncture GB Defensive","Mara"
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.arachnid_onslaught=1
+talent.malevolence=1
+talent.gushing_blood=1
+talent.puncture=1
+
+copy="Finisher RL GB +BR -VD Defensive","Mara"
+talent.assassins_guile=1
+talent.bloodrush=1
+talent.deadly_scheme=1
+talent.red_ledger=1
+talent.malevolence=1
+talent.gushing_blood=1
+
+# copy="Finisher Hemotoxin","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.bloodrush=1
+# talent.deadly_scheme=1
+# talent.hemotoxin=1
+# talent.malevolence=1
+# talent.puncture=1
+
+# copy="Finisher Hemotoxin EK","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.bloodrush=1
+# talent.deadly_scheme=1
+# talent.hemotoxin=1
+# talent.malevolence=1
+# talent.efficient_killer=1
+
+# copy="Funnel Hemotoxin","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.hemotoxin=1
+# talent.malevolence=1
+# talent.feed_the_queen=1
+
+# copy="Bleed RL DS","Mara"
+# talent.deadly_scheme=1
+# talent.hemotoxin=1
+# talent.red_ledger=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+
+# copy="Bleed RL AG","Mara"
+# talent.red_ledger=1
+# talent.hemotoxin=1
+# talent.assassins_guile=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+
+# copy="Bleed AG DS","Mara"
+# talent.deadly_scheme=1
+# talent.hemotoxin=1
+# talent.assassins_guile=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+
+# copy="Bleed Finisher","Mara"
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.assassins_guile=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+
+# copy="Bleed Finisher -BR+VD","Mara"
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+
+# copy="Finisher Hemo CS","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.hemotoxin=1
+# talent.malevolence=1
+# talent.corrosive_spill=1
+
+# copy="Finisher No Hemo FTQ Punc","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.corrosive_spill=1
+# talent.feed_the_queen=1
+# talent.puncture=1
+
+# copy="Finisher No Hemo RL Punc","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.corrosive_spill=1
+# talent.red_ledger=1
+# talent.puncture=1
+
+
+# copy="Finisher No Hemo FTQ MD","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.corrosive_spill=1
+# talent.feed_the_queen=1
+# talent.maidens_doom=1
+
+# copy="Finisher No Hemo RL MD","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.corrosive_spill=1
+# talent.red_ledger=1
+# talent.maidens_doom=1
+
+# copy="Finisher No Hemo GB AO","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.corrosive_spill=1
+# talent.gushing_blood=1
+# talent.arachnid_onslaught=1
+
+# copy="Finisher No Hemo GB FTS","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+
+# copy="Finisher No Hemo FTQ BR","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.corrosive_spill=1
+# talent.feed_the_queen=1
+# talent.bloodrush=1
+
+# copy="Finisher No Hemo FTQ EK","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.malevolence=1
+# talent.corrosive_spill=1
+# talent.feed_the_queen=1
+# talent.efficient_killer=1
+
+# copy="Bleed CS DS Hemo","Mara"
+# talent.deadly_scheme=1
+# talent.hemotoxin=1
+# talent.corrosive_spill=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+
+# copy="Bleed CS DS AG AO","Mara"
+# talent.deadly_scheme=1
+# talent.corrosive_spill=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+# talent.assassins_guile=1
+# talent.arachnid_onslaught=1
+
+# copy="Bleed CS DS AG Punc","Mara"
+# talent.deadly_scheme=1
+# talent.corrosive_spill=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# talent.from_the_shadows=1
+# talent.assassins_guile=1
+# talent.puncture=1
+
+# copy="Assassins_Guile","Mara"
+# talent.assassins_guile=1
+
+# copy="Red_Ledger","Mara"
+# talent.red_ledger=1
+
+# copy="Corrosive_Spill_VD","Mara"
+# talent.corrosive_spill=1
+# talent.venomous_delight=1
+
+# copy="Assassins_Guile_VD","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+
+# copy="Red_Ledger_VD","Mara"
+# talent.red_ledger=1
+# talent.venomous_delight=1
+
+# copy="Corrosive_Spill_BR","Mara"
+# talent.corrosive_spill=1
+# talent.bloodrush=1
+
+# copy="Assassins_Guile_BR","Mara"
+# talent.assassins_guile=1
+# talent.bloodrush=1
+
+# copy="Red_Ledger_BR","Mara"
+# talent.red_ledger=1
+# talent.bloodrush=1
+
+# copy="Corrosive_Spill_EK","Mara"
+# talent.corrosive_spill=1
+# talent.efficient_killer=1
+
+# copy="Assassins_Guile_EK","Mara"
+# talent.assassins_guile=1
+# talent.efficient_killer=1
+
+# copy="Red_Ledger_EK","Mara"
+# talent.red_ledger=1
+# talent.efficient_killer=1
+
+
+# copy="Amethyst 120","Mara"
+# gems.amethyst_power=120
+# copy="Amethyst 240","Mara"
+# gems.amethyst_power=240
+# copy="Amethyst 720","Mara"
+# gems.amethyst_power=720
+# copy="Amethyst 960","Mara"
+# gems.amethyst_power=960
+# copy="Amethyst 1200","Mara"
+# gems.amethyst_power=1200
+# copy="Amethyst 1560","Mara"
+# gems.amethyst_power=1560
+# copy="Amethyst 2280","Mara"
+# gems.amethyst_power=2280
+# copy="Amethyst 2640","Mara"
+# gems.amethyst_power=2640
+
+# copy="Sapphire 120","Mara"
+# gems.sapphire_power=120
+# copy="Sapphire 240","Mara"
+# gems.sapphire_power=240
+# copy="Sapphire 720","Mara"
+# gems.sapphire_power=720
+# copy="Sapphire 960","Mara"
+# gems.sapphire_power=960
+# copy="Sapphire 1200","Mara"
+# gems.sapphire_power=1200
+# copy="Sapphire 1560","Mara"
+# gems.sapphire_power=1560
+# copy="Sapphire 2280","Mara"
+# gems.sapphire_power=2280
+# copy="Sapphire 2640","Mara"
+# gems.sapphire_power=2640
+
+# copy="Topaz 120","Mara"
+# gems.topaz_power=120
+# copy="Topaz 240","Mara"
+# gems.topaz_power=240
+# copy="Topaz 720","Mara"
+# gems.topaz_power=720
+# copy="Topaz 960","Mara"
+# gems.topaz_power=960
+# copy="Topaz 1200","Mara"
+# gems.topaz_power=1200
+# copy="Topaz 1560","Mara"
+# gems.topaz_power=1560
+# copy="Topaz 2280","Mara"
+# gems.topaz_power=2280
+# copy="Topaz 2640","Mara"
+# gems.topaz_power=2640
+
+# copy="Emerald 120","Mara"
+# gems.emerald_power=120
+# copy="Emerald 240","Mara"
+# gems.emerald_power=240
+# copy="Emerald 720","Mara"
+# gems.emerald_power=720
+# copy="Emerald 960","Mara"
+# gems.emerald_power=960
+# copy="Emerald 1200","Mara"
+# gems.emerald_power=1200
+# copy="Emerald 1560","Mara"
+# gems.emerald_power=1560
+# copy="Emerald 2280","Mara"
+# gems.emerald_power=2280
+# copy="Emerald 2640","Mara"
+# gems.emerald_power=2640
+
+# copy="Diamond 120","Mara"
+# gems.diamond_power=120
+# copy="Diamond 240","Mara"
+# gems.diamond_power=240
+# copy="Diamond 720","Mara"
+# gems.diamond_power=720
+# copy="Diamond 1200","Mara"
+# gems.diamond_power=1200
+# copy="Diamond 1560","Mara"
+# gems.diamond_power=1560
+# copy="Diamond 2280","Mara"
+# gems.diamond_power=2280
+
+# copy="Ruby 120","Mara"
+# gems.ruby_power=120
+# copy="Ruby 240","Mara"
+# gems.ruby_power=240
+# copy="Ruby 960","Mara"
+# gems.ruby_power=960
+# copy="Ruby 1200","Mara"
+# gems.ruby_power=1200
+# copy="Ruby 1560","Mara"
+# gems.ruby_power=1560
+# copy="Ruby 2640","Mara"
+# gems.ruby_power=2640

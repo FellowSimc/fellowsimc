@@ -583,9 +583,9 @@ std::unique_ptr<expr_t> fs_player_t::create_expression( util::string_view name_s
 {
   auto split = util::string_split<util::string_view>( name_str, "." );
 
-  if ( util::str_compare_ci( split[ 0 ], "sets" ) )
+  if ( split.size() == 2 )
   {
-    if ( split.size() == 2 )
+    if ( util::str_compare_ci( split[ 0 ], "sets" ) )
     {
       if ( util::str_compare_ci( split[ 1 ], "dark_prophecy" ) )
         return make_ref_expr( name_str, fs_sets.dark_prophecy );
@@ -609,6 +609,11 @@ std::unique_ptr<expr_t> fs_player_t::create_expression( util::string_view name_s
         return make_ref_expr( name_str, fs_sets.torment_of_baelaurum );
       else if ( util::str_compare_ci( split[ 1 ], "tuzari_grace" ) )
         return make_ref_expr( name_str, fs_sets.tuzari_grace );
+    }
+    else if ( util::str_compare_ci( split[ 0 ], "weapon_trait" ) )
+    {
+      if ( util::str_compare_ci( split[ 1 ], "visions_of_grandeur" ) )
+        return make_ref_expr( name_str, fs_weapons.visions_of_grandeur );
     }
   }
   // Split expressions
@@ -642,7 +647,7 @@ void fs_player_t::init_base_stats()
 
   resources.base[ RESOURCE_SPIRIT ] = resources.max[ RESOURCE_SPIRIT ] = 100;
   resources.start_at[ RESOURCE_SPIRIT ]                                = 0;
-  resources.base_regen_per_second[ RESOURCE_SPIRIT ]                   = 100.0 / 300 * 1.7;
+  resources.base_regen_per_second[ RESOURCE_SPIRIT ]                   = 100.0 / 300 * 1.20;
 
   // resources.base_regen_per_second[ RESOURCE_ENERGY ] = 10;
 

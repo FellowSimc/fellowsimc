@@ -813,7 +813,8 @@ void fs_player_t::create_buffs()
 
   fs_buffs.willful_momentum =
       make_buff<fs_player_buff_t>( this, "willful_momentum" )
-          ->set_default_value( fs_weapon_trait_values.willful_momentum_amp[ fs_weapons.willful_momentum ] );
+          ->set_default_value( fs_weapon_trait_values.willful_momentum_amp[ fs_weapons.willful_momentum ] )
+          ->set_duration( 4_s );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -1447,7 +1448,8 @@ void fs_player_t::init_special_effects()
 
   if ( fs_weapons.willful_momentum > 0 )
   {
-    base.mastery += fs_weapon_trait_values.willful_momentum_spirit[ fs_weapons.willful_momentum ];
+    passive.add_stat( STAT_MASTERY_RATING,
+                      fs_weapon_trait_values.willful_momentum_spirit[ fs_weapons.willful_momentum ] );
   }
 
   if ( fs_weapons.kindling )
@@ -1542,8 +1544,6 @@ void fs_player_t::init_special_effects()
 
         name_str_reporting = "Diamond Strike";
 
-        aoe = -1;
-
         spell_power_mod.direct = p->fs_weapon_trait_values.diamond_strike_dmg[ p->fs_weapons.diamond_strike ];
       }
 
@@ -1569,7 +1569,7 @@ void fs_player_t::init_special_effects()
     effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
     effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
     effect->cooldown_    = 0_s;
-    effect->ppm_         = -5;
+    effect->ppm_         = -fs_weapon_trait_values.diamond_strike_ppm[ fs_weapons.diamond_strike ];
     effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
     effect->rppm_blp_    = real_ppm_t::BLP_DISABLED;
     effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
@@ -1587,8 +1587,9 @@ void fs_player_t::init_special_effects()
   struct stacking_proc_buff_t : dbc_proc_callback_t
   {
     buff_t* blocking_buff;
+    buff_t* stacking_buff;
     stacking_proc_buff_t( fs_player_t* p, const special_effect_t& e, buff_t* stacking, buff_t* blocking_buff )
-      : dbc_proc_callback_t( p, e )
+      : dbc_proc_callback_t( p, e ), blocking_buff( blocking_buff ), stacking_buff( stacking )
     {
     }
 
@@ -1599,7 +1600,7 @@ void fs_player_t::init_special_effects()
 
     void execute( action_t*, action_state_t* s ) override
     {
-      proc_buff->trigger();
+      stacking_buff->trigger();
     }
 
     void trigger( action_t* a, action_state_t* state ) override
@@ -1625,9 +1626,9 @@ void fs_player_t::init_special_effects()
 
     special_effects.push_back( fs_effect );
 
-    auto first_strike = new stacking_proc_buff_t( this, *fs_effect, fs_buffs.hidden_power_stacking, fs_buffs.hidden_power );
-    first_strike->initialize();
-    first_strike->activate();
+    auto cb = new stacking_proc_buff_t( this, *fs_effect, fs_buffs.hidden_power_stacking, fs_buffs.hidden_power );
+    cb->initialize();
+    cb->activate();
   }
 
   if ( fs_weapons.seized_opportunity )
@@ -1643,10 +1644,10 @@ void fs_player_t::init_special_effects()
 
     special_effects.push_back( fs_effect );
 
-    auto first_strike =
+    auto cb =
         new stacking_proc_buff_t( this, *fs_effect, fs_buffs.seized_opportunity_stacking, fs_buffs.seized_opportunity );
-    first_strike->initialize();
-    first_strike->activate();
+    cb->initialize();
+    cb->activate();
   }
 
   if ( fs_weapons.vengeful_soul )

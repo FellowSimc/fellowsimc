@@ -221,6 +221,7 @@ public:
     const double hidden_power_amp[ 5 ]            = { 0, 0.075, 0.09, 0.105, 0.12 };
     const double emerald_judgement_dmg[ 5 ]       = { 0, 6.0, 7.0, 8.0, 9.0 };
     const double diamond_strike_dmg[ 5 ]          = { 0, 1.48, 1.78, 2.0, 2.37 };
+    const double diamond_strike_ppm[ 5 ]          = { 0, 5.0, 5.5, 6.1, 6.7 };
     const double amethyst_splinters_fraction[ 5 ] = { 0, 0.07, 0.08, 0.09, 0.1 };
     const double hunters_focus_haste[ 5 ]         = { 0, 18, 27, 36, 45 };
     const double brave_machinations_crit[ 5 ]     = { 0, 0.2, 0.24, 0.28, 0.38 };

@@ -357,6 +357,30 @@ public:
     return "disabled";
   }
 
+  template <typename CLASS, typename... ARGS>
+  action_t* create_fs_proc_action( util::string_view name, ARGS&&... args )
+  {
+    auto a = find_action( name );
+
+    if ( a == nullptr )
+    {
+      if constexpr ( std::is_constructible_v<CLASS, fs_player_t*, ARGS...> )
+      {
+        a = new CLASS( this, std::forward<ARGS>( args )... );
+      }
+      else if constexpr ( std::is_constructible_v<CLASS, std::string_view, fs_player_t*, ARGS...> )
+      {
+        a = new CLASS( name, this, std::forward<ARGS>( args )... );
+      }
+      else
+      {
+        static_assert( static_false<CLASS>, "Invalid constructor arguments for create_proc_action" );
+      }
+    }
+
+    return a;
+  }
+
   fs_player_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE, player_e p = PLAYER_NONE );
 
   // Secondary Action Tracking
@@ -692,10 +716,7 @@ public:
 class fs_proc_spell_t : public fs_player_action_t<spell_t>
 {
 protected:
-  /// typedef for fs_weapon_action_t<action_base_t>
-  using base_t = fs_player_action_t<spell_t>;
-
-  /// typedef for the templated action type, eg. spell_t, attack_t, heal_t
+  using base_t = fs_proc_spell_t;
   using ab = fs_player_action_t<spell_t>;
 
 public:

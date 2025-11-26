@@ -15,9 +15,12 @@ namespace fellowship
 fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
   : actor_target_data_t( target, source ), dots(), debuffs(), buffs()
 {
-  dots.curse_of_anzhyr   = target->get_dot( "curse_of_anzhyr", source );
+  dots.curse_of_anzhyr = target->get_dot( "curse_of_anzhyr", source );
 
   debuffs.triggered_first_strike = make_buff( *this, "first_strike_triggered" );
+
+  debuffs.diamond_strike_amp =
+      make_buff( *this, "diamond_strike_amp" )->set_max_stack( 5 )->set_duration( 20_s )->set_default_value( 0.4 );
 }
 
 // ==========================================================================
@@ -1361,6 +1364,141 @@ void fs_player_t::init_special_effects()
   {
     base.mastery += fs_weapon_trait_values.willful_momentum_spirit[ fs_weapons.willful_momentum ];
   }
+
+  if ( fs_weapons.kindling )
+  {
+    struct kindling_dot_t : public actions::fs_proc_spell_t
+    {
+      kindling_dot_t( std::string_view n, fs_player_t* p ) : actions::fs_proc_spell_t( n, p )
+      {
+        // random number - use actual ids later.
+        id                     = 2289;
+        school                 = SCHOOL_FIRE;
+        dot_duration           = 9_s;
+        dot_behavior           = DOT_REFRESH_DURATION;
+        base_tick_time         = 1.5_s;
+        tick_on_application    = true;
+        hasted_ticks           = true;
+        dot_allow_partial_tick = true;
+
+        name_str_reporting = "Kindling";
+
+        spell_power_mod.tick = p->fs_weapon_trait_values.kindling_tick_damage[ p->fs_weapons.kindling ];
+      }
+    };
+
+    auto effect                   = new special_effect_t( this );
+    effect->spell_id              = 2289;
+    effect->name_str              = "kindling";
+    effect->proc_flags_           = PF_ALL_DAMAGE | PF_PERIODIC;
+    effect->proc_flags2_          = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
+    effect->cooldown_             = 0_s;
+    effect->ppm_                  = -2.1;
+    effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
+    effect->rppm_blp_             = real_ppm_t::BLP_DISABLED;
+    effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+    special_effects.push_back( effect );
+
+    effect->execute_action = create_fs_proc_action<kindling_dot_t>( "kindling_dot" );
+
+    auto dbc = new dbc_proc_callback_t( this, *effect );
+
+    dbc->initialize();
+    dbc->activate();
+  }
+
+  if ( fs_weapons.emerald_judgement )
+  {
+    struct emerald_judgement_t : public actions::fs_proc_spell_t
+    {
+      emerald_judgement_t( std::string_view n, fs_player_t* p ) : actions::fs_proc_spell_t( n, p )
+      {
+        // random number - use actual ids later.
+        id     = 2290;
+        school = SCHOOL_NATURE;
+
+        name_str_reporting = "Emerald Judgement";
+
+        spell_power_mod.direct = p->fs_weapon_trait_values.emerald_judgement_dmg[ p->fs_weapons.emerald_judgement ];
+      }
+    };
+
+    auto effect          = new special_effect_t( this );
+    effect->spell_id     = 2290;
+    effect->name_str     = "emerald_judgement";
+    effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
+    effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
+    effect->cooldown_    = 0_s;
+    effect->ppm_         = -2;
+    effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
+    effect->rppm_blp_    = real_ppm_t::BLP_DISABLED;
+    effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+    special_effects.push_back( effect );
+
+    effect->execute_action = create_fs_proc_action<emerald_judgement_t>( "emerald_judgement" );
+
+    auto dbc = new dbc_proc_callback_t( this, *effect );
+
+    dbc->initialize();
+    dbc->activate();
+  }
+
+  if ( fs_weapons.diamond_strike )
+  {
+    struct diamond_strike_t : public actions::fs_proc_spell_t
+    {
+      diamond_strike_t( std::string_view n, fs_player_t* p ) : base_t( n, p )
+      {
+        // random number - use actual ids later.
+        id     = 2291;
+        school = SCHOOL_MAGIC;
+
+        name_str_reporting = "Diamond Strike";
+
+        aoe = -1;
+
+        spell_power_mod.direct = p->fs_weapon_trait_values.diamond_strike_dmg[ p->fs_weapons.diamond_strike ];
+      }
+
+      double composite_target_da_multiplier( player_t* t ) const override
+      {
+        auto m = base_t::composite_target_da_multiplier( t );
+
+        m *= 1.0 + ab::fs_p()->get_target_data( t )->debuffs.diamond_strike_amp->check_stack_value();
+
+        return m;
+      }
+
+      void impact( action_state_t* s ) override
+      {
+        base_t::impact( s );
+        ab::fs_p()->get_target_data( s->target )->debuffs.diamond_strike_amp->trigger();
+      }
+    };
+
+    auto effect          = new special_effect_t( this );
+    effect->spell_id     = 2291;
+    effect->name_str     = "diamond_strike";
+    effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
+    effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
+    effect->cooldown_    = 0_s;
+    effect->ppm_         = -5;
+    effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
+    effect->rppm_blp_    = real_ppm_t::BLP_DISABLED;
+    effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+    special_effects.push_back( effect );
+
+    effect->execute_action = create_fs_proc_action<diamond_strike_t>( "diamond_strike" );
+
+    auto dbc = new dbc_proc_callback_t( this, *effect );
+
+    dbc->initialize();
+    dbc->activate();
+  }
+
 }
 
 void fs_player_t::init_assessors()

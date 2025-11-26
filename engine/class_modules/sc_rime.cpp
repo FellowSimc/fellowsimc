@@ -1952,7 +1952,7 @@ void rime_t::create_buffs()
 
   buffs.winters_blessing = make_buff<rime_buff_t>( this, "winters_blessing" )
                                ->set_duration( 20_s )
-                               ->set_default_value( 0.2 )
+                               ->set_default_value( 20 )
                                ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
 
   buffs.winters_embrace = make_buff<rime_buff_t>( this, "winters_embrace" )->set_default_value( 0.2 );

@@ -208,8 +208,22 @@ public:
 
   struct fs_weapon_trait_values_t
   {
-    const double willful_momentum_spirit[ 5 ] = { 0, 59, 89, 118, 148 };
-    const double willful_momentum_amp[ 5 ]    = { 0, 0.03, 0.036, 0.042, 0.048 };
+    const double willful_momentum_spirit[ 5 ]     = { 0, 59, 89, 118, 148 };
+    const double willful_momentum_amp[ 5 ]        = { 0, 0.03, 0.036, 0.042, 0.048 };
+    const double vengeful_soul_amp[ 5 ]           = { 0, 0.04, 0.048, 0.056, 0.064 };
+    const double seized_opportunity_crit[ 5 ]     = { 0, 112, 168, 224, 280 };
+    const double martial_initiative_duration[ 5 ] = { 0, 0.2, 0.24, 0.28, 0.32 };
+    const double kindling_tick_damage[ 5 ]        = { 0, 0.92, 1.1, 1.33, 1.66 };
+    const timespan_t inspired_allegiance_cdr[ 5 ] = { 0_s, 3_s, 4_s, 5_s, 6_s };
+    const int inspired_allegiance_allies[ 5 ]     = { 0, 1, 2, 3, 3 };
+    const double inspired_allegiance_haste[ 5 ]   = { 0, 170.0, 170.0, 170.0, 213.0 };
+    const double hidden_power_amp[ 5 ]            = { 0, 0.075, 0.09, 0.105, 0.12 };
+    const double emerald_judgement_dmg[ 5 ]       = { 0, 6.0, 7.0, 8.0, 9.0 };
+    const double diamond_strike_dmg[ 5 ]          = { 0, 1.48, 1.78, 2.0, 2.37 };
+    const double amethyst_splinters_fraction[ 5 ] = { 0, 0.07, 0.08, 0.09, 0.1 };
+    const double hunters_focus_haste[ 5 ]         = { 0, 18, 27, 36, 45 };
+    const double brave_machinations_crit[ 5 ]     = { 0, 0.2, 0.24, 0.28, 0.38 };
+    const double heroic_brand_amp[ 5 ]            = { 1.0, 1.5, 1.6, 1.7, 1.8 };
   } fs_weapon_trait_values;
 
   cooldown_t* weapon_cd;
@@ -574,40 +588,12 @@ public:
   {
     if ( p->fs_weapons.brave_machinations )
     {
-      switch ( p->fs_weapons.brave_machinations )
-      {
-        case 1:
-          ab::base_crit += 0.2;
-          break;
-        case 2:
-          ab::base_crit += 0.24;
-          break;
-        case 3:
-          ab::base_crit += 0.28;
-          break;
-        case 4:
-          ab::base_crit += 0.38;
-          break;
-      }
+      ab::base_crit += p->fs_weapon_trait_values.brave_machinations_crit[ p->fs_weapons.brave_machinations ];
     }
 
     if ( p->fs_weapons.heroic_brand )
     {
-      switch ( p->fs_weapons.heroic_brand )
-      {
-        case 1:
-          ab::base_multiplier *= 1.5;
-          break;
-        case 2:
-          ab::base_multiplier *= 1.6;
-          break;
-        case 3:
-          ab::base_multiplier *= 1.7;
-          break;
-        case 4:
-          ab::base_multiplier *= 1.8;
-          break;
-      }
+      ab::base_multiplier *= p->fs_weapon_trait_values.heroic_brand_amp[ p->fs_weapons.heroic_brand ];
     }
   }
 

@@ -5443,11 +5443,6 @@ double player_t::composite_mastery() const
   for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_MASTERY ] )
     cm += b->check_stack_value();
 
-  if ( !is_pet() && !is_enemy() && type != HEALING_ENEMY )
-  {
-    cm += sim->auras.skyfury->check_value();
-  }
-
   return cm;
 }
 

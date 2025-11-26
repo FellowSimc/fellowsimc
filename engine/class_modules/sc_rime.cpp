@@ -1952,7 +1952,7 @@ void rime_t::create_buffs()
 
   buffs.winters_blessing = make_buff<rime_buff_t>( this, "winters_blessing" )
                                ->set_duration( 20_s )
-                               ->set_default_value( 20 )
+                               ->set_default_value( 0.20 )
                                ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
 
   buffs.winters_embrace = make_buff<rime_buff_t>( this, "winters_embrace" )->set_default_value( 0.2 );
@@ -2179,7 +2179,8 @@ void actions::rime_action_t<Base>::spend_winter_orbs( const action_state_t* s )
   }
   else if ( p()->rng().roll( p()->cache.mastery_value() ) )
   {
-    p()->sim->print_debug( "{} proc'd Spirit Orb Refund (Chance: {:.2f}%)", *p(), p()->cache.mastery_value() * 100.0 );
+    p()->sim->print_debug( "{} proc'd Spirit Orb Refund (Chance: {:.2f}%, Sprit: {:.2f}%)", *p(),
+                           p()->cache.mastery_value() * 100.0, p()->cache.mastery() * 100.0 );
 
     trigger_spirit_refund( s, orbs_spent );
   }

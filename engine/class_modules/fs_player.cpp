@@ -13,7 +13,7 @@ namespace fellowship
 // ==========================================================================
 
 fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
-  : actor_target_data_t( target, source ), dots(), debuffs()
+  : actor_target_data_t( target, source ), dots(), debuffs(), buffs()
 {
   dots.curse_of_anzhyr   = target->get_dot( "curse_of_anzhyr", source );
 
@@ -808,6 +808,25 @@ void fs_player_t::create_buffs()
       break;
   }
 
+  fs_buffs.willful_momentum =
+      make_buff<fs_player_buff_t>( this, "willful_momentum" )
+          ->set_default_value( fs_weapon_trait_values.willful_momentum_amp[ fs_weapons.willful_momentum ] );
+
+  switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
+  {
+    case STAT_INTELLECT:
+      fs_buffs.willful_momentum->set_pct_buff_type( STAT_PCT_BUFF_INTELLECT );
+      break;
+    case STAT_AGILITY:
+      fs_buffs.willful_momentum->set_pct_buff_type( STAT_PCT_BUFF_AGILITY );
+      break;
+    case STAT_STRENGTH:
+      fs_buffs.willful_momentum->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+      break;
+    default:
+      break;
+  }
+
   struct fated_strike_buff_t : fs_player_buff_t
   {
     double cdr_mod = 3.0;
@@ -1337,6 +1356,11 @@ void fs_player_t::init_special_effects()
     base.attribute_multiplier[ STAT_AGILITY ] += mul;
     base.attribute_multiplier[ STAT_STAMINA ] += mul;
   }
+
+  if ( fs_weapons.willful_momentum > 0 )
+  {
+    base.mastery += fs_weapon_trait_values.willful_momentum_spirit[ fs_weapons.willful_momentum ];
+  }
 }
 
 void fs_player_t::init_assessors()
@@ -1377,6 +1401,8 @@ void fs_player_t::init_finished()
 
 void fs_player_t::spirit_refund()
 {
+  if ( fs_weapons.willful_momentum )
+    fs_buffs.willful_momentum->trigger();
 }
 
 void fs_player_t::used_ultimate()

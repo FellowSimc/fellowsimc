@@ -29,10 +29,16 @@ public:
     dot_t* curse_of_anzhyr;
   } dots;
 
-  struct
+  struct debuffs_t
   {
     buff_t* triggered_first_strike;
+    buff_t* diamond_strike_amp;
   } debuffs;
+
+  struct buffs_t
+  {
+    buff_t* inspired_allegiance;
+  } buffs;
 
   fs_player_td_t( player_t* target, fs_player_t* source );
 };
@@ -88,6 +94,12 @@ public:
     buff_t* drakheims_absolution;
     buff_t* dark_prophecy;
     buff_t* draconic_might;
+    buff_t* willful_momentum;
+    buff_t* vengeful_soul;
+    buff_t* seized_opportunity;
+    buff_t* martial_initiative;
+    buff_t* hidden_power_stacking;
+    buff_t* hidden_power;
   } fs_buffs;
 
   struct fs_cooldowns_t
@@ -165,34 +177,40 @@ public:
     fsweapon_e equipped_weapon = fsweapon_e::FSWEAPON_NONE;
 
     // You know I should have made these into an enum and an array shouldn't I...
-    unsigned amethyst_splinters       = 0;
-    unsigned brave_machinations       = 0;
-    unsigned diamond_strike           = 0;
-    unsigned divine_mediation         = 0;
-    unsigned emerald_judgement        = 0;
-    unsigned first_man_standing       = 0;
-    unsigned grounded_spirit          = 0;
-    unsigned heart_of_stone           = 0;
-    unsigned heroic_brand             = 0;
-    unsigned hidden_power             = 0;
-    unsigned hunters_focus            = 0;
-    unsigned inspired_allegiance      = 0;
-    unsigned iron_spikes              = 0;
-    unsigned kindling                 = 0;
-    unsigned king_of_the_hill         = 0;
-    unsigned latent_resurgence        = 0;
-    unsigned martial_initiative       = 0;
-    unsigned navigators_intuition     = 0;
-    unsigned patient_soul             = 0;
-    unsigned ruby_storm               = 0;
-    unsigned sapphire_aurastone       = 0;
-    unsigned seized_opportunity       = 0;
-    unsigned stalwart_readiness       = 0;
-    unsigned treasure_hunters_delight = 0;
-    unsigned vengeful_soul            = 0;
-    unsigned visions_of_grandeur      = 0;
-    unsigned willful_momentum         = 0;
+    unsigned amethyst_splinters               = 0;
+    unsigned brave_machinations               = 0;
+    unsigned diamond_strike                   = 0;
+    unsigned divine_mediation                 = 0;
+    unsigned emerald_judgement                = 0;
+    unsigned first_man_standing               = 0;
+    unsigned grounded_spirit                  = 0;
+    unsigned heart_of_stone                   = 0;
+    unsigned heroic_brand                     = 0;
+    unsigned hidden_power                     = 0;
+    unsigned hunters_focus                    = 0;
+    unsigned inspired_allegiance              = 0;
+    unsigned iron_spikes                      = 0;
+    unsigned kindling                         = 0;
+    unsigned king_of_the_hill                 = 0;
+    unsigned latent_resurgence                = 0;
+    unsigned martial_initiative               = 0;
+    unsigned navigators_intuition             = 0;
+    unsigned patient_soul                     = 0;
+    unsigned ruby_storm                       = 0;
+    unsigned sapphire_aurastone               = 0;
+    unsigned seized_opportunity               = 0;
+    unsigned stalwart_readiness               = 0;
+    unsigned treasure_hunters_delight         = 0;
+    unsigned vengeful_soul                    = 0;
+    unsigned visions_of_grandeur              = 0;
+    unsigned willful_momentum                 = 0;
   } fs_weapons;
+
+  struct fs_weapon_trait_values_t
+  {
+    const double willful_momentum_spirit[ 5 ] = { 0, 59, 89, 118, 148 };
+    const double willful_momentum_amp[ 5 ]    = { 0, 0.03, 0.036, 0.042, 0.048 };
+  } fs_weapon_trait_values;
 
   cooldown_t* weapon_cd;
   bool brave_machinations_available;

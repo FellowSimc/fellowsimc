@@ -1,0 +1,73 @@
+report_details=1
+optimal_raid=0
+max_time=420
+target_error=0.05
+iterations=10000
+chart_show_relative_difference=1
+vary_combat_length=0.05
+single_actor_batch=1
+desired_targets=1
+
+# apl/chuey_dungeon.simc
+
+rime="Rime"
+level=80
+
+apl/rime.simc
+
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+
+gear_intellect=1500
+
+gear_haste_rating=2717
+gear_crit_rating=453
+gear_versatility_rating=1359
+gear_mastery_rating=0
+
+gems.topaz_power=2280
+gems.amethyst_power=2640
+gems.ruby_power=120
+
+talent.winters_embrace=1
+legendary.skandis_decree=1
+talent.burstbolter=1
+talent.chilling_finesse=1
+talent.cascading_blitz=1
+talent.frostweavers_wrath=1
+talent.biting_cold=1
+
+# weapon=chronoshift
+
+# weapon=icicles_of_anzhyr
+
+# weapon=natures_fury
+
+copy="Grandeur 4","Rime"
+weapon_trait.visions_of_grandeur=4
+copy="Martial Initiative 4","Rime"
+weapon_trait.martial_initiative=4
+copy="Kindling 4","Rime"
+weapon_trait.kindling=4
+copy="Diamond Strike 4","Rime"
+weapon_trait.diamond_strike=4
+copy="Emerald Judgement 4","Rime"
+weapon_trait.emerald_judgement=4
+copy="Seized Opportunity 4","Rime"
+weapon_trait.seized_opportunity=4
+copy="Hidden Power 4","Rime"
+weapon_trait.hidden_power=4
+copy="Vengeful Soul 4","Rime"
+weapon_trait.vengeful_soul=4
+copy="Willful Momentum 4","Rime"
+weapon_trait.willful_momentum=4
+copy="Heroic Brand 4","Rime"
+weapon_trait.heroic_brand=4
+copy="Brave Machinations 4","Rime"
+weapon_trait.heroic_brand=4
+copy="Amethyst Splinters 4","Rime"
+weapon_trait.amethyst_splinters=4

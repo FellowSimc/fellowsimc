@@ -285,6 +285,48 @@ void fs_player_t::init_action_list()
 namespace actions
 {
 
+struct amethyst_splinters_t : public residual_action::residual_periodic_action_t<fs_player_action_t<spell_t>>
+{
+  amethyst_splinters_t( util::string_view name, fs_player_t* p ) : residual_action_t( name, p )
+  {
+    id = 11471;
+
+    background = true;
+
+    name_str_reporting = "Amethyst Splinters";
+
+    tick_may_crit = false;
+
+    dot_duration           = 8_s;
+    dot_behavior           = DOT_REFRESH_DURATION;
+    base_tick_time         = 2_s;
+    hasted_ticks           = true;
+    dot_allow_partial_tick = true;
+
+    base_multiplier *= p->fs_weapon_trait_values.amethyst_splinters_fraction[ p->fs_weapons.amethyst_splinters ];
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    spell_t::snapshot_state( state, rt );
+  }
+
+  double composite_ta_multiplier( const action_state_t* s ) const override
+  {
+    return fs_player_action_t::action_multiplier();
+  }
+
+  void init() override
+  {
+    base_t::init();
+    snapshot_flags &= STATE_NO_MULTIPLIER;
+    update_flags &= STATE_NO_MULTIPLIER;
+    snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
+    update_flags &= ~STATE_HASTE;
+  }
+};
+
+
 struct fated_strike_t : fs_weapon_action_t<attack_t>
 {
   double st_mod       = 11.37;
@@ -1691,6 +1733,17 @@ void fs_player_t::init_assessors()
       return assessor::CONTINUE;
     } );
   }
+
+  if ( fs_weapons.amethyst_splinters > 0 )
+  {
+    assessor_out_damage.add( assessor::TARGET_DAMAGE + 2, [ this ]( result_amount_type, action_state_t* s ) {
+      if ( s->result == RESULT_CRIT )
+      {
+        residual_action::trigger( fs_actions.amethyst_splinters, s->target, s->result_amount );
+      }
+      return assessor::CONTINUE;
+    } );
+  }
 }
 
 // fs_player_t::init_finished ===================================================
@@ -1737,6 +1790,8 @@ void fs_player_t::used_ultimate()
 void fs_player_t::init_background_actions()
 {
   player_t::init_background_actions();
+
+  fs_actions.amethyst_splinters = new actions::amethyst_splinters_t( "amethyst_splinters", this );
 }
 
 // fs_player_t::reset ===========================================================

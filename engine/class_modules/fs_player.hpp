@@ -15,8 +15,6 @@ struct fs_player_attack_t;
 struct fs_player_heal_t;
 struct fs_player_spell_t;
 
-struct fs_player_poison_t;
-
 struct melee_t;
 }  // namespace actions
 
@@ -79,6 +77,8 @@ public:
 
   struct fs_actions_t
   {
+    action_t* amethyst_splinters;
+    action_t* voidbringer_dmg;
   } fs_actions;
 
   struct fs_buffs_t

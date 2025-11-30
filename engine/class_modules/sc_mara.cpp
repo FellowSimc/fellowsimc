@@ -1856,10 +1856,11 @@ struct vexiras_venom_t : public residual_action::residual_periodic_action_t<mara
 
     tick_may_crit = false;
         
-    dot_duration   = p->legendary.vexiras_venom_duration;
-    dot_behavior   = DOT_REFRESH_DURATION;
-    base_tick_time = p->legendary.vexiras_venom_period;
-    hasted_ticks   = true;
+    dot_duration           = p->legendary.vexiras_venom_duration;
+    dot_behavior           = DOT_REFRESH_DURATION;
+    base_tick_time         = p->legendary.vexiras_venom_period;
+    hasted_ticks           = true;
+    dot_allow_partial_tick = true;
   }
 
   void snapshot_state( action_state_t* state, result_amount_type rt ) override

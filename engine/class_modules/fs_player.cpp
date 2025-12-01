@@ -696,6 +696,38 @@ struct voidbringers_touch_dmg_t : fs_weapon_action_t<spell_t>
                       STATE_MUL_PERSISTENT;
   }
 };
+
+struct sahrils_wrath_t : fs_weapon_action_t<spell_t>
+{
+  sahrils_wrath_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : fs_weapon_action_t( n, p, options )
+  {
+    id = 161123;
+
+    name_str_reporting = "Sahril's Wrath";
+    school             = SCHOOL_FIRE;
+
+    spell_power_mod.direct = 21.09;
+
+    aoe = -1;
+
+    full_amount_targets = 1;
+
+    cooldown->duration = 120_s;
+
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_SAHRILS_WRATH )
+      active_weapon = true;
+
+    parse_options( options );
+  }
+
+
+  void execute() override
+  {
+    fs_p()->fs_buffs.sundering_wrath->trigger( as<int>( target_list().size() ) );
+    base_t::execute();
+  }
+};
 }  // namespace actions
 
 // fs_player_t::create_action  ==================================================
@@ -710,10 +742,12 @@ action_t* fs_player_t::create_action( util::string_view name, util::string_view 
     return new chronoshift_t( name, this, options_str );
   if ( name == "natures_fury" )
     return new natures_fury_t( name, this, options_str );
-  if ( name == "icicles_of_anzhyr" )
+  if ( name == "icicles_of_anzhyr" || name == "icicles" )
     return new icicles_of_anzhyr_t( name, this, options_str );
   if ( name == "voidbringer" || name == "voidbringers" || name == "voidbringers_touch" )
     return new voidbringers_touch_t( name, this, options_str );
+  if ( name == "sahrils_wrath" || name == "sahrils" || name == "sahril" )
+    return new sahrils_wrath_t( name, this, options_str );
 
   return player_t::create_action( name, options_str );
 }
@@ -1070,6 +1104,13 @@ void fs_player_t::create_buffs()
                       fs_weapon_trait_values.seized_opportunity_crit[ fs_weapons.seized_opportunity ] )
           ->set_max_stack( 20 )
           ->set_duration( 12_s );
+
+  fs_buffs.sundering_wrath = make_buff<fs_player_buff_t>( this, "sundering_wrath" )
+                               ->set_default_value( 0.06 )
+                               ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
+                               ->set_max_stack( 5 )
+                               ->set_duration( 20_s )
+                               ->set_refresh_behavior( buff_refresh_behavior::DISABLED );
 
   struct fated_strike_buff_t : fs_player_buff_t
   {

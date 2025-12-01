@@ -107,6 +107,7 @@ public:
     buff_t* martial_initiative;
     buff_t* hidden_power_stacking;
     buff_t* hidden_power;
+    buff_t* sundering_wrath;
   } fs_buffs;
 
   struct fs_cooldowns_t

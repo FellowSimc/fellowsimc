@@ -12,15 +12,58 @@ namespace fellowship
 // FS Targetdata Definitions
 // ==========================================================================
 
+struct voidbringer_debuff_t : fs_player_buff_t
+{
+  double current_cap;
+  voidbringer_debuff_t( player_t* target, fs_player_t* pl ) : fs_player_buff_t( target, pl, "voidbringer_accumulator" )
+  {
+    default_value = 0;
+
+    set_duration( p()->fs_weapon_values.voidbringer_duration );
+    add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
+      if ( _new )
+      {
+        p()->active_voidbringer_buffs.push_back( this );
+      }
+    } );
+  }
+
+  bool trigger( int stacks, double value, double chance, timespan_t duration ) override
+  {
+    current_cap = p()->fs_weapon_values.voidbringer_cap *
+                  std::max( p()->cache.attack_power(), p()->cache.spell_power( SCHOOL_SHADOW ) );
+
+    return fs_player_buff_t::trigger( stacks, value, chance, duration );
+  }
+
+  void expire_override( int expiration_stacks, timespan_t remaining_duration ) override
+  {
+    fs_player_buff_t::expire_override( expiration_stacks, remaining_duration );
+
+    auto it = range::find( p()->active_voidbringer_buffs, this );
+    if ( it != p()->active_voidbringer_buffs.end() )
+    {
+      erase_unordered( p()->active_voidbringer_buffs, it );
+    }
+
+    p()->fs_actions.voidbringer_dmg->execute_on_target( player, current_value );
+  }
+};
+
 fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
   : actor_target_data_t( target, source ), dots(), debuffs(), buffs()
 {
-  dots.curse_of_anzhyr = target->get_dot( "curse_of_anzhyr", source );
+  if ( target->is_enemy() )
+  {
+    dots.curse_of_anzhyr = target->get_dot( "curse_of_anzhyr", source );
 
-  debuffs.triggered_first_strike = make_buff( *this, "first_strike_triggered" );
+    debuffs.triggered_first_strike = make_buff( *this, "first_strike_triggered" );
 
-  debuffs.diamond_strike_amp =
-      make_buff( *this, "diamond_strike_amp" )->set_max_stack( 5 )->set_duration( 20_s )->set_default_value( 0.4 );
+    debuffs.diamond_strike_amp =
+        make_buff( *this, "diamond_strike_amp" )->set_max_stack( 5 )->set_duration( 20_s )->set_default_value( 0.4 );
+
+    debuffs.voidbringer_debuff = make_buff<voidbringer_debuff_t>( target, source );
+  }
 }
 
 // ==========================================================================
@@ -377,51 +420,51 @@ struct fated_strike_t : fs_weapon_action_t<attack_t>
   }
 };
 
-struct chronoshift_pulse_t : fs_weapon_action_t<spell_t>
-{
-  chronoshift_pulse_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
-  {
-    id                  = 1558;
-    name_str_reporting  = "Chronoshift (Pulse)";
-    background          = true;
-    aoe                 = -1;
-    school              = SCHOOL_ARCANE;
-    reduced_aoe_targets = 5;
-
-    spell_power_mod.direct = 5.769;
-
-    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT )
-      active_weapon = true;
-  }
-
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = base_t::composite_da_multiplier( s );
-
-    if ( parent_dot )
-    {
-      m *= parent_dot->get_tick_factor();
-    }
-
-    return m;
-  }
-
-  void execute() override
-  {
-    if ( target_list().size() > 1 )
-    {
-      target = target_list().front();
-    }
-
-    if ( pre_execute_state )
-      pre_execute_state->target = target;
-
-    base_t::execute();
-  }
-};
-
 struct chronoshift_t : fs_weapon_action_t<spell_t>
 {
+  struct chronoshift_pulse_t : fs_weapon_action_t<spell_t>
+  {
+    chronoshift_pulse_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
+    {
+      id                  = 1558;
+      name_str_reporting  = "Chronoshift (Pulse)";
+      background          = true;
+      aoe                 = -1;
+      school              = SCHOOL_ARCANE;
+      reduced_aoe_targets = 5;
+
+      spell_power_mod.direct = 5.769;
+
+      if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT )
+        active_weapon = true;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      double m = base_t::composite_da_multiplier( s );
+
+      if ( parent_dot )
+      {
+        m *= parent_dot->get_tick_factor();
+      }
+
+      return m;
+    }
+
+    void execute() override
+    {
+      if ( target_list().size() > 1 )
+      {
+        target = target_list().front();
+      }
+
+      if ( pre_execute_state )
+        pre_execute_state->target = target;
+
+      base_t::execute();
+    }
+  };
+
   chronoshift_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
     : fs_weapon_action_t( n, p, options )
   {
@@ -592,6 +635,67 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
         true );
   }
 };
+
+struct voidbringers_touch_t : fs_weapon_action_t<spell_t>
+{
+  voidbringers_touch_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : fs_weapon_action_t( n, p, options )
+  {
+    id = 12712;
+
+    name_str_reporting = "Voidbringer's Touch";
+    school             = SCHOOL_SHADOW;
+
+
+    aoe = 0;
+
+    cooldown->duration = 90_s;
+
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_VOIDBRINGERS_TOUCH )
+      active_weapon = true;
+
+    parse_options( options );
+
+    add_child( p->fs_actions.voidbringer_dmg );
+  }
+
+  void impact( action_state_t* state ) override
+  {
+    fs_weapon_action_t::impact( state );
+
+    auto td = fs_p()->find_target_data( state->target );
+    if ( td )
+    {
+      td->debuffs.voidbringer_debuff->trigger();
+    }
+  }
+};
+struct voidbringers_touch_dmg_t : fs_weapon_action_t<spell_t>
+{
+  voidbringers_touch_dmg_t( util::string_view n, fs_player_t* p )
+    : fs_weapon_action_t( n, p )
+  {
+    id = 12713;
+
+    name_str_reporting = "Voidbringer's Touch";
+    school             = SCHOOL_SHADOW;
+
+    aoe = 0;
+    background = true;
+
+    base_crit += 1.0;
+
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_VOIDBRINGERS_TOUCH )
+      active_weapon = true;
+  }
+
+  void init_finished() override
+  {
+    base_t::init_finished();
+    snapshot_flags |= STATE_TARGET_NO_PET | STATE_CRIT | STATE_VERSATILITY | STATE_MUL_DA | STATE_MUL_PLAYER_DAM |
+                      STATE_MUL_PERSISTENT;
+  }
+};
 }  // namespace actions
 
 // fs_player_t::create_action  ==================================================
@@ -608,6 +712,8 @@ action_t* fs_player_t::create_action( util::string_view name, util::string_view 
     return new natures_fury_t( name, this, options_str );
   if ( name == "icicles_of_anzhyr" )
     return new icicles_of_anzhyr_t( name, this, options_str );
+  if ( name == "voidbringer" || name == "voidbringers" || name == "voidbringers_touch" )
+    return new voidbringers_touch_t( name, this, options_str );
 
   return player_t::create_action( name, options_str );
 }
@@ -656,6 +762,8 @@ std::unique_ptr<expr_t> fs_player_t::create_expression( util::string_view name_s
     {
       if ( util::str_compare_ci( split[ 1 ], "visions_of_grandeur" ) )
         return make_ref_expr( name_str, fs_weapons.visions_of_grandeur );
+      else if ( util::str_compare_ci( split[ 1 ], "brave_machinations" ) )
+        return make_ref_expr( name_str, fs_weapons.brave_machinations );
     }
   }
   // Split expressions
@@ -1744,6 +1852,16 @@ void fs_player_t::init_assessors()
       return assessor::CONTINUE;
     } );
   }
+
+  if ( fs_weapons.equipped_weapon == FSWEAPON_VOIDBRINGERS_TOUCH )
+  {
+    assessor_out_damage.add( assessor::TARGET_DAMAGE + 3, [ this ]( result_amount_type, action_state_t* s ) {
+      if ( s->result_amount > 0 )
+        voidbringer_accumulate( s->result_amount );
+
+      return assessor::CONTINUE;
+    } );
+  }
 }
 
 // fs_player_t::init_finished ===================================================
@@ -1792,6 +1910,7 @@ void fs_player_t::init_background_actions()
   player_t::init_background_actions();
 
   fs_actions.amethyst_splinters = new actions::amethyst_splinters_t( "amethyst_splinters", this );
+  fs_actions.voidbringer_dmg    = new actions::voidbringers_touch_dmg_t( "voidbringers_touch_dmg", this );
 }
 
 // fs_player_t::reset ===========================================================
@@ -1799,6 +1918,8 @@ void fs_player_t::init_background_actions()
 void fs_player_t::reset()
 {
   player_t::reset();
+
+  active_voidbringer_buffs.clear();
   brave_machinations_available = false;
 }
 
@@ -1865,6 +1986,43 @@ double fs_player_t::stacking_movement_modifier() const
   double ms = player_t::stacking_movement_modifier();
 
   return ms;
+}
+
+void fs_player_t::voidbringer_accumulate( double damage )
+{
+  auto accumulated = fs_weapon_values.voidbringer_acc * damage;
+
+  for ( size_t i = 0; i < active_voidbringer_buffs.size(); )
+  {
+      
+    auto* buff = debug_cast<voidbringer_debuff_t*>( active_voidbringer_buffs[ i ] );
+    
+    if ( !buff )
+      sim->error( "{} has invalid voidbringer debuff in active_voidbringer_buffs vector.", *this );
+
+    if ( !buff->check() )
+    {
+      sim->print_debug( "{} has voidbringer debuff on target {} in vector while buff is not active.", *this,
+                        *buff->player );
+      i++;
+      continue;
+    }
+    auto cap = buff->current_cap;
+
+    auto old_value = buff->current_value;
+    buff->current_value = std::min( cap, buff->current_value + accumulated );
+    sim->print_debug( "{} voidbringer accumulates {} dmg on target {}. (Stored: {} was: {})", *this, accumulated,
+                      *buff->player, buff->current_value, old_value );
+    if ( buff->current_value >= cap || buff->current_value >= buff->player->current_health() )
+    {
+      // This will remove the buff from active_voidbringer_buffs by swapping with last element.
+      buff->expire();
+    }
+    else
+    {
+      i++;
+    }
+  }
 }
 
 // fs_player_t::regen ===========================================================

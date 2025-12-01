@@ -2558,6 +2558,10 @@ std::unique_ptr<expr_t> mara_t::create_expression( util::string_view name_str )
       }
     }
   }
+  else if ( util::str_compare_ci( split[ 0 ], "deadly_scheme_energy" ) )
+  {
+    return make_ref_expr( name_str, deadly_energy_tracker );
+  }
   // Split expressions
 
   return fs_player_t::create_expression( name_str );

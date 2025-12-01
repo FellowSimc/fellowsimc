@@ -31,6 +31,7 @@ public:
   {
     buff_t* triggered_first_strike;
     buff_t* diamond_strike_amp;
+    buff_t* voidbringer_debuff;
   } debuffs;
 
   struct buffs_t
@@ -47,14 +48,19 @@ struct fs_player_buff_t : public buff_t
   {
   }
 
+  fs_player_buff_t( player_t* t, player_t* p, util::string_view name )
+    : buff_t( p->sim, t, p, name, spell_data_t::nil(), nullptr )
+  {
+  }
+
   fs_player_t* p()
   {
-    return debug_cast<fs_player_t*>( player );
+    return debug_cast<fs_player_t*>( source );
   }
 
   const fs_player_t* p() const
   {
-    return debug_cast<const fs_player_t*>( player );
+    return debug_cast<const fs_player_t*>( source );
   }
 
   // Used by underhanded upper hand, it's not a *real* pause, but rather an application of a 100x slowdown via time mod
@@ -207,6 +213,13 @@ public:
     unsigned willful_momentum                 = 0;
   } fs_weapons;
 
+  struct fs_weapon_values_t
+  {
+    const double voidbringer_cap          = 42.5;
+    const double voidbringer_acc          = 0.1;
+    const timespan_t voidbringer_duration = 15_s;
+  } fs_weapon_values;
+
   struct fs_weapon_trait_values_t
   {
     const double willful_momentum_spirit[ 5 ]     = { 0, 59, 89, 118, 148 };
@@ -232,6 +245,7 @@ public:
   bool brave_machinations_available;
 
   target_specific_t<fs_player_td_t> target_data;
+  std::vector<buff_t*> active_voidbringer_buffs;
 
   virtual const fs_player_td_t* find_target_data( const player_t* target ) const override
   {
@@ -307,6 +321,7 @@ public:
   void invalidate_cache( cache_e ) override;
   void spirit_refund();
   void used_ultimate();
+  void voidbringer_accumulate( double damage );
 
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
 

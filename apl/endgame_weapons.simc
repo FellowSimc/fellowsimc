@@ -1,6 +1,8 @@
 report_details=1
 optimal_raid=0
-max_time=420
+#max_time=420
+max_time=290
+vary_combat_length=0.03
 target_error=0.1
 iterations=100000
 chart_show_relative_difference=1
@@ -25,6 +27,7 @@ mara="Mara"
 level=80
 
 # initial_resource=spirit=100
+
 
 apl/mara.simc
 
@@ -142,6 +145,10 @@ copy="Fated Strike Brave4","Mara"
 weapon=fated_strike
 weapon_trait.brave_machinations=4
 
+copy="Fated Strike Splinters4","Mara"
+weapon=fated_strike
+weapon_trait.amethyst_splinters=4
+
 copy="Fated Strike heroic_brand4","Mara"
 weapon=fated_strike
 weapon_trait.heroic_brand=4
@@ -150,6 +157,28 @@ copy="Fated Strike Grandeur4","Mara"
 weapon=fated_strike
 weapon_trait.visions_of_grandeur=4
 
+copy="Fated Strike Diam4","Mara"
+weapon=fated_strike
+weapon_trait.diamond_strike=4
+
+copy="Voidbringer Brave4","Mara"
+weapon=voidbringers_touch
+weapon_trait.brave_machinations=4
+
+copy="Voidbringer Grand4","Mara"
+weapon=voidbringers_touch
+weapon_trait.visions_of_grandeur=4
+
+copy="Voidbringer Splinters4","Mara"
+weapon=voidbringers_touch
+weapon_trait.amethyst_splinters=4
+
+copy="Voidbringer Brand4","Mara"
+weapon=voidbringers_touch
+weapon_trait.heroic_brand=4
+copy="Voidbringer Diam4","Mara"
+weapon=voidbringers_touch
+weapon_trait.diamond_strike=4
 # copy="Finisher No Hemo FTQ MD","Mara"
 # talent.assassins_guile=1
 # talent.venomous_delight=1

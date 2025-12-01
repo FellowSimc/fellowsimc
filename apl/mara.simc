@@ -13,6 +13,7 @@ actions.aoe+=/cycling_variable,name=low_duration_bleeds,op=add,value=dot.hemorrh
 actions.aoe+=/variable,name=energy_regen_estimate,op=set,value=energy.regen_combined+talent.venomous_delight*((((active_enemies*6+active_enemies*active_enemies)>?energy.deficit)%cooldown.brooding_shadows.duration)+(active_dot.seething_poison%action.seething_poison.tick_time)+(active_dot.vexiras_venom%2))
 actions.aoe+=/matriach_macabre,target_if=max:target.health,if=combo_points>=4&(buff.maiden_of_death.up|(((fight_remains-10-cooldown.maiden_of_death.remains)*spirit.regen)%%100<((fight_remains-10)*spirit.regen)%%100)&(!raid_event.adds.exists|active_enemies>=raid_event.adds.count))&(!talent.gushing_blood|variable.low_duration_bleeds<=0|expected_combat_length>=60)|fight_remains<=20
 actions.aoe+=/maiden_of_death,if=combo_points>=4&!buff.maiden_of_death.up&(spirit=100|spirit.time_to_max>=8|legendary.final_stratagem_cdr)&(raid_event.adds.remains>=30|!talent.gushing_blood|!raid_event.adds.exists|legendary.final_stratagem_cdr&raid_event.adds.remains>=20|!talent.from_the_shadows)
+actions.aoe+=/sahrils_wrath,if=!buff.sundering_wrath.up&(weapon_trait.visions_of_grandeur&cooldown.maiden_of_death.remains>=10|buff.maiden_of_death.up)
 actions.aoe+=/fated_strike,if=(cooldown.brooding_shadows.full_recharge_time>=gcd.max*2&cooldown.maiden_of_death.full_recharge_time>=gcd.max*2|weapon_trait.visions_of_grandeur)&!buff.fated_strike.up
 actions.aoe+=/voidbringers_touch,target_if=max:target.health*(1-2*debuff.voidbringer_accumulator.up),if=(cooldown.maiden_of_death.remains<=6|buff.matriach_macabre.up|buff.maiden_of_death.up|!weapon_trait.brave_machinations&buff.deadly_scheme.up)&!debuff.voidbringer_accumulator.up
 #|combo_points<=2&cooldown.maiden_of_death.remains>=10&legendary.final_stratagem_cdr
@@ -41,7 +42,8 @@ actions.st+=/widows_bite,if=buff.brooding_shadows.up&dot.seething_poison.refresh
 actions.st+=/pool_resource,if=energy<=100&cooldown.maiden_of_death.remains<=6&!buff.maiden_of_death.up
 actions.st+=/maiden_of_death,if=(dot.seething_poison.ticking&(combo_points<4)&!buff.brooding_shadows.up&spirit.time_to_max>=15|fight_remains<=20)&!buff.maiden_of_death.up
 actions.st+=/fated_strike,if=!cooldown.brooding_shadows.up&!cooldown.maiden_of_death.up
-actions.st+=/voidbringers_touch,target_if=max:target.health*(1-2*debuff.voidbringer_accumulator.up),if=(cooldown.maiden_of_death.remains<=6|buff.matriach_macabre.up|buff.maiden_of_death.up|!weapon_trait.brave_machinations&buff.deadly_scheme.up)&!debuff.voidbringer_accumulator.up
+actions.st+=/sahrils_wrath,if=buff.maiden_of_death.up
+actions.st+=/voidbringers_touch,target_if=max:target.health*(1-2*debuff.voidbringer_accumulator.up),if=(cooldown.maiden_of_death.remains<=6&buff.deadly_scheme.up|buff.matriach_macabre.up|buff.maiden_of_death.up|weapon_trait.visions_of_grandeur)&!debuff.voidbringer_accumulator.up
 actions.st+=/final_stratagem,if=!cooldown.brooding_shadows.up&cooldown.maiden_of_death.remains>=10&combo_points=0&(!cooldown.widows_bite.up|energy.regen_combined>=19)&(buff.matriach_macabre.up|fight_remains>=190|(fight_remains-spirit.time_to_max-10)%%180<(fight_remains-10)%%180)&!buff.brooding_shadows.up|fight_remains<=20|legendary.final_stratagem_cdr&!cooldown.brooding_shadows.up&combo_points<=2&!buff.brooding_shadows.up&!cooldown.maiden_of_death.up
 actions.st+=/skittering_blades,if=buff.brooding_shadows.up&active_enemies>=4
 actions.st+=/backstab,if=buff.brooding_shadows.up&combo_points=0&active_enemies<4

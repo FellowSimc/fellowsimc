@@ -64,6 +64,15 @@ fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
 
     debuffs.voidbringer_debuff = make_buff<voidbringer_debuff_t>( target, source );
   }
+  else
+  {
+    buffs.inspired_allegiance =
+        make_buff<stat_buff_t>( *this, "inspired_allegiance" )
+            ->add_stat(
+                STAT_HASTE_RATING,
+                source->fs_weapon_trait_values.inspired_allegiance_haste[ source->fs_weapons.inspired_allegiance ] )
+            ->set_duration( 8_s );
+  }
 }
 
 // ==========================================================================
@@ -643,9 +652,11 @@ struct voidbringers_touch_t : fs_weapon_action_t<spell_t>
   {
     id = 12712;
 
+    base_execute_time = trigger_gcd = min_gcd = 0_s;
+    gcd_type = gcd_haste_type::NONE;
+
     name_str_reporting = "Voidbringer's Touch";
     school             = SCHOOL_SHADOW;
-
 
     aoe = 0;
 
@@ -711,7 +722,10 @@ struct sahrils_wrath_t : fs_weapon_action_t<spell_t>
 
     aoe = -1;
 
-    full_amount_targets = 1;
+    base_execute_time = trigger_gcd = min_gcd = 0_s;
+    gcd_type                                  = gcd_haste_type::NONE;
+
+    reduced_aoe_targets = 1;
 
     cooldown->duration = 120_s;
 
@@ -1867,6 +1881,75 @@ void fs_player_t::init_special_effects()
 
     dbc->initialize();
     dbc->activate();
+  }
+
+  if ( fs_weapons.inspired_allegiance )
+  {
+    struct inspired_allegiance_t: dbc_proc_callback_t
+    {
+      inspired_allegiance_t( fs_player_t* p, const special_effect_t& e )
+        : dbc_proc_callback_t( p, e )
+      {
+      }
+
+      fs_player_t* p() const
+      {
+        return static_cast<fs_player_t*>( listener );
+      }
+
+      void execute( action_t*, action_state_t* s ) override
+      {
+        if ( p()->weapon_cd )
+        {
+          p()->weapon_cd->adjust(
+              -p()->fs_weapon_trait_values.inspired_allegiance_cdr[ p()->fs_weapons.inspired_allegiance ], true, true );
+        }
+
+        p()->get_target_data( p() )->buffs.inspired_allegiance->trigger();
+
+
+        // TODO: Cache this.
+        std::vector<fs_player_t*> allies;
+
+        for ( auto& player : p()->sim->player_non_sleeping_list )
+        {
+          if ( player == p() || p()->is_sleeping() || p()->is_pet() || dynamic_cast<fs_player_t*>( player ) == nullptr )
+            continue;
+
+          allies.push_back( static_cast<fs_player_t*>( player ) );
+        }
+
+        rng().shuffle( allies.begin(), allies.end() );
+        size_t max_targets = p()->fs_weapon_trait_values.inspired_allegiance_allies[ p()->fs_weapons.inspired_allegiance ];
+
+        size_t count = 0;
+        for ( auto& ally : allies )
+        {
+          ally->get_target_data( p() )->buffs.inspired_allegiance->trigger();
+
+          if ( ++count >= max_targets )
+            break;
+
+        }
+      }
+
+    };
+
+    auto fs_effect                   = new special_effect_t( this );
+    fs_effect->spell_id              = 1368;
+    fs_effect->name_str              = "inspired_allegiance";
+    fs_effect->proc_flags_           = PF_ALL_DAMAGE;
+    fs_effect->proc_flags2_          = PF2_ALL_HIT;
+    fs_effect->ppm_                  = -1.2;
+    fs_effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
+    fs_effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+    fs_effect->has_use_buff_override = true;
+
+    special_effects.push_back( fs_effect );
+
+    auto cb = new inspired_allegiance_t( this, *fs_effect );
+    cb->initialize();
+    cb->activate();
   }
 }
 

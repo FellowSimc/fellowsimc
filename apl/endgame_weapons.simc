@@ -1,6 +1,6 @@
 report_details=1
 optimal_raid=0
-#max_time=420
+# max_time=420
 max_time=290
 vary_combat_length=0.03
 target_error=0.1
@@ -10,7 +10,7 @@ vary_combat_length=0
 single_actor_batch=1
 desired_targets=1
 
-apl/chuey_dungeon.simc
+# apl/chuey_dungeon.simc
 
 # apl/dungeon.simc
 
@@ -26,7 +26,7 @@ apl/chuey_dungeon.simc
 mara="Mara"
 level=80
 
-# initial_resource=spirit=100
+initial_resource=spirit=100
 
 
 apl/mara.simc
@@ -179,6 +179,27 @@ weapon_trait.heroic_brand=4
 copy="Voidbringer Diam4","Mara"
 weapon=voidbringers_touch
 weapon_trait.diamond_strike=4
+
+copy="Sahrils Brave4","Mara"
+weapon=sahrils_wrath
+weapon_trait.brave_machinations=4
+
+copy="Sahrils Splinters4","Mara"
+weapon=sahrils_wrath
+weapon_trait.amethyst_splinters=4
+
+copy="Sahrils heroic_brand4","Mara"
+weapon=sahrils_wrath
+weapon_trait.heroic_brand=4
+
+copy="Sahrils Grandeur4","Mara"
+weapon=sahrils_wrath
+weapon_trait.visions_of_grandeur=4
+
+copy="Sahrils Diam4","Mara"
+weapon=sahrils_wrath
+weapon_trait.diamond_strike=4
+
 # copy="Finisher No Hemo FTQ MD","Mara"
 # talent.assassins_guile=1
 # talent.venomous_delight=1

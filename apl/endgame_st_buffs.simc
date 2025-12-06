@@ -1,0 +1,924 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+max_time=290
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=1
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_agility=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+
+mara="Mara"
+level=80
+
+initial_resource=spirit=100
+
+apl/mara.simc
+
+gear_agility=1442
+
+# Agi = 1442
+# Secondary - 4515
+# = Full 330 :^)
+
+
+legendary.vexiras_venom=1
+
+# talent.sinners_pride=1
+
+# legendary.spirit_procs_clones=1
+
+
+# gems.sapphire_power=1200
+# gems.emerald_power=1200
+# gems.topaz_power=1200
+
+talent.gushing_blood_always_works=0
+
+# weapon=sahrils_wrath
+talent.assassins_guile=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.feed_the_queen=1
+talent.malevolence=1
+talent.puncture=1
+talent.maidens_doom=1
+
+
+gear_haste_rating=650
+gear_crit_rating=1500
+gear_versatility_rating=1960
+gear_mastery_rating=400
+
+# gear_haste_rating=650
+# # gear_haste_rating=0
+# gear_crit_rating=900
+# gear_versatility_rating=1460
+# # gear_mastery_rating=452
+# gear_mastery_rating=1600
+
+weapon=fated_strike
+weapon_trait.visions_of_grandeur=4
+# weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+# weapon_trait.willful_momentum=4
+
+gems.amethyst_power=2904
+gems.ruby_power=1296
+gems.sapphire_power=324
+sets.deaths_grasp=1
+
+
+# copy="0 Set","Mara"
+# gems.amethyst_power=2640
+# gems.ruby_power=1200
+# gems.sapphire_power=1200
+
+
+# copy="1 Set Overcap Amethyst","Mara"
+# gems.amethyst_power=3228
+# gems.ruby_power=1296
+# sets.deaths_grasp=1
+
+# copy="1 Set DiamondT2","Mara"
+# gems.amethyst_power=2904
+# gems.ruby_power=1296
+# gems.diamond_power=324
+# sets.deaths_grasp=1
+
+# copy="1 Set TopazT2","Mara"
+# gems.amethyst_power=2904
+# gems.ruby_power=1296
+# gems.topaz_power=324
+# sets.deaths_grasp=1
+
+# copy="1 Set SapphireT2","Mara"
+# gems.amethyst_power=2904
+# gems.ruby_power=1296
+# gems.sapphire_power=324
+# sets.deaths_grasp=1
+
+# copy="2 Set","Mara"
+# gems.amethyst_power=2742
+# gems.ruby_power=972
+# sets.deaths_grasp=1
+# sets.dark_prophecy=1
+
+
+# copy="3 Sets Full Overcap","Mara"
+# gems.amethyst_power=3066
+# sets.deaths_grasp=1
+# sets.draconic_might=1
+# sets.dark_prophecy=1
+
+
+# copy="3 Sets Ruby T1","Mara"
+# gems.amethyst_power=2742
+# gems.ruby_power=162
+# sets.deaths_grasp=1
+# sets.draconic_might=1
+# sets.dark_prophecy=1
+
+
+# copy="Dark Prophecy","Mara"
+# sets.dark_prophecy=1
+# copy="Deaths Grasp","Mara"
+# sets.deaths_grasp=1
+# copy="Draconic Might","Mara"
+# sets.draconic_might=1
+# copy="Drakheims Absolution","Mara"
+# sets.drakheims_absolution=1
+# copy="Eldrin Deceit","Mara"
+# sets.eldrin_deceit=1
+# copy="Torment of BaelAurum","Mara"
+# sets.torment_of_baelaurum=1
+# copy="Tuzari Grace","Mara"
+# sets.tuzari_grace=1
+
+
+# copy="Bleed RL HT","Mara"
+# talent.assassins_guile=0
+# talent.venomous_delight=0
+# talent.deadly_scheme=0
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=1
+# talent.puncture=1
+
+# copy="Bleed RL HT Drenched","Mara"
+# talent.assassins_guile=0
+# talent.venomous_delight=0
+# talent.deadly_scheme=0
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=1
+# talent.puncture=1
+
+# legendary.vexiras_venom=0
+# legendary.drenched_in_blood=1
+
+# copy="Bleed RL HT Sinners Pride 30% Hemo Amp","Mara"
+# talent.assassins_guile=0
+# talent.venomous_delight=0
+# talent.deadly_scheme=0
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=1
+# talent.puncture=1
+
+# legendary.vexiras_venom=0
+# talent.sinners_pride=1
+# talent.sinners_pride_cdr_reduction_per_cp=1
+# talent.sinners_pride_hemorrhaging_strike_amp=0.3
+
+
+# copy="Bleed AG HT","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=0
+# talent.deadly_scheme=0
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=0
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=1
+# talent.puncture=1
+
+# copy="Bleed DS HT","Mara"
+# talent.assassins_guile=0
+# talent.venomous_delight=0
+# talent.deadly_scheme=1
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=0
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=1
+# talent.puncture=1
+
+# copy="Bleed RL AG DS","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=0
+# talent.deadly_scheme=1
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=0
+# talent.puncture=0
+
+# copy="Bleed RL AG DS Punc","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=0
+# talent.deadly_scheme=1
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=1
+# talent.bloodrush=0
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=0
+# talent.puncture=1
+
+# copy="Bleed RL AG DS VD","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=1
+# talent.bloodrush=0
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=0
+# talent.puncture=0
+
+# copy="Bleed RL DS BR VD PUNC","Mara"
+# talent.assassins_guile=0
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=1
+# talent.maidens_doom=0
+
+# talent.red_ledger=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=0
+# talent.puncture=1
+
+
+# copy="Bleed RL DS MD","Mara"
+# talent.assassins_guile=0
+# talent.venomous_delight=0
+# talent.deadly_scheme=1
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=1
+
+# talent.red_ledger=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=0
+# talent.puncture=1
+
+# copy="Bleed RL AG MD","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=0
+# talent.deadly_scheme=0
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=1
+
+# talent.red_ledger=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=0
+# talent.puncture=1
+
+# copy="Bleed DS AG MD","Mara"
+# talent.assassins_guile=1
+# talent.venomous_delight=0
+# talent.deadly_scheme=1
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=1
+
+# talent.red_ledger=0
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=0
+# talent.puncture=1
+
+# copy="Bleed Finisher VD","Mara"
+# talent.assassins_guile=0
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.feed_the_queen=0
+# talent.malevolence=1
+# talent.puncture=1
+# talent.maidens_doom=0
+
+# talent.red_ledger=0
+# talent.bloodrush=0
+# talent.gushing_blood=1
+# legendary.from_the_shadows=1
+# talent.hemotoxin=0
+# talent.puncture=1
+
+copy="Finisher HT RL BR","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=1
+talent.assassins_guile=0
+talent.bloodrush=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.maidens_doom=0
+talent.hemotoxin=1
+talent.malevolence=1
+talent.puncture=0
+
+copy="Finisher HT AG BR","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.assassins_guile=1
+talent.bloodrush=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.maidens_doom=0
+talent.hemotoxin=1
+talent.malevolence=1
+talent.puncture=0
+
+copy="Finisher HT AG Punc","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.assassins_guile=1
+talent.bloodrush=0
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.maidens_doom=0
+talent.hemotoxin=1
+talent.malevolence=1
+talent.puncture=1
+
+copy="HT RL BR VD AG DS Punc","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=1
+talent.assassins_guile=1
+talent.bloodrush=1
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.maidens_doom=0
+talent.hemotoxin=1
+talent.malevolence=0
+talent.puncture=1
+
+copy="Bleed Finisher BR Sinners Pride Maiden NOT VEXIRA","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=1
+talent.puncture=1
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.hemotoxin=0
+talent.puncture=0
+talent.sinners_pride=1
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+
+copy="Bleed Finisher BR Sinners Pride Maiden NOT VEXIRA AO","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=1
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.hemotoxin=0
+talent.arachnid_onslaught=1
+talent.sinners_pride=1
+
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+
+
+copy="Bleed Finisher BR Sinners Pride Maiden NOT VEXIRA MD","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=1
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.sinners_pride=1
+talent.hemotoxin=0
+talent.maidens_doom=1
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+
+
+copy="Bleed Finisher BR Sinners Pride Maiden NOT VEXIRA MD AO","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=1
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.bloodrush=0
+talent.arachnid_onslaught=1
+talent.gushing_blood=1
+talent.sinners_pride=1
+talent.hemotoxin=0
+talent.maidens_doom=1
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+
+
+copy="Bleed Finisher BR Sinners Pride Maiden NOT VEXIRA MD RL","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=1
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=1
+talent.bloodrush=0
+talent.arachnid_onslaught=0
+talent.gushing_blood=1
+talent.hemotoxin=0
+talent.maidens_doom=0
+talent.sinners_pride=1
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+
+copy="Bleed Finisher BR Sinners Pride Maiden VEXIRA","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=1
+talent.puncture=1
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.hemotoxin=0
+talent.puncture=1
+talent.sinners_pride=1
+legendary.from_the_shadows=0
+legendary.vexiras_venom=1
+
+copy="Bleed Finisher BR Sinners Pride Maiden VEXIRA AO","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=1
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.hemotoxin=0
+talent.arachnid_onslaught=1
+talent.sinners_pride=1
+
+copy="Bleed RL HT Sinners Pride Maiden","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=1
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.hemotoxin=1
+talent.puncture=1
+talent.sinners_pride=1
+
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+
+# gear_haste_rating=1050
+# # gear_haste_rating=0
+# gear_crit_rating=1100
+# gear_versatility_rating=1960
+# # gear_mastery_rating=452
+# gear_mastery_rating=400
+
+# copy="HT RL MD VD AG DS Punc Sinners Maiden Drenched","Mara"
+# talent.assassins_guile=0
+# talent.venomous_delight=0
+# talent.deadly_scheme=0
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=1
+# talent.assassins_guile=0
+# talent.bloodrush=0
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.maidens_doom=1
+# talent.hemotoxin=1
+# talent.malevolence=0
+# talent.puncture=0
+
+# legendary.drenched_in_blood=1
+# talent.sinners_pride=1
+# talent.sinners_pride_maiden=1
+# talent.sinners_pride_cdr_reduction_per_cp=0.5
+# talent.sinners_pride_hemorrhaging_strike_amp=0
+
+
+# copy="HT RL BR VD AG DS Punc Sinners Maiden Drenched","Mara"
+# talent.assassins_guile=0
+# talent.venomous_delight=0
+# talent.deadly_scheme=0
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=1
+# talent.assassins_guile=0
+# talent.bloodrush=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.maidens_doom=0
+# talent.hemotoxin=1
+# talent.malevolence=0
+# talent.puncture=0
+
+# legendary.drenched_in_blood=1
+# talent.sinners_pride=1
+# talent.sinners_pride_maiden=1
+# talent.sinners_pride_cdr_reduction_per_cp=0.5
+# talent.sinners_pride_hemorrhaging_strike_amp=0
+
+copy="Finisher Sinners Doom","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.assassins_guile=1
+talent.bloodrush=0
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.maidens_doom=1
+talent.hemotoxin=0
+talent.malevolence=1
+
+talent.sinners_pride=1
+
+copy="Finisher Sinners Doom Drenched","Mara"
+talent.assassins_guile=1
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.assassins_guile=1
+talent.bloodrush=0
+talent.venomous_delight=1
+talent.deadly_scheme=1
+talent.maidens_doom=1
+talent.hemotoxin=0
+talent.malevolence=1
+talent.sinners_pride=1
+
+legendary.vexiras_venom=0
+legendary.drenched_in_blood=1
+
+
+copy="Finisher Sinners Doom Spirit Heavy Crit=Exp=Spirit","Finisher Sinners Doom"
+gear_haste_rating=610
+gear_crit_rating=1300
+gear_versatility_rating=1300
+gear_mastery_rating=1300
+
+
+copy="Finisher Sinners Doom Drenched Crit=Exp=Spirit","Finisher Sinners Doom Drenched"
+gear_haste_rating=610
+gear_crit_rating=1300
+gear_versatility_rating=1300
+gear_mastery_rating=1300
+
+copy="Bleed RL HT MD Sinners Pride Maiden","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=1
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.hemotoxin=1
+talent.maidens_doom=1
+talent.sinners_pride=1
+
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+
+# # gear_haste_rating=0
+# gear_crit_rating=1100
+# gear_versatility_rating=1960
+# # gear_mastery_rating=452
+# gear_mastery_rating=400
+
+
+
+copy="Bleed DS HT MD Sinners Pride Maiden","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.hemotoxin=1
+talent.maidens_doom=1
+talent.sinners_pride=1
+
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+
+# gear_haste_rating=1050
+# # gear_haste_rating=0
+# gear_crit_rating=1100
+# gear_versatility_rating=1960
+# # gear_mastery_rating=452
+# gear_mastery_rating=400
+
+
+copy="Bleed Finisher BR Punc","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=1
+talent.puncture=1
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.sinners_pride=1
+talent.hemotoxin=0
+talent.puncture=1
+
+
+copy="Bleed Finisher MD Punc","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=1
+talent.puncture=1
+talent.maidens_doom=0
+
+talent.red_ledger=0
+# talent.bloodrush=1
+talent.maidens_doom=1
+talent.gushing_blood=1
+talent.sinners_pride=1
+talent.hemotoxin=0
+talent.puncture=1
+
+copy="Bleed Finisher BR MD","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=1
+talent.feed_the_queen=0
+talent.malevolence=1
+talent.puncture=1
+talent.maidens_doom=0
+
+talent.red_ledger=0
+talent.bloodrush=1
+talent.maidens_doom=1
+talent.gushing_blood=1
+talent.sinners_pride=1
+talent.hemotoxin=0
+talent.puncture=0
+
+
+copy="Pure Bleed Puncture AG","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=1
+talent.assassins_guile=1
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.maidens_doom=1
+talent.sinners_pride=1
+talent.puncture=1
+
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+
+gear_haste_rating=1050
+# gear_haste_rating=0
+gear_crit_rating=1100
+gear_versatility_rating=1960
+# gear_mastery_rating=452
+gear_mastery_rating=400
+
+
+copy="Pure Bleed Puncture DS","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=1
+talent.assassins_guile=0
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.deadly_scheme=1
+talent.maidens_doom=1
+talent.sinners_pride=1
+talent.puncture=1
+
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+# gear_haste_rating=1050
+# # gear_haste_rating=0
+# gear_crit_rating=1100
+# gear_versatility_rating=1960
+# # gear_mastery_rating=452
+# gear_mastery_rating=400
+
+
+copy="Pure Bleed AO AG","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+talent.red_ledger=1
+talent.assassins_guile=1
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.maidens_doom=1
+talent.sinners_pride=1
+talent.arachnid_onslaught=1
+
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+
+# gear_haste_rating=1050
+# # gear_haste_rating=0
+# gear_crit_rating=1100
+# gear_versatility_rating=1960
+# # gear_mastery_rating=452
+# gear_mastery_rating=400
+
+copy="Pure Bleed AO DS","Mara"
+talent.assassins_guile=0
+talent.venomous_delight=0
+talent.deadly_scheme=0
+talent.feed_the_queen=0
+talent.malevolence=0
+talent.puncture=0
+talent.maidens_doom=0
+
+talent.red_ledger=1
+talent.assassins_guile=0
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.deadly_scheme=1
+talent.maidens_doom=1
+talent.sinners_pride=1
+talent.arachnid_onslaught=1
+
+legendary.from_the_shadows=1
+legendary.vexiras_venom=0
+# gear_haste_rating=1050
+# # gear_haste_rating=0
+# gear_crit_rating=1100
+# gear_versatility_rating=1960
+# # gear_mastery_rating=452
+# gear_mastery_rating=400

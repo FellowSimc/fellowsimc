@@ -474,52 +474,81 @@ struct chronoshift_t : fs_weapon_action_t<spell_t>
     }
   };
 
+  struct chronoshift_channel_t : fs_weapon_action_t<spell_t>
+  {
+    chronoshift_channel_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+      : fs_weapon_action_t( n, p, options )
+    {
+      id = 1926;
+
+      name_str_reporting = "Chronoshift";
+      dot_duration       = 3.0_s;
+      base_tick_time     = 1.5_s;
+
+      channeled              = true;
+      hasted_ticks           = true;
+      tick_on_application    = true;
+      dot_allow_partial_tick = true;
+      may_crit               = false;
+
+      aoe = 0;
+
+      school             = SCHOOL_ARCANE;
+
+      if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT )
+        active_weapon = true;
+
+      tick_action = new chronoshift_pulse_t( "chronoshift_pulse", p );
+      add_child( tick_action );
+
+      parse_options( options );
+    }
+
+    void execute() override
+    {
+      target = player;
+      fs_weapon_action_t::execute();
+      fs_p()->fs_buffs.chronoshift->trigger();
+    }
+
+    void cancel() override
+    {
+      fs_weapon_action_t::cancel();
+      fs_p()->fs_buffs.chronoshift->expire();
+    }
+
+    void last_tick( dot_t* d ) override
+    {
+      fs_weapon_action_t::last_tick( d );
+      fs_p()->fs_buffs.chronoshift->expire();
+    }
+  };
+
+  action_t* channel_action;
   chronoshift_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
     : fs_weapon_action_t( n, p, options )
   {
     id = 1926;
 
     name_str_reporting = "Chronoshift";
-    dot_duration       = 3.0_s;
-    base_tick_time     = 1.5_s;
+    base_execute_time  = 1_s;
 
-    channeled              = true;
-    hasted_ticks           = true;
-    tick_on_application    = true;
-    dot_allow_partial_tick = true;
-    may_crit               = false;
-
-    aoe = 0;
-
-    school             = SCHOOL_ARCANE;
     cooldown->duration = 200_s;
 
     if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT )
       active_weapon = true;
 
-    tick_action = new chronoshift_pulse_t( "chronoshift_pulse", p );
-    add_child( tick_action );
+
+    channel_action = new chronoshift_channel_t( fmt::format( "{}_channel", n ), p, options );
 
     parse_options( options );
   }
 
   void execute() override
   {
-    target = player;
     fs_weapon_action_t::execute();
-    fs_p()->fs_buffs.chronoshift->trigger();
-  }
-
-  void cancel() override
-  {
-    fs_weapon_action_t::cancel();
-    fs_p()->fs_buffs.chronoshift->expire();
-  }
-
-  void last_tick( dot_t* d ) override
-  {
-    fs_weapon_action_t::last_tick( d );
-    fs_p()->fs_buffs.chronoshift->expire();
+    
+    channel_action->execute();
   }
 };
 
@@ -1212,6 +1241,8 @@ bool parse_fsweapon( sim_t* sim, std::string_view, std::string_view value )
 void fs_player_t::create_options()
 {
   player_t::create_options();
+
+  add_option( opt_uint64( "talent_points_fs", talent_points_fs ) );
 
   add_option( opt_bool( "sets.dark_prophecy", fs_sets.dark_prophecy ) );
   add_option( opt_float( "sets.dark_prophecy_haste", fs_sets.dark_prophecy_haste ) );
@@ -2004,7 +2035,7 @@ void fs_player_t::init_finished()
   {
     for ( auto action : action_list )
     {
-      action->base_recharge_rate_multiplier *= fs_gems.gem_powers[ GEM_EMERALD ] >= 2640.0 ? 0.88 : 0.96;
+      action->base_recharge_multiplier *= fs_gems.gem_powers[ GEM_EMERALD ] >= 2640.0 ? 0.88 : 0.96;
       action->cooldown->adjust_recharge_multiplier();
     }
   }

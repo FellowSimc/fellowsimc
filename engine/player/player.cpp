@@ -1008,6 +1008,8 @@ player_t::player_t( sim_t* s, player_e t, util::string_view n, race_e r )
     ready_type( READY_POLL ),
     _spec( SPEC_NONE ),
     bugs( true ),
+    talent_points_fs( 0 ),
+    talent_points_fs_count( 0 ),
     disable_hotfixes( 0 ),
     scale_player( true ),
     death_pct( 0.0 ),

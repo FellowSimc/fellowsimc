@@ -158,6 +158,14 @@ public:
     gain_t* efficient_killer;
   } gains;
 
+  struct spell_const_t
+  {
+    double hemorrhaging_strike_energy_gen = 5.0;
+    double hemorrhaging_strike_damage     = 1.75;
+    double hemorrhaging_stike_tick_dmg    = 0.92 * 1.3;
+    timespan_t hemorrhaging_strike_period = 3_s;
+  } spell_const;
+
   struct talents_t
   {
     bool red_ledger             = false;
@@ -175,7 +183,7 @@ public:
     double deadly_scheme_required_energy = 200;
 
     bool bloodrush            = false;
-    double bloodrush_tickrate = 1.2;
+    double bloodrush_tickrate = 1.3;
     double bloodrush_damage   = 1.5;
 
     bool venomous_delight          = false;
@@ -192,6 +200,7 @@ public:
 
     bool gushing_blood                                = false;
     int gushing_blood_hemorrhaging_additional_targets = 4;
+    bool gushing_blood_always_works = true;
 
     bool corrosive_spill                      = false;
     double corrosive_spill_chance_per_cp      = 0.03;
@@ -212,19 +221,19 @@ public:
 
     bool magic_ward = false;
 
-    bool from_the_shadows             = false;
-    double from_the_shadows_chance    = 0.24;
-    int from_the_shadows_combo_points = 6;
+    bool sinners_pride                            = false;
+    timespan_t sinners_pride_cdr_reduction_per_cp = 0.6_s;
 
     bool hemotoxin                        = false;
-    double hemotoxin_chance               = 0.06;
+    double hemotoxin_chance               = 0.12;
     int hemotoxin_applied_stacks          = 1;
     int hemotoxin_max_stacks              = 3;
     double hemotoxin_damage_coefficient   = 0.2;
     timespan_t hemotoxin_duration         = 9_s;
     timespan_t hemotoxin_period           = 1.5_s;
-    double hemotoxin_conversion_rate      = 1.0;
-    double hemotoxin_aoe_damage_reduction = 0.7;
+    double hemotoxin_conversion_rate      = 0.60;
+    double hemotoxin_aoe_damage_reduction = 0.8;
+    double hemotoxin_aoe_falloff          = 1.0;
     bool hemotoxin_double_dip_stats       = false;
     bool hemotoxin_double_dip_multipliers = false;
 
@@ -260,8 +269,10 @@ public:
     double drenched_in_blood_exp         = 0.32;
     timespan_t drenched_in_blood_duration = 8_s;
 
-    bool final_stratagem_cdr                        = false;
-    timespan_t final_stratagem_cdr_reduction_per_cp = 0.3_s;
+    bool from_the_shadows              = false;
+    double from_the_shadows_chance     = 0.25;
+    int from_the_shadows_combo_points  = 6;
+    double from_the_shadows_bleed_rate = 0.15;
 
     bool spirit_procs_clones                = false;
     bool spirit_procs_clones_proc_on_next   = true;
@@ -1274,7 +1285,7 @@ struct hemorrhaging_strike_t : public mara_attack_t
 {
   double energy_gain_per_tick;
   hemorrhaging_strike_t( util::string_view name, mara_t* p, util::string_view options_str = {} )
-    : mara_attack_t( name, p, options_str ), energy_gain_per_tick( 4 )
+    : mara_attack_t( name, p, options_str ), energy_gain_per_tick( p->spell_const.hemorrhaging_strike_energy_gen )
   {
     dot_duration   = 15_s;
     dot_behavior   = DOT_REFRESH_PANDEMIC;
@@ -1283,8 +1294,8 @@ struct hemorrhaging_strike_t : public mara_attack_t
 
     name_str_reporting = "Hemorrhaging Strike";
 
-    attack_power_mod.tick              = 0.92;
-    attack_power_mod.direct            = 1.75;
+    attack_power_mod.tick              = p->spell_const.hemorrhaging_stike_tick_dmg;
+    attack_power_mod.direct            = p->spell_const.hemorrhaging_strike_damage;
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 20;
@@ -1292,7 +1303,7 @@ struct hemorrhaging_strike_t : public mara_attack_t
     if ( p->talents.efficient_killer )
       base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;
 
-    if ( p->talents.from_the_shadows )
+    if ( p->legendary.from_the_shadows )
       add_child( p->actions.queens_fang_fts_clone );
 
     if ( p->talents.hemotoxin )
@@ -1303,7 +1314,8 @@ struct hemorrhaging_strike_t : public mara_attack_t
   {
     int n = mara_attack_t::n_targets();
 
-    if ( !is_secondary_action() && ( p()->talents.gushing_blood && p()->buffs.maiden_of_death->check() ) )
+    if ( !is_secondary_action() && ( p()->talents.gushing_blood && ( p()->buffs.maiden_of_death->check() ||
+                                                                     p()->talents.gushing_blood_always_works ) ) )
     {
       n = 1 + p()->talents.gushing_blood_hemorrhaging_additional_targets;
     }
@@ -1315,15 +1327,19 @@ struct hemorrhaging_strike_t : public mara_attack_t
   {
     mara_attack_t::available_targets( tl );
 
-    // Indiscriminate Carnage smart-targets beyond the primary target, preferring lowest duration
-    // Replicating Shadows also smart-targets in a similar fashion as of 10.2.0
     if ( is_aoe() && tl.size() > 1 && !is_secondary_action() )
     {
       if ( p()->talents.gushing_blood )
       {
-        auto it = std::partition( tl.begin(), tl.end(), [ this ]( player_t* t ) { return t == this->target; } );
-        std::sort( it, tl.end(), [ this ]( player_t* a, player_t* b ) {
-          return td( a )->dots.hemorrhaging_strike->remains() < td( b )->dots.hemorrhaging_strike->remains();
+        // Find Target and move to front
+        auto it     = std::find( tl.begin(), tl.end(), this->target );
+        auto tmp    = *it;
+        *it         = *tl.begin();
+        *tl.begin() = tmp;
+
+        // Sort remaining by dot remains
+        std::sort( tl.begin() + 1, tl.end(), [ this ]( player_t* a, player_t* b ) {
+          return td( a )->dots.hemorrhaging_strike->remains() <= td( b )->dots.hemorrhaging_strike->remains();
         } );
       }
     }
@@ -1353,12 +1369,18 @@ struct hemorrhaging_strike_t : public mara_attack_t
       tt /= 1 + td( s->target )->debuffs.puncture->check_value();
     }
 
+    if ( p()->legendary.from_the_shadows )
+    {
+      tt /= 1.0 + p()->legendary.from_the_shadows_bleed_rate;
+    }
+
     return tt;
   }
 
   double composite_ta_multiplier( const action_state_t* s ) const override
   {
     double tam = mara_attack_t::composite_ta_multiplier( s );
+
     return tam;
   }
 
@@ -1417,10 +1439,10 @@ struct hemorrhaging_strike_t : public mara_attack_t
     mara_attack_t::tick( d );
 
     p()->resource_gain( RESOURCE_ENERGY, energy_gain_per_tick * d->get_tick_factor(), gain, this );
-    if ( p()->talents.from_the_shadows && rng().roll( p()->talents.from_the_shadows_chance ) )
+    if ( p()->legendary.from_the_shadows && rng().roll( p()->legendary.from_the_shadows_chance ) )
     {
-      p()->actions.queens_fang_fts_clone->trigger_secondary_action( d->state->target,
-                                                                    p()->talents.from_the_shadows_combo_points, 0.3_s );
+      p()->actions.queens_fang_fts_clone->trigger_secondary_action(
+          d->state->target, p()->legendary.from_the_shadows_combo_points, 0.3_s );
     }
   }
 
@@ -1794,7 +1816,7 @@ struct hemotoxin_explosion_t : public mara_poison_t
 
     aoe                 = -1;
 
-    reduced_aoe_targets = 1;
+    reduced_aoe_targets = p->talents.hemotoxin_aoe_falloff;
     full_amount_targets = 1;
   }
 
@@ -2183,7 +2205,7 @@ mara_td_t::mara_td_t( player_t* target, mara_t* source ) : fellowship::fs_player
 {
   dots.seething_poison    = target->get_dot( "seething_poison", source );
   dots.hemorrhaging_strike = target->get_dot( "hemorrhaging_strike", source );
-  dots.hemotoxin          = target->get_dot( "hemotoxin", source );
+  dots.hemotoxin          = target->get_dot( "hemotoxin_dot", source );
   dots.volatile_poison    = target->get_dot( "volatile_poison", source );
 
   debuffs.nightstalker = make_buff( *this, "nightstalker" )
@@ -2510,10 +2532,6 @@ std::unique_ptr<expr_t> mara_t::create_expression( util::string_view name_str )
       {
         return make_ref_expr( name_str, talents.nightstalker );
       }
-      else if ( util::str_compare_ci( split[ 1 ], "from_the_shadows" ) )
-      {
-        return make_ref_expr( name_str, talents.from_the_shadows );
-      }
       else if ( util::str_compare_ci( split[ 1 ], "hemotoxin" ) )
       {
         return make_ref_expr( name_str, talents.hemotoxin );
@@ -2534,6 +2552,14 @@ std::unique_ptr<expr_t> mara_t::create_expression( util::string_view name_str )
       {
         return make_ref_expr( name_str, talents.assassins_guile );
       }
+      else if ( util::str_compare_ci( split[ 1 ], "gushing_blood_always_works" ) )
+      {
+        return make_ref_expr( name_str, talents.gushing_blood_always_works );
+      }
+      else if ( util::str_compare_ci( split[ 1 ], "sinners_pride" ) )
+      {
+        return make_ref_expr( name_str, talents.sinners_pride );
+      }
     }
   }
   else if ( util::str_compare_ci( split[ 0 ], "legendary" ) )
@@ -2548,9 +2574,9 @@ std::unique_ptr<expr_t> mara_t::create_expression( util::string_view name_str )
       {
         return make_ref_expr( name_str, legendary.drenched_in_blood );
       }
-      else if ( util::str_compare_ci( split[ 1 ], "final_stratagem_cdr" ) )
+      else if ( util::str_compare_ci( split[ 1 ], "from_the_shadows" ) )
       {
-        return make_ref_expr( name_str, legendary.final_stratagem_cdr );
+        return make_ref_expr( name_str, legendary.from_the_shadows );
       }
       else if ( util::str_compare_ci( split[ 1 ], "spirit_procs_clones" ) )
       {
@@ -2616,7 +2642,8 @@ std::unique_ptr<expr_t> mara_t::create_resource_expression( util::string_view na
             if ( tdata->dots.hemorrhaging_strike->is_ticking() )
 
             {
-              bleed_regen += 4 * tdata->dots.hemorrhaging_strike->ticks_left_fractional() /
+              bleed_regen += spell_const.hemorrhaging_strike_energy_gen *
+                             tdata->dots.hemorrhaging_strike->ticks_left_fractional() /
                              tdata->dots.hemorrhaging_strike->remains().total_seconds();
             }
           }
@@ -2685,6 +2712,85 @@ void mara_t::init_spells()
 void mara_t::init_talents()
 {
   fs_player_t::init_talents();
+
+  if ( talent_points_fs )
+  {
+    if ( talent_points_fs && 1 << 0 )
+      talents.red_ledger = true;
+    if ( talent_points_fs && 1 << 1 )
+      talents.corrosive_spill = true;
+    if ( talent_points_fs && 1 << 2 )
+      talents.assassins_guile = true;
+    if ( talent_points_fs && 1 << 3 )
+      talents.bloodrush = true;
+    if ( talent_points_fs && 1 << 4 )
+      talents.venomous_delight = true;
+    if ( talent_points_fs && 1 << 5 )
+      talents.efficient_killer = true;
+    if ( talent_points_fs && 1 << 6 )
+      talents.gushing_blood = true;
+    if ( talent_points_fs && 1 << 7 )
+      talents.feed_the_queen = true;
+    if ( talent_points_fs && 1 << 8 )
+      talents.deadly_scheme = true;
+    if ( talent_points_fs && 1 << 9 )
+      talents.veil_of_shadows = true;
+    if ( talent_points_fs && 1 << 10 )
+      talents.maidens_doom = true;
+    if ( talent_points_fs && 1 << 11 )
+      talents.magic_ward = true;
+    if ( talent_points_fs && 1 << 12 )
+      talents.sinners_pride = true;
+    if ( talent_points_fs && 1 << 13 )
+      talents.hemotoxin = true;
+    if ( talent_points_fs && 1 << 14 )
+      talents.malevolence = true;
+    if ( talent_points_fs && 1 << 15 )
+      talents.arachnid_onslaught = true;
+    if ( talent_points_fs && 1 << 16 )
+      talents.spirited_fortitude = true;
+    if ( talent_points_fs && 1 << 17 )
+      talents.puncture = true;
+  }
+  else
+  {
+    if ( talents.red_ledger )
+      talent_points_fs |= ( 1ULL << 0 );
+    if ( talents.corrosive_spill )
+      talent_points_fs |= ( 1ULL << 1 );
+    if ( talents.assassins_guile )
+      talent_points_fs |= ( 1ULL << 2 );
+    if ( talents.bloodrush )
+      talent_points_fs |= ( 1ULL << 3 );
+    if ( talents.venomous_delight )
+      talent_points_fs |= ( 1ULL << 4 );
+    if ( talents.efficient_killer )
+      talent_points_fs |= ( 1ULL << 5 );
+    if ( talents.gushing_blood )
+      talent_points_fs |= ( 1ULL << 6 );
+    if ( talents.feed_the_queen )
+      talent_points_fs |= ( 1ULL << 7 );
+    if ( talents.deadly_scheme )
+      talent_points_fs |= ( 1ULL << 8 );
+    if ( talents.veil_of_shadows )
+      talent_points_fs |= ( 1ULL << 9 );
+    if ( talents.maidens_doom )
+      talent_points_fs |= ( 1ULL << 10 );
+    if ( talents.magic_ward )
+      talent_points_fs |= ( 1ULL << 11 );
+    if ( talents.sinners_pride )
+      talent_points_fs |= ( 1ULL << 12 );
+    if ( talents.hemotoxin )
+      talent_points_fs |= ( 1ULL << 13 );
+    if ( talents.malevolence )
+      talent_points_fs |= ( 1ULL << 14 );
+    if ( talents.arachnid_onslaught )
+      talent_points_fs |= ( 1ULL << 15 );
+    if ( talents.spirited_fortitude )
+      talent_points_fs |= ( 1ULL << 16 );
+    if ( talents.puncture )
+      talent_points_fs |= ( 1ULL << 17 );
+  }
 }
 
 // mara_t::init_gains ======================================================
@@ -2868,13 +2974,19 @@ void mara_t::create_options()
   add_option( opt_bool( "talent.efficient_killer", talents.efficient_killer ) );
 
   add_option( opt_bool( "talent.gushing_blood", talents.gushing_blood ) );
+  add_option( opt_bool( "talent.gushing_blood_always_works", talents.gushing_blood_always_works ) );
+  add_option( opt_int( "talent.gushing_blood_hemorrhaging_additional_targets",
+                       talents.gushing_blood_hemorrhaging_additional_targets, 1, 20 ) );
   add_option( opt_bool( "talent.corrosive_spill", talents.corrosive_spill ) );
   add_option( opt_bool( "talent.feed_the_queen", talents.feed_the_queen ) );
 
   add_option( opt_bool( "talent.nightstalker", talents.nightstalker ) );
 
-  add_option( opt_bool( "talent.from_the_shadows", talents.from_the_shadows ) );
-  add_option( opt_float( "talent.from_the_shadows_chance", talents.from_the_shadows_chance, 0.0, 1.0 ) );
+  
+  add_option( opt_bool( "talent.sinners_pride", talents.sinners_pride ) );
+  add_option( opt_timespan( "talent.sinners_pride_cdr_reduction_per_cp",
+                            talents.sinners_pride_cdr_reduction_per_cp, 0_s, 180_s ) );
+
   add_option( opt_bool( "talent.hemotoxin", talents.hemotoxin ) );
   add_option( opt_bool( "talent.maidens_doom", talents.maidens_doom ) );
   
@@ -2890,9 +3002,9 @@ void mara_t::create_options()
   add_option( opt_bool( "legendary.vexiras_venom", legendary.vexiras_venom ) );
   add_option( opt_bool( "legendary.drenched_in_blood", legendary.drenched_in_blood ) );
 
-  add_option( opt_bool( "legendary.final_stratagem_cdr", legendary.final_stratagem_cdr ) );
-  add_option( opt_timespan( "legendary.final_stratagem_cdr_reduction_per_cp",
-                            legendary.final_stratagem_cdr_reduction_per_cp, 0_s, 180_s ) );
+  add_option( opt_bool( "legendary.from_the_shadows", legendary.from_the_shadows ) );
+  add_option( opt_float( "legendary.from_the_shadows_chance", legendary.from_the_shadows_chance, 0.0, 1.0 ) );
+  add_option( opt_float( "legendary.from_the_shadows_bleed_rate", legendary.from_the_shadows_bleed_rate, 0.0, 100.0 ) );
 
   add_option( opt_bool( "legendary.spirit_procs_clones", legendary.spirit_procs_clones ) );
   add_option( opt_bool( "legendary.spirit_procs_clones_proc_on_next", legendary.spirit_procs_clones_proc_on_next ) );
@@ -2960,6 +3072,18 @@ void mara_t::init_special_effects()
 void mara_t::init_finished()
 {
   fs_player_t::init_finished();
+
+  talent_points_fs_count = 2 * ( talents.red_ledger + talents.corrosive_spill + talents.assassins_guile +
+                            talents.gushing_blood + talents.feed_the_queen + talents.deadly_scheme ) +
+                      ( talents.bloodrush + talents.venomous_delight + talents.efficient_killer +
+                        talents.veil_of_shadows + talents.maidens_doom + talents.magic_ward +
+                        talents.arachnid_onslaught + talents.spirited_fortitude + talents.puncture ) +
+                      3 * ( talents.sinners_pride + talents.hemotoxin + talents.malevolence );
+
+  if ( talent_points_fs_count > 12 )
+  {
+    sim->error( "{} has more than 12 talent points allocated. Total: {}", *this, talent_points_fs_count );
+  }
 }
 
 void mara_t::init_background_actions()
@@ -3185,10 +3309,10 @@ void actions::mara_action_t<Base>::spend_combo_points( const action_state_t* sta
                        util::resource_type_string( RESOURCE_COMBO_POINT ), *this, p()->current_cp() );
 
   trigger_poison_bomb( state, max_spend );
-    
-  if ( p()->legendary.final_stratagem_cdr )
+
+  if ( p()->talents.sinners_pride )
   {
-    p()->cooldowns.final_stratagem->adjust( -max_spend * p()->legendary.final_stratagem_cdr_reduction_per_cp, false, false );
+    p()->cooldowns.maiden_of_death->adjust( -max_spend * p()->talents.sinners_pride_cdr_reduction_per_cp, false, true );
   }
 
   if ( p()->talents.efficient_killer )

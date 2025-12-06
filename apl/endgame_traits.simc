@@ -1,6 +1,8 @@
 report_details=1
 optimal_raid=0
-max_time=420
+# max_time=420
+max_time=290
+vary_combat_length=0.03
 target_error=0.1
 iterations=100000
 chart_show_relative_difference=1
@@ -8,7 +10,7 @@ vary_combat_length=0
 single_actor_batch=1
 desired_targets=1
 
-apl/chuey_dungeon.simc
+# apl/chuey_dungeon.simc
 
 # apl/dungeon.simc
 

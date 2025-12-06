@@ -1897,7 +1897,7 @@ void print_html_talent_table( report::sc_html_stream& os, const player_t& p, std
 
 void print_html_talents( report::sc_html_stream& os, const player_t& p )
 {
-  if ( !p.collected_data.fight_length.mean() || p.player_traits.empty() )
+  if ( !p.collected_data.fight_length.mean() || p.player_traits.empty() && p.talent_points_fs_count == 0 )
     return;
 
   static constexpr unsigned TREE_ROWS = 10;
@@ -1960,39 +1960,9 @@ void print_html_talents( report::sc_html_stream& os, const player_t& p )
      << "<h3 class=\"toggle\">Talents</h3>\n"
      << "<div class=\"toggle-content hide\">\n";
 
-  auto num_players = p.sim->players_by_name.size();
-  if ( num_players == 1 )
-  {
-    auto w_ = raidbots_talent_render_width( p.specialization(), 600 );
-    os.format( R"(<iframe src="{}" width="{}" height="600"></iframe>)",
-               raidbots_talent_render_src( p.talents_str, p.true_level, w_, false, p.dbc->ptr ), w_ );
-
-    // Hide the talent table only if the Raidbots talent iframe is present.
-    os << "<h3 class=\"toggle\">Talent Tables</h3>\n"
-       << "<div class=\"toggle-content hide\">\n";
-  }
-
-  if ( range::accumulate( class_traits, 0, &std::vector<talentrank_t>::size ) )
-    print_html_talent_table( os, p, util::player_type_string_long( p.type ), class_points, class_traits );
-
-  if ( range::accumulate( spec_traits, 0, &std::vector<talentrank_t>::size ) )
-    print_html_talent_table( os, p, util::spec_string_no_class( p ), spec_points, spec_traits );
-
-  if ( !hero_traits.empty() )
-  {
-    os << "<div class=\"flexwrap\">\n";
-
-    for ( const auto& [ id, traits ] : hero_traits )
-      if ( range::accumulate( traits, 0, &std::vector<talentrank_t>::size ) )
-        print_html_talent_table( os, p, trait_data_t::get_hero_tree_name( id ), hero_points[ id ], traits );
-
-    os << "</div>\n";
-  }
-
-  // Close the talent table div only if it exists.
-  if ( num_players == 1 )
-    os << "</div>\n";
-
+  
+  os.format( "Talent Points Allocated: {}. Number: {}\n", p.talent_points_fs_count, p.talent_points_fs );
+  
   os << "</div>\n"
      << "</div>\n";
 }

@@ -1038,7 +1038,8 @@ struct detonate_t : public ardeos_spell_t
       name_str_reporting = "Detonate";
 
       aoe                 = -1;
-      reduced_aoe_targets = 1;
+      // tested 08/12/2025 - No reduced AOE currently.
+      //reduced_aoe_targets = 1;
 
       dual = background = true;
     }

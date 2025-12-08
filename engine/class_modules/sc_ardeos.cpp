@@ -1324,6 +1324,8 @@ struct searing_blaze_t : public ardeos_spell_t
     dot_allow_partial_tick = true;
     hasted_ticks           = true;
 
+    dot_behavior = DOT_REFRESH_PANDEMIC;
+
     base_execute_time = 0_s;
 
     energize_type     = action_energize::NONE;
@@ -1393,8 +1395,7 @@ struct searing_blaze_t : public ardeos_spell_t
 
 struct engulfing_flames_t : public ardeos_spell_t
 {
-  engulfing_flames_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
-    : ardeos_spell_t( name, p, options_str )
+  engulfing_flames_t( ardeos_t* p, util::string_view options_str = {} ) : ardeos_spell_t( "engulfing_flames", p, options_str )
   {
     id                     = 12;
     name_str_reporting     = "Engulfing Flames";
@@ -1403,6 +1404,8 @@ struct engulfing_flames_t : public ardeos_spell_t
     base_tick_time         = p->spell_const.engulfing_flames_period;
     dot_allow_partial_tick = true;
     hasted_ticks           = true;
+
+    dot_behavior = DOT_REFRESH_PANDEMIC;
 
     if ( p->talents_enabled( ardeos_t::UNDYING_FLAME ) )
       dot_duration += p->talents.undying_flame_extension;
@@ -1613,7 +1616,7 @@ struct pyromania_t : public ardeos_spell_t
   pyromania_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( name, p, options_str )
   {
-    id = 15;
+    id = 22;
 
     name_str_reporting = "Pyromania";
 
@@ -1624,32 +1627,6 @@ struct pyromania_t : public ardeos_spell_t
     cooldown->duration = p->spell_const.pyromania_cooldown;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
-  }
-
-  size_t available_targets( std::vector<player_t*>& tl ) const override
-  {
-    tl.clear();
-    if ( !target->is_sleeping() && target->is_enemy() )
-      tl.push_back( target );
-
-    for ( auto* t : sim->target_non_sleeping_list )
-    {
-      if ( t->is_enemy() && ( t != target ) )
-      {
-        tl.push_back( t );
-      }
-    }
-
-    if ( sim->debug && !sim->distance_targeting_enabled )
-    {
-      sim->print_debug( "{} regenerated target cache for {} ({})", *player, signature_str, *this );
-      for ( size_t i = 0; i < tl.size(); i++ )
-      {
-        sim->print_debug( "[{}, {} (id={})]", i, *tl[ i ], tl[ i ]->actor_index );
-      }
-    }
-
-    return tl.size();
   }
 
   void impact( action_state_t* s ) override
@@ -1745,7 +1722,6 @@ struct fire_frog_hit_t : public ardeos_spell_t
     background             = true;
 
     dot_action = new fire_frog_dot_t( p );
-    add_child( dot_action );
   }
 
   void impact( action_state_t* s ) override
@@ -1775,9 +1751,6 @@ struct fire_frog_t : public ardeos_spell_t
     {
       frog_hits += p->talents.frog_squad_extra_hits;
     }
-
-    if ( !p->actions.fire_frogs_hit->stats->parent )
-      add_child( p->actions.fire_frogs_hit );
   }
 
   void execute() override
@@ -1998,7 +1971,7 @@ action_t* ardeos_t::create_action( util::string_view name, util::string_view opt
   if ( name == "searing_blaze" || name == "sb" )
     return new searing_blaze_t( "searing_blaze", this, options_str );
   if ( name == "engulfing_flames" || name == "ef" )
-    return new engulfing_flames_t( "engulfing_flames", this, options_str );
+    return new engulfing_flames_t( this, options_str );
   if ( name == "apocalypse" )
     return new apocalypse_t( name, this, options_str );
   if ( name == "fire_ball" || name == "fireball" )
@@ -2335,7 +2308,7 @@ void ardeos_t::init_background_actions()
   fs_player_t::init_background_actions();
 
   actions.searing_blaze    = new actions::searing_blaze_t( "searing_blaze", this );
-  actions.engulfing_flames = new actions::engulfing_flames_t( "engulfing_flames", this );
+  actions.engulfing_flames = new actions::engulfing_flames_t( this );
 
   actions.fire_frogs_hit    = new actions::fire_frog_hit_t( this );
   actions.fire_frog         = new actions::fire_frog_t( this );

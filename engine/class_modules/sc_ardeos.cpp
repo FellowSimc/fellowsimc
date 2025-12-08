@@ -1381,6 +1381,19 @@ struct apocalypse_t : public ardeos_spell_t
     ardeos_spell_t::impact( s );
     p()->actions.searing_blaze->execute_on_target( s->target );
   }
+
+  void execute() override
+  {
+    ardeos_spell_t::execute();
+
+    if ( p()->legendary.brimstone_cataclysm )
+    {
+      timespan_t cdr = std::min( p()->legendary.brimstone_cataclysm_cdr_cap,
+                                 p()->legendary.brimstone_cataclysm_cdr_per_hit * execute_state->n_targets );
+
+      p()->cooldowns.apocalypse->adjust( -cdr, false );
+    }
+  }
 };
 
 }  // namespace actions

@@ -56,6 +56,7 @@ struct module_t
   static const module_t* warrior();
   static const module_t* mara();
   static const module_t* rime();
+  static const module_t* ardeos();
   static const module_t* player_simplified();
   static const module_t* enemy();
   static const module_t* tank_dummy_enemy();
@@ -95,6 +96,8 @@ struct module_t
         return mara();
       case RIME:
         return rime();
+      case ARDEOS:
+        return ardeos();
       case PLAYER_SIMPLIFIED:
         return player_simplified();
       case ENEMY:

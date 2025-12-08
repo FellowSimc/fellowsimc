@@ -116,7 +116,70 @@ public:
     real_ppm_t* reign_of_fire;
   } rppm;
 
-  enum ardeos_talents_t
+  struct spell_const_t
+  {
+    timespan_t wildfire_duration = 9_s;
+    double wildfire_tickrate     = 0.2;
+    timespan_t wildfire_cooldown = 45_s;
+
+    double infernal_wave_cinders = 40;
+    double infernal_wave_coeff   = 1.55;
+
+    double fire_frog_coeff             = 0.77;
+    double fire_frog_dot_conversion    = 1.0;
+    timespan_t fire_frog_dot_duration  = 12_s;
+    timespan_t fire_frog_dot_period    = 3_s;
+    timespan_t fire_frog_jump_duration = 0.3_s;
+    unsigned fire_frog_max_jumps       = 3;
+    timespan_t fire_frogs_cooldown     = 45_s;
+
+    timespan_t pyromania_cooldown = 90_s;
+    unsigned pyromania_targets    = 3;
+
+    double searing_blaze_tick_coeff      = 0.717;
+    timespan_t searing_blaze_duration    = 24_s;
+    timespan_t searing_blaze_period      = 2_s;
+    double searing_blaze_embers_per_tick = 1.0;  // This is currently reduced by haste.
+
+    double engulfing_flames_tick_coeff      = 1.82;
+    timespan_t engulfing_flames_duration    = 9_s;
+    timespan_t engulfing_flames_period      = 1.5_s;
+    double engulfing_flames_embers_per_tick = 5.0;  // This is currently reduced by haste.
+    timespan_t engufling_flames_cooldown    = 20_s;
+
+    timespan_t detonate_cast_time         = 1.0_s;  // Data has 1.5s but it is clearly faster than GCD still.
+    double detonate_embers_cost           = 100;
+    double detonate_hits                  = 3;      // Divides sample duration equally into these.
+    timespan_t detonate_delay             = 0.5_s;  // Damage is sampled at cast time and snapshots.
+    timespan_t detonate_between_hit_delay = 0.3_s;
+    timespan_t detonate_sample_duration   = 2.5_s;
+
+    double fire_ball_coeff            = 3.0;
+    timespan_t fire_ball_cooldown     = 30_s;
+    double fire_ball_falloff          = 5;
+    double fire_ball_damage_to_dot    = 0.7;
+    timespan_t fire_ball_dot_duration = 12_s;
+    timespan_t fire_ball_dot_period   = 2_s;
+    double fire_ball_embers_per_tick  = 2.0;  // This is **NOT** currently reduced by haste.
+
+    double incinerate_coeff             = 5.914;
+    double incinerate_falloff           = 8;
+    timespan_t incinerate_dot_extend    = 1.5_s;
+    timespan_t incinerate_duration      = 2.5_s;
+    timespan_t incinerate_period        = 0.5_s;
+    timespan_t incinerate_dot_period    = 3_s;
+    timespan_t incinerate_dot_duration  = 12_s;
+    double incinerate_dot_coeff         = 0.39;
+    double incinerate_dot_amp_per_stack = 0.3;
+
+    timespan_t apocalypse_cast_time = 3_s;
+    timespan_t apocalypse_cooldown  = 60_s;
+    double apocalypse_coeff         = 23.19;
+    double apocalypse_falloff       = 1;
+
+  } spell_const;
+
+  enum ardeos_talents_t : unsigned long long
   {
     NONE                   = 0,
     SLOW_BURN              = 1 << 0,
@@ -256,8 +319,9 @@ public:
 
     double pyrophibian_frenzy_chance = 0.08;
 
-    double reign_of_fire_ppm         = 1.0;
-    double reign_of_fire_crit_chance = 1.0;
+    double reign_of_fire_ppm          = 1.0;
+    double reign_of_fire_crit_chance  = 1.0;
+    timespan_t reign_of_fire_duration = 12_s;
 
     double intensifying_inferno_amp = 0.15;
 
@@ -382,9 +446,9 @@ public:
     return "disabled";
   }
 
-  double current_worbs( bool /* react */ = false ) const
+  double current_cinders( bool /* react */ = false ) const
   {
-    return resources.current[ RESOURCE_WINTER_ORB ];
+    return resources.current[ RESOURCE_CINDERS ];
   }
 
   resource_e primary_resource() const override
@@ -662,11 +726,11 @@ public:
 
   // Helper function for expressions. Returns the number of guaranteed generated combo points for
   // this ability, taking into account any potential buffs.
-  virtual double generate_anima() const
+  virtual double generate_cinders() const
   {
     double cp = 0;
 
-    if ( ab::energize_type != action_energize::NONE && ab::energize_resource == RESOURCE_ANIMA )
+    if ( ab::energize_type != action_energize::NONE && ab::energize_resource == RESOURCE_CINDERS )
     {
       cp += ab::energize_amount;
     }
@@ -681,8 +745,8 @@ public:
 
 public:
   // Ability triggers
-  void spend_winter_orbs( const action_state_t* );
-  void gain_winter_orb( int );
+  void spend_cinders( const action_state_t* );
+  void gain_cinders( int );
   void gain_anima( int );
   void trigger_spirit_refund( const action_state_t*, double );
 
@@ -709,14 +773,6 @@ public:
   {
     double m = ab::composite_da_multiplier( state );
 
-    if ( p()->buffs.winters_embrace->check() )
-    {
-      if ( ab::id != 11 && ab::id != 12 )
-      {
-        m *= ( 1.0 + p()->buffs.winters_embrace->check_value() );
-      }
-    }
-
     return m;
   }
 
@@ -724,14 +780,7 @@ public:
   {
     double m = ab::composite_ta_multiplier( state );
 
-    if ( p()->buffs.winters_embrace->check() )
-    {
-      if ( ab::id != 11 && ab::id != 12 )
-      {
-        m *= ( 1.0 + p()->buffs.winters_embrace->check_value() );
-      }
-    }
-
+   
     return m;
   }
 
@@ -760,11 +809,6 @@ public:
   double composite_crit_damage_bonus_multiplier() const override
   {
     double cm = ab::composite_crit_damage_bonus_multiplier();
-
-    if ( p()->talents.biting_cold )
-    {
-      cm *= 1.0 + p()->talents.biting_cold_crit_power;
-    }
 
     return cm;
   }
@@ -807,28 +851,28 @@ public:
 
     ab::consume_resource();
 
-    spend_winter_orbs( ab::execute_state );
+    spend_cinders( ab::execute_state );
   }
 
   void execute() override
   {
     ab::execute();
 
-    if ( p()->talents.soulfrost_torrent && !is_secondary_action() && !ab::background && !ab::tick_action )
-    {
-      if ( !p()->buffs.soulfrost_torrent->check() && p()->rppm.soulfrost_torrent->trigger() )
-      {
-        p()->buffs.soulfrost_torrent->trigger();
-      }
-    }
+    //if ( p()->talents.soulfrost_torrent && !is_secondary_action() && !ab::background && !ab::tick_action )
+    //{
+    //  if ( !p()->buffs.soulfrost_torrent->check() && p()->rppm.soulfrost_torrent->trigger() )
+    //  {
+    //    p()->buffs.soulfrost_torrent->trigger();
+    //  }
+    //}
 
-     if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background )
-     {
-       if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
-       {
-         p()->buffs.undulating_spirit->trigger();
-       }
-    }
+    // if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background )
+    // {
+    //   if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
+    //   {
+    //     p()->buffs.undulating_spirit->trigger();
+    //   }
+    //}
   }
 
   void schedule_travel( action_state_t* state ) override
@@ -841,7 +885,7 @@ public:
     if ( !ab::ready() )
       return false;
 
-    if ( ab::base_costs[ RESOURCE_WINTER_ORB ] > 0 && p()->current_worbs() < ab::base_costs[ RESOURCE_WINTER_ORB ] )
+    if ( ab::base_costs[ RESOURCE_CINDERS ] > 0 && p()->current_cinders() < ab::base_costs[ RESOURCE_CINDERS ] )
       return false;
 
     return true;
@@ -849,9 +893,9 @@ public:
 
   std::unique_ptr<expr_t> create_expression( std::string_view name ) override
   {
-    if ( util::str_compare_ci( name, "anima_gain" ) )
+    if ( util::str_compare_ci( name, "cinders_gain" ) )
     {
-      return make_mem_fn_expr( "anima_gain", *this, &base_t::generate_anima );
+      return make_mem_fn_expr( "cinders_gain", *this, &base_t::generate_cinders );
     }
 
     return ab::create_expression( name );
@@ -878,26 +922,21 @@ struct ardeos_spell_t : public ardeos_action_t<fellowship::actions::fs_player_ac
   }
 };
 
-struct frost_bolt_t : public ardeos_spell_t
+struct infernal_wave_t : public ardeos_spell_t
 {
-  frost_bolt_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+  infernal_wave_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( name, p, options_str )
   {
     id = 2;
 
-    spell_power_mod.direct = 2.34;
+    spell_power_mod.direct = p->spell_const.infernal_wave_coeff;
 
-    name_str_reporting = "Frost Bolt";
+    name_str_reporting = "Infernal Wave";
 
     energize_type     = action_energize::ON_CAST;
-    energize_resource = RESOURCE_ANIMA;
-    energize_amount   = 1.0;
+    energize_resource = RESOURCE_CINDERS;
+    energize_amount   = p->spell_const.infernal_wave_cinders;
 
-    if ( p->talents.burstbolter )
-    {
-      energize_amount += p->talents.burstbolter_additional_anima;
-      add_child( p->actions.bursting_ice_tick_burstbolter );
-    }
 
     base_execute_time = 1.5_s;
   }
@@ -910,652 +949,325 @@ struct frost_bolt_t : public ardeos_spell_t
   void impact( action_state_t* s ) override
   {
     ardeos_spell_t::impact( s );
-
-    if ( p()->talents.burstbolter )
-    {
-      p()->actions.bursting_ice_tick_burstbolter->execute_on_target( s->target );
-    }
   }
 };
 
-struct glacial_blast_t : public ardeos_spell_t
+struct detonate_t : public ardeos_spell_t
 {
-  glacial_blast_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+  detonate_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( name, p, options_str )
   {
     id                 = 3;
-    name_str_reporting = "Glacial Blast";
+    name_str_reporting = "Detonate";
 
-    resource_current                  = RESOURCE_WINTER_ORB;
-    base_costs[ RESOURCE_WINTER_ORB ] = 2;
+    resource_current                  = RESOURCE_CINDERS;
+    base_costs[ RESOURCE_CINDERS ] = p->spell_const.detonate_embers_cost;
 
-    base_execute_time = 2_s;
+    base_execute_time = 0_s;
+    trigger_gcd       = 1_s;
+    gcd_type          = gcd_haste_type::NONE;
 
-    spell_power_mod.direct = 11.88;
+  }
 
-    if ( p->talents.greater_glacial_blast )
+  double composite_target_multiplier( player_t* target ) const override
+  {
+    double m = ardeos_spell_t::composite_target_multiplier( target );
+    if ( p()->legendary.explosive_potency )
     {
-      base_execute_time += p->talents.greater_glacial_blast_added_cast_time;
-      base_dd_multiplier *= 1 + p->talents.greater_glacial_blast_amp;
-    }
-  }
-
-  timespan_t execute_time() const override
-  {
-    if ( p()->buffs.ultimate_buff_window->check() || p()->buffs.glacial_assault->at_max_stacks() )
-      return 0_s;
-
-    timespan_t base = base_execute_time.base;
-
-    if ( p()->buffs.icy_flow->check() )
-      base -= p()->talents.icy_flow_gb_reduction;
-
-    auto mul = base_execute_time.pct_mul * execute_time_pct_multiplier();
-    if ( mul <= 0 )
-      return 0_ms;
-
-    base += base_execute_time.flat_add + execute_time_flat_modifier();
-    if ( base <= 0_ms )
-      return 0_ms;
-
-    // TODO: assumed to be rounded to ms like tick_time(), confirm if possible.
-    return timespan_t::from_millis( std::round( static_cast<double>( base.total_millis() ) * mul ) );
-  }
-
-  double cost() const override
-  {
-    if ( p()->buffs.glacial_assault->at_max_stacks() )
-    {
-      return 0.0;
-    }
-
-    return base_t::cost();
-  }
-
-  double composite_da_multiplier( const action_state_t* state ) const override
-  {
-    double m = ardeos_spell_t::composite_da_multiplier( state );
-
-    if ( p()->buffs.glacial_assault->at_max_stacks() )
-      m *= 1 + p()->buffs.glacial_assault->check_value();
-
-    return m;
-  }
-
-  double composite_crit_chance() const override
-  {
-    return ardeos_spell_t::composite_crit_chance() + p()->buffs.icy_flow->check_value() +
-           p()->buffs.frostweavers_wrath->check_value();
-  }
-
-  void execute() override
-  {
-    ardeos_spell_t::execute();
-
-    if ( p()->buffs.glacial_assault->at_max_stacks() )
-    {
-      p()->buffs.glacial_assault->expire();
-    }
-
-    p()->buffs.frostweavers_wrath->decrement();
-    p()->buffs.icy_flow->decrement();
-  }
-};
-
-struct ice_comet_t : public ardeos_spell_t
-{
-  ice_comet_t( util::string_view name, ardeos_t* p, util::string_view options_str = {},
-               secondary_trigger st = secondary_trigger::NONE )
-    : ardeos_spell_t( name, p, options_str )
-  {
-    id                     = 3;
-    name_str_reporting     = "Ice Comet";
-    secondary_trigger_type = st;
-
-    resource_current                  = RESOURCE_WINTER_ORB;
-    base_costs[ RESOURCE_WINTER_ORB ] = 2;
-
-    spell_power_mod.direct = 4.51;
-    aoe                    = -1;
-    reduced_aoe_targets    = 8;
-
-    if ( st == secondary_trigger::NONE )
-    {
-      add_child( p->actions.ice_comet_avalanche );
-    }
-  }
-
-  double composite_da_multiplier( const action_state_t* state ) const override
-  {
-    double m = ardeos_spell_t::composite_da_multiplier( state );
-
-    return m;
-  }
-
-  double composite_crit_chance() const override
-  {
-    return ardeos_spell_t::composite_crit_chance() + p()->buffs.icy_flow->check_value() +
-           p()->buffs.frostweavers_wrath->check_value();
-  }
-
-  void execute() override
-  {
-    ardeos_spell_t::execute();
-
-    if ( !is_secondary_action() )
-    {
-      p()->buffs.frostweavers_wrath->decrement();
-      p()->buffs.icy_flow->decrement();
-
-      if ( p()->talents.avalanche )
+      if ( target->health_percentage() <= 35.0 )
       {
-        if ( p()->rng().roll( p()->talents.avalanche_double ) )
-        {
-          p()->actions.ice_comet_avalanche->trigger_secondary_action( target, 0.3_s );
-        }
-
-        if ( p()->rng().roll( p()->talents.avalanche_triple ) )
-        {
-          p()->actions.ice_comet_avalanche->trigger_secondary_action( target, 0.6_s );
-        }
+        m *= 1.0 + p()->legendary.explosive_potency_detonate_amp;
       }
     }
-  }
-
-  void impact( action_state_t* s ) override
-  {
-    ardeos_spell_t::impact( s );
-  }
-};
-
-struct ice_blitz_t : public ardeos_spell_t
-{
-  ice_blitz_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
-    : ardeos_spell_t( name, p, options_str )
-  {
-    id = 6;
-
-    name_str_reporting = "Ice Blitz";
-
-    add_child( p->actions.frost_swallow_cascading );
-
-    trigger_gcd = timespan_t::zero();
-
-    cooldown->duration = 120_s;
-    cooldown->hasted   = false;
-    cooldown->charges  = 1;
+    return m;
   }
 
   void execute() override
   {
-    p()->buffs.ice_blitz->trigger();
     ardeos_spell_t::execute();
   }
 };
 
-struct winters_blessing_t : public ardeos_spell_t
+struct wildfire_t : public ardeos_spell_t
 {
-  winters_blessing_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+  wildfire_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( name, p, options_str )
   {
     id = 7;
 
-    name_str_reporting = "Winters Blessing";
+    name_str_reporting = "Wildfire";
 
     trigger_gcd = timespan_t::zero();
 
-    cooldown->duration = 60_s;
+    cooldown->duration = p->spell_const.wildfire_cooldown;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
   }
 
   void execute() override
   {
-    p()->buffs.winters_blessing->trigger();
+    p()->buffs.wildfire->trigger();
     ardeos_spell_t::execute();
   }
 };
 
-struct flight_of_the_navir_t : public ardeos_spell_t
+struct incinerate_t : public ardeos_spell_t
 {
-  flight_of_the_navir_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
-    : ardeos_spell_t( name, p, options_str )
+  struct incinerate_dot_t : public ardeos_spell_t
   {
-    id = 8;
-
-    name_str_reporting = "Flight of the Navir";
-
-    add_child( p->actions.frost_swallow_navir );
-
-    cooldown->duration = 60_s;
-    cooldown->hasted   = false;
-    cooldown->charges  = 1;
-  }
-
-  void execute() override
-  {
-    p()->buffs.flight_of_the_navir->trigger();
-    ardeos_spell_t::execute();
-
-    if ( p()->talents.navirs_keeper )
+    incinerate_dot_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+      : ardeos_spell_t( fmt::format( "{}_dot", name ), p, options_str )
     {
-      p()->cooldowns.cold_snap->reset( false, p()->talents.navirs_keeper_cold_snaps );
-    }
-  }
-};
+      id = 9;
 
-struct wrath_of_winter_t : public ardeos_spell_t
-{
-  wrath_of_winter_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+      name_str_reporting   = "Incinerate";
+      may_crit             = true;
+      spell_power_mod.tick = p->spell_const.incinerate_dot_coeff;
+      dot_duration         = p->spell_const.incinerate_dot_duration;
+      base_tick_time       = p->spell_const.incinerate_dot_period;
+      hasted_ticks         = true;
+      tick_may_crit        = true;
+      dot_behavior         = DOT_REFRESH_DURATION;
+    }
+
+    double composite_ta_multiplier( const action_state_t* s ) const override
+    {
+      double m = ardeos_spell_t::composite_ta_multiplier( s );
+
+      auto td = p()->get_target_data( s->target );
+      m *= 1.0 + td->debuffs.incinerate_stacks->check_stack_value();
+
+      return m;
+    }
+
+    void trigger_dot( action_state_t* s ) override
+    {
+      ardeos_spell_t::trigger_dot( s );
+      p()->get_target_data( s->target )->debuffs.incinerate_stacks->increment();
+    }
+
+    void last_tick( dot_t* d ) override
+    {
+      ardeos_spell_t::last_tick( d );
+      p()->get_target_data( d->target )->debuffs.incinerate_stacks->expire();
+    }
+  };
+
+  struct incinerate_aoe_t : public ardeos_spell_t
+  {
+    action_t* dot;
+    incinerate_aoe_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+      : ardeos_spell_t( fmt::format( "{}_aoe", name ), p, options_str )
+    {
+      id = 9;
+
+      aoe                    = -1;
+      name_str_reporting     = "Incinerate";
+      may_crit               = true;
+      spell_power_mod.direct = p->spell_const.incinerate_coeff;
+      reduced_aoe_targets    = p->spell_const.incinerate_falloff;
+
+      dot = new incinerate_dot_t( name, p, options_str );
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      double m = base_t::composite_da_multiplier( s );
+
+      if ( parent_dot )
+      {
+        m *= parent_dot->get_tick_factor();
+      }
+
+      return m;
+    }
+
+    void impact(action_state_t* s) override
+    {
+      ardeos_spell_t::impact( s );
+      // Apply dot
+      dot->set_target( s->target );
+      dot->execute();
+    }
+  };
+
+  struct incinerate_channel_t : public ardeos_spell_t
+  {
+    action_t* custom_tick_action;
+    action_t* parent;
+    incinerate_channel_t( util::string_view name, ardeos_t* p, action_t* parent, util::string_view options_str = {} )
+      : ardeos_spell_t( fmt::format( "{}_channel", name ), p, options_str )
+    {
+      id = 9;
+
+      name_str_reporting = "Incinerate";
+
+      channeled              = true;
+      dot_allow_partial_tick = true;
+      dot_duration           = p->spell_const.incinerate_duration;
+      hasted_ticks           = true;
+      base_tick_time         = p->spell_const.incinerate_period;
+      may_crit               = false;
+
+      target = p;
+
+      custom_tick_action = new incinerate_aoe_t( name, p, options_str );
+    }
+
+    void execute() override
+    {
+      target = player;
+      ardeos_spell_t::execute();
+    }
+
+    void tick( dot_t* d ) override
+    {
+      ardeos_spell_t::tick( d );
+      custom_tick_action->set_target( parent->target );
+      custom_tick_action->execute();
+    }
+  };
+
+  action_t* channel_action;
+  incinerate_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( name, p, options_str )
   {
     id = 9;
 
-    name_str_reporting = "Wrath of Winter";
+    name_str_reporting = "Incinerate";
 
     base_execute_time = 1.5_s;
 
     resource_current              = RESOURCE_SPIRIT;
     base_costs[ RESOURCE_SPIRIT ] = 100;
+
+    channel_action = new incinerate_channel_t( name, p, this, options_str );
   }
 
   void execute() override
   {
     ardeos_spell_t::execute();
     p()->fs_buffs.spirit_of_heroism->trigger();
-    p()->buffs.ultimate_buff_window->trigger();
     p()->used_ultimate();
+    channel_action->execute();
   }
 };
 
-struct cold_snap_t : public ardeos_spell_t
+
+struct searing_blaze_t : public ardeos_spell_t
 {
-  cold_snap_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+  searing_blaze_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( name, p, options_str )
   {
-    id = 10;
+    id                     = 11;
+    name_str_reporting     = "Searing Blaze";
+    spell_power_mod.tick   = p->spell_const.searing_blaze_tick_coeff;
+    dot_duration           = p->spell_const.searing_blaze_duration;
+    base_tick_time         = p->spell_const.searing_blaze_period;
+    dot_allow_partial_tick = true;
+    hasted_ticks           = true;
 
-    name_str_reporting = "Cold Snap";
+    base_execute_time = 0_s;
 
-    cooldown->duration = 12_s;
-    cooldown->hasted   = true;
-    cooldown->charges  = 2;
+    energize_type   = action_energize::NONE;
+    energize_amount = p->spell_const.searing_blaze_embers_per_tick;
 
-    spell_power_mod.direct = 3.648;
-
-    energize_type     = action_energize::ON_CAST;
-    energize_resource = RESOURCE_WINTER_ORB;
-    energize_amount   = 1;
-
-    aoe = 1;
-    if ( p->legendary.frostwyrms_spite )
+    if ( p->talents_enabled( ardeos_t::FLICKERING_CINDERS ) )
     {
-      reduced_aoe_targets = 3;
+      energize_amount *= 1 + p->talents.flickering_cinders_cinder_multiplier;
     }
   }
 
   void execute() override
   {
     ardeos_spell_t::execute();
-
-    if ( p()->legendary.frostwyrms_spite )
-    {
-      p()->buffs.frostwyrms_spite->expire();
-    }
-
-    if ( p()->buffs.flight_of_the_navir->check() )
-    {
-      for ( auto i = 0; i < 5; i++ )
-        p()->actions.frost_swallow_navir->execute();
-    }
-
-    if ( p()->talents.glacial_assault )
-      p()->buffs.glacial_assault->trigger();
-
-    if ( p()->talents.icy_flow )
-      p()->buffs.icy_flow->trigger();
-
-    if ( p()->talents.chilling_finesse )
-      p()->cooldowns.freezing_torrent->adjust( -p()->talents.chilling_finesse_torrent_cdr_per_snap, true, false );
   }
 
-  int n_targets() const override
+  double composite_ta_multiplier( const action_state_t* s ) const override
   {
-    int n = ardeos_spell_t::n_targets();
+    double m = ardeos_spell_t::composite_ta_multiplier( s );
 
-    if ( p()->legendary.frostwyrms_spite )
-    {
-      n += p()->buffs.frostwyrms_spite->check();
-    }
-
-    return n;
-  }
-
-  double composite_da_multiplier( const action_state_t* state ) const override
-  {
-    double m = ardeos_spell_t::composite_da_multiplier( state );
-
-    if ( p()->legendary.frostwyrms_spite )
-    {
-      m *= 1.0 + p()->buffs.frostwyrms_spite->check_stack_value();
-    }
+    auto td = p()->get_target_data( s->target );
+    m *= 1.0 + td->debuffs.agonizing_blaze_stacks->check_stack_value();
 
     return m;
   }
-};
 
-struct bursting_ice_tick_t : public ardeos_spell_t
-{
-  bursting_ice_tick_t( util::string_view name, ardeos_t* p ) : ardeos_spell_t( name, p )
+  void impact( action_state_t* s ) override
   {
-    id = 11;
-
-    name_str_reporting = "Bursting Ice (Tick)";
-
-    aoe                 = -1;
-    reduced_aoe_targets = 5;
-
-    background = true;
-
-    spell_power_mod.direct = 0.55;
-
-    energize_type     = action_energize::ON_CAST;
-    energize_resource = RESOURCE_ANIMA;
-    energize_amount   = 1;
-  }
-
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = base_t::composite_da_multiplier( s );
-
-    if ( parent_dot )
-    {
-      m *= parent_dot->get_tick_factor();
-    }
-
-    return m;
-  }
-};
-
-struct bursting_ice_t : public ardeos_spell_t
-{
-  bursting_ice_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
-    : ardeos_spell_t( name, p, options_str )
-  {
-    id = 12;
-
-    name_str_reporting = "Bursting Ice";
-    tick_action        = new bursting_ice_tick_t( "bursting_ice_tick", p );
-    add_child( tick_action );
-
-    base_execute_time      = 2_s;
-    dot_duration           = 3_s;
-
-    if ( p->legendary.skandis_decree )
-    {
-      dot_duration += p->legendary.skandis_decree_duration_bonus;
-    }
-
-    base_tick_time         = 0.5_s;
-    hasted_ticks           = true;
-    dot_allow_partial_tick = true;
-
-    cooldown->duration = 10_s;
-    cooldown->hasted   = false;
-    cooldown->charges  = 1;
-  }
-
-  void execute() override
-  {
-    base_t::execute();
-
-    if ( p()->talents.winters_embrace )
-      p()->buffs.winters_embrace->trigger();
-  }
-
-  void last_tick( dot_t* d ) override
-  {
-    base_t::last_tick( d );
-
-    p()->buffs.winters_embrace->expire();
-  }
-};
-
-template <typename T_ACTION>
-struct freezing_torrent_state_t : public ardeos_action_state_t<T_ACTION>
-
-{
-  using base_t = ardeos_action_state_t<T_ACTION>;
-
-  bool soulfrost_torrent;
-  freezing_torrent_state_t( action_t* action, player_t* target ) : base_t( action, target ), soulfrost_torrent( false )
-  {
-  }
-
-  void initialize() override
-  {
-    base_t::initialize();
-
-    soulfrost_torrent = false;
-  }
-
-  void copy_state( const action_state_t* s )
-  {
-    base_t::copy_state( s );
-    const freezing_torrent_state_t* rs = debug_cast<const freezing_torrent_state_t*>( s );
-
-    soulfrost_torrent = rs->soulfrost_torrent;
-  }
-
-  double composite_crit_chance() const override
-  {
-    auto cc = base_t::composite_crit_chance();
-
-    if ( soulfrost_torrent )
-      cc += base_t::p()->talents.soulfrost_torrent_crit_chance;
-
-    return cc;
-  }
-};
-
-struct freezing_torrent_t : public ardeos_spell_t
-{
-  freezing_torrent_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
-    : ardeos_spell_t( name, p, options_str )
-  {
-    id = 13;
-
-    name_str_reporting = "Freezing Torrent";
-
-    spell_power_mod.tick = 1.562;
-
-    dot_duration           = 2_s;
-    base_tick_time         = 0.4_s;
-    hasted_ticks           = true;
-    dot_allow_partial_tick = true;
-    tick_on_application    = true;
-    channeled              = true;
-
-    if ( p->talents.supreme_torrent )
-    {
-      dot_duration += p->talents.supreme_torrent_duration;
-    }
-
-    if ( p->talents.coalescing_frost )
-    {
-      add_child( p->actions.coalescing_frost );
-    }
-
-    energize_type     = action_energize::PER_TICK;
-    energize_resource = RESOURCE_ANIMA;
-    energize_amount   = 1;
-
-    cooldown->duration = 15_s;
-    cooldown->hasted   = false;
-    cooldown->charges  = 1;
-  }
-
-  static const freezing_torrent_state_t<base_t>* cast_state( const action_state_t* st )
-  {
-    return debug_cast<const freezing_torrent_state_t<base_t>*>( st );
-  }
-
-  static freezing_torrent_state_t<base_t>* cast_state( action_state_t* st )
-  {
-    return debug_cast<freezing_torrent_state_t<base_t>*>( st );
-  }
-
-  action_state_t* new_state() override
-  {
-    return new freezing_torrent_state_t<base_t>( this, target );
-  }
-
-  void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
-  {
-    base_t::update_state( state, flags, rt );
-  }
-
-  void snapshot_state( action_state_t* state, result_amount_type rt ) override
-  {
-    auto rs = cast_state( state );
-
-    rs->soulfrost_torrent = p()->buffs.soulfrost_torrent->check() > 0;
-
-    base_t::snapshot_state( state, rt );
-  }
-
-  void execute() override
-  {
-    base_t::execute();
-
-    sim->print_debug( "{}'s should be executing a torrent", *p() );
-
-    p()->buffs.soulfrost_torrent->decrement();
-  }
-
-  void init_finished() override
-  {
-    base_t::init_finished();
-
-    update_flags &= ~STATE_HASTE;
-  }
-
-  double tick_time_pct_multiplier( const action_state_t* s ) const override
-  {
-    auto base = base_t::tick_time_pct_multiplier( s );
-
-    if ( cast_state( s )->soulfrost_torrent )
-      base /= p()->talents.soulfrost_torrent_tickrate_increase;
-
-    return base;
+    ardeos_spell_t::impact( s );
   }
 
   void tick( dot_t* d ) override
   {
-    base_t::tick( d );
+    ardeos_spell_t::tick( d );
 
-    if ( p()->talents.coalescing_frost )
+    if ( p()->talents_enabled( ardeos_t::AGONIZING_BLAZE ) )
     {
-      if ( !p()->get_target_data( d->target )->debuffs.coalescing_frost->check() )
-      {
-        sim->print_debug( "{}'s Freezing Torrent tick triggers Coalescing Frost on {}. Target is sleeping: {}", *p(),
-                          *d->target, d->target->is_sleeping() );
-      }
-      if ( result_is_hit( d->state->result ) )
-      {
-        if ( d->state->result == RESULT_CRIT && rng().roll( p()->talents.coalescing_frost_crit_extra_chance ) )
-        {
-          p()->get_target_data( d->target )
-              ->debuffs.coalescing_frost->trigger( p()->talents.coalescing_frost_crit_stacks );
-        }
-        else
-        {
-          p()->get_target_data( d->target )->debuffs.coalescing_frost->trigger();
-        }
-      }
+      p()->get_target_data( d->target )->debuffs.agonizing_blaze_stacks->increment();
     }
 
-    if ( p()->talents.chilling_finesse )
-    {
-      p()->cooldowns.bursting_ice->adjust( -p()->talents.chilling_finesse_bursting_ice_cdr_per_tick, false, false );
-    }
+    p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), nullptr, this );
+  }
 
-    if ( p()->buffs.flight_of_the_navir->check() )
+  void last_tick( dot_t* d ) override
+  {
+    ardeos_spell_t::last_tick( d );
+    if ( p()->talents_enabled( ardeos_t::AGONIZING_BLAZE ) )
     {
-      p()->actions.frost_swallow_navir->execute();
-    }
-
-    if ( p()->legendary.frostwyrms_spite )
-    {
-      p()->buffs.frostwyrms_spite->trigger();
+      p()->get_target_data( d->target )->debuffs.agonizing_blaze_stacks->expire();
     }
   }
 };
 
-struct coalescing_frost_t : public ardeos_spell_t
+struct engulfing_flame_t : public ardeos_spell_t
 {
-  coalescing_frost_t( util::string_view name, ardeos_t* p ) : ardeos_spell_t( name, p )
+  engulfing_flame_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+    : ardeos_spell_t( name, p, options_str )
   {
-    id = 14;
+    id                   = 12;
+    name_str_reporting   = "Engulfing Flame";
+    spell_power_mod.tick = p->spell_const.engulfing_flames_tick_coeff;
+    dot_duration         = p->spell_const.engulfing_flames_duration;
+    base_tick_time         = p->spell_const.engulfing_flames_period;
+    dot_allow_partial_tick = true;
+    hasted_ticks           = true;
+    
 
-    name_str_reporting = "Coalescing Frost";
+    base_execute_time = 1.5_s;
 
-    aoe                 = -1;
-    reduced_aoe_targets = 3;
+    cooldown->duration = p->spell_const.engufling_flames_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+    
+    energize_type   = action_energize::NONE;
+    energize_amount = p->spell_const.engulfing_flames_embers_per_tick;
 
-    background = true;
-
-    // Was 1.42, old beam value
-    spell_power_mod.direct = 0.333 * 1.562;
+    if ( p->talents_enabled( ardeos_t::FLICKERING_CINDERS ) )
+    {
+      energize_amount *= 1 + p->talents.flickering_cinders_cinder_multiplier;
+    }
   }
-};
 
-struct frost_swallow_t : public ardeos_spell_t
-{
-  frost_swallow_t( util::string_view name, ardeos_t* p ) : ardeos_spell_t( name, p )
+  
+  void tick( dot_t* d ) override
   {
-    id = 15;
+    ardeos_spell_t::tick( d );
 
-    name_str_reporting = "Birb";
-
-    background = true;
-
-    spell_power_mod.direct = 0.68;
+    p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), nullptr, this );
   }
 
   void execute() override
   {
-    base_t::execute();
-    if ( p()->talents.cascading_blitz && p()->buffs.ice_blitz->check() )
-    {
-      p()->buffs.ice_blitz->extend_duration( p(), p()->talents.cascading_blitz_extension_per_bird );
-    }
+    ardeos_spell_t::execute();
   }
-};
 
-// struct vexiras_venom_t : public residual_action::residual_periodic_action_t<ardeos_spell_t>
-//{
-//   vexiras_venom_t( util::string_view name, ardeos_t* p ) : residual_action_t( name, p )
-//   {
-//     id = 16;
-//
-//     name_str_reporting = "Vexiras Venom";
-//
-//     tick_may_crit = false;
-//
-//     dot_duration   = p->legendary.vexiras_venom_duration;
-//     dot_behavior   = DOT_REFRESH_DURATION;
-//     base_tick_time = p->legendary.vexiras_venom_period;
-//     hasted_ticks   = true;
-//   }
-//
-//   void init() override
-//   {
-//     base_t::init();
-//     snapshot_flags |= STATE_HASTE;
-//     update_flags &= ~STATE_HASTE;
-//   }
-// };
+  void impact( action_state_t* s ) override
+  {
+    ardeos_spell_t::impact( s );
+  }
+
+};
 
 }  // namespace actions
 
@@ -1566,50 +1278,19 @@ struct frost_swallow_t : public ardeos_spell_t
 ardeos_td_t::ardeos_td_t( player_t* target, ardeos_t* source )
   : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
 {
-  dots.bursting_ice     = target->get_dot( "bursting_ice", source );
-  dots.freezing_torrent = target->get_dot( "freezing_torrent", source );
+  dots.crackling_inferno = target->get_dot( "crackling_inferno", source );
+  dots.engulfing_flames  = target->get_dot( "engulfing_flame", source );
+  dots.fire_ball         = target->get_dot( "fire_ball_dot", source );
+  dots.fire_frogs        = target->get_dot( "fire_frogs_dot", source );
+  dots.incinerate        = target->get_dot( "incinerate_dot", source );
+  dots.searing_blaze     = target->get_dot( "searing_blaze", source );
 
-  debuffs.coalescing_frost = make_buff( *this, "coalescing_frost" )
-                                 ->set_duration( source->talents.coalescing_frost_duration )
-                                 ->set_refresh_behavior( buff_refresh_behavior::DURATION )
-                                 ->set_max_stack( source->talents.coalescing_frost_max_stacks )
-                                 ->add_stack_change_callback( [ source ]( buff_t* b, int old, int _new ) {
-                                   if ( !_new && old )
-                                   {
-                                     auto damage = source->actions.coalescing_frost;
-                                     if ( !b->player->is_sleeping() )
-                                     {
-                                       damage->set_target( b->player );
-                                     }
-                                     else
-                                     {
-                                       for ( auto& enemy : b->sim->target_non_sleeping_list )
-                                       {
-                                         if ( !enemy->is_sleeping() )
-                                         {
-                                           damage->set_target( enemy );
-                                           break;
-                                         }
-                                       }
-                                     }
-                                     if ( !damage->target->is_sleeping() )
-                                     {
-                                       action_state_t* damage_state = damage->get_state();
-                                       damage_state->target         = damage->target;
-
-                                       damage->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
-                                       damage_state->da_multiplier *= old;
-                                       damage->schedule_execute( damage_state );
-                                     }
-                                     else
-                                     {
-                                       b->sim->print_debug( "{} tried to execute {} on {} but all targets were dead.",
-                                                            *b->source, *damage, *b->player );
-                                       source->procs.coal_no_targets->occur();
-                                       
-                                     }
-                                   }
-                                 } );
+  debuffs.agonizing_blaze_stacks = make_buff( *this, "agonizing_blaze_stacks" )
+                                       ->set_max_stack( source->talents.agonizing_blaze_maximum_stacks )
+                                       ->set_default_value( source->talents.agonizing_blaze_amp_per_stack );
+  debuffs.incinerate_stacks = make_buff( *this, "incinerate_stacks" )
+                                  ->set_max_stack( 99 )
+                                  ->set_default_value( source->spell_const.incinerate_dot_amp_per_stack );
 }
 
 // ==========================================================================
@@ -1747,26 +1428,18 @@ action_t* ardeos_t::create_action( util::string_view name, util::string_view opt
 {
   using namespace actions;
 
-  if ( name == "frost_bolt" )
-    return new frost_bolt_t( name, this, options_str );
-  if ( name == "glacial_blast" )
-    return new glacial_blast_t( name, this, options_str );
-  if ( name == "cold_snap" )
-    return new cold_snap_t( name, this, options_str );
-  if ( name == "winters_blessing" )
-    return new winters_blessing_t( name, this, options_str );
-  if ( name == "bursting_ice" )
-    return new bursting_ice_t( name, this, options_str );
-  if ( name == "freezing_torrent" )
-    return new freezing_torrent_t( name, this, options_str );
-  if ( name == "flight_of_the_navir" )
-    return new flight_of_the_navir_t( name, this, options_str );
-  if ( name == "ice_comet" )
-    return new ice_comet_t( name, this, options_str );
-  if ( name == "wrath_of_winter" )
-    return new wrath_of_winter_t( name, this, options_str );
-  if ( name == "ice_blitz" )
-    return new ice_blitz_t( name, this, options_str );
+  if ( name == "infernal_wave" )
+    return new infernal_wave_t( name, this, options_str );
+  if ( name == "detonate" )
+    return new detonate_t( name, this, options_str );
+  if ( name == "wildfire" )
+    return new wildfire_t( name, this, options_str );
+  if ( name == "incinerate" )
+    return new incinerate_t( name, this, options_str );
+  if ( name == "searing_blaze" )
+    return new searing_blaze_t( name, this, options_str );
+  if ( name == "engulfing_flame" )
+    return new engulfing_flame_t( name, this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -1784,28 +1457,28 @@ std::unique_ptr<expr_t> ardeos_t::create_expression( util::string_view name_str 
 {
   auto split = util::string_split<util::string_view>( name_str, "." );
 
-  if ( split[ 0 ] == "winter_orbs" || split[ 0 ] == "worb" || split[ 0 ] == "worbs" )
+  if ( split[ 0 ] == "cinder" || split[ 0 ] == "cinders" )
   {
     if ( split.size() == 1 )
     {
-      return make_fn_expr( name_str, [ this ] { return this->current_worbs( true ); } );
+      return make_fn_expr( name_str, [ this ] { return this->current_cinders( true ); } );
     }
 
     if ( split.size() == 2 && split[ 1 ] == "deficit" )
     {
       return make_fn_expr( name_str,
-                           [ this ] { return resources.max[ RESOURCE_WINTER_ORB ] - this->current_worbs( true ); } );
+                           [ this ] { return resources.max[ RESOURCE_CINDERS ] - this->current_cinders( true ); } );
     }
   } 
   else if ( util::str_compare_ci( split[ 0 ], "talent" ) )
   {
     if ( split.size() == 2 )
     {
-      for ( ardeos_talents_t t = static_cast<ardeos_talents_t>( 1U ); t < ardeos_talents_t::MAX; t << 1 )
+      for ( ardeos_talents_t t = static_cast<ardeos_talents_t>( 1U ); t < ardeos_talents_t::MAX; t++ )
       {
         if ( util::str_compare_ci( split[ 1 ], talent_name( t ) ) )
         {
-          return make_fn_expr( name_str, std::bind( std::mem_fn( talent_enabled ), *this, t ) );
+          return make_fn_expr( name_str, std::bind( std::mem_fn( &ardeos_t::talents_enabled ), this, t ) );
         }
       }
     }
@@ -1918,7 +1591,7 @@ void ardeos_t::init_resources( bool force )
 {
   fs_player_t::init_resources( force );
 
-  resources.current[ RESOURCE_WINTER_ORB ] = 0;
+  resources.current[ RESOURCE_CINDERS ] = 0;
 }
 
 // ardeos_t::init_buffs ======================================================
@@ -1927,55 +1600,18 @@ void ardeos_t::create_buffs()
 {
   fs_player_t::create_buffs();
 
-  buffs.icy_flow = make_buff<ardeos_buff_t>( this, "icy_flow" )
-                       ->set_duration( talents.icy_flow_buff_duration )
-                       ->set_default_value( talents.icy_flow_cc )
-                       ->set_max_stack( talents.icy_flow_max_stacks );
+  buffs.reign_of_fire = make_buff<ardeos_buff_t>( this, "reign_of_fire" )
+                            ->set_duration( talents.reign_of_fire_duration )
+                            ->set_default_value( talents.reign_of_fire_crit_chance )
+                            ->set_refresh_behavior( buff_refresh_behavior::DURATION );
 
-  buffs.flight_of_the_navir = make_buff<ardeos_buff_t>( this, "flight_of_the_navir" )->set_duration( 20_s );
+  buffs.wildfire = make_buff<ardeos_buff_t>( this, "wildfire" )
+                       ->set_duration( spell_const.wildfire_duration )
+                       ->set_default_value( spell_const.wildfire_tickrate )
+                       ->set_refresh_behavior( buff_refresh_behavior::DURATION )
+                       ->add_invalidate( CACHE_HASTE );
 
-  buffs.frostweavers_wrath = make_buff<ardeos_buff_t>( this, "frostweaver_wrath" )
-                                 ->set_duration( talents.frostweavers_wrath_buff_duration )
-                                 ->set_default_value( talents.frostweavers_wrath_added_cc );
 
-  buffs.glacial_assault = make_buff<ardeos_buff_t>( this, "glacial_assault" )
-                              ->set_default_value( talents.glacial_assault_amp )
-                              ->set_max_stack( talents.glacial_assault_stacks );
-
-  buffs.ice_blitz = make_buff<ardeos_buff_t>( this, "ice_blitz" )
-                        ->set_duration( 20_s )
-                        ->set_default_value( 0.2 )
-                        ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
-
-  buffs.soulfrost_torrent = make_buff<ardeos_buff_t>( this, "soulfrost_torrent" )
-                                ->set_duration( talents.soulfrost_torrent_buff_duration )
-                                ->set_default_value( talents.soulfrost_torrent_crit_chance );
-
-  buffs.ultimate_buff_window =
-      make_buff<ardeos_buff_t>( this, "wrath_of_winter" )
-          ->set_default_value( 0.2 )
-          ->set_duration( 20_s )
-          ->set_period( 4_s )
-          ->set_tick_on_application( true )
-          ->set_tick_callback( [ this ]( buff_t*, int, timespan_t ) {
-            resource_gain( RESOURCE_WINTER_ORB, 1.0, gains.ult_worbs, actions.wrath_of_winter );
-          } )
-          ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
-
-  buffs.winters_blessing = make_buff<ardeos_buff_t>( this, "winters_blessing" )
-                               ->set_duration( 20_s )
-                               ->set_default_value( 0.20 )
-                               ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
-
-  buffs.winters_embrace = make_buff<ardeos_buff_t>( this, "winters_embrace" )->set_default_value( 0.2 );
-
-  buffs.frostwyrms_spite = make_buff<ardeos_buff_t>( this, "frostwyrms_spite" )
-                               ->set_duration( legendary.frostwyrms_spite_duration )
-                               ->set_max_stack( legendary.frostwyrms_spite_max_stacks )
-                               ->set_default_value( legendary.frostwyrms_spite_dmg_per_stack )
-                               ->set_refresh_behavior( buff_refresh_behavior::DURATION );
-
-  buffs.undulating_spirit = make_buff<ardeos_buff_t>( this, "undulating_spirit" )->set_max_stack( 1 );
 }
 
 // ardeos_t::invalidate_cache =========================================
@@ -1989,7 +1625,7 @@ void ardeos_t::create_options()
 {
   fs_player_t::create_options();
 
-  add_option( opt_bool( "talent.chilling_finesse", talents.chilling_finesse ) );
+  /*add_option( opt_bool( "talent.chilling_finesse", talents.chilling_finesse ) );
   add_option( opt_bool( "talent.winters_embrace", talents.winters_embrace ) );
   add_option( opt_bool( "talent.glacial_assault", talents.glacial_assault ) );
 
@@ -2012,7 +1648,7 @@ void ardeos_t::create_options()
 
   add_option( opt_bool( "legendary.frostwyrms_spite", legendary.frostwyrms_spite ) );
   add_option( opt_bool( "legendary.skandis_decree", legendary.skandis_decree ) );
-  add_option( opt_bool( "legendary.undulating_spirit", legendary.undulating_spirit ) );
+  add_option( opt_bool( "legendary.undulating_spirit", legendary.undulating_spirit ) );*/
 }
 
 // ardeos_t::copy_from =======================================================
@@ -2069,14 +1705,14 @@ void ardeos_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
-  actions.bursting_ice_tick_burstbolter = new actions::bursting_ice_tick_t( "bursting_ice_burstbolter", this );
-  actions.coalescing_frost              = new actions::coalescing_frost_t( "coalescing_frost", this );
-  actions.frost_swallow                 = new actions::frost_swallow_t( "frost_swallow", this );
-  actions.frost_swallow_cascading       = new actions::frost_swallow_t( "frost_swallow_cascading", this );
-  actions.frost_swallow_navir           = new actions::frost_swallow_t( "frost_swallow_navir", this );
-  actions.ice_comet_avalanche =
-      new actions::ice_comet_t( "ice_comet_avalanche", this, {}, secondary_trigger::AVALANCHE );
-  actions.ice_comet_avalanche->background = true;
+  //actions.bursting_ice_tick_burstbolter = new actions::bursting_ice_tick_t( "bursting_ice_burstbolter", this );
+  //actions.coalescing_frost              = new actions::coalescing_frost_t( "coalescing_frost", this );
+  //actions.frost_swallow                 = new actions::frost_swallow_t( "frost_swallow", this );
+  //actions.frost_swallow_cascading       = new actions::frost_swallow_t( "frost_swallow_cascading", this );
+  //actions.frost_swallow_navir           = new actions::frost_swallow_t( "frost_swallow_navir", this );
+  //actions.ice_comet_avalanche =
+  //    new actions::ice_comet_t( "ice_comet_avalanche", this, {}, secondary_trigger::AVALANCHE );
+  //actions.ice_comet_avalanche->background = true;
 }
 
 // ardeos_t::reset ===========================================================
@@ -2099,8 +1735,7 @@ void ardeos_t::arise()
 {
   fs_player_t::arise();
 
-  resources.current[ RESOURCE_ANIMA ]      = 0;
-  resources.current[ RESOURCE_WINTER_ORB ] = 0;
+  resources.current[ RESOURCE_CINDERS ]      = 0;
 }
 
 // ardeos_t::combat_begin ====================================================
@@ -2112,37 +1747,7 @@ void ardeos_t::combat_begin()
 
 double ardeos_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
-  if ( resource_type == RESOURCE_ANIMA && talents.cascading_blitz && buffs.ice_blitz->check() )
-  {
-    for ( int i = 0; i < amount; i++ )
-    {
-      actions.frost_swallow_cascading->execute();
-    }
-  }
-
   double actual_amount = fs_player_t::resource_gain( resource_type, amount, source, action );
-
-  if ( resource_type == RESOURCE_ANIMA )
-  {
-    if ( resources.current[ RESOURCE_ANIMA ] >= 9 )
-    {
-      resources.current[ RESOURCE_ANIMA ] -= 9;
-      resource_gain( RESOURCE_WINTER_ORB, 1.0, gains.anima_worbs, action );
-    }
-  }
-
-  if ( resource_type == RESOURCE_WINTER_ORB )
-  {
-    if ( talents.frostweavers_wrath && rng().roll( talents.frostweavers_wrath_chance_per_orb ) )
-    {
-      buffs.frostweavers_wrath->trigger();
-    }
-
-    for ( int i = 0; i < amount; i++ )
-    {
-      actions.frost_swallow->execute();
-    }
-  }
 
   return actual_amount;
 }
@@ -2166,49 +1771,34 @@ double ardeos_t::stacking_movement_modifier() const
 }
 
 template <typename Base>
-void actions::ardeos_action_t<Base>::trigger_spirit_refund( const action_state_t* state, double orbs_refunded )
+void actions::ardeos_action_t<Base>::trigger_spirit_refund( const action_state_t* state, double cinders_refunded )
 {
-  make_event( ab::sim, 200_ms, [ orbs_refunded, this ] {
-    p()->resource_gain( RESOURCE_WINTER_ORB, orbs_refunded, p()->gains.spirit_procs, this );
-    p()->sim->print_debug( "{} actually refunded {:.0f} Winter Orbs", *p(), orbs_refunded );
+  make_event( ab::sim, 200_ms, [ cinders_refunded, this ] {
+    p()->resource_gain( RESOURCE_CINDERS, cinders_refunded, p()->gains.spirit_procs, this );
+    p()->sim->print_debug( "{} actually refunded {:.0f} Cinders", *p(), cinders_refunded );
   } );
   
   p()->spirit_refund();
 }
 
 template <typename Base>
-void actions::ardeos_action_t<Base>::spend_winter_orbs( const action_state_t* s )
+void actions::ardeos_action_t<Base>::spend_cinders( const action_state_t* s )
 {
-  double orbs_spent = s->action->base_costs[ RESOURCE_WINTER_ORB ];
+  double orbs_spent = s->action->base_costs[ RESOURCE_CINDERS ];
   if ( orbs_spent <= 0 )
     return;
 
-  if ( p()->legendary.undulating_spirit && p()->buffs.undulating_spirit->check() )
-  {
-    p()->buffs.undulating_spirit->expire();
-    p()->sim->print_debug( "{} proc'd Undulating Spirit Refund", *p() );
-    trigger_spirit_refund( s, orbs_spent );
-  }
-  else if ( p()->rng().roll( p()->cache.mastery_value() ) )
+  if ( p()->rng().roll( p()->cache.mastery_value() ) )
   {
     p()->sim->print_debug( "{} proc'd Spirit Orb Refund (Chance: {:.2f}%, Sprit: {:.2f}%)", *p(),
                            p()->cache.mastery_value() * 100.0, p()->cache.mastery() * 100.0 );
 
     trigger_spirit_refund( s, orbs_spent );
   }
-
-  if ( p()->talents.wisdom_of_the_north )
-  {
-    timespan_t total_reduction = -orbs_spent * p()->talents.wisdom_of_the_north_cdr;
-
-    p()->cooldowns.ice_blitz->adjust( total_reduction );
-    p()->cooldowns.flight_of_the_navir->adjust( total_reduction );
-    p()->cooldowns.winters_blessing->adjust( total_reduction );
-  }
 }
 
 template <typename Base>
-void actions::ardeos_action_t<Base>::gain_winter_orb( int gain )
+void actions::ardeos_action_t<Base>::gain_cinders( int gain )
 {
 }
 
@@ -2240,12 +1830,17 @@ stat_e ardeos_t::convert_hybrid_stat( stat_e s ) const
 
 void ardeos_t::create_cooldowns()
 {
-  cooldowns.bursting_ice        = get_cooldown( "bursting_ice" );
+  /*cooldowns.bursting_ice        = get_cooldown( "bursting_ice" );
   cooldowns.cold_snap           = get_cooldown( "cold_snap" );
   cooldowns.flight_of_the_navir = get_cooldown( "flight_of_the_navir" );
   cooldowns.freezing_torrent    = get_cooldown( "freezing_torrent" );
   cooldowns.ice_blitz           = get_cooldown( "ice_blitz" );
-  cooldowns.winters_blessing    = get_cooldown( "winters_blessing" );
+  cooldowns.winters_blessing    = get_cooldown( "winters_blessing" );*/
+
+  cooldowns.apocalypse       = get_cooldown( "apocalypse" );
+  cooldowns.engulfing_flames = get_cooldown( "engulfing_flame" );
+  cooldowns.fireball         = get_cooldown( "fire_ball" );
+  cooldowns.pyromania        = get_cooldown( "pyromania" );
 }
 
 class ardeos_module_t : public module_t

@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\engine\class_modules\fs_player.cpp" />
+    <ClCompile Include="..\engine\class_modules\sc_ardeos.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_mara.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_rime.cpp" />
   </ItemGroup>

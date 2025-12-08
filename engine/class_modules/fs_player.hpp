@@ -336,10 +336,19 @@ public:
     return ( talent_points_fs & mask );
   }
 
-  void enable_talent_points( unsigned mask )
+  void enable_talent_points( unsigned long long mask )
   {
     talent_points_fs |= mask;
-    talent_points_fs_count = __popcnt( talent_points_fs );
+    talent_points_fs_count = as<unsigned long>( __popcnt64( talent_points_fs ) );
+  }
+
+  void set_talent_points( unsigned long long mask, bool enable )
+  {
+    if ( enable )
+      talent_points_fs |= mask;
+    else
+      talent_points_fs &= ~mask;
+    talent_points_fs_count = as<unsigned long>( __popcnt64( talent_points_fs ) );
   }
 
   static bool parse_fsweapon( sim_t* sim, std::string_view, std::string_view value )

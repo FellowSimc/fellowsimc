@@ -5,6 +5,7 @@ actions.precombat+=/infernal_wave
 actions=run_action_list,name=main
 
 actions.main=incinerate,if=buff.wildfire.up|!legendary.untamed_flame
+actions.main+=/fire_ball,if=(cooldown.engulfing_flames.remains<=gcd.max|active_dot.engulfing_flames>=1)&active_dot.fire_ball_dot=0
 actions.main+=/apocalypse
 #,if=dot.searing_blaze.refreshable
 actions.main+=/wildfire,if=active_dot.engulfing_flames>0|spirit=100&legendary.untamed_flame

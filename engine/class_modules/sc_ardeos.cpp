@@ -1401,6 +1401,129 @@ struct apocalypse_t : public ardeos_spell_t
   }
 };
 
+
+struct fire_ball_t : public ardeos_spell_t
+{
+  struct fire_ball_dot_t : public residual_action::residual_periodic_action_t<ardeos_spell_t>
+  {
+    fire_ball_dot_t( util::string_view name, ardeos_t* p ) : residual_action_t( fmt::format( "{}_dot", name ), p )
+    {
+      id = 14;
+
+      background = true;
+
+      name_str_reporting = "Fire Ball (DoT)";
+
+      tick_may_crit = false;
+
+      dot_duration           = p->spell_const.fire_ball_dot_duration;
+      dot_behavior           = DOT_REFRESH_DURATION;
+      base_tick_time         = p->spell_const.fire_ball_dot_period;
+      hasted_ticks           = true;
+      dot_allow_partial_tick = true;
+
+      base_multiplier *= p->spell_const.fire_ball_damage_to_dot;
+
+      energize_type   = action_energize::PER_TICK;
+      energize_amount = p->spell_const.fire_ball_embers_per_tick;
+
+      base_crit = p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
+    }
+
+    void snapshot_state( action_state_t* state, result_amount_type rt ) override
+    {
+      spell_t::snapshot_state( state, rt );
+    }
+
+    double composite_ta_multiplier( const action_state_t* s ) const override
+    {
+      return fs_player_action_t::action_multiplier();
+    }
+
+    void init() override
+    {
+      base_t::init();
+      snapshot_flags &= STATE_NO_MULTIPLIER;
+      update_flags &= STATE_NO_MULTIPLIER;
+      snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
+      update_flags &= ~STATE_HASTE;
+
+      if ( p()->talents_enabled( ardeos_t::FIRESTARTER ) )
+      {
+        snapshot_flags |= STATE_CRIT;
+      }
+    }
+
+    double composite_crit_chance() const override
+    {
+      return base_crit;
+    }
+
+    void tick( dot_t* d ) override
+    {
+      residual_action_t::tick( d );
+
+      if ( p()->talents_enabled( ardeos_t::SLOW_BURN ) )
+      {
+        auto td = p()->get_target_data( d->target );
+        td->dots.engulfing_flames->adjust_duration( p()->talents.slow_burn_extend );
+        td->dots.searing_blaze->adjust_duration( p()->talents.slow_burn_extend );
+      }
+    }
+  };
+
+  fire_ball_dot_t* dot_action;
+  fire_ball_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+    : ardeos_spell_t( name, p, options_str )
+  {
+    id                 = 14;
+    name_str_reporting = "Fire Ball";
+
+    spell_power_mod.direct = p->spell_const.fire_ball_coeff;
+
+    base_execute_time = 0_s;
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->spell_const.fire_ball_falloff;
+
+    cooldown->duration = p->spell_const.fire_ball_cooldown;
+    cooldown->hasted   = true;
+    cooldown->charges  = 2;
+
+    dot_action = new fire_ball_dot_t( name, p );
+    add_child( dot_action );
+
+    if ( p->talents_enabled( ardeos_t::GREAT_BALLS_OF_FIRE ) )
+    {
+      base_multiplier *= 1.0 + p->talents.great_balls_of_fire_amp;
+    }
+  }
+
+  double composite_crit_chance() const override
+  {
+    double c = ardeos_spell_t::composite_crit_chance();
+
+    if ( p()->buffs.reign_of_fire->check() )
+    {
+      c += p()->buffs.reign_of_fire->check_value();
+    }
+
+    return c;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ardeos_spell_t::impact( s );
+    residual_action::trigger( dot_action, s->target, s->result_amount );
+  }
+
+  void execute() override
+  {
+    ardeos_spell_t::execute();
+    p()->buffs.reign_of_fire->decrement();
+  }
+};
+
 }  // namespace actions
 
 // ==========================================================================
@@ -1568,12 +1691,14 @@ action_t* ardeos_t::create_action( util::string_view name, util::string_view opt
     return new wildfire_t( name, this, options_str );
   if ( name == "incinerate" )
     return new incinerate_t( name, this, options_str );
-  if ( name == "searing_blaze" )
-    return new searing_blaze_t( name, this, options_str );
-  if ( name == "engulfing_flames" )
-    return new engulfing_flames_t( name, this, options_str );
+  if ( name == "searing_blaze" || name == "sb" )
+    return new searing_blaze_t( "searing_blaze", this, options_str );
+  if ( name == "engulfing_flames" || name == "ef" )
+    return new engulfing_flames_t( "engulfing_flames", this, options_str );
   if ( name == "apocalypse" )
     return new apocalypse_t( name, this, options_str );
+  if ( name == "fire_ball" || name == "fireball" )
+    return new fire_ball_t( "fire_ball", this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }

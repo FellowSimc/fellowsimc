@@ -830,9 +830,14 @@ public:
     return crit_bonus;
   }
 
-  timespan_t tick_time( const action_state_t* state ) const override
+  timespan_t tick_time( const action_state_t* s ) const override
   {
-    timespan_t tt = ab::tick_time( state );
+    timespan_t tt = ab::tick_time( s );
+
+    if ( !ab::channeled && p()->buffs.wildfire->check() )
+    {
+      tt /= 1 + p()->buffs.wildfire->check_value();
+    }
 
     return tt;
   }
@@ -954,7 +959,6 @@ struct infernal_wave_t : public ardeos_spell_t
     ardeos_spell_t::impact( s );
   }
 };
-
 
 struct detonate_t : public ardeos_spell_t
 {
@@ -1352,6 +1356,33 @@ struct engulfing_flames_t : public ardeos_spell_t
 
 };
 
+struct apocalypse_t : public ardeos_spell_t
+{
+  apocalypse_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+    : ardeos_spell_t( name, p, options_str )
+  {
+    id                 = 13;
+    name_str_reporting = "Apocalypse";
+
+    spell_power_mod.direct = p->spell_const.apocalypse_coeff;
+
+    base_execute_time = p->spell_const.apocalypse_cast_time;
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->spell_const.apocalypse_falloff;
+
+    cooldown->duration = p->spell_const.apocalypse_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ardeos_spell_t::impact( s );
+    p()->actions.searing_blaze->execute_on_target( s->target );
+  }
+};
+
 }  // namespace actions
 
 // ==========================================================================
@@ -1523,6 +1554,8 @@ action_t* ardeos_t::create_action( util::string_view name, util::string_view opt
     return new searing_blaze_t( name, this, options_str );
   if ( name == "engulfing_flames" )
     return new engulfing_flames_t( name, this, options_str );
+  if ( name == "apocalypse" )
+    return new apocalypse_t( name, this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -1787,6 +1820,10 @@ void ardeos_t::init_finished()
 void ardeos_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
+
+  actions.searing_blaze    = new actions::searing_blaze_t( "searing_blaze", this );
+  actions.engulfing_flames = new actions::engulfing_flames_t( "engulfing_flames", this );
+
 
   //actions.bursting_ice_tick_burstbolter = new actions::bursting_ice_tick_t( "bursting_ice_burstbolter", this );
   //actions.coalescing_frost              = new actions::coalescing_frost_t( "coalescing_frost", this );

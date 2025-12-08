@@ -1020,7 +1020,7 @@ struct incinerate_t : public ardeos_spell_t
     {
       id = 9;
 
-      name_str_reporting   = "Incinerate";
+      name_str_reporting   = "Incinerate (DoT)";
       may_crit             = true;
       spell_power_mod.tick = p->spell_const.incinerate_dot_coeff;
       dot_duration         = p->spell_const.incinerate_dot_duration;
@@ -1068,6 +1068,7 @@ struct incinerate_t : public ardeos_spell_t
       reduced_aoe_targets    = p->spell_const.incinerate_falloff;
 
       dot = new incinerate_dot_t( name, p, options_str );
+      add_child( dot );
     }
 
     double composite_da_multiplier( const action_state_t* s ) const override
@@ -1095,12 +1096,15 @@ struct incinerate_t : public ardeos_spell_t
   {
     action_t* custom_tick_action;
     action_t* parent;
+
     incinerate_channel_t( util::string_view name, ardeos_t* p, action_t* parent, util::string_view options_str = {} )
-      : ardeos_spell_t( fmt::format( "{}_channel", name ), p, options_str )
+      : ardeos_spell_t( fmt::format( "{}_channel", name ), p, options_str ), parent( parent )
     {
       id = 9;
 
       name_str_reporting = "Incinerate";
+
+      dual = true;
 
       channeled              = true;
       dot_allow_partial_tick = true;
@@ -1128,7 +1132,7 @@ struct incinerate_t : public ardeos_spell_t
     }
   };
 
-  action_t* channel_action;
+  incinerate_channel_t* channel_action;
   incinerate_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( name, p, options_str )
   {
@@ -1136,12 +1140,15 @@ struct incinerate_t : public ardeos_spell_t
 
     name_str_reporting = "Incinerate";
 
-    base_execute_time = 1.5_s;
+    base_execute_time = 1_s;
 
     resource_current              = RESOURCE_SPIRIT;
     base_costs[ RESOURCE_SPIRIT ] = 100;
 
     channel_action = new incinerate_channel_t( name, p, this, options_str );
+    channel_action->stats = stats;
+    add_child( channel_action->custom_tick_action );
+
   }
 
   void execute() override
@@ -1220,13 +1227,13 @@ struct searing_blaze_t : public ardeos_spell_t
   }
 };
 
-struct engulfing_flame_t : public ardeos_spell_t
+struct engulfing_flames_t : public ardeos_spell_t
 {
-  engulfing_flame_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+  engulfing_flames_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( name, p, options_str )
   {
     id                   = 12;
-    name_str_reporting   = "Engulfing Flame";
+    name_str_reporting   = "Engulfing Flames";
     spell_power_mod.tick = p->spell_const.engulfing_flames_tick_coeff;
     dot_duration         = p->spell_const.engulfing_flames_duration;
     base_tick_time         = p->spell_const.engulfing_flames_period;
@@ -1438,8 +1445,8 @@ action_t* ardeos_t::create_action( util::string_view name, util::string_view opt
     return new incinerate_t( name, this, options_str );
   if ( name == "searing_blaze" )
     return new searing_blaze_t( name, this, options_str );
-  if ( name == "engulfing_flame" )
-    return new engulfing_flame_t( name, this, options_str );
+  if ( name == "engulfing_flames" )
+    return new engulfing_flames_t( name, this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }

@@ -3824,6 +3824,12 @@ void sim_t::create_options()
   add_option( opt_func( "player_simplified", parse_player ) );
   add_option( opt_func( "mara", parse_player ) );
   add_option( opt_func( "rime", parse_player ) );
+  add_option( opt_func( "ardeos", parse_player ) );
+  add_option( opt_func( "helena", parse_player ) );
+  add_option( opt_func( "tariq", parse_player ) );
+  add_option( opt_func( "elarion", parse_player ) );
+  add_option( opt_func( "sylvie", parse_player ) );
+  add_option( opt_func( "vigour", parse_player ) );
   add_option( opt_func( "enemy", parse_player ) );
   add_option( opt_func( "tank_dummy", parse_player ) );
   add_option( opt_func( "pet", parse_player ) );

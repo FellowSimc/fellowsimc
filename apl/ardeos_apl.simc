@@ -1,0 +1,11 @@
+
+actions.precombat=snapshot_stats
+actions.precombat+=/infernal_wave
+
+actions=run_action_list,name=main
+
+actions.main=incinerate
+actions.main+=/detonate,if=dot.engulfing_flames.ticking
+actions.main+=/engulfing_flames,target_if=refreshable
+actions.main+=/searing_blaze,target_if=refreshable
+actions.main+=/infernal_wave

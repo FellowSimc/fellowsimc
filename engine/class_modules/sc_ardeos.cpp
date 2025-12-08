@@ -183,25 +183,26 @@ public:
 
   enum ardeos_talents_t : unsigned long long
   {
-    NONE                   = 0,
-    SLOW_BURN              = 1 << 0,
-    GREAT_BALLS_OF_FIRE    = 1 << 1,
-    FLICKERING_CINDERS     = 1 << 2,
-    FLARE_UP               = 1 << 3,
-    UNDYING_FLAME          = 1 << 4,
-    AGONIZING_BLAZE        = 1 << 5,
-    FIRESTARTER            = 1 << 6,
-    OUROBOROS              = 1 << 7,
-    FIERY_RESILIENCE       = 1 << 8,
-    CRACKLING_INFERNO      = 1 << 9,
-    MAGIC_WARD             = 1 << 10,
-    ROLLING_FLAMES         = 1 << 11,
-    PYROPHIBIAN_FRENZY     = 1 << 12,
-    REIGN_OF_FIRE          = 1 << 13,
-    INTENSIFYING_INFERNO   = 1 << 14,
-    SPIRITED_FORTITUDE     = 1 << 15,
-    SPONTANEOUS_COMBUSTION = 1 << 16,
-    MAX                    = 1 << 17
+    NONE                   = 0ULL,
+    SLOW_BURN              = 1ULL << 0,
+    FROG_SQUAD             = 1ULL << 1,
+    GREAT_BALLS_OF_FIRE    = 1ULL << 2,
+    FLICKERING_CINDERS     = 1ULL << 3,
+    FLARE_UP               = 1ULL << 4,
+    UNDYING_FLAME          = 1ULL << 5,
+    AGONIZING_BLAZE        = 1ULL << 6,
+    FIRESTARTER            = 1ULL << 7,
+    OUROBOROS              = 1ULL << 8,
+    FIERY_RESILIENCE       = 1ULL << 9,
+    CRACKLING_INFERNO      = 1ULL << 10,
+    MAGIC_WARD             = 1ULL << 11,
+    ROLLING_FLAMES         = 1ULL << 12,
+    PYROPHIBIAN_FRENZY     = 1ULL << 13,
+    REIGN_OF_FIRE          = 1ULL << 14,
+    INTENSIFYING_INFERNO   = 1ULL << 15,
+    SPIRITED_FORTITUDE     = 1ULL << 16,
+    SPONTANEOUS_COMBUSTION = 1ULL << 17,
+    MAX                    = 1ULL << 18
   };
 
   static constexpr std::string_view talent_name_formatted( ardeos_talents_t t )
@@ -212,6 +213,8 @@ public:
         return "Slow Burn";
       case ardeos_talents_t::GREAT_BALLS_OF_FIRE:
         return "Great Balls of Fire";
+      case ardeos_talents_t::FROG_SQUAD:
+        return "Frog Squad";
       case ardeos_talents_t::FLICKERING_CINDERS:
         return "Flickering Cinders";
       case ardeos_talents_t::FLARE_UP:
@@ -252,6 +255,8 @@ public:
     {
       case ardeos_talents_t::SLOW_BURN:
         return "slow_burn";
+      case ardeos_talents_t::FROG_SQUAD:
+        return "frog_squad";
       case ardeos_talents_t::GREAT_BALLS_OF_FIRE:
         return "great_balls_of_fire";
       case ardeos_talents_t::FLICKERING_CINDERS:
@@ -1261,13 +1266,16 @@ struct searing_blaze_t : public ardeos_spell_t
 
     base_execute_time = 0_s;
 
-    energize_type   = action_energize::NONE;
-    energize_amount = p->spell_const.searing_blaze_embers_per_tick;
+    energize_type     = action_energize::NONE;
+    energize_amount   = p->spell_const.searing_blaze_embers_per_tick;
+    energize_resource = RESOURCE_CINDERS;
 
     if ( p->talents_enabled( ardeos_t::FLICKERING_CINDERS ) )
     {
       energize_amount *= 1 + p->talents.flickering_cinders_cinder_multiplier;
     }
+
+    base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
   }
 
   void execute() override
@@ -1299,7 +1307,18 @@ struct searing_blaze_t : public ardeos_spell_t
       p()->get_target_data( d->target )->debuffs.agonizing_blaze_stacks->increment();
     }
 
-    p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), nullptr, this );
+    p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), energize_gain( d->state ), this );
+
+    if ( p()->talents_enabled( ardeos_t::ROLLING_FLAMES ) )
+    {
+      p()->cooldowns.engulfing_flames->adjust( -p()->talents.rolling_flames_cdr, true );
+    }
+
+    if ( p()->talents_enabled( ardeos_t::OUROBOROS ) )
+    {
+      p()->cooldowns.pyromania->adjust(
+          -( d->state->result == RESULT_CRIT ? p()->talents.ouroboros_cdr_crit : p()->talents.ouroboros_cdr ), true );
+    }
   }
 
   void last_tick( dot_t* d ) override
@@ -1325,6 +1344,8 @@ struct engulfing_flames_t : public ardeos_spell_t
     dot_allow_partial_tick = true;
     hasted_ticks           = true;
     
+    if ( p->talents_enabled( ardeos_t::UNDYING_FLAME ) )
+      dot_duration += p->talents.undying_flame_extension;
 
     base_execute_time = 1.5_s;
 
@@ -1333,12 +1354,15 @@ struct engulfing_flames_t : public ardeos_spell_t
     cooldown->charges  = 1;
     
     energize_type   = action_energize::NONE;
-    energize_amount = p->spell_const.engulfing_flames_embers_per_tick;
+    energize_amount   = p->spell_const.engulfing_flames_embers_per_tick;
+    energize_resource = RESOURCE_CINDERS;
 
     if ( p->talents_enabled( ardeos_t::FLICKERING_CINDERS ) )
     {
       energize_amount *= 1 + p->talents.flickering_cinders_cinder_multiplier;
     }
+
+    base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
   }
 
   
@@ -1346,7 +1370,7 @@ struct engulfing_flames_t : public ardeos_spell_t
   {
     ardeos_spell_t::tick( d );
 
-    p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), nullptr, this );
+    p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), energize_gain( d->state ), this );
   }
 
   void execute() override
@@ -1414,7 +1438,7 @@ struct fire_ball_t : public ardeos_spell_t
 
       name_str_reporting = "Fire Ball (DoT)";
 
-      tick_may_crit = false;
+      tick_may_crit = p->talents_enabled( ardeos_t::FIRESTARTER );
 
       dot_duration           = p->spell_const.fire_ball_dot_duration;
       dot_behavior           = DOT_REFRESH_DURATION;
@@ -1426,8 +1450,10 @@ struct fire_ball_t : public ardeos_spell_t
 
       energize_type   = action_energize::PER_TICK;
       energize_amount = p->spell_const.fire_ball_embers_per_tick;
+      energize_resource = RESOURCE_CINDERS;
 
       base_crit = p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
+
     }
 
     void snapshot_state( action_state_t* state, result_amount_type rt ) override
@@ -1521,6 +1547,78 @@ struct fire_ball_t : public ardeos_spell_t
   {
     ardeos_spell_t::execute();
     p()->buffs.reign_of_fire->decrement();
+  }
+};
+
+
+struct pyromania_t : public ardeos_spell_t
+{
+  pyromania_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+    : ardeos_spell_t( name, p, options_str )
+  {
+    id = 15;
+
+    name_str_reporting = "Pyromania";
+
+    trigger_gcd = timespan_t::zero();
+
+    aoe = p->spell_const.pyromania_targets;
+
+    cooldown->duration = p->spell_const.pyromania_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+  }
+
+  
+  size_t available_targets( std::vector<player_t*>& tl ) const override
+  {
+    tl.clear();
+    if ( !target->is_sleeping() && target->is_enemy() )
+      tl.push_back( target );
+
+    for ( auto* t : sim->target_non_sleeping_list )
+    {
+      if ( t->is_enemy() && ( t != target ) )
+      {
+        tl.push_back( t );
+      }
+    }
+
+    if ( sim->debug && !sim->distance_targeting_enabled )
+    {
+      sim->print_debug( "{} regenerated target cache for {} ({})", *player, signature_str, *this );
+      for ( size_t i = 0; i < tl.size(); i++ )
+      {
+        sim->print_debug( "[{}, {} (id={})]", i, *tl[ i ], tl[ i ]->actor_index );
+      }
+    }
+
+    return tl.size();
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ardeos_spell_t::impact( s );
+
+    p()->actions.engulfing_flames->execute_on_target( s->target );
+  }
+
+  void execute() override
+  {
+    if ( target_list().size() > 1 )
+    {
+      auto partition = std::partition( target_list().begin() + 1, target_list().end(), [ this ]( player_t* a ) {
+        return !p()->get_target_data( a )->dots.engulfing_flames->is_ticking();
+      } );
+
+      std::sort( target_list().begin() + 1, partition,
+                 []( player_t* a, player_t* b ) { return a->current_health() > b->current_health(); } );
+
+      std::sort( partition, target_list().end(),
+                 []( player_t* a, player_t* b ) { return a->current_health() > b->current_health(); } );
+    }
+
+    ardeos_spell_t::execute();
   }
 };
 
@@ -1699,6 +1797,8 @@ action_t* ardeos_t::create_action( util::string_view name, util::string_view opt
     return new apocalypse_t( name, this, options_str );
   if ( name == "fire_ball" || name == "fireball" )
     return new fire_ball_t( "fire_ball", this, options_str );
+  if ( name == "pyromania" || name == "pyro" )
+    return new pyromania_t( "pyromania", this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -1795,9 +1895,33 @@ void ardeos_t::init_spells()
 
 // ardeos_t::init_talents ====================================================
 
+
 void ardeos_t::init_talents()
 {
   fs_player_t::init_talents();
+
+  auto talents = util::string_split<std::string_view>( talents_str, "/" );
+  for ( const auto talent : talents )
+  {
+    auto talent_split = util::string_split<std::string_view>( talent, ":" );
+    if ( talent_split.size() != 2 )
+    {
+      sim->error( "Invalid talent string {}", talent );
+      sim->cancel();
+      return;
+    }
+
+    auto ranks = util::to_unsigned( talent_split[ 1 ] );
+
+    for ( ardeos_talents_t t = static_cast<ardeos_talents_t>( 1U ); t < ardeos_talents_t::MAX; t++ )
+    {
+      if ( util::str_compare_ci( talent_split[ 0 ], talent_name( t ) ) )
+      {
+        set_talent_points( t, ranks >= 1 );
+        break;
+      }
+    }
+  }
 }
 
 // ardeos_t::init_gains ======================================================

@@ -5,11 +5,13 @@ actions.precombat+=/infernal_wave
 actions=run_action_list,name=main
 
 actions.main=incinerate,if=buff.wildfire.up|!legendary.untamed_flame
-actions.main+=/fire_ball,if=(cooldown.engulfing_flames.remains<=gcd.max|active_dot.engulfing_flames>=1)&active_dot.fire_ball_dot=0
+actions.main+=/fire_ball,if=(cooldown.engulfing_flames.remains<=gcd.max|active_dot.engulfing_flames>=2)&active_dot.fire_ball_dot=0
 actions.main+=/apocalypse
 #,if=dot.searing_blaze.refreshable
 actions.main+=/wildfire,if=active_dot.engulfing_flames>0|spirit=100&legendary.untamed_flame
-actions.main+=/detonate,if=active_dot.searing_blaze=active_enemies&active_dot.engulfing_flames>0
-actions.main+=/engulfing_flames,target_if=refreshable,if=cooldown.wildfire.remains>=10|cooldown.wildfire.remains<=execute_time
+actions.main+=/engulfing_flames,target_if=refreshable,if=cooldown.wildfire.remains>=10|cooldown.wildfire.remains<=execute_time|talent.rolling_flames&!buff.wildfire.up
+actions.main+=/pyromania,target_if=dot.engulfing_flames.refreshable,if=buff.wildfire.up|talent.ouroboros&active_enemies>=4
+actions.main+=/detonate,if=active_dot.searing_blaze=active_enemies&active_dot.engulfing_flames>=1|(active_dot.fire_ball_dot|active_dot.searing_blaze>=4|active_dot.engulfing_flames>1)&cinders>=350
 actions.main+=/searing_blaze,target_if=refreshable
+actions.main+=/engulfing_flames,target_if=refreshable,if=talent.rolling_flames
 actions.main+=/infernal_wave

@@ -7,7 +7,7 @@ iterations=100000
 chart_show_relative_difference=1
 vary_combat_length=0
 single_actor_batch=1
-desired_targets=1
+desired_targets=8
 
 
 # apl/chuey_dungeon.simc
@@ -32,9 +32,9 @@ apl/ardeos_apl.simc
 
 gear_intellect=1442
 
-gear_haste_rating=650
+gear_haste_rating=1650
 gear_crit_rating=1500
-gear_versatility_rating=1960
+gear_versatility_rating=960
 gear_mastery_rating=400
 
 gems.amethyst_power=2904
@@ -46,9 +46,29 @@ sets.deaths_grasp=1
 copy="Untamed Flame","Ardeos"
 legendary.untamed_flame=1
 
-
 copy="Brimstone Cataclysm","Ardeos"
 legendary.brimstone_cataclysm=1
 
 copy="Explosive Potency","Ardeos"
 legendary.explosive_potency=1
+
+copy="Slow Burn","Ardeos"
+talents=slow_burn:1
+
+copy="Flickering Cinders","Ardeos"
+talents=flickering_cinders:1
+
+copy="Undying Flame","Ardeos"
+talents=undying_flame:1
+
+copy="Agonizing Blaze","Ardeos"
+talents=agonizing_blaze:1
+
+copy="Firestarter","Ardeos"
+talents=firestarter:1
+
+copy="Ouroboros","Ardeos"
+talents=ouroboros:1
+
+copy="Rolling Flames","Ardeos"
+talents=rolling_flames:1

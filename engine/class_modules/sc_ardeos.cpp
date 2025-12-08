@@ -33,7 +33,7 @@ public:
     dot_t* searing_blaze;
     dot_t* engulfing_flames;
     dot_t* fire_ball;
-    dot_t* fire_frogs;
+    dot_t* fire_frog;
     dot_t* crackling_inferno;
   } dots;
 
@@ -48,7 +48,7 @@ public:
   int dot_count() const
   {
     return dots.incinerate->is_ticking() + dots.searing_blaze->is_ticking() + dots.engulfing_flames->is_ticking() +
-           dots.fire_ball->is_ticking() + dots.fire_frogs->is_ticking() + dots.crackling_inferno->is_ticking();
+           dots.fire_ball->is_ticking() + dots.fire_frog->is_ticking() + dots.crackling_inferno->is_ticking();
   }
 };
 
@@ -76,7 +76,7 @@ public:
   {
     actions::ardeos_spell_t* incinerate;
     actions::ardeos_spell_t* fire_ball;
-    actions::ardeos_spell_t* fire_frogs;
+    actions::ardeos_spell_t* fire_frog;
     actions::ardeos_spell_t* fire_frogs_hit;
     actions::ardeos_spell_t* infernal_wave;
     actions::ardeos_spell_t* searing_blaze;
@@ -133,6 +133,7 @@ public:
     timespan_t fire_frog_dot_period    = 3_s;
     timespan_t fire_frog_jump_duration = 0.3_s;
     unsigned fire_frog_max_jumps       = 3;
+    unsigned fire_frog_frogs           = 5;
     timespan_t fire_frogs_cooldown     = 45_s;
 
     timespan_t pyromania_cooldown = 90_s;
@@ -427,7 +428,6 @@ public:
 
   void analyze( sim_t& sim ) override;
 
-
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
 
   std::string default_flask() const override
@@ -473,7 +473,8 @@ public:
     return "disabled";
   }
 
-  ardeos_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE ) : fs_player_t( sim, name, r, ARDEOS ), target_data()
+  ardeos_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
+    : fs_player_t( sim, name, r, ARDEOS ), target_data()
   {
     create_cooldowns();
   }
@@ -551,7 +552,7 @@ public:
     : action_state_t( action, target ), action( dynamic_cast<T_ACTION*>( action ) )
   {
   }
-  
+
   ardeos_t* p() const
   {
     return debug_cast<ardeos_t*>( action->player );
@@ -790,7 +791,6 @@ public:
   {
     double m = ab::composite_ta_multiplier( state );
 
-   
     return m;
   }
 
@@ -873,13 +873,13 @@ public:
   {
     ab::execute();
 
-    //if ( p()->talents.soulfrost_torrent && !is_secondary_action() && !ab::background && !ab::tick_action )
+    // if ( p()->talents.soulfrost_torrent && !is_secondary_action() && !ab::background && !ab::tick_action )
     //{
-    //  if ( !p()->buffs.soulfrost_torrent->check() && p()->rppm.soulfrost_torrent->trigger() )
-    //  {
-    //    p()->buffs.soulfrost_torrent->trigger();
-    //  }
-    //}
+    //   if ( !p()->buffs.soulfrost_torrent->check() && p()->rppm.soulfrost_torrent->trigger() )
+    //   {
+    //     p()->buffs.soulfrost_torrent->trigger();
+    //   }
+    // }
 
     // if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background )
     // {
@@ -937,6 +937,50 @@ struct ardeos_spell_t : public ardeos_action_t<fellowship::actions::fs_player_ac
   }
 };
 
+struct crackling_inferno_t : public residual_action::residual_periodic_action_t<ardeos_spell_t>
+{
+  crackling_inferno_t( ardeos_t* p ) : residual_action_t( "crackling_inferno", p )
+  {
+    id = 20;
+
+    background = true;
+
+    name_str_reporting = "Crackling Inferno";
+
+    dot_duration           = p->talents.crackling_inferno_dot_duration;
+    dot_behavior           = DOT_REFRESH_DURATION;
+    base_tick_time         = p->talents.crackling_inferno_dot_period;
+    hasted_ticks           = true;
+    dot_allow_partial_tick = true;
+
+    base_multiplier *= p->talents.crackling_inferno_dot_fraction;
+
+    base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    spell_t::snapshot_state( state, rt );
+  }
+
+  double composite_ta_multiplier( const action_state_t* s ) const override
+  {
+    return fs_player_action_t::action_multiplier();
+  }
+
+  void init() override
+  {
+    base_t::init();
+    snapshot_flags &= STATE_NO_MULTIPLIER;
+    update_flags &= STATE_NO_MULTIPLIER;
+    snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
+    update_flags &= ~STATE_HASTE;
+
+    snapshot_flags |= STATE_CRIT | STATE_TGT_CRIT;
+    update_flags |= STATE_CRIT | STATE_TGT_CRIT;
+  }
+};
+
 struct infernal_wave_t : public ardeos_spell_t
 {
   infernal_wave_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
@@ -952,8 +996,19 @@ struct infernal_wave_t : public ardeos_spell_t
     energize_resource = RESOURCE_CINDERS;
     energize_amount   = p->spell_const.infernal_wave_cinders;
 
-
     base_execute_time = 1.5_s;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto da = ardeos_spell_t::composite_da_multiplier( s );
+
+    if ( p()->talents_enabled( ardeos_t::INTENSIFYING_INFERNO ) )
+    {
+      da *= 1 + p()->get_target_data( s->target )->dot_count() * p()->talents.intensifying_inferno_amp;
+    }
+
+    return da;
   }
 
   void execute() override
@@ -964,6 +1019,11 @@ struct infernal_wave_t : public ardeos_spell_t
   void impact( action_state_t* s ) override
   {
     ardeos_spell_t::impact( s );
+    if ( s->result == RESULT_CRIT && p()->talents_enabled( ardeos_t::CRACKLING_INFERNO ) )
+
+    {
+      residual_action::trigger( p()->actions.crackling_inferno, s->target, s->result_amount );
+    }
   }
 };
 
@@ -1014,7 +1074,7 @@ struct detonate_t : public ardeos_spell_t
       da += tick_damage_over_time( td->dots.crackling_inferno );
       da += tick_damage_over_time( td->dots.engulfing_flames );
       da += tick_damage_over_time( td->dots.fire_ball );
-      da += tick_damage_over_time( td->dots.fire_frogs );
+      da += tick_damage_over_time( td->dots.fire_frog );
       da += tick_damage_over_time( td->dots.incinerate );
       da += tick_damage_over_time( td->dots.searing_blaze );
 
@@ -1035,7 +1095,7 @@ struct detonate_t : public ardeos_spell_t
     void snapshot_internal( action_state_t* s, unsigned flags, result_amount_type rt ) override
     {
       ardeos_spell_t::snapshot_internal( s, flags, rt );
-      
+
       base_dd_min = base_dd_max = get_detonate_damage( s->target );
     }
 
@@ -1067,7 +1127,7 @@ struct detonate_t : public ardeos_spell_t
     trigger_gcd       = 1_s;
     gcd_type          = gcd_haste_type::NONE;
 
-    damage_action = new detonate_damage_t( name, p, options_str );
+    damage_action        = new detonate_damage_t( name, p, options_str );
     damage_action->stats = stats;
   }
 
@@ -1120,6 +1180,8 @@ struct incinerate_t : public ardeos_spell_t
       base_tick_time       = p->spell_const.incinerate_dot_period;
       hasted_ticks         = true;
       dot_behavior         = DOT_REFRESH_DURATION;
+
+      base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
     }
 
     double composite_ta_multiplier( const action_state_t* s ) const override
@@ -1235,10 +1297,9 @@ struct incinerate_t : public ardeos_spell_t
     resource_current              = RESOURCE_SPIRIT;
     base_costs[ RESOURCE_SPIRIT ] = 100;
 
-    channel_action = new incinerate_channel_t( name, p, this, options_str );
+    channel_action        = new incinerate_channel_t( name, p, this, options_str );
     channel_action->stats = stats;
     add_child( channel_action->custom_tick_action );
-
   }
 
   void execute() override
@@ -1249,7 +1310,6 @@ struct incinerate_t : public ardeos_spell_t
     channel_action->execute();
   }
 };
-
 
 struct searing_blaze_t : public ardeos_spell_t
 {
@@ -1336,14 +1396,14 @@ struct engulfing_flames_t : public ardeos_spell_t
   engulfing_flames_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( name, p, options_str )
   {
-    id                   = 12;
-    name_str_reporting   = "Engulfing Flames";
-    spell_power_mod.tick = p->spell_const.engulfing_flames_tick_coeff;
-    dot_duration         = p->spell_const.engulfing_flames_duration;
+    id                     = 12;
+    name_str_reporting     = "Engulfing Flames";
+    spell_power_mod.tick   = p->spell_const.engulfing_flames_tick_coeff;
+    dot_duration           = p->spell_const.engulfing_flames_duration;
     base_tick_time         = p->spell_const.engulfing_flames_period;
     dot_allow_partial_tick = true;
     hasted_ticks           = true;
-    
+
     if ( p->talents_enabled( ardeos_t::UNDYING_FLAME ) )
       dot_duration += p->talents.undying_flame_extension;
 
@@ -1352,8 +1412,8 @@ struct engulfing_flames_t : public ardeos_spell_t
     cooldown->duration = p->spell_const.engufling_flames_cooldown;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
-    
-    energize_type   = action_energize::NONE;
+
+    energize_type     = action_energize::NONE;
     energize_amount   = p->spell_const.engulfing_flames_embers_per_tick;
     energize_resource = RESOURCE_CINDERS;
 
@@ -1365,7 +1425,6 @@ struct engulfing_flames_t : public ardeos_spell_t
     base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
   }
 
-  
   void tick( dot_t* d ) override
   {
     ardeos_spell_t::tick( d );
@@ -1382,7 +1441,6 @@ struct engulfing_flames_t : public ardeos_spell_t
   {
     ardeos_spell_t::impact( s );
   }
-
 };
 
 struct apocalypse_t : public ardeos_spell_t
@@ -1425,7 +1483,6 @@ struct apocalypse_t : public ardeos_spell_t
   }
 };
 
-
 struct fire_ball_t : public ardeos_spell_t
 {
   struct fire_ball_dot_t : public residual_action::residual_periodic_action_t<ardeos_spell_t>
@@ -1448,12 +1505,11 @@ struct fire_ball_t : public ardeos_spell_t
 
       base_multiplier *= p->spell_const.fire_ball_damage_to_dot;
 
-      energize_type   = action_energize::PER_TICK;
-      energize_amount = p->spell_const.fire_ball_embers_per_tick;
+      energize_type     = action_energize::PER_TICK;
+      energize_amount   = p->spell_const.fire_ball_embers_per_tick;
       energize_resource = RESOURCE_CINDERS;
 
       base_crit = p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
-
     }
 
     void snapshot_state( action_state_t* state, result_amount_type rt ) override
@@ -1550,7 +1606,6 @@ struct fire_ball_t : public ardeos_spell_t
   }
 };
 
-
 struct pyromania_t : public ardeos_spell_t
 {
   pyromania_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
@@ -1569,7 +1624,6 @@ struct pyromania_t : public ardeos_spell_t
     cooldown->charges  = 1;
   }
 
-  
   size_t available_targets( std::vector<player_t*>& tl ) const override
   {
     tl.clear();
@@ -1622,6 +1676,154 @@ struct pyromania_t : public ardeos_spell_t
   }
 };
 
+struct fire_frog_hit_t : public ardeos_spell_t
+{
+  struct fire_frog_dot_t : public residual_action::residual_periodic_action_t<ardeos_spell_t>
+  {
+    fire_frog_dot_t( ardeos_t* p ) : residual_action_t( "fire_frog_dot", p )
+    {
+      id = 18;
+
+      background = true;
+
+      name_str_reporting = "Fire Frog (DoT)";
+
+      tick_may_crit = p->talents_enabled( ardeos_t::FIRESTARTER );
+
+      dot_duration           = p->spell_const.fire_frog_dot_duration;
+      dot_behavior           = DOT_REFRESH_DURATION;
+      base_tick_time         = p->spell_const.fire_frog_dot_period;
+      hasted_ticks           = true;
+      dot_allow_partial_tick = true;
+
+      base_multiplier *= p->spell_const.fire_frog_coeff;
+
+      base_crit = p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
+    }
+
+    void snapshot_state( action_state_t* state, result_amount_type rt ) override
+    {
+      spell_t::snapshot_state( state, rt );
+    }
+
+    double composite_ta_multiplier( const action_state_t* s ) const override
+    {
+      return fs_player_action_t::action_multiplier();
+    }
+
+    void init() override
+    {
+      base_t::init();
+      snapshot_flags &= STATE_NO_MULTIPLIER;
+      update_flags &= STATE_NO_MULTIPLIER;
+      snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
+      update_flags &= ~STATE_HASTE;
+
+      if ( p()->talents_enabled( ardeos_t::FIRESTARTER ) )
+      {
+        snapshot_flags |= STATE_CRIT;
+      }
+    }
+
+    double composite_crit_chance() const override
+    {
+      return base_crit;
+    }
+  };
+
+  fire_frog_dot_t* dot_action;
+  fire_frog_hit_t( ardeos_t* p ) : ardeos_spell_t( "fire_frog_hit", p )
+  {
+    id                 = 17;
+    name_str_reporting = "Fire Frog";
+
+    spell_power_mod.direct = p->spell_const.fire_frog_coeff;
+    background             = true;
+
+    dot_action = new fire_frog_dot_t( p );
+    add_child( dot_action );
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ardeos_spell_t::impact( s );
+    residual_action::trigger( dot_action, s->target, s->result_amount );
+  }
+  void execute() override
+  {
+    // Always target a random target
+    target = rng().range( target_list() );
+    ardeos_spell_t::execute();
+  }
+};
+
+struct fire_frog_t : public ardeos_spell_t
+{
+  int frog_hits;
+  fire_frog_t( ardeos_t* p ) : ardeos_spell_t( "fire_frog", p ), frog_hits( p->spell_const.fire_frog_max_jumps )
+  {
+    id                 = 16;
+    name_str_reporting = "Fire Frog";
+
+    background = true;
+
+    if ( p->talents_enabled( ardeos_t::FROG_SQUAD ) )
+    {
+      frog_hits += p->talents.frog_squad_extra_hits;
+    }
+
+    if ( !p->actions.fire_frogs_hit->stats->parent )
+      add_child( p->actions.fire_frogs_hit );
+  }
+
+  void execute() override
+  {
+    ardeos_spell_t::execute();
+
+    for ( int i = 0; i < frog_hits; i++ )
+    {
+      timespan_t frog_delay                     = ( 0.5_s + p()->spell_const.fire_frog_jump_duration * i );
+      p()->actions.fire_frogs_hit->travel_delay = frog_delay.total_seconds();
+      p()->actions.fire_frogs_hit->execute();
+    }
+  }
+};
+
+struct fire_frogs_t : public ardeos_spell_t
+{
+  int frogs;
+  fire_frogs_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+    : ardeos_spell_t( name, p, options_str ), frogs( p->spell_const.fire_frog_frogs )
+  {
+    id                 = 15;
+    name_str_reporting = "Fire Frogs";
+
+    base_execute_time = 0_s;
+
+    cooldown->duration = p->spell_const.fire_frogs_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    if ( p->talents_enabled( ardeos_t::FROG_SQUAD ) )
+    {
+      frogs += p->talents.frog_squad_extra_frogs;
+    }
+
+    if ( !p->actions.fire_frog->stats->parent )
+      add_child( p->actions.fire_frog );
+  }
+
+  void execute() override
+  {
+    ardeos_spell_t::execute();
+
+    for ( int i = 0; i < frogs; i++ )
+    {
+      p()->actions.fire_frog->execute();
+    }
+  }
+};
+
 }  // namespace actions
 
 // ==========================================================================
@@ -1634,7 +1836,7 @@ ardeos_td_t::ardeos_td_t( player_t* target, ardeos_t* source )
   dots.crackling_inferno = target->get_dot( "crackling_inferno", source );
   dots.engulfing_flames  = target->get_dot( "engulfing_flames", source );
   dots.fire_ball         = target->get_dot( "fire_ball_dot", source );
-  dots.fire_frogs        = target->get_dot( "fire_frogs_dot", source );
+  dots.fire_frog         = target->get_dot( "fire_frog_dot", source );
   dots.incinerate        = target->get_dot( "incinerate_dot", source );
   dots.searing_blaze     = target->get_dot( "searing_blaze", source );
 
@@ -1715,7 +1917,7 @@ double ardeos_t::matching_gear_multiplier( attribute_e attr ) const
 double ardeos_t::composite_player_multiplier( school_e school ) const
 {
   double m = fs_player_t::composite_player_multiplier( school );
-  
+
   return m;
 }
 
@@ -1799,6 +2001,8 @@ action_t* ardeos_t::create_action( util::string_view name, util::string_view opt
     return new fire_ball_t( "fire_ball", this, options_str );
   if ( name == "pyromania" || name == "pyro" )
     return new pyromania_t( "pyromania", this, options_str );
+  if ( name == "frogs" || name == "fire_frog" || name == "fire_frogs" )
+    return new fire_frogs_t( "fire_frogs", this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -1828,7 +2032,7 @@ std::unique_ptr<expr_t> ardeos_t::create_expression( util::string_view name_str 
       return make_fn_expr( name_str,
                            [ this ] { return resources.max[ RESOURCE_CINDERS ] - this->current_cinders( true ); } );
     }
-  } 
+  }
   else if ( util::str_compare_ci( split[ 0 ], "talent" ) )
   {
     if ( split.size() == 2 )
@@ -1895,7 +2099,6 @@ void ardeos_t::init_spells()
 
 // ardeos_t::init_talents ====================================================
 
-
 void ardeos_t::init_talents()
 {
   fs_player_t::init_talents();
@@ -1945,10 +2148,8 @@ void ardeos_t::init_rng()
 {
   fs_player_t::init_rng();
 
-
-
- /* if ( talents.soulfrost_torrent )
-    rppm.soulfrost_torrent = get_rppm( "soulfrost_torrent", talents.soulfrost_torrent_rppm, 1.0, RPPM_HASTE );*/
+  /* if ( talents.soulfrost_torrent )
+     rppm.soulfrost_torrent = get_rppm( "soulfrost_torrent", talents.soulfrost_torrent_rppm, 1.0, RPPM_HASTE );*/
 }
 
 // ardeos_t::init_scaling ====================================================
@@ -2097,6 +2298,25 @@ void ardeos_t::init_items()
 void ardeos_t::init_special_effects()
 {
   fs_player_t::init_special_effects();
+
+  if ( talents_enabled( PYROPHIBIAN_FRENZY ) )
+  {
+    auto effect          = new special_effect_t( this );
+    effect->spell_id     = 9120102;
+    effect->name_str     = "pyrophibian_frenzy";
+    effect->proc_flags_  = PF_PERIODIC;
+    effect->proc_flags2_ = PF2_CRIT;
+    effect->proc_chance_ = talents.pyrophibian_frenzy_chance;
+
+    special_effects.push_back( effect );
+
+    effect->execute_action = actions.fire_frog;
+
+    auto dbc = new dbc_proc_callback_t( this, *effect );
+
+    dbc->initialize();
+    dbc->activate();
+  }
 }
 
 // ardeos_t::init_finished ===================================================
@@ -2113,15 +2333,9 @@ void ardeos_t::init_background_actions()
   actions.searing_blaze    = new actions::searing_blaze_t( "searing_blaze", this );
   actions.engulfing_flames = new actions::engulfing_flames_t( "engulfing_flames", this );
 
-
-  //actions.bursting_ice_tick_burstbolter = new actions::bursting_ice_tick_t( "bursting_ice_burstbolter", this );
-  //actions.coalescing_frost              = new actions::coalescing_frost_t( "coalescing_frost", this );
-  //actions.frost_swallow                 = new actions::frost_swallow_t( "frost_swallow", this );
-  //actions.frost_swallow_cascading       = new actions::frost_swallow_t( "frost_swallow_cascading", this );
-  //actions.frost_swallow_navir           = new actions::frost_swallow_t( "frost_swallow_navir", this );
-  //actions.ice_comet_avalanche =
-  //    new actions::ice_comet_t( "ice_comet_avalanche", this, {}, secondary_trigger::AVALANCHE );
-  //actions.ice_comet_avalanche->background = true;
+  actions.fire_frogs_hit    = new actions::fire_frog_hit_t( this );
+  actions.fire_frog         = new actions::fire_frog_t( this );
+  actions.crackling_inferno = new actions::crackling_inferno_t( this );
 }
 
 // ardeos_t::reset ===========================================================
@@ -2144,7 +2358,7 @@ void ardeos_t::arise()
 {
   fs_player_t::arise();
 
-  resources.current[ RESOURCE_CINDERS ]      = 0;
+  resources.current[ RESOURCE_CINDERS ] = 0;
 }
 
 // ardeos_t::combat_begin ====================================================
@@ -2186,7 +2400,7 @@ void actions::ardeos_action_t<Base>::trigger_spirit_refund( const action_state_t
     p()->resource_gain( RESOURCE_CINDERS, cinders_refunded, p()->gains.spirit_procs, this );
     p()->sim->print_debug( "{} actually refunded {:.0f} Cinders", *p(), cinders_refunded );
   } );
-  
+
   p()->spirit_refund();
 }
 
@@ -2257,13 +2471,6 @@ void ardeos_t::analyze( sim_t& sim )
 
 void ardeos_t::create_cooldowns()
 {
-  /*cooldowns.bursting_ice        = get_cooldown( "bursting_ice" );
-  cooldowns.cold_snap           = get_cooldown( "cold_snap" );
-  cooldowns.flight_of_the_navir = get_cooldown( "flight_of_the_navir" );
-  cooldowns.freezing_torrent    = get_cooldown( "freezing_torrent" );
-  cooldowns.ice_blitz           = get_cooldown( "ice_blitz" );
-  cooldowns.winters_blessing    = get_cooldown( "winters_blessing" );*/
-
   cooldowns.apocalypse       = get_cooldown( "apocalypse" );
   cooldowns.engulfing_flames = get_cooldown( "engulfing_flames" );
   cooldowns.fireball         = get_cooldown( "fire_ball" );

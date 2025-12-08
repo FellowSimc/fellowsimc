@@ -13155,7 +13155,8 @@ void player_t::create_options()
   add_option( opt_string( "server", server_str ) );
   add_option( opt_string( "thumbnail", report_information.thumbnail_url ) );
   add_option( opt_string( "id", id_str ) );
-  add_option( opt_func( "talents", parse_talent_string ) );
+  add_option( opt_string( "talents", talents_str ) );
+  add_option( opt_append( "talents+", talents_str ) );
   add_option( opt_string( "race", race_str ) );
   add_option( opt_func( "timeofday", parse_timeofday ) );
   add_option( opt_func( "zandalari_loa", parse_loa ) );

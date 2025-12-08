@@ -43,32 +43,141 @@ gems.sapphire_power=324
 
 sets.deaths_grasp=1
 
-copy="Untamed Flame","Ardeos"
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+
+talents=slow_burn:1/firestarter:1/undying_flame:1/pyrophibian_frenzy:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1
 legendary.untamed_flame=1
 
-copy="Brimstone Cataclysm","Ardeos"
-legendary.brimstone_cataclysm=1
+# copy="Untamed Flame","Ardeos"
+# legendary.untamed_flame=1
 
-copy="Explosive Potency","Ardeos"
-legendary.explosive_potency=1
+# copy="Brimstone Cataclysm","Ardeos"
+# legendary.brimstone_cataclysm=1
 
-copy="Slow Burn","Ardeos"
-talents=slow_burn:1
+# copy="Explosive Potency","Ardeos"
+# legendary.explosive_potency=1
 
-copy="Flickering Cinders","Ardeos"
-talents=flickering_cinders:1
+# copy="Slow Burn","Ardeos"
+# talents=slow_burn:1
 
-copy="Undying Flame","Ardeos"
-talents=undying_flame:1
+# copy="Flickering Cinders","Ardeos"
+# talents+=/flickering_cinders:1
 
-copy="Agonizing Blaze","Ardeos"
-talents=agonizing_blaze:1
+# copy="Undying Flame","Ardeos"
+# talents=undying_flame:1
 
-copy="Firestarter","Ardeos"
-talents=firestarter:1
+# copy="Agonizing Blaze","Ardeos"
+# talents+=/agonizing_blaze:1
 
-copy="Ouroboros","Ardeos"
-talents=ouroboros:1
+# copy="Firestarter","Ardeos"
+# talents=firestarter:1
 
-copy="Rolling Flames","Ardeos"
-talents=rolling_flames:1
+# copy="Ouroboros","Ardeos"
+# talents+=/ouroboros:1
+
+# copy="Rolling Flames","Ardeos"
+# talents+=/rolling_flames:1
+
+
+# copy="Crackling Inferno","Ardeos"
+# talents+=/crackling_inferno:1
+
+# copy="Intensifying Inferno","Ardeos"
+# talents+=/intensifying_inferno:1
+
+# copy="Crackling & Intensifying Inferno","Ardeos"
+# talents+=/crackling_inferno:1/intensifying_inferno:1
+
+# copy="Frog Squad","Ardeos"
+# talents+=/frog_squad:1
+
+# copy="Pyrophibian Frenzy","Ardeos"
+# talents+=/pyrophibian_frenzy:1
+
+# copy="Pyrophibian Frenzy Squad","Ardeos"
+# talents+=/pyrophibian_frenzy:1/frog_squad:1
+
+
+
+copy="Chronoshift","Ardeos"
+weapon=chronoshift
+
+copy="Chronoshift Brave4","Ardeos"
+weapon=chronoshift
+weapon_trait.brave_machinations=4
+
+copy="Chronoshift Splinters4","Ardeos"
+weapon=chronoshift
+weapon_trait.amethyst_splinters=4
+
+copy="Chronoshift heroic_brand4","Ardeos"
+weapon=chronoshift
+weapon_trait.heroic_brand=4
+
+copy="Chronoshift Grandeur4","Ardeos"
+weapon=chronoshift
+weapon_trait.visions_of_grandeur=4
+
+copy="Chronoshift Diam4","Ardeos"
+weapon=chronoshift
+weapon_trait.diamond_strike=4
+
+copy="Voidbringer Brave4","Ardeos"
+weapon=voidbringers_touch
+weapon_trait.brave_machinations=4
+
+copy="Voidbringer Grand4","Ardeos"
+weapon=voidbringers_touch
+weapon_trait.visions_of_grandeur=4
+
+copy="Voidbringer Splinters4","Ardeos"
+weapon=voidbringers_touch
+weapon_trait.amethyst_splinters=4
+
+copy="Voidbringer Brand4","Ardeos"
+weapon=voidbringers_touch
+weapon_trait.heroic_brand=4
+copy="Voidbringer Diam4","Ardeos"
+weapon=voidbringers_touch
+weapon_trait.diamond_strike=4
+
+copy="Icicles Brave4","Ardeos"
+weapon=icicles_of_anzhyr
+weapon_trait.brave_machinations=4
+
+copy="Icicles Splinters4","Ardeos"
+weapon=icicles_of_anzhyr
+weapon_trait.amethyst_splinters=4
+
+copy="Icicles heroic_brand4","Ardeos"
+weapon=icicles_of_anzhyr
+weapon_trait.heroic_brand=4
+
+copy="Icicles Grandeur4","Ardeos"
+weapon=icicles_of_anzhyr
+weapon_trait.visions_of_grandeur=4
+
+copy="Icicles Diam4","Ardeos"
+weapon=icicles_of_anzhyr
+weapon_trait.diamond_strike=4
+
+copy="NF Brave4","Ardeos"
+weapon=natures_fury
+weapon_trait.brave_machinations=4
+
+copy="NF Splinters4","Ardeos"
+weapon=natures_fury
+weapon_trait.amethyst_splinters=4
+
+copy="NF heroic_brand4","Ardeos"
+weapon=natures_fury
+weapon_trait.heroic_brand=4
+
+copy="NF Grandeur4","Ardeos"
+weapon=natures_fury
+weapon_trait.visions_of_grandeur=4
+
+copy="NF Diam4","Ardeos"
+weapon=natures_fury
+weapon_trait.diamond_strike=4

@@ -418,6 +418,9 @@ public:
   double stacking_movement_modifier() const override;
   void invalidate_cache( cache_e ) override;
 
+  void analyze( sim_t& sim ) override;
+
+
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
 
   std::string default_flask() const override
@@ -596,7 +599,7 @@ public:
   {
     ab::parse_options( options );
     ab::may_crit = ab::tick_may_crit = true;
-    ab::school                       = SCHOOL_FROST;
+    ab::school                       = SCHOOL_FIRE;
 
     // ardeos_t sets base and min GCD to 1.5_s hasted
     ab::gcd_type = gcd_haste_type::SPELL_HASTE;
@@ -952,39 +955,116 @@ struct infernal_wave_t : public ardeos_spell_t
   }
 };
 
+
 struct detonate_t : public ardeos_spell_t
 {
+  struct detonate_damage_t : public ardeos_spell_t
+  {
+    detonate_damage_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
+      : ardeos_spell_t( fmt::format( "{}_dmg", name ), p, options_str )
+    {
+      id                 = 3;
+      name_str_reporting = "Detonate";
+
+      aoe                 = -1;
+      reduced_aoe_targets = 1;
+
+      dual = background = true;
+    }
+
+    double tick_damage_over_time( const dot_t* dot ) const
+    {
+      if ( !dot->is_ticking() )
+      {
+        return 0.0;
+      }
+
+      action_state_t* state = dot->current_action->get_state( dot->state );
+      dot->current_action->calculate_tick_amount( state, 1.0 );
+      double tick_base_damage  = state->result_raw;
+      timespan_t dot_tick_time = dot->current_action->tick_time( state );
+      // We don't care how much is remaining on the target, this will always deal
+      // Xs worth of DoT ticks even if the amount is currently less
+      double ticks_left   = p()->spell_const.detonate_sample_duration / dot_tick_time;
+      double total_damage = ticks_left * tick_base_damage;
+      total_damage /= state->target_ta_multiplier;
+      action_state_t::release( state );
+
+      sim->print_debug( "{} Detonate tick damage from {}: {:.2f} ({:.2f} per tick for {:.2f} ticks)", *p(),
+                        *dot->current_action, total_damage, tick_base_damage, ticks_left );
+      return total_damage;
+    }
+
+    double get_detonate_damage( player_t* target ) const
+    {
+      double da = 0.0;
+
+      auto td = p()->get_target_data( target );
+      da += tick_damage_over_time( td->dots.crackling_inferno );
+      da += tick_damage_over_time( td->dots.engulfing_flames );
+      da += tick_damage_over_time( td->dots.fire_ball );
+      da += tick_damage_over_time( td->dots.fire_frogs );
+      da += tick_damage_over_time( td->dots.incinerate );
+      da += tick_damage_over_time( td->dots.searing_blaze );
+
+      return da / p()->spell_const.detonate_hits;
+    }
+
+    void init() override
+    {
+      ardeos_spell_t::init();
+
+      snapshot_flags &= ~( STATE_VERSATILITY | STATE_MUL_PLAYER_DAM );
+      update_flags &= ~( STATE_VERSATILITY | STATE_MUL_PLAYER_DAM );
+    }
+
+    void snapshot_internal( action_state_t* s, unsigned flags, result_amount_type rt ) override
+    {
+      ardeos_spell_t::snapshot_internal( s, flags, rt );
+      
+      base_dd_min = base_dd_max = get_detonate_damage( s->target );
+    }
+
+    double composite_target_multiplier( player_t* target ) const override
+    {
+      double m = ardeos_spell_t::composite_target_multiplier( target );
+      if ( p()->legendary.explosive_potency )
+      {
+        if ( target->health_percentage() <= 35.0 )
+        {
+          m *= 1.0 + p()->legendary.explosive_potency_detonate_amp;
+        }
+      }
+      return m;
+    }
+  };
+
+  detonate_damage_t* damage_action;
   detonate_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( name, p, options_str )
   {
     id                 = 3;
     name_str_reporting = "Detonate";
 
-    resource_current                  = RESOURCE_CINDERS;
+    resource_current               = RESOURCE_CINDERS;
     base_costs[ RESOURCE_CINDERS ] = p->spell_const.detonate_embers_cost;
 
     base_execute_time = 0_s;
     trigger_gcd       = 1_s;
     gcd_type          = gcd_haste_type::NONE;
 
-  }
-
-  double composite_target_multiplier( player_t* target ) const override
-  {
-    double m = ardeos_spell_t::composite_target_multiplier( target );
-    if ( p()->legendary.explosive_potency )
-    {
-      if ( target->health_percentage() <= 35.0 )
-      {
-        m *= 1.0 + p()->legendary.explosive_potency_detonate_amp;
-      }
-    }
-    return m;
+    damage_action = new detonate_damage_t( name, p, options_str );
+    damage_action->stats = stats;
   }
 
   void execute() override
   {
     ardeos_spell_t::execute();
+
+    for ( int i = 0; i < p()->spell_const.detonate_hits; ++i )
+    {
+      damage_action->execute();
+    }
   }
 };
 
@@ -1021,12 +1101,10 @@ struct incinerate_t : public ardeos_spell_t
       id = 9;
 
       name_str_reporting   = "Incinerate (DoT)";
-      may_crit             = true;
       spell_power_mod.tick = p->spell_const.incinerate_dot_coeff;
       dot_duration         = p->spell_const.incinerate_dot_duration;
       base_tick_time       = p->spell_const.incinerate_dot_period;
       hasted_ticks         = true;
-      tick_may_crit        = true;
       dot_behavior         = DOT_REFRESH_DURATION;
     }
 
@@ -1063,7 +1141,6 @@ struct incinerate_t : public ardeos_spell_t
 
       aoe                    = -1;
       name_str_reporting     = "Incinerate";
-      may_crit               = true;
       spell_power_mod.direct = p->spell_const.incinerate_coeff;
       reduced_aoe_targets    = p->spell_const.incinerate_falloff;
 
@@ -1083,7 +1160,7 @@ struct incinerate_t : public ardeos_spell_t
       return m;
     }
 
-    void impact(action_state_t* s) override
+    void impact( action_state_t* s ) override
     {
       ardeos_spell_t::impact( s );
       // Apply dot
@@ -1111,7 +1188,6 @@ struct incinerate_t : public ardeos_spell_t
       dot_duration           = p->spell_const.incinerate_duration;
       hasted_ticks           = true;
       base_tick_time         = p->spell_const.incinerate_period;
-      may_crit               = false;
 
       target = p;
 
@@ -1286,7 +1362,7 @@ ardeos_td_t::ardeos_td_t( player_t* target, ardeos_t* source )
   : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
 {
   dots.crackling_inferno = target->get_dot( "crackling_inferno", source );
-  dots.engulfing_flames  = target->get_dot( "engulfing_flame", source );
+  dots.engulfing_flames  = target->get_dot( "engulfing_flames", source );
   dots.fire_ball         = target->get_dot( "fire_ball_dot", source );
   dots.fire_frogs        = target->get_dot( "fire_frogs_dot", source );
   dots.incinerate        = target->get_dot( "incinerate_dot", source );
@@ -1835,6 +1911,24 @@ stat_e ardeos_t::convert_hybrid_stat( stat_e s ) const
   }
 }
 
+void ardeos_t::analyze( sim_t& sim )
+{
+  auto incin = find_action( "incinerate" );
+
+  if ( incin )
+  {
+    // Set to channeled to add the time spent of the channeled dual action.
+    incin->channeled = true;
+  }
+
+  player_t::analyze( sim );
+
+  if ( incin )
+  {
+    incin->channeled = false;
+  }
+}
+
 void ardeos_t::create_cooldowns()
 {
   /*cooldowns.bursting_ice        = get_cooldown( "bursting_ice" );
@@ -1845,7 +1939,7 @@ void ardeos_t::create_cooldowns()
   cooldowns.winters_blessing    = get_cooldown( "winters_blessing" );*/
 
   cooldowns.apocalypse       = get_cooldown( "apocalypse" );
-  cooldowns.engulfing_flames = get_cooldown( "engulfing_flame" );
+  cooldowns.engulfing_flames = get_cooldown( "engulfing_flames" );
   cooldowns.fireball         = get_cooldown( "fire_ball" );
   cooldowns.pyromania        = get_cooldown( "pyromania" );
 }

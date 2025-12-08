@@ -1529,6 +1529,8 @@ struct fire_ball_t : public ardeos_spell_t
       update_flags &= STATE_NO_MULTIPLIER;
       snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
       update_flags &= ~STATE_HASTE;
+      snapshot_flags &= ~STATE_TGT_CRIT;
+      update_flags &= ~STATE_TGT_CRIT;
 
       if ( p()->talents_enabled( ardeos_t::FIRESTARTER ) )
       {
@@ -1718,6 +1720,8 @@ struct fire_frog_hit_t : public ardeos_spell_t
       update_flags &= STATE_NO_MULTIPLIER;
       snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
       update_flags &= ~STATE_HASTE;
+      snapshot_flags &= ~STATE_TGT_CRIT;
+      update_flags &= ~STATE_TGT_CRIT;
 
       if ( p()->talents_enabled( ardeos_t::FIRESTARTER ) )
       {

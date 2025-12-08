@@ -738,7 +738,7 @@ public:
 
       // Event to make sure the CDR is reduced after the weapon goes on CD.
       make_event( ab::sim, 0_ms,
-                  [ this ]() { ab::fs_p()->weapon_cd->adjust( -ab::fs_p()->weapon_cd->duration * 0.3, false ); } );
+                  [ this ]() { ab::fs_p()->weapon_cd->adjust( -ab::fs_p()->weapon_cd->base_duration * 0.3, false ); } );
     }
   }
     

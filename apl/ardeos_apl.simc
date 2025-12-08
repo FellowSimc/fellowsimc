@@ -4,11 +4,11 @@ actions.precombat+=/infernal_wave
 
 actions=run_action_list,name=main
 
-# actions.main=incinerate
-actions.main+=/apocalypse,if=dot.searing_blaze.refreshable
-# actions.main+=/wildfire,if=dot.engulfing_flames.ticking
-# actions.main+=/detonate,if=dot.engulfing_flames.ticking
-actions.main+=/detonate,if=active_dot.searing_blaze=active_enemies
-# actions.main+=/engulfing_flames,target_if=refreshable,if=cooldown.wildfire.remains>=10|cooldown.wildfire.remains<=execute_time
+actions.main=incinerate,if=buff.wildfire.up|!legendary.untamed_flame
+actions.main+=/apocalypse
+#,if=dot.searing_blaze.refreshable
+actions.main+=/wildfire,if=active_dot.engulfing_flames>0|spirit=100&legendary.untamed_flame
+actions.main+=/detonate,if=active_dot.searing_blaze=active_enemies&active_dot.engulfing_flames>0
+actions.main+=/engulfing_flames,target_if=refreshable,if=cooldown.wildfire.remains>=10|cooldown.wildfire.remains<=execute_time
 actions.main+=/searing_blaze,target_if=refreshable
 actions.main+=/infernal_wave

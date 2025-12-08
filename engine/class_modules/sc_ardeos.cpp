@@ -92,6 +92,8 @@ public:
   {
     buff_t* reign_of_fire;
     buff_t* wildfire;
+    buff_t* untamed_flame_crit;
+    buff_t* untamed_flame_spirit;
   } buffs;
 
   struct cooldowns_t
@@ -1020,6 +1022,9 @@ struct detonate_t : public ardeos_spell_t
 
       snapshot_flags &= ~( STATE_VERSATILITY | STATE_MUL_PLAYER_DAM );
       update_flags &= ~( STATE_VERSATILITY | STATE_MUL_PLAYER_DAM );
+
+      snapshot_flags |= STATE_TGT_CRIT | STATE_TGT_MUL_DA;
+      update_flags |= STATE_TGT_CRIT | STATE_TGT_MUL_DA;
     }
 
     void snapshot_internal( action_state_t* s, unsigned flags, result_amount_type rt ) override
@@ -1740,7 +1745,29 @@ void ardeos_t::create_buffs()
                        ->set_refresh_behavior( buff_refresh_behavior::DURATION )
                        ->add_invalidate( CACHE_HASTE );
 
+  buffs.untamed_flame_crit = make_buff<ardeos_buff_t>( this, "untamed_flame_crit" )
+                                 ->set_default_value( legendary.untamed_flame_crit_chance )
+                                 ->set_pct_buff_type( STAT_PCT_BUFF_CRIT );
 
+  buffs.untamed_flame_spirit = make_buff<ardeos_buff_t>( this, "untamed_flame_spirit" )
+                                   ->set_default_value( legendary.untamed_flame_crit_chance )
+                                   ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
+
+  if ( legendary.untamed_flame )
+  {
+    buffs.wildfire->add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
+      if ( _new )
+      {
+        buffs.untamed_flame_crit->trigger();
+        buffs.untamed_flame_spirit->trigger();
+      }
+      else
+      {
+        buffs.untamed_flame_crit->expire();
+        buffs.untamed_flame_spirit->expire();
+      }
+    } );
+  }
 }
 
 // ardeos_t::invalidate_cache =========================================

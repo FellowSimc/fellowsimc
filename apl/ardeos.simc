@@ -7,7 +7,7 @@ iterations=100000
 chart_show_relative_difference=1
 vary_combat_length=0
 single_actor_batch=1
-desired_targets=8
+desired_targets=1
 
 
 # apl/chuey_dungeon.simc
@@ -42,3 +42,13 @@ gems.ruby_power=1296
 gems.sapphire_power=324
 
 sets.deaths_grasp=1
+
+copy="Untamed Flame","Ardeos"
+legendary.untamed_flame=1
+
+
+copy="Brimstone Cataclysm","Ardeos"
+legendary.brimstone_cataclysm=1
+
+copy="Explosive Potency","Ardeos"
+legendary.explosive_potency=1

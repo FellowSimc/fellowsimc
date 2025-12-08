@@ -1773,11 +1773,11 @@ void ardeos_t::create_options()
   add_option( opt_bool( "talent.soulfrost_torrent", talents.soulfrost_torrent ) );
 
   add_option( opt_bool( "talent.biting_cold", talents.biting_cold ) );
-  add_option( opt_bool( "talent.wisdom_of_the_north", talents.wisdom_of_the_north ) );
+  add_option( opt_bool( "talent.wisdom_of_the_north", talents.wisdom_of_the_north ) );*/
 
-  add_option( opt_bool( "legendary.frostwyrms_spite", legendary.frostwyrms_spite ) );
-  add_option( opt_bool( "legendary.skandis_decree", legendary.skandis_decree ) );
-  add_option( opt_bool( "legendary.undulating_spirit", legendary.undulating_spirit ) );*/
+  add_option( opt_bool( "legendary.brimstone_cataclysm", legendary.brimstone_cataclysm ) );
+  add_option( opt_bool( "legendary.explosive_potency", legendary.explosive_potency ) );
+  add_option( opt_bool( "legendary.untamed_flame", legendary.untamed_flame ) );
 }
 
 // ardeos_t::copy_from =======================================================

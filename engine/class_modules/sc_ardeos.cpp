@@ -86,6 +86,7 @@ public:
     actions::ardeos_spell_t* pyromania;
     actions::ardeos_spell_t* crackling_inferno;
     actions::ardeos_spell_t* apocalypse;
+    actions::ardeos_spell_t* flare_up;
   } actions;
 
   struct buffs_t
@@ -981,6 +982,53 @@ struct crackling_inferno_t : public residual_action::residual_periodic_action_t<
   }
 };
 
+struct flare_up_t : public ardeos_spell_t
+{
+  flare_up_t( ardeos_t* p ) : ardeos_spell_t( "flare_up", p )
+  {
+    id = 23;
+
+    name_str_reporting = "Flare Up";
+
+    base_multiplier *= p->talents.flare_up_multiplier;
+    aoe = -1;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto da = ardeos_spell_t::composite_da_multiplier( s );
+    return da;
+  }
+
+  size_t available_targets( std::vector<player_t*>& tl ) const override
+  {
+    tl.clear();
+
+    for ( auto* t : sim->target_non_sleeping_list )
+    {
+      if ( t->is_enemy() && p()->get_target_data( t )->dots.searing_blaze->is_ticking() )
+      {
+        tl.push_back( t );
+      }
+    }
+
+    return tl.size();
+  }
+
+
+  void execute() override
+  {
+    target_cache.is_valid = false;
+    ardeos_spell_t::execute();
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ardeos_spell_t::impact( s );
+  }
+};
+
+
 struct infernal_wave_t : public ardeos_spell_t
 {
   infernal_wave_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
@@ -1019,10 +1067,19 @@ struct infernal_wave_t : public ardeos_spell_t
   void impact( action_state_t* s ) override
   {
     ardeos_spell_t::impact( s );
-    if ( s->result == RESULT_CRIT && p()->talents_enabled( ardeos_t::CRACKLING_INFERNO ) )
 
+    if ( s->result_amount > 0 )
     {
-      residual_action::trigger( p()->actions.crackling_inferno, s->target, s->result_amount );
+      if ( s->result == RESULT_CRIT && p()->talents_enabled( ardeos_t::CRACKLING_INFERNO ) )
+
+      {
+        residual_action::trigger( p()->actions.crackling_inferno, s->target, s->result_amount );
+      }
+
+      if ( p()->talents_enabled( ardeos_t::FLARE_UP ) && result_is_hit( s->result ) )
+      {
+        p()->actions.flare_up->execute_on_target( s->target, s->result_amount );
+      }
     }
   }
 };
@@ -1139,6 +1196,15 @@ struct detonate_t : public ardeos_spell_t
     for ( int i = 0; i < p()->spell_const.detonate_hits; ++i )
     {
       damage_action->execute();
+    }
+
+    if ( p()->talents_enabled( ardeos_t::REIGN_OF_FIRE ) )
+    {
+      if ( p()->rppm.reign_of_fire->trigger() )
+      {
+        p()->buffs.reign_of_fire->trigger();
+        p()->cooldowns.fireball->reset( true, 1 );
+      }
     }
   }
 };
@@ -1360,6 +1426,22 @@ struct searing_blaze_t : public ardeos_spell_t
   {
     ardeos_spell_t::impact( s );
   }
+  
+  double spontaneous_chance() const
+  {
+    return p()->talents.spontaneous_combustion_chance +
+           p()->cache.spell_crit_chance() / p()->talents.spontaneous_combustion_extra_chance;
+  }
+
+  double composite_crit_chance() const override
+  {
+    auto cc = ardeos_spell_t::composite_crit_chance();
+
+    if ( p()->talents_enabled( ardeos_t::SPONTANEOUS_COMBUSTION ) && rng().roll( spontaneous_chance() ) )
+      cc += 1.0;
+
+    return cc;
+  }
 
   void tick( dot_t* d ) override
   {
@@ -1434,6 +1516,22 @@ struct engulfing_flames_t : public ardeos_spell_t
     ardeos_spell_t::tick( d );
 
     p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), energize_gain( d->state ), this );
+  }
+
+  double spontaneous_chance() const
+  {
+    return p()->talents.spontaneous_combustion_chance +
+           p()->cache.spell_crit_chance() / p()->talents.spontaneous_combustion_extra_chance;
+  }
+
+  double composite_crit_chance() const override
+  {
+    auto cc = ardeos_spell_t::composite_crit_chance();
+
+    if ( p()->talents_enabled( ardeos_t::SPONTANEOUS_COMBUSTION ) && rng().roll( spontaneous_chance() ) )
+      cc += 1.0;
+
+    return cc;
   }
 
   void execute() override
@@ -2126,8 +2224,7 @@ void ardeos_t::init_rng()
 {
   fs_player_t::init_rng();
 
-  /* if ( talents.soulfrost_torrent )
-     rppm.soulfrost_torrent = get_rppm( "soulfrost_torrent", talents.soulfrost_torrent_rppm, 1.0, RPPM_HASTE );*/
+  rppm.reign_of_fire = get_rppm( "reign_of_fire", talents.reign_of_fire_ppm, 1.0, RPPM_HASTE );
 }
 
 // ardeos_t::init_scaling ====================================================
@@ -2314,6 +2411,7 @@ void ardeos_t::init_background_actions()
   actions.fire_frogs_hit    = new actions::fire_frog_hit_t( this );
   actions.fire_frog         = new actions::fire_frog_t( this );
   actions.crackling_inferno = new actions::crackling_inferno_t( this );
+  actions.flare_up          = new actions::flare_up_t( this );
 }
 
 // ardeos_t::reset ===========================================================

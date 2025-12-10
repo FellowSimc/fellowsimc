@@ -7,7 +7,9 @@ actions=run_action_list,name=main
 actions.main=fire_ball,if=(cooldown.engulfing_flames.remains<=gcd.max)&active_dot.fire_ball_dot=0|buff.reign_of_fire.react|talent.reign_of_fire&active_dot.fire_ball_dot=0
 actions.main+=/apocalypse
 #,if=dot.searing_blaze.refreshable
-actions.main+=/engulfing_flames,target_if=refreshable
+actions.main+=/engulfing_flames,target_if=dot.engulfing_flames.refreshable,if=engulfing_flames_max_stacks=1
+actions.main+=/engulfing_flames,target_if=dot.engulfing_flames.stack<engulfing_flames_max_stacks,if=engulfing_flames_max_stacks>1
+# actions.main+=/engulfing_flames
 #,if=!buff.wildfire.up&active_enemies>1|cooldown.wildfire.remains>=10|cooldown.wildfire.remains<=gcd.max*3|talent.rolling_flames
 actions.main+=/wildfire,if=active_dot.engulfing_flames>0|cooldown.pyromania.up|spirit=100&legendary.untamed_flame
 actions.main+=/pyromania,target_if=dot.engulfing_flames.refreshable|active_enemies=1,if=buff.wildfire.up

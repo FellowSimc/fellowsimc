@@ -7,7 +7,7 @@ iterations=100000
 chart_show_relative_difference=1
 vary_combat_length=0
 single_actor_batch=1
-desired_targets=20
+desired_targets=20  
 
 
 # apl/chuey_dungeon.simc
@@ -63,7 +63,9 @@ weapon_trait.kindling=4
 weapon_trait.inspired_allegiance=4
 
 # talents+=/slow_burn:1/firestarter:1/undying_flame:1/pyrophibian_frenzy:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1
-legendary.untamed_flame=1talents=slow_burn:1/pyrophibian_frenzy:1
+legendary.untamed_flame=1
+
+talents=slow_burn:1/pyrophibian_frenzy:1
 
 copy="Untamed Flame","Ardeos"
 legendary.untamed_flame=1

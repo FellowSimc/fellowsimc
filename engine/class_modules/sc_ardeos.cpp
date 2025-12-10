@@ -35,6 +35,7 @@ public:
     dot_t* fire_ball;
     dot_t* fire_frog;
     dot_t* crackling_inferno;
+    std::vector<event_t*> engulfing_decrement_events;
   } dots;
 
   struct
@@ -47,9 +48,10 @@ public:
 
   int dot_count() const
   {
-    return dots.incinerate->is_ticking() + dots.searing_blaze->is_ticking() + dots.engulfing_flames->is_ticking() +
+    return dots.incinerate->is_ticking() + dots.searing_blaze->is_ticking() + dots.engulfing_flames->current_stack() +
            dots.fire_ball->is_ticking() + dots.fire_frog->is_ticking() + dots.crackling_inferno->is_ticking();
-    // fs_dots.amethyst_splinters->is_ticking() + fs_dots.curse_of_anzhyr->is_ticking() + fs_dots.kindling->is_ticking();
+    // fs_dots.amethyst_splinters->is_ticking() + fs_dots.curse_of_anzhyr->is_ticking() +
+    // fs_dots.kindling->is_ticking();
   }
 };
 
@@ -339,6 +341,8 @@ public:
     double spontaneous_combustion_extra_chance = 0.05;
 
     bool rolling_flames_instant = false;
+
+    bool double_detonate_cost_efficiency = false;
   } talents;
 
   struct legendary_t
@@ -357,6 +361,7 @@ public:
 
   struct options_t
   {
+    unsigned int engulfing_flames_max_stacks = 1;
   } options;
 
   target_specific_t<ardeos_td_t> target_data;
@@ -1029,7 +1034,6 @@ struct flare_up_t : public ardeos_spell_t
     return tl.size();
   }
 
-
   void execute() override
   {
     target_cache.is_valid = false;
@@ -1043,7 +1047,6 @@ struct flare_up_t : public ardeos_spell_t
     ardeos_spell_t::impact( s );
   }
 };
-
 
 struct infernal_wave_t : public ardeos_spell_t
 {
@@ -1107,17 +1110,22 @@ struct detonate_t : public ardeos_spell_t
 {
   struct detonate_damage_t : public ardeos_spell_t
   {
+    timespan_t sample_duration;
     detonate_damage_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
-      : ardeos_spell_t( fmt::format( "{}_dmg", name ), p, options_str )
+      : ardeos_spell_t( fmt::format( "{}_dmg", name ), p, options_str ),
+        sample_duration( p->spell_const.detonate_sample_duration )
     {
       id                 = 3;
       name_str_reporting = "Detonate";
 
-      aoe                 = -1;
+      aoe = -1;
       // tested 08/12/2025 - No reduced AOE currently.
-      //reduced_aoe_targets = 1;
+      // reduced_aoe_targets = 1;
 
       dual = background = true;
+
+      if ( p->talents.double_detonate_cost_efficiency )
+        sample_duration *= 2;
     }
 
     double tick_damage_over_time( const dot_t* dot ) const
@@ -1133,7 +1141,7 @@ struct detonate_t : public ardeos_spell_t
       timespan_t dot_tick_time = dot->current_action->tick_time( state );
       // We don't care how much is remaining on the target, this will always deal
       // Xs worth of DoT ticks even if the amount is currently less
-      double ticks_left   = p()->spell_const.detonate_sample_duration / dot_tick_time;
+      double ticks_left   = sample_duration / dot_tick_time;
       double total_damage = ticks_left * tick_base_damage;
       total_damage /= state->target_ta_multiplier;
       action_state_t::release( state );
@@ -1199,6 +1207,9 @@ struct detonate_t : public ardeos_spell_t
 
     resource_current               = RESOURCE_CINDERS;
     base_costs[ RESOURCE_CINDERS ] = p->spell_const.detonate_embers_cost;
+
+    if ( p->talents.double_detonate_cost_efficiency )
+      base_costs[ RESOURCE_CINDERS ] *= 2;
 
     base_execute_time = 0_s;
     trigger_gcd       = 1_s;
@@ -1328,6 +1339,37 @@ struct incinerate_t : public ardeos_spell_t
       // Apply dot
       dot->set_target( s->target );
       dot->execute();
+
+      auto td = p()->get_target_data( s->target );
+
+      td->dots.crackling_inferno->adjust_duration( p()->spell_const.incinerate_dot_extend, p()->talents.crackling_inferno_dot_duration );
+
+      if ( td->dots.engulfing_flames->max_stack == 1 )
+        td->dots.engulfing_flames->adjust_duration(
+            p()->spell_const.incinerate_dot_extend,
+            td->dots.engulfing_flames->current_action ? td->dots.engulfing_flames->current_action->dot_duration.value()
+                                                      : p()->spell_const.engulfing_flames_duration );
+
+      auto& vec = td->dots.engulfing_decrement_events;
+      for ( size_t i = 0; i < vec.size(); )
+      {
+        if ( vec[ i ]->remains() < 0_s || vec[ i ]->canceled )
+        {
+          erase_unordered( vec, vec.begin() + i );
+        }
+        else
+        {
+          vec[ i ]->reschedule_time = vec[ i ]->occurs() + p()->spell_const.incinerate_dot_extend;
+          i++;
+        }
+      }
+
+      td->dots.fire_ball->adjust_duration( p()->spell_const.incinerate_dot_extend,
+                                           p()->spell_const.fire_ball_dot_duration );
+      td->dots.fire_frog->adjust_duration( p()->spell_const.incinerate_dot_extend,
+                                           p()->spell_const.fire_frog_dot_duration );
+      td->dots.searing_blaze->adjust_duration( p()->spell_const.incinerate_dot_extend,
+                                               p()->spell_const.searing_blaze_duration );
     }
   };
 
@@ -1445,7 +1487,7 @@ struct searing_blaze_t : public ardeos_spell_t
   {
     ardeos_spell_t::impact( s );
   }
-  
+
   double spontaneous_chance() const
   {
     return p()->talents.spontaneous_combustion_chance +
@@ -1468,7 +1510,8 @@ struct searing_blaze_t : public ardeos_spell_t
 
     if ( p()->talents_enabled( ardeos_t::AGONIZING_BLAZE ) )
     {
-      // Currently a dot ticking increases all stacks. This is similar but not identical, but significantly more performant.
+      // Currently a dot ticking increases all stacks. This is similar but not identical, but significantly more
+      // performant.
       p()->get_target_data( d->target )
           ->debuffs.agonizing_blaze_stacks->increment(
               p()->get_active_dots( p()->get_target_data( d->target )->dots.searing_blaze ) );
@@ -1500,7 +1543,9 @@ struct searing_blaze_t : public ardeos_spell_t
 
 struct engulfing_flames_t : public ardeos_spell_t
 {
-  engulfing_flames_t( ardeos_t* p, util::string_view options_str = {} ) : ardeos_spell_t( "engulfing_flames", p, options_str )
+  timespan_t actual_duration;
+  engulfing_flames_t( ardeos_t* p, util::string_view options_str = {} )
+    : ardeos_spell_t( "engulfing_flames", p, options_str )
   {
     id                     = 12;
     name_str_reporting     = "Engulfing Flames";
@@ -1516,7 +1561,7 @@ struct engulfing_flames_t : public ardeos_spell_t
       dot_duration += p->talents.undying_flame_extension;
 
     base_execute_time = 1.5_s;
-    
+
     if ( p->talents_enabled( ardeos_t::ROLLING_FLAMES ) && p->talents.rolling_flames_instant )
     {
       base_execute_time = 0_s;
@@ -1536,13 +1581,22 @@ struct engulfing_flames_t : public ardeos_spell_t
     }
 
     base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
+
+    dot_max_stack = p->options.engulfing_flames_max_stacks;
+
+    actual_duration = dot_duration;
+    if ( dot_max_stack > 1 )
+    {
+      dot_duration = 9999_s;
+    }
   }
 
   void tick( dot_t* d ) override
   {
     ardeos_spell_t::tick( d );
 
-    p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), energize_gain( d->state ), this );
+    p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste() * d->current_stack(),
+                        energize_gain( d->state ), this );
   }
 
   double spontaneous_chance() const
@@ -1559,6 +1613,24 @@ struct engulfing_flames_t : public ardeos_spell_t
       cc += 1.0;
 
     return cc;
+  }
+
+  void schedule_decrement_event( timespan_t time, dot_t* dot )
+  {
+    p()->get_target_data( dot->target )->dots.engulfing_decrement_events.push_back( make_event( sim, time, [ dot ] {
+      dot->decrement( 1 );
+    } ) );
+  }
+
+  void trigger_dot( action_state_t* s ) override
+  {
+    ardeos_spell_t::trigger_dot( s );
+
+    if ( dot_max_stack > 1 )
+    {
+      dot_t* dot = get_dot( s->target );
+      schedule_decrement_event( actual_duration, dot );
+    }
   }
 
   void execute() override
@@ -1680,6 +1752,20 @@ struct fire_ball_t : public ardeos_spell_t
       {
         auto td = p()->get_target_data( d->target );
         td->dots.engulfing_flames->adjust_duration( p()->talents.slow_burn_extend );
+        auto& vec = td->dots.engulfing_decrement_events;
+        for ( size_t i = 0; i < vec.size(); )
+        {
+          if ( vec[ i ]->remains() < 0_s || vec[ i ]->canceled )
+          {
+            erase_unordered( vec, vec.begin() + i );
+          }
+          else
+          {
+            vec[ i ]->reschedule_time = vec[ i ]->occurs() + p()->talents.slow_burn_extend;
+            i++;
+          }
+        }
+
         td->dots.searing_blaze->adjust_duration( p()->talents.slow_burn_extend );
       }
     }
@@ -1936,6 +2022,7 @@ struct fire_frogs_t : public ardeos_spell_t
 ardeos_td_t::ardeos_td_t( player_t* target, ardeos_t* source )
   : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
 {
+  dots.engulfing_decrement_events = {};
   dots.crackling_inferno = target->get_dot( "crackling_inferno", source );
   dots.engulfing_flames  = target->get_dot( "engulfing_flames", source );
   dots.fire_ball         = target->get_dot( "fire_ball_dot", source );
@@ -2161,6 +2248,8 @@ std::unique_ptr<expr_t> ardeos_t::create_expression( util::string_view name_str 
         return make_ref_expr( name_str, legendary.untamed_flame );
     }
   }
+  else if ( util::str_compare_ci( split[ 0 ], "engulfing_flames_max_stacks" ) )
+    return make_ref_expr( name_str, options.engulfing_flames_max_stacks );
 
   return fs_player_t::create_expression( name_str );
 }
@@ -2332,6 +2421,9 @@ void ardeos_t::create_options()
   fs_player_t::create_options();
 
   add_option( opt_bool( "talent.rolling_flames_instant", talents.rolling_flames_instant ) );
+  add_option( opt_bool( "talent.double_detonate_cost_efficiency", talents.double_detonate_cost_efficiency ) );
+  add_option( opt_uint( "engulfing_flames_max_stacks", options.engulfing_flames_max_stacks ) );
+
   add_option( opt_float( "talent.reign_of_fire_ppm", talents.reign_of_fire_ppm ) );
 
   /*add_option( opt_bool( "talent.chilling_finesse", talents.chilling_finesse ) );
@@ -2447,6 +2539,11 @@ void ardeos_t::init_background_actions()
 void ardeos_t::reset()
 {
   fs_player_t::reset();
+
+  for ( auto enemy : sim->target_list )
+  {
+    get_target_data( enemy )->dots.engulfing_decrement_events.clear();
+  }
 }
 
 // ardeos_t::activate ========================================================
@@ -2577,7 +2674,7 @@ void ardeos_t::create_cooldowns()
 {
   cooldowns.apocalypse       = get_cooldown( "apocalypse" );
   cooldowns.engulfing_flames = get_cooldown( "engulfing_flames" );
-  cooldowns.fire_ball         = get_cooldown( "fire_ball" );
+  cooldowns.fire_ball        = get_cooldown( "fire_ball" );
   cooldowns.pyromania        = get_cooldown( "pyromania" );
 }
 

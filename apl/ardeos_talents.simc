@@ -1,13 +1,13 @@
 report_details=1
 optimal_raid=0
 # max_time=420
-max_time=290
+max_time=50
 target_error=0.1
 iterations=100000
 chart_show_relative_difference=1
 vary_combat_length=0
 single_actor_batch=1
-desired_targets=1
+desired_targets=20
 
 
 # apl/chuey_dungeon.simc
@@ -31,7 +31,8 @@ positive_scale_delta=1
 ardeos="Ardeos"
 level=80
 
-# initial_resource=spirit=100
+initial_resource=spirit=100
+initial_resource=cinders=200
 
 apl/ardeos_apl.simc
 
@@ -55,47 +56,47 @@ gems.topaz_power=324
 # sets.deaths_grasp=1
 sets.draconic_might=1
 
-weapon=icicles_of_anzhyr
-# weapon=chronoshift
+# weapon=icicles_of_anzhyr
+weapon=chronoshift
 weapon_trait.amethyst_splinters=4
 weapon_trait.kindling=4
 weapon_trait.inspired_allegiance=4
 
-# talents=slow_burn:1/firestarter:1/undying_flame:1/pyrophibian_frenzy:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1
+# talents+=/slow_burn:1/firestarter:1/undying_flame:1/pyrophibian_frenzy:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1
+legendary.untamed_flame=1talents=slow_burn:1/pyrophibian_frenzy:1
+
+copy="Untamed Flame","Ardeos"
 legendary.untamed_flame=1
 
-# copy="Untamed Flame","Ardeos"
-# legendary.untamed_flame=1
+copy="Brimstone Cataclysm","Ardeos"
+legendary.brimstone_cataclysm=1
 
-# copy="Brimstone Cataclysm","Ardeos"
-# legendary.brimstone_cataclysm=1
-
-# copy="Explosive Potency","Ardeos"
-# legendary.explosive_potency=1
+copy="Explosive Potency","Ardeos"
+legendary.explosive_potency=1
 
 copy="Slow Burn","Ardeos"
-talents=slow_burn:1
+talents+=/slow_burn:1
 
 copy="Frog Squad","Ardeos"
-talents=frog_squad:1
+talents+=/frog_squad:1
 
 copy="Great Balls of Fire","Ardeos"
-talents=great_balls_of_fire:1
+talents+=/great_balls_of_fire:1
 
 copy="Flickering Cinders","Ardeos"
 talents+=/flickering_cinders:1
 
 copy="Flare up","Ardeos"
-talents=flare_up:1
+talents+=/flare_up:1
 
 copy="Undying Flame","Ardeos"
-talents=undying_flame:1
+talents+=/undying_flame:1
 
 copy="Agonizing Blaze","Ardeos"
 talents+=/agonizing_blaze:1
 
 copy="Firestarter","Ardeos"
-talents=firestarter:1
+talents+=/firestarter:1
 
 copy="Ouroboros","Ardeos"
 talents+=/ouroboros:1
@@ -123,7 +124,7 @@ copy="Pyrophibian Frenzy Squad","Ardeos"
 talents+=/pyrophibian_frenzy:1/frog_squad:1
 
 copy="Slow Burn Undying","Ardeos"
-talents=undying_flame:1/slow_burn:1
+talents+=/undying_flame:1/slow_burn:1
 
 copy="Reign of Fire","Ardeos"
 talents+=/reign_of_fire:1
@@ -144,16 +145,20 @@ copy="Crackling & Intensifying Inferno","Ardeos"
 talents+=/crackling_inferno:1/intensifying_inferno:1
 
 copy="Flare up & Intensifying Inferno","Ardeos"
-talents=flare_up:1/intensifying_inferno:1
+talents+=/flare_up:1/intensifying_inferno:1
 
 copy="Flare up & Intensifying Inferno & Crackling Inferno","Ardeos"
-talents=flare_up:1/intensifying_inferno:1/crackling_inferno:1
+talents+=/flare_up:1/intensifying_inferno:1/crackling_inferno:1
 
 copy="Flare up & Crackling Inferno","Ardeos"
-talents=flare_up:1/crackling_inferno:1
+talents+=/flare_up:1/crackling_inferno:1
 
 copy="Spontaneous Combustion","Ardeos"
 talents+=/spontaneous_combustion:1
+
+copy="Frog Squad Firestarter","Ardeos"
+talents+=/frog_squad:1/firestarter:1
+
 
 copy="Pyrophibian Frenzy Squad Firestarter","Ardeos"
 talents+=/pyrophibian_frenzy:1/frog_squad:1/firestarter:1

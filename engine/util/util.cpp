@@ -1370,18 +1370,20 @@ item_subclass_armor util::matching_armor_type( player_e ptype )
     case DEATH_KNIGHT:
     case PLAYER_SIMPLIFIED:
     case HELENA:
-    case TARIQ:
       return ITEM_SUBCLASS_ARMOR_PLATE;
     case HUNTER:
     case SHAMAN:
     case EVOKER:
+    case ELARION:
+    case TARIQ:
+    case VIGOUR:
       return ITEM_SUBCLASS_ARMOR_MAIL;
     case DRUID:
     case ROGUE:
     case MONK:
     case DEMON_HUNTER:
     case MARA:
-    case ELARION:
+    case SYLVIE:
       return ITEM_SUBCLASS_ARMOR_LEATHER;
     case MAGE:
     case PRIEST:

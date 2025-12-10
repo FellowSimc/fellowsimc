@@ -1468,7 +1468,10 @@ struct searing_blaze_t : public ardeos_spell_t
 
     if ( p()->talents_enabled( ardeos_t::AGONIZING_BLAZE ) )
     {
-      p()->get_target_data( d->target )->debuffs.agonizing_blaze_stacks->increment();
+      // Currently a dot ticking increases all stacks. This is similar but not identical, but significantly more performant.
+      p()->get_target_data( d->target )
+          ->debuffs.agonizing_blaze_stacks->increment(
+              p()->get_active_dots( p()->get_target_data( d->target )->dots.searing_blaze ) );
     }
 
     p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), energize_gain( d->state ), this );
@@ -2273,8 +2276,6 @@ void ardeos_t::init_scaling()
 void ardeos_t::init_resources( bool force )
 {
   fs_player_t::init_resources( force );
-
-  resources.current[ RESOURCE_CINDERS ] = 0;
 }
 
 // ardeos_t::init_buffs ======================================================

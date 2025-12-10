@@ -51,11 +51,13 @@ struct voidbringer_debuff_t : fs_player_buff_t
 };
 
 fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
-  : actor_target_data_t( target, source ), dots(), debuffs(), buffs()
+  : actor_target_data_t( target, source ), fs_dots(), debuffs(), buffs()
 {
   if ( target->is_enemy() )
   {
-    dots.curse_of_anzhyr = target->get_dot( "curse_of_anzhyr", source );
+    fs_dots.curse_of_anzhyr    = target->get_dot( "curse_of_anzhyr", source );
+    fs_dots.amethyst_splinters = target->get_dot( "amethyst_splinters", source );
+    fs_dots.kindling           = target->get_dot( "kindling", source );
 
     debuffs.triggered_first_strike = make_buff( *this, "first_strike_triggered" );
 
@@ -601,6 +603,13 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
 
       parse_options( options );
     }
+
+    void init() override
+    {
+      fs_weapon_action_t::init();
+
+      update_flags &= ~STATE_CRIT;
+    }
   };
 
   struct icicles_of_anzhyr_wave_t : fs_weapon_action_t<spell_t>
@@ -622,7 +631,7 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
       double m = fs_weapon_action_t::composite_da_multiplier( s );
       const fs_player_td_t* td = fs_p()->find_target_data( s->target );
 
-      if ( td && td->dots.curse_of_anzhyr && td->dots.curse_of_anzhyr->is_ticking() )
+      if ( td && td->fs_dots.curse_of_anzhyr && td->fs_dots.curse_of_anzhyr->is_ticking() )
       {
         m *= 3.0;
       }

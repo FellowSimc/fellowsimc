@@ -25,7 +25,9 @@ public:
   struct dots_t
   {
     dot_t* curse_of_anzhyr;
-  } dots;
+    dot_t* kindling;
+    dot_t* amethyst_splinters;
+  } fs_dots;
 
   struct debuffs_t
   {

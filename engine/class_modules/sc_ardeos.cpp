@@ -49,6 +49,7 @@ public:
   {
     return dots.incinerate->is_ticking() + dots.searing_blaze->is_ticking() + dots.engulfing_flames->is_ticking() +
            dots.fire_ball->is_ticking() + dots.fire_frog->is_ticking() + dots.crackling_inferno->is_ticking();
+    // fs_dots.amethyst_splinters->is_ticking() + fs_dots.curse_of_anzhyr->is_ticking() + fs_dots.kindling->is_ticking();
   }
 };
 
@@ -102,7 +103,7 @@ public:
     cooldown_t* apocalypse;
     cooldown_t* engulfing_flames;
     cooldown_t* pyromania;
-    cooldown_t* fireball;
+    cooldown_t* fire_ball;
   } cooldowns;
 
   struct gains_t
@@ -336,6 +337,8 @@ public:
 
     double spontaneous_combustion_chance       = 0.04;
     double spontaneous_combustion_extra_chance = 0.05;
+
+    bool rolling_flames_instant = false;
   } talents;
 
   struct legendary_t
@@ -990,14 +993,25 @@ struct flare_up_t : public ardeos_spell_t
 
     name_str_reporting = "Flare Up";
 
+    may_crit = false;
+
     base_multiplier *= p->talents.flare_up_multiplier;
     aoe = -1;
   }
 
-  double composite_da_multiplier( const action_state_t* s ) const override
+  double composite_ta_multiplier( const action_state_t* s ) const override
   {
-    auto da = ardeos_spell_t::composite_da_multiplier( s );
-    return da;
+    return fs_player_action_t::action_multiplier();
+  }
+
+  void init() override
+  {
+    base_t::init();
+
+    snapshot_flags &= STATE_NO_MULTIPLIER;
+    update_flags &= STATE_NO_MULTIPLIER;
+
+    snapshot_flags |= STATE_MUL_DA;
   }
 
   size_t available_targets( std::vector<player_t*>& tl ) const override
@@ -1019,7 +1033,9 @@ struct flare_up_t : public ardeos_spell_t
   void execute() override
   {
     target_cache.is_valid = false;
-    ardeos_spell_t::execute();
+
+    if ( target_list().size() > 0 )
+      ardeos_spell_t::execute();
   }
 
   void impact( action_state_t* s ) override
@@ -1045,6 +1061,9 @@ struct infernal_wave_t : public ardeos_spell_t
     energize_amount   = p->spell_const.infernal_wave_cinders;
 
     base_execute_time = 1.5_s;
+
+    if ( !p->actions.flare_up->stats->parent )
+      add_child( p->actions.flare_up );
   }
 
   double composite_da_multiplier( const action_state_t* s ) const override
@@ -1203,7 +1222,7 @@ struct detonate_t : public ardeos_spell_t
       if ( p()->rppm.reign_of_fire->trigger() )
       {
         p()->buffs.reign_of_fire->trigger();
-        p()->cooldowns.fireball->reset( true, 1 );
+        p()->cooldowns.fire_ball->reset( true, 1 );
       }
     }
   }
@@ -1430,7 +1449,7 @@ struct searing_blaze_t : public ardeos_spell_t
   double spontaneous_chance() const
   {
     return p()->talents.spontaneous_combustion_chance +
-           p()->cache.spell_crit_chance() / p()->talents.spontaneous_combustion_extra_chance;
+           0.01 * p()->cache.spell_crit_chance() / p()->talents.spontaneous_combustion_extra_chance;
   }
 
   double composite_crit_chance() const override
@@ -1494,6 +1513,11 @@ struct engulfing_flames_t : public ardeos_spell_t
       dot_duration += p->talents.undying_flame_extension;
 
     base_execute_time = 1.5_s;
+    
+    if ( p->talents_enabled( ardeos_t::ROLLING_FLAMES ) && p->talents.rolling_flames_instant )
+    {
+      base_execute_time = 0_s;
+    }
 
     cooldown->duration = p->spell_const.engufling_flames_cooldown;
     cooldown->hasted   = false;
@@ -1521,7 +1545,7 @@ struct engulfing_flames_t : public ardeos_spell_t
   double spontaneous_chance() const
   {
     return p()->talents.spontaneous_combustion_chance +
-           p()->cache.spell_crit_chance() / p()->talents.spontaneous_combustion_extra_chance;
+           0.01 * p()->cache.spell_crit_chance() / p()->talents.spontaneous_combustion_extra_chance;
   }
 
   double composite_crit_chance() const override
@@ -2306,6 +2330,9 @@ void ardeos_t::create_options()
 {
   fs_player_t::create_options();
 
+  add_option( opt_bool( "talent.rolling_flames_instant", talents.rolling_flames_instant ) );
+  add_option( opt_float( "talent.reign_of_fire_ppm", talents.reign_of_fire_ppm ) );
+
   /*add_option( opt_bool( "talent.chilling_finesse", talents.chilling_finesse ) );
   add_option( opt_bool( "talent.winters_embrace", talents.winters_embrace ) );
   add_option( opt_bool( "talent.glacial_assault", talents.glacial_assault ) );
@@ -2549,7 +2576,7 @@ void ardeos_t::create_cooldowns()
 {
   cooldowns.apocalypse       = get_cooldown( "apocalypse" );
   cooldowns.engulfing_flames = get_cooldown( "engulfing_flames" );
-  cooldowns.fireball         = get_cooldown( "fire_ball" );
+  cooldowns.fire_ball         = get_cooldown( "fire_ball" );
   cooldowns.pyromania        = get_cooldown( "pyromania" );
 }
 

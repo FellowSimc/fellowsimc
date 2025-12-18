@@ -1350,7 +1350,7 @@ struct incinerate_t : public ardeos_spell_t
             td->dots.engulfing_flames->current_action ? td->dots.engulfing_flames->current_action->dot_duration.value()
                                                       : p()->spell_const.engulfing_flames_duration );
 
-      auto& vec = td->dots.engulfing_decrement_events;
+      /*auto& vec = td->dots.engulfing_decrement_events;
       for ( size_t i = 0; i < vec.size(); )
       {
         if ( vec[ i ]->remains() < 0_s || vec[ i ]->canceled )
@@ -1362,7 +1362,7 @@ struct incinerate_t : public ardeos_spell_t
           vec[ i ]->reschedule_time = vec[ i ]->occurs() + p()->spell_const.incinerate_dot_extend;
           i++;
         }
-      }
+      }*/
 
       td->dots.fire_ball->adjust_duration( p()->spell_const.incinerate_dot_extend,
                                            p()->spell_const.fire_ball_dot_duration );
@@ -1761,6 +1761,7 @@ struct fire_ball_t : public ardeos_spell_t
           }
           else
           {
+            //vec[ i ]->reschedule()
             vec[ i ]->reschedule_time = vec[ i ]->occurs() + p()->talents.slow_burn_extend;
             i++;
           }

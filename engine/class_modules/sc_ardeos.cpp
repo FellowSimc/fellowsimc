@@ -1307,8 +1307,12 @@ struct incinerate_t : public ardeos_spell_t
   struct incinerate_aoe_t : public ardeos_spell_t
   {
     action_t* dot;
+    timespan_t engulf_duration;
     incinerate_aoe_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
-      : ardeos_spell_t( fmt::format( "{}_aoe", name ), p, options_str )
+      : ardeos_spell_t( fmt::format( "{}_aoe", name ), p, options_str ),
+        engulf_duration( p->talents_enabled( ardeos_t::UNDYING_FLAME )
+                             ? p->spell_const.engulfing_flames_duration + p->talents.undying_flame_extension
+                             : p->spell_const.engulfing_flames_duration )
     {
       id = 9;
 
@@ -1345,12 +1349,9 @@ struct incinerate_t : public ardeos_spell_t
       td->dots.crackling_inferno->adjust_duration( p()->spell_const.incinerate_dot_extend, p()->talents.crackling_inferno_dot_duration );
 
       if ( td->dots.engulfing_flames->max_stack == 1 )
-        td->dots.engulfing_flames->adjust_duration(
-            p()->spell_const.incinerate_dot_extend,
-            td->dots.engulfing_flames->current_action ? td->dots.engulfing_flames->current_action->dot_duration.value()
-                                                      : p()->spell_const.engulfing_flames_duration );
+        td->dots.engulfing_flames->adjust_duration( p()->spell_const.incinerate_dot_extend, engulf_duration );
 
-      /*auto& vec = td->dots.engulfing_decrement_events;
+      auto& vec = td->dots.engulfing_decrement_events;
       for ( size_t i = 0; i < vec.size(); )
       {
         if ( vec[ i ]->remains() < 0_s || vec[ i ]->canceled )
@@ -1359,10 +1360,13 @@ struct incinerate_t : public ardeos_spell_t
         }
         else
         {
-          vec[ i ]->reschedule_time = vec[ i ]->occurs() + p()->spell_const.incinerate_dot_extend;
+          timespan_t new_length = std::min(
+              engulf_duration, vec[ i ]->occurs() - sim->current_time() + p()->spell_const.incinerate_dot_extend );
+
+          vec[ i ]->reschedule( new_length );
           i++;
         }
-      }*/
+      }
 
       td->dots.fire_ball->adjust_duration( p()->spell_const.incinerate_dot_extend,
                                            p()->spell_const.fire_ball_dot_duration );

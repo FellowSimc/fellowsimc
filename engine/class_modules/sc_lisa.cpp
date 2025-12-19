@@ -999,7 +999,7 @@ struct splinter_of_time_t : public lisa_spell_t
     : lisa_spell_t( "splinter_of_time", p, options_str ), hold_action( false )
   {
     id                 = 3;
-    name_str_reporting = "Splinter of time";
+    name_str_reporting = "Splinter of Time";
 
     spell_power_mod.direct = p->spell_const.splinter_of_time_sp_coeff;
     spell_power_mod.tick   = p->spell_const.splinter_of_time_tick_sp_coeff;

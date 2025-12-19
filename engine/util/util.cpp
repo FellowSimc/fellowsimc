@@ -643,6 +643,8 @@ const char* util::player_type_string( player_e type )
     case HELENA:                  return "helena";
     case SYLVIE:                  return "sylvie";
     case VIGOUR:                  return "vigour";
+    case LISA:                    return "lisa";
+    case SUNE:                    return "sune";
     case PLAYER_SIMPLIFIED:       return "player_simplified";
     case PLAYER_PET:              return "pet";
     case PLAYER_GUARDIAN:         return "guardian";
@@ -694,6 +696,8 @@ const char* util::player_type_string_long( player_e type )
     case HELENA:          return "Helena";
     case SYLVIE:          return "Sylvie";
     case VIGOUR:          return "Vigour";
+    case LISA:            return "Lisa";
+    case SUNE:            return "Sune";
     case PLAYER_SIMPLIFIED:         return "Simplified Player";
     case PLAYER_PET:      return "Pet";
     case PLAYER_GUARDIAN: return "Guardian";
@@ -1023,6 +1027,7 @@ const char* util::resource_type_string( resource_e resource_type )
     case RESOURCE_SPIRIT:        return "spirit";
     case RESOURCE_WINTER_ORB:    return "winter_orb";
     case RESOURCE_CINDERS:       return "cinders";
+    case RESOURCE_TEMPORAL_OVERCHARGE: return "temporal_overcharge";
     case RESOURCE_ANIMA:         return "anima";
     default:                     return "unknown";
   }
@@ -1054,6 +1059,7 @@ const char* util::resource_type_abbrev( resource_e resource_type )
     case RESOURCE_WINTER_ORB:    return "worb";
     case RESOURCE_ANIMA:         return "anima";
     case RESOURCE_CINDERS:       return "cinders";
+    case RESOURCE_TEMPORAL_OVERCHARGE: return "tmprl_oc";
     default:                     return "unk";
   }
 }
@@ -1370,6 +1376,7 @@ item_subclass_armor util::matching_armor_type( player_e ptype )
     case DEATH_KNIGHT:
     case PLAYER_SIMPLIFIED:
     case HELENA:
+    case SUNE:
       return ITEM_SUBCLASS_ARMOR_PLATE;
     case HUNTER:
     case SHAMAN:
@@ -1390,6 +1397,7 @@ item_subclass_armor util::matching_armor_type( player_e ptype )
     case WARLOCK:
     case RIME:
     case ARDEOS:
+    case LISA:
       return ITEM_SUBCLASS_ARMOR_CLOTH;
     default:
       return ITEM_SUBCLASS_ARMOR_MISC;

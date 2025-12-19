@@ -992,6 +992,7 @@ void fs_player_t::create_buffs()
                                    ->set_default_value( 0.3 )
                                    ->set_duration( 20_s );
 
+
   fs_buffs.ancestral_surge = make_buff<fs_player_buff_t>( this, "ancestral_surge" )
                                  ->set_default_value( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1200.0 ? 0.24 : 0.08 );
 
@@ -2186,6 +2187,12 @@ double fs_player_t::resource_regen_per_second( resource_e r ) const
   if ( r == RESOURCE_SPIRIT )
   {
     reg *= 1.0 + cache.mastery();
+  }
+
+  if ( r == RESOURCE_MANA && type == LISA && fs_buffs.spirit_of_heroism->check() )
+  {
+    // Half Tick Time and 2x regen rate.
+    reg *= 6;
   }
 
   return reg;

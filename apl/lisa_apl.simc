@@ -6,8 +6,10 @@ actions=run_action_list,name=main
 
 actions.main=time_burn,target_if=refreshable
 actions.main+=/alzeracs_essence,if=mana.pct<=60
+actions.main+=/natures_fury
 actions.main+=/chrono_barrage,if=overcharge>=90|talent.practical_overcharge&overcharge>=50&!buff.practical_overcharge.up|overcharge>=80&buff.time_rift.up|buff.uchronia.react
 actions.main+=/time_rift
 actions.main+=/shifting_sands
 actions.main+=/splinter_of_time,target_if=refreshable
+actions.main+=/absolute_stasis
 actions.main+=/time_shard

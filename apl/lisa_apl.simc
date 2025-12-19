@@ -1,0 +1,7 @@
+
+actions.precombat=snapshot_stats
+actions.precombat+=/time_shard
+
+actions=run_action_list,name=main
+
+actions.main=time_shard

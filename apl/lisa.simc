@@ -1,0 +1,85 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+max_time=50
+# max_time=290
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=1
+
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_intellect=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+lisa="Lisa"
+level=80
+
+# initial_resource=spirit=100
+
+apl/lisa_apl.simc
+
+gear_intellect=1442
+
+# gear_haste_rating=1650
+gear_haste_rating=1850
+gear_crit_rating=1215
+gear_versatility_rating=1250
+# gear_versatility_rating=960
+gear_mastery_rating=200
+
+# gems.amethyst_power=2640
+# gems.ruby_power=162
+# gems.topaz_power=2304
+
+gems.amethyst_power=2664
+gems.ruby_power=1296
+gems.topaz_power=1296
+
+# gems.amethyst_power=2742
+# gems.ruby_power=120
+
+# gems.amethyst_power=2658
+# gems.ruby_power=972
+
+# gems.amethyst_power=1200
+# gems.ruby_power=1296
+# gems.topaz_power=1200
+
+# gems.amethyst_power=3960
+# gems.amethyst_power=2988
+# gems.topaz_power=972
+# gems.ruby_power=1296
+
+
+
+# gems.amethyst_power=2904
+# gems.ruby_power=1296
+# gems.topaz_power=324
+
+# sets.deaths_grasp=1
+# sets.draconic_might=1
+# sets.dark_prophecy=1
+
+# weapon=icicles_of_anzhyr
+# weapon=chronoshift
+weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4

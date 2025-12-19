@@ -39,9 +39,9 @@ apl/lisa_apl.simc
 gear_intellect=1442
 
 # gear_haste_rating=1650
-gear_haste_rating=1250
-gear_crit_rating=1515
-gear_versatility_rating=1550
+gear_haste_rating=1850
+gear_crit_rating=1215
+gear_versatility_rating=1250
 # gear_versatility_rating=960
 gear_mastery_rating=200
 
@@ -49,9 +49,19 @@ gear_mastery_rating=200
 # gems.ruby_power=162
 # gems.topaz_power=2304
 
-gems.amethyst_power=2664
-gems.ruby_power=1296
-gems.topaz_power=1296
+# gems.topaz_power=2664
+# gems.ruby_power=1296
+# gems.amethyst_power=1296
+
+gems.topaz_power=2664
+gems.ruby_power=360
+gems.amethyst_power=1296
+
+sets.torment_of_baelaurum=1
+sets.dark_prophecy=1
+sets.tuzari_grace=1
+sets.sin_warding=1
+
 
 talents=practical_overcharge:1/uchronia:1/temporal_paradox:1/overcharge_manipulation:1/fractions_of_time:1
 

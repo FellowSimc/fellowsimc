@@ -15,14 +15,14 @@ desired_targets=1
 
 # apl/dungeon.simc
 
-scale_only=crit,haste,mastery,vers
+# scale_only=crit,haste,mastery,vers
 # scale_intellect=100
 # scale_crit_rating=590
 # scale_haste_rating=590
 # scale_mastery_rating=590
 # scale_versatility_rating=590
 # positive_scale_delta=1
-calculate_scale_factors=1
+# calculate_scale_factors=1
 # dps_plot_stat=haste,crit_rating,mastery,versatility
 # dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
 # dps_plot_points=10
@@ -53,7 +53,7 @@ gems.amethyst_power=2664
 gems.ruby_power=1296
 gems.topaz_power=1296
 
-talents=practical_overcharge:1/uchronia:1/temporal_paradox:1/overcharge_manipulation:1
+talents=practical_overcharge:1/uchronia:1/temporal_paradox:1/overcharge_manipulation:1/fractions_of_time:1
 
 weapon=natures_fury
 relic1=alzeracs_essence

@@ -296,6 +296,10 @@ public:
 
   struct talents_t
   {
+    int fractions_of_time_targets          = 4;
+    timespan_t fractions_of_time_cast_time = 2_s;
+    double fractions_of_time_mana_cost     = 10;
+
     double practical_overcharge_mana_regen = 0.25;
     timespan_t practical_overcharge_duration = 8_s;
 
@@ -306,6 +310,7 @@ public:
 
     timespan_t temporal_paradox_duration = 15_s;
     double temporal_paradox_extra_ticks  = 3;
+    int temporal_paradox_burn_aoe        = 2;
 
   } talents;
 
@@ -573,11 +578,9 @@ public:
   secondary_trigger secondary_trigger_type;
 
   // Init =====================================================================
-
   lisa_action_t( util::string_view n, lisa_t* p, util::string_view options = {} )
     : ab( n, p, options ), secondary_trigger_type( secondary_trigger::NONE )
   {
-    ab::parse_options( options );
     ab::may_crit = ab::tick_may_crit = true;
     ab::school                       = SCHOOL_ARCANE;
 
@@ -984,13 +987,16 @@ struct time_shard_t : public lisa_spell_t
     overcharge_on_crit = p->spell_const.time_shard_resource_crit;
     
     base_costs[ RESOURCE_MANA ] = p->spell_const.time_shard_mana_cost;
+
+    parse_options( options_str );
   }
 };
 
 struct splinter_of_time_t : public lisa_spell_t
 {
+  bool hold_action;
   splinter_of_time_t( lisa_t* p, util::string_view options_str = {} )
-    : lisa_spell_t( "splinter_of_time", p, options_str )
+    : lisa_spell_t( "splinter_of_time", p, options_str ), hold_action( false )
   {
     id                 = 3;
     name_str_reporting = "Splinter of time";
@@ -1010,8 +1016,45 @@ struct splinter_of_time_t : public lisa_spell_t
     overcharge_on_tick_crit = p->spell_const.splinter_of_time_tick_resource_crit;
 
     base_costs[ RESOURCE_MANA ] = p->spell_const.splinter_of_time_mana_cost;
+
+    add_option( opt_bool( "hold_action", hold_action ) );
+    parse_options( options_str );
+
+    if ( hold_action && p->talents_enabled( lisa_t::TALENT_1 ) )
+    {
+      base_execute_time = p->talents.fractions_of_time_cast_time;
+      aoe                         = p->talents.fractions_of_time_targets;
+      base_costs[ RESOURCE_MANA ] = p->talents.fractions_of_time_mana_cost;
+
+    }
   }
-};
+
+  void execute() override
+  {
+    if ( aoe > 0 && target_list().size() > 1 )
+    {
+      auto partition = std::partition( target_list().begin() + 1, target_list().end(), [ this ]( player_t* a ) {
+        return !p()->get_target_data( a )->dots.splinter_of_time->is_ticking();
+      } );
+
+      std::sort( target_list().begin() + 1, partition,
+                 []( player_t* a, player_t* b ) { return a->current_health() > b->current_health(); } );
+
+      std::sort( partition, target_list().end(),
+                 []( player_t* a, player_t* b ) { return a->current_health() > b->current_health(); } );
+    }
+    base_t::execute();
+  }
+
+  bool action_ready() override
+  {
+    if ( hold_action && !p()->talents_enabled( lisa_t::TALENT_1 ) )
+      return false;
+
+    return base_t::action_ready();
+  }
+
+ };
 
 struct time_burn_t : public lisa_spell_t
 {
@@ -1037,6 +1080,18 @@ struct time_burn_t : public lisa_spell_t
     overcharge_on_tick_crit = p->spell_const.time_burn_tick_resource_crit;
 
     base_costs[ RESOURCE_MANA ] = p->spell_const.time_burn_mana_cost;
+    
+    parse_options( options_str );
+  }
+
+  int n_targets() const override
+  {
+    return p()->buffs.temporal_paradox->check() ? p()->talents.temporal_paradox_burn_aoe : 0;
+  }
+  void execute() override
+  {
+    base_t::execute();
+    p()->buffs.temporal_paradox->decrement();
   }
 };
 
@@ -1057,6 +1112,8 @@ struct shifting_sands_t : public lisa_spell_t
     overcharge_on_crit = p->spell_const.shifting_sands_resource_crit;
 
     base_costs[ RESOURCE_MANA ] = p->spell_const.shifting_sands_mana_cost;
+
+    parse_options( options_str );
   }
 
   void impact( action_state_t* s ) override
@@ -1100,6 +1157,8 @@ struct chrono_barrage_t : public lisa_spell_t
     
     base_costs[ RESOURCE_MANA ] = p->spell_const.shifting_sands_mana_cost;
     secondary_costs[ RESOURCE_TEMPORAL_OVERCHARGE ] = 1;
+
+    parse_options( options_str );
   }
 
   double spell_tick_power_coefficient( const action_state_t* s ) const override
@@ -1160,6 +1219,8 @@ struct time_rift_t : public lisa_spell_t
      cooldown->duration = p->spell_const.time_rift_cd;
      cooldown->hasted   = p->spell_const.time_rift_cd_hasted;
      cooldown->charges  = 1;
+
+     parse_options( options_str );
    }
 
    void execute() override
@@ -1181,6 +1242,8 @@ struct absolute_stasis_t : public lisa_spell_t
 
      resource_current              = RESOURCE_SPIRIT;
      base_costs[ RESOURCE_SPIRIT ] = 100;
+
+     parse_options( options_str );
    }
 
    void execute() override
@@ -1363,24 +1426,6 @@ action_t* lisa_t::create_action( util::string_view name, util::string_view optio
     return new time_rift_t( this, options_str );
   if ( name == "absolute_stasis" )
     return new absolute_stasis_t( this, options_str );
-  //if ( name == "detonate" )
-  //  return new detonate_t( name, this, options_str );
-  //if ( name == "wildfire" )
-  //  return new wildfire_t( name, this, options_str );
-  //if ( name == "incinerate" )
-  //  return new incinerate_t( name, this, options_str );
-  //if ( name == "searing_blaze" || name == "sb" )
-  //  return new searing_blaze_t( "searing_blaze", this, options_str );
-  //if ( name == "engulfing_flames" || name == "ef" )
-  //  return new engulfing_flames_t( this, options_str );
-  //if ( name == "apocalypse" )
-  //  return new apocalypse_t( name, this, options_str );
-  //if ( name == "fire_ball" || name == "fireball" )
-  //  return new fire_ball_t( "fire_ball", this, options_str );
-  //if ( name == "pyromania" || name == "pyro" )
-  //  return new pyromania_t( "pyromania", this, options_str );
-  //if ( name == "frogs" || name == "fire_frog" || name == "fire_frogs" )
-  //  return new fire_frogs_t( "fire_frogs", this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }

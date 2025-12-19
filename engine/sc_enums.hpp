@@ -42,6 +42,13 @@ enum fsweapon_e : unsigned
     FSWEAPON_MAX
 };
 
+enum fsrelic_e : unsigned
+{
+  FSRELIC_NONE = 0,
+  FSRELIC_ALZERACS_ESSENCE,
+  FSRELIC_MAX
+};
+
 
 // Type of internal execution of an action
 enum class execute_type : unsigned

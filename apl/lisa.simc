@@ -53,6 +53,10 @@ gems.amethyst_power=2664
 gems.ruby_power=1296
 gems.topaz_power=1296
 
+talents=practical_overcharge:1/uchronia:1/temporal_paradox:1/overcharge_manipulation:1
+
+relic1=alzeracs_essence
+
 # gems.amethyst_power=2742
 # gems.ruby_power=120
 
@@ -80,6 +84,7 @@ gems.topaz_power=1296
 
 # weapon=icicles_of_anzhyr
 # weapon=chronoshift
-# weapon_trait.amethyst_splinters=4
-# weapon_trait.kindling=4
-# weapon_trait.inspired_allegiance=4
+
+weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4

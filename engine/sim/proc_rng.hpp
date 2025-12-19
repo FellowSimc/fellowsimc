@@ -91,7 +91,7 @@ public:
   static constexpr rng_type_e rng_type = RNG_RPPM;
 
   real_ppm_t( std::string_view n, player_t* p, double f = 0, double mod = 1.0, unsigned s = RPPM_HASTE,
-              blp b = BLP_DISABLED );
+              blp b = BLP_ENABLED );
 
   real_ppm_t( std::string_view n, player_t* p, const spell_data_t* data, const item_t* item = nullptr );
 

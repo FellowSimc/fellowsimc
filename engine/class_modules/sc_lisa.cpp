@@ -112,14 +112,15 @@ public:
     double splinter_of_time_tick_resource_crit    = 4.5;
     double splinter_of_time_mana_cost          = 3;
 
-    timespan_t shifting_sands_cast_time = 2_s;
-    double shifting_sands_sp_coeff      = 7.2;
-    double shifting_sands_resource      = 50;
-    double shifting_sands_resource_crit = 70;
-    timespan_t shifting_sands_cd        = 45_s;
-    bool shifting_sands_cd_hasted       = false; // TODO: Confirm
+    timespan_t shifting_sands_cast_time       = 2_s;
+    double shifting_sands_sp_coeff            = 7.2;
+    double shifting_sands_resource            = 50;
+    double shifting_sands_resource_crit       = 70;
+    timespan_t shifting_sands_cd              = 45_s;
+    bool shifting_sands_cd_hasted             = false;  // TODO: Confirm
     timespan_t shifting_sands_debuff_duration = 15_s;
     double shifting_sands_debuff_amp          = 0.2;
+    double shifting_sands_mana_cost           = 70;
 
     timespan_t rewind_cast_time = 1.5_s;
     double rewind_sp_coeff      = 10.5;
@@ -157,15 +158,15 @@ public:
     double chrono_bind_mana         = 80;
     double chrono_bind_max_targets  = 8;
 
-    timespan_t time_burn_cast_time = 2_s;
-    timespan_t time_burn_dot_duration = 21_s;
-    timespan_t time_burn_dot_period   = 3_s;
-    double time_burn_tick_sp_coeff    = 4.5;
-    timespan_t time_burn_cd           = 30_s;
-    bool time_burn_cd_hasted          = false; // TODO: Confirm
-    double time_burn_tick_resource    = 5;
+    timespan_t time_burn_cast_time      = 2_s;
+    timespan_t time_burn_dot_duration   = 21_s;
+    timespan_t time_burn_dot_period     = 3_s;
+    double time_burn_tick_sp_coeff      = 4.5;
+    timespan_t time_burn_cd             = 30_s;
+    bool time_burn_cd_hasted            = false;  // TODO: Confirm
+    double time_burn_tick_resource      = 5;
     double time_burn_tick_resource_crit = 10;
-    double time_burn_mana               = 40;
+    double time_burn_mana_cost          = 40;
 
     double time_rift_haste = 0.15;
     double time_rift_resource = 2;
@@ -503,6 +504,7 @@ private:
   T_ACTION* action;
 
 public:
+  double temporal_pct;
   lisa_action_state_t( action_t* action, player_t* target )
     : action_state_t( action, target ), action( dynamic_cast<T_ACTION*>( action ) )
   {
@@ -521,6 +523,7 @@ public:
   void initialize() override
   {
     action_state_t::initialize();
+    temporal_pct = 0.0;
   }
 
   std::ostringstream& debug_str( std::ostringstream& s ) override
@@ -533,6 +536,7 @@ public:
   {
     action_state_t::copy_state( s );
     const lisa_action_state_t* rs = debug_cast<const lisa_action_state_t*>( s );
+    temporal_pct                  = rs->temporal_pct;
   }
 
   T_ACTION* get_action() const
@@ -615,6 +619,7 @@ public:
   void snapshot_state( action_state_t* state, result_amount_type rt ) override
   {
     ab::snapshot_state( state, rt );
+    cast_state( state )->temporal_pct = p()->resources.pct( RESOURCE_TEMPORAL_OVERCHARGE );
   }
 
   // Secondary Trigger Functions ==============================================
@@ -962,8 +967,138 @@ struct time_shard_t : public lisa_spell_t
 
     overcharge_on_hit  = p->spell_const.time_shard_resource;
     overcharge_on_crit = p->spell_const.time_shard_resource_crit;
+    
+    base_costs[ RESOURCE_MANA ] = p->spell_const.time_shard_mana_cost;
   }
 };
+
+struct splinter_of_time_t : public lisa_spell_t
+{
+  splinter_of_time_t( lisa_t* p, util::string_view options_str = {} )
+    : lisa_spell_t( "splinter_of_time", p, options_str )
+  {
+    id                 = 3;
+    name_str_reporting = "Splinter of time";
+
+    spell_power_mod.direct = p->spell_const.splinter_of_time_sp_coeff;
+    spell_power_mod.tick   = p->spell_const.splinter_of_time_tick_sp_coeff;
+    dot_duration           = p->spell_const.splinter_of_time_dot_duration;
+    base_tick_time         = p->spell_const.splinter_of_time_period;
+    dot_allow_partial_tick = true;
+    hasted_ticks           = true;
+
+    dot_behavior = DOT_REFRESH_PANDEMIC;
+
+    base_execute_time = 0_s;
+
+    overcharge_on_tick      = p->spell_const.splinter_of_time_tick_resource;
+    overcharge_on_tick_crit = p->spell_const.splinter_of_time_tick_resource_crit;
+
+    base_costs[ RESOURCE_MANA ] = p->spell_const.splinter_of_time_mana_cost;
+  }
+};
+
+struct time_burn_t : public lisa_spell_t
+{
+  time_burn_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "time_burn", p, options_str )
+  {
+    id                     = 4;
+    name_str_reporting     = "Time Burn";
+    spell_power_mod.tick   = p->spell_const.time_burn_tick_sp_coeff;
+    dot_duration           = p->spell_const.time_burn_dot_duration;
+    base_tick_time         = p->spell_const.time_burn_dot_period;
+    dot_allow_partial_tick = true;
+    hasted_ticks           = true;
+
+    dot_behavior = DOT_REFRESH_PANDEMIC;
+
+    base_execute_time = p->spell_const.time_burn_cast_time;
+
+    cooldown->duration = p->spell_const.time_burn_cd;
+    cooldown->hasted   = p->spell_const.time_burn_cd_hasted;
+    cooldown->charges  = 1;
+
+    overcharge_on_tick      = p->spell_const.time_burn_tick_resource;
+    overcharge_on_tick_crit = p->spell_const.time_burn_tick_resource_crit;
+
+    base_costs[ RESOURCE_MANA ] = p->spell_const.time_burn_mana_cost;
+  }
+};
+
+struct shifting_sands_t : public lisa_spell_t
+{
+  shifting_sands_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "shifting_sands", p, options_str )
+  {
+    id                     = 5;
+    name_str_reporting     = "Shfiting Sands";
+    spell_power_mod.direct = p->spell_const.shifting_sands_sp_coeff;
+    base_execute_time      = p->spell_const.shifting_sands_cast_time;
+
+    cooldown->duration = p->spell_const.shifting_sands_cd;
+    cooldown->hasted   = p->spell_const.shifting_sands_cd_hasted;
+    cooldown->charges  = 1;
+
+    overcharge_on_hit  = p->spell_const.shifting_sands_resource;
+    overcharge_on_crit = p->spell_const.shifting_sands_resource_crit;
+
+    base_costs[ RESOURCE_MANA ] = p->spell_const.shifting_sands_mana_cost;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    p()->get_target_data( s->target )->debuffs.shifting_sands->trigger();
+  }
+};
+
+struct chrono_barrage_t : public lisa_spell_t
+{
+  double sp_coeff_extra;
+  chrono_barrage_t( lisa_t* p, util::string_view options_str = {} )
+    : lisa_spell_t( "chrono_barrage", p, options_str ), sp_coeff_extra( 0 )
+  {
+    id = 6;
+
+    name_str_reporting = "Chrono Barrage";
+
+    spell_power_mod.tick = p->spell_const.chrono_barrage_dmg_sp_coeff_minimum;
+    sp_coeff_extra       = p->spell_const.chrono_barrage_dmg_sp_coeff_maximum - spell_power_mod.tick;
+
+    dot_duration           = p->spell_const.chrono_barrage_channel_duration;
+    base_tick_time         = p->spell_const.chrono_barrage_channel_period;
+    hasted_ticks           = true;
+    hasted_dot_duration    = true; // TODO: Confirm
+    dot_allow_partial_tick = true;
+    tick_on_application    = false;
+    channeled              = true;
+
+    base_costs[ RESOURCE_MANA ] = p->spell_const.shifting_sands_mana_cost;
+    secondary_costs[ RESOURCE_TEMPORAL_OVERCHARGE ] = 1;
+  }
+
+  double spell_tick_power_coefficient( const action_state_t* s ) const override
+  {
+    return spell_power_mod.tick + cast_state( s )->temporal_pct * sp_coeff_extra;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    auto resource_available = p()->resources.current[ RESOURCE_TEMPORAL_OVERCHARGE ];
+    p()->resource_loss( RESOURCE_TEMPORAL_OVERCHARGE, resource_available, nullptr, this );
+    stats->consume_resource( RESOURCE_TEMPORAL_OVERCHARGE, resource_available );
+  }
+
+  void init_finished() override
+  {
+    base_t::init_finished();
+
+    update_flags &= ~STATE_HASTE;
+  }
+};
+
 
 //struct detonate_t : public lisa_spell_t
 //{
@@ -2036,6 +2171,14 @@ action_t* lisa_t::create_action( util::string_view name, util::string_view optio
 
   if ( name == "time_shard" )
     return new time_shard_t( name, this, options_str );
+  if ( name == "splinter_of_time" )
+    return new splinter_of_time_t( this, options_str );
+  if ( name == "time_burn" )
+    return new time_burn_t( this, options_str );
+  if ( name == "shifting_sands" )
+    return new shifting_sands_t( this, options_str );
+  if ( name == "chrono_barrage" )
+    return new chrono_barrage_t( this, options_str );
   //if ( name == "detonate" )
   //  return new detonate_t( name, this, options_str );
   //if ( name == "wildfire" )
@@ -2504,20 +2647,7 @@ stat_e lisa_t::convert_hybrid_stat( stat_e s ) const
 
 void lisa_t::analyze( sim_t& sim )
 {
-  auto incin = find_action( "incinerate" );
-
-  if ( incin )
-  {
-    // Set to channeled to add the time spent of the channeled dual action.
-    incin->channeled = true;
-  }
-
-  player_t::analyze( sim );
-
-  if ( incin )
-  {
-    incin->channeled = false;
-  }
+  fs_player_t::analyze( sim );
 }
 
 void lisa_t::create_cooldowns()

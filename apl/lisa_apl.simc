@@ -4,4 +4,8 @@ actions.precombat+=/time_shard
 
 actions=run_action_list,name=main
 
-actions.main=time_shard
+actions.main=time_burn,target_if=refreshable
+actions.main+=/chrono_barrage,if=overcharge>=90
+actions.main+=/shifting_sands
+actions.main+=/splinter_of_time,target_if=refreshable
+actions.main+=/time_shard

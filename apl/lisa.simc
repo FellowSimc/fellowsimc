@@ -1,8 +1,8 @@
 report_details=1
 optimal_raid=0
 # max_time=420
-max_time=50
-# max_time=290
+# max_time=50
+max_time=290
 target_error=0.1
 iterations=100000
 chart_show_relative_difference=1
@@ -80,6 +80,6 @@ gems.topaz_power=1296
 
 # weapon=icicles_of_anzhyr
 # weapon=chronoshift
-weapon_trait.amethyst_splinters=4
-weapon_trait.kindling=4
-weapon_trait.inspired_allegiance=4
+# weapon_trait.amethyst_splinters=4
+# weapon_trait.kindling=4
+# weapon_trait.inspired_allegiance=4

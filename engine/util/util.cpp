@@ -1222,6 +1222,20 @@ const char* util::fsweapon_string( fsweapon_e type )
       return "unknown";
   }
 }
+// fsrelic_type_string =======================================================
+
+const char* util::fsrelic_string( fsrelic_e type )
+{
+  switch ( type )
+  {
+    case FSRELIC_NONE:
+      return "none";
+    case FSRELIC_ALZERACS_ESSENCE:
+      return "alzeracs_essence";
+    default:
+      return "unknown";
+  }
+}
 
 // gem_type_string =======================================================
 

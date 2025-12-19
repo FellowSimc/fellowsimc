@@ -83,6 +83,7 @@ public:
   struct gains_t
   {
     gain_t* spirit_procs;
+    gain_t* time_rift;
   } gains;
 
   struct procs_t
@@ -99,10 +100,10 @@ public:
     double spirit_proc_resource        = 25;
 
     timespan_t time_shard_cast_time = 1.5_s;
-    double time_shard_sp_coeff        = 1.2;
-    double time_shard_resource        = 10;
-    double time_shard_resource_crit  = 15;
-    double time_shard_mana_cost       = 1;
+    double time_shard_sp_coeff      = 1.2;
+    double time_shard_resource      = 10;
+    double time_shard_resource_crit = 15;
+    double time_shard_mana_cost     = 1;
 
     double splinter_of_time_sp_coeff = 0.6;
     timespan_t splinter_of_time_dot_duration = 15_s;
@@ -173,6 +174,7 @@ public:
     timespan_t time_rift_duration = 20_s;
     double time_rift_mana         = 50;
     timespan_t time_rift_cd       = 90_s;
+    bool time_rift_cd_hasted      = false;
     timespan_t time_rift_period   = 0.15_s;
 
     timespan_t time_mending_hot_duration = 12_s;
@@ -300,6 +302,10 @@ public:
     double overcharge_manipulation_threshold = 0.5;
     double overcharge_manipulation_amp       = 0.15;
 
+    double uchronia_threshold = 500;
+
+    timespan_t temporal_paradox_duration = 15_s;
+    double temporal_paradox_extra_ticks  = 3;
 
   } talents;
 
@@ -373,6 +379,7 @@ public:
   double composite_heal_versatility() const override;
   double composite_leech() const override;
   double matching_gear_multiplier( attribute_e attr ) const override;
+  double resource_regen_per_second( resource_e ) const override;
   double composite_player_multiplier( school_e school ) const override;
   double composite_player_pet_damage_multiplier( const action_state_t*, bool ) const override;
   double composite_player_target_multiplier( player_t* target, school_e school ) const override;
@@ -429,8 +436,11 @@ public:
     return "disabled";
   }
 
+  
+  double uchronia_tracker;
+
   lisa_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
-    : fs_player_t( sim, name, r, LISA ), target_data()
+    : fs_player_t( sim, name, r, LISA ), target_data(), uchronia_tracker( 0.0 )
   {
     create_cooldowns();
   }
@@ -505,6 +515,7 @@ private:
 
 public:
   double temporal_pct;
+  bool temporal_paradox;
   lisa_action_state_t( action_t* action, player_t* target )
     : action_state_t( action, target ), action( dynamic_cast<T_ACTION*>( action ) )
   {
@@ -524,6 +535,7 @@ public:
   {
     action_state_t::initialize();
     temporal_pct = 0.0;
+    temporal_paradox = false;
   }
 
   std::ostringstream& debug_str( std::ostringstream& s ) override
@@ -537,6 +549,7 @@ public:
     action_state_t::copy_state( s );
     const lisa_action_state_t* rs = debug_cast<const lisa_action_state_t*>( s );
     temporal_pct                  = rs->temporal_pct;
+    temporal_paradox              = rs->temporal_paradox;
   }
 
   T_ACTION* get_action() const
@@ -619,7 +632,9 @@ public:
   void snapshot_state( action_state_t* state, result_amount_type rt ) override
   {
     ab::snapshot_state( state, rt );
-    cast_state( state )->temporal_pct = p()->resources.pct( RESOURCE_TEMPORAL_OVERCHARGE );
+    cast_state( state )->temporal_pct =
+        p()->buffs.uchronia->check() ? 1.0 : p()->resources.pct( RESOURCE_TEMPORAL_OVERCHARGE );
+    cast_state( state )->temporal_paradox = p()->buffs.temporal_paradox->check();
   }
 
   // Secondary Trigger Functions ==============================================
@@ -1050,6 +1065,16 @@ struct shifting_sands_t : public lisa_spell_t
 
     p()->get_target_data( s->target )->debuffs.shifting_sands->trigger();
   }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    if ( p()->talents_enabled( lisa_t::TALENT_13 ) )
+    {
+      p()->buffs.temporal_paradox->trigger();
+    }
+  }
 };
 
 struct chrono_barrage_t : public lisa_spell_t
@@ -1072,7 +1097,7 @@ struct chrono_barrage_t : public lisa_spell_t
     dot_allow_partial_tick = true;
     tick_on_application    = false;
     channeled              = true;
-
+    
     base_costs[ RESOURCE_MANA ] = p->spell_const.shifting_sands_mana_cost;
     secondary_costs[ RESOURCE_TEMPORAL_OVERCHARGE ] = 1;
   }
@@ -1082,13 +1107,38 @@ struct chrono_barrage_t : public lisa_spell_t
     return spell_power_mod.tick + cast_state( s )->temporal_pct * sp_coeff_extra;
   }
 
+  double tick_time_pct_multiplier( const action_state_t* s ) const override
+  {
+    auto base = base_t::tick_time_pct_multiplier( s );
+
+    // TODO: make it add extra ticks instead of just doing this.
+    if ( cast_state( s )->temporal_paradox )
+      base /= 2;
+
+    return base;
+  }
+
   void execute() override
   {
     base_t::execute();
 
-    auto resource_available = p()->resources.current[ RESOURCE_TEMPORAL_OVERCHARGE ];
-    p()->resource_loss( RESOURCE_TEMPORAL_OVERCHARGE, resource_available, nullptr, this );
-    stats->consume_resource( RESOURCE_TEMPORAL_OVERCHARGE, resource_available );
+    if ( p()->buffs.uchronia->check() )
+    {
+      p()->buffs.uchronia->decrement();
+    }
+    else
+    {
+      auto resource_available = p()->resources.current[ RESOURCE_TEMPORAL_OVERCHARGE ];
+      p()->resource_loss( RESOURCE_TEMPORAL_OVERCHARGE, resource_available, nullptr, this );
+      stats->consume_resource( RESOURCE_TEMPORAL_OVERCHARGE, resource_available );
+    }
+
+    if ( p()->talents_enabled( lisa_t::TALENT_4 ) )
+    {
+      p()->buffs.practical_overcharge->trigger();
+    }
+
+    p()->buffs.temporal_paradox->decrement();
   }
 
   void init_finished() override
@@ -1099,6 +1149,25 @@ struct chrono_barrage_t : public lisa_spell_t
   }
 };
 
+struct time_rift_t : public lisa_spell_t
+{
+  time_rift_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "time_rift", p, options_str )
+   {
+     id = 7;
+
+     name_str_reporting = "Time Rift";
+
+     cooldown->duration = p->spell_const.time_rift_cd;
+     cooldown->hasted   = p->spell_const.time_rift_cd_hasted;
+     cooldown->charges  = 1;
+   }
+
+   void execute() override
+   {
+     p()->buffs.time_rift->trigger();
+     lisa_spell_t::execute();
+   }
+ };
 
 //struct detonate_t : public lisa_spell_t
 //{
@@ -1233,28 +1302,7 @@ struct chrono_barrage_t : public lisa_spell_t
 //  }
 //};
 //
-//struct wildfire_t : public lisa_spell_t
-//{
-//  wildfire_t( util::string_view name, lisa_t* p, util::string_view options_str = {} )
-//    : lisa_spell_t( name, p, options_str )
-//  {
-//    id = 7;
-//
-//    name_str_reporting = "Wildfire";
-//
-//    trigger_gcd = timespan_t::zero();
-//
-//    cooldown->duration = p->spell_const.wildfire_cooldown;
-//    cooldown->hasted   = false;
-//    cooldown->charges  = 1;
-//  }
-//
-//  void execute() override
-//  {
-//    p()->buffs.wildfire->trigger();
-//    lisa_spell_t::execute();
-//  }
-//};
+
 //
 //struct incinerate_t : public lisa_spell_t
 //{
@@ -2179,6 +2227,8 @@ action_t* lisa_t::create_action( util::string_view name, util::string_view optio
     return new shifting_sands_t( this, options_str );
   if ( name == "chrono_barrage" )
     return new chrono_barrage_t( this, options_str );
+  if ( name == "time_rift" )
+    return new time_rift_t( this, options_str );
   //if ( name == "detonate" )
   //  return new detonate_t( name, this, options_str );
   //if ( name == "wildfire" )
@@ -2253,6 +2303,10 @@ std::unique_ptr<expr_t> lisa_t::create_expression( util::string_view name_str )
       //  return make_ref_expr( name_str, legendary.untamed_flame );
     }
   }
+  else if ( util::str_compare_ci( split[ 0 ], "uchronia_energy" ) )
+  {
+    return make_ref_expr( name_str, uchronia_tracker );
+  }
 
   return fs_player_t::create_expression( name_str );
 }
@@ -2260,6 +2314,19 @@ std::unique_ptr<expr_t> lisa_t::create_expression( util::string_view name_str )
 std::unique_ptr<expr_t> lisa_t::create_resource_expression( util::string_view name_str )
 {
   return fs_player_t::create_resource_expression( name_str );
+}
+
+
+double lisa_t::resource_regen_per_second( resource_e r ) const
+{
+  double reg = fs_player_t::resource_regen_per_second( r );
+
+  if ( r == RESOURCE_MANA )
+  {
+    reg *= 1.0 + buffs.practical_overcharge->check_value();
+  }
+
+  return reg;
 }
 
 // lisa_t::init_base =======================================================
@@ -2331,6 +2398,7 @@ void lisa_t::init_gains()
   fs_player_t::init_gains();
 
   gains.spirit_procs = get_gain( "Spirit Procs" );
+  gains.time_rift    = get_gain( "Time Rift" );
 }
 
 // lisa_t::init_procs ======================================================
@@ -2375,6 +2443,28 @@ void lisa_t::init_resources( bool force )
 void lisa_t::create_buffs()
 {
   fs_player_t::create_buffs();
+
+  buffs.practical_overcharge = make_buff<lisa_buff_t>( this, "practical_overcharge" )
+                                   ->set_duration( talents.practical_overcharge_duration )
+                                   ->set_default_value( talents.practical_overcharge_mana_regen );
+
+  buffs.uchronia = make_buff<lisa_buff_t>( this, "uchronia" );
+
+  buffs.temporal_paradox =
+      make_buff<lisa_buff_t>( this, "temporal_paradox" )->set_duration( talents.temporal_paradox_duration );
+
+  buffs.time_rift =
+      make_buff<lisa_buff_t>( this, "time_rift" )
+          ->set_duration( spell_const.time_rift_duration )
+          ->set_period( spell_const.time_rift_period )
+          ->set_default_value( spell_const.time_rift_haste )
+          ->set_freeze_stacks( true )
+          ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+          ->set_tick_callback( [ this ]( buff_t*, int, timespan_t ) {
+            resource_gain( RESOURCE_TEMPORAL_OVERCHARGE, spell_const.time_rift_resource, gains.time_rift, nullptr );
+          } );
+
+
 
   //buffs.reign_of_fire = make_buff<lisa_buff_t>( this, "reign_of_fire" )
   //                          ->set_duration( talents.reign_of_fire_duration )
@@ -2542,6 +2632,8 @@ void lisa_t::init_background_actions()
 void lisa_t::reset()
 {
   fs_player_t::reset();
+  
+  uchronia_tracker = 0;
 
   //for ( auto enemy : sim->target_list )
   //{
@@ -2573,6 +2665,15 @@ void lisa_t::combat_begin()
 double lisa_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
   double actual_amount = fs_player_t::resource_gain( resource_type, amount, source, action );
+  if ( talents_enabled( TALENT_16 ) && resource_type == RESOURCE_TEMPORAL_OVERCHARGE && actual_amount > 0 )
+  {
+    uchronia_tracker += actual_amount;
+    if ( uchronia_tracker >= talents.uchronia_threshold )
+    {
+      uchronia_tracker -= talents.uchronia_threshold;
+      buffs.uchronia->trigger();
+    }
+  }
 
   return actual_amount;
 }

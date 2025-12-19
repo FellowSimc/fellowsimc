@@ -216,6 +216,19 @@ public:
     unsigned willful_momentum                 = 0;
   } fs_weapons;
 
+  
+  struct fs_relic_t
+  {
+    fsrelic_e relic1 = fsrelic_e::FSRELIC_NONE;
+    fsrelic_e relic2 = fsrelic_e::FSRELIC_NONE;
+  } fs_relics;
+
+  struct fs_relic_values_t
+  {
+    const double alzeracs_mana_pct = 0.4;
+    timespan_t alzeracs_cd         = 120_s;
+  } fs_relic_values;
+
   struct fs_weapon_values_t
   {
     const double voidbringer_cap          = 42.5;
@@ -791,6 +804,60 @@ public:
     return std::max( ab::composite_total_spell_power(), ab::composite_total_attack_power() );
   }
 };
+template <typename Base>
+class fs_relic_action_t : public fs_player_action_t<Base>
+{
+protected:
+  /// typedef for fs_weapon_action_t<action_base_t>
+  using base_t = fs_relic_action_t<Base>;
+
+  /// typedef for the templated action type, eg. spell_t, attack_t, heal_t
+  using ab = fs_player_action_t<Base>;
+
+public:
+  bool usable_relic;
+
+  fs_relic_action_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : ab( n, p, options ), usable_relic( false )
+  {
+  }
+
+  void init_finished() override
+  {
+    ab::init_finished();
+  }
+
+  bool ready() override
+  {
+    if ( !usable_relic && !ab::background )
+      return false;
+
+    return ab::ready();
+  }
+
+  void execute() override
+  {
+    ab::execute();
+
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ab::impact( s );
+  }
+
+  double composite_total_spell_power() const override
+  {
+    return std::max( ab::composite_total_spell_power(), ab::composite_total_attack_power() );
+  }
+
+  double composite_total_attack_power() const override
+  {
+    return std::max( ab::composite_total_spell_power(), ab::composite_total_attack_power() );
+  }
+};
+
+
 }  // namespace actions
 
 }  // namespace fellowship

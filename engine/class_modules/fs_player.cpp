@@ -780,6 +780,37 @@ struct sahrils_wrath_t : fs_weapon_action_t<spell_t>
     base_t::execute();
   }
 };
+struct alzeracs_essence_t : fs_relic_action_t<attack_t>
+{
+  alzeracs_essence_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : fs_relic_action_t( n, p, options )
+  {
+    id = 40001;
+
+    base_execute_time = trigger_gcd = min_gcd = 0_s;
+
+    gcd_type                = gcd_haste_type::NONE;
+
+    name_str_reporting = "Alzerac's Essence";
+    cooldown->duration = p->fs_relic_values.alzeracs_cd;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    if ( fs_p()->fs_relics.relic1 == FSRELIC_ALZERACS_ESSENCE || fs_p()->fs_relics.relic2 == FSRELIC_ALZERACS_ESSENCE )
+      usable_relic = true;
+
+    parse_options( options );
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+    fs_p()->resource_gain(
+        RESOURCE_MANA, fs_p()->resources.max[ RESOURCE_MANA ] * fs_p()->fs_relic_values.alzeracs_mana_pct, gain, this );
+  }
+};
+
+
 }  // namespace actions
 
 // fs_player_t::create_action  ==================================================
@@ -800,6 +831,8 @@ action_t* fs_player_t::create_action( util::string_view name, util::string_view 
     return new voidbringers_touch_t( name, this, options_str );
   if ( name == "sahrils_wrath" || name == "sahrils" || name == "sahril" )
     return new sahrils_wrath_t( name, this, options_str );
+  if ( name == "alzeracs_essence" )
+    return new alzeracs_essence_t( name, this, options_str );
 
   return player_t::create_action( name, options_str );
 }
@@ -1247,6 +1280,39 @@ bool parse_fsweapon( sim_t* sim, std::string_view, std::string_view value )
   return false;
 }
 
+bool parse_fsrelic1( sim_t* sim, std::string_view, std::string_view value )
+{
+  auto& player = sim->active_player;
+  for ( fsrelic_e relic = fsrelic_e::FSRELIC_NONE; relic < fsrelic_e::FSRELIC_MAX; relic++ )
+  {
+    if ( util::str_compare_ci( value, util::fsrelic_string( relic ) ) )
+    {
+      static_cast<fs_player_t*>( player )->fs_relics.relic1 = relic;
+      return true;
+    }
+  }
+
+  sim->error( "{} relic string '{}' not valid.", sim->active_player->name(), value );
+  return false;
+}
+
+bool parse_fsrelic2( sim_t* sim, std::string_view, std::string_view value )
+{
+  auto& player = sim->active_player;
+  for ( fsrelic_e relic = fsrelic_e::FSRELIC_NONE; relic < fsrelic_e::FSRELIC_MAX; relic++ )
+  {
+    if ( util::str_compare_ci( value, util::fsrelic_string( relic ) ) )
+    {
+      static_cast<fs_player_t*>( player )->fs_relics.relic2 = relic;
+      return true;
+    }
+  }
+
+  sim->error( "{} relic string '{}' not valid.", sim->active_player->name(), value );
+  return false;
+}
+
+
 void fs_player_t::create_options()
 {
   player_t::create_options();
@@ -1304,6 +1370,8 @@ void fs_player_t::create_options()
   add_option( opt_float( "gems.sapphire_power", fs_gems.gem_powers[ GEM_SAPPHIRE ] ) );
 
   add_option( opt_func( "weapon", parse_fsweapon ) );
+  add_option( opt_func( "relic1", parse_fsrelic1 ) );
+  add_option( opt_func( "relic2", parse_fsrelic2 ) );
 
   add_option( opt_uint( "weapon_trait.amethyst_splinters", fs_weapons.amethyst_splinters, 0, 4 ) );
   add_option( opt_uint( "weapon_trait.brave_machinations", fs_weapons.brave_machinations, 0, 4 ) );
@@ -1345,6 +1413,7 @@ void fs_player_t::copy_from( player_t* source )
   fs_options = fs_player->fs_options;
   fs_gems    = fs_player->fs_gems;
   fs_weapons = fs_player->fs_weapons;
+  fs_relics  = fs_player->fs_relics;
 }
 
 // fs_player_t::create_profile  =================================================

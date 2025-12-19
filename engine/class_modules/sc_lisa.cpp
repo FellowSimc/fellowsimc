@@ -1150,7 +1150,7 @@ struct chrono_barrage_t : public lisa_spell_t
     dot_duration           = p->spell_const.chrono_barrage_channel_duration;
     base_tick_time         = p->spell_const.chrono_barrage_channel_period;
     hasted_ticks           = true;
-    hasted_dot_duration    = true; // TODO: Confirm
+    hasted_dot_duration    = false; // Confirmed :aware:
     dot_allow_partial_tick = true;
     tick_on_application    = false;
     channeled              = true;
@@ -1170,9 +1170,11 @@ struct chrono_barrage_t : public lisa_spell_t
   {
     auto base = base_t::tick_time_pct_multiplier( s );
 
-    // TODO: make it add extra ticks instead of just doing this.
     if ( cast_state( s )->temporal_paradox )
-      base /= 2;
+    {
+      auto ticks = dot_duration / base_tick_time.base * s->haste;
+      base *= ticks / ( p()->talents.temporal_paradox_extra_ticks + 1 );
+    }
 
     return base;
   }

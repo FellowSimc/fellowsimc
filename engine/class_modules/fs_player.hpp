@@ -139,9 +139,9 @@ public:
     double death_grasp_execute_amp = 0.15;
 
     bool draconic_might                = false;
-    double draconic_might_ppm          = 0.9;
+    double draconic_might_ppm          = 1.0;
     double draconic_might_amp          = 0.18;
-    timespan_t draconic_might_duration = 15_s;
+    timespan_t draconic_might_duration = 14_s;
     timespan_t draconic_might_cooldown  = 5_s;
 
     bool drakheims_absolution                = false;

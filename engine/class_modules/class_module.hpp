@@ -100,6 +100,8 @@ struct module_t
         return rime();
       case ARDEOS:
         return ardeos();
+      case LISA:
+        return lisa();
       case PLAYER_SIMPLIFIED:
         return player_simplified();
       case ENEMY:

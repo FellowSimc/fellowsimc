@@ -57,6 +57,8 @@ struct module_t
   static const module_t* mara();
   static const module_t* rime();
   static const module_t* ardeos();
+  static const module_t* lisa();
+  //static const module_t* sune();
   static const module_t* player_simplified();
   static const module_t* enemy();
   static const module_t* tank_dummy_enemy();

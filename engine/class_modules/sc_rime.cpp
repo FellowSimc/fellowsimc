@@ -1890,7 +1890,7 @@ void rime_t::init_scaling()
   fs_player_t::init_scaling();
 
   scaling->disable( STAT_STRENGTH );
-  scaling->disable( STAT_INTELLECT );
+  scaling->disable( STAT_AGILITY );
 
   // Break out early if scaling is disabled on this player, or there's no
   // scaling stat

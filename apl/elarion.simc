@@ -36,7 +36,7 @@ level=80
 
 apl/elarion_apl.simc
 
-gear_intellect=1442
+gear_agility=1442
 
 # gear_haste_rating=1650
 gear_haste_rating=1850
@@ -96,8 +96,32 @@ sets.sin_warding=1
 # weapon=icicles_of_anzhyr
 # weapon=chronoshift
 
-talents=focused_expanse:1/last_lights:1
+# talents=last_lights:1
 
 weapon_trait.amethyst_splinters=4
 weapon_trait.kindling=4
 weapon_trait.willful_momentum=4
+
+copy="Last Lights"
+talents=last_lights:1
+
+copy="Focused"
+talents=focused_expanse:1
+
+copy="Final Crescendo"
+talents=final_crescendo:1
+
+copy="Final Crescendo Lethal Shots"
+talents=final_crescendo:1/lethal_shots:1
+
+copy="Lethal Shots"
+talents=lethal_shots:1
+
+copy="Skyward Munitions"
+talents=skyward_munitions:1
+
+copy="Fervent"
+talents=last_lights:1/fervent_supremacy:1
+
+copy="Fervent Focused"
+talents=focused_expanse:1/fervent_supremacy:1

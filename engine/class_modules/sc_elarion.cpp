@@ -137,6 +137,8 @@ public:
     double highwind_arrow_focus_cost    = 30;
     int highwind_arrow_charges          = 3;
     timespan_t highwind_arrow_cooldown  = 15_s;
+    int highwind_arrow_targets          = 3;
+    double highwind_arrow_cleave_mul    = 0.7;
 
     int lunarlight_mark_max_targets     = 12;
     int lunarlight_mark_stacks_applied  = 3;
@@ -291,7 +293,7 @@ public:
 
     double final_crescendo_dmg_mul = 1.0;
     int final_crescendo_max_stacks = 3;
-    int final_crescendo_ricochets  = 7;
+    int final_crescendo_ricochets  = 8;
 
     double skylit_grace_cdr = 1.0;
 
@@ -305,8 +307,8 @@ public:
     double lunarlight_affinity_volley_chance_mul = 1.0;
     double lunarlight_affinity_salvo_cc          = 0.4;
 
-    double lethal_shots_chance = 0.3;
-    double lethal_shots_cc     = 1.0;
+    double lethal_shots_proc_chance = 0.3;
+    double lethal_shots_added_cc     = 1.0;
 
     double lunar_fury_mul = 0.3;
 
@@ -1067,6 +1069,17 @@ struct multishot_t : public elarion_attack_t
     return p()->buffs.skystriders_supremacy->check() || p()->buffs.focused_expanse->check();
   }
 
+  double cost_pct_multiplier() const override
+  {
+    auto mul = base_t::cost_pct_multiplier();
+    
+    // Note 04/01/2026 - Focused Expanse does not reduce cost by 50%
+    if ( is_empowered() )
+      mul *= 1.0 - p()->spell_const.skystriders_supremacy_focus_mul;
+
+    return mul;
+  }
+
   size_t available_targets( std::vector<player_t*>& tl ) const override
   {
     base_t::available_targets( tl );
@@ -1157,6 +1170,144 @@ struct multishot_t : public elarion_attack_t
     else
     {
       p()->buffs.multishot->decrement();
+    }
+  }
+};
+
+
+struct highwind_arrow_t : public elarion_attack_t
+{
+  highwind_arrow_t( elarion_t* p, util::string_view options_str = {} )
+    : elarion_attack_t( "highwind_arrow", p, options_str )
+  {
+    id = 5;
+
+    attack_power_mod.direct = p->spell_const.highwind_arrow_ap_coeff;
+    aoe                     = p->spell_const.highwind_arrow_targets;
+
+    name_str_reporting = "Highwind Arrow";
+
+    base_execute_time = p->spell_const.highwind_arrow_cast_time;
+
+    base_costs[ RESOURCE_FOCUS ] = p->spell_const.highwind_arrow_focus_cost;
+
+    cooldown->duration = p->spell_const.highwind_arrow_cooldown;
+    cooldown->charges  = p->spell_const.highwind_arrow_charges;
+    cooldown->hasted   = true;
+
+    parse_options( options_str );
+  }
+
+  timespan_t execute_time() const override
+  {
+    if ( p()->buffs.resurgent_winds->check() )
+    {
+      return timespan_t::zero();
+    }
+
+    return base_t::execute_time();
+  }
+
+  int n_targets() const override
+  {
+    return p()->buffs.final_crescendo->at_max_stacks() ? p()->talents.final_crescendo_ricochets : base_t::n_targets();
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    if ( result_is_hit( s->result ) )
+    {
+      if ( p()->legendary.shimmer )
+      {
+        p()->get_target_data( s->target )->debuffs.shimmer->trigger();
+      }
+
+      if ( p()->buffs.event_horizon->check() )
+      {
+        p()->cooldowns.heartseeker_barrage->adjust( -p()->spell_const.event_horizon_barrage_cdr_highwind );
+      }
+    }
+  }
+
+  double cost_pct_multiplier() const override
+  {
+    auto mul = base_t::cost_pct_multiplier();
+
+    if ( p()->buffs.resurgent_winds->check() )
+      mul = 0;
+
+    return mul;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    double m = base_t::composite_da_multiplier( s );
+
+    if ( s->chain_target > 0 )
+    {
+      m *= p()->spell_const.highwind_arrow_cleave_mul;
+    }
+
+    if ( p()->buffs.final_crescendo->at_max_stacks() )
+    {
+      m *= 1.0 + p()->talents.final_crescendo_dmg_mul;
+    }
+
+    if ( p()->buffs.resurgent_winds->check() &&
+         p()->get_target_data( s->target )->debuffs.lunarlight_mark->check() )
+    {
+      m *= 1.0 + p()->talents.resurgent_winds_mul;
+    }
+
+    return m;
+  }
+
+  double composite_crit_chance() const override
+  {
+    double cc = base_t::composite_crit_chance();
+
+    if ( p()->talents_enabled( elarion_t::TALENT_9 ) && rng().roll( p()->talents.lethal_shots_proc_chance ) )
+    {
+      cc += p()->talents.lethal_shots_added_cc;
+    }
+
+    return cc;
+  }
+
+  void update_ready( timespan_t cd_duration ) override
+  {
+    // Decrementing a stack of shadowy insight will consume a max charge. Consuming a max charge loses you a current
+    // charge. Therefore update_ready needs to not be called in that case.
+    if ( p()->buffs.resurgent_winds->up() )
+    {
+      p()->buffs.resurgent_winds->decrement();
+    }
+    else
+    {
+      base_t::update_ready( cd_duration );
+    }
+  }
+
+  void reset() override
+  {
+    cooldown->charges = p()->spell_const.highwind_arrow_charges;
+
+    base_t::reset();
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    if ( p()->buffs.final_crescendo->at_max_stacks() )
+    {
+      p()->buffs.final_crescendo->expire();
+    }
+    else if ( p()->talents_enabled( elarion_t::TALENT_3 ) )
+    {
+      p()->buffs.final_crescendo->trigger();
     }
   }
 };
@@ -1404,6 +1555,8 @@ action_t* elarion_t::create_action( util::string_view name, util::string_view op
     return new celestial_shot_t( this, options_str );
   if ( name == "multishot" )
     return new multishot_t( this, options_str );
+  if ( name == "highwind_arrow" )
+    return new highwind_arrow_t( this, options_str );
   if ( name == "skystriders_grace" )
     return new skystriders_grace_t( this, options_str );
   if ( name == "skystriders_supremacy" )
@@ -1620,7 +1773,10 @@ void elarion_t::create_buffs()
 
   buffs.resurgent_winds = make_buff<elarion_buff_t>( this, "resurgent_winds" )
                               ->set_duration( talents.resurgent_winds_duration )
-                              ->set_max_stack( talents.resurgent_winds_maximum_stacks );
+                              ->set_max_stack( talents.resurgent_winds_maximum_stacks )
+                              ->add_stack_change_callback( [ this ]( buff_t*, int old, int cur ) {
+                                cooldowns.highwind_arrow->adjust_max_charges( cur - old );
+                              } );
 
   buffs.skystriders_supremacy = make_buff<elarion_buff_t>( this, "skystriders_supremacy" )
                                     ->set_default_value( 0 )
@@ -1647,7 +1803,7 @@ void elarion_t::create_buffs()
 
   buffs.event_horizon =
       make_buff<elarion_buff_t>( this, "event_horizon" )
-          ->set_duration( spell_const.event_horizon_barrage_cdr_highwind )
+          ->set_duration( spell_const.event_horizon_duration )
           ->add_stack_change_callback( [ this ]( buff_t*, int, int ) { adjust_dynamic_cooldowns(); } );
 }
 

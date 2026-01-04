@@ -8,5 +8,6 @@ actions.main=event_horizon
 actions.main+=/skystriders_grace
 actions.main+=/skystriders_supremacy
 actions.main+=/multishot,if=buff.focused_expanse.up|buff.skystriders_supremacy.up
-actions.main+=/celestial_shot,if=!talent.focused_expanse
+actions.main+=/highwind_arrow
+actions.main+=/celestial_shot,if=!talent.focused_expanse|buff.celestial_impetus.react
 actions.main+=/focused_shot

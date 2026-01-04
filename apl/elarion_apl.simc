@@ -1,0 +1,12 @@
+
+actions.precombat=snapshot_stats
+actions.precombat+=/focused_shot
+
+actions=run_action_list,name=main
+
+actions.main=event_horizon
+actions.main+=/skystriders_grace
+actions.main+=/skystriders_supremacy
+actions.main+=/multishot,if=buff.focused_expanse.up|buff.skystriders_supremacy.up
+actions.main+=/celestial_shot,if=!talent.focused_expanse
+actions.main+=/focused_shot

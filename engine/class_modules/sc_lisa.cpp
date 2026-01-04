@@ -397,6 +397,7 @@ public:
   void analyze( sim_t& sim ) override;
 
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
+  double resource_loss( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
 
   std::string default_flask() const override
   {
@@ -1166,15 +1167,28 @@ struct chrono_barrage_t : public lisa_spell_t
     return spell_power_mod.tick + cast_state( s )->temporal_pct * sp_coeff_extra;
   }
 
+  timespan_t dot_duration_flat_modifier( const action_state_t* s ) const override
+  {
+    auto t = base_t::dot_duration_flat_modifier( s );
+
+    // This is 3 bolts... I suppose. Not really.
+    if ( cast_state( s )->temporal_paradox )
+    {
+      t *= 2;
+    }
+
+    return t;
+  }
+
   double tick_time_pct_multiplier( const action_state_t* s ) const override
   {
     auto base = base_t::tick_time_pct_multiplier( s );
 
-    if ( cast_state( s )->temporal_paradox )
+  /*  if ( cast_state( s )->temporal_paradox )
     {
       auto ticks = dot_duration / base_tick_time.base * s->haste;
       base *= ticks / ( p()->talents.temporal_paradox_extra_ticks + 1 );
-    }
+    }*/
 
     return base;
   }
@@ -1367,7 +1381,7 @@ double lisa_t::composite_player_target_multiplier( player_t* target, school_e sc
 
   lisa_td_t* tdata = get_target_data( target );
 
-  m += 1.0 + tdata->debuffs.shifting_sands->check_value();
+  m *= 1.0 + tdata->debuffs.shifting_sands->check_value();
 
   return m;
 }
@@ -1526,7 +1540,7 @@ void lisa_t::init_base_stats()
   base.health_per_stamina = 38.005;
 
   resources.base[ RESOURCE_TEMPORAL_OVERCHARGE ]   = 100;
-  resources.base[ RESOURCE_MANA ]                  = 1444;
+  resources.base[ RESOURCE_MANA ]                  = 1440;
   resources.base_regen_per_second[ RESOURCE_MANA ] = 0.005 * resources.base[ RESOURCE_MANA ];
 
   base_gcd = timespan_t::from_seconds( 1.5 );
@@ -1875,6 +1889,14 @@ void lisa_t::combat_begin()
 double lisa_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
   double actual_amount = fs_player_t::resource_gain( resource_type, amount, source, action );
+
+  return actual_amount;
+}
+
+double lisa_t::resource_loss( resource_e resource_type, double amount, gain_t* source, action_t* action )
+{
+  double actual_amount = fs_player_t::resource_loss( resource_type, amount, source, action );
+
   if ( talents_enabled( TALENT_16 ) && resource_type == RESOURCE_TEMPORAL_OVERCHARGE && actual_amount > 0 )
   {
     uchronia_tracker += actual_amount;
@@ -1887,6 +1909,7 @@ double lisa_t::resource_gain( resource_e resource_type, double amount, gain_t* s
 
   return actual_amount;
 }
+
 
 // lisa_t::non_stacking_movement_modifier ==================================
 

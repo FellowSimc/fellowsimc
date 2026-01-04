@@ -58,6 +58,7 @@ struct module_t
   static const module_t* rime();
   static const module_t* ardeos();
   static const module_t* lisa();
+  static const module_t* elarion();
   //static const module_t* sune();
   static const module_t* player_simplified();
   static const module_t* enemy();
@@ -102,6 +103,8 @@ struct module_t
         return ardeos();
       case LISA:
         return lisa();
+      case ELARION:
+        return elarion();
       case PLAYER_SIMPLIFIED:
         return player_simplified();
       case ENEMY:

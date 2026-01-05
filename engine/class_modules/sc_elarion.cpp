@@ -160,6 +160,7 @@ public:
     timespan_t starfall_volley_cooldown   = 30_s;
     timespan_t starfall_volley_period     = 1_s;
     double starfall_volley_ap_coeff       = 1.0864;
+    double starfall_volley_focus_cost     = 30;
 
     timespan_t event_horizon_duration             = 20_s;
     timespan_t event_horizon_cast_time            = 0.7_s;
@@ -1695,6 +1696,8 @@ struct starfall_volley_t : public elarion_spell_t
                            break;
                        }
                      } );
+
+    base_costs[ RESOURCE_FOCUS ] = p->spell_const.starfall_volley_focus_cost;
   }
 
   void execute() override

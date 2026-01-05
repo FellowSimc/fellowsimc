@@ -788,6 +788,18 @@ public:
     return t;
   }
 
+  
+  double cost_pct_multiplier() const override
+  {
+    auto mul = ab::cost_pct_multiplier();
+
+    // Note 04/01/2026 - Focused Expanse does not reduce cost by 50%
+    if ( p()->buffs.event_horizon->check() )
+      mul *= p()->spell_const.event_horizon_resource_mul;
+
+    return mul;
+  }
+
   double recharge_multiplier( const cooldown_t& cd ) const
   {
     double m = ab::recharge_multiplier( cd );
@@ -1108,7 +1120,7 @@ struct multishot_t : public elarion_attack_t
 
     // Note 04/01/2026 - Focused Expanse does not reduce cost by 50%
     if ( is_empowered() )
-      mul *= 1.0 - p()->spell_const.skystriders_supremacy_focus_mul;
+      mul *= p()->spell_const.skystriders_supremacy_focus_mul;
 
     return mul;
   }
@@ -1787,6 +1799,11 @@ double elarion_t::matching_gear_multiplier( attribute_e attr ) const
 double elarion_t::composite_player_multiplier( school_e school ) const
 {
   double m = fs_player_t::composite_player_multiplier( school );
+
+  if ( buffs.event_horizon->check() )
+  {
+    m *= 1.0 + spell_const.event_horizon_dmg_mul;
+  }
 
   return m;
 }

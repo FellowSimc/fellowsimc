@@ -874,13 +874,6 @@ public:
     return tt;
   }
 
-  double cost_pct_multiplier() const override
-  {
-    double c = ab::cost_pct_multiplier();
-
-    return c;
-  }
-
   void consume_resource() override
   {
     // Abilities triggered as part of another ability (secondary triggers) do not consume resources

@@ -8,9 +8,12 @@ actions.main=event_horizon
 actions.main+=/skystriders_grace
 actions.main+=/skystriders_supremacy
 actions.main+=/lunarlight_mark
-actions.main+=/heartseeker_barrage
+actions.main+=/starfall_volley
+actions.main+=/heartseeker_barrage,if=buff.impending_heartseeker.up|talent.fervent_supremacy
 actions.main+=/celestial_shot,if=buff.celestial_impetus.react&talent.impending_heartseeker&(prev_gcd.1.heartseeker_barrage|buff.celestial_impetus.remains<cooldown.impending_heartseeker.remains+action.heartseeker_barrage.duration)
+actions.main+=/highwind_arrow,if=full_recharge_time<=gcd.max*3&(!buff.skystriders_supremacy.up|talent.fervent_supremacy)
 actions.main+=/multishot,if=buff.focused_expanse.up|buff.skystriders_supremacy.up
+actions.main+=/heartseeker_barrage
 actions.main+=/highwind_arrow
-actions.main+=/celestial_shot,if=!talent.focused_expanse|buff.celestial_impetus.react&talent.impending_heartseeker
+actions.main+=/celestial_shot,if=!talent.focused_expanse|buff.celestial_impetus.react&!talent.impending_heartseeker
 actions.main+=/focused_shot

@@ -120,6 +120,9 @@ talents=lethal_shots:1
 copy="Fusillade"
 talents=fusillade:1
 
+copy="Skylit Grace"
+talents=skylit_grace:1
+
 copy="Resurgent Winds"
 talents=resurgent_winds:1
 
@@ -138,11 +141,17 @@ talents=last_lights:1/fervent_supremacy:1
 copy="Fervent Focused"
 talents=focused_expanse:1/fervent_supremacy:1
 
+copy="Fervent Focused Repeating Stars"
+talents=focused_expanse:1/fervent_supremacy:1/repeating_stars:1
+
 copy="Lunarlight Affinity"
 talents=lunarlight_affinity:1
 
 copy="Lunar Fury"
 talents=lunar_fury:1
+
+copy="Repeating Stars"
+talents=repeating_stars:1
 
 copy="Lunarlight Affinity Lunar Fury"
 talents=lunarlight_affinity:1/lunar_fury:1

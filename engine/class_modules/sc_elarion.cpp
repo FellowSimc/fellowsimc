@@ -63,6 +63,7 @@ public:
   struct actions_t
   {
     action_t* lunarlight_salvo;
+    action_t* starfall_volley;
   } actions;
 
   struct buffs_t
@@ -1136,7 +1137,7 @@ struct multishot_t : public elarion_attack_t
       m *= 1.0 + p()->buffs.skystriders_supremacy->check_value();
 
       if ( p()->talents_enabled( elarion_t::TALENT_1 ) )
-        m *= 1.0 + p()->talents.fervent_supremacy_mul;
+        m *= 1.0 + p()->talents.focused_expanse_amp;
     }
 
     return m;
@@ -1202,6 +1203,17 @@ struct multishot_t : public elarion_attack_t
     else
     {
       p()->buffs.multishot->decrement();
+    }
+
+    if ( p()->legendary.astronomers_hail )
+    {
+      for ( auto volley : p()->starfall_volleys )
+      {
+        /* volley->params->duration_ += p()->legendary.astronomers_hail_multishot_extend;*/
+
+        // volley->_time_left
+        // volley->extend_duration(p()->legendary.astronomers_hail_multishot_extend);
+      }
     }
   }
 };
@@ -1592,7 +1604,7 @@ struct lunarlight_mark_t : public elarion_spell_t
       p()->get_target_data( s->target )
           ->debuffs.lunarlight_mark->trigger( p()->spell_const.lunarlight_mark_stacks_applied );
     }
-  } 
+  }
 
   void execute() override
   {
@@ -1605,6 +1617,88 @@ struct lunarlight_mark_t : public elarion_spell_t
     }
   }
 };
+
+struct starfall_volley_damage_t : public elarion_spell_t
+{
+  starfall_volley_damage_t( elarion_t* p ) : elarion_spell_t( "starfall_volley_dmg", p, {} )
+  {
+    id = 11;
+
+    background = true;
+
+    name_str_reporting = "Starfall Volley";
+
+    aoe                     = -1;
+    attack_power_mod.direct = p->spell_const.starfall_volley_ap_coeff;
+
+    reduced_aoe_targets = p->spell_const.starfall_volley_target_falloff;
+
+    if ( p->talents_enabled( elarion_t::TALENT_8 ) )
+    {
+      lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_mul;
+      lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_mul;
+    }
+  }
+};
+
+struct starfall_volley_t : public elarion_spell_t
+{
+  ground_aoe_params_t aoe_params;
+
+  starfall_volley_t( elarion_t* p, util::string_view options_str = {} )
+    : elarion_spell_t( "starfall_volley", p, options_str )
+  {
+    id = 11;
+
+    name_str_reporting = "Starfall Volley";
+
+    cooldown->duration = p->spell_const.starfall_volley_cooldown;
+    parse_options( options_str );
+
+    if ( !p->actions.starfall_volley->stats->parent )
+      add_child( p->actions.starfall_volley );
+
+    aoe_params = ground_aoe_params_t()
+                     .duration( p->legendary.astronomers_hail ? p->spell_const.starfall_volley_duration +
+                                                                    p->legendary.astronomers_hail_volley_duration
+                                                              : p->spell_const.starfall_volley_duration )
+                     .pulse_time( p->spell_const.starfall_volley_period )
+                     .hasted( ground_aoe_params_t::SPELL_HASTE )
+                     .action( p->actions.starfall_volley )
+                     .state_callback( [ this, p ]( ground_aoe_params_t::state_type type, ground_aoe_event_t* event ) {
+                       switch ( type )
+                       {
+                         case ground_aoe_params_t::EVENT_STARTED:
+                           p->buffs.starfall_volleys->increment();
+                           break;
+                         case ground_aoe_params_t::EVENT_STOPPED:
+                           p->buffs.starfall_volleys->decrement();
+                           break;
+                         case ground_aoe_params_t::EVENT_CREATED:
+                           p->starfall_volleys.insert( event );
+                           break;
+                         case ground_aoe_params_t::EVENT_DESTRUCTED:
+                           p->starfall_volleys.erase( event );
+                           break;
+                         default:
+                           break;
+                       }
+                     } );
+  }
+
+  void execute() override
+  {
+    elarion_spell_t::execute();
+
+    aoe_params.target( execute_state->target ).start_time( sim->current_time() );
+
+    if ( sim->distance_targeting_enabled )
+      aoe_params.x( execute_state->target->x_position ).y( execute_state->target->y_position );
+
+    make_event<ground_aoe_event_t>( *sim, p(), aoe_params, true );
+  }
+};
+
 }  // namespace actions
 
 // ==========================================================================
@@ -1785,6 +1879,8 @@ action_t* elarion_t::create_action( util::string_view name, util::string_view op
     return new event_horizon_t( this, options_str );
   if ( name == "lunarlight_mark" )
     return new lunarlight_mark_t( this, options_str );
+  if ( name == "starfall_volley" )
+    return new starfall_volley_t( this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -2014,9 +2110,52 @@ void elarion_t::create_buffs()
         ->set_initial_stack( talents.fervent_supremacy_stacks );
   }
 
-  buffs.starfall_volleys = make_buff<elarion_buff_t>( this, "starfall_volleys" )
-                               ->set_max_stack( 99 )
-                               ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+  struct skylit_grace_buff_t : elarion_buff_t
+  {
+    double cdr_mod;
+    skylit_grace_buff_t( elarion_t* pl )
+      : elarion_buff_t( pl, "skylit_grace" ), cdr_mod( 1 + pl->talents.skylit_grace_cdr )
+    {
+      set_max_stack( 99 );
+      set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+
+      add_stack_change_callback( [ this ]( buff_t*, int old, int _new ) {
+        if ( _new != old )
+        {
+          auto change         = _new - old;
+          auto mod_difference = std::pow( cdr_mod, -change );
+
+          if ( p()->cooldowns.skystriders_grace->action )
+          {
+            p()->cooldowns.skystriders_grace->action->base_recharge_rate_multiplier *= mod_difference;
+            p()->cooldowns.skystriders_grace->adjust_recharge_multiplier();
+          }
+          else
+          {
+            for ( auto& action : p()->action_list )
+            {
+              if ( action->cooldown == p()->cooldowns.skystriders_grace )
+              {
+                action->base_recharge_rate_multiplier *= mod_difference;
+                action->cooldown->adjust_recharge_multiplier();
+              }
+            }
+          }
+        }
+      } );
+    }
+  };
+
+  if ( talents_enabled( TALENT_4 ) )
+  {
+    buffs.starfall_volleys = make_buff<skylit_grace_buff_t>( this );
+  }
+  else
+  {
+    buffs.starfall_volleys = make_buff<elarion_buff_t>( this, "starfall_volleys" )
+                                 ->set_max_stack( 99 )
+                                 ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+  }
 
   buffs.skystriders_grace = make_buff<elarion_buff_t>( this, "skystriders_grace" )
                                 ->set_duration( spell_const.skystriders_grace_duration )
@@ -2153,6 +2292,7 @@ void elarion_t::init_background_actions()
   fs_player_t::init_background_actions();
 
   actions.lunarlight_salvo = new actions::lunarlight_salvo_t( this );
+  actions.starfall_volley  = new actions::starfall_volley_damage_t( this );
 
   // actions.searing_blaze    = new actions::searing_blaze_t( "searing_blaze", this );
   // actions.engulfing_flames = new actions::engulfing_flames_t( this );

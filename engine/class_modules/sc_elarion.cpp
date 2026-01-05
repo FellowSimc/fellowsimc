@@ -1393,7 +1393,7 @@ struct heartseeker_barrage_t : public elarion_attack_t
 
       if ( result_is_hit( s->result ) )
       {
-        if ( p()->buffs.event_horizon->check() )
+        if ( p()->buffs.event_horizon->check() && s->chain_target == 0 )
         {
           p()->cooldowns.starfall_volley->adjust( -p()->spell_const.event_horizon_volley_cdr_barrage );
         }

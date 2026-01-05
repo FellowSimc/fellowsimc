@@ -7,7 +7,10 @@ actions=run_action_list,name=main
 actions.main=event_horizon
 actions.main+=/skystriders_grace
 actions.main+=/skystriders_supremacy
+actions.main+=/lunarlight_mark
+actions.main+=/heartseeker_barrage
+actions.main+=/celestial_shot,if=buff.celestial_impetus.react&talent.impending_heartseeker&(prev_gcd.1.heartseeker_barrage|buff.celestial_impetus.remains<cooldown.impending_heartseeker.remains+action.heartseeker_barrage.duration)
 actions.main+=/multishot,if=buff.focused_expanse.up|buff.skystriders_supremacy.up
 actions.main+=/highwind_arrow
-actions.main+=/celestial_shot,if=!talent.focused_expanse|buff.celestial_impetus.react
+actions.main+=/celestial_shot,if=!talent.focused_expanse|buff.celestial_impetus.react&talent.impending_heartseeker
 actions.main+=/focused_shot

@@ -1,0 +1,210 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=290
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=8
+
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_intellect=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+elarion="Elarion"
+level=80
+
+# initial_resource=spirit=100
+
+apl/elarion_apl.simc
+
+gear_agility=1442
+
+# gear_haste_rating=1850
+# gear_crit_rating=1215
+# gear_versatility_rating=1250
+# gear_mastery_rating=200
+
+gear_haste_rating=1450
+gear_crit_rating=1265
+gear_versatility_rating=1600
+gear_mastery_rating=200
+
+# gems.amethyst_power=2640
+# gems.ruby_power=162
+# gems.topaz_power=2304
+
+# gems.topaz_power=2664
+# gems.ruby_power=1296
+# gems.amethyst_power=1296
+
+gems.topaz_power=1296
+gems.ruby_power=360
+gems.amethyst_power=2664
+
+sets.torment_of_baelaurum=1
+sets.dark_prophecy=1
+sets.tuzari_grace=1
+sets.sin_warding=1
+
+
+
+
+# weapon=natures_fury
+# relic1=alzeracs_essence
+
+# gems.amethyst_power=2742
+# gems.ruby_power=120
+
+# gems.amethyst_power=2658
+# gems.ruby_power=972
+
+# gems.amethyst_power=1200
+# gems.ruby_power=1296
+# gems.topaz_power=1200
+
+# gems.amethyst_power=3960
+# gems.amethyst_power=2988
+# gems.topaz_power=972
+# gems.ruby_power=1296
+
+
+
+# gems.amethyst_power=2904
+# gems.ruby_power=1296
+# gems.topaz_power=324
+
+# sets.deaths_grasp=1
+# sets.draconic_might=1
+# sets.dark_prophecy=1
+
+# weapon=icicles_of_anzhyr
+# weapon=chronoshift
+
+# talents+=/last_lights:1
+
+# weapon=chronoshift
+weapon=voidbringers_touch
+
+weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.willful_momentum=4
+
+# copy="Last Lights"
+talents=last_lights:1
+
+# copy="Fervent","Elarion"
+talents+=/fervent_supremacy:1
+
+
+# copy="Focused","Elarion"
+talents+=/focused_expanse:1
+
+# # copy="Impending Heartseeker Fusillade","Elarion"
+# talents+=/impending_heartseeker:1/fusillade:1
+
+# # copy="Piercing Seekers","Elarion"
+# talents+=/piercing_seekers:1
+
+legendary.shimmer=1
+
+
+
+# talents+=/resurgent_winds:1
+# talents+=/lethal_shots:1
+
+# copy="Hybrid","Elarion"
+# talents+=/final_crescendo:1/repeating_stars:0/piercing_seekers:1/lunar_fury:0/skyward_munitions:0
+
+# talents+=/repeating_stars:1/piercing_seekers:1/lunar_fury:1
+
+copy="Highwind Arrow","Elarion"
+talents+=/final_crescendo:1
+talents+=/resurgent_winds:1
+talents+=/lethal_shots:1
+talents+=/lunar_fury:0/repeating_stars:0/repeating_star:0
+
+copy="Hybrid","Elarion"
+talents+=/final_crescendo:1/repeating_stars:1/piercing_seekers:1/lunar_fury:1/skyward_munitions:1
+
+copy="Hybrid2","Elarion"
+talents+=/lunar_fury:0/repeating_stars:0/final_crescendo:1/resurgent_winds:1/piercing_seekers:1/skyward_munitions:1
+
+copy="Barrage","Elarion"
+talents+=/lunar_fury:0/repeating_stars:0/final_crescendo:0/impending_heartseeker:1/fusillade:1/piercing_seekers:1/skyward_munitions:1
+
+# # copy="Piercing Seekers","Elarion"
+# talents+=/piercing_seekers:1
+
+# copy="Skyward Munitions","Elarion"
+# talents+=/skyward_munitions:1
+
+# copy="Final Crescendo","Elarion"
+# talents+=/final_crescendo:1
+
+# copy="Final Crescendo Lethal Shots","Elarion"
+# talents+=/final_crescendo:1/lethal_shots:1
+
+# copy="Lethal Shots","Elarion"
+# talents+=/lethal_shots:1
+
+
+# copy="Piercing Seekers","Elarion"
+# talents+=/piercing_seekers:1
+
+# copy="Fusillade","Elarion"
+# talents+=/fusillade:1
+
+# copy="Skylit Grace","Elarion"
+# talents+=/skylit_grace:1
+
+# copy="Resurgent Winds","Elarion"
+# talents+=/resurgent_winds:1
+
+# copy="Impending Heartseeker","Elarion"
+# talents+=/impending_heartseeker:1
+
+
+# copy="Fervent Focused","Elarion"
+# talents+=/focused_expanse:1/fervent_supremacy:1
+
+# copy="Fervent Focused Repeating Stars","Elarion"
+# talents+=/focused_expanse:1/fervent_supremacy:1/repeating_stars:1
+
+# copy="Lunarlight Affinity","Elarion"
+# talents+=/lunarlight_affinity:1
+
+# copy="Lunar Fury","Elarion"
+# talents+=/lunar_fury:1
+
+# copy="Repeating Stars","Elarion"
+# talents+=/repeating_stars:1
+
+# copy="Lunarlight Affinity Lunar Fury","Elarion"
+# talents+=/lunarlight_affinity:1/lunar_fury:1
+
+# copy="Starstrikers Accent","Elarion"
+# legendary.starstrikers_ascent=1
+
+# copy="Astronomers Hail","Elarion"
+# legendary.astronomers_hail=1
+
+# copy="Shimmer","Elarion"

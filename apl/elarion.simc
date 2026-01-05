@@ -136,7 +136,7 @@ copy="Skyward Munitions"
 talents=skyward_munitions:1
 
 copy="Fervent"
-talents=last_lights:1/fervent_supremacy:1
+talents=fervent_supremacy:1
 
 copy="Fervent Focused"
 talents=focused_expanse:1/fervent_supremacy:1

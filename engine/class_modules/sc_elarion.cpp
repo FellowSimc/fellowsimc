@@ -133,13 +133,14 @@ public:
     timespan_t heartseeker_barrage_cooldown = 20_s;
     double heartseeker_barrage_focus_cost   = 30;
 
-    double highwind_arrow_ap_coeff      = 9.6903;
-    timespan_t highwind_arrow_cast_time = 2.0_s;
-    double highwind_arrow_focus_cost    = 30;
-    int highwind_arrow_charges          = 3;
-    timespan_t highwind_arrow_cooldown  = 15_s;
-    int highwind_arrow_targets          = 3;
-    double highwind_arrow_cleave_mul    = 0.7;
+    double highwind_arrow_ap_coeff                    = 9.6903;
+    timespan_t highwind_arrow_cast_time               = 2.0_s;
+    double highwind_arrow_focus_cost                  = 30;
+    int highwind_arrow_charges                        = 3;
+    timespan_t highwind_arrow_cooldown                = 15_s;
+    int highwind_arrow_targets                        = 3;
+    double highwind_arrow_cleave_mul                  = 0.7;
+    unsigned int highwind_arrow_targets_for_multishot = 3;
 
     timespan_t lunarlight_mark_cooldown = 30_s;
     int lunarlight_mark_max_targets     = 12;
@@ -1356,6 +1357,11 @@ struct highwind_arrow_t : public elarion_attack_t
     {
       p()->buffs.final_crescendo->trigger();
     }
+
+    if ( hit_any_target && execute_state->n_targets >= p()->spell_const.highwind_arrow_targets_for_multishot )
+    {
+      p()->buffs.multishot->trigger();
+    }
   }
 };
 
@@ -1818,7 +1824,7 @@ double elarion_t::composite_player_target_multiplier( player_t* target, school_e
 
   elarion_td_t* tdata = get_target_data( target );
 
-  m *= 1.0 + tdata->debuffs.shimmer->check_value();
+  m *= 1.0 + tdata->debuffs.shimmer->check_stack_value();
 
   return m;
 }

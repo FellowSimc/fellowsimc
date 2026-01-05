@@ -140,6 +140,7 @@ public:
     int highwind_arrow_targets          = 3;
     double highwind_arrow_cleave_mul    = 0.7;
 
+    timespan_t lunarlight_mark_cooldown = 30_s;
     int lunarlight_mark_max_targets     = 12;
     int lunarlight_mark_stacks_applied  = 3;
     timespan_t lunarlight_mark_duration = 15_s;
@@ -308,7 +309,7 @@ public:
     double lunarlight_affinity_salvo_cc          = 0.4;
 
     double lethal_shots_proc_chance = 0.3;
-    double lethal_shots_added_cc     = 1.0;
+    double lethal_shots_added_cc    = 1.0;
 
     double lunar_fury_mul = 0.3;
 
@@ -600,10 +601,15 @@ private:
 
 public:
   secondary_trigger secondary_trigger_type;
+  double lunarlight_salvo_chance_hit;
+  double lunarlight_salvo_chance_crit;
 
   // Init =====================================================================
   elarion_action_t( util::string_view n, elarion_t* p, util::string_view options = {} )
-    : ab( n, p, options ), secondary_trigger_type( secondary_trigger::NONE )
+    : ab( n, p, options ),
+      secondary_trigger_type( secondary_trigger::NONE ),
+      lunarlight_salvo_chance_hit( p->spell_const.lunarlight_mark_chance_hit ),
+      lunarlight_salvo_chance_crit( p->spell_const.lunarlight_mark_chance_crit )
   {
     ab::may_crit = ab::tick_may_crit = true;
     ab::school                       = SCHOOL_PHYSICAL;
@@ -875,6 +881,32 @@ public:
     spend_resource_costs( ab::execute_state );
   }
 
+  
+
+  void impact( action_state_t* s ) override
+  {
+    ab::impact( s );
+
+    if ( ab::result_is_hit( s->result ) && s->result_amount > 0 )
+    {
+      auto td = p()->get_target_data( s->target );
+      if ( td->debuffs.lunarlight_mark->check() )
+      {
+        if ( s->result == RESULT_HIT && ab::rng().roll( lunarlight_salvo_chance_hit ) )
+        {
+          p()->actions.lunarlight_salvo->execute_on_target( s->target );
+          td->debuffs.lunarlight_mark->decrement();
+        }
+
+        if ( s->result == RESULT_CRIT && ab::rng().roll( lunarlight_salvo_chance_crit ) )
+        {
+          p()->actions.lunarlight_salvo->execute_on_target( s->target );
+          td->debuffs.lunarlight_mark->decrement();
+        }
+      }
+    }
+  }
+
   void execute() override
   {
     ab::execute();
@@ -1072,7 +1104,7 @@ struct multishot_t : public elarion_attack_t
   double cost_pct_multiplier() const override
   {
     auto mul = base_t::cost_pct_multiplier();
-    
+
     // Note 04/01/2026 - Focused Expanse does not reduce cost by 50%
     if ( is_empowered() )
       mul *= 1.0 - p()->spell_const.skystriders_supremacy_focus_mul;
@@ -1174,7 +1206,6 @@ struct multishot_t : public elarion_attack_t
   }
 };
 
-
 struct highwind_arrow_t : public elarion_attack_t
 {
   highwind_arrow_t( elarion_t* p, util::string_view options_str = {} )
@@ -1255,8 +1286,7 @@ struct highwind_arrow_t : public elarion_attack_t
       m *= 1.0 + p()->talents.final_crescendo_dmg_mul;
     }
 
-    if ( p()->buffs.resurgent_winds->check() &&
-         p()->get_target_data( s->target )->debuffs.lunarlight_mark->check() )
+    if ( p()->buffs.resurgent_winds->check() && p()->get_target_data( s->target )->debuffs.lunarlight_mark->check() )
     {
       m *= 1.0 + p()->talents.resurgent_winds_mul;
     }
@@ -1309,6 +1339,128 @@ struct highwind_arrow_t : public elarion_attack_t
     {
       p()->buffs.final_crescendo->trigger();
     }
+  }
+};
+
+struct heartseeker_barrage_t : public elarion_attack_t
+{
+  struct heartseeker_barrage_arrow_t : public elarion_attack_t
+  {
+    heartseeker_barrage_arrow_t( elarion_t* p, util::string_view options_str = {} )
+      : elarion_attack_t( "heartseeker_barrage_arrow", p, options_str )
+    {
+      id = 6;
+
+      background = true;
+
+      name_str_reporting = "Heartseeker Barrage";
+
+      attack_power_mod.direct = p->spell_const.heartseeker_barrage_ap_coeff;
+      aoe = p->talents_enabled( elarion_t::TALENT_5 ) ? 1 + p->talents.piercing_seekers_ricochet_targets : 0;
+
+      if ( p->talents_enabled( elarion_t::TALENT_2 ) )
+      {
+        base_crit += p->talents.fusillade_crit;
+      }
+    }
+
+    void impact( action_state_t* s ) override
+    {
+      base_t::impact( s );
+
+      if ( result_is_hit( s->result ) )
+      {
+        if ( p()->buffs.event_horizon->check() )
+        {
+          p()->cooldowns.starfall_volley->adjust( -p()->spell_const.event_horizon_volley_cdr_barrage );
+        }
+      }
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      double m = base_t::composite_da_multiplier( s );
+
+      if ( s->chain_target > 0 )
+      {
+        m *= p()->talents.piercing_seekers_ricochet_mul;
+      }
+
+      return m;
+    }
+  };
+
+  heartseeker_barrage_arrow_t* arrow;
+  heartseeker_barrage_t( elarion_t* p, util::string_view options_str = {} )
+    : elarion_attack_t( "heartseeker_barrage", p, options_str ), arrow( nullptr )
+  {
+    id = 6;
+
+    name_str_reporting = "Heartseeker Barrage";
+
+    dot_duration           = p->spell_const.heartseeker_barrage_duration;
+    base_tick_time         = p->spell_const.heartseeker_barrage_period;
+    hasted_ticks           = true;
+    dot_allow_partial_tick = false;
+    tick_on_application    = false;
+    channeled              = true;
+
+    if ( p->talents_enabled( elarion_t::TALENT_2 ) )
+    {
+      dot_duration += p->talents.fusillade_duration;
+    }
+
+    base_costs[ RESOURCE_FOCUS ] = p->spell_const.highwind_arrow_focus_cost;
+
+    cooldown->duration = p->spell_const.heartseeker_barrage_cooldown;
+    cooldown->hasted   = false;
+
+    arrow = new heartseeker_barrage_arrow_t( p, options_str );
+
+    add_child( arrow );
+
+    parse_options( options_str );
+  }
+
+
+  /*double cost_pct_multiplier() const override
+  {
+    auto mul = base_t::cost_pct_multiplier();
+
+    if ( p()->buffs.resurgent_winds->check() )
+      mul = 0;
+
+    return mul;
+  }*/
+
+  void tick( dot_t* d ) override
+  {
+    base_t::tick( d );
+
+    arrow->set_target( d->target );
+    action_state_t* damage_state = arrow->get_state();
+    damage_state->target         = arrow->target;
+
+    arrow->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+
+    if ( p()->buffs.impending_heartseeker->check() )
+    {
+      damage_state->da_multiplier *= 1.0 + d->current_tick * p()->talents.impending_heartseeker_mul_per_arrow;
+    }
+
+    arrow->schedule_execute( damage_state );
+  }
+
+  void last_tick( dot_t* d ) override
+  {
+    base_t::last_tick( d );
+
+    p()->buffs.impending_heartseeker->expire();
+  }
+
+  void execute() override
+  {
+    base_t::execute();
   }
 };
 
@@ -1387,6 +1539,72 @@ struct event_horizon_t : public elarion_spell_t
   }
 };
 
+struct lunarlight_salvo_t : public elarion_spell_t
+{
+  lunarlight_salvo_t( elarion_t* p )
+    : elarion_spell_t( "lunarlight_salvo", p, {} )
+  {
+    id = 9;
+
+    background = true;
+
+    name_str_reporting = "Lunarlight Salvo";
+
+    attack_power_mod.direct = p->spell_const.lunarlight_mark_ap_coeff;
+    aoe = p->talents_enabled( elarion_t::TALENT_5 ) ? 1 + p->talents.piercing_seekers_ricochet_targets : 0;
+
+    if ( p->talents_enabled( elarion_t::TALENT_11 ) )
+    {
+      base_multiplier *= 1.0 + p->talents.lunar_fury_mul;
+      base_crit += p->talents.fusillade_crit;
+    }
+    if ( p->talents_enabled( elarion_t::TALENT_8 ) )
+    {
+      base_crit += p->talents.lunarlight_affinity_salvo_cc;
+    }
+
+    lunarlight_salvo_chance_hit = lunarlight_salvo_chance_crit = 0;
+  }
+};
+
+struct lunarlight_mark_t : public elarion_spell_t
+{
+  lunarlight_mark_t( elarion_t* p, util::string_view options_str = {} )
+    : elarion_spell_t( "lunarlight_mark", p, options_str )
+  {
+    id = 10;
+
+    name_str_reporting = "Lunarlight Mark";
+
+    trigger_gcd = 0_s;
+
+    aoe = p->spell_const.lunarlight_mark_max_targets;
+
+    cooldown->duration = p->spell_const.lunarlight_mark_cooldown;
+    parse_options( options_str );
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    elarion_spell_t::impact( s );
+    if ( result_is_hit( s->result ) )
+    {
+      p()->get_target_data( s->target )
+          ->debuffs.lunarlight_mark->trigger( p()->spell_const.lunarlight_mark_stacks_applied );
+    }
+  } 
+
+  void execute() override
+  {
+    elarion_spell_t::execute();
+
+    if ( p()->talents_enabled( elarion_t::TALENT_15 ) )
+    {
+      p()->cooldowns.highwind_arrow->reset( false, 1 );
+      p()->buffs.resurgent_winds->trigger();
+    }
+  }
+};
 }  // namespace actions
 
 // ==========================================================================
@@ -1557,12 +1775,16 @@ action_t* elarion_t::create_action( util::string_view name, util::string_view op
     return new multishot_t( this, options_str );
   if ( name == "highwind_arrow" )
     return new highwind_arrow_t( this, options_str );
+  if ( name == "heartseeker_barrage" )
+    return new heartseeker_barrage_t( this, options_str );
   if ( name == "skystriders_grace" )
     return new skystriders_grace_t( this, options_str );
   if ( name == "skystriders_supremacy" )
     return new skystriders_supremacy_t( this, options_str );
   if ( name == "event_horizon" )
     return new event_horizon_t( this, options_str );
+  if ( name == "lunarlight_mark" )
+    return new lunarlight_mark_t( this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -1929,6 +2151,8 @@ void elarion_t::init_finished()
 void elarion_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
+
+  actions.lunarlight_salvo = new actions::lunarlight_salvo_t( this );
 
   // actions.searing_blaze    = new actions::searing_blaze_t( "searing_blaze", this );
   // actions.engulfing_flames = new actions::engulfing_flames_t( this );

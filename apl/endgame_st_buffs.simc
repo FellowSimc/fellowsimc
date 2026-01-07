@@ -78,6 +78,9 @@ weapon_trait.kindling=4
 weapon_trait.inspired_allegiance=4
 # weapon_trait.willful_momentum=4
 
+sets.draconic_might=1
+weapon_trait.vengeful_soul=4
+
 gems.amethyst_power=2904
 gems.ruby_power=1296
 gems.sapphire_power=324

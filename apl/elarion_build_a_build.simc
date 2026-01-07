@@ -32,7 +32,7 @@ desired_targets=1
 elarion="Elarion"
 level=80
 
-# initial_resource=spirit=100
+initial_resource=spirit=100
 
 apl/elarion_apl.simc
 
@@ -111,7 +111,8 @@ weapon=voidbringers_touch
 
 weapon_trait.amethyst_splinters=4
 weapon_trait.kindling=4
-weapon_trait.vengeful_soul=4
+weapon_trait.inspired_allegiance=4
+# weapon_trait.vengeful_soul=4
 
 # sets.draconic_might=1
 # sets.dark_prophecy=1
@@ -160,6 +161,11 @@ talents+=/final_crescendo:1
 talents+=/resurgent_winds:1
 talents+=/skyward_munitions:1
 
+# copy="Highwind Arrow 12pt SM","Elarion"
+# talents+=/final_crescendo:1
+# talents+=/resurgent_winds:1
+# talents+=/skyward_munitions:1
+
 
 copy="Hybrid","Elarion"
 talents+=/final_crescendo:1/repeating_stars:1/piercing_seekers:1/lunar_fury:1/skyward_munitions:1
@@ -167,8 +173,77 @@ talents+=/final_crescendo:1/repeating_stars:1/piercing_seekers:1/lunar_fury:1/sk
 copy="Hybrid2","Elarion"
 talents+=/final_crescendo:1/resurgent_winds:1/piercing_seekers:1/skyward_munitions:1
 
+copy="Hybrid3","Elarion"
+talents+=/final_crescendo:1/resurgent_winds:1/repeating_stars:1
+
 copy="Barrage","Elarion"
 talents+=/impending_heartseeker:1/fusillade:1/piercing_seekers:1/skyward_munitions:1
+
+copy="Barrage 12pt","Elarion"
+talents+=/impending_heartseeker:1/fusillade:1/piercing_seekers:1/skyward_munitions:0
+
+copy="Barrage 12pt SM LF","Elarion"
+talents+=/impending_heartseeker:1/fusillade:1/piercing_seekers:1/skyward_munitions:0/focused_expanse:0/skyward_munitions:1/lunar_fury:1
+
+
+# copy="Highwind Arrow 12pt LF SS","Elarion"
+# talents+=/final_crescendo:1
+# talents+=/resurgent_winds:1
+# talents+=/lunar_fury:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+
+# copy="Highwind Arrow 12pt LF SS +600 Spirit","Elarion"
+# talents+=/final_crescendo:1
+# talents+=/resurgent_winds:1
+# talents+=/lunar_fury:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+# gear_haste_rating=1250
+# gear_crit_rating=1065
+# gear_versatility_rating=1400
+# gear_mastery_rating=800
+
+# copy="Highwind Arrow 12pt LF SS +1200 Spirit","Elarion"
+# talents+=/final_crescendo:1
+# talents+=/resurgent_winds:1
+# talents+=/lunar_fury:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+# gear_haste_rating=1050
+# gear_crit_rating=865
+# gear_versatility_rating=1200
+# gear_mastery_rating=1400
+
+
+# copy="Highwind Arrow 12pt LF LS SS","Elarion"
+# talents+=/final_crescendo:1
+# talents+=/resurgent_winds:1
+# talents+=/lunar_fury:1/focused_expanse:0/lethal_shots:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+
+# copy="Highwind Arrow 12pt LF LS SS +600 Spirit","Elarion"
+# talents+=/final_crescendo:1
+# talents+=/resurgent_winds:1
+# talents+=/lunar_fury:1/focused_expanse:0/lethal_shots:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+# gear_haste_rating=1250
+# gear_crit_rating=1065
+# gear_versatility_rating=1400
+# gear_mastery_rating=800
+
+# copy="Highwind Arrow 12pt LF LS SS +1200 Spirit","Elarion"
+# talents+=/final_crescendo:1
+# talents+=/resurgent_winds:1
+# talents+=/lunar_fury:1/focused_expanse:0/lethal_shots:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+# gear_haste_rating=1050
+# gear_crit_rating=865
+# gear_versatility_rating=1200
+# gear_mastery_rating=1400
 
 # # copy="Piercing Seekers","Elarion"
 # talents+=/piercing_seekers:1

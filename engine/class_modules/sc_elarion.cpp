@@ -11,11 +11,6 @@ namespace elarion
 // Forward Declarations
 class elarion_t;
 
-enum class secondary_trigger
-{
-  NONE = 0U,
-};
-
 namespace actions
 {
 struct elarion_heal_t;
@@ -374,11 +369,7 @@ public:
   void init_base_stats() override;
   void init_talents() override;
   void init_gains() override;
-  void init_procs() override;
   void init_scaling() override;
-  void init_resources( bool force ) override;
-  void init_items() override;
-  void init_special_effects() override;
   void init_finished() override;
   void init_background_actions() override;
   void init_rng() override;
@@ -391,10 +382,6 @@ public:
   std::string create_profile( save_e stype ) override;
   void init_action_list() override;
 
-  void reset() override;
-  void activate() override;
-  void arise() override;
-  void combat_begin() override;
   action_t* create_action( util::string_view name, util::string_view options ) override;
 
   std::unique_ptr<expr_t> create_action_expression( action_t& action, std::string_view name_str ) override;
@@ -414,20 +401,11 @@ public:
   double composite_heal_versatility() const override;
   double composite_leech() const override;
   double matching_gear_multiplier( attribute_e attr ) const override;
-  double resource_regen_per_second( resource_e ) const override;
   double composite_player_multiplier( school_e school ) const override;
-  double composite_player_pet_damage_multiplier( const action_state_t*, bool ) const override;
   double composite_player_target_multiplier( player_t* target, school_e school ) const override;
   double composite_player_target_crit_chance( player_t* target ) const override;
   double composite_player_target_armor( player_t* target ) const override;
-  double non_stacking_movement_modifier() const override;
-  double stacking_movement_modifier() const override;
   void invalidate_cache( cache_e ) override;
-
-  void analyze( sim_t& sim ) override;
-
-  double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
-  double resource_loss( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
 
   std::string default_flask() const override
   {
@@ -488,64 +466,6 @@ public:
 namespace actions
 {  // namespace actions
 
-template <typename Base>
-struct secondary_action_trigger_t : public event_t
-{
-  Base* action;
-  action_state_t* state;
-  player_t* target;
-
-  secondary_action_trigger_t( action_state_t* s, timespan_t delay = timespan_t::zero() )
-    : event_t( *s->action->sim, delay ), action( dynamic_cast<Base*>( s->action ) ), state( s ), target( nullptr )
-  {
-  }
-
-  secondary_action_trigger_t( player_t* target, Base* action, timespan_t delay = timespan_t::zero() )
-    : event_t( *action->sim, delay ), action( action ), state( nullptr ), target( target )
-  {
-  }
-
-  const char* name() const override
-  {
-    return "secondary_action_trigger";
-  }
-
-  void execute() override
-  {
-    assert( action->is_secondary_action() );
-
-    player_t* action_target = state ? state->target : target;
-
-    // Ensure target is still available and did not demise during delay.
-    if ( !action_target || action_target->is_sleeping() )
-      return;
-
-    action->set_target( action_target );
-
-    // No state, construct one and grab combo points from the event instead of current CP amount.
-    if ( !state )
-    {
-      state         = action->get_state();
-      state->target = action_target;
-      // Calling snapshot_internal, snapshot_state would overwrite CP.
-      action->snapshot_internal( state, STATE_CRIT, action->amount_type( state ) );
-    }
-
-    assert( !action->pre_execute_state );
-
-    action->pre_execute_state = state;
-    action->snapshot_internal( state, action->snapshot_flags & ~STATE_CRIT, action->amount_type( state ) );
-    action->execute();
-    state = nullptr;
-  }
-
-  ~secondary_action_trigger_t() override
-  {
-    if ( state )
-      action_state_t::release( state );
-  }
-};
-
 template <typename T_ACTION>
 struct elarion_action_state_t : public action_state_t
 {
@@ -603,14 +523,12 @@ private:
   using ab = Base;
 
 public:
-  secondary_trigger secondary_trigger_type;
   double lunarlight_salvo_chance_hit;
   double lunarlight_salvo_chance_crit;
 
   // Init =====================================================================
   elarion_action_t( util::string_view n, elarion_t* p, util::string_view options = {} )
     : ab( n, p, options ),
-      secondary_trigger_type( secondary_trigger::NONE ),
       lunarlight_salvo_chance_hit( p->spell_const.lunarlight_mark_chance_hit ),
       lunarlight_salvo_chance_crit( p->spell_const.lunarlight_mark_chance_crit )
   {
@@ -620,11 +538,6 @@ public:
     ab::resource_current = RESOURCE_FOCUS;
     // elarion_t sets base and min GCD to 1.5_s hasted
     ab::gcd_type = gcd_haste_type::ATTACK_HASTE;
-  }
-
-  void init() override
-  {
-    ab::init();
   }
 
   // Type Wrappers ============================================================
@@ -661,90 +574,6 @@ public:
     return new elarion_action_state_t<base_t>( this, ab::target );
   }
 
-  void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
-  {
-    ab::update_state( state, flags, rt );
-  }
-
-  void snapshot_state( action_state_t* state, result_amount_type rt ) override
-  {
-    ab::snapshot_state( state, rt );
-    /*cast_state( state )->temporal_pct =
-        p()->buffs.uchronia->check() ? 1.0 : p()->resources.pct( RESOURCE_FOCUS );
-    cast_state( state )->temporal_paradox = p()->buffs.temporal_paradox->check();*/
-  }
-
-  // Secondary Trigger Functions ==============================================
-
-  bool is_secondary_action() const
-  {
-    return secondary_trigger_type != secondary_trigger::NONE;
-  }
-
-  virtual void trigger_secondary_action( player_t* target, timespan_t delay = timespan_t::zero() )
-  {
-    assert( is_secondary_action() );
-    make_event<secondary_action_trigger_t<base_t>>( *ab::sim, target, this, delay );
-  }
-
-  virtual void trigger_secondary_action( action_state_t* s, timespan_t delay = timespan_t::zero() )
-  {
-    assert( is_secondary_action() && s->action == this );
-    make_event<secondary_action_trigger_t<base_t>>( *ab::sim, s, delay );
-  }
-
-  // Residual Trigger Functions ===============================================
-
-  virtual void trigger_residual_action( const action_state_t* s, double multiplier = 1.0, bool unmitigated = true,
-                                        bool reverse_target_da_multiplier = true, player_t* override_target = nullptr,
-                                        bool trigger_event = true )
-  {
-    // Depending on the ability, may use unmitigated or mitigated results
-    const double base_damage = unmitigated ? s->result_total : s->result_amount;
-    // Target multipliers may not replicate to secondary targets, which requires reversing them out
-    const double target_da_multiplier =
-        ( unmitigated && reverse_target_da_multiplier ) ? ( 1.0 / s->target_da_multiplier ) : 1.0;
-    const double amount = base_damage * multiplier * target_da_multiplier;
-
-    if ( amount <= 0 )
-      return;
-
-    player_t* primary_target = override_target ? override_target : s->target;
-
-    p()->sim->print_debug( "{} triggers residual {} for {:.2f} damage ({:.2f} * {} * {:.3f}) on {}", *p(), *this,
-                           amount, base_damage, multiplier, target_da_multiplier, *primary_target );
-
-    if ( !ab::callbacks || !trigger_event )
-    {
-      ab::execute_on_target( primary_target, amount );
-    }
-    else
-    {
-      // Trigger as an event so that this happens after the impact for proc/RPPM targeting purposes
-      make_event( *p()->sim, 0_ms,
-                  [ this, amount, primary_target ]() { ab::execute_on_target( primary_target, amount ); } );
-    }
-  }
-
-  virtual void trigger_residual_action( player_t* primary_target, double amount, bool trigger_event = true )
-  {
-    if ( amount <= 0 )
-      return;
-
-    p()->sim->print_debug( "{} triggers residual {} for {:.2f} damage on {}", *p(), *this, amount, *primary_target );
-
-    if ( !ab::callbacks || !trigger_event )
-    {
-      ab::execute_on_target( primary_target, amount );
-    }
-    else
-    {
-      // Trigger as an event so that this happens after the impact for proc/RPPM targeting purposes
-      make_event( *p()->sim, 0_ms,
-                  [ this, amount, primary_target ]() { ab::execute_on_target( primary_target, amount ); } );
-    }
-  }
-
   // Helper Functions =========================================================
 
   // Helper function for expressions. Returns the number of guaranteed generated combo points for
@@ -773,24 +602,6 @@ public:
 
   // General Methods ==========================================================
 
-  void update_ready( timespan_t cd_duration = timespan_t::min() ) override
-  {
-    if ( secondary_trigger_type != secondary_trigger::NONE )
-    {
-      cd_duration = timespan_t::zero();
-    }
-
-    ab::update_ready( cd_duration );
-  }
-
-  timespan_t gcd() const override
-  {
-    timespan_t t = ab::gcd();
-
-    return t;
-  }
-
-  
   double cost_pct_multiplier() const override
   {
     auto mul = ab::cost_pct_multiplier();
@@ -814,76 +625,9 @@ public:
     return m;
   }
 
-  double composite_da_multiplier( const action_state_t* state ) const override
-  {
-    double m = ab::composite_da_multiplier( state );
-
-    return m;
-  }
-
-  double composite_ta_multiplier( const action_state_t* state ) const override
-  {
-    double m = ab::composite_ta_multiplier( state );
-
-    return m;
-  }
-
-  double composite_target_multiplier( player_t* target ) const override
-  {
-    double m = ab::composite_target_multiplier( target );
-
-    return m;
-  }
-
-  double composite_target_crit_chance( player_t* target ) const override
-  {
-    double c = ab::composite_target_crit_chance( target );
-    return c;
-  }
-
-  double composite_crit_chance() const override
-  {
-    double c = ab::composite_crit_chance();
-
-    return c;
-  }
-
-  double composite_crit_damage_bonus_multiplier() const override
-  {
-    double cm = ab::composite_crit_damage_bonus_multiplier();
-
-    return cm;
-  }
-
-  double composite_target_crit_damage_bonus_multiplier( player_t* target ) const override
-  {
-    double cm = ab::composite_target_crit_damage_bonus_multiplier( target );
-
-    return cm;
-  }
-
-  double total_crit_bonus( const action_state_t* state ) const override
-  {
-    double crit_bonus = ab::total_crit_bonus( state );
-
-    return crit_bonus;
-  }
-
-  timespan_t tick_time( const action_state_t* s ) const override
-  {
-    timespan_t tt = ab::tick_time( s );
-
-    return tt;
-  }
 
   void consume_resource() override
   {
-    // Abilities triggered as part of another ability (secondary triggers) do not consume resources
-    if ( is_secondary_action() )
-    {
-      return;
-    }
-
     ab::consume_resource();
 
     spend_resource_costs( ab::execute_state );
@@ -915,40 +659,6 @@ public:
     }
   }
 
-  void execute() override
-  {
-    ab::execute();
-
-    // if ( p()->talents.soulfrost_torrent && !is_secondary_action() && !ab::background && !ab::tick_action )
-    //{
-    //   if ( !p()->buffs.soulfrost_torrent->check() && p()->rppm.soulfrost_torrent->trigger() )
-    //   {
-    //     p()->buffs.soulfrost_torrent->trigger();
-    //   }
-    // }
-
-    // if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background )
-    // {
-    //   if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
-    //   {
-    //     p()->buffs.undulating_spirit->trigger();
-    //   }
-    //}
-  }
-
-  void schedule_travel( action_state_t* state ) override
-  {
-    ab::schedule_travel( state );
-  }
-
-  bool ready() override
-  {
-    if ( !ab::ready() )
-      return false;
-
-    return true;
-  }
-
   std::unique_ptr<expr_t> create_expression( std::string_view name ) override
   {
     if ( util::str_compare_ci( name, "focus_gain" ) )
@@ -977,7 +687,7 @@ struct elarion_spell_t : public elarion_action_t<fellowship::actions::fs_player_
   }
 };
 
-struct elarion_attack_t : public elarion_action_t<fellowship::actions::fs_player_action_t<attack_t>>
+struct elarion_attack_t : public elarion_action_t<fellowship::actions::fs_player_action_t<ranged_attack_t>>
 {
   elarion_attack_t( util::string_view n, elarion_t* p, util::string_view o = {} ) : base_t( n, p, o )
   {
@@ -1026,6 +736,8 @@ struct celestial_shot_t : public elarion_attack_t
     : elarion_attack_t( "celestial_shot", p, options_str )
   {
     id = 3;
+
+    school = SCHOOL_MAGIC;
 
     attack_power_mod.direct = p->spell_const.celestial_shot_ap_coeff;
 
@@ -1575,12 +1287,10 @@ struct lunarlight_salvo_t : public elarion_spell_t
     name_str_reporting = "Lunarlight Salvo";
 
     attack_power_mod.direct = p->spell_const.lunarlight_mark_ap_coeff;
-    aoe = p->talents_enabled( elarion_t::TALENT_5 ) ? 1 + p->talents.piercing_seekers_ricochet_targets : 0;
 
     if ( p->talents_enabled( elarion_t::TALENT_11 ) )
     {
       base_multiplier *= 1.0 + p->talents.lunar_fury_mul;
-      base_crit += p->talents.fusillade_crit;
     }
     if ( p->talents_enabled( elarion_t::TALENT_8 ) )
     {
@@ -1630,11 +1340,13 @@ struct lunarlight_mark_t : public elarion_spell_t
   }
 };
 
-struct starfall_volley_damage_t : public elarion_spell_t
+struct starfall_volley_damage_t : public elarion_attack_t
 {
-  starfall_volley_damage_t( elarion_t* p ) : elarion_spell_t( "starfall_volley_dmg", p, {} )
+  starfall_volley_damage_t( elarion_t* p ) : elarion_attack_t( "starfall_volley_dmg", p, {} )
   {
     id = 11;
+
+    school = SCHOOL_MAGIC;
 
     background = true;
 
@@ -1810,15 +1522,6 @@ double elarion_t::composite_player_multiplier( school_e school ) const
   return m;
 }
 
-// elarion_t::composite_player_pet_damage_multiplier ==========================
-
-double elarion_t::composite_player_pet_damage_multiplier( const action_state_t* s, bool guardian ) const
-{
-  double m = fs_player_t::composite_player_pet_damage_multiplier( s, guardian );
-
-  return m;
-}
-
 // elarion_t::composite_player_target_multiplier ==============================
 
 double elarion_t::composite_player_target_multiplier( player_t* target, school_e school ) const
@@ -1966,13 +1669,6 @@ std::unique_ptr<expr_t> elarion_t::create_resource_expression( util::string_view
   return fs_player_t::create_resource_expression( name_str );
 }
 
-double elarion_t::resource_regen_per_second( resource_e r ) const
-{
-  double reg = fs_player_t::resource_regen_per_second( r );
-
-  return reg;
-}
-
 // elarion_t::init_base =======================================================
 
 void elarion_t::init_base_stats()
@@ -2044,13 +1740,6 @@ void elarion_t::init_gains()
   // gains.time_rift    = get_gain( "Time Rift" );
 }
 
-// elarion_t::init_procs ======================================================
-
-void elarion_t::init_procs()
-{
-  fs_player_t::init_procs();
-}
-
 // elarion_t::init_rng ========================================================
 void elarion_t::init_rng()
 {
@@ -2074,13 +1763,6 @@ void elarion_t::init_scaling()
   {
     return;
   }
-}
-
-// elarion_t::init_resources =================================================
-
-void elarion_t::init_resources( bool force )
-{
-  fs_player_t::init_resources( force );
 }
 
 // elarion_t::init_buffs ======================================================
@@ -2259,39 +1941,6 @@ std::string elarion_t::create_profile( save_e stype )
   return profile_str;
 }
 
-// elarion_t::init_items ======================================================
-
-void elarion_t::init_items()
-{
-  fs_player_t::init_items();
-}
-
-// elarion_t::init_special_effects ============================================
-
-void elarion_t::init_special_effects()
-{
-  fs_player_t::init_special_effects();
-
-  /*if ( talents_enabled( PYROPHIBIAN_FRENZY ) )
-  {
-    auto effect          = new special_effect_t( this );
-    effect->spell_id     = 9120102;
-    effect->name_str     = "pyrophibian_frenzy";
-    effect->proc_flags_  = PF_PERIODIC;
-    effect->proc_flags2_ = PF2_CRIT;
-    effect->proc_chance_ = talents.pyrophibian_frenzy_chance;
-
-    special_effects.push_back( effect );
-
-    effect->execute_action = actions.fire_frog;
-
-    auto dbc = new dbc_proc_callback_t( this, *effect );
-
-    dbc->initialize();
-    dbc->activate();
-  }*/
-}
-
 // elarion_t::init_finished ===================================================
 
 void elarion_t::init_finished()
@@ -2312,79 +1961,6 @@ void elarion_t::init_background_actions()
 
   actions.lunarlight_salvo = new actions::lunarlight_salvo_t( this );
   actions.starfall_volley  = new actions::starfall_volley_damage_t( this );
-
-  // actions.searing_blaze    = new actions::searing_blaze_t( "searing_blaze", this );
-  // actions.engulfing_flames = new actions::engulfing_flames_t( this );
-
-  // actions.fire_frogs_hit    = new actions::fire_frog_hit_t( this );
-  // actions.fire_frog         = new actions::fire_frog_t( this );
-  // actions.crackling_inferno = new actions::crackling_inferno_t( this );
-  // actions.flare_up          = new actions::flare_up_t( this );
-}
-
-// elarion_t::reset ===========================================================
-
-void elarion_t::reset()
-{
-  fs_player_t::reset();
-
-  // for ( auto enemy : sim->target_list )
-  //{
-  //   get_target_data( enemy )->dots.engulfing_decrement_events.clear();
-  // }
-}
-
-// elarion_t::activate ========================================================
-
-void elarion_t::activate()
-{
-  fs_player_t::activate();
-}
-
-// elarion_t::arise ===========================================================
-
-void elarion_t::arise()
-{
-  fs_player_t::arise();
-}
-
-// elarion_t::combat_begin ====================================================
-
-void elarion_t::combat_begin()
-{
-  fs_player_t::combat_begin();
-}
-
-double elarion_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
-{
-  double actual_amount = fs_player_t::resource_gain( resource_type, amount, source, action );
-
-  return actual_amount;
-}
-
-double elarion_t::resource_loss( resource_e resource_type, double amount, gain_t* source, action_t* action )
-{
-  double actual_amount = fs_player_t::resource_loss( resource_type, amount, source, action );
-
-  return actual_amount;
-}
-
-// elarion_t::non_stacking_movement_modifier ==================================
-
-double elarion_t::non_stacking_movement_modifier() const
-{
-  double ms = fs_player_t::non_stacking_movement_modifier();
-
-  return ms;
-}
-
-// elarion_t::stacking_movement_modifier===================================
-
-double elarion_t::stacking_movement_modifier() const
-{
-  double ms = fs_player_t::stacking_movement_modifier();
-
-  return ms;
 }
 
 template <typename Base>
@@ -2438,11 +2014,6 @@ stat_e elarion_t::convert_hybrid_stat( stat_e s ) const
     default:
       return s;
   }
-}
-
-void elarion_t::analyze( sim_t& sim )
-{
-  fs_player_t::analyze( sim );
 }
 
 void elarion_t::create_cooldowns()

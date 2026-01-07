@@ -1664,7 +1664,7 @@ void fs_player_t::init_special_effects()
     effect->cooldown_             = fs_sets.dark_prophecy_cooldown;
     effect->ppm_                  = -fs_sets.dark_prophecy_ppm;
     effect->rppm_scale_           = rppm_scale_e::RPPM_NONE;
-    effect->rppm_blp_             = real_ppm_t::BLP_DISABLED;
+    effect->rppm_blp_             = real_ppm_t::BLP_ENABLED;
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
     special_effects.push_back( effect );
@@ -1688,7 +1688,7 @@ void fs_player_t::init_special_effects()
     effect->cooldown_             = fs_sets.draconic_might_cooldown;
     effect->ppm_                  = -fs_sets.draconic_might_ppm;
     effect->rppm_scale_           = rppm_scale_e::RPPM_CRIT;
-    effect->rppm_blp_             = real_ppm_t::BLP_DISABLED;
+    effect->rppm_blp_             = real_ppm_t::BLP_ENABLED;
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
     special_effects.push_back( effect );
@@ -1802,7 +1802,7 @@ void fs_player_t::init_special_effects()
     effect->cooldown_             = 0_s;
     effect->ppm_                  = -2.1;
     effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
-    effect->rppm_blp_             = real_ppm_t::BLP_DISABLED;
+    effect->rppm_blp_             = real_ppm_t::BLP_ENABLED;
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
     special_effects.push_back( effect );
@@ -1839,7 +1839,7 @@ void fs_player_t::init_special_effects()
     effect->cooldown_    = 0_s;
     effect->ppm_         = -2;
     effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
-    effect->rppm_blp_    = real_ppm_t::BLP_DISABLED;
+    effect->rppm_blp_    = real_ppm_t::BLP_ENABLED;
     effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
     special_effects.push_back( effect );
@@ -1891,7 +1891,7 @@ void fs_player_t::init_special_effects()
     effect->cooldown_    = 0_s;
     effect->ppm_         = -fs_weapon_trait_values.diamond_strike_ppm[ fs_weapons.diamond_strike ];
     effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
-    effect->rppm_blp_    = real_ppm_t::BLP_DISABLED;
+    effect->rppm_blp_    = real_ppm_t::BLP_ENABLED;
     effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
     special_effects.push_back( effect );
@@ -1977,20 +1977,21 @@ void fs_player_t::init_special_effects()
     effect->name_str              = "vengeful_soul";
     effect->proc_flags_           = PF_ALL_DAMAGE;
     effect->proc_flags2_          = PF2_CRIT;
+    effect->cooldown_             = 0_s;
     effect->has_use_buff_override = true;
     effect->ppm_                  = -2.0;
     effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
-    effect->rppm_blp_             = real_ppm_t::BLP_DISABLED;
+    effect->rppm_blp_             = real_ppm_t::BLP_ENABLED;
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
     special_effects.push_back( effect );
 
     effect->custom_buff = fs_buffs.vengeful_soul;
 
-    auto dbc = new dbc_proc_callback_t( this, *effect );
+    auto cb = new dbc_proc_callback_t( this, *effect );
 
-    dbc->initialize();
-    dbc->activate();
+    cb->initialize();
+    cb->activate();
   }
 
   if ( fs_weapons.inspired_allegiance )

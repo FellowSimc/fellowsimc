@@ -5,7 +5,7 @@ actions.precombat+=/focused_shot
 actions=run_action_list,name=main
 
 actions.main=event_horizon,if=buff.skystriders_grace.up
-actions.main+=/skystriders_grace
+actions.main+=/skystriders_grace,if=spirit.time_to_100>=10|spirit=100|fight_remains>=130
 actions.main+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up
 actions.main+=/lunarlight_mark,if=!buff.resurgent_winds.up|!talent.resurgent_winds
 #,if=!talent.final_crescendo|!talent.resurgent_winds|buff.final_crescendo.at_max_stacks
@@ -13,16 +13,15 @@ actions.main+=/voidbringer
 actions.main+=/highwind_arrow,if=debuff.lunarlight_mark.up&buff.resurgent_winds.up
 actions.main+=/starfall_volley
 actions.main+=/multishot,if=buff.skystriders_supremacy.up&(buff.skystriders_supremacy.stack-2)*gcd.max<=buff.skystriders_supremacy.remains&(buff.skystriders_supremacy.stack)*gcd.max>=buff.skystriders_supremacy.remains
-actions.main+=/celestial_shot,if=buff.celestial_impetus.react&buff.resurgent_winds.react|buff.celestial_impetus.remains<=gcd.max*2&buff.celestial_impetus.up
-actions.main+=/highwind_arrow,if=legendary.shimmer&debuff.shimmer.remains<=gcd.max*3|debuff.shimmer.stack<2&charges>=2&legendary.shimmer|buff.resurgent_winds.at_max_stacks|debuff.lunarlight_mark.up&buff.resurgent_winds.up
-actions.main+=/heartseeker_barrage,if=buff.impending_heartseeker.up|talent.fervent_supremacy&active_enemies=1|buff.event_horizon.up
+actions.main+=/highwind_arrow,if=legendary.shimmer&debuff.shimmer.remains<=gcd.max*3|charges>=(2-debuff.shimmer.stack)&legendary.shimmer&debuff.shimmer.stack<2|buff.resurgent_winds.at_max_stacks|debuff.lunarlight_mark.up&buff.resurgent_winds.up
+actions.main+=/heartseeker_barrage,if=buff.impending_heartseeker.up|talent.fervent_supremacy&active_enemies=1|buff.event_horizon.up|talent.piercing_seekers&talent.fusillade,interrupt_if=!buff.impending_heartseeker.up&active_enemies>3
 actions.main+=/celestial_shot,if=buff.celestial_impetus.react&talent.impending_heartseeker
-actions.main+=/highwind_arrow,if=full_recharge_time<=gcd.max*3&(!buff.skystriders_supremacy.up|talent.fervent_supremacy)&active_enemies<=3
+actions.main+=/highwind_arrow,if=charges_fractional>=2&(!buff.skystriders_supremacy.up|talent.fervent_supremacy)&active_enemies<=12
 actions.main+=/multishot,if=buff.focused_expanse.up|buff.skystriders_supremacy.up
-actions.main+=/heartseeker_barrage
-actions.main+=/highwind_arrow,if=legendary.shimmer&charges>=2
+actions.main+=/highwind_arrow,if=legendary.shimmer&charges>=2|!legendary.shimmer&(active_enemies=1|!buff.multishot.at_max_stacks)
 actions.main+=/chronoshift
-actions.main+=/multishot,if=buff.multishot.up&active_enemies>=3
-actions.main+=/celestial_shot,if=(!talent.focused_expanse|talent.skyward_munitions&focus.deficit<=40&active_enemies<3|buff.celestial_impetus.react&!talent.impending_heartseeker)&active_enemies<3
-actions.main+=/highwind_arrow,if=!legendary.shimmer&charges>1&!buff.resurgent_winds.react
+actions.main+=/highwind_arrow,if=active_enemies>=2&!buff.multishot.up
+actions.main+=/multishot,if=buff.multishot.up&active_enemies>=2
+actions.main+=/heartseeker_barrage,if=active_enemies<=6*(1+talent.piercing_seekers),interrupt_if=active_enemies>3
+actions.main+=/celestial_shot,if=(!talent.focused_expanse|talent.skyward_munitions|buff.celestial_impetus.react&!talent.impending_heartseeker)&focus>=65
 actions.main+=/focused_shot

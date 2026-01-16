@@ -69,7 +69,7 @@ gear_mastery_rating=400
 # gear_crit_rating=900
 # gear_versatility_rating=1460
 # # gear_mastery_rating=452
-# gear_mastery_rating=1600
+# gear_mastery_rating=s
 
 weapon=fated_strike
 weapon_trait.visions_of_grandeur=4

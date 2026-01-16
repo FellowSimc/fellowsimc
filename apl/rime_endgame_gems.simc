@@ -22,7 +22,7 @@ apl/rime.simc
 # positive_scale_delta=1
 # calculate_scale_factors=1
 
-gear_intellect=1500
+gear_intellect=1442
 
 # gear_haste_rating=452
 # gear_crit_rating=1812
@@ -110,7 +110,7 @@ gear_intellect=1500
 
 gear_haste_rating=2717
 gear_crit_rating=453
-gear_versatility_rating=1359
+gear_versatility_rating=1340
 gear_mastery_rating=0
 
 talent.winters_embrace=1

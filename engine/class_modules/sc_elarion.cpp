@@ -853,10 +853,12 @@ struct multishot_t : public elarion_attack_t
 
     if ( is_empowered() )
     {
-      m *= 1.0 + p()->buffs.skystriders_supremacy->check_value();
+      auto empowered_amp = 1.0 + p()->buffs.skystriders_supremacy->check_value();
 
       if ( p()->talents_enabled( elarion_t::TALENT_1 ) )
-        m *= 1.0 + p()->talents.focused_expanse_amp;
+        empowered_amp += p()->talents.focused_expanse_amp;
+
+      m *= empowered_amp;
     }
 
     return m;

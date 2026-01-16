@@ -22,7 +22,7 @@ apl/rime.simc
 # positive_scale_delta=1
 # calculate_scale_factors=1
 
-gear_intellect=1500
+gear_intellect=1442
 
 # gear_haste_rating=452
 # gear_crit_rating=1812
@@ -116,6 +116,12 @@ gear_mastery_rating=0
 gems.topaz_power=2280
 gems.amethyst_power=2640
 gems.ruby_power=120
+
+weapon=voidbringers_touch
+weapon_trait.amethyst_splinters=4
+# weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
 
 # copy="FWW Ava IF Spender","Rime"
 # talent.winters_embrace=1

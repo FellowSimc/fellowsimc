@@ -129,11 +129,11 @@ double fs_player_t::composite_melee_haste() const
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
   {
-    h += 0.015;
+    h += 0.03;
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
   {
-    h += 0.005;
+    h += 0.01;
   }
 
   if ( fs_sets.tuzari_grace )
@@ -161,11 +161,11 @@ double fs_player_t::composite_spell_haste() const
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
   {
-    h += 0.015;
+    h += 0.03;
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
   {
-    h += 0.005;
+    h += 0.01;
   }
 
   if ( fs_sets.tuzari_grace )
@@ -191,11 +191,11 @@ double fs_player_t::composite_player_critical_damage_multiplier( const action_st
 
   if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 2640 )
   {
-    cdm *= 1.12;
+    cdm *= 1.09;
   }
   else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 960 )
   {
-    cdm *= 1.04;
+    cdm *= 1.03;
   }
 
   return cdm;
@@ -298,11 +298,11 @@ double fs_player_t::composite_player_target_crit_chance( player_t* target ) cons
   {
     if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 1200 )
     {
-      c += 0.3;
+      c += 0.15;
     }
     else
     {
-      c += 0.1;
+      c += 0.05;
     }
   }
 
@@ -1064,7 +1064,7 @@ void fs_player_t::create_buffs()
                           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE );
 
   fs_buffs.first_strike = make_buff<fs_player_buff_t>( this, "first_strike" )
-                              ->set_default_value( fs_gems.gem_powers[ GEM_EMERALD ] >= 1200.0 ? 0.015 : 0.05 )
+                              ->set_default_value( fs_gems.gem_powers[ GEM_EMERALD ] >= 1200.0 ? 0.15 : 0.05 )
                               ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
                               ->set_duration( 15_s );
 
@@ -1449,12 +1449,12 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_RUBY ] >= 1560 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 24 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 45 );
     passive.add_stat( STAT_STAMINA, 420 );
   }
   else if ( fs_gems.gem_powers[ GEM_RUBY ] >= 240 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 8 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 15 );
     passive.add_stat( STAT_STAMINA, 140 );
   }
 
@@ -1504,13 +1504,13 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1560 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 45 );
-    passive.add_stat( STAT_STAMINA, 180 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 75 );
+    passive.add_stat( STAT_ARMOR, 1500 );
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 240 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 15 );
-    passive.add_stat( STAT_STAMINA, 60 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 25 );
+    passive.add_stat( STAT_ARMOR, 500 );
   }
 
   if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 2280 )
@@ -1544,30 +1544,30 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
   {
-    base.versatility += 0.015;
-    base.mastery += 0.015;
-    base.spell_crit_chance += 0.015;
-    base.attack_crit_chance += 0.015;
+    base.versatility += 0.03;
+    base.mastery += 0.03;
+    base.spell_crit_chance += 0.03;
+    base.attack_crit_chance += 0.03;
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
   {
-    base.versatility += 0.005;
-    base.mastery += 0.005;
-    base.spell_crit_chance += 0.005;
-    base.attack_crit_chance += 0.005;
+    base.versatility += 0.01;
+    base.mastery += 0.01;
+    base.spell_crit_chance += 0.01;
+    base.attack_crit_chance += 0.01;
   }
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 2280 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.06;
-    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.06;
-    base.attribute_multiplier[ STAT_AGILITY ] *= 1.06;
+    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.09;
+    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.09;
+    base.attribute_multiplier[ STAT_AGILITY ] *= 1.09;
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 720 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.02;
-    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.02;
-    base.attribute_multiplier[ STAT_AGILITY ] *= 1.02;
+    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.03;
+    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.03;
+    base.attribute_multiplier[ STAT_AGILITY ] *= 1.03;
   }
 
   // TODO: Implement as a health based check and buff that turns on & off.
@@ -1828,6 +1828,15 @@ void fs_player_t::init_special_effects()
         name_str_reporting = "Emerald Judgement";
 
         spell_power_mod.direct = p->fs_weapon_trait_values.emerald_judgement_dmg[ p->fs_weapons.emerald_judgement ];
+      }
+
+      void execute() override
+      {
+        if ( fs_p()->fs_gems.gem_powers[ GEM_EMERALD ] >= 120.0 )
+        {
+          fs_p()->fs_buffs.first_strike->trigger();
+        }
+        base_t::execute();
       }
     };
 

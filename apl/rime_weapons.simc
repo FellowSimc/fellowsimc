@@ -33,13 +33,14 @@ gems.topaz_power=2280
 gems.amethyst_power=2640
 gems.ruby_power=120
 
-talent.winters_embrace=1
-legendary.skandis_decree=1
-talent.burstbolter=1
-talent.chilling_finesse=1
-talent.cascading_blitz=1
-talent.frostweavers_wrath=1
-talent.biting_cold=1
+# talent.winters_embrace=1
+# legendary.skandis_decree=1
+# talent.burstbolter=1
+# talent.chilling_finesse=1
+# talent.cascading_blitz=1
+# talent.frostweavers_wrath=1
+# talent.biting_cold=1
+
 
 copy="Chronoshift Base","Rime"
 weapon=chronoshift

@@ -9,7 +9,7 @@ vary_combat_length=0
 single_actor_batch=1
 desired_targets=1
 
-# apl/chuey_dungeon.simc
+apl/chuey_dungeon.simc
 
 # apl/dungeon.simc
 
@@ -25,7 +25,7 @@ desired_targets=1
 mara="Mara"
 level=80
 
-initial_resource=spirit=100
+# initial_resource=spirit=100
 
 apl/mara.simc
 
@@ -78,8 +78,8 @@ weapon_trait.kindling=4
 weapon_trait.inspired_allegiance=4
 # weapon_trait.willful_momentum=4
 
-sets.draconic_might=1
-weapon_trait.vengeful_soul=4
+# sets.draconic_might=1
+# weapon_trait.vengeful_soul=4
 
 gems.amethyst_power=2904
 gems.ruby_power=1296

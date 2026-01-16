@@ -163,6 +163,8 @@ namespace color
   inline constexpr rgb COLOR_WARRIOR( "C79C6E" );
   inline constexpr rgb COLOR_PLAYER_SIMPLIFIED( "FF69B4" );
 
+  inline constexpr rgb COLOR_ELARION( "935DFF" );
+
   inline constexpr rgb WHITE( "FFFFFF" );
   inline constexpr rgb GREY( "333333" );
   inline constexpr rgb GREY2( "666666" );

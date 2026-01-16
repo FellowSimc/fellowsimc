@@ -4,8 +4,8 @@ actions.precombat+=/focused_shot
 
 actions=run_action_list,name=main
 
-actions.main=event_horizon,if=buff.skystriders_grace.up
-actions.main+=/skystriders_grace,if=spirit.time_to_100>=10|spirit=100|fight_remains>=130
+actions.main=event_horizon
+actions.main+=/skystriders_grace,if=target.time_to_die>=16|fight_remains<=20
 actions.main+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up
 actions.main+=/lunarlight_mark,if=!buff.resurgent_winds.up|!talent.resurgent_winds
 #,if=!talent.final_crescendo|!talent.resurgent_winds|buff.final_crescendo.at_max_stacks

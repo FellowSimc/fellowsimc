@@ -113,13 +113,20 @@ gear_crit_rating=453
 gear_versatility_rating=1340
 gear_mastery_rating=0
 
+weapon=voidbringers_touch
+weapon_trait.amethyst_splinters=4
+# weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+
 talent.winters_embrace=1
-legendary.skandis_decree=1
 talent.burstbolter=1
-talent.icy_flow=1
-talent.avalanche=1
+talent.supreme_torrent=1
+talent.coalescing_frost=1
 talent.cascading_blitz=1
-talent.frostweavers_wrath=1
+talent.soulfrost_torrent=1
+talent.biting_cold=1
+legendary.frostwyrms_spite=1
 
 copy="Amethyst 120","Rime"
 gems.amethyst_power=120

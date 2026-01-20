@@ -312,6 +312,9 @@ public:
     double temporal_paradox_extra_ticks  = 3;
     int temporal_paradox_burn_aoe        = 2;
 
+    double a_tear_in_time_cdr   = 0.1;
+    double a_tear_in_time_haste = 0.1;
+
   } talents;
 
   struct legendary_t
@@ -636,8 +639,9 @@ public:
   void snapshot_state( action_state_t* state, result_amount_type rt ) override
   {
     ab::snapshot_state( state, rt );
-    cast_state( state )->temporal_pct =
-        p()->buffs.uchronia->check() ? 1.0 : p()->resources.pct( RESOURCE_TEMPORAL_OVERCHARGE );
+    cast_state( state )->temporal_pct     = p()->buffs.absolute_stasis->check() || p()->buffs.uchronia->check()
+                                                ? 1.0
+                                                : p()->resources.pct( RESOURCE_TEMPORAL_OVERCHARGE );
     cast_state( state )->temporal_paradox = p()->buffs.temporal_paradox->check();
   }
 
@@ -1659,11 +1663,36 @@ void lisa_t::create_buffs()
             resource_gain( RESOURCE_TEMPORAL_OVERCHARGE, spell_const.time_rift_resource, gains.time_rift, nullptr );
           } );
 
+  if ( talents_enabled( TALENT_10 ) )
+  {
+    buffs.time_rift->add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
+      if ( _new )
+      {
+        for ( auto& action : action_list )
+        {
+          action->base_recharge_multiplier -= talents.a_tear_in_time_cdr;
+          action->cooldown->adjust_recharge_multiplier();
+        }
+      }
+      else
+      {
+        for ( auto& action : action_list )
+        {
+          action->base_recharge_multiplier += talents.a_tear_in_time_cdr;
+          action->cooldown->adjust_recharge_multiplier();
+        }
+      }
+    } );
+  }
+
   struct absolute_stasis_buff_t : lisa_buff_t
   {
     double cdr_mod;
+    double cd_mod;
     absolute_stasis_buff_t( lisa_t* pl )
-      : lisa_buff_t( pl, "absolute_stasis" ), cdr_mod( pl->spell_const.absolute_stasis_cd_recovery )
+      : lisa_buff_t( pl, "absolute_stasis" ),
+        cdr_mod( pl->spell_const.absolute_stasis_cd_recovery ),
+        cd_mod( pl->spell_const.absolute_stasis_cd_reduction )
     {
       set_duration( pl->spell_const.absolute_stasis_duration );
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
@@ -1672,6 +1701,7 @@ void lisa_t::create_buffs()
           for ( auto& action : p()->action_list )
           {
             action->base_recharge_rate_multiplier /= cdr_mod;
+            action->base_recharge_multiplier = 1.0 - ( 1.0 - action->base_recharge_multiplier ) * cd_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
         }
@@ -1680,6 +1710,7 @@ void lisa_t::create_buffs()
           for ( auto& action : p()->action_list )
           {
             action->base_recharge_rate_multiplier *= cdr_mod;
+            action->base_recharge_multiplier = 1.0 - ( 1.0 - action->base_recharge_multiplier ) / cd_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
         }

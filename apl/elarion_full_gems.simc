@@ -43,10 +43,7 @@ apl/elarion_apl.simc
 # gear_mastery_rating=200
 
 gear_agility=1442
-gear_haste_rating=1450
-gear_crit_rating=1265
-gear_versatility_rating=1600
-gear_mastery_rating=200
+
 
 # gems.amethyst_power=2640
 # gems.ruby_power=162
@@ -111,21 +108,19 @@ weapon=voidbringers_touch
 
 weapon_trait.amethyst_splinters=4
 weapon_trait.kindling=4
-weapon_trait.inspired_allegiance=4
+weapon_trait.willful_momentum=4
+# weapon_trait.inspired_allegiance=4
 # weapon_trait.vengeful_soul=4
 
 # sets.draconic_might=1
 # sets.dark_prophecy=1
 
 # copy="Last Lights"
-talents=last_lights:1
 
 # copy="Fervent","Elarion"
-talents+=/fervent_supremacy:1
 
 
 # copy="Focused","Elarion"
-talents+=/focused_expanse:1
 
 # # copy="Impending Heartseeker Fusillade","Elarion"
 # talents+=/impending_heartseeker:1/fusillade:1
@@ -133,7 +128,6 @@ talents+=/focused_expanse:1
 # # copy="Piercing Seekers","Elarion"
 # talents+=/piercing_seekers:1
 
-legendary.shimmer=1
 
 
 
@@ -146,10 +140,28 @@ legendary.shimmer=1
 # talents+=/repeating_stars:1/piercing_seekers:1/lunar_fury:1
 
 # copy="Highwind Arrow","Elarion"
+
+gear_haste_rating=1450
+gear_crit_rating=1265
+gear_versatility_rating=1600
+gear_mastery_rating=200
+legendary.shimmer=1
+
+
+# gear_haste_rating=1050
+# gear_crit_rating=865
+# gear_versatility_rating=1200
+# gear_mastery_rating=1400
+# legendary.starstrikers_ascent=1
+
+talents=last_lights:1
+talents+=/fervent_supremacy:1
 talents+=/final_crescendo:1
 talents+=/resurgent_winds:1
+# talents+=/focused_expanse:1
 talents+=/lethal_shots:1
-# talents+=/skyward_munitions:1/lunar_fury:1
+talents+=/skyward_munitions:1/lunar_fury:1
+
 
 
 copy="10p6r6y","Elarion"

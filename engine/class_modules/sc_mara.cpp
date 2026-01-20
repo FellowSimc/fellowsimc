@@ -2671,17 +2671,10 @@ void mara_t::init_base_stats()
 
   fs_player_t::init_base_stats();
 
-  base.rating.attack_crit = base.rating.attack_haste = base.rating.damage_versatility = base.rating.mastery =
-      base.rating.heal_versatility = base.rating.spell_crit = base.rating.spell_haste = base.rating.spell_hit = 0.00017;
-
   base.stats.attribute[ STAT_AGILITY ] = 1000;
-  base.stats.attribute[ STAT_STAMINA ] = 1000;
   resources.base[ RESOURCE_HEALTH ]    = 11480;
 
   base.health_per_stamina = 36.638;
-
-  base.attack_power_per_agility  = 1.0;
-  base.spell_power_per_intellect = 1.0;
 
   base.mastery = 0.0;
 

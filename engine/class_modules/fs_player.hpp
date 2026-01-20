@@ -110,6 +110,7 @@ public:
     buff_t* hidden_power_stacking;
     buff_t* hidden_power;
     buff_t* sundering_wrath;
+    buff_t* harmonious_soul;
   } fs_buffs;
 
   struct fs_cooldowns_t
@@ -180,6 +181,10 @@ public:
   struct fs_gems_t
   {
     std::array<double, GEM_MAX> gem_powers;
+
+    bool use_new_harmonious            = false;
+    timespan_t new_harmonious_duration = 12_s;
+    double new_harmonious_amp          = 0.2;
   } fs_gems;
 
   struct fs_weapons_t
@@ -234,6 +239,14 @@ public:
     const double voidbringer_cap          = 42.5;
     const double voidbringer_acc          = 0.1;
     const timespan_t voidbringer_duration = 15_s;
+
+    const timespan_t earthbreaker_cooldown        = 180_s;
+    const double earthbreaker_initial_hit_coeff   = 8.767;
+    const double earthbreaker_repeating_hit_coeff = 1.332;
+    const double earthbreaker_final_hit_coeff     = 12.66;
+    const double earthbreaker_target_falloff      = 3;
+    const timespan_t earthbreaker_duration        = 10_s;
+    const timespan_t earthbreaker_period          = 1.5_s;
   } fs_weapon_values;
 
   struct fs_weapon_trait_values_t

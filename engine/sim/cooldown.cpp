@@ -17,7 +17,7 @@ struct recharge_event_t : event_t
   cooldown_t* cooldown_;
 
   recharge_event_t( cooldown_t* cd ) :
-    event_t( cd->sim, cd->recharge_multiplier * cd->base_duration ),
+    event_t( cd->sim, cd->recharge_multiplier * cd->recharge_rate_multiplier * cd->base_duration ),
     cooldown_( cd )
   { }
 
@@ -108,6 +108,7 @@ cooldown_t::cooldown_t( util::string_view n, player_t& p ) :
   execute_types_mask( 0U ),
   current_charge( 1 ),
   recharge_multiplier( 1.0 ),
+  recharge_rate_multiplier( 1.0 ),
   base_duration( 0_ms )
 { }
 
@@ -129,6 +130,7 @@ cooldown_t::cooldown_t( util::string_view n, sim_t& s ) :
   execute_types_mask( 0U ),
   current_charge( 1 ),
   recharge_multiplier( 1.0 ),
+  recharge_rate_multiplier( 1.0 ),
   base_duration( 0_ms )
 { }
 
@@ -145,22 +147,25 @@ void cooldown_t::adjust_recharge_multiplier()
     return;
   }
 
-  double old_multiplier = recharge_multiplier;
   assert( action && "Only cooldowns with associated action can have their recharge multiplier adjusted." );
-  recharge_multiplier = action->recharge_multiplier( *this ) * action->recharge_rate_multiplier( *this );
-  assert( recharge_multiplier > 0.0 );
-  if ( old_multiplier == recharge_multiplier )
+  recharge_multiplier = action->recharge_rate_multiplier( *this );
+
+  double old_rate_multiplier = recharge_rate_multiplier;
+  recharge_rate_multiplier   = action->recharge_rate_multiplier( *this );
+
+  assert( recharge_rate_multiplier > 0.0 );
+  if ( old_rate_multiplier == recharge_rate_multiplier )
   {
     return;
   }
 
   timespan_t old_ready = ready;
-  adjust_remaining_duration( recharge_multiplier / old_multiplier );
+  adjust_remaining_duration( recharge_rate_multiplier / old_rate_multiplier );
 
   if ( sim.debug )
   {
     sim.out_debug.print( "{} dynamic cooldown {} adjusted: new_ready={} old_ready={} old_mul={} new_mul={}",
-        *(action -> player), name(), ready, old_ready, old_multiplier, recharge_multiplier );
+                         *( action->player ), name(), ready, old_ready, old_rate_multiplier, recharge_rate_multiplier );
   }
 }
 
@@ -349,9 +354,10 @@ void cooldown_t::reset_init()
   last_charged = 0_ms;
   reset_react = 0_ms;
 
-  current_charge = charges;
-  recharge_multiplier = 1.0;
-  base_duration = duration;
+  current_charge           = charges;
+  recharge_multiplier      = 1.0;
+  recharge_rate_multiplier = 1.0;
+  base_duration            = duration;
 
   recharge_event = nullptr;
   ready_trigger_event = nullptr;
@@ -444,11 +450,13 @@ void cooldown_t::start( action_t* a, timespan_t _override, timespan_t delay )
 
   if ( a )
   {
-    recharge_multiplier = a->recharge_multiplier( *this ) * a->recharge_rate_multiplier( *this );
+    recharge_rate_multiplier = a->recharge_rate_multiplier( *this );
+    recharge_multiplier      = a->recharge_multiplier( *this );
   }
   else
   {
-    recharge_multiplier = 1.0;
+    recharge_rate_multiplier = 1.0;
+    recharge_multiplier      = 1.0;
   }
 
   if ( _override > 0_ms )
@@ -508,7 +516,7 @@ void cooldown_t::start( timespan_t _override, timespan_t delay )
 timespan_t cooldown_t::cooldown_duration( const cooldown_t* cd )
 {
   if ( cd->ongoing() )
-    return cd->recharge_multiplier * cd->base_duration;
+    return cd->recharge_multiplier * cd->recharge_rate_multiplier * cd->base_duration;
   else if ( cd->action )
     return cd->action->recharge_multiplier( *cd ) * cd->action->recharge_rate_multiplier( *cd ) * cd->action->cooldown_base_duration( *cd );
   else

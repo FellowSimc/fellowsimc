@@ -47,6 +47,7 @@ struct cooldown_t
   // State of the current cooldown progression. Only updated for ongoing cooldowns.
   int current_charge;
   double recharge_multiplier;
+  double recharge_rate_multiplier;
   timespan_t base_duration;
 
   cooldown_t( util::string_view name, player_t& );

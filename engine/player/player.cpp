@@ -1282,49 +1282,50 @@ player_t::player_t( sim_t* s, player_e t, util::string_view n, race_e r )
 // Added in source file to get full definitions of all objects to destruct here;
 player_t::~player_t() = default;
 
-player_t::base_initial_current_t::base_initial_current_t() :
-  stats(),
-  spell_power_per_intellect( 0 ),
-  spell_power_per_attack_power( 0 ),
-  spell_crit_per_intellect( 0 ),
-  attack_power_per_strength( 0 ),
-  attack_power_per_agility( 0 ),
-  attack_crit_per_agility( 0 ),
-  attack_power_per_spell_power( 0 ),
-  dodge_per_agility( 0 ),
-  parry_per_strength( 0 ),
-  health_per_stamina( 0 ),
-  resource_reduction(),
-  miss( 0 ),
-  dodge( 0 ),
-  parry( 0 ),
-  block( 0 ),
-  hit( 0 ),
-  expertise( 0 ),
-  leech( 0 ),
-  avoidance( 0 ),
-  spell_crit_chance(),
-  attack_crit_chance(),
-  block_reduction(),
-  mastery(),
-  versatility( 0 ),
-  skill( 1.0 ),
-  skill_debuff( 0.0 ),
-  distance( 0 ),
-  distance_to_move( 0 ),
-  moving_away( 0 ),
-  movement_direction(),
-  armor_coeff( 0 ),
-  sleeping( false ),
-  rating(),
-  attribute_multiplier(),
-  spell_power_multiplier( 1.0 ),
-  attack_power_multiplier( 1.0 ),
-  base_armor_multiplier( 1.0 ),
-  armor_multiplier( 1.0 ),
-  crit_damage_multiplier( 1.0 ),
-  crit_healing_multiplier( 1.0 ),
-  position( POSITION_BACK )
+player_t::base_initial_current_t::base_initial_current_t()
+  : stats(),
+    spell_power_per_intellect( 0 ),
+    spell_power_per_attack_power( 0 ),
+    spell_crit_per_intellect( 0 ),
+    attack_power_per_strength( 0 ),
+    attack_power_per_agility( 0 ),
+    attack_crit_per_agility( 0 ),
+    attack_power_per_spell_power( 0 ),
+    dodge_per_agility( 0 ),
+    parry_per_strength( 0 ),
+    health_per_stamina( 0 ),
+    resource_reduction(),
+    miss( 0 ),
+    dodge( 0 ),
+    parry( 0 ),
+    block( 0 ),
+    hit( 0 ),
+    expertise( 0 ),
+    leech( 0 ),
+    avoidance( 0 ),
+    spell_crit_chance(),
+    attack_crit_chance(),
+    block_reduction(),
+    mastery(),
+    versatility( 0 ),
+    haste( 0.0 ),
+    skill( 1.0 ),
+    skill_debuff( 0.0 ),
+    distance( 0 ),
+    distance_to_move( 0 ),
+    moving_away( 0 ),
+    movement_direction(),
+    armor_coeff( 0 ),
+    sleeping( false ),
+    rating(),
+    attribute_multiplier(),
+    spell_power_multiplier( 1.0 ),
+    attack_power_multiplier( 1.0 ),
+    base_armor_multiplier( 1.0 ),
+    armor_multiplier( 1.0 ),
+    crit_damage_multiplier( 1.0 ),
+    crit_healing_multiplier( 1.0 ),
+    position( POSITION_BACK )
 {
   range::fill( attribute_multiplier, 1.0 );
 }
@@ -5003,6 +5004,8 @@ double player_t::composite_melee_haste() const
   h = std::max( 0.0, composite_melee_haste_rating() ) * current.rating.attack_haste;
   h = apply_combat_rating_dr( RATING_MELEE_HASTE, h );
 
+  h += current.haste;
+
   if ( !is_pet() && !is_enemy() && type != HEALING_ENEMY )
   {
     for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_HASTE ] )
@@ -5345,6 +5348,8 @@ double player_t::composite_spell_haste() const
 
   h = std::max( 0.0, composite_spell_haste_rating() ) * current.rating.spell_haste;
   h = apply_combat_rating_dr( RATING_SPELL_HASTE, h );
+
+  h += current.haste;
 
   if ( !is_pet() && !is_enemy() && type != HEALING_ENEMY )
   {

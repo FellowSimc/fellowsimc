@@ -164,7 +164,8 @@ void pet_t::init_base_stats()
   base.attack_crit_chance = 0.05;
 
   base.versatility = 0.0;
-  base.leech = 0.0;
+  base.leech       = 0.0;
+  base.haste       = 0.0;
 
   base.armor_coeff = dbc->armor_mitigation_constant( level() );
   sim -> print_debug( "{} base armor coefficient set to {}.", *this, base.armor_coeff );

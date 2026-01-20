@@ -266,7 +266,7 @@ struct player_t : public actor_t
     std::array<double, SCHOOL_MAX> resource_reduction;
     double miss, dodge, parry, block;
     double hit, expertise, leech, avoidance;
-    double spell_crit_chance, attack_crit_chance, block_reduction, mastery, versatility;
+    double spell_crit_chance, attack_crit_chance, block_reduction, mastery, versatility, haste;
     double skill, skill_debuff, distance;
     double distance_to_move;
     double moving_away;

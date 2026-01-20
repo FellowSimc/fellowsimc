@@ -116,64 +116,14 @@ double fs_player_t::composite_melee_auto_attack_speed() const
 
 double fs_player_t::composite_melee_haste() const
 {
-  double h = 1.0 / player_t::composite_melee_haste();
-
-  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2280 )
-  {
-    h += 0.09;
-  }
-  else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 720 )
-  {
-    h += 0.03;
-  }
-
-  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
-  {
-    h += 0.03;
-  }
-  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
-  {
-    h += 0.01;
-  }
-
-  if ( fs_sets.tuzari_grace )
-  {
-    h += fs_sets.tuzari_grace_haste;
-  }
-
-  return 1.0 / h;
+  return player_t::composite_melee_haste();
 }
 
 // fs_player_t::composite_spell_haste ==========================================
 
 double fs_player_t::composite_spell_haste() const
 {
-  double h = 1.0 / player_t::composite_spell_haste();
-
-  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2280 )
-  {
-    h += 0.09;
-  }
-  else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 720 )
-  {
-    h += 0.03;
-  }
-
-  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
-  {
-    h += 0.03;
-  }
-  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
-  {
-    h += 0.01;
-  }
-
-  if ( fs_sets.tuzari_grace )
-  {
-    h += fs_sets.tuzari_grace_haste;
-  }
-
-  return 1.0 / h;
+  return player_t::composite_spell_haste();
 }
 
 // fs_player_t::composite_melee_crit_chance =========================================
@@ -579,6 +529,89 @@ struct natures_fury_t : fs_weapon_action_t<spell_t>
   }
 };
 
+struct earthbreaker_t : fs_weapon_action_t<spell_t>
+{
+  struct earthbreaker_reapeating_t : fs_weapon_action_t<spell_t>
+  {
+    earthbreaker_reapeating_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
+    {
+      id                 = 30203;
+      name_str_reporting = "Earthbreaker (Repeating)";
+      school             = SCHOOL_NATURE;
+
+      spell_power_mod.direct = p->fs_weapon_values.earthbreaker_repeating_hit_coeff;
+
+      reduced_aoe_targets = p->fs_weapon_values.earthbreaker_target_falloff;
+      aoe        = -1;
+      background = true;
+    }
+  };
+
+  struct earthbreaker_final_t : fs_weapon_action_t<spell_t>
+  {
+    earthbreaker_final_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
+    {
+      id                 = 30204;
+      name_str_reporting = "Earthbreaker (Final)";
+      school             = SCHOOL_NATURE;
+
+      spell_power_mod.direct = p->fs_weapon_values.earthbreaker_final_hit_coeff;
+
+      reduced_aoe_targets = p->fs_weapon_values.earthbreaker_target_falloff;
+      aoe                 = -1;
+      background          = true;
+    }
+  };
+
+  earthbreaker_reapeating_t* repeating_action;
+  earthbreaker_final_t* final_action;
+
+  earthbreaker_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : fs_weapon_action_t( n, p, options ), repeating_action( nullptr ), final_action( nullptr )
+  {
+    id                 = 30201;
+    name_str_reporting = "Earthbreaker";
+    cooldown->duration = p->fs_weapon_values.earthbreaker_cooldown;
+
+    spell_power_mod.direct = p->fs_weapon_values.earthbreaker_initial_hit_coeff;
+
+    reduced_aoe_targets = p->fs_weapon_values.earthbreaker_target_falloff;
+    aoe                 = -1;
+
+    repeating_action = new earthbreaker_reapeating_t( "earthbreaker_repeating", p );
+    final_action     = new earthbreaker_final_t( "earthbreaker_final", p );
+
+    add_child( repeating_action );
+    add_child( final_action );
+
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_EARTHBREAKER )
+      active_weapon = true;
+
+    parse_options( options );
+  }
+
+  void execute() override
+  {
+    fs_weapon_action_t::execute();
+
+    make_event<ground_aoe_event_t>(
+        *sim, fs_p(),
+        ground_aoe_params_t()
+            .target( execute_state->target )
+            .action( repeating_action )
+            .pulse_time( fs_p()->fs_weapon_values.earthbreaker_period )
+            .duration( fs_p()->fs_weapon_values.earthbreaker_duration )
+            .hasted( ground_aoe_params_t::hasted_with::SPELL_HASTE )
+            .state_callback( [ this ]( ground_aoe_params_t::state_type type, ground_aoe_event_t* e ) {
+              if ( type == ground_aoe_params_t::EVENT_STOPPED )
+              {
+                final_action->execute();
+              }
+            } ),
+        false );
+  }
+};
+
 struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
 {
   struct curse_of_anzhyr_t : fs_weapon_action_t<spell_t>
@@ -622,8 +655,9 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
 
       spell_power_mod.direct = 0.96;
 
-      aoe        = -1;
-      background = true;
+      reduced_aoe_targets = 12;
+      aoe                 = -1;
+      background          = true;
     }
 
     double composite_da_multiplier( const action_state_t* s ) const override
@@ -833,6 +867,8 @@ action_t* fs_player_t::create_action( util::string_view name, util::string_view 
     return new sahrils_wrath_t( name, this, options_str );
   if ( name == "alzeracs_essence" )
     return new alzeracs_essence_t( name, this, options_str );
+  if ( name == "earthbreaker" )
+    return new earthbreaker_t( name, this, options_str );
 
   return player_t::create_action( name, options_str );
 }
@@ -1166,6 +1202,23 @@ void fs_player_t::create_buffs()
       break;
   }
 
+  
+  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 && fs_gems.use_new_harmonious )
+  {
+    fs_buffs.harmonious_soul = make_buff<fs_player_buff_t>( this, "harmonious_soul" )
+                                   ->set_max_stack( 10 )
+                                   ->set_freeze_stacks( true )
+                                   ->set_period( fs_gems.new_harmonious_duration )
+                                   ->set_default_value( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 ? 0.009 : 0.003 )
+                                   ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
+                                   ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                                   ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY )
+                                   ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+                                   ->set_tick_behavior( buff_tick_behavior::REFRESH )
+                                   ->set_tick_callback( []( buff_t* b, int, timespan_t ) { b->decrement(); } );
+  }
+
+
   fs_buffs.hidden_power_stacking = make_buff<fs_player_buff_t>( this, "hidden_power_stacking" )
                                        ->set_max_stack( 5 )
                                        ->set_duration( 60_s )
@@ -1203,7 +1256,7 @@ void fs_player_t::create_buffs()
     double cdr_mod = 3.0;
     fated_strike_buff_t( player_t* pl ) : fs_player_buff_t( pl, "fated_strike" )
     {
-      set_default_value( 0.2 )->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )->set_duration( 6_s );
+      set_duration( 6_s );
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
         if ( _new )
         {
@@ -1401,6 +1454,10 @@ void fs_player_t::create_options()
   add_option( opt_uint( "weapon_trait.vengeful_soul", fs_weapons.vengeful_soul, 0, 4 ) );
   add_option( opt_uint( "weapon_trait.visions_of_grandeur", fs_weapons.visions_of_grandeur, 0, 4 ) );
   add_option( opt_uint( "weapon_trait.willful_momentum", fs_weapons.willful_momentum, 0, 4 ) );
+
+  add_option( opt_bool( "gems.use_new_harmonious", fs_gems.use_new_harmonious ) );
+  add_option( opt_timespan( "gems.new_harmonious_duration", fs_gems.new_harmonious_duration ) );
+  add_option( opt_float( "gems.new_harmonious_amp", fs_gems.new_harmonious_amp ) );
 }
 
 // fs_player_t::copy_from =======================================================
@@ -1542,19 +1599,36 @@ void fs_player_t::init_special_effects()
     base.versatility += 0.03;
   }
 
-  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
+  if ( !fs_gems.use_new_harmonious )
   {
-    base.versatility += 0.03;
-    base.mastery += 0.03;
-    base.spell_crit_chance += 0.03;
-    base.attack_crit_chance += 0.03;
+    if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
+    {
+      base.versatility += 0.03;
+      base.mastery += 0.03;
+      base.spell_crit_chance += 0.03;
+      base.attack_crit_chance += 0.03;
+      base.haste += 0.03;
+    }
+    else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
+    {
+      base.versatility += 0.01;
+      base.mastery += 0.01;
+      base.spell_crit_chance += 0.01;
+      base.attack_crit_chance += 0.01;
+      base.haste += 0.01;
+    }
   }
-  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
+  else
   {
-    base.versatility += 0.01;
-    base.mastery += 0.01;
-    base.spell_crit_chance += 0.01;
-    base.attack_crit_chance += 0.01;
+    if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
+    {
+      register_on_kill_callback( [ this ]( player_t* t ) { fs_buffs.harmonious_soul->trigger( 1 ); } );
+    }
+  }
+
+  if ( fs_sets.tuzari_grace )
+  {
+    base.haste += fs_sets.tuzari_grace_haste;
   }
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 2280 )
@@ -1880,7 +1954,13 @@ void fs_player_t::init_special_effects()
       {
         auto m = base_t::composite_target_da_multiplier( t );
 
-        m *= 1.0 + ab::fs_p()->get_target_data( t )->debuffs.diamond_strike_amp->check_stack_value();
+        auto dia_m =
+            ab::fs_p()->fs_gems.use_new_harmonious
+                ? ab::fs_p()->get_target_data( t )->debuffs.diamond_strike_amp->check_stack_value() +
+                      ab::fs_p()->fs_gems.new_harmonious_amp * ab::fs_p()->fs_buffs.harmonious_soul->current_stack
+                : ab::fs_p()->get_target_data( t )->debuffs.diamond_strike_amp->check_stack_value();
+
+        m *= 1.0 + dia_m;
 
         return m;
       }
@@ -1889,6 +1969,16 @@ void fs_player_t::init_special_effects()
       {
         base_t::impact( s );
         ab::fs_p()->get_target_data( s->target )->debuffs.diamond_strike_amp->trigger();
+      }
+
+      void execute() override
+      {
+        base_t::execute();
+
+        /*if ( ab::fs_p()->fs_gems.use_new_harmonious && ab::fs_p()->fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
+        {
+          ab::fs_p()->fs_buffs.harmonious_soul->trigger();
+        }*/
       }
     };
 
@@ -2124,7 +2214,7 @@ void fs_player_t::init_finished()
   {
     for ( auto action : action_list )
     {
-      action->base_recharge_multiplier *= fs_gems.gem_powers[ GEM_EMERALD ] >= 2640.0 ? 0.88 : 0.96;
+      action->base_recharge_multiplier -= fs_gems.gem_powers[ GEM_EMERALD ] >= 2640.0 ? 0.12: 0.04;
       action->cooldown->adjust_recharge_multiplier();
     }
   }

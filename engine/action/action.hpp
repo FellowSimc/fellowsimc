@@ -858,7 +858,9 @@ public:
   virtual double calculate_crit_damage_bonus( action_state_t* s ) const;
 
   virtual double recharge_multiplier( const cooldown_t& ) const
-  { return base_recharge_multiplier * dynamic_recharge_multiplier; }
+  {
+    return std::max( 0.0, base_recharge_multiplier * dynamic_recharge_multiplier );
+  }
 
   virtual double recharge_rate_multiplier( const cooldown_t& ) const
   { return base_recharge_rate_multiplier * dynamic_recharge_rate_multiplier; }

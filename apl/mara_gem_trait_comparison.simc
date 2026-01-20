@@ -1,0 +1,204 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+max_time=290
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=1
+
+apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_agility=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+
+mara="Mara"
+level=80
+
+# initial_resource=spirit=100
+
+apl/mara.simc
+
+gear_agility=1442
+
+# Agi = 1442
+# Secondary - 4515
+# = Full 330 :^)
+
+
+# legendary.vexiras_venom=1
+
+# talent.sinners_pride=1
+
+# legendary.spirit_procs_clones=1
+
+
+# gems.sapphire_power=1200
+# gems.emerald_power=1200
+# gems.topaz_power=1200
+
+talent.gushing_blood_always_works=0
+
+# weapon=sahrils_wrath
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.feed_the_queen=1
+# talent.malevolence=1
+# talent.puncture=1
+# talent.maidens_doom=1
+
+
+# talent.red_ledger=1
+# talent.bloodrush=1
+# talent.gushing_blood=1
+# talent.hemotoxin=1
+# talent.maidens_doom=1
+# talent.sinners_pride=1
+
+# legendary.vexiras_venom=0
+# legendary.from_the_shadows=1
+
+# talent.assassins_guile=0
+# talent.venomous_delight=0
+# talent.deadly_scheme=0
+# talent.feed_the_queen=0
+# talent.malevolence=0
+# talent.puncture=0
+# talent.maidens_doom=0
+
+# talent.red_ledger=0
+# talent.assassins_guile=1
+# talent.bloodrush=0
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.maidens_doom=1
+# talent.hemotoxin=0
+# talent.malevolence=1
+
+# talent.sinners_pride=1
+
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.maidens_doom=1
+# talent.malevolence=1
+
+# talent.sinners_pride=1
+
+
+# Bleed
+
+talent.red_ledger=1
+talent.bloodrush=1
+talent.gushing_blood=1
+talent.hemotoxin=1
+talent.maidens_doom=1
+talent.sinners_pride=1
+
+legendary.from_the_shadows=1
+
+
+# # Finisher
+# legendary.vexiras_venom=1
+
+# talent.assassins_guile=1
+# talent.venomous_delight=1
+# talent.deadly_scheme=1
+# talent.maidens_doom=1
+# talent.malevolence=1
+# talent.sinners_pride=1
+
+gear_haste_rating=650
+gear_crit_rating=1500
+gear_versatility_rating=1960
+gear_mastery_rating=400
+
+# gear_haste_rating=650
+# # gear_haste_rating=0
+# gear_crit_rating=900
+# gear_versatility_rating=1460
+# # gear_mastery_rating=452
+# gear_mastery_rating=1600
+
+
+# gems.amethyst_power=2640
+# gems.emerald_power=1200
+# gems.diamond_power=1200
+
+weapon=fated_strike
+# weapon_trait.visions_of_grandeur=4
+# weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+# weapon_trait.willful_momentum=4
+
+copy="Amethyst Splinters","Mara"
+weapon_trait.amethyst_splinters=4
+
+copy="Diamond Strike","Mara"
+weapon_trait.diamond_strike=4
+
+copy="Emerald Judgement","Mara"
+weapon_trait.emerald_judgement=4
+
+copy="Grandeur","Mara"
+weapon_trait.visions_of_grandeur=4
+
+copy="Brave Mach","Mara"
+weapon_trait.brave_machinations=4
+
+copy="Martial Initiative","Mara"
+weapon_trait.martial_initiative=4
+
+
+copy="T6 Sapphire Grandeur","Mara"
+gems.sapphire_power=1200
+weapon_trait.visions_of_grandeur=4
+
+copy="T6 Emerald","Mara"
+gems.emerald_power=1200
+copy="T6 Sapphire","Mara"
+gems.sapphire_power=1200
+copy="T6 Topaz","Mara"
+gems.topaz_power=1200
+copy="T6 Ruby","Mara"
+gems.ruby_power=1200
+copy="T6 Diamond","Mara"
+gems.diamond_power=1200
+copy="T6 Diamond New","Mara"
+gems.diamond_power=1200
+gems.use_new_harmonious=1
+gems.new_harmonious_duration=5
+gems.new_harmonious_amp=0.35
+copy="T6 Amethyst","Mara"
+gems.amethyst_power=1200
+
+copy="T6 Amethyst Splinters","Mara"
+gems.amethyst_power=1200
+weapon_trait.amethyst_splinters=4
+
+copy="T6 Emerald Judgement","Mara"
+gems.emerald_power=1200
+weapon_trait.emerald_judgement=4
+
+copy="T6 Diamond Strike","Mara"
+weapon_trait.diamond_strike=4
+gems.diamond_power=1200
+
+copy="T6 Diamond Strike New","Mara"
+weapon_trait.diamond_strike=4
+gems.diamond_power=1200
+gems.use_new_harmonious=1
+gems.new_harmonious_duration=5
+gems.new_harmonious_amp=0.35

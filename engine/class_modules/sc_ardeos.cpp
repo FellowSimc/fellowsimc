@@ -32,10 +32,10 @@ public:
     dot_t* incinerate;
     dot_t* searing_blaze;
     dot_t* engulfing_flames;
+    std::vector<dot_t*> engulfing_flames_individual;
     dot_t* fire_ball;
     dot_t* fire_frog;
     dot_t* crackling_inferno;
-    std::vector<event_t*> engulfing_decrement_events;
   } dots;
 
   struct
@@ -52,6 +52,12 @@ public:
            dots.fire_ball->is_ticking() + dots.fire_frog->is_ticking() + dots.crackling_inferno->is_ticking();
     // fs_dots.amethyst_splinters->is_ticking() + fs_dots.curse_of_anzhyr->is_ticking() +
     // fs_dots.kindling->is_ticking();
+  }
+
+  int unique_dot_count() const
+  {
+    return dots.incinerate->is_ticking() + dots.searing_blaze->is_ticking() + dots.engulfing_flames->is_ticking() +
+           dots.fire_ball->is_ticking() + dots.fire_frog->is_ticking() + dots.crackling_inferno->is_ticking();
   }
 };
 
@@ -81,6 +87,7 @@ public:
     actions::ardeos_spell_t* fire_ball;
     actions::ardeos_spell_t* fire_frog;
     actions::ardeos_spell_t* fire_frogs_hit;
+    actions::ardeos_spell_t* fire_toads_hit;
     actions::ardeos_spell_t* infernal_wave;
     actions::ardeos_spell_t* searing_blaze;
     actions::ardeos_spell_t* engulfing_flames;
@@ -153,21 +160,23 @@ public:
     timespan_t engulfing_flames_period      = 1.5_s;
     double engulfing_flames_embers_per_tick = 5.0;  // This is currently reduced by haste.
     timespan_t engufling_flames_cooldown    = 20_s;
+    int engulfing_flames_charges            = 1;
 
     timespan_t detonate_cast_time         = 1.0_s;  // Data has 1.5s but it is clearly faster than GCD still.
     double detonate_embers_cost           = 100;
     double detonate_hits                  = 3;      // Divides sample duration equally into these.
     timespan_t detonate_delay             = 0.5_s;  // Damage is sampled at cast time and snapshots.
     timespan_t detonate_between_hit_delay = 0.3_s;
-    timespan_t detonate_sample_duration   = 2.5_s;
+    timespan_t detonate_sample_duration   = 2_s;
 
-    double fire_ball_coeff            = 3.0;
+    double fire_ball_coeff            = 3.0*1.2;
     timespan_t fire_ball_cooldown     = 30_s;
     double fire_ball_falloff          = 5;
     double fire_ball_damage_to_dot    = 0.7;
     timespan_t fire_ball_dot_duration = 12_s;
     timespan_t fire_ball_dot_period   = 2_s;
     double fire_ball_embers_per_tick  = 2.0;  // This is **NOT** currently reduced by haste.
+    double fire_ball_embers_chance    = 1.0;
 
     double incinerate_coeff             = 5.914;
     double incinerate_falloff           = 8;
@@ -342,7 +351,9 @@ public:
 
     bool rolling_flames_instant = false;
 
-    bool double_detonate_cost_efficiency = false;
+    bool double_detonate_cost_efficiency        = false;
+    timespan_t rolling_flames_infernal_wave_cdr = 0_ms;
+    timespan_t detonate_extends_searing         = 0_s;
   } talents;
 
   struct legendary_t
@@ -351,17 +362,23 @@ public:
     double untamed_flame_spirit      = 0.3;
     double untamed_flame_crit_chance = 0.3;
 
-    bool explosive_potency                = false;
-    double explosive_potency_detonate_amp = 0.5;
+    bool fire_toad              = false;
+    double fire_toad_chance     = 0.12;
+    double fire_toad_mul        = 8;
+    double fire_toad_falloff    = 1;
+    bool fire_toad_full_primary = false;
+    bool fire_toad_on_cast      = false;
 
     bool brimstone_cataclysm                   = false;
     timespan_t brimstone_cataclysm_cdr_per_hit = 2_s;
     timespan_t brimstone_cataclysm_cdr_cap     = 30_s;
+
+    bool engulf_stacker       = false;
+    double engulf_stacker_amp = 0.1;
   } legendary;
 
   struct options_t
   {
-    unsigned int engulfing_flames_max_stacks = 1;
   } options;
 
   target_specific_t<ardeos_td_t> target_data;
@@ -438,6 +455,10 @@ public:
   void analyze( sim_t& sim ) override;
 
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
+
+  void extend_engulfing_flames( player_t* target, timespan_t duration );
+  void extend_dot( dot_t* d, timespan_t duration );
+  void extend_dots( player_t* target, timespan_t duration );
 
   std::string default_flask() const override
   {
@@ -1075,7 +1096,7 @@ struct infernal_wave_t : public ardeos_spell_t
 
     if ( p()->talents_enabled( ardeos_t::INTENSIFYING_INFERNO ) )
     {
-      da *= 1 + p()->get_target_data( s->target )->dot_count() * p()->talents.intensifying_inferno_amp;
+      da *= 1 + p()->get_target_data( s->target )->unique_dot_count() * p()->talents.intensifying_inferno_amp;
     }
 
     return da;
@@ -1084,6 +1105,11 @@ struct infernal_wave_t : public ardeos_spell_t
   void execute() override
   {
     ardeos_spell_t::execute();
+
+    if ( p()->talents_enabled( ardeos_t::ROLLING_FLAMES ) )
+    {
+      p()->cooldowns.engulfing_flames->adjust( -p()->talents.rolling_flames_infernal_wave_cdr, false );
+    }
   }
 
   void impact( action_state_t* s ) override
@@ -1157,7 +1183,10 @@ struct detonate_t : public ardeos_spell_t
 
       auto td = p()->get_target_data( target );
       da += tick_damage_over_time( td->dots.crackling_inferno );
-      da += tick_damage_over_time( td->dots.engulfing_flames );
+      for ( auto& engulf : td->dots.engulfing_flames_individual )
+      {
+        da += tick_damage_over_time( engulf );
+      }
       da += tick_damage_over_time( td->dots.fire_ball );
       da += tick_damage_over_time( td->dots.fire_frog );
       da += tick_damage_over_time( td->dots.incinerate );
@@ -1187,14 +1216,24 @@ struct detonate_t : public ardeos_spell_t
     double composite_target_multiplier( player_t* target ) const override
     {
       double m = ardeos_spell_t::composite_target_multiplier( target );
-      if ( p()->legendary.explosive_potency )
-      {
-        if ( target->health_percentage() <= 35.0 )
-        {
-          m *= 1.0 + p()->legendary.explosive_potency_detonate_amp;
-        }
-      }
+      //if ( p()->legendary.explosive_potency )
+      //{
+      //  if ( target->health_percentage() <= 35.0 )
+      //  {
+      //    m *= 1.0 + p()->legendary.explosive_potency_detonate_amp;
+      //  }
+      //}
       return m;
+    }
+
+    void impact( action_state_t* s )
+    {
+      ardeos_spell_t::impact( s );
+      if ( p()->talents.detonate_extends_searing > 0_s )
+      {
+        const auto& td = p()->get_target_data( s->target );
+        p()->extend_dot( td->dots.searing_blaze, p()->talents.detonate_extends_searing );
+      }
     }
   };
 
@@ -1344,36 +1383,7 @@ struct incinerate_t : public ardeos_spell_t
       dot->set_target( s->target );
       dot->execute();
 
-      auto td = p()->get_target_data( s->target );
-
-      td->dots.crackling_inferno->adjust_duration( p()->spell_const.incinerate_dot_extend, p()->talents.crackling_inferno_dot_duration );
-
-      if ( td->dots.engulfing_flames->max_stack == 1 )
-        td->dots.engulfing_flames->adjust_duration( p()->spell_const.incinerate_dot_extend, engulf_duration );
-
-      auto& vec = td->dots.engulfing_decrement_events;
-      for ( size_t i = 0; i < vec.size(); )
-      {
-        if ( vec[ i ]->remains() < 0_s || vec[ i ]->canceled )
-        {
-          erase_unordered( vec, vec.begin() + i );
-        }
-        else
-        {
-          timespan_t new_length = std::min(
-              engulf_duration, vec[ i ]->occurs() - sim->current_time() + p()->spell_const.incinerate_dot_extend );
-
-          vec[ i ]->reschedule( new_length );
-          i++;
-        }
-      }
-
-      td->dots.fire_ball->adjust_duration( p()->spell_const.incinerate_dot_extend,
-                                           p()->spell_const.fire_ball_dot_duration );
-      td->dots.fire_frog->adjust_duration( p()->spell_const.incinerate_dot_extend,
-                                           p()->spell_const.fire_frog_dot_duration );
-      td->dots.searing_blaze->adjust_duration( p()->spell_const.incinerate_dot_extend,
-                                               p()->spell_const.searing_blaze_duration );
+      p()->extend_dots( s->target, p()->spell_const.incinerate_dot_extend );
     }
   };
 
@@ -1547,7 +1557,6 @@ struct searing_blaze_t : public ardeos_spell_t
 
 struct engulfing_flames_t : public ardeos_spell_t
 {
-  timespan_t actual_duration;
   engulfing_flames_t( ardeos_t* p, util::string_view options_str = {} )
     : ardeos_spell_t( "engulfing_flames", p, options_str )
   {
@@ -1573,7 +1582,7 @@ struct engulfing_flames_t : public ardeos_spell_t
 
     cooldown->duration = p->spell_const.engufling_flames_cooldown;
     cooldown->hasted   = false;
-    cooldown->charges  = 1;
+    cooldown->charges  = p->spell_const.engulfing_flames_charges;
 
     energize_type     = action_energize::NONE;
     energize_amount   = p->spell_const.engulfing_flames_embers_per_tick;
@@ -1585,22 +1594,75 @@ struct engulfing_flames_t : public ardeos_spell_t
     }
 
     base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
+  }
 
-    dot_max_stack = p->options.engulfing_flames_max_stacks;
+  dot_t* get_dot( player_t* t, size_t i )
+  {
+    if ( !t )
+      t = target;
+    if ( !t )
+      return nullptr;
 
-    actual_duration = dot_duration;
-    if ( dot_max_stack > 1 )
+    std::vector<dot_t*>& target_dots = p()->get_target_data( t )->dots.engulfing_flames_individual;
+
+    if ( i >= target_dots.size()  )
     {
-      dot_duration = 9999_s;
+      for ( size_t j = target_dots.size(); j <= i; ++j )
+      {
+        target_dots.push_back( t->get_dot( fmt::format( "{}_{}", name_str, j + 1 ), player ) );
+      }
     }
+
+    return target_dots.at( i );
+  }
+
+  dot_t* get_first_ticking( player_t* t )
+  {
+    if ( !t )
+      t = target;
+    if ( !t )
+      return nullptr;
+
+    std::vector<dot_t*>& target_dots = p()->get_target_data( t )->dots.engulfing_flames_individual;
+
+    for ( dot_t* d : target_dots )
+    {
+      if ( d->is_ticking() )
+        return d;
+    }
+
+    return nullptr;
+  }
+
+  dot_t* get_first_missing( player_t* t )
+  {
+    if ( !t )
+      t = target;
+    if ( !t )
+      return nullptr;
+
+    std::vector<dot_t*>& target_dots = p()->get_target_data( t )->dots.engulfing_flames_individual;
+
+    for ( dot_t* d : target_dots )
+    {
+      if ( !d->is_ticking() )
+        return d;
+    }
+
+    return get_dot( t, target_dots.size() );
+  }
+
+  dot_t* get_dot( player_t* t ) override
+  {
+    ardeos_spell_t::get_dot( t );
+    return get_first_missing( t );
   }
 
   void tick( dot_t* d ) override
   {
     ardeos_spell_t::tick( d );
 
-    p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste() * d->current_stack(),
-                        energize_gain( d->state ), this );
+    p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), energize_gain( d->state ), this );
   }
 
   double spontaneous_chance() const
@@ -1619,22 +1681,40 @@ struct engulfing_flames_t : public ardeos_spell_t
     return cc;
   }
 
-  void schedule_decrement_event( timespan_t time, dot_t* dot )
-  {
-    p()->get_target_data( dot->target )->dots.engulfing_decrement_events.push_back( make_event( sim, time, [ dot ] {
-      dot->decrement( 1 );
-    } ) );
-  }
-
   void trigger_dot( action_state_t* s ) override
   {
     ardeos_spell_t::trigger_dot( s );
 
-    if ( dot_max_stack > 1 )
+    dot_t* base_dot = ardeos_spell_t::get_dot( s->target );
+
+    base_dot->current_action = this;
+    base_dot->max_stack = 9999;
+
+    if ( !base_dot->state )
+      base_dot->state = get_state();
+    base_dot->state->copy_state( s );
+
+    base_dot->false_start( composite_dot_duration( s ) );
+  }
+
+  void last_tick( dot_t* d ) override
+  {
+    ardeos_spell_t::last_tick( d );
+    dot_t* base_dot = ardeos_spell_t::get_dot( d->target );
+    if ( base_dot->current_stack() > 1 )
     {
-      dot_t* dot = get_dot( s->target );
-      schedule_decrement_event( actual_duration, dot );
+      base_dot->decrement( 1 );
+      p()->remove_active_dot( base_dot );
     }
+    else
+    {
+      base_dot->reset();
+    }
+  }
+
+  bool dot_refreshable( const dot_t*, timespan_t ) const override
+  {
+    return true;
   }
 
   void execute() override
@@ -1710,7 +1790,9 @@ struct fire_ball_t : public ardeos_spell_t
 
       base_multiplier *= p->spell_const.fire_ball_damage_to_dot;
 
-      energize_type     = action_energize::PER_TICK;
+      //energize_type     = action_energize::PER_TICK;
+      // Manually handle it.
+      energize_type     = action_energize::NONE;
       energize_amount   = p->spell_const.fire_ball_embers_per_tick;
       energize_resource = RESOURCE_CINDERS;
 
@@ -1752,26 +1834,16 @@ struct fire_ball_t : public ardeos_spell_t
     {
       residual_action_t::tick( d );
 
+      if ( rng().roll( p()->spell_const.fire_ball_embers_chance ) )
+      {
+        gain_energize_resource( energize_resource_(), composite_energize_amount( d->state ), gain );
+      }
+
       if ( p()->talents_enabled( ardeos_t::SLOW_BURN ) )
       {
+        p()->extend_engulfing_flames( d->target, p()->talents.slow_burn_extend );
         auto td = p()->get_target_data( d->target );
-        td->dots.engulfing_flames->adjust_duration( p()->talents.slow_burn_extend );
-        auto& vec = td->dots.engulfing_decrement_events;
-        for ( size_t i = 0; i < vec.size(); )
-        {
-          if ( vec[ i ]->remains() < 0_s || vec[ i ]->canceled )
-          {
-            erase_unordered( vec, vec.begin() + i );
-          }
-          else
-          {
-            //vec[ i ]->reschedule()
-            vec[ i ]->reschedule_time = vec[ i ]->occurs() + p()->talents.slow_burn_extend;
-            i++;
-          }
-        }
-
-        td->dots.searing_blaze->adjust_duration( p()->talents.slow_burn_extend );
+        p()->extend_dot( td->dots.searing_blaze, p()->talents.slow_burn_extend );
       }
     }
   };
@@ -1872,73 +1944,85 @@ struct pyromania_t : public ardeos_spell_t
   }
 };
 
+struct fire_frog_dot_t : public residual_action::residual_periodic_action_t<ardeos_spell_t>
+{
+  fire_frog_dot_t( std::string_view n, fs_player_t* p ) : residual_action_t( n, static_cast<ardeos_t*>( p ) )
+  {
+    id = 18;
+
+    ardeos_t* player = static_cast<ardeos_t*>( p );
+
+    background = true;
+
+    name_str_reporting = "Fire Frog (DoT)";
+
+    tick_may_crit = player->talents_enabled( ardeos_t::FIRESTARTER );
+
+    dot_duration           = player->spell_const.fire_frog_dot_duration;
+    dot_behavior           = DOT_REFRESH_DURATION;
+    base_tick_time         = player->spell_const.fire_frog_dot_period;
+    hasted_ticks           = true;
+    dot_allow_partial_tick = true;
+
+    base_multiplier *= player->spell_const.fire_frog_coeff;
+
+    base_crit = player->talents_enabled( ardeos_t::FIRESTARTER ) ? player->talents.firestarter_crit_chance : 0.0;
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    spell_t::snapshot_state( state, rt );
+  }
+
+  double composite_ta_multiplier( const action_state_t* s ) const override
+  {
+    return fs_player_action_t::action_multiplier();
+  }
+
+  void init() override
+  {
+    base_t::init();
+    snapshot_flags &= STATE_NO_MULTIPLIER;
+    update_flags &= STATE_NO_MULTIPLIER;
+    snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
+    update_flags &= ~STATE_HASTE;
+    snapshot_flags &= ~STATE_TGT_CRIT;
+    update_flags &= ~STATE_TGT_CRIT;
+
+    if ( p()->talents_enabled( ardeos_t::FIRESTARTER ) )
+    {
+      snapshot_flags |= STATE_CRIT;
+    }
+  }
+
+  double composite_crit_chance() const override
+  {
+    return base_crit;
+  }
+};
+
 struct fire_frog_hit_t : public ardeos_spell_t
 {
-  struct fire_frog_dot_t : public residual_action::residual_periodic_action_t<ardeos_spell_t>
-  {
-    fire_frog_dot_t( ardeos_t* p ) : residual_action_t( "fire_frog_dot", p )
-    {
-      id = 18;
-
-      background = true;
-
-      name_str_reporting = "Fire Frog (DoT)";
-
-      tick_may_crit = p->talents_enabled( ardeos_t::FIRESTARTER );
-
-      dot_duration           = p->spell_const.fire_frog_dot_duration;
-      dot_behavior           = DOT_REFRESH_DURATION;
-      base_tick_time         = p->spell_const.fire_frog_dot_period;
-      hasted_ticks           = true;
-      dot_allow_partial_tick = true;
-
-      base_multiplier *= p->spell_const.fire_frog_coeff;
-
-      base_crit = p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
-    }
-
-    void snapshot_state( action_state_t* state, result_amount_type rt ) override
-    {
-      spell_t::snapshot_state( state, rt );
-    }
-
-    double composite_ta_multiplier( const action_state_t* s ) const override
-    {
-      return fs_player_action_t::action_multiplier();
-    }
-
-    void init() override
-    {
-      base_t::init();
-      snapshot_flags &= STATE_NO_MULTIPLIER;
-      update_flags &= STATE_NO_MULTIPLIER;
-      snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
-      update_flags &= ~STATE_HASTE;
-      snapshot_flags &= ~STATE_TGT_CRIT;
-      update_flags &= ~STATE_TGT_CRIT;
-
-      if ( p()->talents_enabled( ardeos_t::FIRESTARTER ) )
-      {
-        snapshot_flags |= STATE_CRIT;
-      }
-    }
-
-    double composite_crit_chance() const override
-    {
-      return base_crit;
-    }
-  };
 
   fire_frog_dot_t* dot_action;
-  fire_frog_hit_t( ardeos_t* p ) : ardeos_spell_t( "fire_frog_hit", p )
+  fire_frog_hit_t( ardeos_t* p, bool toad ) : ardeos_spell_t( toad ? "fire_toad_hit" : "fire_frog_hit", p )
   {
     id                 = 17;
-    name_str_reporting = "Fire Frog";
+    name_str_reporting = toad  ? "Large Lad" : "Fire Frog";
 
     spell_power_mod.direct = p->spell_const.fire_frog_coeff;
     background             = true;
 
-    dot_action = new fire_frog_dot_t( p );
+    dot_action = p->get_background_action<fire_frog_dot_t>( "fire_frog_dot" );
+
+    if ( toad )
+    {
+      base_dd_multiplier *= p->legendary.fire_toad_mul;
+      aoe                 = -1;
+      full_amount_targets = p->legendary.fire_toad_full_primary ? 1 : 0;
+      reduced_aoe_targets = p->legendary.fire_toad_falloff;
+      travel_delay        = 0.5;
+    }
   }
 
   void impact( action_state_t* s ) override
@@ -1946,6 +2030,7 @@ struct fire_frog_hit_t : public ardeos_spell_t
     ardeos_spell_t::impact( s );
     residual_action::trigger( dot_action, s->target, s->result_amount );
   }
+
   void execute() override
   {
     // Always target a random target
@@ -1974,11 +2059,18 @@ struct fire_frog_t : public ardeos_spell_t
   {
     ardeos_spell_t::execute();
 
-    for ( int i = 0; i < frog_hits; i++ )
+    if ( p()->legendary.fire_toad && rng().roll( p()->legendary.fire_toad_chance ) )
     {
-      timespan_t frog_delay                     = ( 0.5_s + p()->spell_const.fire_frog_jump_duration * i );
-      p()->actions.fire_frogs_hit->travel_delay = frog_delay.total_seconds();
-      p()->actions.fire_frogs_hit->execute();
+      p()->actions.fire_toads_hit->execute();
+    }
+    else
+    {
+      for ( int i = 0; i < frog_hits; i++ )
+      {
+        timespan_t frog_delay                     = ( 0.5_s + p()->spell_const.fire_frog_jump_duration * i );
+        p()->actions.fire_frogs_hit->travel_delay = frog_delay.total_seconds();
+        p()->actions.fire_frogs_hit->execute();
+      }
     }
   }
 };
@@ -2015,6 +2107,11 @@ struct fire_frogs_t : public ardeos_spell_t
     {
       p()->actions.fire_frog->execute();
     }
+
+    if ( p()->legendary.fire_toad && p()->legendary.fire_toad_on_cast )
+    {
+      p()->actions.fire_toads_hit->execute();
+    }
   }
 };
 
@@ -2027,7 +2124,7 @@ struct fire_frogs_t : public ardeos_spell_t
 ardeos_td_t::ardeos_td_t( player_t* target, ardeos_t* source )
   : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
 {
-  dots.engulfing_decrement_events = {};
+  dots.engulfing_flames_individual = {};
   dots.crackling_inferno = target->get_dot( "crackling_inferno", source );
   dots.engulfing_flames  = target->get_dot( "engulfing_flames", source );
   dots.fire_ball         = target->get_dot( "fire_ball_dot", source );
@@ -2131,7 +2228,22 @@ double ardeos_t::composite_player_target_multiplier( player_t* target, school_e 
 {
   double m = fs_player_t::composite_player_target_multiplier( target, school );
 
-  // ardeos_td_t* tdata = get_target_data( target );
+  if ( legendary.engulf_stacker )
+  {
+    ardeos_td_t* tdata = get_target_data( target );
+    //int dot_count      = 0;
+    //for ( dot_t* d : tdata->dots.engulfing_flames_individual )
+    //{
+    //  if ( d->is_ticking() )
+    //    dot_count++;
+    //}
+    //sim->print_debug( "{} Engulf Stacker stacks: {}. Count dots {}.", *this,
+    //                  tdata->dots.engulfing_flames->current_stack(), dot_count );
+
+    //if ( dot_count != tdata->dots.engulfing_flames->current_stack() )
+    //  sim->print_debug( "{} ENGULF COUNT NOT EQUAL.", *this );
+    m *= 1.0 + legendary.engulf_stacker_amp * tdata->dots.engulfing_flames->current_stack();
+  }
 
   return m;
 }
@@ -2155,6 +2267,54 @@ double ardeos_t::composite_player_target_armor( player_t* target ) const
 
   return a;
 }
+
+// ardeos_t::extend_engulfing_flames ========================================
+void ardeos_t::extend_engulfing_flames( player_t* t, timespan_t extension )
+{
+  if ( !t )
+    return;
+
+  dot_t* base_dot = get_target_data( t )->dots.engulfing_flames;
+
+  if ( !base_dot->current_action )
+    return;
+
+  timespan_t dot_max = base_dot->current_action->dot_duration;
+  base_dot->adjust_duration( extension, dot_max );
+
+  std::vector<dot_t*> target_dots = get_target_data( t )->dots.engulfing_flames_individual;
+
+  for ( dot_t* d : target_dots )
+  {
+    if ( d && d->is_ticking() && d->current_action )
+      d->adjust_duration( extension, d->current_action->composite_dot_duration( d->state ) );
+  }
+}
+
+// ardeos_t::extend_dot ====================================================
+void ardeos_t::extend_dot( dot_t* d, timespan_t extension )
+{
+  if ( d->is_ticking() && d->current_action )
+  {
+    d->adjust_duration( extension, d->current_action->composite_dot_duration( d->state ) );
+  }
+}
+
+// ardeos_t::extend_dots ====================================================
+void ardeos_t::extend_dots( player_t* target, timespan_t extension )
+{
+  ardeos_td_t* tdata = get_target_data( target );
+  extend_engulfing_flames( target, extension );
+
+  auto dots = { tdata->dots.crackling_inferno, tdata->dots.fire_ball, tdata->dots.fire_frog, tdata->dots.incinerate,
+                tdata->dots.searing_blaze };
+
+  for ( dot_t* d : dots )
+  {
+    extend_dot( d, extension );
+  }
+}
+
 // ardeos_t::init_actions ====================================================
 
 void ardeos_t::init_action_list()
@@ -2215,6 +2375,12 @@ std::unique_ptr<expr_t> ardeos_t::create_expression( util::string_view name_str 
 {
   auto split = util::string_split<util::string_view>( name_str, "." );
 
+  if ( split.size() == 2 && split[ 0 ] == "active_dot" && split[ 1 ] == "engulfing_flames" )
+  {
+    return make_fn_expr( name_str,
+                         [ this ] { return get_active_dots( get_target_data( target )->dots.engulfing_flames ); } );
+  }
+
   if ( split[ 0 ] == "cinder" || split[ 0 ] == "cinders" )
   {
     if ( split.size() == 1 )
@@ -2247,14 +2413,12 @@ std::unique_ptr<expr_t> ardeos_t::create_expression( util::string_view name_str 
     {
       if ( util::str_compare_ci( split[ 1 ], "brimstone_cataclysm" ) )
         return make_ref_expr( name_str, legendary.brimstone_cataclysm );
-      if ( util::str_compare_ci( split[ 1 ], "explosive_potency" ) )
-        return make_ref_expr( name_str, legendary.explosive_potency );
+      if ( util::str_compare_ci( split[ 1 ], "fire_toad" ) )
+        return make_ref_expr( name_str, legendary.fire_toad );
       if ( util::str_compare_ci( split[ 1 ], "untamed_flame" ) )
         return make_ref_expr( name_str, legendary.untamed_flame );
     }
   }
-  else if ( util::str_compare_ci( split[ 0 ], "engulfing_flames_max_stacks" ) )
-    return make_ref_expr( name_str, options.engulfing_flames_max_stacks );
 
   return fs_player_t::create_expression( name_str );
 }
@@ -2277,7 +2441,7 @@ void ardeos_t::init_base_stats()
   base.stats.attribute[ STAT_STAMINA ]   = 1000;
   resources.base[ RESOURCE_HEALTH ]      = 15927;
 
-  base.health_per_stamina = 38.496;
+  base.health_per_stamina = 48.12;
 
   resources.base[ RESOURCE_CINDERS ] = 400;
 
@@ -2426,10 +2590,15 @@ void ardeos_t::create_options()
   fs_player_t::create_options();
 
   add_option( opt_bool( "talent.rolling_flames_instant", talents.rolling_flames_instant ) );
+  add_option( opt_timespan( "talent.rolling_flames_cdr", talents.rolling_flames_cdr ) );
   add_option( opt_bool( "talent.double_detonate_cost_efficiency", talents.double_detonate_cost_efficiency ) );
-  add_option( opt_uint( "engulfing_flames_max_stacks", options.engulfing_flames_max_stacks ) );
 
   add_option( opt_float( "talent.reign_of_fire_ppm", talents.reign_of_fire_ppm ) );
+  add_option( opt_int( "ardeos.engulfing_flames_charges", spell_const.engulfing_flames_charges ) );
+  add_option( opt_timespan( "ardeos.engulfing_flames_cooldown", spell_const.engufling_flames_cooldown ) );
+  add_option( opt_timespan( "talent.rolling_flames_infernal_wave_cdr", talents.rolling_flames_infernal_wave_cdr ) );
+
+  add_option( opt_timespan( "talent.detonate_extends_searing", talents.detonate_extends_searing ) );
 
   /*add_option( opt_bool( "talent.chilling_finesse", talents.chilling_finesse ) );
   add_option( opt_bool( "talent.winters_embrace", talents.winters_embrace ) );
@@ -2453,8 +2622,14 @@ void ardeos_t::create_options()
   add_option( opt_bool( "talent.wisdom_of_the_north", talents.wisdom_of_the_north ) );*/
 
   add_option( opt_bool( "legendary.brimstone_cataclysm", legendary.brimstone_cataclysm ) );
-  add_option( opt_bool( "legendary.explosive_potency", legendary.explosive_potency ) );
+  add_option( opt_bool( "legendary.fire_toad", legendary.fire_toad ) );
   add_option( opt_bool( "legendary.untamed_flame", legendary.untamed_flame ) );
+  add_option( opt_bool( "legendary.engulf_stacker", legendary.engulf_stacker ) );
+  add_option( opt_float( "legendary.engulf_stacker_amp", legendary.engulf_stacker_amp ) );
+
+  add_option( opt_float( "legendary.fire_toad_chance", legendary.fire_toad_chance ) );
+  add_option( opt_float( "legendary.fire_toad_mul", legendary.fire_toad_mul ) );
+  add_option( opt_bool( "legendary.fire_toad_on_cast", legendary.fire_toad_on_cast ) );
 }
 
 // ardeos_t::copy_from =======================================================
@@ -2532,8 +2707,11 @@ void ardeos_t::init_background_actions()
 
   actions.searing_blaze    = new actions::searing_blaze_t( "searing_blaze", this );
   actions.engulfing_flames = new actions::engulfing_flames_t( this );
+  actions.engulfing_flames->background = true;
+  actions.engulfing_flames->cooldown   = get_cooldown( "engulfing_flames_pyro" );
 
-  actions.fire_frogs_hit    = new actions::fire_frog_hit_t( this );
+  actions.fire_frogs_hit    = new actions::fire_frog_hit_t( this, false );
+  actions.fire_toads_hit    = new actions::fire_frog_hit_t( this, true );
   actions.fire_frog         = new actions::fire_frog_t( this );
   actions.crackling_inferno = new actions::crackling_inferno_t( this );
   actions.flare_up          = new actions::flare_up_t( this );
@@ -2544,11 +2722,6 @@ void ardeos_t::init_background_actions()
 void ardeos_t::reset()
 {
   fs_player_t::reset();
-
-  for ( auto enemy : sim->target_list )
-  {
-    get_target_data( enemy )->dots.engulfing_decrement_events.clear();
-  }
 }
 
 // ardeos_t::activate ========================================================

@@ -2,16 +2,17 @@ report_details=1
 optimal_raid=0
 # max_time=420
 # max_time=50
-max_time=290
+# max_time=290
+max_time=60
 target_error=0.1
 iterations=100000
 chart_show_relative_difference=1
 vary_combat_length=0
 single_actor_batch=1
-desired_targets=1
+desired_targets=10
 
 
-apl/chuey_dungeon.simc
+# apl/chuey_dungeon.simc
 
 # apl/dungeon.simc
 
@@ -141,26 +142,27 @@ weapon_trait.willful_momentum=4
 
 # copy="Highwind Arrow","Elarion"
 
-gear_haste_rating=1450
-gear_crit_rating=1265
-gear_versatility_rating=1600
-gear_mastery_rating=200
-legendary.shimmer=1
+# gear_haste_rating=1450
+# gear_crit_rating=1265
+# gear_versatility_rating=1600
+# gear_mastery_rating=200
+# legendary.shimmer=1
 
 
-# gear_haste_rating=1050
-# gear_crit_rating=865
-# gear_versatility_rating=1200
-# gear_mastery_rating=1400
-# legendary.starstrikers_ascent=1
+gear_haste_rating=1050
+gear_crit_rating=865
+gear_versatility_rating=1200
+gear_mastery_rating=1400
+legendary.starstrikers_ascent=1
 
 talents=last_lights:1
 talents+=/fervent_supremacy:1
 talents+=/final_crescendo:1
 talents+=/resurgent_winds:1
-# talents+=/focused_expanse:1
+talents+=/impending_heartseeker:1
+talents+=/focused_expanse:1
 talents+=/lethal_shots:1
-talents+=/skyward_munitions:1/lunar_fury:1
+# talents+=/skyward_munitions:1/lunar_fury:1
 
 
 

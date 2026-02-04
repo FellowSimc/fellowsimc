@@ -102,6 +102,8 @@ public:
   friend void sc_format_to( const dot_t&, fmt::format_context::iterator );
 
   void reschedule_tick();
+  void false_start( timespan_t duration );
+
 private:
   void schedule_tick();
   void start(timespan_t duration);

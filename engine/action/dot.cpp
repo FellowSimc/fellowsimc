@@ -875,6 +875,27 @@ void dot_t::start( timespan_t duration )
 
 }
 
+void dot_t::false_start( timespan_t duration )
+{
+  current_duration = duration;
+
+  if ( ticking )
+  {
+    increment( 1 );
+  }
+  else
+  {
+    ticking   = true;
+    stack     = 1;
+    sim.print_debug( "{} starts {} on {} with duration={}", *source, *this, *target, duration );
+  }
+
+  event_t::cancel( end_event );
+  end_event = make_event<dot_end_event_t>( sim, this, current_duration );
+
+  source->add_active_dot( this );
+}
+
 /* Precondition: ticking == true
  */
 void dot_t::refresh( timespan_t duration )

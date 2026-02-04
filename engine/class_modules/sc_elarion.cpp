@@ -164,6 +164,8 @@ public:
     double event_horizon_resource_mul             = 0.5;
     timespan_t event_horizon_barrage_cdr_highwind = 0.5_s;
     timespan_t event_horizon_volley_cdr_barrage   = 1_s;
+
+    int spirit_refund_marks_applied = 3;
   } spell_const;
 
   enum elarion_talents_t : unsigned long long
@@ -314,7 +316,7 @@ public:
     timespan_t fervent_supremacy_duration         = 15_s;
     timespan_t fervent_supremacy_reduced_cooldown = 20_s;
     int fervent_supremacy_stacks                  = 4;
-    double fervent_supremacy_mul                  = 0.5;
+    double fervent_supremacy_mul                  = 0.25;
 
     double impending_heartseeker_mul_per_arrow = 0.1;
     timespan_t impending_heartseeker_duration  = 15_s;
@@ -1336,7 +1338,6 @@ struct lunarlight_mark_t : public elarion_spell_t
 
     if ( p()->talents_enabled( elarion_t::TALENT_15 ) )
     {
-      p()->cooldowns.highwind_arrow->reset( false, 1 );
       p()->buffs.resurgent_winds->trigger();
     }
   }
@@ -1974,6 +1975,9 @@ void actions::elarion_action_t<Base>::trigger_spirit_refund( const action_state_
   } );
 
   p()->spirit_refund();
+
+  p()->get_target_data( state->target )
+      ->debuffs.lunarlight_mark->trigger( p()->spell_const.spirit_refund_marks_applied );
 
   if ( p()->legendary.starstrikers_ascent )
   {

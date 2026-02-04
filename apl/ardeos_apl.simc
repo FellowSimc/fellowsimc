@@ -4,24 +4,22 @@ actions.precombat+=/infernal_wave
 
 actions=run_action_list,name=main
 
-actions.main=fire_ball,if=(cooldown.engulfing_flames.remains<=gcd.max)&active_dot.fire_ball_dot=0|buff.reign_of_fire.react|talent.reign_of_fire&active_dot.fire_ball_dot=0
-actions.main+=/apocalypse
+actions.main=apocalypse
+actions.main+=/fire_ball,if=(cooldown.engulfing_flames.remains<=gcd.max*3|buff.wildfire.up)&active_dot.fire_ball_dot=0|buff.reign_of_fire.react&active_enemies>1|(talent.reign_of_fire|!talent.slow_burn)&active_dot.fire_ball_dot=0
 #,if=dot.searing_blaze.refreshable
-actions.main+=/engulfing_flames,target_if=dot.engulfing_flames.refreshable,if=engulfing_flames_max_stacks=1
-actions.main+=/engulfing_flames,target_if=dot.engulfing_flames.stack<engulfing_flames_max_stacks,if=engulfing_flames_max_stacks>1
+actions.main+=/engulfing_flames,if=full_recharge_time<=gcd.max*3|full_recharge_time<=talent.rolling_flames&active_dot.searing_blaze*0.5+gcd.max*3|cooldown.wildfire.remains<=gcd.max*5|buff.wildfire.up|cooldown.chronoshift.up
+actions.main+=/voidbringers_touch,if=buff.wildfire.up&active_enemies>1|cooldown.wildfire.remains<=8
 # actions.main+=/engulfing_flames
 #,if=!buff.wildfire.up&active_enemies>1|cooldown.wildfire.remains>=10|cooldown.wildfire.remains<=gcd.max*3|talent.rolling_flames
+actions.main+=/fire_frogs,if=buff.wildfire.up&(active_enemies<=19|cinders<100&active_dot.fire_ball_dot>1)|!legendary.untamed_flame&cooldown.wildfire.up
 actions.main+=/wildfire,if=active_dot.engulfing_flames>0|cooldown.pyromania.up|spirit=100&legendary.untamed_flame
-actions.main+=/pyromania,target_if=dot.engulfing_flames.refreshable|active_enemies=1,if=buff.wildfire.up
-actions.main+=/incinerate,if=buff.wildfire.up|!legendary.untamed_flame
-actions.main+=/voidbringers_touch,if=buff.wildfire.up
-actions.main+=/fire_frogs,if=buff.wildfire.up&(active_enemies<=19|cinders<100&active_dot.fire_ball_dot>1)
+actions.main+=/pyromania,if=buff.wildfire.up
+actions.main+=/incinerate,if=active_dot.engulfing_flames>=2
 actions.main+=/chronoshift,if=!cooldown.wildfire.up&!buff.wildfire.up
 actions.main+=/icicles_of_anzhyr,if=(!raid_event.adds.exists|active_enemies%2>=raid_event.adds.count|raid_event.adds.in>=12)&(active_dot.curse_of_anzhyr<active_enemies|!raid_event.adds.exists|raid_event.adds.in>=30)
 actions.main+=/detonate,if=(active_dot.engulfing_flames>=1)&cinders>=300|buff.wildfire.up
 actions.main+=/searing_blaze,target_if=refreshable,if=cooldown.apocalypse.remains>=10|active_enemies<=4
 actions.main+=/detonate,if=active_dot.searing_blaze=active_enemies&active_dot.engulfing_flames>1|cinders>=360&dot.fire_frog_dot.ticking
 actions.main+=/natures_fury
-actions.main+=/engulfing_flames,target_if=refreshable,if=talent.rolling_flames
 actions.main+=/detonate,if=cinders>=360&active_dot.searing_blaze>=4
 actions.main+=/infernal_wave

@@ -1201,21 +1201,22 @@ void fs_player_t::create_buffs()
     default:
       break;
   }
-
   
-  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 && fs_gems.use_new_harmonious )
+  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
   {
-    fs_buffs.harmonious_soul = make_buff<fs_player_buff_t>( this, "harmonious_soul" )
-                                   ->set_max_stack( 10 )
-                                   ->set_freeze_stacks( true )
-                                   ->set_period( fs_gems.new_harmonious_duration )
-                                   ->set_default_value( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 ? 0.009 : 0.003 )
-                                   ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
-                                   ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-                                   ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY )
-                                   ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
-                                   ->set_tick_behavior( buff_tick_behavior::REFRESH )
-                                   ->set_tick_callback( []( buff_t* b, int, timespan_t ) { b->decrement(); } );
+    fs_buffs.harmonious_soul =
+        make_buff<fs_player_buff_t>( this, "harmonious_soul" )
+            ->set_max_stack( fs_gems.harmonious_max_stacks )
+            ->set_freeze_stacks( true )
+            ->set_period( fs_gems.harmonious_duration )
+            ->set_default_value( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 ? fs_gems.harmonious_buff_major
+                                                                           : fs_gems.harmonious_buff_minor )
+            ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
+            ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+            ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY )
+            ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+            ->set_tick_behavior( buff_tick_behavior::CLIP )
+            ->set_tick_callback( []( buff_t* b, int, timespan_t ) { b->decrement(); } );
   }
 
 
@@ -1455,9 +1456,8 @@ void fs_player_t::create_options()
   add_option( opt_uint( "weapon_trait.visions_of_grandeur", fs_weapons.visions_of_grandeur, 0, 4 ) );
   add_option( opt_uint( "weapon_trait.willful_momentum", fs_weapons.willful_momentum, 0, 4 ) );
 
-  add_option( opt_bool( "gems.use_new_harmonious", fs_gems.use_new_harmonious ) );
-  add_option( opt_timespan( "gems.new_harmonious_duration", fs_gems.new_harmonious_duration ) );
-  add_option( opt_float( "gems.new_harmonious_amp", fs_gems.new_harmonious_amp ) );
+  add_option( opt_timespan( "gems.harmonious_duration", fs_gems.harmonious_duration ) );
+  add_option( opt_float( "gems.harmonious_diamond_amp", fs_gems.harmonious_diamond_amp ) );
 }
 
 // fs_player_t::copy_from =======================================================
@@ -1599,31 +1599,9 @@ void fs_player_t::init_special_effects()
     base.versatility += 0.03;
   }
 
-  if ( !fs_gems.use_new_harmonious )
+  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
   {
-    if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 )
-    {
-      base.versatility += 0.03;
-      base.mastery += 0.03;
-      base.spell_crit_chance += 0.03;
-      base.attack_crit_chance += 0.03;
-      base.haste += 0.03;
-    }
-    else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
-    {
-      base.versatility += 0.01;
-      base.mastery += 0.01;
-      base.spell_crit_chance += 0.01;
-      base.attack_crit_chance += 0.01;
-      base.haste += 0.01;
-    }
-  }
-  else
-  {
-    if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
-    {
-      register_on_kill_callback( [ this ]( player_t* t ) { fs_buffs.harmonious_soul->trigger( 1 ); } );
-    }
+    register_on_kill_callback( [ this ]( player_t* t ) { fs_buffs.harmonious_soul->trigger( 1 ); } );
   }
 
   if ( fs_sets.tuzari_grace )
@@ -1666,6 +1644,11 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 960 )
   {
+    register_on_arise_callback( this, [ this ]() {
+      if ( !fs_buffs.spirit_of_heroism->check() )
+        fs_buffs.virtuoso->trigger();
+    } );
+
     fs_buffs.spirit_of_heroism->add_stack_change_callback( [ this ]( buff_t*, int, int new_stack ) {
       if ( new_stack )
       {
@@ -1954,11 +1937,8 @@ void fs_player_t::init_special_effects()
       {
         auto m = base_t::composite_target_da_multiplier( t );
 
-        auto dia_m =
-            ab::fs_p()->fs_gems.use_new_harmonious
-                ? ab::fs_p()->get_target_data( t )->debuffs.diamond_strike_amp->check_stack_value() +
-                      ab::fs_p()->fs_gems.new_harmonious_amp * ab::fs_p()->fs_buffs.harmonious_soul->current_stack
-                : ab::fs_p()->get_target_data( t )->debuffs.diamond_strike_amp->check_stack_value();
+        auto dia_m = ab::fs_p()->get_target_data( t )->debuffs.diamond_strike_amp->check_stack_value() +
+                     ab::fs_p()->fs_gems.harmonious_diamond_amp * ab::fs_p()->fs_buffs.harmonious_soul->check();
 
         m *= 1.0 + dia_m;
 
@@ -1969,16 +1949,6 @@ void fs_player_t::init_special_effects()
       {
         base_t::impact( s );
         ab::fs_p()->get_target_data( s->target )->debuffs.diamond_strike_amp->trigger();
-      }
-
-      void execute() override
-      {
-        base_t::execute();
-
-        /*if ( ab::fs_p()->fs_gems.use_new_harmonious && ab::fs_p()->fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
-        {
-          ab::fs_p()->fs_buffs.harmonious_soul->trigger();
-        }*/
       }
     };
 
@@ -2338,7 +2308,10 @@ void fs_player_t::voidbringer_accumulate( double damage )
     auto* buff = debug_cast<voidbringer_debuff_t*>( active_voidbringer_buffs[ i ] );
     
     if ( !buff )
+    {
       sim->error( "{} has invalid voidbringer debuff in active_voidbringer_buffs vector.", *this );
+      continue;
+    }
 
     if ( !buff->check() )
     {

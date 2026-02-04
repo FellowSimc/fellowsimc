@@ -1,27 +1,27 @@
 report_details=1
 optimal_raid=0
 # max_time=420
-max_time=50
-# max_time=290
+# max_time=50
+max_time=290
 target_error=0.1
 iterations=100000
 chart_show_relative_difference=1
 vary_combat_length=0
 single_actor_batch=1
-desired_targets=20
+desired_targets=1
 
 
 # apl/chuey_dungeon.simc
 
 # apl/dungeon.simc
 
-scale_only=crit,haste,mastery,vers
-scale_intellect=100
-scale_crit_rating=590
-scale_haste_rating=590
-scale_mastery_rating=590
-scale_versatility_rating=590
-positive_scale_delta=1
+# scale_only=crit,haste,mastery,vers
+# scale_intellect=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
 # calculate_scale_factors=1
 # dps_plot_stat=haste,crit_rating,mastery,versatility
 # dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
@@ -85,10 +85,8 @@ weapon_trait.amethyst_splinters=4
 weapon_trait.kindling=4
 weapon_trait.inspired_allegiance=4
 
-engulfing_flames_max_stacks=20
-
 # talents+=/slow_burn:1/firestarter:1/undying_flame:1/pyrophibian_frenzy:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1
-legendary.untamed_flame=1
+# legendary.untamed_flame=0
 
 talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1
 

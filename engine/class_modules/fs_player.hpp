@@ -182,9 +182,11 @@ public:
   {
     std::array<double, GEM_MAX> gem_powers;
 
-    bool use_new_harmonious            = false;
-    timespan_t new_harmonious_duration = 12_s;
-    double new_harmonious_amp          = 0.2;
+    timespan_t harmonious_duration = 5_s;
+    int harmonious_max_stacks      = 10;
+    double harmonious_diamond_amp  = 0.35;
+    double harmonious_buff_minor   = 0.003;
+    double harmonious_buff_major   = 0.009;
   } fs_gems;
 
   struct fs_weapons_t

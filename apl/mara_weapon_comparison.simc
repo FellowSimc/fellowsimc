@@ -22,7 +22,7 @@ apl/chuey_dungeon.simc
 # positive_scale_delta=1
 # calculate_scale_factors=1
 
-mara="Mara"
+mara="Mara Finisher"
 level=80
 
 # initial_resource=spirit=100
@@ -136,126 +136,125 @@ gear_mastery_rating=400
 # gems.emerald_power=1200
 # gems.diamond_power=1200
 
+gems.amethyst_power=1200
+gems.diamond_power=1200
+gems.emerald_power=1200
+gems.ruby_power=1200
+gems.use_new_harmonious=1
+gems.new_harmonious_duration=5
+gems.new_harmonious_amp=0.35
+
 # weapon=fated_strike
 # weapon_trait.visions_of_grandeur=4
-weapon_trait.amethyst_splinters=4
+# weapon_trait.amethyst_splinters=4
 weapon_trait.kindling=4
 weapon_trait.inspired_allegiance=4
 # weapon_trait.willful_momentum=4
 
+copy="Amethyst","Mara Finisher"
+weapon_trait.amethyst_splinters=4
 
-copy="Fated Strike","Mara"
+copy="Diamond Strike","Mara Finisher"
+weapon_trait.diamond_strike=4
+
+copy="Emerald Judgement","Mara Finisher"
+weapon_trait.emerald_judgement=4
+
+copy="Fated Strike","Mara Finisher"
 weapon=fated_strike
 
-copy="Fated Strike Grandeur","Mara"
+copy="Voidbringers Touch","Mara Finisher"
+weapon=voidbringers_touch
+
+copy="Sahrils","Mara Finisher"
+weapon=sahrils_wrath
+
+copy="Earthbreaker","Mara Finisher"
+weapon=earthbreaker
+
+copy="Fated Strike Amethyst","Mara Finisher"
+weapon=fated_strike
+weapon_trait.amethyst_splinters=4
+
+copy="Voidbringers Touch Amethyst","Mara Finisher"
+weapon=voidbringers_touch
+weapon_trait.amethyst_splinters=4
+
+copy="Sahrils Amethyst","Mara Finisher"
+weapon=sahrils_wrath
+weapon_trait.amethyst_splinters=4
+
+copy="Earthbreaker Amethyst","Mara Finisher"
+weapon=earthbreaker
+weapon_trait.amethyst_splinters=4
+
+copy="Fated Strike Emerald","Mara Finisher"
+weapon=fated_strike
+weapon_trait.emerald_judgement=4
+
+copy="Voidbringers Touch Emerald","Mara Finisher"
+weapon=voidbringers_touch
+weapon_trait.emerald_judgement=4
+
+copy="Sahrils Emerald","Mara Finisher"
+weapon=sahrils_wrath
+weapon_trait.emerald_judgement=4
+
+copy="Earthbreaker Emerald","Mara Finisher"
+weapon=earthbreaker
+weapon_trait.emerald_judgement=4
+
+copy="Fated Strike Diamond","Mara Finisher"
+weapon=fated_strike
+weapon_trait.diamond_strike=4
+
+copy="Voidbringers Touch Diamond","Mara Finisher"
+weapon=voidbringers_touch
+weapon_trait.diamond_strike=4
+
+copy="Sahrils Diamond","Mara Finisher"
+weapon=sahrils_wrath
+weapon_trait.diamond_strike=4
+
+copy="Earthbreaker Diamond","Mara Finisher"
+weapon=earthbreaker
+weapon_trait.diamond_strike=4
+
+copy="Fated Strike Grandeur","Mara Finisher"
 weapon=fated_strike
 weapon_trait.amethyst_splinters=0
 weapon_trait.visions_of_grandeur=4
 
-copy="Fated Strike Brave","Mara"
+copy="Fated Strike Brave","Mara Finisher"
 weapon=fated_strike
 weapon_trait.amethyst_splinters=0
 weapon_trait.brave_machinations=4
 
-copy="Voidbringers Touch","Mara"
+copy="Voidbringers Touch Brand","Mara Finisher"
 weapon=voidbringers_touch
-
-copy="Voidbringers Touch Brand","Mara"
-weapon=voidbringers_touch
-weapon_trait.amethyst_splinters=0
 weapon_trait.heroic_brand=4
-copy="Voidbringers Touch Brave","Mara"
+copy="Voidbringers Touch Brave","Mara Finisher"
 weapon=voidbringers_touch
-weapon_trait.amethyst_splinters=0
 weapon_trait.brave_machinations=4
-copy="Voidbringers Touch Visions","Mara"
+
+copy="Voidbringers Touch Visions","Mara Finisher"
 weapon=voidbringers_touch
-weapon_trait.amethyst_splinters=0
 weapon_trait.visions_of_grandeur=4
 
-copy="Sahrils","Mara"
+copy="Sahrils Grandeur","Mara Finisher"
 weapon=sahrils_wrath
-
-copy="Sahrils Grandeur","Mara"
-weapon=sahrils_wrath
-weapon_trait.amethyst_splinters=0
 weapon_trait.brave_machinations=4
 
-copy="Sahrils Brave","Mara"
+copy="Sahrils Brave","Mara Finisher"
 weapon=sahrils_wrath
-weapon_trait.amethyst_splinters=0
 weapon_trait.brave_machinations=4
 
-copy="Earthbreaker","Mara"
-weapon=earthbreaker
-copy="Earthbreaker Grandeur","Mara"
-weapon_trait.amethyst_splinters=0
+copy="Earthbreaker Grandeur","Mara Finisher"
 weapon_trait.visions_of_grandeur=4
 weapon=earthbreaker
-copy="Earthbreaker Brand","Mara"
-weapon_trait.amethyst_splinters=0
+copy="Earthbreaker Brand","Mara Finisher"
 weapon_trait.heroic_brand=4
 weapon=earthbreaker
-copy="Earthbreaker Brave","Mara"
-weapon_trait.amethyst_splinters=0
+copy="Earthbreaker Brave","Mara Finisher"
 weapon_trait.brave_machinations=4
 weapon=earthbreaker
-# copy="Amethyst Splinters","Mara"
-# weapon_trait.amethyst_splinters=4
-
-# copy="Diamond Strike","Mara"
-# weapon_trait.diamond_strike=4
-
-# copy="Emerald Judgement","Mara"
-# weapon_trait.emerald_judgement=4
-
-# copy="Grandeur","Mara"
-# weapon_trait.visions_of_grandeur=4
-
-# copy="Brave Mach","Mara"
-# weapon_trait.brave_machinations=4
-
-# copy="Martial Initiative","Mara"
-# weapon_trait.martial_initiative=4
-
-
-# copy="T6 Sapphire Grandeur","Mara"
-# gems.sapphire_power=1200
-# weapon_trait.visions_of_grandeur=4
-
-# copy="T6 Emerald","Mara"
-# gems.emerald_power=1200
-# copy="T6 Sapphire","Mara"
-# gems.sapphire_power=1200
-# copy="T6 Topaz","Mara"
-# gems.topaz_power=1200
-# copy="T6 Ruby","Mara"
-# gems.ruby_power=1200
-# copy="T6 Diamond","Mara"
-# gems.diamond_power=1200
-# copy="T6 Diamond New","Mara"
-# gems.diamond_power=1200
-# gems.use_new_harmonious=1
-# gems.new_harmonious_duration=5
-# gems.new_harmonious_amp=0.35
-# copy="T6 Amethyst","Mara"
-# gems.amethyst_power=1200
-
-# copy="T6 Amethyst Splinters","Mara"
-# gems.amethyst_power=1200
-# weapon_trait.amethyst_splinters=4
-
-# copy="T6 Emerald Judgement","Mara"
-# gems.emerald_power=1200
-# weapon_trait.emerald_judgement=4
-
-# copy="T6 Diamond Strike","Mara"
-# weapon_trait.diamond_strike=4
-# gems.diamond_power=1200
-
-# copy="T6 Diamond Strike New","Mara"
-# weapon_trait.diamond_strike=4
-# gems.diamond_power=1200
-# gems.use_new_harmonious=1
-# gems.new_harmonious_duration=5
-# gems.new_harmonious_amp=0.35

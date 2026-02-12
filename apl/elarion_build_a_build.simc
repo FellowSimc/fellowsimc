@@ -135,6 +135,7 @@ talents+=/focused_expanse:1
 
 legendary.shimmer=1
 
+talents+=/final_crescendo:1/resurgent_winds:1/piercing_seekers:1/skyward_munitions:1
 
 
 # talents+=/resurgent_winds:1
@@ -169,7 +170,6 @@ talents+=/skylit_grace:1
 copy="Repeating Grace SM 12PT","Elarion"
 talents+=/final_crescendo:1/repeating_stars:1/skylit_grace:1/skyward_munitions:1
 
-
 copy="Highwind Arrow 13pt SM SKY","Elarion"
 talents+=/final_crescendo:1
 talents+=/resurgent_winds:1
@@ -198,6 +198,8 @@ talents+=/final_crescendo:1/repeating_stars:1/piercing_seekers:1/lunar_fury:1/sk
 
 copy="Hybrid2","Elarion"
 talents+=/final_crescendo:1/resurgent_winds:1/piercing_seekers:1/skyward_munitions:1
+# copy="Hybrid4","Elarion"
+# talents+=/final_crescendo:1/impending_heartseeker:1/piercing_seekers:1/skyward_munitions:1
 
 copy="Hybrid3","Elarion"
 talents+=/final_crescendo:1/resurgent_winds:1/repeating_stars:1

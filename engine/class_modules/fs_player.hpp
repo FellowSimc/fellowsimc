@@ -120,10 +120,12 @@ public:
   struct fs_gains_t
   {
     gain_t* grandeur;
+    gain_t* spirit_procs;
   } fs_gains;
 
   struct options_t
   {
+    bool use_new_spirit_refunds = true;
   } fs_options;
 
   struct fs_sets_t
@@ -271,6 +273,8 @@ public:
     const double brave_machinations_crit[ 5 ]     = { 0, 0.2, 0.24, 0.28, 0.38 };
     const double heroic_brand_amp[ 5 ]            = { 1.0, 1.5, 1.6, 1.7, 1.8 };
   } fs_weapon_trait_values;
+
+  double spirit_refund_mul = 1;
 
   cooldown_t* weapon_cd;
   bool brave_machinations_available;

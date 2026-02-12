@@ -1122,19 +1122,21 @@ void dot_t::dot_end_event_t::execute()
 {
   dot->end_event = nullptr;
 
-  assert( dot->tick_event );
-  if ( dot->time_to_next_full_tick() < dot->tick_time )
+  if ( dot->tick_event )
   {
-    dot->current_tick++;
-    dot->tick();
-  }
+    if ( dot->time_to_next_full_tick() < dot->tick_time )
+    {
+      dot->current_tick++;
+      dot->tick();
+    }
 
-  dot->current_action->consume_cost_per_tick( *dot );
+    dot->current_action->consume_cost_per_tick( *dot );
 
-  // If consume_cost_per_tick expires the DoT it also calls last_tick so we don't need to do it again
-  if ( dot->state )
-  {
-    dot->last_tick();
+    // If consume_cost_per_tick expires the DoT it also calls last_tick so we don't need to do it again
+    if ( dot->state )
+    {
+      dot->last_tick();
+    }
   }
 }
 

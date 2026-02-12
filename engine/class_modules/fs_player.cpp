@@ -980,7 +980,8 @@ void fs_player_t::init_gains()
 {
   player_t::init_gains();
 
-  fs_gains.grandeur = get_gain( "Visions of Grandeur" );
+  fs_gains.grandeur     = get_gain( "Visions of Grandeur" );
+  fs_gains.spirit_procs = get_gain( "Spirit Procs" );
 }
 
 // fs_player_t::init_procs ======================================================
@@ -1201,23 +1202,20 @@ void fs_player_t::create_buffs()
     default:
       break;
   }
-  
-  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
-  {
-    fs_buffs.harmonious_soul =
-        make_buff<fs_player_buff_t>( this, "harmonious_soul" )
-            ->set_max_stack( fs_gems.harmonious_max_stacks )
-            ->set_freeze_stacks( true )
-            ->set_period( fs_gems.harmonious_duration )
-            ->set_default_value( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 ? fs_gems.harmonious_buff_major
-                                                                           : fs_gems.harmonious_buff_minor )
-            ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
-            ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-            ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY )
-            ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
-            ->set_tick_behavior( buff_tick_behavior::CLIP )
-            ->set_tick_callback( []( buff_t* b, int, timespan_t ) { b->decrement(); } );
-  }
+
+  fs_buffs.harmonious_soul =
+      make_buff<fs_player_buff_t>( this, "harmonious_soul" )
+          ->set_max_stack( fs_gems.harmonious_max_stacks )
+          ->set_freeze_stacks( true )
+          ->set_period( fs_gems.harmonious_duration )
+          ->set_default_value( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 ? fs_gems.harmonious_buff_major
+                                                                         : fs_gems.harmonious_buff_minor )
+          ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
+          ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+          ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY )
+          ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+          ->set_tick_behavior( buff_tick_behavior::CLIP )
+          ->set_tick_callback( []( buff_t* b, int, timespan_t ) { b->decrement(); } );
 
 
   fs_buffs.hidden_power_stacking = make_buff<fs_player_buff_t>( this, "hidden_power_stacking" )
@@ -1458,6 +1456,9 @@ void fs_player_t::create_options()
 
   add_option( opt_timespan( "gems.harmonious_duration", fs_gems.harmonious_duration ) );
   add_option( opt_float( "gems.harmonious_diamond_amp", fs_gems.harmonious_diamond_amp ) );
+
+  add_option( opt_float( "spirit_refund_mul", spirit_refund_mul ) );
+  add_option( opt_bool( "use_new_spirit_refunds", fs_options.use_new_spirit_refunds ) );
 }
 
 // fs_player_t::copy_from =======================================================
@@ -2194,6 +2195,11 @@ void fs_player_t::spirit_refund()
 {
   if ( fs_weapons.willful_momentum )
     fs_buffs.willful_momentum->trigger();
+
+  if ( fs_options.use_new_spirit_refunds )
+  {
+    resource_gain( RESOURCE_SPIRIT, spirit_refund_mul, fs_gains.spirit_procs );
+  }
 }
 
 void fs_player_t::used_ultimate()
@@ -2254,7 +2260,7 @@ double fs_player_t::resource_regen_per_second( resource_e r ) const
 {
   double reg = player_t::resource_regen_per_second( r );
 
-  if ( r == RESOURCE_SPIRIT )
+  if ( r == RESOURCE_SPIRIT && !fs_options.use_new_spirit_refunds )
   {
     reg *= 1.0 + cache.mastery();
   }
@@ -2270,7 +2276,8 @@ double fs_player_t::resource_regen_per_second( resource_e r ) const
 
 double fs_player_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
-  if ( resource_type == RESOURCE_SPIRIT && source != gains.resource_regen[ RESOURCE_SPIRIT ] )
+  if ( !fs_options.use_new_spirit_refunds && resource_type == RESOURCE_SPIRIT &&
+       source != gains.resource_regen[ RESOURCE_SPIRIT ] )
   {
     amount *= 1.0 + cache.mastery();
   }

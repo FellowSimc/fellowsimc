@@ -336,11 +336,12 @@ public:
     timespan_t crackling_inferno_dot_duration = 24_s;
     timespan_t crackling_inferno_dot_period   = 3_s;
 
-    timespan_t rolling_flames_cdr = 0.5_s;
+    timespan_t rolling_flames_cdr               = 0.4_s;
+    timespan_t rolling_flames_infernal_wave_cdr = 1000_ms;
 
     double pyrophibian_frenzy_chance = 0.08;
 
-    double reign_of_fire_ppm          = 1.0;
+    double reign_of_fire_ppm          = 1.5;
     double reign_of_fire_crit_chance  = 1.0;
     timespan_t reign_of_fire_duration = 12_s;
 
@@ -352,7 +353,6 @@ public:
     bool rolling_flames_instant = false;
 
     bool double_detonate_cost_efficiency        = false;
-    timespan_t rolling_flames_infernal_wave_cdr = 0_ms;
     timespan_t detonate_extends_searing         = 0_s;
   } talents;
 
@@ -1385,6 +1385,12 @@ struct incinerate_t : public ardeos_spell_t
 
       p()->extend_dots( s->target, p()->spell_const.incinerate_dot_extend );
     }
+    void execute() override
+    {
+      if ( !target || target->is_sleeping() )
+        target_cache.is_valid = false;
+      ardeos_spell_t::execute();
+    }
   };
 
   struct incinerate_channel_t : public ardeos_spell_t
@@ -1421,7 +1427,6 @@ struct incinerate_t : public ardeos_spell_t
     void tick( dot_t* d ) override
     {
       ardeos_spell_t::tick( d );
-      custom_tick_action->set_target( parent->target );
       custom_tick_action->execute();
     }
   };
@@ -1710,6 +1715,15 @@ struct engulfing_flames_t : public ardeos_spell_t
     {
       base_dot->reset();
     }
+  }
+
+  void reset() override
+  {
+    ardeos_spell_t::reset();
+    auto dot           = ardeos_spell_t::get_dot();
+
+    while ( p()->get_active_dots( dot ) )
+      p()->remove_active_dot( dot );
   }
 
   bool dot_refreshable( const dot_t*, timespan_t ) const override
@@ -2722,6 +2736,7 @@ void ardeos_t::init_background_actions()
 void ardeos_t::reset()
 {
   fs_player_t::reset();
+  
 }
 
 // ardeos_t::activate ========================================================
@@ -2786,6 +2801,9 @@ void actions::ardeos_action_t<Base>::trigger_spirit_refund( const action_state_t
 template <typename Base>
 void actions::ardeos_action_t<Base>::spend_cinders( const action_state_t* s )
 {
+  if ( !s )
+    return;
+
   double orbs_spent = s->action->base_costs[ RESOURCE_CINDERS ];
   if ( orbs_spent <= 0 )
     return;

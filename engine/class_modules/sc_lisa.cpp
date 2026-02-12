@@ -78,6 +78,7 @@ public:
 
   struct cooldowns_t
   {
+    cooldown_t* time_rift;
   } cooldowns;
 
   struct gains_t
@@ -100,85 +101,92 @@ public:
     double spirit_proc_resource        = 25;
 
     timespan_t time_shard_cast_time = 1.5_s;
-    double time_shard_sp_coeff      = 1.2;
-    double time_shard_resource      = 10;
-    double time_shard_resource_crit = 15;
+    double time_shard_sp_coeff      = 1.06;
+    double time_shard_resource      = 4;
+    double time_shard_resource_crit = 6;
     double time_shard_mana_cost     = 1;
 
-    double splinter_of_time_sp_coeff = 0.6;
-    timespan_t splinter_of_time_dot_duration = 15_s;
-    timespan_t splinter_of_time_period       = 2_s;
-    double splinter_of_time_tick_sp_coeff       = 0.2;
-    double splinter_of_time_tick_resource    = 3.5;
-    double splinter_of_time_tick_resource_crit    = 4.5;
+    double splinter_of_time_sp_coeff           = 0.3;
+    timespan_t splinter_of_time_dot_duration   = 18_s;
+    timespan_t splinter_of_time_period         = 2_s;
+    double splinter_of_time_tick_sp_coeff      = 0.3;
+    double splinter_of_time_tick_resource      = 0;
+    double splinter_of_time_tick_resource_crit = 0;
     double splinter_of_time_mana_cost          = 3;
+    int splinter_of_time_aoe                   = 3;
 
     timespan_t shifting_sands_cast_time       = 2_s;
-    double shifting_sands_sp_coeff            = 7.2;
-    double shifting_sands_resource            = 50;
-    double shifting_sands_resource_crit       = 70;
+    double shifting_sands_sp_coeff            = 3.6;
+    double shifting_sands_resource            = 10;
+    double shifting_sands_resource_crit       = 15;
     timespan_t shifting_sands_cd              = 45_s;
-    bool shifting_sands_cd_hasted             = false;  // TODO: Confirm
-    timespan_t shifting_sands_debuff_duration = 15_s;
+    bool shifting_sands_cd_hasted             = false;
+    timespan_t shifting_sands_debuff_duration = 20_s;
     double shifting_sands_debuff_amp          = 0.2;
     double shifting_sands_mana_cost           = 70;
 
-    timespan_t rewind_cast_time = 1.5_s;
-    double rewind_sp_coeff      = 10.5;
-    double rewind_past_taken_heal = 0.3;
-    double rewind_mana_cost       = 150;
-    double rewind_resource        = 10;
-    double rewind_resource_crit   = 15;
+    timespan_t reconstitution_cast_time   = 1.5_s;
+    double reconstitution_sp_coeff        = 16.16;
+    double reconstitution_past_taken_heal = 0.0;
+    double reconstitution_mana_cost       = 88;
+    double reconstitution_resource        = 5;
+    double reconstitution_resource_crit   = 15;
+    double reconstitution_heal_to_stagger = 0.5;
 
-    timespan_t temporal_barrier_duration = 25_s;
-    double temporal_barrier_sp_coeff_minimum   = 4.5;
-    double temporal_barrier_sp_coeff_maximum   = 20;
-    double temporal_barrier_mana_cost    = 80;
+    /*timespan_t temporal_barrier_duration     = 25_s;
+    double temporal_barrier_sp_coeff_minimum = 4.5;
+    double temporal_barrier_sp_coeff_maximum = 20;
+    double temporal_barrier_mana_cost        = 80;*/
 
-    timespan_t chrono_barrage_channel_duration = 1.7_s;
-    timespan_t chrono_barrage_channel_period   = 0.6_s;
-    double chrono_barrage_dmg_sp_coeff_minimum = 1;
-    double chrono_barrage_dmg_sp_coeff_maximum = 5;
-    double chrono_barrage_heal_sp_coeff_minimum = 1.7;
-    double chrono_barrage_heal_sp_coeff_maximum = 11.5;
-    double chrono_barrage_mana_cost             = 50;
+    timespan_t chrono_barrage_channel_duration = 2_s;
+    timespan_t chrono_barrage_channel_period   = 0.5_s;
+    double chrono_barrage_dmg_sp_coeff         = 2.85;
+    double chrono_barrage_heal_sp_coeff        = 8.7;
+    double chrono_barrage_mana_cost            = 50;
+    timespan_t chrono_barrage_cd               = 12_s;
+    double chrono_barrage_tick_resource        = 4;
+    double chrono_barrage_tick_resource_crit   = 6;
+    bool chrono_barrage_cd_hasted              = true;
 
-    timespan_t time_slip_cd = 15_s;
+    timespan_t time_slip_cd  = 15_s;
     bool time_slip_cd_hasted = false;
 
     timespan_t absolute_stasis_duration = 6_s;
     double absolute_stasis_cd_recovery  = 6;
-    double absolute_stasis_cd_reduction = 6;
 
     timespan_t chrono_veil_duration = 15_s;
     timespan_t chrono_veil_cd       = 180_s;
     double chrono_veil_mana_cost    = 20;
 
-    timespan_t chrono_bind_cd = 300_s;
+    timespan_t chrono_bind_cd       = 300_s;
     timespan_t chrono_bind_duration = 7_s;
     double chrono_bind_mana         = 80;
     double chrono_bind_max_targets  = 8;
 
-    timespan_t time_burn_cast_time      = 2_s;
-    timespan_t time_burn_dot_duration   = 21_s;
-    timespan_t time_burn_dot_period     = 3_s;
-    double time_burn_tick_sp_coeff      = 4.5;
-    timespan_t time_burn_cd             = 30_s;
-    bool time_burn_cd_hasted            = false;  // TODO: Confirm
+    timespan_t time_burn_cast_time      = 1.5_s;
+    timespan_t time_burn_dot_duration   = 6_s;
+    timespan_t time_burn_dot_period     = 1.5_s;
+    double time_burn_tick_sp_coeff      = 2.225;
+    timespan_t time_burn_cd             = 20_s;
+    bool time_burn_cd_hasted            = false;
     double time_burn_tick_resource      = 5;
-    double time_burn_tick_resource_crit = 10;
+    double time_burn_tick_resource_crit = 15;
     double time_burn_mana_cost          = 40;
 
-    double time_rift_haste = 0.15;
-    double time_rift_resource = 2;
-    timespan_t time_rift_duration = 20_s;
+    double time_rift_haste        = 0;
+    double time_rift_resource     = 0;
+    timespan_t time_rift_duration = 15_s;
     double time_rift_mana         = 50;
-    timespan_t time_rift_cd       = 90_s;
+    timespan_t time_rift_cd       = 20_s;
     bool time_rift_cd_hasted      = false;
-    timespan_t time_rift_period   = 0.15_s;
+    double time_rift_cdr          = 1.5;
 
-    timespan_t time_mending_hot_duration = 12_s;
-    timespan_t time_mending_hot_period = 2_s;
+    double blast_resource_cost = 25;
+    double blast_sp_coeff      = 23.5;
+    // timespan_t time_rift_period   = 0.15_s;
+
+    timespan_t time_mending_hot_duration      = 12_s;
+    timespan_t time_mending_hot_period        = 2_s;
     double time_mending_tick_sp_coeff_minimum = 0.3;
     double time_mending_tick_sp_coeff_maximum = 2.5;
     double time_mending_past_taken_heal       = 0.15;
@@ -300,7 +308,7 @@ public:
     timespan_t fractions_of_time_cast_time = 2_s;
     double fractions_of_time_mana_cost     = 10;
 
-    double practical_overcharge_mana_regen = 0.25;
+    double practical_overcharge_mana_regen   = 0.25;
     timespan_t practical_overcharge_duration = 8_s;
 
     double overcharge_manipulation_threshold = 0.5;
@@ -445,7 +453,6 @@ public:
     return "disabled";
   }
 
-  
   double uchronia_tracker;
 
   lisa_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
@@ -543,7 +550,7 @@ public:
   void initialize() override
   {
     action_state_t::initialize();
-    temporal_pct = 0.0;
+    temporal_pct     = 0.0;
     temporal_paradox = false;
   }
 
@@ -838,6 +845,12 @@ public:
       return;
     }
 
+    if ( ab::current_resource() == RESOURCE_TEMPORAL_OVERCHARGE && p()->buffs.uchronia->check() )
+    {
+      p()->buffs.uchronia->decrement();
+      return;
+    }
+
     ab::consume_resource();
 
     spend_resource_costs( ab::execute_state );
@@ -990,7 +1003,7 @@ struct time_shard_t : public lisa_spell_t
 
     overcharge_on_hit  = p->spell_const.time_shard_resource;
     overcharge_on_crit = p->spell_const.time_shard_resource_crit;
-    
+
     base_costs[ RESOURCE_MANA ] = p->spell_const.time_shard_mana_cost;
 
     parse_options( options_str );
@@ -999,9 +1012,8 @@ struct time_shard_t : public lisa_spell_t
 
 struct splinter_of_time_t : public lisa_spell_t
 {
-  bool hold_action;
   splinter_of_time_t( lisa_t* p, util::string_view options_str = {} )
-    : lisa_spell_t( "splinter_of_time", p, options_str ), hold_action( false )
+    : lisa_spell_t( "splinter_of_time", p, options_str )
   {
     id                 = 3;
     name_str_reporting = "Splinter of Time";
@@ -1022,16 +1034,9 @@ struct splinter_of_time_t : public lisa_spell_t
 
     base_costs[ RESOURCE_MANA ] = p->spell_const.splinter_of_time_mana_cost;
 
-    add_option( opt_bool( "hold_action", hold_action ) );
     parse_options( options_str );
 
-    if ( hold_action && p->talents_enabled( lisa_t::TALENT_1 ) )
-    {
-      base_execute_time = p->talents.fractions_of_time_cast_time;
-      aoe                         = p->talents.fractions_of_time_targets;
-      base_costs[ RESOURCE_MANA ] = p->talents.fractions_of_time_mana_cost;
-
-    }
+    aoe = p->spell_const.splinter_of_time_aoe;
   }
 
   void execute() override
@@ -1050,16 +1055,7 @@ struct splinter_of_time_t : public lisa_spell_t
     }
     base_t::execute();
   }
-
-  bool action_ready() override
-  {
-    if ( hold_action && !p()->talents_enabled( lisa_t::TALENT_1 ) )
-      return false;
-
-    return base_t::action_ready();
-  }
-
- };
+};
 
 struct time_burn_t : public lisa_spell_t
 {
@@ -1085,18 +1081,8 @@ struct time_burn_t : public lisa_spell_t
     overcharge_on_tick_crit = p->spell_const.time_burn_tick_resource_crit;
 
     base_costs[ RESOURCE_MANA ] = p->spell_const.time_burn_mana_cost;
-    
-    parse_options( options_str );
-  }
 
-  int n_targets() const override
-  {
-    return p()->buffs.temporal_paradox->check() ? p()->talents.temporal_paradox_burn_aoe : 0;
-  }
-  void execute() override
-  {
-    base_t::execute();
-    p()->buffs.temporal_paradox->decrement();
+    parse_options( options_str );
   }
 };
 
@@ -1141,83 +1127,31 @@ struct shifting_sands_t : public lisa_spell_t
 
 struct chrono_barrage_t : public lisa_spell_t
 {
-  double sp_coeff_extra;
-  chrono_barrage_t( lisa_t* p, util::string_view options_str = {} )
-    : lisa_spell_t( "chrono_barrage", p, options_str ), sp_coeff_extra( 0 )
+  chrono_barrage_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "chrono_barrage", p, options_str )
   {
     id = 6;
 
     name_str_reporting = "Chrono Barrage";
 
-    spell_power_mod.tick = p->spell_const.chrono_barrage_dmg_sp_coeff_minimum;
-    sp_coeff_extra       = p->spell_const.chrono_barrage_dmg_sp_coeff_maximum - spell_power_mod.tick;
+    spell_power_mod.tick = p->spell_const.chrono_barrage_dmg_sp_coeff;
 
-    dot_duration           = p->spell_const.chrono_barrage_channel_duration;
-    base_tick_time         = p->spell_const.chrono_barrage_channel_period;
-    hasted_ticks           = true;
-    hasted_dot_duration    = false; // Confirmed :aware:
-    dot_allow_partial_tick = true;
-    tick_on_application    = false;
-    channeled              = true;
+    dot_duration        = p->spell_const.chrono_barrage_channel_duration;
+    base_tick_time      = p->spell_const.chrono_barrage_channel_period;
+    hasted_ticks        = true;
+    hasted_dot_duration = true;
+    tick_on_application = true;
+    channeled           = true;
     
+    cooldown->duration = p->spell_const.chrono_barrage_cd;
+    cooldown->hasted   = p->spell_const.chrono_barrage_cd_hasted;
+    cooldown->charges  = 1;
+
     base_costs[ RESOURCE_MANA ] = p->spell_const.shifting_sands_mana_cost;
-    secondary_costs[ RESOURCE_TEMPORAL_OVERCHARGE ] = 1;
+
+    overcharge_on_tick      = p->spell_const.chrono_barrage_tick_resource;
+    overcharge_on_tick_crit = p->spell_const.chrono_barrage_tick_resource_crit;
 
     parse_options( options_str );
-  }
-
-  double spell_tick_power_coefficient( const action_state_t* s ) const override
-  {
-    return spell_power_mod.tick + cast_state( s )->temporal_pct * sp_coeff_extra;
-  }
-
-  timespan_t dot_duration_flat_modifier( const action_state_t* s ) const override
-  {
-    auto t = base_t::dot_duration_flat_modifier( s );
-
-    // This is 3 bolts... I suppose. Not really.
-    if ( cast_state( s )->temporal_paradox )
-    {
-      t *= 2;
-    }
-
-    return t;
-  }
-
-  double tick_time_pct_multiplier( const action_state_t* s ) const override
-  {
-    auto base = base_t::tick_time_pct_multiplier( s );
-
-  /*  if ( cast_state( s )->temporal_paradox )
-    {
-      auto ticks = dot_duration / base_tick_time.base * s->haste;
-      base *= ticks / ( p()->talents.temporal_paradox_extra_ticks + 1 );
-    }*/
-
-    return base;
-  }
-
-  void execute() override
-  {
-    base_t::execute();
-
-    if ( p()->buffs.uchronia->check() )
-    {
-      p()->buffs.uchronia->decrement();
-    }
-    else
-    {
-      auto resource_available = p()->resources.current[ RESOURCE_TEMPORAL_OVERCHARGE ];
-      p()->resource_loss( RESOURCE_TEMPORAL_OVERCHARGE, resource_available, nullptr, this );
-      stats->consume_resource( RESOURCE_TEMPORAL_OVERCHARGE, resource_available );
-    }
-
-    if ( p()->talents_enabled( lisa_t::TALENT_4 ) )
-    {
-      p()->buffs.practical_overcharge->trigger();
-    }
-
-    p()->buffs.temporal_paradox->decrement();
   }
 
   void init_finished() override
@@ -1231,49 +1165,97 @@ struct chrono_barrage_t : public lisa_spell_t
 struct time_rift_t : public lisa_spell_t
 {
   time_rift_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "time_rift", p, options_str )
-   {
-     id = 7;
+  {
+    id = 7;
 
-     name_str_reporting = "Time Rift";
+    name_str_reporting = "Time Rift";
 
-     cooldown->duration = p->spell_const.time_rift_cd;
-     cooldown->hasted   = p->spell_const.time_rift_cd_hasted;
-     cooldown->charges  = 1;
+    cooldown = p->cooldowns.time_rift;
 
-     parse_options( options_str );
-   }
+    cooldown->duration = p->spell_const.time_rift_cd;
+    cooldown->hasted   = p->spell_const.time_rift_cd_hasted;
+    cooldown->charges  = 1;
 
-   void execute() override
-   {
-     p()->buffs.time_rift->trigger();
-     lisa_spell_t::execute();
-   }
- };
+    base_costs[ RESOURCE_MANA ] = p->spell_const.time_rift_mana;
+
+    parse_options( options_str );
+  }
+
+  void execute() override
+  {
+    lisa_spell_t::execute();
+    p()->buffs.time_rift->trigger();
+  }
+  
+  bool action_ready() override
+  {
+    if ( p()->buffs.time_rift->check() )
+      return false;
+
+    return base_t::action_ready();
+  }
+};
 
 struct absolute_stasis_t : public lisa_spell_t
- {
+{
   absolute_stasis_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "absolute_stasis", p, options_str )
-   {
-     id = 8;
+  {
+    id = 8;
 
-     name_str_reporting = "Absolute Stasis";
+    name_str_reporting = "Absolute Stasis";
 
-     base_execute_time = 0_s;
+    base_execute_time = 0_s;
 
-     resource_current              = RESOURCE_SPIRIT;
-     base_costs[ RESOURCE_SPIRIT ] = 100;
+    resource_current              = RESOURCE_SPIRIT;
+    base_costs[ RESOURCE_SPIRIT ] = 100;
 
-     parse_options( options_str );
-   }
+    parse_options( options_str );
+  }
 
-   void execute() override
-   {
-     lisa_spell_t::execute();
-     p()->fs_buffs.spirit_of_heroism->trigger();
-     p()->buffs.absolute_stasis->trigger();
-     p()->used_ultimate();
-   }
- };
+  void execute() override
+  {
+    lisa_spell_t::execute();
+    p()->fs_buffs.spirit_of_heroism->trigger();
+    p()->buffs.absolute_stasis->trigger();
+    p()->used_ultimate();
+  }
+};
+
+struct blast_t : public lisa_spell_t
+{
+  blast_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "blast", p, options_str )
+  {
+    id = 9;
+
+    spell_power_mod.direct = p->spell_const.blast_sp_coeff;
+
+    name_str_reporting = "Blast";
+
+    base_execute_time = 0_s;
+
+    resource_current                           = RESOURCE_TEMPORAL_OVERCHARGE;
+    base_costs[ RESOURCE_TEMPORAL_OVERCHARGE ] = p->spell_const.blast_resource_cost;
+
+    parse_options( options_str );
+  }
+
+  double cost() const override
+  {
+    if ( p()->buffs.absolute_stasis->check() )
+      return 0;
+
+    return lisa_spell_t::cost();
+  }
+
+  void execute() override
+  {
+    lisa_spell_t::execute();
+    if ( p()->talents_enabled( lisa_t::TALENT_4 ) )
+    {
+      p()->buffs.practical_overcharge->trigger();
+    }
+  }
+};
 
 }  // namespace actions
 
@@ -1292,7 +1274,6 @@ lisa_td_t::lisa_td_t( player_t* target, lisa_t* source )
   debuffs.shifting_sands = make_buff( *this, "shifting_sands" )
                                ->set_duration( source->spell_const.shifting_sands_debuff_duration )
                                ->set_default_value( source->spell_const.shifting_sands_debuff_amp );
-
 }
 
 // ==========================================================================
@@ -1383,9 +1364,10 @@ double lisa_t::composite_player_target_multiplier( player_t* target, school_e sc
 {
   double m = fs_player_t::composite_player_target_multiplier( target, school );
 
-  lisa_td_t* tdata = get_target_data( target );
+  const lisa_td_t* tdata = find_target_data( target );
 
-  m *= 1.0 + tdata->debuffs.shifting_sands->check_value();
+  if ( tdata )
+    m *= 1.0 + tdata->debuffs.shifting_sands->check_value();
 
   return m;
 }
@@ -1446,6 +1428,8 @@ action_t* lisa_t::create_action( util::string_view name, util::string_view optio
     return new time_rift_t( this, options_str );
   if ( name == "absolute_stasis" )
     return new absolute_stasis_t( this, options_str );
+  if ( name == "blast" )
+    return new blast_t( this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -1473,8 +1457,9 @@ std::unique_ptr<expr_t> lisa_t::create_expression( util::string_view name_str )
 
     if ( split.size() == 2 && split[ 1 ] == "deficit" )
     {
-      return make_fn_expr( name_str,
-                           [ this ] { return resources.max[ RESOURCE_TEMPORAL_OVERCHARGE ] - this->current_temporal_overcharge( true ); } );
+      return make_fn_expr( name_str, [ this ] {
+        return resources.max[ RESOURCE_TEMPORAL_OVERCHARGE ] - this->current_temporal_overcharge( true );
+      } );
     }
   }
   else if ( util::str_compare_ci( split[ 0 ], "talent" ) )
@@ -1494,12 +1479,12 @@ std::unique_ptr<expr_t> lisa_t::create_expression( util::string_view name_str )
   {
     if ( split.size() == 2 )
     {
-      //if ( util::str_compare_ci( split[ 1 ], "brimstone_cataclysm" ) )
-      //  return make_ref_expr( name_str, legendary.brimstone_cataclysm );
-      //if ( util::str_compare_ci( split[ 1 ], "explosive_potency" ) )
-      //  return make_ref_expr( name_str, legendary.explosive_potency );
-      //if ( util::str_compare_ci( split[ 1 ], "untamed_flame" ) )
-      //  return make_ref_expr( name_str, legendary.untamed_flame );
+      // if ( util::str_compare_ci( split[ 1 ], "brimstone_cataclysm" ) )
+      //   return make_ref_expr( name_str, legendary.brimstone_cataclysm );
+      // if ( util::str_compare_ci( split[ 1 ], "explosive_potency" ) )
+      //   return make_ref_expr( name_str, legendary.explosive_potency );
+      // if ( util::str_compare_ci( split[ 1 ], "untamed_flame" ) )
+      //   return make_ref_expr( name_str, legendary.untamed_flame );
     }
   }
   else if ( util::str_compare_ci( split[ 0 ], "uchronia_energy" ) )
@@ -1514,7 +1499,6 @@ std::unique_ptr<expr_t> lisa_t::create_resource_expression( util::string_view na
 {
   return fs_player_t::create_resource_expression( name_str );
 }
-
 
 double lisa_t::resource_regen_per_second( resource_e r ) const
 {
@@ -1652,47 +1636,48 @@ void lisa_t::create_buffs()
   buffs.temporal_paradox =
       make_buff<lisa_buff_t>( this, "temporal_paradox" )->set_duration( talents.temporal_paradox_duration );
 
-  buffs.time_rift =
-      make_buff<lisa_buff_t>( this, "time_rift" )
-          ->set_duration( spell_const.time_rift_duration )
-          ->set_period( spell_const.time_rift_period )
-          ->set_default_value( spell_const.time_rift_haste )
-          ->set_freeze_stacks( true )
-          ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-          ->set_tick_callback( [ this ]( buff_t*, int, timespan_t ) {
-            resource_gain( RESOURCE_TEMPORAL_OVERCHARGE, spell_const.time_rift_resource, gains.time_rift, nullptr );
-          } );
-
-  if ( talents_enabled( TALENT_10 ) )
+  struct time_rift_buff_t : lisa_buff_t
   {
-    buffs.time_rift->add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
-      if ( _new )
-      {
-        for ( auto& action : action_list )
+    double cdr_mod;
+    time_rift_buff_t( lisa_t* pl )
+      : lisa_buff_t( pl, "time_rift" ), cdr_mod( pl->spell_const.time_rift_cdr )
+    {
+      set_duration( pl->spell_const.time_rift_duration );
+      add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
+        if ( _new )
         {
-          action->base_recharge_multiplier -= talents.a_tear_in_time_cdr;
-          action->cooldown->adjust_recharge_multiplier();
+          for ( auto& action : p()->action_list )
+          {
+            if ( action->cooldown && action->cooldown->base_duration > 0_s )
+            {
+              action->base_recharge_rate_multiplier /= cdr_mod;
+              action->cooldown->adjust_recharge_multiplier();
+            }
+          }
         }
-      }
-      else
-      {
-        for ( auto& action : action_list )
+        else
         {
-          action->base_recharge_multiplier += talents.a_tear_in_time_cdr;
-          action->cooldown->adjust_recharge_multiplier();
+          for ( auto& action : p()->action_list )
+          {
+            if ( action->cooldown && action->cooldown->base_duration > 0_s )
+            {
+              action->base_recharge_rate_multiplier *= cdr_mod;
+              action->cooldown->adjust_recharge_multiplier();
+            }
+          }
+          p()->cooldowns.time_rift->start( p()->cooldowns.time_rift->action );
         }
-      }
-    } );
-  }
+      } );
+    }
+  };
+
+  buffs.time_rift = make_buff<time_rift_buff_t>( this );
 
   struct absolute_stasis_buff_t : lisa_buff_t
   {
     double cdr_mod;
-    double cd_mod;
     absolute_stasis_buff_t( lisa_t* pl )
-      : lisa_buff_t( pl, "absolute_stasis" ),
-        cdr_mod( pl->spell_const.absolute_stasis_cd_recovery ),
-        cd_mod( pl->spell_const.absolute_stasis_cd_reduction )
+      : lisa_buff_t( pl, "absolute_stasis" ), cdr_mod( pl->spell_const.absolute_stasis_cd_recovery )
     {
       set_duration( pl->spell_const.absolute_stasis_duration );
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
@@ -1701,7 +1686,6 @@ void lisa_t::create_buffs()
           for ( auto& action : p()->action_list )
           {
             action->base_recharge_rate_multiplier /= cdr_mod;
-            action->base_recharge_multiplier = 1.0 - ( 1.0 - action->base_recharge_multiplier ) * cd_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
         }
@@ -1710,7 +1694,6 @@ void lisa_t::create_buffs()
           for ( auto& action : p()->action_list )
           {
             action->base_recharge_rate_multiplier *= cdr_mod;
-            action->base_recharge_multiplier = 1.0 - ( 1.0 - action->base_recharge_multiplier ) / cd_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
         }
@@ -1720,41 +1703,40 @@ void lisa_t::create_buffs()
 
   buffs.absolute_stasis = make_buff<absolute_stasis_buff_t>( this );
 
+  // buffs.reign_of_fire = make_buff<lisa_buff_t>( this, "reign_of_fire" )
+  //                           ->set_duration( talents.reign_of_fire_duration )
+  //                           ->set_default_value( talents.reign_of_fire_crit_chance )
+  //                           ->set_refresh_behavior( buff_refresh_behavior::DURATION );
 
-  //buffs.reign_of_fire = make_buff<lisa_buff_t>( this, "reign_of_fire" )
-  //                          ->set_duration( talents.reign_of_fire_duration )
-  //                          ->set_default_value( talents.reign_of_fire_crit_chance )
-  //                          ->set_refresh_behavior( buff_refresh_behavior::DURATION );
+  // buffs.wildfire = make_buff<lisa_buff_t>( this, "wildfire" )
+  //                      ->set_duration( spell_const.wildfire_duration )
+  //                      ->set_default_value( spell_const.wildfire_tickrate )
+  //                      ->set_refresh_behavior( buff_refresh_behavior::DURATION )
+  //                      ->add_invalidate( CACHE_HASTE );
 
-  //buffs.wildfire = make_buff<lisa_buff_t>( this, "wildfire" )
-  //                     ->set_duration( spell_const.wildfire_duration )
-  //                     ->set_default_value( spell_const.wildfire_tickrate )
-  //                     ->set_refresh_behavior( buff_refresh_behavior::DURATION )
-  //                     ->add_invalidate( CACHE_HASTE );
+  // buffs.untamed_flame_crit = make_buff<lisa_buff_t>( this, "untamed_flame_crit" )
+  //                                ->set_default_value( legendary.untamed_flame_crit_chance )
+  //                                ->set_pct_buff_type( STAT_PCT_BUFF_CRIT );
 
-  //buffs.untamed_flame_crit = make_buff<lisa_buff_t>( this, "untamed_flame_crit" )
-  //                               ->set_default_value( legendary.untamed_flame_crit_chance )
-  //                               ->set_pct_buff_type( STAT_PCT_BUFF_CRIT );
+  // buffs.untamed_flame_spirit = make_buff<lisa_buff_t>( this, "untamed_flame_spirit" )
+  //                                  ->set_default_value( legendary.untamed_flame_crit_chance )
+  //                                  ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
 
-  //buffs.untamed_flame_spirit = make_buff<lisa_buff_t>( this, "untamed_flame_spirit" )
-  //                                 ->set_default_value( legendary.untamed_flame_crit_chance )
-  //                                 ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
-
-  //if ( legendary.untamed_flame )
+  // if ( legendary.untamed_flame )
   //{
-  //  buffs.wildfire->add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
-  //    if ( _new )
-  //    {
-  //      buffs.untamed_flame_crit->trigger();
-  //      buffs.untamed_flame_spirit->trigger();
-  //    }
-  //    else
-  //    {
-  //      buffs.untamed_flame_crit->expire();
-  //      buffs.untamed_flame_spirit->expire();
-  //    }
-  //  } );
-  //}
+  //   buffs.wildfire->add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
+  //     if ( _new )
+  //     {
+  //       buffs.untamed_flame_crit->trigger();
+  //       buffs.untamed_flame_spirit->trigger();
+  //     }
+  //     else
+  //     {
+  //       buffs.untamed_flame_crit->expire();
+  //       buffs.untamed_flame_spirit->expire();
+  //     }
+  //   } );
+  // }
 }
 
 // lisa_t::invalidate_cache =========================================
@@ -1873,13 +1855,13 @@ void lisa_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
-  //actions.searing_blaze    = new actions::searing_blaze_t( "searing_blaze", this );
-  //actions.engulfing_flames = new actions::engulfing_flames_t( this );
+  // actions.searing_blaze    = new actions::searing_blaze_t( "searing_blaze", this );
+  // actions.engulfing_flames = new actions::engulfing_flames_t( this );
 
-  //actions.fire_frogs_hit    = new actions::fire_frog_hit_t( this );
-  //actions.fire_frog         = new actions::fire_frog_t( this );
-  //actions.crackling_inferno = new actions::crackling_inferno_t( this );
-  //actions.flare_up          = new actions::flare_up_t( this );
+  // actions.fire_frogs_hit    = new actions::fire_frog_hit_t( this );
+  // actions.fire_frog         = new actions::fire_frog_t( this );
+  // actions.crackling_inferno = new actions::crackling_inferno_t( this );
+  // actions.flare_up          = new actions::flare_up_t( this );
 }
 
 // lisa_t::reset ===========================================================
@@ -1887,13 +1869,13 @@ void lisa_t::init_background_actions()
 void lisa_t::reset()
 {
   fs_player_t::reset();
-  
+
   uchronia_tracker = 0;
 
-  //for ( auto enemy : sim->target_list )
+  // for ( auto enemy : sim->target_list )
   //{
-  //  get_target_data( enemy )->dots.engulfing_decrement_events.clear();
-  //}
+  //   get_target_data( enemy )->dots.engulfing_decrement_events.clear();
+  // }
 }
 
 // lisa_t::activate ========================================================
@@ -1940,7 +1922,6 @@ double lisa_t::resource_loss( resource_e resource_type, double amount, gain_t* s
 
   return actual_amount;
 }
-
 
 // lisa_t::non_stacking_movement_modifier ==================================
 
@@ -2017,6 +1998,7 @@ void lisa_t::analyze( sim_t& sim )
 
 void lisa_t::create_cooldowns()
 {
+  cooldowns.time_rift = get_cooldown( "time_rift" );
 }
 
 class lisa_module_t : public module_t

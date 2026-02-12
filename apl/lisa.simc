@@ -32,7 +32,7 @@ desired_targets=1
 lisa="Lisa"
 level=80
 
-initial_resource=spirit=100
+# initial_resource=spirit=100
 
 apl/lisa_apl.simc
 

@@ -340,6 +340,8 @@ struct adds_event_t final : public raid_event_t
       for ( auto p : affected_players )
       {
         p->in_boss_encounter++;
+        p->invalidate_cache( CACHE_PLAYER_DAMAGE_MULTIPLIER );
+        p->invalidate_cache( CACHE_PLAYER_HEAL_MULTIPLIER );
       }
     }
   }
@@ -361,6 +363,8 @@ struct adds_event_t final : public raid_event_t
       {
         assert( p->in_boss_encounter );
         p->in_boss_encounter--;
+        p->invalidate_cache( CACHE_PLAYER_DAMAGE_MULTIPLIER );
+        p->invalidate_cache( CACHE_PLAYER_HEAL_MULTIPLIER );
       }
     }
 
@@ -690,6 +694,8 @@ struct pull_event_t final : raid_event_t
         if ( p->is_player() )
         {
           p->in_boss_encounter++;
+          p->invalidate_cache( CACHE_PLAYER_DAMAGE_MULTIPLIER );
+          p->invalidate_cache( CACHE_PLAYER_HEAL_MULTIPLIER );
         }
       }
     }
@@ -715,6 +721,8 @@ struct pull_event_t final : raid_event_t
         {
           assert( p->in_boss_encounter );
           p->in_boss_encounter--;
+          p->invalidate_cache( CACHE_PLAYER_DAMAGE_MULTIPLIER );
+          p->invalidate_cache( CACHE_PLAYER_HEAL_MULTIPLIER );
         }
       }
     }

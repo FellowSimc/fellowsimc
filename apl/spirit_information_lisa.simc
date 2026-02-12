@@ -1,0 +1,79 @@
+report_details=1
+optimal_raid=0
+max_time=600
+target_error=0.05
+iterations=10000
+chart_show_relative_difference=1
+vary_combat_length=0.05
+single_actor_batch=1
+desired_targets=1
+
+apl/chuey_dungeon.simc
+single_actor_batch=0
+
+ardeos="Ardeos"
+level=80
+
+spirit_refund_mul=1
+initial_resource=cinders=240
+
+apl/ardeos_apl.simc
+
+gear_intellect=1442
+
+# gear_haste_rating=1650
+# gear_crit_rating=1415
+# gear_versatility_rating=1250
+# gear_mastery_rating=200
+
+gear_haste_rating=1290
+gear_crit_rating=1300
+gear_versatility_rating=683
+gear_mastery_rating=1242
+
+gems.amethyst_power=2754
+gems.ruby_power=1206
+gems.topaz_power=1296
+
+weapon=chronoshift
+weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+
+legendary.untamed_flame=1
+# legendary.fire_toad=1
+# legendary.fire_toad_on_cast=1
+# legendary.fire_toad_chance=0.15
+
+# legendary.engulf_stacker=1
+
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1/spontaneous_combustion:1
+
+talent.rolling_flames_cdr=0.4
+talent.reign_of_fire_ppm=1.5
+
+lisa="Lisa"
+level=80
+
+apl/lisa_apl.simc
+
+gear_intellect=1442
+
+gear_haste_rating=1290
+gear_crit_rating=1300
+gear_versatility_rating=683
+gear_mastery_rating=1242
+
+gems.topaz_power=2754
+gems.ruby_power=1206
+gems.amethyst_power=1296
+
+# talents=practical_overcharge:1/uchronia:1/temporal_paradox:1/overcharge_manipulation:1/fractions_of_time:1
+
+weapon=natures_fury
+relic1=alzeracs_essence
+
+weapon_trait.diamond_strike=4
+# weapon_trait.emerald_judgement=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4

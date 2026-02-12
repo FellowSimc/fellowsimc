@@ -1,0 +1,152 @@
+report_details=1
+optimal_raid=0
+max_time=290
+target_error=0.05
+iterations=10000
+chart_show_relative_difference=1
+vary_combat_length=0.05
+single_actor_batch=1
+desired_targets=1
+
+# apl/chuey_dungeon.simc
+
+rime="Rime"
+level=80
+
+spirit_refund_mul=2
+
+apl/rime.simc
+
+gear_intellect=1442
+
+gear_haste_rating=1790
+gear_crit_rating=500
+gear_versatility_rating=983
+gear_mastery_rating=1242
+
+gems.ruby_power=1206
+gems.emerald_power=1296
+gems.amethyst_power=2754
+
+weapon=voidbringers_touch
+weapon_trait.emerald_judgement=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+
+talent.winters_embrace=1
+talent.burstbolter=1
+talent.supreme_torrent=1
+talent.coalescing_frost=1
+talent.cascading_blitz=1
+talent.soulfrost_torrent=1
+talent.biting_cold=1
+legendary.frostwyrms_spite=1
+
+ardeos="Ardeos"
+level=80
+
+spirit_refund_mul=1
+initial_resource=cinders=240
+
+apl/ardeos_apl.simc
+
+gear_intellect=1442
+
+# gear_haste_rating=1650
+# gear_crit_rating=1415
+# gear_versatility_rating=1250
+# gear_mastery_rating=200
+
+gear_haste_rating=1290
+gear_crit_rating=1300
+gear_versatility_rating=683
+gear_mastery_rating=1242
+
+gems.amethyst_power=2754
+gems.ruby_power=1206
+gems.topaz_power=1296
+
+weapon=chronoshift
+weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+
+legendary.untamed_flame=1
+# legendary.fire_toad=1
+# legendary.fire_toad_on_cast=1
+# legendary.fire_toad_chance=0.15
+
+# legendary.engulf_stacker=1
+
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1/spontaneous_combustion:1
+
+talent.rolling_flames_cdr=0.4
+talent.reign_of_fire_ppm=1.5
+
+elarion="Elarion"
+level=80
+
+spirit_refund_mul=1
+
+apl/elarion_apl.simc
+
+gear_agility=1442
+
+gear_haste_rating=1290
+gear_crit_rating=1300
+gear_versatility_rating=683
+gear_mastery_rating=1242
+
+gems.amethyst_power=2754
+gems.ruby_power=1206
+gems.topaz_power=1296
+
+weapon=voidbringers_touch
+
+weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+
+talents=last_lights:1
+talents+=/fervent_supremacy:1
+talents+=/focused_expanse:1
+talents+=/final_crescendo:1/resurgent_winds:1/piercing_seekers:1/skyward_munitions:1
+legendary.shimmer=1
+
+mara="Mara"
+level=80
+spirit_refund_mul=1
+
+apl/mara.simc
+
+gear_agility=1442
+
+gear_haste_rating=690
+gear_crit_rating=1300
+gear_versatility_rating=1283
+gear_mastery_rating=1242
+
+
+weapon=voidbringers_touch
+weapon_trait.emerald_judgement=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+
+gems.amethyst_power=2754
+gems.ruby_power=1206
+gems.emerald_power=1296
+
+# 2
+talent.deadly_scheme=1
+# 3
+talent.bloodrush=1
+# 5
+talent.gushing_blood=1
+# 8
+talent.hemotoxin=1
+# 11
+talent.sinners_pride=1
+# 13
+talent.red_ledger=1
+
+legendary.from_the_shadows=1

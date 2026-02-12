@@ -169,16 +169,16 @@ public:
     timespan_t detonate_between_hit_delay = 0.3_s;
     timespan_t detonate_sample_duration   = 2_s;
 
-    double fire_ball_coeff            = 3.0*1.2;
+    double fire_ball_coeff            = 3.0*1.2*1.5;
     timespan_t fire_ball_cooldown     = 30_s;
     double fire_ball_falloff          = 5;
-    double fire_ball_damage_to_dot    = 0.7;
+    double fire_ball_damage_to_dot    = 0.2;
     timespan_t fire_ball_dot_duration = 12_s;
     timespan_t fire_ball_dot_period   = 2_s;
     double fire_ball_embers_per_tick  = 2.0;  // This is **NOT** currently reduced by haste.
     double fire_ball_embers_chance    = 1.0;
 
-    double incinerate_coeff             = 5.914;
+    double incinerate_coeff             = 5.914 * 0.4;
     double incinerate_falloff           = 8;
     timespan_t incinerate_dot_extend    = 1.5_s;
     timespan_t incinerate_duration      = 2.5_s;
@@ -201,12 +201,12 @@ public:
     SLOW_BURN              = 1ULL << 0,
     FROG_SQUAD             = 1ULL << 1,
     GREAT_BALLS_OF_FIRE    = 1ULL << 2,
-    FLICKERING_CINDERS     = 1ULL << 3,
+    BACKDRAFT              = 1ULL << 3,
     FLARE_UP               = 1ULL << 4,
-    UNDYING_FLAME          = 1ULL << 5,
+    OUROBOROS              = 1ULL << 5,
     AGONIZING_BLAZE        = 1ULL << 6,
     FIRESTARTER            = 1ULL << 7,
-    OUROBOROS              = 1ULL << 8,
+    UNDYING_FLAME          = 1ULL << 8,
     FIERY_RESILIENCE       = 1ULL << 9,
     CRACKLING_INFERNO      = 1ULL << 10,
     MAGIC_WARD             = 1ULL << 11,
@@ -229,8 +229,8 @@ public:
         return "Great Balls of Fire";
       case ardeos_talents_t::FROG_SQUAD:
         return "Frog Squad";
-      case ardeos_talents_t::FLICKERING_CINDERS:
-        return "Flickering Cinders";
+      case ardeos_talents_t::BACKDRAFT:
+        return "Backdraft";
       case ardeos_talents_t::FLARE_UP:
         return "Flare Up";
       case ardeos_talents_t::UNDYING_FLAME:
@@ -273,8 +273,8 @@ public:
         return "frog_squad";
       case ardeos_talents_t::GREAT_BALLS_OF_FIRE:
         return "great_balls_of_fire";
-      case ardeos_talents_t::FLICKERING_CINDERS:
-        return "flickering_cinders";
+      case ardeos_talents_t::BACKDRAFT:
+        return "backdraft";
       case ardeos_talents_t::FLARE_UP:
         return "flare_up";
       case ardeos_talents_t::UNDYING_FLAME:
@@ -314,16 +314,18 @@ public:
 
     unsigned frog_squad_extra_hits  = 1;
     unsigned frog_squad_extra_frogs = 1;
+    double frog_squad_frog_amp      = 0.1;
 
-    double great_balls_of_fire_amp = 0.6;
+    double great_balls_of_fire_amp = 1;
 
-    double flickering_cinders_cinder_multiplier = 0.25;
+    timespan_t backdraft_extension = 1.5_s;
 
-    double flare_up_multiplier = 0.25;
+    double flare_up_multiplier = 0.5;
 
     timespan_t undying_flame_extension = 3_s;
+    int undying_flame_extra_charges    = 1;
 
-    double agonizing_blaze_amp_per_stack    = 0.03;
+    double agonizing_blaze_amp_per_stack    = 0.04;
     unsigned agonizing_blaze_maximum_stacks = 10;
 
     double firestarter_crit_chance = 0.2;
@@ -352,8 +354,7 @@ public:
 
     bool rolling_flames_instant = false;
 
-    bool double_detonate_cost_efficiency        = false;
-    timespan_t detonate_extends_searing         = 0_s;
+    bool double_detonate_cost_efficiency = false;
   } talents;
 
   struct legendary_t
@@ -363,18 +364,23 @@ public:
     double untamed_flame_crit_chance = 0.3;
 
     bool fire_toad              = false;
-    double fire_toad_chance     = 0.12;
+    double fire_toad_chance     = 0.15;
     double fire_toad_mul        = 8;
     double fire_toad_falloff    = 1;
     bool fire_toad_full_primary = false;
-    bool fire_toad_on_cast      = false;
+    bool fire_toad_on_cast      = true;
 
     bool brimstone_cataclysm                   = false;
     timespan_t brimstone_cataclysm_cdr_per_hit = 2_s;
     timespan_t brimstone_cataclysm_cdr_cap     = 30_s;
 
-    bool engulf_stacker       = false;
-    double engulf_stacker_amp = 0.1;
+    bool devouring_flame       = false;
+    double devouring_flame_amp = 0.1;
+
+    bool explosivo                   = false;
+    double explosivo_boss_bonus = 1.5;
+    double explosivo_adds_bonus = 0.5;
+    timespan_t explosivo_cdr_per_ball = 6_s;
   } legendary;
 
   struct options_t
@@ -1229,10 +1235,10 @@ struct detonate_t : public ardeos_spell_t
     void impact( action_state_t* s )
     {
       ardeos_spell_t::impact( s );
-      if ( p()->talents.detonate_extends_searing > 0_s )
+      if ( p()->talents_enabled( ardeos_t::BACKDRAFT ) )
       {
         const auto& td = p()->get_target_data( s->target );
-        p()->extend_dot( td->dots.searing_blaze, p()->talents.detonate_extends_searing );
+        p()->extend_dot( td->dots.searing_blaze, p()->talents.backdraft_extension );
       }
     }
   };
@@ -1479,11 +1485,6 @@ struct searing_blaze_t : public ardeos_spell_t
     energize_amount   = p->spell_const.searing_blaze_embers_per_tick;
     energize_resource = RESOURCE_CINDERS;
 
-    if ( p->talents_enabled( ardeos_t::FLICKERING_CINDERS ) )
-    {
-      energize_amount *= 1 + p->talents.flickering_cinders_cinder_multiplier;
-    }
-
     base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
   }
 
@@ -1545,7 +1546,7 @@ struct searing_blaze_t : public ardeos_spell_t
 
     if ( p()->talents_enabled( ardeos_t::OUROBOROS ) )
     {
-      p()->cooldowns.pyromania->adjust(
+      p()->cooldowns.fire_ball->adjust(
           -( d->state->result == RESULT_CRIT ? p()->talents.ouroboros_cdr_crit : p()->talents.ouroboros_cdr ), true );
     }
   }
@@ -1575,8 +1576,15 @@ struct engulfing_flames_t : public ardeos_spell_t
 
     dot_behavior = DOT_REFRESH_PANDEMIC;
 
+    cooldown->duration = p->spell_const.engufling_flames_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = p->spell_const.engulfing_flames_charges;
+
     if ( p->talents_enabled( ardeos_t::UNDYING_FLAME ) )
+    {
       dot_duration += p->talents.undying_flame_extension;
+      cooldown->charges += p->talents.undying_flame_extra_charges;
+    }
 
     base_execute_time = 1.5_s;
 
@@ -1585,18 +1593,9 @@ struct engulfing_flames_t : public ardeos_spell_t
       base_execute_time = 0_s;
     }
 
-    cooldown->duration = p->spell_const.engufling_flames_cooldown;
-    cooldown->hasted   = false;
-    cooldown->charges  = p->spell_const.engulfing_flames_charges;
-
     energize_type     = action_energize::NONE;
     energize_amount   = p->spell_const.engulfing_flames_embers_per_tick;
     energize_resource = RESOURCE_CINDERS;
-
-    if ( p->talents_enabled( ardeos_t::FLICKERING_CINDERS ) )
-    {
-      energize_amount *= 1 + p->talents.flickering_cinders_cinder_multiplier;
-    }
 
     base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
   }
@@ -1768,6 +1767,25 @@ struct apocalypse_t : public ardeos_spell_t
     p()->actions.searing_blaze->execute_on_target( s->target );
   }
 
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    double m = ardeos_spell_t::composite_da_multiplier( s );
+
+    if ( p()->legendary.explosivo )
+    {
+      if ( s->target->is_boss() )
+      {
+        m *= 1.0 + p()->legendary.explosivo_boss_bonus;
+      }
+      else
+      {
+        m *= 1.0 + p()->legendary.explosivo_adds_bonus;
+      }
+    }
+
+    return m;
+  }
+
   void execute() override
   {
     ardeos_spell_t::execute();
@@ -1911,6 +1929,11 @@ struct fire_ball_t : public ardeos_spell_t
   {
     ardeos_spell_t::execute();
     p()->buffs.reign_of_fire->decrement();
+
+    if ( p()->legendary.explosivo )
+    {
+      p()->cooldowns.apocalypse->adjust( -p()->legendary.explosivo_cdr_per_ball, false );
+    }
   }
 };
 
@@ -2022,7 +2045,7 @@ struct fire_frog_hit_t : public ardeos_spell_t
   fire_frog_hit_t( ardeos_t* p, bool toad ) : ardeos_spell_t( toad ? "fire_toad_hit" : "fire_frog_hit", p )
   {
     id                 = 17;
-    name_str_reporting = toad  ? "Large Lad" : "Fire Frog";
+    name_str_reporting = toad  ? "Fire Toad" : "Fire Frog";
 
     spell_power_mod.direct = p->spell_const.fire_frog_coeff;
     background             = true;
@@ -2242,21 +2265,10 @@ double ardeos_t::composite_player_target_multiplier( player_t* target, school_e 
 {
   double m = fs_player_t::composite_player_target_multiplier( target, school );
 
-  if ( legendary.engulf_stacker )
+  if ( legendary.devouring_flame )
   {
     ardeos_td_t* tdata = get_target_data( target );
-    //int dot_count      = 0;
-    //for ( dot_t* d : tdata->dots.engulfing_flames_individual )
-    //{
-    //  if ( d->is_ticking() )
-    //    dot_count++;
-    //}
-    //sim->print_debug( "{} Engulf Stacker stacks: {}. Count dots {}.", *this,
-    //                  tdata->dots.engulfing_flames->current_stack(), dot_count );
-
-    //if ( dot_count != tdata->dots.engulfing_flames->current_stack() )
-    //  sim->print_debug( "{} ENGULF COUNT NOT EQUAL.", *this );
-    m *= 1.0 + legendary.engulf_stacker_amp * tdata->dots.engulfing_flames->current_stack();
+    m *= pow( 1.0 + legendary.devouring_flame_amp, tdata->dots.engulfing_flames->current_stack() );
   }
 
   return m;
@@ -2431,6 +2443,10 @@ std::unique_ptr<expr_t> ardeos_t::create_expression( util::string_view name_str 
         return make_ref_expr( name_str, legendary.fire_toad );
       if ( util::str_compare_ci( split[ 1 ], "untamed_flame" ) )
         return make_ref_expr( name_str, legendary.untamed_flame );
+      if ( util::str_compare_ci( split[ 1 ], "explosivo" ) )
+        return make_ref_expr( name_str, legendary.explosivo );
+      if ( util::str_compare_ci( split[ 1 ], "devouring_flame" ) )
+        return make_ref_expr( name_str, legendary.devouring_flame );
     }
   }
 
@@ -2612,7 +2628,6 @@ void ardeos_t::create_options()
   add_option( opt_timespan( "ardeos.engulfing_flames_cooldown", spell_const.engufling_flames_cooldown ) );
   add_option( opt_timespan( "talent.rolling_flames_infernal_wave_cdr", talents.rolling_flames_infernal_wave_cdr ) );
 
-  add_option( opt_timespan( "talent.detonate_extends_searing", talents.detonate_extends_searing ) );
 
   /*add_option( opt_bool( "talent.chilling_finesse", talents.chilling_finesse ) );
   add_option( opt_bool( "talent.winters_embrace", talents.winters_embrace ) );
@@ -2636,11 +2651,16 @@ void ardeos_t::create_options()
   add_option( opt_bool( "talent.wisdom_of_the_north", talents.wisdom_of_the_north ) );*/
 
   add_option( opt_bool( "legendary.brimstone_cataclysm", legendary.brimstone_cataclysm ) );
-  add_option( opt_bool( "legendary.fire_toad", legendary.fire_toad ) );
   add_option( opt_bool( "legendary.untamed_flame", legendary.untamed_flame ) );
-  add_option( opt_bool( "legendary.engulf_stacker", legendary.engulf_stacker ) );
-  add_option( opt_float( "legendary.engulf_stacker_amp", legendary.engulf_stacker_amp ) );
+  add_option( opt_bool( "legendary.explosivo", legendary.explosivo ) );
+  add_option( opt_timespan( "legendary.explosivo_cdr_per_ball", legendary.explosivo_cdr_per_ball ) );
+  add_option( opt_float( "legendary.explosivo_adds_bonus", legendary.explosivo_adds_bonus ) );
+  add_option( opt_float( "legendary.explosivo_boss_bonus", legendary.explosivo_boss_bonus ) );
 
+  add_option( opt_bool( "legendary.devouring_flame", legendary.devouring_flame ) );
+  add_option( opt_float( "legendary.devouring_flame_amp", legendary.devouring_flame_amp ) );
+
+  add_option( opt_bool( "legendary.fire_toad", legendary.fire_toad ) );
   add_option( opt_float( "legendary.fire_toad_chance", legendary.fire_toad_chance ) );
   add_option( opt_float( "legendary.fire_toad_mul", legendary.fire_toad_mul ) );
   add_option( opt_bool( "legendary.fire_toad_on_cast", legendary.fire_toad_on_cast ) );

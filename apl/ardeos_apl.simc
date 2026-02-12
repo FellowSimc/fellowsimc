@@ -4,7 +4,7 @@ actions.precombat+=/infernal_wave
 
 actions=run_action_list,name=main
 
-actions.main=apocalypse,if=!raid_event.adds.exists|(raid_event.adds.in>=30|(active_enemies-active_dot.searing_blaze)>=4)&target.time_to_die>=20
+actions.main=apocalypse,target_if=max:target.health,if=legendary.explosivo&target.time_to_die>=40|!raid_event.adds.exists|(raid_event.adds.in>=55|(active_enemies-active_dot.searing_blaze)>=1)&target.time_to_die>=15|active_enemies=1&legendary.explosivo&raid_event.adds.in>=40
 actions.main+=/fire_ball,if=(cooldown.engulfing_flames.remains<=gcd.max*3|buff.wildfire.up)&active_dot.fire_ball_dot=0|buff.reign_of_fire.react&active_enemies>1|(talent.reign_of_fire|!talent.slow_burn)&active_dot.fire_ball_dot=0
 #,if=dot.searing_blaze.refreshable
 actions.main+=/engulfing_flames,target_if=max:target.health,if=full_recharge_time<=gcd.max*3|full_recharge_time<=talent.rolling_flames&active_dot.searing_blaze*0.5+gcd.max*3|cooldown.wildfire.remains<=gcd.max*5|buff.wildfire.up|cooldown.chronoshift.up
@@ -14,7 +14,7 @@ actions.main+=/voidbringers_touch,target_if=max:target.health,if=buff.wildfire.u
 actions.main+=/fire_frogs,if=buff.wildfire.up&(active_enemies<=19|cinders<100&active_dot.fire_ball_dot>1)|!legendary.untamed_flame&cooldown.wildfire.up
 actions.main+=/wildfire,if=active_dot.engulfing_flames>0|cooldown.pyromania.up|spirit=100&legendary.untamed_flame
 actions.main+=/pyromania,if=buff.wildfire.up
-actions.main+=/incinerate,target_if=max:target.health,if=(active_dot.engulfing_flames>=2|active_enemies>=5)&target.time_to_die>=12
+actions.main+=/incinerate,target_if=max:target.health,if=(active_dot.engulfing_flames>=2|active_enemies>=4)&target.time_to_die>=12
 actions.main+=/chronoshift,if=!cooldown.wildfire.up&!buff.wildfire.up
 actions.main+=/icicles_of_anzhyr,if=(!raid_event.adds.exists|active_enemies%2>=raid_event.adds.count|raid_event.adds.in>=12)&(active_dot.curse_of_anzhyr<active_enemies|!raid_event.adds.exists|raid_event.adds.in>=30)
 actions.main+=/detonate,if=(active_dot.engulfing_flames>=1)&cinders>=300|buff.wildfire.up

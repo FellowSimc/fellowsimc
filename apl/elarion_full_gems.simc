@@ -12,7 +12,7 @@ single_actor_batch=1
 desired_targets=10
 
 
-# apl/chuey_dungeon.simc
+apl/chuey_dungeon.simc
 
 # apl/dungeon.simc
 
@@ -107,7 +107,7 @@ gear_agility=1442
 # weapon=chronoshift
 weapon=voidbringers_touch
 
-weapon_trait.amethyst_splinters=4
+weapon_trait.emerald_judgement=4
 weapon_trait.kindling=4
 weapon_trait.willful_momentum=4
 # weapon_trait.inspired_allegiance=4
@@ -155,21 +155,16 @@ gear_versatility_rating=1200
 gear_mastery_rating=1400
 legendary.starstrikers_ascent=1
 
-talents=last_lights:1
-talents+=/fervent_supremacy:1
-talents+=/final_crescendo:1
-talents+=/resurgent_winds:1
-talents+=/impending_heartseeker:1
-talents+=/focused_expanse:1
-talents+=/lethal_shots:1
-# talents+=/skyward_munitions:1/lunar_fury:1
 
+talents=focused_expanse:1/final_crescendo:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
 
 
 copy="10p6r6y","Elarion"
 gems.topaz_power=1296
 gems.ruby_power=1296
 gems.amethyst_power=2664
+weapon_trait.emerald_judgement=0
+weapon_trait.amethyst_splinters=4
 
 copy="10p6r6g","Elarion"
 gems.emerald_power=1296
@@ -180,3 +175,45 @@ copy="10g6r6p","Elarion"
 gems.amethyst_power=1296
 gems.ruby_power=1296
 gems.emerald_power=2664
+
+
+
+copy="10p6r6y repeatv1","Elarion"
+gems.topaz_power=1296
+gems.ruby_power=1296
+gems.amethyst_power=2664
+weapon_trait.emerald_judgement=0
+weapon_trait.amethyst_splinters=4
+talents=focused_expanse:1/final_crescendo:1/repeating_stars:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+
+copy="10p6r6g repeatv1","Elarion"
+gems.emerald_power=1296
+gems.ruby_power=1296
+gems.amethyst_power=2664
+talents=focused_expanse:1/final_crescendo:1/repeating_stars:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+
+copy="10g6r6p repeatv1","Elarion"
+gems.amethyst_power=1296
+gems.ruby_power=1296
+gems.emerald_power=2664
+talents=focused_expanse:1/final_crescendo:1/repeating_stars:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+
+copy="10p6r6y repeatv2","Elarion"
+gems.topaz_power=1296
+gems.ruby_power=1296
+gems.amethyst_power=2664
+weapon_trait.emerald_judgement=0
+weapon_trait.amethyst_splinters=4
+talents=repeating_stars:1/final_crescendo:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+
+copy="10p6r6g repeatv2","Elarion"
+gems.emerald_power=1296
+gems.ruby_power=1296
+gems.amethyst_power=2664
+talents=repeating_stars:1/final_crescendo:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+
+copy="10g6r6p repeatv2","Elarion"
+gems.amethyst_power=1296
+gems.ruby_power=1296
+gems.emerald_power=2664
+talents=repeating_stars:1/final_crescendo:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1

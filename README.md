@@ -9,7 +9,7 @@ WoW code has yet to be pruned.
 
 ## Overview
 
-SimulationCraft is a tool to explore combat mechanics in the popular MMO RPG World of Warcraft (tm).
+SimulationCraft is a tool to explore combat mechanics in the popular MMO RPG ~~World of Warcraft~~ Fellowship (tm).
 
 It is a multi-player event driven simulator written in C++ that models player character damage-per-second in various raiding and dungeon scenarios.
 

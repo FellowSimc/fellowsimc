@@ -166,6 +166,7 @@ public:
     timespan_t event_horizon_volley_cdr_barrage   = 1_s;
 
     int spirit_refund_marks_applied = 3;
+    int spirit_refund_marks_targets = 1;
   } spell_const;
 
   enum elarion_talents_t : unsigned long long
@@ -343,6 +344,10 @@ public:
     bool astronomers_hail                        = false;
     timespan_t astronomers_hail_volley_duration  = 2_s;
     timespan_t astronomers_hail_multishot_extend = 0.5_s;
+
+
+    bool new_spirit_legendary = false;
+    double new_spirit_legendary_chance_to_consume_mark = 1.0;
   } legendary;
 
   struct options_t
@@ -540,6 +545,12 @@ public:
     ab::resource_current = RESOURCE_FOCUS;
     // elarion_t sets base and min GCD to 1.5_s hasted
     ab::gcd_type = gcd_haste_type::ATTACK_HASTE;
+
+    if ( p->legendary.new_spirit_legendary )
+    {
+      lunarlight_salvo_chance_hit += p->legendary.new_spirit_legendary_chance_to_consume_mark;
+      lunarlight_salvo_chance_crit += p->legendary.new_spirit_legendary_chance_to_consume_mark;
+    }
   }
 
   // Type Wrappers ============================================================
@@ -1913,6 +1924,11 @@ void elarion_t::create_options()
   add_option( opt_bool( "legendary.shimmer", legendary.shimmer ) );
   add_option( opt_bool( "legendary.astronomers_hail", legendary.astronomers_hail ) );
   add_option( opt_bool( "legendary.starstrikers_ascent", legendary.starstrikers_ascent ) );
+
+  add_option( opt_int( "elarion.spirit_refund_marks_applied", spell_const.spirit_refund_marks_applied ) );
+  add_option( opt_int( "elarion.spirit_refund_marks_targets", spell_const.spirit_refund_marks_targets ) );
+
+  add_option( opt_bool( "legendary.new_spirit_legendary", legendary.new_spirit_legendary ) );
 }
 
 // elarion_t::copy_from =======================================================
@@ -1922,9 +1938,10 @@ void elarion_t::copy_from( player_t* source )
   elarion_t* elarion = static_cast<elarion_t*>( source );
   fs_player_t::copy_from( source );
 
-  talents   = elarion->talents;
-  legendary = elarion->legendary;
-  options   = elarion->options;
+  talents     = elarion->talents;
+  legendary   = elarion->legendary;
+  options     = elarion->options;
+  spell_const = elarion->spell_const;
 }
 
 // elarion_t::create_profile  =================================================
@@ -1956,6 +1973,8 @@ void elarion_t::init_finished()
       dynamic_cooldown_list.push_back( c );
     }
   } );
+
+  
 }
 
 void elarion_t::init_background_actions()
@@ -1976,8 +1995,35 @@ void actions::elarion_action_t<Base>::trigger_spirit_refund( const action_state_
 
   p()->spirit_refund();
 
-  p()->get_target_data( state->target )
-      ->debuffs.lunarlight_mark->trigger( p()->spell_const.spirit_refund_marks_applied );
+
+  // TODO: action handler.
+  if ( p()->sim->target_non_sleeping_list.size() > 1 )
+  {
+    p()->get_target_data( state->target )
+        ->debuffs.lunarlight_mark->trigger( p()->spell_const.spirit_refund_marks_applied );
+
+    int aoe_to_apply = p()->spell_const.spirit_refund_marks_targets - 1;
+
+    while ( aoe_to_apply )
+    {
+      player_t* target =
+          *( p()->rng().range( p()->sim->target_non_sleeping_list.begin(), p()->sim->target_non_sleeping_list.end() - 1 ) );
+
+      if ( target == state->target )
+      {
+        target = p()->sim->target_non_sleeping_list.data().back();
+      }
+
+      p()->get_target_data( target )->debuffs.lunarlight_mark->trigger( p()->spell_const.spirit_refund_marks_applied );
+      aoe_to_apply--;
+    }
+  }
+  else
+  {
+    p()->get_target_data( state->target )
+        ->debuffs.lunarlight_mark->trigger( p()->spell_const.spirit_refund_marks_applied *
+                                            p()->spell_const.spirit_refund_marks_targets );
+  }
 
   if ( p()->legendary.starstrikers_ascent )
   {

@@ -2050,6 +2050,11 @@ struct fire_frog_hit_t : public ardeos_spell_t
     spell_power_mod.direct = p->spell_const.fire_frog_coeff;
     background             = true;
 
+    if ( p->talents_enabled( ardeos_t::FROG_SQUAD ) )
+    {
+      spell_power_mod.direct *= 1.0 + p->talents.frog_squad_frog_amp;
+    }
+
     dot_action = p->get_background_action<fire_frog_dot_t>( "fire_frog_dot" );
 
     if ( toad )
@@ -2673,9 +2678,10 @@ void ardeos_t::copy_from( player_t* source )
   ardeos_t* ardeos = static_cast<ardeos_t*>( source );
   fs_player_t::copy_from( source );
 
-  talents   = ardeos->talents;
-  legendary = ardeos->legendary;
-  options   = ardeos->options;
+  talents     = ardeos->talents;
+  legendary   = ardeos->legendary;
+  options     = ardeos->options;
+  spell_const = ardeos->spell_const;
 }
 
 // ardeos_t::create_profile  =================================================

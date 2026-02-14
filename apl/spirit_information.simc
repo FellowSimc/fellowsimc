@@ -15,7 +15,7 @@ level=80
 
 spirit_refund_mul=2
 
-apl/rime.simc
+apl/rime/rime.simc
 
 gear_intellect=1442
 
@@ -48,7 +48,7 @@ level=80
 spirit_refund_mul=1
 initial_resource=cinders=240
 
-apl/ardeos_apl.simc
+apl/ardeos/ardeos_apl.simc
 
 gear_intellect=1442
 
@@ -88,7 +88,7 @@ level=80
 
 spirit_refund_mul=1
 
-apl/elarion_apl.simc
+apl/elarion/elarion_apl.simc
 
 gear_agility=1442
 
@@ -117,7 +117,7 @@ mara="Mara"
 level=80
 spirit_refund_mul=1
 
-apl/mara.simc
+apl/mara/mara.simc
 
 gear_agility=1442
 

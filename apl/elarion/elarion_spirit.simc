@@ -1,0 +1,112 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=290
+# max_time=60
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=1
+
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_intellect=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+elarion="Elarion"
+level=80
+
+# initial_resource=spirit=100
+
+apl/elarion/elarion_apl.simc
+
+
+
+gear_agility=1442
+
+
+weapon=voidbringers_touch
+
+weapon_trait.emerald_judgement=4
+weapon_trait.kindling=4
+weapon_trait.willful_momentum=4
+
+
+gear_haste_rating=1250
+gear_crit_rating=1065
+gear_versatility_rating=1400
+gear_mastery_rating=800
+# legendary.starstrikers_ascent=1
+
+legendary.new_spirit_legendary=1
+
+# talents=focused_expanse:1/final_crescendo:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+
+gems.emerald_power=1296
+gems.ruby_power=1296
+gems.amethyst_power=2664
+
+talents=repeating_stars:1/final_crescendo:1/lunar_fury:1/skyward_munitions:1/fervent_supremacy:1/last_lights:1/resurgent_winds:1
+# /lunar_fury:1/lunarlight_affinity:1
+
+elarion.spirit_refund_marks_applied=5
+elarion.spirit_refund_marks_targets=1
+
+copy="Less Spirit"
+gear_haste_rating=1450
+gear_crit_rating=1265
+gear_versatility_rating=1600
+gear_mastery_rating=200
+
+copy="Slightly More Spirit"
+gear_haste_rating=1150
+gear_crit_rating=965
+gear_versatility_rating=1300
+gear_mastery_rating=1100
+
+copy="More Spirit"
+gear_haste_rating=1050
+gear_crit_rating=865
+gear_versatility_rating=1200
+gear_mastery_rating=1400
+
+copy="Insane Spirit"
+gear_haste_rating=1050
+gear_crit_rating=665
+gear_versatility_rating=800
+gear_mastery_rating=2000
+
+copy="Insane Spirit exp"
+gear_haste_rating=1050
+gear_crit_rating=665
+gear_versatility_rating=1000
+gear_mastery_rating=1800
+
+copy="Insane Spirit exp2"
+gear_haste_rating=1050
+gear_crit_rating=465
+gear_versatility_rating=1200
+gear_mastery_rating=1800
+
+copy="Insane Spirit exp3"
+gear_haste_rating=1050
+gear_crit_rating=465
+gear_versatility_rating=1400
+gear_mastery_rating=1600

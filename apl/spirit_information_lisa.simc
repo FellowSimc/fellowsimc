@@ -17,7 +17,7 @@ level=80
 spirit_refund_mul=1
 initial_resource=cinders=240
 
-apl/ardeos_apl.simc
+apl/ardeos/ardeos_apl.simc
 
 gear_intellect=1442
 
@@ -55,7 +55,7 @@ talent.reign_of_fire_ppm=1.5
 lisa="Lisa"
 level=80
 
-apl/lisa_apl.simc
+apl/aeona/lisa_apl.simc
 
 gear_intellect=1442
 

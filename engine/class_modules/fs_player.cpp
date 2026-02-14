@@ -920,6 +920,15 @@ std::unique_ptr<expr_t> fs_player_t::create_expression( util::string_view name_s
       else if ( util::str_compare_ci( split[ 1 ], "brave_machinations" ) )
         return make_ref_expr( name_str, fs_weapons.brave_machinations );
     }
+    else if ( util::str_compare_ci( split[ 0 ], "weapon" ) )
+    {
+      if ( util::str_compare_ci( split[ 1 ], "chronoshift" ) )
+        return make_fn_expr( name_str, [ & ] { return fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT; } );
+      else if ( util::str_compare_ci( split[ 1 ], "voidbringer" ) )
+        return make_fn_expr( name_str, [ & ] { return fs_weapons.equipped_weapon == FSWEAPON_VOIDBRINGERS_TOUCH; } );
+      else if ( util::str_compare_ci( split[ 1 ], "fated_strike" ) )
+        return make_fn_expr( name_str, [ & ] { return fs_weapons.equipped_weapon == FSWEAPON_FATED_STRIKE; } );
+    }
   }
   // Split expressions
 

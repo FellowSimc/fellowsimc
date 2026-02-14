@@ -161,8 +161,8 @@ public:
   struct spell_const_t
   {
     double hemorrhaging_strike_energy_gen = 5.0;
-    double hemorrhaging_strike_damage     = 1.75;
-    double hemorrhaging_stike_tick_dmg    = 0.92 * 1.3;
+    double hemorrhaging_strike_damage     = 2.73;
+    double hemorrhaging_stike_tick_dmg    = 1.435;
     timespan_t hemorrhaging_strike_period = 3_s;
   } spell_const;
 
@@ -202,11 +202,11 @@ public:
     int gushing_blood_hemorrhaging_additional_targets = 4;
     bool gushing_blood_always_works = true;
 
-    bool corrosive_spill                      = false;
-    double corrosive_spill_chance_per_cp      = 0.03;
-    timespan_t corrosive_spill_duration       = 3_s;
-    double corrosive_spill_damage             = 0.9;
-    timespan_t corrosive_spill_ticktime       = 1.5_s;
+    bool corrosive_spill                                      = false;
+    double corrosive_spill_chance_per_cp                      = 0.03;
+    timespan_t corrosive_spill_duration                       = 3_s;
+    double corrosive_spill_damage                             = 0.9;
+    timespan_t corrosive_spill_ticktime                       = 1.5_s;
     double corrosive_spill_cumulative_chance_per_tick_of_miss = 0.25;
 
     bool feed_the_queen                   = false;
@@ -260,17 +260,17 @@ public:
   struct legendary_t
   {
     bool vexiras_venom = false;
-    // Vex is 0.4 but lowering to 0.3 to simulate ingame loss
-    double vexiras_venom_accumulate   = 0.3;
+    // Consider penalising it by 25%
+    double vexiras_venom_accumulate   = 0.25;
     timespan_t vexiras_venom_period   = 2_s;
     timespan_t vexiras_venom_duration = 6_s;
 
     bool drenched_in_blood = false;
-    double drenched_in_blood_exp         = 0.32;
+    double drenched_in_blood_exp         = 0.24;
     timespan_t drenched_in_blood_duration = 8_s;
 
     bool from_the_shadows              = false;
-    double from_the_shadows_chance     = 0.25;
+    double from_the_shadows_chance     = 0.16;
     int from_the_shadows_combo_points  = 6;
     double from_the_shadows_bleed_rate = 0.15;
 
@@ -1132,7 +1132,7 @@ struct backstab_t : public mara_attack_t
     id = 2;
 
     school                        = SCHOOL_PHYSICAL;
-    attack_power_mod.direct       = 0.83;
+    attack_power_mod.direct       = 0.996;
     resource_current              = RESOURCE_ENERGY;
     base_costs[ RESOURCE_ENERGY ] = 20;
 
@@ -1190,7 +1190,7 @@ struct queens_fang_t : public mara_attack_t
     name_str_reporting = "Queens Fang";
 
     school                             = SCHOOL_PHYSICAL;
-    attack_power_mod.direct            = 1.91;
+    attack_power_mod.direct            = 2.292;
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 40;
@@ -1504,7 +1504,7 @@ struct seething_poison_t : public mara_poison_t
 
     name_str_reporting = "Seething Poison";
 
-    attack_power_mod.tick = 0.93;
+    attack_power_mod.tick = 1.116;
   }
   void trigger_dot( action_state_t* s ) override
   {
@@ -1533,7 +1533,7 @@ struct caustic_poison_t : public mara_poison_t
 
     name_str_reporting = "Caustic Poison";
 
-    attack_power_mod.direct = 3.73;
+    attack_power_mod.direct = 4.476;
 
     base_crit += 1.0;
   }
@@ -1593,9 +1593,9 @@ struct widows_bite_t : public mara_attack_t
     energize_amount   = 30 + p->options.widows_bite_extra_energy;
     energize_resource = RESOURCE_ENERGY;
 
-    widows_bite_hit_1       = new widows_bite_hit_t( "widows_bite_hit_1", p, 1.21 );
+    widows_bite_hit_1       = new widows_bite_hit_t( "widows_bite_hit_1", p, 1.452 );
     widows_bite_hit_1->gain = this->gain;
-    widows_bite_hit_2       = new widows_bite_hit_t( "widows_bite_hit_2", p, 0.9 );
+    widows_bite_hit_2       = new widows_bite_hit_t( "widows_bite_hit_2", p, 1.08 );
     widows_bite_hit_2->gain = this->gain;
 
     add_child( widows_bite_hit_1 );
@@ -1906,7 +1906,7 @@ struct skittering_blades_t : public mara_attack_t
     id = 17;
 
     school                        = SCHOOL_PHYSICAL;
-    attack_power_mod.direct       = 0.672;
+    attack_power_mod.direct       = 0.806;
     resource_current              = RESOURCE_ENERGY;
     base_costs[ RESOURCE_ENERGY ] = 35;
 
@@ -1960,8 +1960,7 @@ struct arachnid_assault_t : public mara_attack_t
     reduced_aoe_targets = 8;
 
     school                  = SCHOOL_PHYSICAL;
-    attack_power_mod.direct = 0.715;
-    // attack_power_mod.direct            = 0.715;
+    attack_power_mod.direct = 0.858;
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 45;
@@ -2098,7 +2097,7 @@ struct volatile_poison_dot_t : public mara_poison_t
 
     name_str_reporting = "Volatile Poison";
 
-    attack_power_mod.tick = 0.26;
+    attack_power_mod.tick = 0.312;
   }
 
   mara_t* p()
@@ -2186,7 +2185,7 @@ struct volatile_poison_aoe_t : public mara_poison_t
     background = true;
     id         = 19;
 
-    attack_power_mod.direct = 0.52;
+    attack_power_mod.direct = 0.624;
 
     name_str_reporting = "Volatile Poison (AoE)";
 

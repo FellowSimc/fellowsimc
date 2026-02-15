@@ -960,6 +960,7 @@ void fs_player_t::init_base_stats()
   base.mastery = 0.0;
 
   resources.base[ RESOURCE_SPIRIT ] = resources.max[ RESOURCE_SPIRIT ] = 100;
+
   resources.start_at[ RESOURCE_SPIRIT ]                                = 0;
   resources.base_regen_per_second[ RESOURCE_SPIRIT ]                   = 100.0 / 300 * 1.20;
 
@@ -1107,7 +1108,8 @@ void fs_player_t::create_buffs()
 
   fs_buffs.virtuoso = make_buff<fs_player_buff_t>( this, "virtuoso" )
                           ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2640.0 ? 0.09 : 0.03 )
-                          ->set_pct_buff_type( STAT_PCT_BUFF_HASTE );
+                          ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   fs_buffs.first_strike = make_buff<fs_player_buff_t>( this, "first_strike" )
                               ->set_default_value( fs_gems.gem_powers[ GEM_EMERALD ] >= 1200.0 ? 0.15 : 0.05 )
@@ -1513,6 +1515,13 @@ void fs_player_t::init_items()
 void fs_player_t::init_special_effects()
 {
   player_t::init_special_effects();
+
+  
+  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 120.0 )
+  {
+    resources.max[ RESOURCE_SPIRIT ] += fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1200 ? 30.0 : 10.0;
+    resources.base[ RESOURCE_SPIRIT ] = resources.max[ RESOURCE_SPIRIT ];
+  }
 
   if ( fs_gems.gem_powers[ GEM_RUBY ] >= 1560 )
   {

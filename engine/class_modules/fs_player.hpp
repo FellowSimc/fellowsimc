@@ -521,6 +521,11 @@ public:
   {
     ab::may_crit = ab::tick_may_crit = true;
     ab::school                       = SCHOOL_PHYSICAL;
+
+    if ( p->fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 960.0 )
+    {
+      ab::base_costs[ RESOURCE_SPIRIT ].pct_mul *= p->fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 2640 ? 0.85 : 0.95;
+    }
   }
 
   fs_player_t* fs_p()

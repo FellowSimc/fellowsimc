@@ -169,7 +169,7 @@ public:
     timespan_t detonate_between_hit_delay = 0.3_s;
     timespan_t detonate_sample_duration   = 2_s;
 
-    double fire_ball_coeff            = 3.0*1.2*1.5;
+    double fire_ball_coeff            = 5.4*1.2;
     timespan_t fire_ball_cooldown     = 30_s;
     double fire_ball_falloff          = 5;
     double fire_ball_damage_to_dot    = 0.2;
@@ -316,7 +316,7 @@ public:
     unsigned frog_squad_extra_frogs = 1;
     double frog_squad_frog_amp      = 0.1;
 
-    double great_balls_of_fire_amp = 1;
+    double great_balls_of_fire_amp = 0.6;
 
     timespan_t backdraft_extension = 1.5_s;
 
@@ -380,7 +380,7 @@ public:
     bool explosivo                   = false;
     double explosivo_boss_bonus = 1.5;
     double explosivo_adds_bonus = 0.5;
-    timespan_t explosivo_cdr_per_ball = 6_s;
+    timespan_t explosivo_cdr_per_ball = 8_s;
   } legendary;
 
   struct options_t
@@ -1028,6 +1028,7 @@ struct flare_up_t : public ardeos_spell_t
     may_crit = false;
 
     base_multiplier *= p->talents.flare_up_multiplier;
+    reduced_aoe_targets = 3;
     aoe = -1;
   }
 
@@ -1530,11 +1531,7 @@ struct searing_blaze_t : public ardeos_spell_t
 
     if ( p()->talents_enabled( ardeos_t::AGONIZING_BLAZE ) )
     {
-      // Currently a dot ticking increases all stacks. This is similar but not identical, but significantly more
-      // performant.
-      p()->get_target_data( d->target )
-          ->debuffs.agonizing_blaze_stacks->increment(
-              p()->get_active_dots( p()->get_target_data( d->target )->dots.searing_blaze ) );
+      p()->get_target_data( d->target )->debuffs.agonizing_blaze_stacks->increment();
     }
 
     p()->resource_gain( RESOURCE_CINDERS, energize_amount * p()->cache.spell_haste(), energize_gain( d->state ), this );
@@ -1546,8 +1543,7 @@ struct searing_blaze_t : public ardeos_spell_t
 
     if ( p()->talents_enabled( ardeos_t::OUROBOROS ) )
     {
-      p()->cooldowns.fire_ball->adjust(
-          -( d->state->result == RESULT_CRIT ? p()->talents.ouroboros_cdr_crit : p()->talents.ouroboros_cdr ), true );
+      p()->cooldowns.fire_ball->adjust( -( p()->talents.ouroboros_cdr ), true );
     }
   }
 
@@ -1698,28 +1694,36 @@ struct engulfing_flames_t : public ardeos_spell_t
       base_dot->state = get_state();
     base_dot->state->copy_state( s );
 
-    base_dot->false_start( composite_dot_duration( s ) );
+    base_dot->false_start( composite_dot_duration( s ) + 1_ms );
   }
 
   void last_tick( dot_t* d ) override
   {
     ardeos_spell_t::last_tick( d );
     dot_t* base_dot = ardeos_spell_t::get_dot( d->target );
-    if ( base_dot->current_stack() > 1 )
+    if ( d != base_dot )
     {
-      base_dot->decrement( 1 );
-      p()->remove_active_dot( base_dot );
+      if ( base_dot->current_stack() > 1 )
+      {
+        base_dot->decrement( 1 );
+        p()->remove_active_dot( base_dot );
+      }
+      else
+      {
+        base_dot->reset();
+      }
     }
     else
     {
-      base_dot->reset();
+      sim->print_debug( "Engulfing Base DoT Expired. Is Ticking: {}, stacks: {}, end event: {}", base_dot->is_ticking(),
+                      base_dot->current_stack(), base_dot->end_event ? "end" : "no end" );
     }
   }
 
   void reset() override
   {
     ardeos_spell_t::reset();
-    auto dot           = ardeos_spell_t::get_dot();
+    auto dot = ardeos_spell_t::get_dot();
 
     while ( p()->get_active_dots( dot ) )
       p()->remove_active_dot( dot );
@@ -2310,10 +2314,10 @@ void ardeos_t::extend_engulfing_flames( player_t* t, timespan_t extension )
   if ( !base_dot->current_action )
     return;
 
-  timespan_t dot_max = base_dot->current_action->dot_duration;
-  base_dot->adjust_duration( extension, dot_max );
-
   std::vector<dot_t*> target_dots = get_target_data( t )->dots.engulfing_flames_individual;
+  
+  timespan_t dot_max = base_dot->current_action->dot_duration;
+  base_dot->adjust_duration( extension, dot_max + 1_ms );
 
   for ( dot_t* d : target_dots )
   {

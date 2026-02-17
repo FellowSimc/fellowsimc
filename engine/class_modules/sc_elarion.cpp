@@ -59,6 +59,7 @@ public:
   {
     action_t* lunarlight_salvo;
     action_t* starfall_volley;
+    action_t* lunarlight_marks_spirit;
   } actions;
 
   struct buffs_t
@@ -165,8 +166,9 @@ public:
     timespan_t event_horizon_barrage_cdr_highwind = 0.5_s;
     timespan_t event_horizon_volley_cdr_barrage   = 1_s;
 
-    int spirit_refund_marks_applied = 3;
-    int spirit_refund_marks_targets = 1;
+    int spirit_refund_marks_applied       = 3;
+    int spirit_refund_marks_cleave        = 2;
+    int spirit_refund_marks_extra_targets = 2;
   } spell_const;
 
   enum elarion_talents_t : unsigned long long
@@ -985,6 +987,21 @@ struct highwind_arrow_t : public elarion_attack_t
     return base_t::execute_time();
   }
 
+  size_t available_targets( std::vector<player_t*>& tl ) const override
+  {
+    base_t::available_targets( tl );
+
+    if ( tl.size() > 2 )
+    {
+      std::sort( tl.begin() + 1, tl.end(), [ this ]( player_t* a, player_t* b ) {
+        return p()->get_target_data( a )->debuffs.lunarlight_mark->check() >
+               p()->get_target_data( b )->debuffs.lunarlight_mark->check();
+      } );
+    }
+
+    return tl.size();
+  }
+
   int n_targets() const override
   {
     return p()->buffs.final_crescendo->at_max_stacks() ? p()->talents.final_crescendo_ricochets : base_t::n_targets();
@@ -1353,6 +1370,35 @@ struct lunarlight_mark_t : public elarion_spell_t
     }
   }
 };
+
+struct lunarlight_mark_spirit_t : public elarion_spell_t
+{
+  lunarlight_mark_spirit_t( elarion_t* p, util::string_view options_str = {} )
+    : elarion_spell_t( "lunarlight_mark_spirit_proc", p, options_str )
+  {
+    id = 10;
+
+    name_str_reporting = "Lunarlight Mark Spirit";
+
+    background = false;
+
+    aoe = 1 + p->spell_const.spirit_refund_marks_extra_targets;
+
+    parse_options( options_str );
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    elarion_spell_t::impact( s );
+    if ( result_is_hit( s->result ) )
+    {
+      p()->get_target_data( s->target )
+          ->debuffs.lunarlight_mark->trigger( s->chain_target == 0 ? p()->spell_const.spirit_refund_marks_applied
+                                                                   : p()->spell_const.spirit_refund_marks_cleave );
+    }
+  }
+};
+
 
 struct starfall_volley_damage_t : public elarion_attack_t
 {
@@ -1926,7 +1972,6 @@ void elarion_t::create_options()
   add_option( opt_bool( "legendary.starstrikers_ascent", legendary.starstrikers_ascent ) );
 
   add_option( opt_int( "elarion.spirit_refund_marks_applied", spell_const.spirit_refund_marks_applied ) );
-  add_option( opt_int( "elarion.spirit_refund_marks_targets", spell_const.spirit_refund_marks_targets ) );
 
   add_option( opt_bool( "legendary.new_spirit_legendary", legendary.new_spirit_legendary ) );
 }
@@ -1981,8 +2026,9 @@ void elarion_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
-  actions.lunarlight_salvo = new actions::lunarlight_salvo_t( this );
-  actions.starfall_volley  = new actions::starfall_volley_damage_t( this );
+  actions.lunarlight_salvo        = new actions::lunarlight_salvo_t( this );
+  actions.starfall_volley         = new actions::starfall_volley_damage_t( this );
+  actions.lunarlight_marks_spirit = new actions::lunarlight_mark_spirit_t( this );
 }
 
 template <typename Base>
@@ -1995,35 +2041,7 @@ void actions::elarion_action_t<Base>::trigger_spirit_refund( const action_state_
 
   p()->spirit_refund();
 
-
-  // TODO: action handler.
-  if ( p()->sim->target_non_sleeping_list.size() > 1 )
-  {
-    p()->get_target_data( state->target )
-        ->debuffs.lunarlight_mark->trigger( p()->spell_const.spirit_refund_marks_applied );
-
-    int aoe_to_apply = p()->spell_const.spirit_refund_marks_targets - 1;
-
-    while ( aoe_to_apply )
-    {
-      player_t* target =
-          *( p()->rng().range( p()->sim->target_non_sleeping_list.begin(), p()->sim->target_non_sleeping_list.end() - 1 ) );
-
-      if ( target == state->target )
-      {
-        target = p()->sim->target_non_sleeping_list.data().back();
-      }
-
-      p()->get_target_data( target )->debuffs.lunarlight_mark->trigger( p()->spell_const.spirit_refund_marks_applied );
-      aoe_to_apply--;
-    }
-  }
-  else
-  {
-    p()->get_target_data( state->target )
-        ->debuffs.lunarlight_mark->trigger( p()->spell_const.spirit_refund_marks_applied *
-                                            p()->spell_const.spirit_refund_marks_targets );
-  }
+  p()->actions.lunarlight_marks_spirit->execute_on_target( state->target );
 
   if ( p()->legendary.starstrikers_ascent )
   {

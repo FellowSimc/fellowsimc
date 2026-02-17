@@ -189,6 +189,11 @@ public:
     double harmonious_diamond_amp  = 0.35;
     double harmonious_buff_minor   = 0.003;
     double harmonious_buff_major   = 0.009;
+
+    double sapphire_additional_max_spirit_minor  = 10.0;
+    double sapphire_additional_max_spirit_major  = 30.0;
+    double sapphire_spirit_cost_multiplier_minor = 0.95;
+    double sapphire_spirit_cost_multiplier_major = 0.85;
   } fs_gems;
 
   struct fs_weapons_t
@@ -521,12 +526,8 @@ public:
   {
     ab::may_crit = ab::tick_may_crit = true;
     ab::school                       = SCHOOL_PHYSICAL;
-
-    if ( p->fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 960.0 )
-    {
-      ab::base_costs[ RESOURCE_SPIRIT ].pct_mul *= p->fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 2640 ? 0.85 : 0.95;
-    }
   }
+
 
   fs_player_t* fs_p()
   {
@@ -536,6 +537,19 @@ public:
   const fs_player_t* fs_p() const
   {
     return debug_cast<const fs_player_t*>( ab::player );
+  }
+
+  double cost_pct_multiplier() const override
+  {
+    auto mul = ab::cost_pct_multiplier();
+
+    if ( ab::current_resource() == RESOURCE_SPIRIT && fs_p()->fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 960.0 )
+    {
+      mul *= fs_p()->fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 2640 ? fs_p()->fs_gems.sapphire_spirit_cost_multiplier_major
+                                                                : fs_p()->fs_gems.sapphire_spirit_cost_multiplier_minor;
+    }
+
+    return mul;
   }
 
   // Residual Trigger Functions ===============================================
@@ -727,7 +741,7 @@ public:
         break;
     }
 
-    if ( active_weapon && !ab::background )
+    if ( active_weapon && !ab::background && !ab::channeled )
     {
       ab::fs_p()->weapon_cd = ab::cooldown;
     }

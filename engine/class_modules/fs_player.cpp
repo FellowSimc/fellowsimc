@@ -1516,11 +1516,12 @@ void fs_player_t::init_special_effects()
 {
   player_t::init_special_effects();
 
-  
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 120.0 )
   {
-    resources.max[ RESOURCE_SPIRIT ] += fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1200 ? 30.0 : 10.0;
-    resources.base[ RESOURCE_SPIRIT ] = resources.max[ RESOURCE_SPIRIT ];
+    auto extra_max_spirit = fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1200 ? fs_gems.sapphire_additional_max_spirit_major
+                                                                       : fs_gems.sapphire_additional_max_spirit_minor;
+    resources.max[ RESOURCE_SPIRIT ] += extra_max_spirit;
+    resources.base[ RESOURCE_SPIRIT ] += extra_max_spirit;
   }
 
   if ( fs_gems.gem_powers[ GEM_RUBY ] >= 1560 )

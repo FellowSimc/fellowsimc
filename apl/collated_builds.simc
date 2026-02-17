@@ -1,0 +1,71 @@
+report_details=1
+optimal_raid=0
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=1
+max_time=300
+# desired_targets=8
+# max_time=60
+
+
+
+apl/chuey_dungeon.simc
+
+mara="Mara Finisher SP MD Punc"
+level=80
+
+# initial_resource=spirit=100
+
+apl/mara/mara.simc
+
+gear_agility=1442
+
+legendary.vexiras_venom=1
+
+talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/sinners_pride:1/puncture:1/maidens_doom:1
+
+gear_haste_rating=650
+gear_crit_rating=1500
+gear_versatility_rating=1960
+gear_mastery_rating=400
+
+gems.amethyst_power=2664
+gems.ruby_power=120
+gems.diamond_power=2304
+
+weapon=sahrils_wrath
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+weapon_trait.diamond_strike=4
+
+copy="Mara Finisher SP FTQ","Mara Finisher SP MD Punc"
+talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/feed_the_queen:1/sinners_pride:1
+
+copy="Mara Finisher FTQ CS Puncture","Mara Finisher SP MD Punc"
+talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/feed_the_queen:1/puncture:1/corrosive_spill:1
+
+copy="Mara Bleed Punc MD","Mara Finisher SP MD Punc"
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/sinners_pride:1/puncture:1/maidens_doom:1
+
+legendary.from_the_shadows=1
+legendary.vexiras_venom=0
+
+gear_haste_rating=1050
+gear_crit_rating=1400
+gear_versatility_rating=1860
+gear_mastery_rating=200
+
+copy="Mara Bleed Deadly","Mara Finisher SP MD Punc"
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/sinners_pride:1/deadly_scheme:1
+
+legendary.from_the_shadows=1
+legendary.vexiras_venom=0
+
+gear_haste_rating=1050
+gear_crit_rating=1400
+gear_versatility_rating=1860
+gear_mastery_rating=200
+

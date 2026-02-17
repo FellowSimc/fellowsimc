@@ -162,69 +162,168 @@ public:
   {
     double hemorrhaging_strike_energy_gen = 5.0;
     double hemorrhaging_strike_damage     = 2.73;
-    double hemorrhaging_stike_tick_dmg    = 1.435;
+    double hemorrhaging_stike_tick_dmg    = 1.076;
     timespan_t hemorrhaging_strike_period = 3_s;
   } spell_const;
 
+  enum mara_talents_t : unsigned long long
+  {
+    NONE               = 0ULL,
+    RED_LEDGER         = 1ULL << 0,
+    CORROSIVE_SPILL    = 1ULL << 1,
+    ASSASSINS_GUILE    = 1ULL << 2,
+    BLOODRUSH          = 1ULL << 3,
+    VENOMOUS_DELIGHT   = 1ULL << 4,
+    EFFICIENT_KILLER   = 1ULL << 5,
+    GUSHING_BLOOD      = 1ULL << 6,
+    FEED_THE_QUEEN     = 1ULL << 7,
+    DEADLY_SCHEME      = 1ULL << 8,
+    VEIL_OF_SHADOWS    = 1ULL << 9,
+    MAIDENS_DOOM       = 1ULL << 10,
+    MAGIC_WARD         = 1ULL << 11,
+    HEMOTOXIN          = 1ULL << 12,
+    SINNERS_PRIDE      = 1ULL << 13,
+    MALEVOLENCE        = 1ULL << 14,
+    ARACHNID_ONSLAUGHT = 1ULL << 15,
+    SPIRITED_FORTITUDE = 1ULL << 16,
+    PUNCTURE           = 1ULL << 17,
+    MAX                = 1ULL << 18
+  };
+
+  static constexpr std::string_view talent_name_formatted( mara_talents_t t )
+  {
+    switch ( t )
+    {
+      case mara_t::RED_LEDGER:
+        return "Red Ledger";
+      case mara_talents_t::CORROSIVE_SPILL:
+        return "Corrosive Spill";
+      case mara_talents_t::ASSASSINS_GUILE:
+        return "Assassins Guile";
+      case mara_talents_t::BLOODRUSH:
+        return "Bloodrush";
+      case mara_talents_t::VENOMOUS_DELIGHT:
+        return "Venomous Delight";
+      case mara_talents_t::EFFICIENT_KILLER:
+        return "Efficient Killer";
+      case mara_talents_t::GUSHING_BLOOD:
+        return "Gushing Blood";
+      case mara_talents_t::FEED_THE_QUEEN:
+        return "Feed the Queen";
+      case mara_talents_t::DEADLY_SCHEME:
+        return "Deadly Scheme";
+      case mara_talents_t::VEIL_OF_SHADOWS:
+        return "Veil of Shadows";
+      case mara_talents_t::MAIDENS_DOOM:
+        return "Maidens Doom";
+      case mara_talents_t::MAGIC_WARD:
+        return "Magic Ward";
+      case mara_talents_t::HEMOTOXIN:
+        return "Hemotoxin";
+      case mara_talents_t::SINNERS_PRIDE:
+        return "Sinners Pride";
+      case mara_talents_t::MALEVOLENCE:
+        return "Malevolence";
+      case mara_talents_t::ARACHNID_ONSLAUGHT:
+        return "Arachnid Onslaught";
+      case mara_talents_t::SPIRITED_FORTITUDE:
+        return "Spirited Fortitude";
+      case mara_talents_t::PUNCTURE:
+        return "Puncture";
+      default:
+        return "Unknown Talent";
+    }
+  }
+
+  static constexpr std::string_view talent_name( mara_talents_t t )
+  {
+    switch ( t )
+    {
+      case mara_t::RED_LEDGER:
+        return "red_ledger";
+      case mara_talents_t::CORROSIVE_SPILL:
+        return "corrosive_spill";
+      case mara_talents_t::ASSASSINS_GUILE:
+        return "assassins_guile";
+      case mara_talents_t::BLOODRUSH:
+        return "bloodrush";
+      case mara_talents_t::VENOMOUS_DELIGHT:
+        return "venomous_delight";
+      case mara_talents_t::EFFICIENT_KILLER:
+        return "efficient_killer";
+      case mara_talents_t::GUSHING_BLOOD:
+        return "gushing_blood";
+      case mara_talents_t::FEED_THE_QUEEN:
+        return "feed_the_queen";
+      case mara_talents_t::DEADLY_SCHEME:
+        return "deadly_scheme";
+      case mara_talents_t::VEIL_OF_SHADOWS:
+        return "veil_of_shadows";
+      case mara_talents_t::MAIDENS_DOOM:
+        return "maidens_doom";
+      case mara_talents_t::MAGIC_WARD:
+        return "magic_ward";
+      case mara_talents_t::HEMOTOXIN:
+        return "hemotoxin";
+      case mara_talents_t::SINNERS_PRIDE:
+        return "sinners_pride";
+      case mara_talents_t::MALEVOLENCE:
+        return "malevolence";
+      case mara_talents_t::ARACHNID_ONSLAUGHT:
+        return "arachnid_onslaught";
+      case mara_talents_t::SPIRITED_FORTITUDE:
+        return "spirited_fortitude";
+      case mara_talents_t::PUNCTURE:
+        return "puncture";
+      default:
+        return "unknown_talent";
+    }
+  }
+
   struct talents_t
   {
-    bool red_ledger             = false;
     double red_ledger_base      = 0.1;
     double red_ledger_per_stack = 0.02;
     int red_ledger_max          = 5;
 
-    bool malevolence                = false;
     double malevolence_amplifier    = 1;
     int malevolence_max_stacks      = 2;
     timespan_t malevolence_duration = 20_s;
 
-    bool deadly_scheme                   = false;
     double deadly_scheme_added_crit      = 1.0;
     double deadly_scheme_required_energy = 200;
 
-    bool bloodrush            = false;
     double bloodrush_tickrate = 1.3;
     double bloodrush_damage   = 1.5;
 
-    bool venomous_delight          = false;
     double venomous_delight_chance = 0.1;
     double venomous_delight_energy = 10;
 
-    bool vile_venoms                     = false;
     double vile_venoms_poison_multiplier = 1.15;
 
-    bool efficient_killer                        = false;
     double efficient_killer_energy_cost_modifier = 0.9;
     double efficient_killer_max_energy_boost     = 1.1;
     double efficient_killer_energy_per_cp        = 1.0;
 
-    bool gushing_blood                                = false;
     int gushing_blood_hemorrhaging_additional_targets = 4;
     bool gushing_blood_always_works = true;
 
-    bool corrosive_spill                                      = false;
     double corrosive_spill_chance_per_cp                      = 0.03;
     timespan_t corrosive_spill_duration                       = 3_s;
     double corrosive_spill_damage                             = 0.9;
     timespan_t corrosive_spill_ticktime                       = 1.5_s;
     double corrosive_spill_cumulative_chance_per_tick_of_miss = 0.25;
 
-    bool feed_the_queen                   = false;
-    int feed_the_queen_max_stacks         = 5;
-    double feed_the_queen_bonus_per_stack = 0.09;
+    int feed_the_queen_max_stacks         = 6;
+    double feed_the_queen_bonus_per_stack = 0.1;
 
-    bool veil_of_shadows = false;
-
-    bool nightstalker                = false;
     double nightstalker_damage_taken = 0.1;
     timespan_t nightstalker_duration = 10_s;
 
     bool magic_ward = false;
 
-    bool sinners_pride                            = false;
     timespan_t sinners_pride_cdr_reduction_per_cp = 0.6_s;
 
-    bool hemotoxin                        = false;
     double hemotoxin_chance               = 0.12;
     int hemotoxin_applied_stacks          = 1;
     int hemotoxin_max_stacks              = 3;
@@ -237,22 +336,17 @@ public:
     bool hemotoxin_double_dip_stats       = false;
     bool hemotoxin_double_dip_multipliers = false;
 
-    bool maidens_doom                     = false;
     double maidens_doom_execute_threshold = 30.0;
     double maidens_doom_execute_amp       = 0.2;
 
-    bool puncture                     = false;
     double puncture_cc                = 1.0;
     bool puncture_buff                = false;
     double puncture_buff_tickrate     = 0.3;
     timespan_t puncture_buff_duration = 9_s;
 
-    bool spirited_fortitude = false;
 
-    bool arachnid_onslaught              = false;
     double arachnid_onslaught_multiplier = 1.2;
 
-    bool assassins_guile                      = false;
     double assassins_guile_finisher_boost     = 0.4;
     timespan_t assassins_guile_buff_duration = 4.99_s;
   } talents;
@@ -980,11 +1074,6 @@ struct mara_poison_t : public mara_attack_t
     school = SCHOOL_MAGIC;
 
     trigger_gcd = timespan_t::zero();
-
-    if ( p->talents.vile_venoms )
-    {
-      base_multiplier *= p->talents.vile_venoms_poison_multiplier;
-    }
   }
 
   timespan_t execute_time() const override
@@ -995,7 +1084,9 @@ struct mara_poison_t : public mara_attack_t
   void assess_damage( result_amount_type rt, action_state_t* state ) override
   {
     mara_attack_t::assess_damage( rt, state );
-    if ( p()->talents.venomous_delight && rt != result_amount_type::NONE && state->result_amount > 0 )
+
+    if ( p()->talents_enabled( mara_t::VENOMOUS_DELIGHT ) && rt != result_amount_type::NONE &&
+         state->result_amount > 0 )
     {
       if ( rng().roll( p()->talents.venomous_delight_chance ) )
       {
@@ -1251,7 +1342,7 @@ struct queens_fang_t : public mara_attack_t
       }
     }
 
-    if ( !is_secondary_action() && p()->talents.malevolence )
+    if ( !is_secondary_action() && p()->talents_enabled( mara_t::MALEVOLENCE ) )
     {
       p()->buffs.malevolence_qf_buffs_aa->trigger();
       p()->buffs.malevolence_aa_buffs_qf->decrement();
@@ -1300,13 +1391,13 @@ struct hemorrhaging_strike_t : public mara_attack_t
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 20;
 
-    if ( p->talents.efficient_killer )
+    if ( p->talents_enabled(mara_t::EFFICIENT_KILLER ))
       base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;
 
     if ( p->legendary.from_the_shadows )
       add_child( p->actions.queens_fang_fts_clone );
 
-    if ( p->talents.hemotoxin )
+    if ( p->talents_enabled( mara_t::HEMOTOXIN ) )
       add_child( p->actions.hemotoxin );
   }
 
@@ -1314,8 +1405,9 @@ struct hemorrhaging_strike_t : public mara_attack_t
   {
     int n = mara_attack_t::n_targets();
 
-    if ( !is_secondary_action() && ( p()->talents.gushing_blood && ( p()->buffs.maiden_of_death->check() ||
-                                                                     p()->talents.gushing_blood_always_works ) ) )
+    if ( !is_secondary_action() &&
+         ( p()->talents_enabled( mara_t::GUSHING_BLOOD ) &&
+           ( p()->buffs.maiden_of_death->check() || p()->talents.gushing_blood_always_works ) ) )
     {
       n = 1 + p()->talents.gushing_blood_hemorrhaging_additional_targets;
     }
@@ -1329,7 +1421,7 @@ struct hemorrhaging_strike_t : public mara_attack_t
 
     if ( is_aoe() && tl.size() > 1 && !is_secondary_action() )
     {
-      if ( p()->talents.gushing_blood )
+      if ( p()->talents_enabled( mara_t::GUSHING_BLOOD ) )
       {
         // Find Target and move to front
         auto it     = std::find( tl.begin(), tl.end(), this->target );
@@ -1359,12 +1451,13 @@ struct hemorrhaging_strike_t : public mara_attack_t
   {
     timespan_t tt = mara_attack_t::tick_time( s );
 
-    if ( p()->talents.bloodrush )
+    if ( p()->talents_enabled( mara_t::BLOODRUSH ) )
     {
       tt /= p()->talents.bloodrush_tickrate;
     }
 
-    if ( p()->talents.puncture && p()->talents.puncture_buff && td( s->target )->debuffs.puncture->check() )
+    if ( p()->talents_enabled( mara_t::PUNCTURE ) && p()->talents.puncture_buff &&
+         td( s->target )->debuffs.puncture->check() )
     {
       tt /= 1 + td( s->target )->debuffs.puncture->check_value();
     }
@@ -1422,10 +1515,10 @@ struct hemorrhaging_strike_t : public mara_attack_t
   {
     mara_attack_t::impact( s );
 
-    if ( p()->talents.red_ledger )
+    if ( p()->talents_enabled( mara_t::RED_LEDGER ) )
       make_event( *p()->sim, [ this ] { trigger_red_ledger(); } );
 
-    if ( p()->talents.hemotoxin && p()->get_target_data( s->target )->debuffs.hemotoxin->check() )
+    if ( p()->talents_enabled( mara_t::HEMOTOXIN ) && p()->get_target_data( s->target )->debuffs.hemotoxin->check() )
     {
       p()->get_target_data( s->target )->debuffs.hemotoxin->decrement();
       
@@ -1451,13 +1544,13 @@ struct hemorrhaging_strike_t : public mara_attack_t
     mara_attack_t::last_tick( d );
 
     // Delay to allow the demise to reset() and update get_active_dots() count
-    if ( p()->talents.red_ledger )
+    if ( p()->talents_enabled( mara_t::RED_LEDGER ) )
       make_event( *p()->sim, [ this ] { trigger_red_ledger(); } );
   }
 
   void trigger_red_ledger()
   {
-    if ( !p()->talents.red_ledger )
+    if ( !p()->talents_enabled( mara_t::RED_LEDGER ) )
       return;
 
     const int current_stacks = p()->buffs.red_ledger_additional->check();
@@ -1560,7 +1653,7 @@ struct widows_bite_t : public mara_attack_t
 
       name_str_reporting = "Widows Bite";
 
-      if ( p->talents.puncture )
+      if ( p->talents_enabled( mara_t::PUNCTURE ) )
       {
         base_crit += p->talents.puncture_cc;
       }
@@ -1573,7 +1666,7 @@ struct widows_bite_t : public mara_attack_t
       trigger_combo_point_gain( state->result == RESULT_CRIT ? 3 : 2, this->gain );
       roll_for_hemotoxin( state );
 
-      if ( p()->talents.puncture && p()->talents.puncture_buff && state->result == RESULT_CRIT )
+      if ( p()->talents_enabled( mara_t::PUNCTURE ) && p()->talents.puncture_buff && state->result == RESULT_CRIT )
       {
         td( state->target )->debuffs.puncture->trigger();
       }
@@ -1861,10 +1954,6 @@ struct stalker_step_t : public mara_spell_t
   void impact( action_state_t* s ) override
   {
     mara_spell_t::impact( s );
-    if ( p()->talents.nightstalker )
-    {
-      p()->get_target_data( s->target )->debuffs.nightstalker->trigger();
-    }
   }
 };
 
@@ -1922,7 +2011,7 @@ struct skittering_blades_t : public mara_attack_t
 
     trigger_combo_point_gain( s->result == RESULT_CRIT ? 2 : 1, gain );
 
-    if ( p()->talents.feed_the_queen )
+    if ( p()->talents_enabled( mara_t::FEED_THE_QUEEN ) )
     {
       p()->buffs.feed_the_queen->trigger();
     }
@@ -1965,7 +2054,7 @@ struct arachnid_assault_t : public mara_attack_t
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 45;
 
-    if ( p->talents.efficient_killer )
+    if ( p->talents_enabled( mara_t::EFFICIENT_KILLER ) )
       base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;
 
     if ( st == secondary_trigger::NONE && p->legendary.spirit_procs_clones )
@@ -1990,7 +2079,8 @@ struct arachnid_assault_t : public mara_attack_t
   {
     auto m = mara_attack_t::composite_target_multiplier( t );
 
-    if ( p()->talents.arachnid_onslaught && p()->get_target_data( t )->dots.hemorrhaging_strike->is_ticking() )
+    if ( p()->talents_enabled( mara_t::ARACHNID_ONSLAUGHT ) &&
+         p()->get_target_data( t )->dots.hemorrhaging_strike->is_ticking() )
       m *= p()->talents.arachnid_onslaught_multiplier;
 
     if ( secondary_trigger_type != secondary_trigger::TALENT_CLONE )
@@ -2038,7 +2128,7 @@ struct arachnid_assault_t : public mara_attack_t
     if ( !is_secondary_action() )
       p()->buffs.deadly_scheme->expire();
 
-    if ( !is_secondary_action() && p()->talents.malevolence )
+    if ( !is_secondary_action() && p()->talents_enabled( mara_t::MALEVOLENCE ) )
     {
       p()->buffs.malevolence_aa_buffs_qf->trigger();
       p()->buffs.malevolence_qf_buffs_aa->decrement();
@@ -2352,7 +2442,7 @@ double mara_t::composite_player_target_multiplier( player_t* target, school_e sc
 
   if ( buffs.maiden_of_death->check() )
   {
-    if ( talents.maidens_doom && target->health_percentage() <= talents.maidens_doom_execute_threshold )
+    if ( talents_enabled( MAIDENS_DOOM ) && target->health_percentage() <= talents.maidens_doom_execute_threshold )
     {
       m *= 1.2 + talents.maidens_doom_execute_amp;
     }
@@ -2487,77 +2577,12 @@ std::unique_ptr<expr_t> mara_t::create_expression( util::string_view name_str )
   {
     if ( split.size() == 2 )
     {
-      if ( util::str_compare_ci( split[ 1 ], "red_ledger" ) )
+      for ( mara_talents_t t = static_cast<mara_talents_t>( 1U ); t < mara_talents_t::MAX; t++ )
       {
-        return make_ref_expr( name_str, talents.red_ledger );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "malevolence" ) )
-      {
-        return make_ref_expr( name_str, talents.malevolence );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "deadly_scheme" ) )
-      {
-        return make_ref_expr( name_str, talents.deadly_scheme );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "bloodrush" ) )
-      {
-        return make_ref_expr( name_str, talents.bloodrush );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "venomous_delight" ) )
-      {
-        return make_ref_expr( name_str, talents.venomous_delight );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "vile_venoms" ) )
-      {
-        return make_ref_expr( name_str, talents.vile_venoms );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "efficient_killer" ) )
-      {
-        return make_ref_expr( name_str, talents.efficient_killer );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "gushing_blood" ) )
-      {
-        return make_ref_expr( name_str, talents.gushing_blood );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "corrosive_spill" ) )
-      {
-        return make_ref_expr( name_str, talents.corrosive_spill );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "feed_the_queen" ) )
-      {
-        return make_ref_expr( name_str, talents.feed_the_queen );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "nightstalker" ) )
-      {
-        return make_ref_expr( name_str, talents.nightstalker );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "hemotoxin" ) )
-      {
-        return make_ref_expr( name_str, talents.hemotoxin );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "maidens_doom" ) )
-      {
-        return make_ref_expr( name_str, talents.maidens_doom );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "puncture" ) )
-      {
-        return make_ref_expr( name_str, talents.puncture );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "arachnid_onslaught" ) )
-      {
-        return make_ref_expr( name_str, talents.arachnid_onslaught );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "assassins_guile" ) )
-      {
-        return make_ref_expr( name_str, talents.assassins_guile );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "gushing_blood_always_works" ) )
-      {
-        return make_ref_expr( name_str, talents.gushing_blood_always_works );
-      }
-      else if ( util::str_compare_ci( split[ 1 ], "sinners_pride" ) )
-      {
-        return make_ref_expr( name_str, talents.sinners_pride );
+        if ( util::str_compare_ci( split[ 1 ], talent_name( t ) ) )
+        {
+          return make_fn_expr( name_str, std::bind( std::mem_fn( &mara_t::talents_enabled ), this, t ) );
+        }
       }
     }
   }
@@ -2704,85 +2729,6 @@ void mara_t::init_spells()
 void mara_t::init_talents()
 {
   fs_player_t::init_talents();
-
-  if ( talent_points_fs )
-  {
-    if ( talent_points_fs && 1 << 0 )
-      talents.red_ledger = true;
-    if ( talent_points_fs && 1 << 1 )
-      talents.corrosive_spill = true;
-    if ( talent_points_fs && 1 << 2 )
-      talents.assassins_guile = true;
-    if ( talent_points_fs && 1 << 3 )
-      talents.bloodrush = true;
-    if ( talent_points_fs && 1 << 4 )
-      talents.venomous_delight = true;
-    if ( talent_points_fs && 1 << 5 )
-      talents.efficient_killer = true;
-    if ( talent_points_fs && 1 << 6 )
-      talents.gushing_blood = true;
-    if ( talent_points_fs && 1 << 7 )
-      talents.feed_the_queen = true;
-    if ( talent_points_fs && 1 << 8 )
-      talents.deadly_scheme = true;
-    if ( talent_points_fs && 1 << 9 )
-      talents.veil_of_shadows = true;
-    if ( talent_points_fs && 1 << 10 )
-      talents.maidens_doom = true;
-    if ( talent_points_fs && 1 << 11 )
-      talents.magic_ward = true;
-    if ( talent_points_fs && 1 << 12 )
-      talents.sinners_pride = true;
-    if ( talent_points_fs && 1 << 13 )
-      talents.hemotoxin = true;
-    if ( talent_points_fs && 1 << 14 )
-      talents.malevolence = true;
-    if ( talent_points_fs && 1 << 15 )
-      talents.arachnid_onslaught = true;
-    if ( talent_points_fs && 1 << 16 )
-      talents.spirited_fortitude = true;
-    if ( talent_points_fs && 1 << 17 )
-      talents.puncture = true;
-  }
-  else
-  {
-    if ( talents.red_ledger )
-      talent_points_fs |= ( 1ULL << 0 );
-    if ( talents.corrosive_spill )
-      talent_points_fs |= ( 1ULL << 1 );
-    if ( talents.assassins_guile )
-      talent_points_fs |= ( 1ULL << 2 );
-    if ( talents.bloodrush )
-      talent_points_fs |= ( 1ULL << 3 );
-    if ( talents.venomous_delight )
-      talent_points_fs |= ( 1ULL << 4 );
-    if ( talents.efficient_killer )
-      talent_points_fs |= ( 1ULL << 5 );
-    if ( talents.gushing_blood )
-      talent_points_fs |= ( 1ULL << 6 );
-    if ( talents.feed_the_queen )
-      talent_points_fs |= ( 1ULL << 7 );
-    if ( talents.deadly_scheme )
-      talent_points_fs |= ( 1ULL << 8 );
-    if ( talents.veil_of_shadows )
-      talent_points_fs |= ( 1ULL << 9 );
-    if ( talents.maidens_doom )
-      talent_points_fs |= ( 1ULL << 10 );
-    if ( talents.magic_ward )
-      talent_points_fs |= ( 1ULL << 11 );
-    if ( talents.sinners_pride )
-      talent_points_fs |= ( 1ULL << 12 );
-    if ( talents.hemotoxin )
-      talent_points_fs |= ( 1ULL << 13 );
-    if ( talents.malevolence )
-      talent_points_fs |= ( 1ULL << 14 );
-    if ( talents.arachnid_onslaught )
-      talent_points_fs |= ( 1ULL << 15 );
-    if ( talents.spirited_fortitude )
-      talent_points_fs |= ( 1ULL << 16 );
-    if ( talents.puncture )
-      talent_points_fs |= ( 1ULL << 17 );
-  }
 }
 
 // mara_t::init_gains ======================================================
@@ -2876,7 +2822,7 @@ void mara_t::create_buffs()
   buffs.brooding_shadows = make_buff<mara_buff_t>( this, "brooding_shadows" );
   buffs.brooding_shadows->set_duration( 0_s )->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
-  if ( talents.assassins_guile )
+  if ( talents_enabled( ASSASSINS_GUILE ) )
   {
     buffs.brooding_shadows->add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
       if ( !_new )
@@ -2956,40 +2902,20 @@ void mara_t::create_options()
 {
   fs_player_t::create_options();
 
-  add_option( opt_bool( "talent.red_ledger", talents.red_ledger ) );
-  add_option( opt_bool( "talent.malevolence", talents.malevolence ) );
-  add_option( opt_bool( "talent.deadly_scheme", talents.deadly_scheme ) );
-
-  add_option( opt_bool( "talent.bloodrush", talents.bloodrush ) );
-  add_option( opt_bool( "talent.vile_venoms", talents.vile_venoms ) );
-  add_option( opt_bool( "talent.venomous_delight", talents.venomous_delight ) );
-  add_option( opt_bool( "talent.efficient_killer", talents.efficient_killer ) );
-
-  add_option( opt_bool( "talent.gushing_blood", talents.gushing_blood ) );
   add_option( opt_bool( "talent.gushing_blood_always_works", talents.gushing_blood_always_works ) );
   add_option( opt_int( "talent.gushing_blood_hemorrhaging_additional_targets",
                        talents.gushing_blood_hemorrhaging_additional_targets, 1, 20 ) );
-  add_option( opt_bool( "talent.corrosive_spill", talents.corrosive_spill ) );
-  add_option( opt_bool( "talent.feed_the_queen", talents.feed_the_queen ) );
-
-  add_option( opt_bool( "talent.nightstalker", talents.nightstalker ) );
 
   
-  add_option( opt_bool( "talent.sinners_pride", talents.sinners_pride ) );
   add_option( opt_timespan( "talent.sinners_pride_cdr_reduction_per_cp",
                             talents.sinners_pride_cdr_reduction_per_cp, 0_s, 180_s ) );
 
-  add_option( opt_bool( "talent.hemotoxin", talents.hemotoxin ) );
-  add_option( opt_bool( "talent.maidens_doom", talents.maidens_doom ) );
-  
-  add_option( opt_bool( "talent.puncture", talents.puncture ) );
   add_option( opt_bool( "talent.puncture_buff", talents.puncture_buff ) );
   add_option( opt_float( "talent.puncture_buff_tickrate", talents.puncture_buff_tickrate, 0.0, 10.0 ) );
   add_option( opt_float( "talent.puncture_cc", talents.puncture_cc, 0.0, 2.0 ) );
   add_option( opt_timespan( "talent.puncture_buff_duration", talents.puncture_buff_duration, 1_s, 30_s ) );
   add_option( opt_float( "options.widows_bite_extra_energy", options.widows_bite_extra_energy, 0.0, 100.0 ) );
 
-  add_option( opt_bool( "talent.arachnid_onslaught", talents.arachnid_onslaught ) );
 
   add_option( opt_bool( "legendary.vexiras_venom", legendary.vexiras_venom ) );
   add_option( opt_bool( "legendary.drenched_in_blood", legendary.drenched_in_blood ) );
@@ -3002,7 +2928,6 @@ void mara_t::create_options()
   add_option( opt_bool( "legendary.spirit_procs_clones_proc_on_next", legendary.spirit_procs_clones_proc_on_next ) );
   add_option( opt_int( "legendary.spirit_procs_clones_clones", legendary.spirit_procs_clones_clones, 1, 200 ) );
 
-  add_option( opt_bool( "talent.assassins_guile", talents.assassins_guile ) );
 
   /*add_option( opt_bool( "ready_trigger", options.mara_ready_trigger ) );
 
@@ -3065,16 +2990,27 @@ void mara_t::init_finished()
 {
   fs_player_t::init_finished();
 
-  talent_points_fs_count = 2 * ( talents.red_ledger + talents.corrosive_spill + talents.assassins_guile +
-                            talents.gushing_blood + talents.feed_the_queen + talents.deadly_scheme ) +
-                      ( talents.bloodrush + talents.venomous_delight + talents.efficient_killer +
-                        talents.veil_of_shadows + talents.maidens_doom + talents.magic_ward +
-                        talents.arachnid_onslaught + talents.spirited_fortitude + talents.puncture ) +
-                      3 * ( talents.sinners_pride + talents.hemotoxin + talents.malevolence );
-
-  if ( talent_points_fs_count > 12 )
+  auto talents = util::string_split<std::string_view>( talents_str, "/" );
+  for ( const auto talent : talents )
   {
-    sim->error( "{} has more than 12 talent points allocated. Total: {}", *this, talent_points_fs_count );
+    auto talent_split = util::string_split<std::string_view>( talent, ":" );
+    if ( talent_split.size() != 2 )
+    {
+      sim->error( "Invalid talent string {}", talent );
+      sim->cancel();
+      return;
+    }
+
+    auto ranks = util::to_unsigned( talent_split[ 1 ] );
+
+    for ( mara_talents_t t = static_cast<mara_talents_t>( 1U ); t < mara_talents_t::MAX; t++ )
+    {
+      if ( util::str_compare_ci( talent_split[ 0 ], talent_name( t ) ) )
+      {
+        set_talent_points( t, ranks >= 1 );
+        break;
+      }
+    }
   }
 }
 
@@ -3194,7 +3130,7 @@ double mara_t::resource_regen_per_second( resource_e r ) const
 double mara_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
   double actual_amount = fs_player_t::resource_gain( resource_type, amount, source, action );
-  if ( talents.deadly_scheme && resource_type == RESOURCE_ENERGY && actual_amount > 0 )
+  if ( talent_enabled( DEADLY_SCHEME ) && resource_type == RESOURCE_ENERGY && actual_amount > 0 )
   {
     deadly_energy_tracker += actual_amount;
     if ( deadly_energy_tracker >= talents.deadly_scheme_required_energy )
@@ -3302,12 +3238,12 @@ void actions::mara_action_t<Base>::spend_combo_points( const action_state_t* sta
 
   trigger_poison_bomb( state, max_spend );
 
-  if ( p()->talents.sinners_pride )
+  if ( p()->talents_enabled( mara_t::SINNERS_PRIDE ) )
   {
     p()->cooldowns.maiden_of_death->adjust( -max_spend * p()->talents.sinners_pride_cdr_reduction_per_cp, false, true );
   }
 
-  if ( p()->talents.efficient_killer )
+  if ( p()->talents_enabled( mara_t::EFFICIENT_KILLER ) ) 
   {
     p()->resource_gain( RESOURCE_ENERGY, p()->talents.efficient_killer_energy_per_cp * max_spend,
                         p()->gains.efficient_killer, this );
@@ -3345,7 +3281,7 @@ void actions::mara_action_t<Base>::trigger_spirit_refund( const action_state_t* 
 template <typename Base>
 void actions::mara_action_t<Base>::trigger_poison_bomb( const action_state_t* state, double max_spend )
 {
-  if ( !p()->talents.corrosive_spill && !is_secondary_action() )
+  if ( !p()->talents_enabled( mara_t::CORROSIVE_SPILL ) && !is_secondary_action() )
     return;
 
   const auto rs = cast_state( state );
@@ -3362,7 +3298,7 @@ void actions::mara_action_t<Base>::trigger_poison_bomb( const action_state_t* st
 template <typename Base>
 void actions::mara_action_t<Base>::roll_for_hemotoxin( const action_state_t* state )
 {
-  if ( !p()->talents.hemotoxin || ab::result_is_miss( state->result ) )
+  if ( !p()->talents_enabled( mara_t::HEMOTOXIN ) || ab::result_is_miss( state->result ) )
     return;
 
   if ( p()->rng().roll( p()->talents.hemotoxin_chance ) )

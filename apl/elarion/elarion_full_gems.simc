@@ -35,7 +35,7 @@ level=80
 
 # initial_resource=spirit=100
 
-apl/elarion_apl.simc
+apl/elarion/elarion_apl.simc
 
 
 # gear_haste_rating=1850

@@ -58,6 +58,7 @@ public:
   struct actions_t
   {
     action_t* lunarlight_salvo;
+    action_t* lunarlight_salvo_aoe;
     action_t* starfall_volley;
     action_t* lunarlight_marks_spirit;
   } actions;
@@ -114,7 +115,7 @@ public:
     double celestial_shot_ap_coeff   = 2.879;
     double celestial_shot_focus_cost = 15;
 
-    double multishot_ap_coeff       = 2.683;
+    double multishot_ap_coeff       = 2.683 * 0.9;
     double multishot_target_falloff = 12;
     double multishot_focus_cost     = 20;
     int multishot_max_stacks        = 5;
@@ -129,7 +130,7 @@ public:
     timespan_t heartseeker_barrage_cooldown = 20_s;
     double heartseeker_barrage_focus_cost   = 30;
 
-    double highwind_arrow_ap_coeff                    = 9.1;
+    double highwind_arrow_ap_coeff                    = 9.3;
     timespan_t highwind_arrow_cast_time               = 2.0_s;
     double highwind_arrow_focus_cost                  = 30;
     int highwind_arrow_charges                        = 3;
@@ -166,9 +167,11 @@ public:
     timespan_t event_horizon_barrage_cdr_highwind = 0.5_s;
     timespan_t event_horizon_volley_cdr_barrage   = 1_s;
 
-    int spirit_refund_marks_applied       = 3;
+    int spirit_refund_marks_applied       = 5;
     int spirit_refund_marks_cleave        = 2;
     int spirit_refund_marks_extra_targets = 2;
+
+    double barrage_mark_aoe_chance = 0.2;
   } spell_const;
 
   enum elarion_talents_t : unsigned long long
@@ -181,10 +184,10 @@ public:
     TALENT_5  = 1ULL << 4,
     TALENT_6  = 1ULL << 5,
     TALENT_7  = 1ULL << 6,
-    TALENT_8  = 1ULL << 7,
+    TALENT_11  = 1ULL << 7,
     TALENT_9  = 1ULL << 8,
     TALENT_10 = 1ULL << 9,
-    TALENT_11 = 1ULL << 10,
+    TALENT_8 = 1ULL << 10,
     TALENT_12 = 1ULL << 11,
     TALENT_13 = 1ULL << 12,
     TALENT_14 = 1ULL << 13,
@@ -202,24 +205,24 @@ public:
       case elarion_talents_t::TALENT_1:
         return "Focused Expanse";
       case elarion_talents_t::TALENT_2:
-        return "Fusillade";
+        return "Piercing Seekers";
       case elarion_talents_t::TALENT_3:
         return "Final Crescendo";
       case elarion_talents_t::TALENT_4:
         return "Skylit Grace";
       case elarion_talents_t::TALENT_5:
-        return "Piercing Seekers";
+        return "Fusillade";
       case elarion_talents_t::TALENT_6:
         return "Skyward Munitions";
       case elarion_talents_t::TALENT_7:
         return "Repeating Stars";
-      case elarion_talents_t::TALENT_8:
+      case elarion_talents_t::TALENT_11:
         return "Lunarlight Affinity";
       case elarion_talents_t::TALENT_9:
         return "Lethal Shots";
       case elarion_talents_t::TALENT_10:
         return "Path of Twilight";
-      case elarion_talents_t::TALENT_11:
+      case elarion_talents_t::TALENT_8:
         return "Lunar Fury";
       case elarion_talents_t::TALENT_12:
         return "Magic Ward";
@@ -246,25 +249,25 @@ public:
       case elarion_talents_t::TALENT_1:
         return "focused_expanse";
       case elarion_talents_t::TALENT_2:
-        return "fusillade";
+        return "piercing_seekers";
       case elarion_talents_t::TALENT_3:
         return "final_crescendo";
       case elarion_talents_t::TALENT_4:
         return "skylit_grace";
       case elarion_talents_t::TALENT_5:
-        return "piercing_seekers";
+        return "fusillade";
       case elarion_talents_t::TALENT_6:
         return "skyward_munitions";
       case elarion_talents_t::TALENT_7:
         return "repeating_stars";
       case elarion_talents_t::TALENT_8:
-        return "lunarlight_affinity";
+        return "lunar_fury";
       case elarion_talents_t::TALENT_9:
         return "lethal_shots";
       case elarion_talents_t::TALENT_10:
         return "path_of_twilight";
       case elarion_talents_t::TALENT_11:
-        return "lunar_fury";
+        return "lunarlight_affinity";
       case elarion_talents_t::TALENT_12:
         return "magic_ward";
       case elarion_talents_t::TALENT_13:
@@ -311,10 +314,11 @@ public:
     double lunarlight_affinity_volley_chance_mul = 1.0;
     double lunarlight_affinity_salvo_cc          = 0.4;
 
-    double lethal_shots_proc_chance = 0.3;
+    double lethal_shots_proc_chance = 0.4;
     double lethal_shots_added_cc    = 1.0;
 
-    double lunar_fury_mul = 0.3;
+    double lunar_fury_mul                = 0.3;
+    double lunar_fury_barrage_chance_mul = 1.0;
 
     timespan_t fervent_supremacy_duration         = 15_s;
     timespan_t fervent_supremacy_reduced_cooldown = 20_s;
@@ -342,6 +346,7 @@ public:
 
     bool starstrikers_ascent                                = false;
     int starstrikers_ascent_spirit_refunds_resurgent_stacks = 1;
+    double starstrikers_ascent_chance                       = 0.5;
 
     bool astronomers_hail                        = false;
     timespan_t astronomers_hail_volley_duration  = 2_s;
@@ -648,12 +653,8 @@ public:
     spend_resource_costs( ab::execute_state );
   }
 
-  
-
-  void impact( action_state_t* s ) override
+  virtual void handle_lunarlight_salvo( const action_state_t* s )
   {
-    ab::impact( s );
-
     if ( ab::result_is_hit( s->result ) && s->result_amount > 0 )
     {
       auto td = p()->get_target_data( s->target );
@@ -672,6 +673,13 @@ public:
         }
       }
     }
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ab::impact( s );
+
+    handle_lunarlight_salvo( s );
   }
 
   std::unique_ptr<expr_t> create_expression( std::string_view name ) override
@@ -763,6 +771,16 @@ struct celestial_shot_t : public elarion_attack_t
     base_costs[ RESOURCE_FOCUS ] = p->spell_const.celestial_shot_focus_cost;
 
     parse_options( options_str );
+  }
+
+  double cost_pct_multiplier() const override
+  {
+    auto mul = base_t::cost_pct_multiplier();
+
+    if ( p()->buffs.celestial_impetus->check() )
+      mul = 0;
+
+    return mul;
   }
 
   void impact( action_state_t* s ) override
@@ -1124,12 +1142,61 @@ struct heartseeker_barrage_t : public elarion_attack_t
       name_str_reporting = "Heartseeker Barrage";
 
       attack_power_mod.direct = p->spell_const.heartseeker_barrage_ap_coeff;
-      aoe = p->talents_enabled( elarion_t::TALENT_5 ) ? 1 + p->talents.piercing_seekers_ricochet_targets : 0;
+      aoe = p->talents_enabled( elarion_t::TALENT_2 ) ? 1 + p->talents.piercing_seekers_ricochet_targets : 0;
 
-      if ( p->talents_enabled( elarion_t::TALENT_2 ) )
+      if ( p->talents_enabled( elarion_t::TALENT_5 ) )
       {
         base_crit += p->talents.fusillade_crit;
       }
+
+      if ( p->talents_enabled( elarion_t::TALENT_8 ) )
+      {
+        lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunar_fury_barrage_chance_mul;
+        lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunar_fury_barrage_chance_mul;
+      }
+    }
+
+    void handle_lunarlight_salvo( const action_state_t* s ) override
+    {
+      if ( result_is_hit( s->result ) && s->result_amount > 0 )
+      {
+        auto td = p()->get_target_data( s->target );
+        if ( td->debuffs.lunarlight_mark->check() )
+        {
+          action_t* lunar_light_action = rng().roll( p()->spell_const.barrage_mark_aoe_chance )
+                                             ? p()->actions.lunarlight_salvo_aoe
+                                             : p()->actions.lunarlight_salvo;
+
+          if ( s->result == RESULT_HIT && rng().roll( lunarlight_salvo_chance_hit ) )
+          {
+            lunar_light_action->execute_on_target( s->target );
+            td->debuffs.lunarlight_mark->decrement();
+          }
+
+          if ( s->result == RESULT_CRIT && rng().roll( lunarlight_salvo_chance_crit ) )
+          {
+            lunar_light_action->execute_on_target( s->target );
+            td->debuffs.lunarlight_mark->decrement();
+          }
+        }
+      }
+    }
+
+    size_t available_targets( std::vector<player_t*>& tl ) const override
+    {
+      base_t::available_targets( tl );
+
+      if ( tl.size() > 1 )
+      {
+        /*std::sort( tl.begin() + 1, tl.end(), [ this ]( player_t* a, player_t* b ) {
+          return p()->get_target_data( a )->debuffs.lunarlight_mark->check() >
+                 p()->get_target_data( b )->debuffs.lunarlight_mark->check();
+        } );*/
+
+          rng().shuffle( tl.begin() + 1, tl.end() );
+      }
+
+      return tl.size();
     }
 
     void impact( action_state_t* s ) override
@@ -1173,12 +1240,12 @@ struct heartseeker_barrage_t : public elarion_attack_t
     tick_on_application    = false;
     channeled              = true;
 
-    if ( p->talents_enabled( elarion_t::TALENT_2 ) )
+    if ( p->talents_enabled( elarion_t::TALENT_5 ) )
     {
       dot_duration += p->talents.fusillade_duration;
     }
 
-    base_costs[ RESOURCE_FOCUS ] = p->spell_const.highwind_arrow_focus_cost;
+    base_costs[ RESOURCE_FOCUS ] = p->spell_const.heartseeker_barrage_focus_cost;
 
     cooldown->duration = p->spell_const.heartseeker_barrage_cooldown;
     cooldown->hasted   = false;
@@ -1223,7 +1290,7 @@ struct heartseeker_barrage_t : public elarion_attack_t
   {
     base_t::last_tick( d );
 
-    p()->buffs.impending_heartseeker->expire();
+    p()->buffs.impending_heartseeker->decrement();
   }
 
   void execute() override
@@ -1320,11 +1387,38 @@ struct lunarlight_salvo_t : public elarion_spell_t
 
     attack_power_mod.direct = p->spell_const.lunarlight_mark_ap_coeff;
 
-    if ( p->talents_enabled( elarion_t::TALENT_11 ) )
+    if ( p->talents_enabled( elarion_t::TALENT_8 ) )
     {
       base_multiplier *= 1.0 + p->talents.lunar_fury_mul;
     }
+    if ( p->talents_enabled( elarion_t::TALENT_11 ) )
+    {
+      base_crit += p->talents.lunarlight_affinity_salvo_cc;
+    }
+
+    lunarlight_salvo_chance_hit = lunarlight_salvo_chance_crit = 0;
+  }
+};
+
+struct lunarlight_salvo_aoe_t : public elarion_spell_t
+{
+  lunarlight_salvo_aoe_t( elarion_t* p ) : elarion_spell_t( "lunarlight_salvo_aoe", p, {} )
+  {
+    id = 9;
+
+    background = true;
+
+    name_str_reporting = "Lunarlight Salvo (AoE)";
+
+    attack_power_mod.direct = p->spell_const.lunarlight_mark_ap_coeff;
+
+    aoe = 12;
+
     if ( p->talents_enabled( elarion_t::TALENT_8 ) )
+    {
+      base_multiplier *= 1.0 + p->talents.lunar_fury_mul;
+    }
+    if ( p->talents_enabled( elarion_t::TALENT_11 ) )
     {
       base_crit += p->talents.lunarlight_affinity_salvo_cc;
     }
@@ -1417,7 +1511,7 @@ struct starfall_volley_damage_t : public elarion_attack_t
 
     reduced_aoe_targets = p->spell_const.starfall_volley_target_falloff;
 
-    if ( p->talents_enabled( elarion_t::TALENT_8 ) )
+    if ( p->talents_enabled( elarion_t::TALENT_11 ) )
     {
       lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_mul;
       lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_mul;
@@ -1496,7 +1590,7 @@ elarion_td_t::elarion_td_t( player_t* target, elarion_t* source )
 {
   debuffs.lunarlight_mark = make_buff( *this, "lunarlight_mark" )
                                 ->set_duration( source->spell_const.lunarlight_mark_duration )
-                                ->set_max_stack( 30 );
+                                ->set_max_stack( 20 );
 
   debuffs.shimmer = make_buff( *this, "shimmer" )
                         ->set_duration( source->legendary.shimmer_duration )
@@ -1844,7 +1938,8 @@ void elarion_t::create_buffs()
                               ->set_duration( talents.focused_expanse_duration );
 
   buffs.impending_heartseeker = make_buff<elarion_buff_t>( this, "impending_heartseeker" )
-                                    ->set_duration( talents.impending_heartseeker_duration );
+                                    ->set_duration( talents.impending_heartseeker_duration )
+                                    ->set_max_stack( 2 );
 
   buffs.multishot = make_buff<elarion_buff_t>( this, "multishot" )
                         ->set_max_stack( spell_const.multishot_max_stacks )
@@ -1974,6 +2069,7 @@ void elarion_t::create_options()
   add_option( opt_int( "elarion.spirit_refund_marks_applied", spell_const.spirit_refund_marks_applied ) );
 
   add_option( opt_bool( "legendary.new_spirit_legendary", legendary.new_spirit_legendary ) );
+  add_option( opt_float( "elarion.barrage_mark_aoe_chance", spell_const.barrage_mark_aoe_chance ) );
 }
 
 // elarion_t::copy_from =======================================================
@@ -2027,6 +2123,7 @@ void elarion_t::init_background_actions()
   fs_player_t::init_background_actions();
 
   actions.lunarlight_salvo        = new actions::lunarlight_salvo_t( this );
+  actions.lunarlight_salvo_aoe    = new actions::lunarlight_salvo_aoe_t( this );
   actions.starfall_volley         = new actions::starfall_volley_damage_t( this );
   actions.lunarlight_marks_spirit = new actions::lunarlight_mark_spirit_t( this );
 }
@@ -2043,17 +2140,24 @@ void actions::elarion_action_t<Base>::trigger_spirit_refund( const action_state_
 
   p()->actions.lunarlight_marks_spirit->execute_on_target( state->target );
 
-  if ( p()->legendary.starstrikers_ascent )
+  if ( p()->legendary.starstrikers_ascent && p()->rng().roll( p()->legendary.starstrikers_ascent_chance ) )
   {
-    p()->buffs.resurgent_winds->trigger();
+    //p()->buffs.resurgent_winds->trigger();
+    p()->cooldowns.heartseeker_barrage->reset( false, 1 );
+    
+    // Highwind Arrow RN
+    if ( state->action->id != 6 )
+      p()->buffs.impending_heartseeker->cancel();
+
+    p()->buffs.impending_heartseeker->trigger();
   }
 }
 
 template <typename Base>
 void actions::elarion_action_t<Base>::spend_resource_costs( const action_state_t* s )
 {
-  double focus_spent = s->action->base_costs[ RESOURCE_FOCUS ];
-  if ( focus_spent <= 0 )
+  //double focus_spent = s->action->base_costs[ RESOURCE_FOCUS ];
+  if ( ab::last_resource_cost <= 0 || ab::current_resource() != RESOURCE_FOCUS )
     return;
 
   if ( p()->rng().roll( p()->cache.mastery_value() ) )
@@ -2061,7 +2165,7 @@ void actions::elarion_action_t<Base>::spend_resource_costs( const action_state_t
     p()->sim->print_debug( "{} proc'd Spirit Refund (Chance: {:.2f}%, Sprit: {:.2f}%)", *p(),
                            p()->cache.mastery_value() * 100.0, p()->cache.mastery() * 100.0 );
 
-    trigger_spirit_refund( s, focus_spent );
+    trigger_spirit_refund( s, ab::last_resource_cost );
   }
 }
 

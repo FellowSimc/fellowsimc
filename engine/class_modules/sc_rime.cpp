@@ -327,6 +327,7 @@ public:
   rime_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE ) : fs_player_t( sim, name, r, RIME ), target_data()
   {
     create_cooldowns();
+    spirit_refund_mul = 2.0;
   }
 };
 
@@ -940,7 +941,7 @@ struct ice_comet_t : public rime_spell_t
     resource_current                  = RESOURCE_WINTER_ORB;
     base_costs[ RESOURCE_WINTER_ORB ] = 2;
 
-    spell_power_mod.direct = 4.51;
+    spell_power_mod.direct = 4.735;
     aoe                    = -1;
     reduced_aoe_targets    = 8;
 
@@ -1182,7 +1183,7 @@ struct bursting_ice_tick_t : public rime_spell_t
 
     background = true;
 
-    spell_power_mod.direct = 0.55;
+    spell_power_mod.direct = 0.578;
 
     energize_type     = action_energize::ON_CAST;
     energize_resource = RESOURCE_ANIMA;
@@ -1426,7 +1427,7 @@ struct coalescing_frost_t : public rime_spell_t
     name_str_reporting = "Coalescing Frost";
 
     aoe                 = -1;
-    reduced_aoe_targets = 3;
+    reduced_aoe_targets = 5;
 
     background = true;
 

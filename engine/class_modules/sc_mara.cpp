@@ -1308,10 +1308,11 @@ struct queens_fang_t : public mara_attack_t
 
     m *= 1 + p()->buffs.assassins_guile->check_value();
 
-    m *= 1 + p()->buffs.feed_the_queen->check_stack_value();
-
     if ( secondary_trigger_type != secondary_trigger::TALENT_CLONE )
+    {
       m *= 1 + p()->buffs.malevolence_aa_buffs_qf->check_value();
+      m *= 1 + p()->buffs.feed_the_queen->check_stack_value();
+    }
 
     return m;
   }
@@ -1364,9 +1365,8 @@ struct queens_fang_t : public mara_attack_t
     if ( !is_secondary_action() )
     {
       p()->buffs.deadly_scheme->expire();
+      p()->buffs.feed_the_queen->expire();
     }
-
-    p()->buffs.feed_the_queen->expire();
 
     handle_vexiras_venom( state );
   }
@@ -1391,8 +1391,8 @@ struct hemorrhaging_strike_t : public mara_attack_t
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 20;
 
-    if ( p->talents_enabled(mara_t::EFFICIENT_KILLER ))
-      base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;
+    /*if ( p->talents_enabled( mara_t::EFFICIENT_KILLER ) )
+      base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;*/
 
     if ( p->legendary.from_the_shadows )
       add_child( p->actions.queens_fang_fts_clone );
@@ -2048,14 +2048,14 @@ struct arachnid_assault_t : public mara_attack_t
     aoe                 = -1;
     reduced_aoe_targets = 8;
 
-    school                  = SCHOOL_PHYSICAL;
-    attack_power_mod.direct = 0.858;
+    school                             = SCHOOL_PHYSICAL;
+    attack_power_mod.direct            = 0.858;
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 45;
 
-    if ( p->talents_enabled( mara_t::EFFICIENT_KILLER ) )
-      base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;
+    /*if ( p->talents_enabled( mara_t::EFFICIENT_KILLER ) )
+      base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;*/
 
     if ( st == secondary_trigger::NONE && p->legendary.spirit_procs_clones )
     {
@@ -2072,6 +2072,9 @@ struct arachnid_assault_t : public mara_attack_t
 
     m *= 1 + p()->buffs.assassins_guile->check_value();
 
+    if ( secondary_trigger_type != secondary_trigger::TALENT_CLONE )
+      m *= 1 + p()->buffs.malevolence_qf_buffs_aa->check_value();
+
     return m;
   }
 
@@ -2082,9 +2085,6 @@ struct arachnid_assault_t : public mara_attack_t
     if ( p()->talents_enabled( mara_t::ARACHNID_ONSLAUGHT ) &&
          p()->get_target_data( t )->dots.hemorrhaging_strike->is_ticking() )
       m *= p()->talents.arachnid_onslaught_multiplier;
-
-    if ( secondary_trigger_type != secondary_trigger::TALENT_CLONE )
-      m *= 1 + p()->buffs.malevolence_qf_buffs_aa->check_value();
 
     return m;
   }
@@ -2144,7 +2144,6 @@ struct arachnid_assault_t : public mara_attack_t
 };
 
 struct volatile_poison_state_t : public mara_action_state_t
-
 {
 
   timespan_t dot_duration;

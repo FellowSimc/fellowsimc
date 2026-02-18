@@ -12,7 +12,7 @@ single_actor_batch=1
 desired_targets=1
 
 
-# apl/chuey_dungeon.simc
+apl/chuey_dungeon.simc
 
 # apl/dungeon.simc
 
@@ -30,7 +30,7 @@ desired_targets=1
 # dps_plot_step=300
 # dps_plot_positive=1
 
-elarion="Elarion"
+elarion="Starstriker Mark"
 level=80
 
 # initial_resource=spirit=100
@@ -44,69 +44,373 @@ gear_agility=1442
 
 weapon=voidbringers_touch
 
-weapon_trait.emerald_judgement=4
+# weapon_trait.emerald_judgement=4
 weapon_trait.kindling=4
 weapon_trait.willful_momentum=4
 
 
-gear_haste_rating=1250
-gear_crit_rating=1065
-gear_versatility_rating=1400
-gear_mastery_rating=800
-# legendary.starstrikers_ascent=1
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=1
+# legendary.shimmer=1
 
-legendary.new_spirit_legendary=1
+# legendary.new_spirit_legendary=1
 
-# talents=focused_expanse:1/final_crescendo:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
 
-gems.emerald_power=1296
-gems.ruby_power=1296
+# gems.emerald_power=1296
+# gems.ruby_power=1296
+# gems.amethyst_power=2664
 gems.amethyst_power=2664
+gems.ruby_power=120
+gems.diamond_power=2304
+weapon_trait.diamond_strike=4
 
-talents=repeating_stars:1/final_crescendo:1/lunar_fury:1/skyward_munitions:1/fervent_supremacy:1/last_lights:1/resurgent_winds:1
-# /lunar_fury:1/lunarlight_affinity:1
-
-elarion.spirit_refund_marks_applied=5
-elarion.spirit_refund_marks_targets=1
-
-copy="Less Spirit"
-gear_haste_rating=1450
-gear_crit_rating=1265
-gear_versatility_rating=1600
-gear_mastery_rating=200
-
-copy="Slightly More Spirit"
-gear_haste_rating=1150
-gear_crit_rating=965
-gear_versatility_rating=1300
-gear_mastery_rating=1100
-
-copy="More Spirit"
+# copy="Starstriker Mark"
+talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/impending_heartseeker:1/last_lights:1
 gear_haste_rating=1050
 gear_crit_rating=865
 gear_versatility_rating=1200
 gear_mastery_rating=1400
 
-copy="Insane Spirit"
-gear_haste_rating=1050
-gear_crit_rating=665
-gear_versatility_rating=800
-gear_mastery_rating=2000
+# less 
+# gear_haste_rating=1150
+# gear_crit_rating=965
+# gear_versatility_rating=1300
+# gear_mastery_rating=1100
 
-copy="Insane Spirit exp"
-gear_haste_rating=1050
-gear_crit_rating=665
-gear_versatility_rating=1000
-gear_mastery_rating=1800
+legendary.starstrikers_ascent=1
+legendary.shimmer=0
 
-copy="Insane Spirit exp2"
-gear_haste_rating=1050
-gear_crit_rating=465
-gear_versatility_rating=1200
-gear_mastery_rating=1800
+# copy="StarStriker Mark no Fervent","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/skyward_munitions:1/lunarlight_affinity:1/lethal_shots:1/lunar_fury:1/resurgent_winds:1/last_lights:1
+# legendary.starstrikers_ascent=1
+# legendary.shimmer=0
 
-copy="Insane Spirit exp3"
-gear_haste_rating=1050
-gear_crit_rating=465
-gear_versatility_rating=1400
-gear_mastery_rating=1600
+# copy="StarStriker Mark no Fervent Impending","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/skyward_munitions:1/lunarlight_affinity:1/lethal_shots:1/lunar_fury:1/impending_heartseeker:1/last_lights:1
+# legendary.starstrikers_ascent=1
+# legendary.shimmer=0
+
+# copy="StarStriker Mark no Fervent Impending 1 mark talent","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/skyward_munitions:1/fusillade:1/lethal_shots:1/lunar_fury:1/impending_heartseeker:1/last_lights:1
+# legendary.starstrikers_ascent=1
+# legendary.shimmer=0
+
+# copy="StarStriker Mark No Fervent Impending Fusi","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/skyward_munitions:1/lunarlight_affinity:1/fusillade:1/lunar_fury:1/impending_heartseeker:1/last_lights:1
+# legendary.starstrikers_ascent=1
+# legendary.shimmer=0
+
+# copy="Shimmer Mark No Fervent Impending Fusi","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/skyward_munitions:1/lunarlight_affinity:1/fusillade:1/lunar_fury:1/impending_heartseeker:1/last_lights:1
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="StarStriker Mark Impending Resurgent","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/skyward_munitions:1/lunarlight_affinity:1/lunar_fury:1/impending_heartseeker:1/resurgent_winds:1
+# legendary.starstrikers_ascent=1
+# legendary.shimmer=0
+
+# copy="Shimmer Mark Impending Resurgent","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/skyward_munitions:1/lunarlight_affinity:1/lunar_fury:1/impending_heartseeker:1/resurgent_winds:1
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Starstriker Barrage Impending Fervent","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/impending_heartseeker:1/last_lights:1
+# legendary.starstrikers_ascent=1
+# legendary.shimmer=0
+
+# copy="Shimmer Mark Impending Resurgent Fusi","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/skyward_munitions:1/fusillade:1/lunar_fury:1/impending_heartseeker:1/resurgent_winds:1
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Shimmer Mark Impending Resurgent Fusi Low Spirit","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/skyward_munitions:1/fusillade:1/lunar_fury:1/impending_heartseeker:1/resurgent_winds:1
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+# gear_haste_rating=1350
+# gear_crit_rating=1165
+# gear_versatility_rating=1500
+# gear_mastery_rating=500
+
+# copy="Shimmer Mark Impending Resurgent Fusi Mid Spirit","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/skyward_munitions:1/fusillade:1/lunar_fury:1/impending_heartseeker:1/resurgent_winds:1
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+# gear_haste_rating=1250
+# gear_crit_rating=1065
+# gear_versatility_rating=1400
+# gear_mastery_rating=800
+
+# copy="StarStriker Mark Axel","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/skyward_munitions:1/repeating_stars:1/lunarlight_affinity:1/lethal_shots:1/lunar_fury:1/last_lights:1/skylit_grace:1
+# legendary.starstrikers_ascent=1
+# legendary.shimmer=0
+
+# copy="StarStriker Mark Axel -LL+FC","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/skyward_munitions:1/repeating_stars:1/lunarlight_affinity:1/lethal_shots:1/lunar_fury:1/final_crescendo:1
+# legendary.starstrikers_ascent=1
+# legendary.shimmer=0
+
+# copy="Starstriker No Mark Talents","Starstriker Mark"
+# talents=focused_expanse:1/final_crescendo:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+# gear_haste_rating=1050
+# gear_crit_rating=865
+# gear_versatility_rating=1200
+# gear_mastery_rating=1400
+# legendary.starstrikers_ascent=1
+# legendary.shimmer=0
+
+copy="Shimmer HWA LL LA","Starstriker Mark"
+talents=focused_expanse:1/final_crescendo:1/skyward_munitions:1/last_lights:1/lunarlight_affinity:1/fervent_supremacy:1/resurgent_winds:1
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+
+copy="Shimmer HWA Pierc","Starstriker Mark"
+talents=focused_expanse:1/final_crescendo:1/piercing_seekers:1/skyward_munitions:1/fervent_supremacy:1/resurgent_winds:1
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+
+copy="Shimmer HWA LF","Starstriker Mark"
+talents=focused_expanse:1/final_crescendo:1/skyward_munitions:1/lunar_fury:1/fervent_supremacy:1/resurgent_winds:1
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+
+copy="Shimmer Full HWA FE","Starstriker Mark"
+talents=focused_expanse:1/final_crescendo:1/skyward_munitions:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+
+copy="Shimmer Full HWA LL LA","Starstriker Mark"
+talents=last_lights:1/lunarlight_affinity:1/final_crescendo:1/skyward_munitions:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+
+copy="Shimmer Full HWA Piercing","Starstriker Mark"
+talents=piercing_seekers:1/final_crescendo:1/skyward_munitions:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+
+copy="Shimmer Full HWA Piercing LF LL","Starstriker Mark"
+talents=piercing_seekers:1/final_crescendo:1/skyward_munitions:1/lunar_fury:1/lethal_shots:1/resurgent_winds:1/last_lights:1
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+
+copy="Shimmer Full HWA Piercing LF LA","Starstriker Mark"
+talents=piercing_seekers:1/final_crescendo:1/skyward_munitions:1/lunar_fury:1/lethal_shots:1/resurgent_winds:1/lunarlight_affinity:1
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+# copy="Shimmer Marks LL Low Spirit","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+# gear_haste_rating=1350
+# gear_crit_rating=1165
+# gear_versatility_rating=1500
+# gear_mastery_rating=500
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Shimmer Marks SM Low Spirit","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/resurgent_winds:1/skystriders_supremacy:1
+# gear_haste_rating=1350
+# gear_crit_rating=1165
+# gear_versatility_rating=1500
+# gear_mastery_rating=500
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Shimmer Marks LL Mid Spirit","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+# gear_haste_rating=1150
+# gear_crit_rating=965
+# gear_versatility_rating=1200
+# gear_mastery_rating=1100
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Shimmer Marks SM Mid Spirit","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/resurgent_winds:1/skystriders_supremacy:1
+# gear_haste_rating=1150
+# gear_crit_rating=965
+# gear_versatility_rating=1200
+# gear_mastery_rating=1100
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Shimmer Marks LL Lowish Spirit","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+# gear_haste_rating=1250
+# gear_crit_rating=1065
+# gear_versatility_rating=1300
+# gear_mastery_rating=800
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Shimmer Marks SM Lowish Spirit","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/resurgent_winds:1/skystriders_supremacy:1
+# gear_haste_rating=1250
+# gear_crit_rating=1065
+# gear_versatility_rating=1300
+# gear_mastery_rating=800
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Shimmer Marks LL Insane Spirit","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+# gear_haste_rating=1050
+# gear_crit_rating=865
+# gear_versatility_rating=1100
+# gear_mastery_rating=1400
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Shimmer Marks SM Insane Spirit","Starstriker Mark"
+# talents=final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/resurgent_winds:1/skystriders_supremacy:1
+# gear_haste_rating=1050
+# gear_crit_rating=865
+# gear_versatility_rating=1100
+# gear_mastery_rating=1400
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+# copy="Barrage Marks Shimmer","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/impending_heartseeker:1/last_lights:1
+# gear_haste_rating=1350
+# gear_crit_rating=1165
+# gear_versatility_rating=1500
+# gear_mastery_rating=500
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Barrage Focused SM Shimmer","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/focused_expanse:1/skyward_munitions:1/fervent_supremacy:1/impending_heartseeker:1/last_lights:1
+# gear_haste_rating=1350
+# gear_crit_rating=1165
+# gear_versatility_rating=1500
+# gear_mastery_rating=500
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+
+# copy="Barrage SM FC Shimmer","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/fervent_supremacy:1/impending_heartseeker:1/last_lights:1/final_crescendo:1/skyward_munitions:1
+# gear_haste_rating=1350
+# gear_crit_rating=1165
+# gear_versatility_rating=1500
+# gear_mastery_rating=500
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+
+# copy="Barrage Marks Starstriker","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/impending_heartseeker:1/last_lights:1
+# gear_haste_rating=1350
+# gear_crit_rating=1165
+# gear_versatility_rating=1500
+# gear_mastery_rating=500
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+
+# copy="Barrage Marks Starstriker Spirit","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/impending_heartseeker:1/last_lights:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+
+# copy="Barrage Marks Starstriker Spirit repeat sm","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/repeating_stars:1/last_lights:1/skyward_munitions:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+
+# copy="Barrage Marks Starstriker Spirit SM","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/impending_heartseeker:1/skyward_munitions:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+
+# copy="Barrage Marks Starstriker Spirit SM no Fervent","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/final_crescendo:1/impending_heartseeker:1/skyward_munitions:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+
+# copy="Repeating Starstriker Spirit","Starstriker Mark"
+# gear_haste_rating=1050
+# gear_crit_rating=865
+# gear_versatility_rating=1200
+# gear_mastery_rating=1400
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+# talents=repeating_stars:1/final_crescendo:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+
+# copy="Repeating Starstriker Spirit SM LF","Starstriker Mark"
+# gear_haste_rating=1050
+# gear_crit_rating=865
+# gear_versatility_rating=1200
+# gear_mastery_rating=1400
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=1
+# talents=repeating_stars:1/final_crescendo:1/skyward_munitions:1/lunar_fury:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+
+# copy="Repeating Shimmer","Starstriker Mark"
+# gear_haste_rating=1350
+# gear_crit_rating=1165
+# gear_versatility_rating=1500
+# gear_mastery_rating=500
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+# talents=repeating_stars:1/final_crescendo:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1/last_lights:1
+
+# copy="Insane Spirit"
+# gear_haste_rating=1050
+# gear_crit_rating=665
+# gear_versatility_rating=800
+# gear_mastery_rating=2000
+
+# copy="Insane Spirit exp"
+# gear_haste_rating=1050
+# gear_crit_rating=665
+# gear_versatility_rating=1000
+# gear_mastery_rating=1800
+
+# copy="Insane Spirit exp2"
+# gear_haste_rating=1050
+# gear_crit_rating=465
+# gear_versatility_rating=1200
+# gear_mastery_rating=1800
+
+# copy="Insane Spirit exp3"
+# gear_haste_rating=1050
+# gear_crit_rating=465
+# gear_versatility_rating=1400
+# gear_mastery_rating=1600

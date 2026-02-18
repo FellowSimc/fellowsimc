@@ -136,9 +136,9 @@ public:
     timespan_t wildfire_cooldown = 45_s;
 
     double infernal_wave_cinders = 40;
-    double infernal_wave_coeff   = 1.55*1.05;
+    double infernal_wave_coeff   = 1.55 * 0.95;
 
-    double fire_frog_coeff             = 0.77 * 1.05;
+    double fire_frog_coeff             = 0.77 * 0.95;
     double fire_frog_dot_conversion    = 1.0;
     timespan_t fire_frog_dot_duration  = 12_s;
     timespan_t fire_frog_dot_period    = 3_s;
@@ -150,12 +150,12 @@ public:
     timespan_t pyromania_cooldown = 90_s;
     unsigned pyromania_targets    = 3;
 
-    double searing_blaze_tick_coeff      = 0.717 * 1.05;
+    double searing_blaze_tick_coeff      = 0.717 * 0.95;
     timespan_t searing_blaze_duration    = 24_s;
     timespan_t searing_blaze_period      = 2_s;
     double searing_blaze_embers_per_tick = 1.0;  // This is currently reduced by haste.
 
-    double engulfing_flames_tick_coeff      = 1.82 * 1.05;
+    double engulfing_flames_tick_coeff      = 1.82 * 0.95;
     timespan_t engulfing_flames_duration    = 9_s;
     timespan_t engulfing_flames_period      = 1.5_s;
     double engulfing_flames_embers_per_tick = 5.0;  // This is currently reduced by haste.
@@ -169,7 +169,7 @@ public:
     timespan_t detonate_between_hit_delay = 0.3_s;
     timespan_t detonate_sample_duration   = 2.5_s;
 
-    double fire_ball_coeff            = 5.4 * 1.2 * 1.05;
+    double fire_ball_coeff            = 5.4 * 1.2 * 0.95;
     timespan_t fire_ball_cooldown     = 30_s;
     double fire_ball_falloff          = 5;
     double fire_ball_damage_to_dot    = 0.2;
@@ -178,19 +178,19 @@ public:
     double fire_ball_embers_per_tick  = 2.0;  // This is **NOT** currently reduced by haste.
     double fire_ball_embers_chance    = 1.0;
 
-    double incinerate_coeff             = 5.914 * 0.6 * 1.05;
+    double incinerate_coeff             = 5.914 * 0.6 * 0.95;
     double incinerate_falloff           = 8;
     timespan_t incinerate_dot_extend    = 1.5_s;
     timespan_t incinerate_duration      = 2.5_s;
     timespan_t incinerate_period        = 0.5_s;
     timespan_t incinerate_dot_period    = 3_s;
     timespan_t incinerate_dot_duration  = 12_s;
-    double incinerate_dot_coeff         = 0.39;
+    double incinerate_dot_coeff         = 0.39 * 0.95;
     double incinerate_dot_amp_per_stack = 0.3;
 
     timespan_t apocalypse_cast_time = 3_s;
     timespan_t apocalypse_cooldown  = 60_s;
-    double apocalypse_coeff         = 23.19 * 1.05;
+    double apocalypse_coeff         = 23.19 * 0.95;
     double apocalypse_falloff       = 1;
 
   } spell_const;
@@ -330,15 +330,14 @@ public:
 
     double firestarter_crit_chance = 0.2;
 
-    timespan_t ouroboros_cdr      = 0.15_s;
-    timespan_t ouroboros_cdr_crit = 0.3_s;
+    timespan_t ouroboros_cdr      = 0.1_s;
 
     double crackling_inferno_crit_chance      = 0.2;
     double crackling_inferno_dot_fraction     = 0.6;
     timespan_t crackling_inferno_dot_duration = 24_s;
     timespan_t crackling_inferno_dot_period   = 3_s;
 
-    timespan_t rolling_flames_cdr               = 0.4_s;
+    timespan_t rolling_flames_cdr               = 0.25_s;
     timespan_t rolling_flames_infernal_wave_cdr = 1000_ms;
 
     double pyrophibian_frenzy_chance = 0.08;
@@ -375,7 +374,7 @@ public:
     timespan_t brimstone_cataclysm_cdr_cap     = 30_s;
 
     bool devouring_flame       = false;
-    double devouring_flame_amp = 0.08;
+    double devouring_flame_amp = 0.06;
 
     bool explosivo                    = false;
     double explosivo_boss_bonus       = 1.5;

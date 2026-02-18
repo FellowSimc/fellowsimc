@@ -330,7 +330,7 @@ public:
     double hemotoxin_damage_coefficient   = 0.2;
     timespan_t hemotoxin_duration         = 9_s;
     timespan_t hemotoxin_period           = 1.5_s;
-    double hemotoxin_conversion_rate      = 0.60;
+    double hemotoxin_conversion_rate      = 0.50;
     double hemotoxin_aoe_damage_reduction = 0.8;
     double hemotoxin_aoe_falloff          = 1.0;
     bool hemotoxin_double_dip_stats       = false;
@@ -364,7 +364,7 @@ public:
     timespan_t drenched_in_blood_duration = 8_s;
 
     bool from_the_shadows              = false;
-    double from_the_shadows_chance     = 0.16;
+    double from_the_shadows_chance     = 0.15;
     int from_the_shadows_combo_points  = 6;
     double from_the_shadows_bleed_rate = 0.15;
 
@@ -1281,7 +1281,7 @@ struct queens_fang_t : public mara_attack_t
     name_str_reporting = "Queens Fang";
 
     school                             = SCHOOL_PHYSICAL;
-    attack_power_mod.direct            = 2.292;
+    attack_power_mod.direct            = 2.292 * 1.1;
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 40;

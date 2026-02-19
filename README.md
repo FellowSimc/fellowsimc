@@ -24,7 +24,7 @@ A simple graphical interface is included with the tool, allowing players to down
 See [Contributing](CONTRIBUTING.md).
 
 ## Original Source
-SimulationCraft (https://github.com/simulationcraft/simc)
+SimulationCraft (https://github.com/simulationcraft/simc). GNU GPL v3 License (see License for more information)
 
 ## External Libraries
 

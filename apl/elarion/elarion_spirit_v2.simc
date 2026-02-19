@@ -1,0 +1,368 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=190
+# max_time=60
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0.1
+single_actor_batch=1
+desired_targets=1
+
+
+apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_intellect=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+elarion="Starstriker Mark"
+level=80
+
+# initial_resource=spirit=100
+
+apl/elarion/elarion_apl.simc
+
+gear_agility=1442
+
+
+weapon=voidbringers_touch
+
+# weapon_trait.emerald_judgement=4
+weapon_trait.kindling=4
+weapon_trait.willful_momentum=4
+
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=1
+# legendary.shimmer=1
+
+# legendary.new_spirit_legendary=1
+
+
+# gems.emerald_power=1296
+# gems.ruby_power=1296
+# gems.amethyst_power=2664
+gems.amethyst_power=2664
+gems.ruby_power=120
+gems.diamond_power=2304
+weapon_trait.diamond_strike=4
+
+# copy="Starstriker Mark"
+talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/impending_heartseeker:1/last_lights:1
+gear_haste_rating=1250
+gear_crit_rating=865
+gear_versatility_rating=800
+gear_mastery_rating=1600
+
+# less 
+# gear_haste_rating=1150
+# gear_crit_rating=965
+# gear_versatility_rating=1300
+# gear_mastery_rating=1100
+
+legendary.starstrikers_ascent=1
+legendary.shimmer=0
+
+copy="Shimmer Full HWA LL LA","Starstriker Mark"
+talents=last_lights:1/lunarlight_affinity:1/final_crescendo:1/skyward_munitions:1/lethal_shots:1/fervent_supremacy:1/resurgent_winds:1
+gear_haste_rating=1350
+gear_crit_rating=1165
+gear_versatility_rating=1500
+gear_mastery_rating=500
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+
+# copy="Cooking Sapphires","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+
+copy="Cooking Sapphires VoG","Starstriker Mark"
+gems.amethyst_power=0
+gems.sapphire_power=2664
+gems.ruby_power=120
+gems.diamond_power=2304
+weapon_trait.diamond_strike=0
+weapon_trait.visions_of_grandeur=4
+
+# copy="Cooking Sapphires VoG NF","Starstriker Mark"
+# weapon=natures_fury
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=0
+# weapon_trait.visions_of_grandeur=4
+
+copy="Cooking Sapphires VoG Chrn","Starstriker Mark"
+weapon=chronoshift
+gems.amethyst_power=0
+gems.sapphire_power=2664
+gems.ruby_power=120
+gems.diamond_power=2304
+weapon_trait.diamond_strike=0
+weapon_trait.visions_of_grandeur=4
+
+copy="Cooking Sapphires VoG Chrn OVercap Bael","Starstriker Mark"
+weapon=chronoshift
+gems.amethyst_power=0
+gems.sapphire_power=3402
+gems.ruby_power=1206
+gems.diamond_power=0
+weapon_trait.diamond_strike=0
+weapon_trait.visions_of_grandeur=4
+sets.torment_of_baelaurum=1
+copy="Cooking Sapphires VoG Chrn Overcap drak","Starstriker Mark"
+weapon=chronoshift
+gems.amethyst_power=0
+gems.sapphire_power=3402
+gems.ruby_power=1206
+gems.diamond_power=0
+weapon_trait.diamond_strike=0
+weapon_trait.visions_of_grandeur=4
+sets.drakheims_absolution=1
+copy="Cooking Sapphires VoG Chrn Overcap Spirit","Starstriker Mark"
+weapon=chronoshift
+gems.amethyst_power=0
+gems.sapphire_power=3402
+gems.ruby_power=1206
+gems.diamond_power=0
+weapon_trait.diamond_strike=0
+weapon_trait.visions_of_grandeur=4
+sets.deaths_grasp=1
+
+copy="Cooking Sapphires VoG Chrn Overcap Spirit Drak","Starstriker Mark"
+weapon=chronoshift
+gems.amethyst_power=0
+gems.sapphire_power=2904
+gems.ruby_power=0
+gems.diamond_power=720
+weapon_trait.diamond_strike=0
+weapon_trait.visions_of_grandeur=4
+sets.deaths_grasp=1
+sets.drakheims_absolution=1
+
+copy="Cooking Sapphires VoG Chrn 10s6R6A","Starstriker Mark"
+weapon=chronoshift
+gems.diamond_power=0
+gems.amethyst_power=1206
+gems.sapphire_power=2754
+gems.ruby_power=1212
+weapon_trait.diamond_strike=0
+weapon_trait.visions_of_grandeur=4
+
+copy="Cooking Sapphires VoG Chrn 10s1r over","Starstriker Mark"
+weapon=chronoshift
+gems.diamond_power=0
+gems.amethyst_power=0
+gems.sapphire_power=5094
+gems.ruby_power=162
+weapon_trait.diamond_strike=0
+weapon_trait.visions_of_grandeur=4
+
+copy="Cooking Sapphires VoG Chrn 10s1r over spirit","Starstriker Mark"
+weapon=chronoshift
+gems.diamond_power=0
+gems.amethyst_power=0
+gems.sapphire_power=4362
+gems.ruby_power=162
+weapon_trait.diamond_strike=0
+weapon_trait.visions_of_grandeur=4
+sets.deaths_grasp=1
+
+
+# copy="Cooking Sapphires VoG Chrn Psychosis","Starstriker Mark"
+# weapon=chronoshift
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=0
+# weapon_trait.visions_of_grandeur=4
+# talents=fusillade:1/final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lethal_shots:1/lunar_fury:1/resurgent_winds:1
+
+# copy="Cooking Sapphires VoG Chrn Psychosis Impending","Starstriker Mark"
+# weapon=chronoshift
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=0
+# weapon_trait.visions_of_grandeur=4
+# talents=fusillade:1/final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lethal_shots:1/lunar_fury:1/impending_heartseeker:1
+
+# copy="Cooking Sapphires VoG Chrn Extreme Psychosis","Starstriker Mark"
+# weapon=chronoshift
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=0
+# weapon_trait.visions_of_grandeur=4
+# talents=fusillade:1/final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lethal_shots:1/lunar_fury:1/last_lights:1/skyward_munitions:1/skylit_grace:1
+
+
+copy="Cooking Sapphires VoG Chrn Sensible Enough","Starstriker Mark"
+weapon=chronoshift
+gems.amethyst_power=0
+gems.sapphire_power=2664
+gems.ruby_power=120
+gems.diamond_power=2304
+weapon_trait.diamond_strike=0
+weapon_trait.visions_of_grandeur=4
+talents=fusillade:1/final_crescendo:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/impending_heartseeker:1/skyward_munitions:1/last_lights:1
+
+# copy="Cooking Sapphires VoG Chrn Sensible Enough v2","Starstriker Mark"
+# weapon=chronoshift
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=0
+# weapon_trait.visions_of_grandeur=4
+# talents=fusillade:1/lethal_shots:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/impending_heartseeker:1/skyward_munitions:1/last_lights:1
+# copy="Cooking Sapphires VoG Chrn Sensible Enough v3","Starstriker Mark"
+# weapon=chronoshift
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=0
+# weapon_trait.visions_of_grandeur=4
+# talents=fusillade:1/lethal_shots:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/impending_heartseeker:1/skyward_munitions:1/last_lights:1
+
+# copy="Cooking Sapphires VoG Chrn fe","Starstriker Mark"
+# weapon=chronoshift
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=0
+# weapon_trait.visions_of_grandeur=4
+# talents=fusillade:1/focused_expanse:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/impending_heartseeker:1/skyward_munitions:1/last_lights:1
+
+# copy="Cooking Sapphires VoG Chrn repet","Starstriker Mark"
+# weapon=chronoshift
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=0
+# weapon_trait.visions_of_grandeur=4
+# talents=fusillade:1/repeating_stars:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/impending_heartseeker:1/skyward_munitions:1/last_lights:1
+
+# copy="Cooking Sapphires Absurd Spirit","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+
+# gear_haste_rating=1450
+# gear_crit_rating=465
+# gear_versatility_rating=400
+# gear_mastery_rating=2200
+
+# copy="RW over FS","Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/resurgent_winds:1/impending_heartseeker:1/last_lights:1
+
+# copy="Sapphire10","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.sapphire_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=4
+
+# copy="Sapph10Top9D1","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.ruby_power=0
+# gems.diamond_power=0
+
+# gems.sapphire_power=2664
+# gems.topaz_power=2304
+# gems.diamond_power=120
+# weapon_trait.diamond_strike=4
+    
+# copy="Sapph10Top9R1","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.ruby_power=0
+# gems.diamond_power=0
+
+# gems.sapphire_power=2664
+# gems.topaz_power=2304
+# gems.ruby_power=120
+# weapon_trait.diamond_strike=4
+
+# copy="Sapph10R6D6","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.ruby_power=0
+# gems.diamond_power=0
+
+# gems.sapphire_power=2664
+# gems.diamond_power=1200
+# gems.ruby_power=1200
+# weapon_trait.diamond_strike=4
+
+# copy="Sapph10R6A6","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.ruby_power=0
+# gems.diamond_power=0
+
+# gems.sapphire_power=2664
+# gems.amethyst_power=1200
+# gems.ruby_power=1200
+# weapon_trait.diamond_strike=4
+
+# copy="Sapph10D6A6","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.ruby_power=0
+# gems.diamond_power=0
+
+# gems.sapphire_power=2664
+# gems.amethyst_power=1200
+# gems.diamond_power=1200
+# weapon_trait.diamond_strike=4
+
+
+# copy="Crazy gems","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.ruby_power=0
+# gems.diamond_power=0
+
+# gems.sapphire_power=1200
+# gems.ruby_power=1200
+# gems.emerald_power=1200
+# gems.amethyst_power=1200
+# weapon_trait.diamond_strike=0
+# weapon_trait.emerald_judgement=4
+
+# copy="Emmy10 Dia","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.emerald_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=4
+# copy="Emmy10 emmy","Starstriker Mark"
+# gems.amethyst_power=0
+# gems.emerald_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+# weapon_trait.diamond_strike=0
+# weapon_trait.emerald_judgement=4

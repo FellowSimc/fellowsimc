@@ -37,8 +37,6 @@ level=80
 
 apl/elarion/elarion_apl.simc
 
-
-
 gear_agility=1442
 
 
@@ -47,7 +45,6 @@ weapon=voidbringers_touch
 # weapon_trait.emerald_judgement=4
 weapon_trait.kindling=4
 weapon_trait.willful_momentum=4
-
 
 gear_haste_rating=1350
 gear_crit_rating=1165

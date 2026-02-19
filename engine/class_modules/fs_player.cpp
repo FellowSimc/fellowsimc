@@ -527,6 +527,16 @@ struct natures_fury_t : fs_weapon_action_t<spell_t>
 
     parse_options( options );
   }
+
+  double composite_da_multiplier(const action_state_t* s) const override
+  {
+    auto m = base_t::composite_da_multiplier( s );
+
+    if ( s->chain_target == 0 )
+      m *= 2;
+
+    return m;
+  }
 };
 
 struct earthbreaker_t : fs_weapon_action_t<spell_t>

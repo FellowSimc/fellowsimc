@@ -608,119 +608,119 @@ legendary.explosivo=1
 talents=slow_burn:1/great_balls_of_fire:1/crackling_inferno:1/flare_up:1/ouroboros:1/undying_flame:1/reign_of_fire:1/intensifying_inferno:1
 
 
-# rime="Rime"
-# level=80
+rime="Rime"
+level=80
 
-# apl/rime/rime.simc
+apl/rime/rime.simc
 
-# # scale_crit_rating=590
-# # scale_haste_rating=590
-# # scale_mastery_rating=590
-# # scale_versatility_rating=590
-# # positive_scale_delta=1
-# # calculate_scale_factors=1
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
 
-# gear_intellect=1442
+gear_intellect=1442
 
-# gear_haste_rating=2317
-# gear_crit_rating=1053
-# gear_versatility_rating=1145
-# gear_mastery_rating=0
-
-
-# gems.emerald_power=2640
-# gems.diamond_power=2280
-# gems.ruby_power=120
-
-# weapon=voidbringers_touch
-# weapon_trait.diamond_strike=4
-# # weapon_trait.amethyst_splinters=4
-# weapon_trait.kindling=4
-# weapon_trait.inspired_allegiance=4
-
-# # copy="CB Beam Skandis Wis","Rime"
-# talent.burstbolter=1
-# talent.winters_embrace=1
-# talent.supreme_torrent=1
-# talent.coalescing_frost=1
-# talent.cascading_blitz=1
-# talent.soulfrost_torrent=1
-# talent.wisdom_of_the_north=1
-# legendary.skandis_decree=1
-
-# copy="CB Beam Skandis BC","Rime"
-# talent.burstbolter=0
-# talent.winters_embrace=0
-# talent.supreme_torrent=0
-# talent.coalescing_frost=0
-# talent.cascading_blitz=0
-# talent.soulfrost_torrent=0
-# talent.wisdom_of_the_north=0
-# legendary.skandis_decree=0
-
-# talent.burstbolter=1
-# talent.winters_embrace=1
-# talent.supreme_torrent=1
-# talent.coalescing_frost=1
-# talent.cascading_blitz=1
-# talent.soulfrost_torrent=1
-# talent.biting_cold=1
-# legendary.skandis_decree=1
+gear_haste_rating=2317
+gear_crit_rating=1053
+gear_versatility_rating=1145
+gear_mastery_rating=0
 
 
-# copy="CB Beam FWS BC","Rime"
-# talent.burstbolter=0
-# talent.winters_embrace=0
-# talent.supreme_torrent=0
-# talent.coalescing_frost=0
-# talent.cascading_blitz=0
-# talent.soulfrost_torrent=0
-# talent.wisdom_of_the_north=0
-# legendary.skandis_decree=0
+gems.emerald_power=2640
+gems.diamond_power=2280
+gems.ruby_power=120
 
-# talent.burstbolter=1
-# talent.winters_embrace=1
-# talent.supreme_torrent=1
-# talent.coalescing_frost=1
-# talent.cascading_blitz=1
-# talent.soulfrost_torrent=1
-# legendary.frostwyrms_spite=1
-# talent.biting_cold=1
+weapon=voidbringers_touch
+weapon_trait.diamond_strike=4
+# weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
 
-# copy="CB Beam Skandis GGB","Rime"
-# talent.burstbolter=0
-# talent.winters_embrace=0
-# talent.supreme_torrent=0
-# talent.coalescing_frost=0
-# talent.cascading_blitz=0
-# talent.soulfrost_torrent=0
-# talent.wisdom_of_the_north=0
-# legendary.skandis_decree=0
+# copy="CB Beam Skandis Wis","Rime"
+talent.burstbolter=1
+talent.winters_embrace=1
+talent.supreme_torrent=1
+talent.coalescing_frost=1
+talent.cascading_blitz=1
+talent.soulfrost_torrent=1
+talent.wisdom_of_the_north=1
+legendary.skandis_decree=1
 
-# talent.burstbolter=1
-# talent.winters_embrace=1
-# talent.supreme_torrent=1
-# talent.coalescing_frost=1
-# talent.cascading_blitz=1
-# talent.soulfrost_torrent=1
-# legendary.skandis_decree=1
-# talent.greater_glacial_blast=1
+copy="CB Beam Skandis BC","Rime"
+talent.burstbolter=0
+talent.winters_embrace=0
+talent.supreme_torrent=0
+talent.coalescing_frost=0
+talent.cascading_blitz=0
+talent.soulfrost_torrent=0
+talent.wisdom_of_the_north=0
+legendary.skandis_decree=0
 
-# copy="CB Spender Wisd","Rime"
-# talent.burstbolter=0
-# talent.winters_embrace=0
-# talent.supreme_torrent=0
-# talent.coalescing_frost=0
-# talent.cascading_blitz=0
-# talent.soulfrost_torrent=0
-# talent.wisdom_of_the_north=0
-# legendary.skandis_decree=0
+talent.burstbolter=1
+talent.winters_embrace=1
+talent.supreme_torrent=1
+talent.coalescing_frost=1
+talent.cascading_blitz=1
+talent.soulfrost_torrent=1
+talent.biting_cold=1
+legendary.skandis_decree=1
 
-# talent.winters_embrace=1
-# legendary.skandis_decree=1
-# talent.burstbolter=1
-# talent.chilling_finesse=1
-# talent.cascading_blitz=1
-# talent.frostweavers_wrath=1
-# talent.biting_cold=1
-# talent.wisdom_of_the_north=1
+
+copy="CB Beam FWS BC","Rime"
+talent.burstbolter=0
+talent.winters_embrace=0
+talent.supreme_torrent=0
+talent.coalescing_frost=0
+talent.cascading_blitz=0
+talent.soulfrost_torrent=0
+talent.wisdom_of_the_north=0
+legendary.skandis_decree=0
+
+talent.burstbolter=1
+talent.winters_embrace=1
+talent.supreme_torrent=1
+talent.coalescing_frost=1
+talent.cascading_blitz=1
+talent.soulfrost_torrent=1
+legendary.frostwyrms_spite=1
+talent.biting_cold=1
+
+copy="CB Beam Skandis GGB","Rime"
+talent.burstbolter=0
+talent.winters_embrace=0
+talent.supreme_torrent=0
+talent.coalescing_frost=0
+talent.cascading_blitz=0
+talent.soulfrost_torrent=0
+talent.wisdom_of_the_north=0
+legendary.skandis_decree=0
+
+talent.burstbolter=1
+talent.winters_embrace=1
+talent.supreme_torrent=1
+talent.coalescing_frost=1
+talent.cascading_blitz=1
+talent.soulfrost_torrent=1
+legendary.skandis_decree=1
+talent.greater_glacial_blast=1
+
+copy="CB Spender Wisd","Rime"
+talent.burstbolter=0
+talent.winters_embrace=0
+talent.supreme_torrent=0
+talent.coalescing_frost=0
+talent.cascading_blitz=0
+talent.soulfrost_torrent=0
+talent.wisdom_of_the_north=0
+legendary.skandis_decree=0
+
+talent.winters_embrace=1
+legendary.skandis_decree=1
+talent.burstbolter=1
+talent.chilling_finesse=1
+talent.cascading_blitz=1
+talent.frostweavers_wrath=1
+talent.biting_cold=1
+talent.wisdom_of_the_north=1

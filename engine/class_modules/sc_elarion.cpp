@@ -75,6 +75,7 @@ public:
     buff_t* multishot;
     buff_t* resurgent_winds;
     buff_t* impending_heartseeker;
+    buff_t* impending_heartseeker_channel;
   } buffs;
 
   struct cooldowns_t
@@ -627,7 +628,7 @@ public:
     auto mul = ab::cost_pct_multiplier();
 
     // Note 04/01/2026 - Focused Expanse does not reduce cost by 50%
-    if ( p()->buffs.event_horizon->check() )
+    if ( ab::current_resource() == RESOURCE_FOCUS && p()->buffs.event_horizon->check() )
       mul *= p()->spell_const.event_horizon_resource_mul;
 
     return mul;
@@ -1278,7 +1279,7 @@ struct heartseeker_barrage_t : public elarion_attack_t
 
     arrow->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
 
-    if ( p()->buffs.impending_heartseeker->check() )
+    if ( p()->buffs.impending_heartseeker_channel->check() )
     {
       damage_state->da_multiplier *= 1.0 + d->current_tick * p()->talents.impending_heartseeker_mul_per_arrow;
     }
@@ -1290,11 +1291,16 @@ struct heartseeker_barrage_t : public elarion_attack_t
   {
     base_t::last_tick( d );
 
-    p()->buffs.impending_heartseeker->decrement();
+    p()->buffs.impending_heartseeker_channel->expire();
   }
 
   void execute() override
   {
+    if ( p()->buffs.impending_heartseeker->check() )
+    {
+      p()->buffs.impending_heartseeker_channel->trigger();
+      p()->buffs.impending_heartseeker->expire();
+    }
     base_t::execute();
   }
 };
@@ -1938,8 +1944,10 @@ void elarion_t::create_buffs()
                               ->set_duration( talents.focused_expanse_duration );
 
   buffs.impending_heartseeker = make_buff<elarion_buff_t>( this, "impending_heartseeker" )
-                                    ->set_duration( talents.impending_heartseeker_duration )
-                                    ->set_max_stack( 2 );
+                                    ->set_duration( talents.impending_heartseeker_duration );
+
+  buffs.impending_heartseeker_channel = make_buff<elarion_buff_t>( this, "impending_heartseeker_channel" )
+                                            ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   buffs.multishot = make_buff<elarion_buff_t>( this, "multishot" )
                         ->set_max_stack( spell_const.multishot_max_stacks )
@@ -2142,14 +2150,10 @@ void actions::elarion_action_t<Base>::trigger_spirit_refund( const action_state_
 
   if ( p()->legendary.starstrikers_ascent && p()->rng().roll( p()->legendary.starstrikers_ascent_chance ) )
   {
-    //p()->buffs.resurgent_winds->trigger();
-    p()->cooldowns.heartseeker_barrage->reset( false, 1 );
-    
-    // Highwind Arrow RN
-    if ( state->action->id != 6 )
-      p()->buffs.impending_heartseeker->cancel();
-
-    p()->buffs.impending_heartseeker->trigger();
+    make_event( ab::sim, 200_ms, [ resource_refund, this ] {
+      p()->buffs.impending_heartseeker->trigger();
+      p()->cooldowns.heartseeker_barrage->reset( true, 1 );
+    } );
   }
 }
 

@@ -723,7 +723,7 @@ public:
 
     unsigned grandeur = ab::fs_p()->fs_weapons.visions_of_grandeur;
     double mul_from_cd = ab::cooldown->duration / 30_s;
-    double max_spirit  = ab::fs_p()->resources.max[ RESOURCE_SPIRIT ];
+    double max_spirit  = 100;
 
     switch ( grandeur )
     {

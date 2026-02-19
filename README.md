@@ -1,6 +1,7 @@
 # [SimulationCraft](https://www.simulationcraft.org/) [![CI](https://github.com/simulationcraft/simc/workflows/CI/badge.svg)](https://github.com/simulationcraft/simc/actions?query=workflow%3ACI)
 ## What is This
-Fork of Simulationcraft for the Game Fellowship.
+Fork of the github.com/simulationcraft/simc project for the Game Fellowship.
+Significant adaptions in progress to adapt the engine to better support Fellowship.
 
 Heavy work in progress.
 
@@ -21,6 +22,9 @@ A simple graphical interface is included with the tool, allowing players to down
 
 ## How Can I Contribute?
 See [Contributing](CONTRIBUTING.md).
+
+## Original Source
+SimulationCraft (github.com/simulationcraft/simc)
 
 ## External Libraries
 

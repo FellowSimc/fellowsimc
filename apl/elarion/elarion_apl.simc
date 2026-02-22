@@ -13,13 +13,13 @@ actions.main+=/lunarlight_mark,if=!buff.resurgent_winds.at_max_stacks|!talent.re
 actions.main+=/voidbringer,target_if=(target.time_to_die>=12|fight_remains<=20)&!debuff.voidbringer_accumulator.up
 actions.main+=/natures_fury
 actions.main+=/highwind_arrow,target_if=max:target.health*(1+0.5*debuff.lunarlight_mark.up),if=debuff.lunarlight_mark.up&buff.resurgent_winds.up
-actions.main+=/starfall_volley
+actions.main+=/starfall_volley,if=cooldown.lunarlight_mark.remains<=20&cooldown.lunarlight_mark.remains>=8
 actions.main+=/chronoshift,cancel_if=gcd.remains<=0
 actions.main+=/multishot,if=buff.skystriders_supremacy.up&(buff.skystriders_supremacy.stack-2)*gcd.max<=buff.skystriders_supremacy.remains&(buff.skystriders_supremacy.stack)*gcd.max>=buff.skystriders_supremacy.remains
 actions.main+=/highwind_arrow,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=legendary.shimmer&debuff.shimmer.remains<=gcd.max*3|charges>=(2-debuff.shimmer.stack)&legendary.shimmer&debuff.shimmer.stack<2|buff.resurgent_winds.up
 actions.main+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,if=buff.impending_heartseeker.up|debuff.lunarlight_mark.up|talent.fervent_supremacy&active_enemies=1|buff.event_horizon.up
 actions.main+=/highwind_arrow,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=charges_fractional>=2&(!buff.skystriders_supremacy.up|talent.fervent_supremacy)&active_enemies<=12
-actions.main+=/multishot,if=buff.focused_expanse.up|buff.skystriders_supremacy.up
+actions.main+=/multishot,if=(buff.focused_expanse.up|buff.skystriders_supremacy.up)&active_enemies<=2
 actions.main+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=buff.celestial_impetus.react&talent.impending_heartseeker&!buff.impending_heartseeker.up
 actions.main+=/highwind_arrow,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=legendary.shimmer&charges>=2|!legendary.shimmer&(active_enemies=1|!buff.multishot.at_max_stacks)
 actions.main+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up&!talent.fervent_supremacy

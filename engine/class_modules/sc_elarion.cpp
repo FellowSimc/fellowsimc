@@ -116,7 +116,7 @@ public:
     double celestial_shot_ap_coeff   = 2.879;
     double celestial_shot_focus_cost = 15;
 
-    double multishot_ap_coeff       = 2.683 * 0.9;
+    double multishot_ap_coeff       = 2.415;
     double multishot_target_falloff = 12;
     double multishot_focus_cost     = 20;
     int multishot_max_stacks        = 5;
@@ -312,7 +312,7 @@ public:
 
     timespan_t repeating_stars_cdr = 0.3_s;
 
-    double lunarlight_affinity_volley_chance_mul = 1.0;
+    double lunarlight_affinity_volley_chance_mul = 0.0;
     double lunarlight_affinity_salvo_cc          = 0.4;
 
     double lethal_shots_proc_chance = 0.4;
@@ -1006,21 +1006,6 @@ struct highwind_arrow_t : public elarion_attack_t
     return base_t::execute_time();
   }
 
-  size_t available_targets( std::vector<player_t*>& tl ) const override
-  {
-    base_t::available_targets( tl );
-
-    if ( tl.size() > 2 )
-    {
-      std::sort( tl.begin() + 1, tl.end(), [ this ]( player_t* a, player_t* b ) {
-        return p()->get_target_data( a )->debuffs.lunarlight_mark->check() >
-               p()->get_target_data( b )->debuffs.lunarlight_mark->check();
-      } );
-    }
-
-    return tl.size();
-  }
-
   int n_targets() const override
   {
     return p()->buffs.final_crescendo->at_max_stacks() ? p()->talents.final_crescendo_ricochets : base_t::n_targets();
@@ -1111,6 +1096,16 @@ struct highwind_arrow_t : public elarion_attack_t
 
   void execute() override
   {
+    auto& tl = target_list();
+
+    if ( tl.size() > 2 )
+    {
+      std::sort( tl.begin() + 1, tl.end(), [ this ]( player_t* a, player_t* b ) {
+        return p()->get_target_data( a )->debuffs.lunarlight_mark->check() >
+               p()->get_target_data( b )->debuffs.lunarlight_mark->check();
+      } );
+    }
+
     base_t::execute();
 
     if ( p()->buffs.final_crescendo->at_max_stacks() )
@@ -1183,9 +1178,9 @@ struct heartseeker_barrage_t : public elarion_attack_t
       }
     }
 
-    size_t available_targets( std::vector<player_t*>& tl ) const override
+    void execute() override
     {
-      base_t::available_targets( tl );
+      auto& tl = target_list();
 
       if ( tl.size() > 1 )
       {
@@ -1194,10 +1189,10 @@ struct heartseeker_barrage_t : public elarion_attack_t
                  p()->get_target_data( b )->debuffs.lunarlight_mark->check();
         } );*/
 
-          rng().shuffle( tl.begin() + 1, tl.end() );
+        rng().shuffle( tl.begin() + 1, tl.end() );
       }
 
-      return tl.size();
+      base_t::execute();
     }
 
     void impact( action_state_t* s ) override
@@ -1496,6 +1491,12 @@ struct lunarlight_mark_spirit_t : public elarion_spell_t
           ->debuffs.lunarlight_mark->trigger( s->chain_target == 0 ? p()->spell_const.spirit_refund_marks_applied
                                                                    : p()->spell_const.spirit_refund_marks_cleave );
     }
+  }
+
+  void execute() override
+  {
+    target_cache.is_valid = false;
+    elarion_spell_t::execute();
   }
 };
 

@@ -18,14 +18,14 @@ actions=run_action_list,name=main
 # actions.main+=/time_shard
 
 
-actions.main=time_rift
-actions.main+=/natures_fury
+actions.main=fleeting_hour
 actions.main+=/alzeracs_essence,if=mana.pct<=60
-actions.main+=/absolute_stasis
-actions.main+=/shifting_sands,target_if=max:target.health
-actions.main+=/blast,target_if=max:debuff.shifting_sands.remains,if=debuff.shifting_sands.remains&(buff.absolute_stasis.up|overcharge>=50|fight_remains<=15)
-actions.main+=/blast,target_if=max:target.health,if=buff.absolute_stasis.up|overcharge>=50|fight_remains<=15
-actions.main+=/chrono_barrage,target_if=max:target.health
-actions.main+=/time_burn,target_if=max:target.health
-actions.main+=/splinter_of_time,target_if=refreshable,if=active_enemies>1
+actions.main+=/unfolding_doom,target_if=max:target.health
+actions.main+=/natures_fury,target_if=debuff.unfolding_doom.up
+actions.main+=/epoch_break,if=!buff.fleeting_hour.up
+actions.main+=/oblivion,target_if=max:debuff.unfolding_doom.remains,if=debuff.unfolding_doom.remains&(buff.epoch_break.up|chrona>=50|fight_remains<=15|buff.uchronia.at_max_stacks)&!buff.lonesome_song.up
+actions.main+=/oblivion,target_if=max:target.health,if=(buff.epoch_break.up|chrona>=50|fight_remains<=15|buff.uchronia.at_max_stacks)&!buff.lonesome_song.up
+actions.main+=/temporal_barrage,target_if=max:target.health
+actions.main+=/entropys_calm,target_if=max:target.health,if=refreshable
+actions.main+=/echoes_of_ruin,target_if=refreshable,if=active_enemies>1
 actions.main+=/time_shard

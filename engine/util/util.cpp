@@ -1027,7 +1027,7 @@ const char* util::resource_type_string( resource_e resource_type )
     case RESOURCE_SPIRIT:        return "spirit";
     case RESOURCE_WINTER_ORB:    return "winter_orb";
     case RESOURCE_CINDERS:       return "cinders";
-    case RESOURCE_TEMPORAL_OVERCHARGE: return "temporal_overcharge";
+    case RESOURCE_CHRONA:        return "chrona";
     case RESOURCE_ANIMA:         return "anima";
     default:                     return "unknown";
   }
@@ -1059,7 +1059,7 @@ const char* util::resource_type_abbrev( resource_e resource_type )
     case RESOURCE_WINTER_ORB:    return "worb";
     case RESOURCE_ANIMA:         return "anima";
     case RESOURCE_CINDERS:       return "cinders";
-    case RESOURCE_TEMPORAL_OVERCHARGE: return "tmprl_oc";
+    case RESOURCE_CHRONA:        return "chrona";
     default:                     return "unk";
   }
 }

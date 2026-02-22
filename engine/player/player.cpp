@@ -5556,6 +5556,17 @@ double player_t::composite_total_corruption() const
   return cache.corruption() - cache.corruption_resistance();
 }
 
+double player_t::composite_action_ta_multiplier( const action_state_t* state ) const
+{
+  return 1.0;
+}
+
+double player_t::composite_action_da_multiplier( const action_state_t* state ) const
+{
+  return 1.0;
+}
+
+
 double player_t::composite_player_pet_damage_multiplier( const action_state_t*, bool guardian ) const
 {
   double m = 1.0;

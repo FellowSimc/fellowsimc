@@ -4910,14 +4910,14 @@ double action_t::composite_player_multiplier( const action_state_t* ) const
   return player_school_multiplier;
 }
 
-double action_t::composite_da_multiplier( const action_state_t* ) const
+double action_t::composite_da_multiplier( const action_state_t* s ) const
 {
-  return action_multiplier() * action_da_multiplier();
+  return action_multiplier() * action_da_multiplier() * player->composite_action_da_multiplier( s );
 }
 
-double action_t::composite_ta_multiplier( const action_state_t* ) const
+double action_t::composite_ta_multiplier( const action_state_t* s ) const
 {
-  return action_multiplier() * action_ta_multiplier();
+  return action_multiplier() * action_ta_multiplier() * player->composite_action_ta_multiplier( s );
 }
 
 double action_t::composite_rolling_ta_multiplier( const action_state_t* s ) const

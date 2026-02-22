@@ -15,55 +15,44 @@ desired_targets=1
 
 # apl/dungeon.simc
 
-# scale_only=crit,haste,mastery,vers
-# scale_intellect=100
-# scale_crit_rating=590
-# scale_haste_rating=590
-# scale_mastery_rating=590
-# scale_versatility_rating=590
-# positive_scale_delta=1
-# calculate_scale_factors=1
-# dps_plot_stat=haste,crit_rating,mastery,versatility
+scale_only=crit,haste,mastery,vers
+scale_intellect=100
+scale_crit_rating=590
+scale_haste_rating=590
+scale_mastery_rating=590
+scale_versatility_rating=590
+positive_scale_delta=1
+calculate_scale_factors=1
+dps_plot_stat=haste,crit_rating,mastery,versatility
 # dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
-# dps_plot_points=10
-# dps_plot_step=300
-# dps_plot_positive=1
+dps_plot_points=10
+dps_plot_step=300
+dps_plot_positive=1
 
 lisa="Lisa"
 level=80
 
 # initial_resource=spirit=100
 
-apl/lisa_apl.simc
+apl/aeona/lisa_apl.simc
 
 gear_intellect=1442
 
 # gear_haste_rating=1650
-gear_haste_rating=1850
-gear_crit_rating=1215
-gear_versatility_rating=1250
+gear_haste_rating=1250
+gear_crit_rating=1515
+gear_versatility_rating=1550
 # gear_versatility_rating=960
 gear_mastery_rating=200
 
-# gems.amethyst_power=2640
-# gems.ruby_power=162
-# gems.topaz_power=2304
 
-# gems.topaz_power=2664
-# gems.ruby_power=1296
-# gems.amethyst_power=1296
-
-gems.topaz_power=2664
-gems.ruby_power=360
-gems.amethyst_power=1296
-
-sets.torment_of_baelaurum=1
-sets.dark_prophecy=1
-sets.tuzari_grace=1
-sets.sin_warding=1
+gems.amethyst_power=2664
+gems.ruby_power=120
+gems.diamond_power=2304
 
 
-talents=practical_overcharge:1/uchronia:1/temporal_paradox:1/overcharge_manipulation:1/fractions_of_time:1
+
+# talents=practical_overcharge:1/uchronia:1/temporal_paradox:1/overcharge_manipulation:1/fractions_of_time:1
 
 weapon=natures_fury
 relic1=alzeracs_essence
@@ -96,6 +85,15 @@ relic1=alzeracs_essence
 # weapon=icicles_of_anzhyr
 # weapon=chronoshift
 
-weapon_trait.amethyst_splinters=4
+weapon_trait.diamond_strike=4
 weapon_trait.kindling=4
 weapon_trait.willful_momentum=4
+
+talents=erasure:1/chrona_tap:1/uchronia:1/hastening_doom:1/synchronicity:1/temporal_shift:1/oblivion_embrace:1
+
+# copy="Lonesome Song","Lisa"
+legendary.lonesome_song=1
+# copy="Mass Entropy","Lisa"
+# legendary.mass_entropy=1
+# copy="Chrono Trigger","Lisa"
+# legendary.chrono_trigger=1

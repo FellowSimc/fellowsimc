@@ -450,7 +450,7 @@ static constexpr std::string_view talent_name_formatted( lisa_talents_t t )
     auto m = fs_player_t::composite_action_ta_multiplier( s );
 
     if ( talents_enabled( lisa_t::SYNCHRONICITY ) && s->action->secondary_costs[ RESOURCE_CHRONA ] < 1 &&
-         resources.pct( RESOURCE_CHRONA ) <= talents.synchronicity_threshold )
+         resources.pct( RESOURCE_CHRONA ) >= talents.synchronicity_threshold )
     {
       m *= 1 + talents.synchronicity_amp;
     }
@@ -463,7 +463,7 @@ static constexpr std::string_view talent_name_formatted( lisa_talents_t t )
     auto m = fs_player_t::composite_action_da_multiplier( s );
 
     if ( talents_enabled( lisa_t::SYNCHRONICITY ) && s->action->secondary_costs[ RESOURCE_CHRONA ] < 1 &&
-         resources.pct( RESOURCE_CHRONA ) <= talents.synchronicity_threshold )
+         resources.pct( RESOURCE_CHRONA ) >= talents.synchronicity_threshold )
     {
       m *= 1 + talents.synchronicity_amp;
     }
@@ -983,8 +983,14 @@ struct lisa_spell_t : public lisa_action_t<fellowship::actions::fs_player_action
     resource_current = RESOURCE_MANA;
   }
 
-  virtual double chrona_multiplier() const 
+  virtual double chrona_multiplier() const
   {
+    if ( p()->talent_enabled( lisa_t::SYNCHRONICITY ) &&
+         p()->resources.pct( RESOURCE_CHRONA ) < p()->talents.synchronicity_threshold )
+    {
+      return 1.0 + p()->talents.synchronicity_resource_amp;
+    }
+
     return 1.0;
   }
 
@@ -1970,71 +1976,60 @@ void lisa_t::create_buffs()
     {
       set_duration( pl->spell_const.fleeting_hour_duration );
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
-        if ( _new )
+        for ( auto& action : p()->action_list )
         {
-          for ( auto& action : p()->action_list )
+          if ( _new )
           {
-            if ( action->cooldown && action->cooldown->base_duration > 0_s )
-            {
-              action->base_recharge_rate_multiplier /= cdr_mod;
-              action->cooldown->adjust_recharge_multiplier();
-            }
+            action->dynamic_recharge_rate_multiplier *= cdr_mod;
+            action->cooldown->adjust_recharge_multiplier();
           }
+          else
+          {
+            action->dynamic_recharge_rate_multiplier /= cdr_mod;
+          }
+          if ( action->cooldown->action == action )
+            action->cooldown->adjust_recharge_multiplier();
+          if ( action->internal_cooldown->action == action )
+            action->internal_cooldown->adjust_recharge_multiplier();
         }
-        else
-        {
-          for ( auto& action : p()->action_list )
-          {
-            if ( action->cooldown && action->cooldown->base_duration > 0_s )
-            {
-              action->base_recharge_rate_multiplier *= cdr_mod;
-              action->cooldown->adjust_recharge_multiplier();
-            }
-          }
+        if ( !_new )
           p()->cooldowns.fleeting_hour->start( p()->cooldowns.fleeting_hour->action );
-        }
       } );
     }
   };
 
   buffs.fleeting_hour = make_buff<fleeting_hour_buff_t>( this );
 
-  struct konesome_snng_t : lisa_buff_t
+  struct lonesome_song_t : lisa_buff_t
   {
     double cdr_mod;
-    konesome_snng_t( lisa_t* pl )
+    lonesome_song_t( lisa_t* pl )
       : lisa_buff_t( pl, "lonesome_song" ), cdr_mod( pl->legendary.lonesome_song_cdr_mul )
     {
       set_duration( pl->legendary.lonesome_song_duration);
       set_refresh_behavior( buff_refresh_behavior::DURATION );
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
-        if ( _new )
+        for ( auto& action : p()->action_list )
         {
-          for ( auto& action : p()->action_list )
+          if ( _new )
           {
-            if ( action->cooldown && action->cooldown->base_duration > 0_s )
-            {
-              action->base_recharge_rate_multiplier /= cdr_mod;
-              action->cooldown->adjust_recharge_multiplier();
-            }
+            action->dynamic_recharge_rate_multiplier /= cdr_mod;
+            action->cooldown->adjust_recharge_multiplier();
           }
-        }
-        else
-        {
-          for ( auto& action : p()->action_list )
+          else
           {
-            if ( action->cooldown && action->cooldown->base_duration > 0_s )
-            {
-              action->base_recharge_rate_multiplier *= cdr_mod;
-              action->cooldown->adjust_recharge_multiplier();
-            }
+            action->dynamic_recharge_rate_multiplier *= cdr_mod;
           }
+          if ( action->cooldown->action == action )
+            action->cooldown->adjust_recharge_multiplier();
+          if ( action->internal_cooldown->action == action )
+            action->internal_cooldown->adjust_recharge_multiplier();
         }
       } );
     }
   };
 
-  buffs.lonesome_song = make_buff<konesome_snng_t>( this );
+  buffs.lonesome_song = make_buff<lonesome_song_t>( this );
 
   struct epoch_break_buff_t : lisa_buff_t
   {
@@ -2044,21 +2039,21 @@ void lisa_t::create_buffs()
     {
       set_duration( pl->spell_const.epoch_break_duration );
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
-        if ( _new )
+        for ( auto& action : p()->action_list )
         {
-          for ( auto& action : p()->action_list )
+          if ( _new )
           {
-            action->base_recharge_rate_multiplier /= cdr_mod;
+            action->dynamic_recharge_rate_multiplier /= cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
-        }
-        else
-        {
-          for ( auto& action : p()->action_list )
+          else
           {
-            action->base_recharge_rate_multiplier *= cdr_mod;
-            action->cooldown->adjust_recharge_multiplier();
+            action->dynamic_recharge_rate_multiplier *= cdr_mod;
           }
+          if ( action->cooldown->action == action )
+            action->cooldown->adjust_recharge_multiplier();
+          if ( action->internal_cooldown->action == action )
+            action->internal_cooldown->adjust_recharge_multiplier();
         }
       } );
     }
@@ -2196,12 +2191,6 @@ void lisa_t::combat_begin()
 
 double lisa_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
-  if ( resource_type == RESOURCE_CHRONA && talent_enabled( lisa_talents_t::SYNCHRONICITY ) &&
-       resources.pct( RESOURCE_CHRONA ) <= talents.synchronicity_threshold )
-  {
-    amount *= 1 + talents.synchronicity_resource_amp;
-  }
-
   double actual_amount = fs_player_t::resource_gain( resource_type, amount, source, action );
 
 
@@ -2289,7 +2278,8 @@ void lisa_t::analyze( sim_t& sim )
 
 void lisa_t::create_cooldowns()
 {
-  cooldowns.fleeting_hour = get_cooldown( "fleeting_hour" );
+  cooldowns.fleeting_hour    = get_cooldown( "fleeting_hour" );
+  cooldowns.temporal_barrage = get_cooldown( "temporal_barrage" );
 }
 
 class lisa_module_t : public module_t

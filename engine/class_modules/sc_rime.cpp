@@ -943,7 +943,7 @@ struct ice_comet_t : public rime_spell_t
 
     spell_power_mod.direct = 4.735;
     aoe                    = -1;
-    reduced_aoe_targets    = 8;
+    reduced_aoe_targets    = 12;
 
     if ( st == secondary_trigger::NONE )
     {

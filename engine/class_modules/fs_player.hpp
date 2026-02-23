@@ -125,7 +125,6 @@ public:
 
   struct options_t
   {
-    bool use_new_spirit_refunds = true;
   } fs_options;
 
   struct fs_sets_t

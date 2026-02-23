@@ -1479,7 +1479,6 @@ void fs_player_t::create_options()
   add_option( opt_float( "gems.harmonious_diamond_amp", fs_gems.harmonious_diamond_amp ) );
 
   add_option( opt_float( "spirit_refund_mul", spirit_refund_mul ) );
-  add_option( opt_bool( "use_new_spirit_refunds", fs_options.use_new_spirit_refunds ) );
 }
 
 // fs_player_t::copy_from =======================================================
@@ -2225,10 +2224,7 @@ void fs_player_t::spirit_refund()
   if ( fs_weapons.willful_momentum )
     fs_buffs.willful_momentum->trigger();
 
-  if ( fs_options.use_new_spirit_refunds )
-  {
-    resource_gain( RESOURCE_SPIRIT, spirit_refund_mul, fs_gains.spirit_procs );
-  }
+  resource_gain( RESOURCE_SPIRIT, spirit_refund_mul, fs_gains.spirit_procs );
 }
 
 void fs_player_t::used_ultimate()
@@ -2289,11 +2285,6 @@ double fs_player_t::resource_regen_per_second( resource_e r ) const
 {
   double reg = player_t::resource_regen_per_second( r );
 
-  if ( r == RESOURCE_SPIRIT && !fs_options.use_new_spirit_refunds )
-  {
-    reg *= 1.0 + cache.mastery();
-  }
-
   if ( r == RESOURCE_MANA && type == LISA && fs_buffs.spirit_of_heroism->check() )
   {
     // Half Tick Time and 2x regen rate.
@@ -2305,12 +2296,6 @@ double fs_player_t::resource_regen_per_second( resource_e r ) const
 
 double fs_player_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
-  if ( !fs_options.use_new_spirit_refunds && resource_type == RESOURCE_SPIRIT &&
-       source != gains.resource_regen[ RESOURCE_SPIRIT ] )
-  {
-    amount *= 1.0 + cache.mastery();
-  }
-
   double actual_amount = player_t::resource_gain( resource_type, amount, source, action );
 
   return actual_amount;

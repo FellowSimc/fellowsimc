@@ -13157,6 +13157,7 @@ void player_t::copy_from( player_t* source )
   for ( resource_e resource = RESOURCE_NONE; resource < RESOURCE_MAX; resource++ )
   {
     resources.initial_opt[ resource ] = source->resources.initial_opt[ resource ];
+    resources.infinite_resource[ resource ] = source->resources.infinite_resource[ resource ];
   }
 
 }

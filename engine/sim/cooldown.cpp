@@ -472,7 +472,7 @@ void cooldown_t::start( action_t* a, timespan_t _override, timespan_t delay )
     base_duration = duration;
   }
 
-  timespan_t event_duration = recharge_multiplier * base_duration;
+  timespan_t event_duration = recharge_rate_multiplier * recharge_multiplier * base_duration;
   assert( event_duration > 0_ms );
 
   if ( delay > 0_ms )

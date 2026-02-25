@@ -714,12 +714,31 @@ talent.coalescing_frost=0
 talent.cascading_blitz=0
 talent.soulfrost_torrent=0
 talent.wisdom_of_the_north=0
-legendary.skandis_decree=0
+# legendary.skandis_decree=0
 
 talent.winters_embrace=1
-legendary.skandis_decree=1
+# legendary.skandis_decree=1
 talent.burstbolter=1
 talent.chilling_finesse=1
+talent.cascading_blitz=1
+talent.frostweavers_wrath=1
+talent.biting_cold=1
+talent.wisdom_of_the_north=1
+
+copy="CB Spender IF Wisd","Rime"
+talent.burstbolter=0
+talent.winters_embrace=0
+talent.supreme_torrent=0
+talent.coalescing_frost=0
+talent.cascading_blitz=0
+talent.soulfrost_torrent=0
+talent.wisdom_of_the_north=0
+# legendary.skandis_decree=0
+
+talent.winters_embrace=1
+# legendary.skandis_decree=1
+talent.burstbolter=1
+talent.icy_flow=1
 talent.cascading_blitz=1
 talent.frostweavers_wrath=1
 talent.biting_cold=1

@@ -13,9 +13,11 @@ actions.main+=/alzeracs_essence,if=mana.pct<=60
 actions.main+=/unfolding_doom,target_if=max:target.health
 # actions.main+=/natures_fury,target_if=debuff.unfolding_doom.up
 actions.main+=/epoch_break,if=!buff.fleeting_hour.up
-actions.main+=/call_action_list,name=spend,if=chrona>=50&talent.synchronicity|buff.epoch_break.up
-actions.main+=/temporal_barrage,target_if=max:target.health,if=!buff.epoch_break.up
 actions.main+=/entropys_calm,target_if=max:target.health,if=refreshable
+actions.main+=/restore_continuity,if=buff.uchronia.at_max_stacks|buff.epoch_break.up
+actions.main+=/amend_fate,if=!buff.uchronia.up|buff.uchronia.stack=2
+actions.main+=/call_action_list,name=spend,if=(chrona>=50&talent.synchronicity|buff.epoch_break.up)&!buff.lonesome_song.up
+actions.main+=/temporal_barrage,target_if=max:target.health,if=!buff.epoch_break.up
 actions.main+=/call_action_list,name=spend,target_if=max:debuff.unfolding_doom.remains,if=debuff.unfolding_doom.up|chrona>=60
 actions.main+=/time_shard
 

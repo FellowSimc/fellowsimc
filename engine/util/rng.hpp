@@ -24,7 +24,60 @@
 /** \ingroup SC_RNG
  * @brief Random number generation
  */
-namespace rng {
+namespace rng
+{
+
+constexpr int constexpr_int_ceil( double f )
+{
+  const int i = static_cast<int>( f );
+  return f > i ? i + 1 : i;
+}
+
+template <class T, std::enable_if_t<std::is_arithmetic_v<T>>...>
+constexpr auto constexpr_abs( T const& x ) noexcept
+{
+  return x < 0 ? -x : x;
+}
+
+constexpr double PfromC( double c )
+{
+  double pAtN     = 0;
+  double pByN     = 0;
+  double accP = 0;
+
+  int maxAttempts = constexpr_int_ceil( 1 / c );
+  for ( int i = 1; i <= maxAttempts; ++i )
+  {
+    pAtN = std::min( 1.0, i * c ) * ( 1 - pByN );
+    pByN += pAtN;
+    accP += i * pAtN;
+  }
+
+  return ( 1 / accP );
+}
+
+constexpr double CfromP( double p )
+{
+  double upper  = p;
+  double lower  = 0.0;
+  double chance = 1.0;
+
+  while ( true )
+  {
+    double mid        = ( upper + lower ) / 2;
+    double new_chance = PfromC( mid );
+
+    if ( constexpr_abs( new_chance - chance ) <= 0 )
+      return new_chance;
+
+    chance = new_chance;
+
+    if ( chance > p )
+      upper = mid;
+    else
+      lower = mid;
+  }
+}
 
 double stdnormal_cdf( double u );
 double stdnormal_inv( double u );

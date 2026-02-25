@@ -371,6 +371,7 @@ static constexpr std::string_view talent_name_formatted( lisa_talents_t t )
 
   struct options_t
   {
+    double max_mana_multiplier = 1.0;
   } options;
 
   target_specific_t<lisa_td_t> target_data;
@@ -959,31 +960,24 @@ public:
 
 struct lisa_heal_t : public lisa_action_t<fellowship::actions::fs_player_action_t<heal_t>>
 {
-  lisa_heal_t( util::string_view n, lisa_t* p, util::string_view o = {} ) : base_t( n, p, o )
-  {
-    harmful = false;
-    set_target( p );
-  }
-};
-
-struct lisa_spell_t : public lisa_action_t<fellowship::actions::fs_player_action_t<spell_t>>
-{
   double chrona_on_hit;
   double chrona_on_crit;
   double chrona_on_tick;
   double chrona_on_tick_crit;
 
-  lisa_spell_t( util::string_view n, lisa_t* p, util::string_view o = {} )
+  lisa_heal_t( util::string_view n, lisa_t* p, util::string_view o = {} )
     : base_t( n, p, o ),
       chrona_on_hit( 0 ),
       chrona_on_crit( 0 ),
       chrona_on_tick( 0 ),
       chrona_on_tick_crit( 0 )
   {
+    harmful = false;
+    set_target( p );
     resource_current = RESOURCE_MANA;
   }
 
-  virtual double chrona_multiplier() const
+  virtual double chrona_multiplier( const action_state_t* s ) const
   {
     if ( p()->talent_enabled( lisa_t::SYNCHRONICITY ) &&
          p()->resources.pct( RESOURCE_CHRONA ) < p()->talents.synchronicity_threshold )
@@ -1002,11 +996,11 @@ struct lisa_spell_t : public lisa_action_t<fellowship::actions::fs_player_action
     {
       if ( s->result == RESULT_HIT && chrona_on_hit > 0 )
       {
-        p()->resource_gain( RESOURCE_CHRONA, chrona_on_hit * chrona_multiplier(), gain, this );
+        p()->resource_gain( RESOURCE_CHRONA, chrona_on_hit * chrona_multiplier( s ), gain, this );
       }
       if ( s->result == RESULT_CRIT && chrona_on_crit > 0 )
       {
-        p()->resource_gain( RESOURCE_CHRONA, chrona_on_crit * chrona_multiplier(), gain, this );
+        p()->resource_gain( RESOURCE_CHRONA, chrona_on_crit * chrona_multiplier( s ), gain, this );
       }
     }
   }
@@ -1019,11 +1013,70 @@ struct lisa_spell_t : public lisa_action_t<fellowship::actions::fs_player_action
     {
       if ( d->state->result == RESULT_HIT && chrona_on_tick > 0 )
       {
-        p()->resource_gain( RESOURCE_CHRONA, chrona_on_tick, gain, this );
+        p()->resource_gain( RESOURCE_CHRONA, chrona_on_tick * chrona_multiplier( d->state ), gain, this );
       }
       if ( d->state->result == RESULT_CRIT && chrona_on_tick_crit > 0 )
       {
-        p()->resource_gain( RESOURCE_CHRONA, chrona_on_tick_crit, gain, this );
+        p()->resource_gain( RESOURCE_CHRONA, chrona_on_tick_crit * chrona_multiplier( d->state ), gain, this );
+      }
+    }
+  }
+};
+
+struct lisa_spell_t : public lisa_action_t<fellowship::actions::fs_player_action_t<spell_t>>
+{
+  double chrona_on_hit;
+  double chrona_on_crit;
+  double chrona_on_tick;
+  double chrona_on_tick_crit;
+
+  lisa_spell_t( util::string_view n, lisa_t* p, util::string_view o = {} )
+    : base_t( n, p, o ), chrona_on_hit( 0 ), chrona_on_crit( 0 ), chrona_on_tick( 0 ), chrona_on_tick_crit( 0 )
+  {
+    resource_current = RESOURCE_MANA;
+  }
+
+  virtual double chrona_multiplier( const action_state_t* s ) const
+  {
+    if ( p()->talent_enabled( lisa_t::SYNCHRONICITY ) &&
+         p()->resources.pct( RESOURCE_CHRONA ) < p()->talents.synchronicity_threshold )
+    {
+      return 1.0 + p()->talents.synchronicity_resource_amp;
+    }
+
+    return 1.0;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    if ( result_is_hit( s->result ) )
+    {
+      if ( s->result == RESULT_HIT && chrona_on_hit > 0 )
+      {
+        p()->resource_gain( RESOURCE_CHRONA, chrona_on_hit * chrona_multiplier( s ), gain, this );
+      }
+      if ( s->result == RESULT_CRIT && chrona_on_crit > 0 )
+      {
+        p()->resource_gain( RESOURCE_CHRONA, chrona_on_crit * chrona_multiplier( s ), gain, this );
+      }
+    }
+  }
+
+  void tick( dot_t* d ) override
+  {
+    base_t::tick( d );
+
+    if ( result_is_hit( d->state->result ) )
+    {
+      if ( d->state->result == RESULT_HIT && chrona_on_tick > 0 )
+      {
+        p()->resource_gain( RESOURCE_CHRONA, chrona_on_tick * chrona_multiplier( d->state ), gain, this );
+      }
+      if ( d->state->result == RESULT_CRIT && chrona_on_tick_crit > 0 )
+      {
+        p()->resource_gain( RESOURCE_CHRONA, chrona_on_tick_crit * chrona_multiplier( d->state ), gain, this );
       }
     }
   }
@@ -1050,9 +1103,9 @@ struct time_shard_t : public lisa_spell_t
     parse_options( options_str );
   }
 
-  double chrona_multiplier() const override
+  double chrona_multiplier( const action_state_t* s ) const override
   {
-    double m = lisa_spell_t::chrona_multiplier();
+    double m = lisa_spell_t::chrona_multiplier( s );
 
     if ( p()->buffs.continuum_shift->check() )
     {
@@ -1313,13 +1366,88 @@ struct unfolding_doom_t : public lisa_spell_t
 
 struct temporal_barrage_t : public lisa_spell_t
 {
+    struct temporal_barrage_projectile_t : public lisa_spell_t
+  {
+    temporal_barrage_projectile_t( lisa_t* p, util::string_view options_str = {} )
+      : lisa_spell_t( "temporal_barrage_projectile", p, options_str )
+    {
+      id = 6;
+
+      background = true;
+
+      spell_power_mod.direct = p->spell_const.temporal_barrage_dmg_sp_coeff;
+      name_str_reporting     = "Temporal Barrage";
+
+      chrona_on_hit  = p->spell_const.temporal_barrage_tick_resource;
+      chrona_on_crit = p->spell_const.temporal_barrage_tick_resource_crit;
+
+      parse_options( options_str );
+      
+      aoe = 1;
+    }
+
+    int n_targets() const override
+    {
+      if ( p()->talents_enabled( lisa_t::PARADOXICAL_TWIST ) && p()->buffs.fleeting_hour->check() )
+      {
+        return 1 + p()->talents.paradoxical_twist_cleave_targets;
+      }
+      return 1;
+    }
+
+    double chrona_multiplier( const action_state_t* s ) const override
+    {
+      double m = lisa_spell_t::chrona_multiplier( s );
+
+      if ( s->chain_target > 0 )
+      {
+        m *= p()->talents.paradoxical_twist_cleave;
+      }
+
+      return m;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      double m = lisa_spell_t::composite_da_multiplier( s );
+
+      if ( p()->talents_enabled( lisa_t::PARADOXICAL_TWIST ) && s->chain_target == 0 &&
+           p()->buffs.fleeting_hour->check() )
+      {
+        m *= 1.0 + p()->talents.paradoxical_twist_amp;
+      }
+
+      if ( s->chain_target > 0 )
+      {
+        m *= p()->talents.paradoxical_twist_cleave;
+      }
+
+      return m;
+    }
+
+    void execute() override
+    {
+      lisa_spell_t::execute();
+
+      if ( p()->talents_enabled( lisa_t::TEMPORAL_SHIFT ) )
+      {
+        if ( p()->buffs.fleeting_hour->check() )
+        {
+          p()->buffs.fleeting_hour->extend_duration( p(), p()->talents.temporal_shift_extension );
+        }
+        else
+        {
+          p()->cooldowns.fleeting_hour->adjust( -p()->talents.temporal_shift_cdr, false );
+        }
+      }
+    }
+  };
+
   temporal_barrage_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "temporal_barrage", p, options_str )
   {
     id = 6;
 
     name_str_reporting = "Temporal Barrage";
-
-    spell_power_mod.tick = p->spell_const.temporal_barrage_dmg_sp_coeff;
 
     dot_duration        = p->spell_const.temporal_barrage_channel_duration;
     base_tick_time      = p->spell_const.temporal_barrage_channel_period;
@@ -1334,8 +1462,10 @@ struct temporal_barrage_t : public lisa_spell_t
 
     base_costs[ RESOURCE_MANA ] = p->spell_const.unfolding_doom_mana_cost;
 
-    chrona_on_tick      = p->spell_const.temporal_barrage_tick_resource;
-    chrona_on_tick_crit = p->spell_const.temporal_barrage_tick_resource_crit;
+
+    tick_action = new temporal_barrage_projectile_t( p, options_str );
+
+    add_child( tick_action );
 
     parse_options( options_str );
   }
@@ -1345,32 +1475,6 @@ struct temporal_barrage_t : public lisa_spell_t
     base_t::init_finished();
 
     update_flags &= ~STATE_HASTE;
-  }
-
-  double composite_ta_multiplier( const action_state_t* s ) const override
-  {
-    double m = lisa_spell_t::composite_ta_multiplier( s );
-    if ( p()->talents_enabled( lisa_t::PARADOXICAL_TWIST ) && p()->buffs.fleeting_hour->check() )
-    {
-      m *= 1.0 + p()->talents.paradoxical_twist_amp;
-    }
-    return m;
-  }
-
-  void tick( dot_t* t ) override
-  {
-    lisa_spell_t::tick( t );
-    if ( p()->talents_enabled( lisa_t::TEMPORAL_SHIFT ) )
-    {
-      if ( p()->buffs.fleeting_hour->check() )
-      {
-        p()->buffs.fleeting_hour->extend_duration( p(), p()->talents.temporal_shift_extension );
-      }
-      else
-      {
-        p()->cooldowns.fleeting_hour->adjust( -p()->talents.temporal_shift_cdr, false );
-      }
-    }
   }
 };
 
@@ -1399,6 +1503,11 @@ struct fleeting_hour_t : public lisa_spell_t
   {
     lisa_spell_t::execute();
     p()->buffs.fleeting_hour->trigger();
+
+    if ( p()->talents_enabled( lisa_t::SURGING_CHRONA ) )
+    {
+      p()->resource_gain( RESOURCE_CHRONA, p()->talents.surging_chrona_resource, gain, this );
+    }
   }
   
   bool action_ready() override
@@ -1461,9 +1570,9 @@ struct oblivion_t : public lisa_spell_t
     return lisa_spell_t::cost();
   }
 
-  double composite_crit_damage_bonus_multiplier() const override
+  double composite_player_critical_multiplier( const action_state_t* s ) const override
   {
-    double cm = lisa_spell_t::composite_crit_damage_bonus_multiplier();
+    double cm = lisa_spell_t::composite_player_critical_multiplier( s );
 
     if ( p()->talents_enabled( lisa_t::OBLIVIONS_EMBRACE ) )
     {
@@ -1536,12 +1645,65 @@ struct entropic_burst_t : public lisa_spell_t
     reduced_aoe_targets = p->talents.entropic_burst_target_falloff;
 
     
-    spell_power_mod.direct = p->talents.entropic_burst_tick_coeff;
+    spell_power_mod.tick = p->talents.entropic_burst_tick_coeff;
     dot_duration           = p->talents.entropic_burstc_duration;
     dot_behavior           = DOT_REFRESH_DURATION;
     base_tick_time         = p->talents.entropic_burst_tick_period;
     hasted_ticks           = true;
     dot_allow_partial_tick = true;
+  }
+};
+
+struct restore_continuity_t : public lisa_heal_t
+{
+  restore_continuity_t( lisa_t* p, util::string_view options_str = {} ) : lisa_heal_t( "restore_continuity", p, options_str )
+  {
+    id = 12;
+
+    name_str_reporting = "Restore Continuity";
+
+    aoe               = -1;
+    base_execute_time = 0_s;
+
+    resource_current              = RESOURCE_CHRONA;
+    base_costs[ RESOURCE_CHRONA ] = 50;
+
+    parse_options( options_str );
+  }
+
+  double cost() const override
+  {
+    if ( p()->buffs.epoch_break->check() )
+      return 0;
+
+    return lisa_heal_t::cost();
+  }
+};
+
+struct amend_fate_t : public lisa_heal_t
+{
+  amend_fate_t( lisa_t* p, util::string_view options_str = {} )
+    : lisa_heal_t( "amend_fate", p, options_str )
+  {
+    id = 13;
+
+    name_str_reporting = "Amend Fate";
+
+    aoe               = -1;
+    base_execute_time = 0_s;
+
+    resource_current              = RESOURCE_CHRONA;
+    base_costs[ RESOURCE_CHRONA ] = 30;
+
+    parse_options( options_str );
+  }
+
+  double cost() const override
+  {
+    if ( p()->buffs.epoch_break->check() )
+      return 0;
+
+    return lisa_heal_t::cost();
   }
 };
 
@@ -1737,6 +1899,10 @@ action_t* lisa_t::create_action( util::string_view name, util::string_view optio
     return new epoch_break_t( this, options_str );
   if ( name == "oblivion" )
     return new oblivion_t( this, options_str );
+  if ( name == "restore_continuity" )
+    return new restore_continuity_t( this, options_str );
+  if ( name == "amend_fate" )
+    return new amend_fate_t( this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -1827,6 +1993,8 @@ void lisa_t::init_base_stats()
   resources.base[ RESOURCE_CHRONA ]   = 100;
   resources.base[ RESOURCE_MANA ]                  = 1440;
   resources.base_regen_per_second[ RESOURCE_MANA ] = 0.005 * resources.base[ RESOURCE_MANA ];
+
+  resources.base_multiplier[ RESOURCE_MANA ] *= options.max_mana_multiplier;
 
   base_gcd = timespan_t::from_seconds( 1.5 );
   min_gcd  = timespan_t::from_seconds( 0.75 );
@@ -1980,12 +2148,14 @@ void lisa_t::create_buffs()
         {
           if ( _new )
           {
-            action->dynamic_recharge_rate_multiplier *= cdr_mod;
+            action->dynamic_recharge_rate_multiplier /= cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
+            sim->print_debug( "Applying Fleeting Hour CDR to {}", *action );
           }
           else
           {
-            action->dynamic_recharge_rate_multiplier /= cdr_mod;
+            action->dynamic_recharge_rate_multiplier *= cdr_mod;
+            sim->print_debug( "Removing Fleeting Hour CDR to {}", *action );
           }
           if ( action->cooldown->action == action )
             action->cooldown->adjust_recharge_multiplier();
@@ -2076,6 +2246,7 @@ void lisa_t::create_options()
   add_option( opt_bool( "legendary.chrono_trigger", legendary.chrono_trigger ) );
   add_option( opt_bool( "legendary.lonesome_song", legendary.lonesome_song ) );
   add_option( opt_bool( "legendary.mass_entropy", legendary.mass_entropy ) );
+  add_option( opt_float( "aeona.max_mana_multiplier", options.max_mana_multiplier ) );
 }
 
 // lisa_t::copy_from =======================================================

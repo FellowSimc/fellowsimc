@@ -683,9 +683,9 @@ public:
     return c;
   }
 
-  double composite_crit_damage_bonus_multiplier() const override
+  double composite_player_critical_multiplier( const action_state_t* s ) const override
   {
-    double cm = ab::composite_crit_damage_bonus_multiplier();
+    double cm = ab::composite_player_critical_multiplier( s );
 
     if ( p()->talents.biting_cold )
     {

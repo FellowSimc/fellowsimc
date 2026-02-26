@@ -207,8 +207,8 @@ public:
     bool undulating_spirit                = false;
     double undulating_spirit_chance       = 0.10;
     double undulating_spirit_spirit_value = 3.0;
-    bool undulating_spirit_new            = false;
-    double undulating_spirit_new_mul      = 2.0;
+    bool undulating_spirit_alternative_check            = false;
+    double undulating_spirit_alternative_check_mul      = 2.0;
   } legendary;
 
   struct options_t
@@ -288,8 +288,8 @@ public:
   double composite_mastery() const override
   {
     double cm = fs_player_t::composite_mastery();
-    if ( legendary.undulating_spirit && legendary.undulating_spirit_new )
-      cm *= legendary.undulating_spirit_new_mul;
+    if ( legendary.undulating_spirit && legendary.undulating_spirit_alternative_check )
+      cm *= legendary.undulating_spirit_alternative_check_mul;
     return cm;
   }
 
@@ -2167,8 +2167,8 @@ void rime_t::create_options()
   add_option( opt_bool( "legendary.frostwyrms_spite", legendary.frostwyrms_spite ) );
   add_option( opt_bool( "legendary.skandis_decree", legendary.skandis_decree ) );
   add_option( opt_bool( "legendary.undulating_spirit", legendary.undulating_spirit ) );
-  add_option( opt_bool( "legendary.undulating_spirit_new", legendary.undulating_spirit_new ) );
-  add_option( opt_float( "legendary.undulating_spirit_new_mul", legendary.undulating_spirit_new_mul ) );
+  add_option( opt_bool( "legendary.undulating_spirit_alternative_check", legendary.undulating_spirit_alternative_check ) );
+  add_option( opt_float( "legendary.undulating_spirit_alternative_mul", legendary.undulating_spirit_alternative_check_mul ) );
 }
 
 // rime_t::copy_from =======================================================

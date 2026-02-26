@@ -41,42 +41,48 @@ constexpr auto constexpr_abs( T const& x ) noexcept
 
 constexpr double PfromC( double c )
 {
-  double pAtN     = 0;
-  double pByN     = 0;
-  double accP = 0;
+  double p_proc_on_n       = 0;
+  double p_proc_by_n       = 0;
+  double sum_n_p_proc_on_n = 0;
 
-  int maxAttempts = constexpr_int_ceil( 1 / c );
-  for ( int i = 1; i <= maxAttempts; ++i )
+  int max_fails = constexpr_int_ceil( 1 / c );
+  for ( int n = 1; n <= max_fails; ++n )
   {
-    pAtN = std::min( 1.0, i * c ) * ( 1 - pByN );
-    pByN += pAtN;
-    accP += i * pAtN;
+    p_proc_on_n = std::min( 1.0, n * c ) * ( 1 - p_proc_by_n );
+    p_proc_by_n += p_proc_on_n;
+    sum_n_p_proc_on_n += n * p_proc_on_n;
   }
 
-  return ( 1 / accP );
+  return ( 1 / sum_n_p_proc_on_n );
 }
 
 constexpr double CfromP( double p )
 {
-  double upper  = p;
-  double lower  = 0.0;
-  double chance = 1.0;
-
+  double c_upper = p;
+  double c_lower = 0;
+  double c_mid;
+  double p1;
+  double p2 = 1;
   while ( true )
   {
-    double mid        = ( upper + lower ) / 2;
-    double new_chance = PfromC( mid );
+    c_mid = ( c_upper + c_lower ) * 0.5;
+    p1    = PfromC( c_mid );
+    if ( constexpr_abs( p1 - p2 ) <= 0 )
+      break;
 
-    if ( constexpr_abs( new_chance - chance ) <= 0 )
-      return new_chance;
-
-    chance = new_chance;
-
-    if ( chance > p )
-      upper = mid;
+    if ( p1 > p )
+    {
+      c_upper = c_mid;
+    }
     else
-      lower = mid;
+    {
+      c_lower = c_mid;
+    }
+
+    p2 = p1;
   }
+
+  return c_mid;
 }
 
 double stdnormal_cdf( double u );

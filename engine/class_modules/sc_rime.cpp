@@ -95,6 +95,7 @@ public:
     buff_t* frostweavers_wrath;
     buff_t* frostwyrms_spite;
     buff_t* undulating_spirit;
+    buff_t* navirs_keeper;
   } buffs;
 
   struct cooldowns_t
@@ -122,7 +123,8 @@ public:
   struct rppms_t
   {
     real_ppm_t* soulfrost_torrent;
-  } rppm;
+    accumulated_rng_t* frostweavers_wrath;
+  } rngs;
 
   struct talents_t
   {
@@ -133,9 +135,11 @@ public:
     bool winters_embrace       = false;
     double winters_embrace_amp = 0.2;
 
-    bool glacial_assault       = false;
-    int glacial_assault_stacks = 4;
-    double glacial_assault_amp = 0.4;
+    bool glacial_assault            = false;
+    int glacial_assault_stacks      = 4;
+    double glacial_assault_amp      = 0.4;
+    double glacial_assault_cleave   = 0.1;
+    int glacial_assault_aoe_falloff = 12;
 
     bool burstbolter                    = false;
     int burstbolter_additional_anima    = 1;
@@ -200,8 +204,11 @@ public:
     bool skandis_decree                      = false;
     timespan_t skandis_decree_duration_bonus = 2_s;
 
-    bool undulating_spirit          = false;
-    double undulating_spirit_chance = 0.10;
+    bool undulating_spirit                = false;
+    double undulating_spirit_chance       = 0.10;
+    double undulating_spirit_spirit_value = 3.0;
+    bool undulating_spirit_new            = false;
+    double undulating_spirit_new_mul      = 2.0;
   } legendary;
 
   struct options_t
@@ -277,6 +284,15 @@ public:
   double composite_player_target_armor( player_t* target ) const override;
   double non_stacking_movement_modifier() const override;
   double stacking_movement_modifier() const override;
+
+  double composite_mastery() const override
+  {
+    double cm = fs_player_t::composite_mastery();
+    if ( legendary.undulating_spirit && legendary.undulating_spirit_new )
+      cm *= legendary.undulating_spirit_new_mul;
+    return cm;
+  }
+
   void invalidate_cache( cache_e ) override;
 
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
@@ -742,13 +758,13 @@ public:
 
     if ( p()->talents.soulfrost_torrent && !is_secondary_action() && !ab::background && !ab::tick_action )
     {
-      if ( !p()->buffs.soulfrost_torrent->check() && p()->rppm.soulfrost_torrent->trigger() )
+      if ( !p()->buffs.soulfrost_torrent->check() && p()->rngs.soulfrost_torrent->trigger() )
       {
         p()->buffs.soulfrost_torrent->trigger();
       }
     }
 
-     if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background )
+     if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background && !p()->legendary.undulating_spirit_new )
      {
        if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
        {
@@ -844,10 +860,84 @@ struct frost_bolt_t : public rime_spell_t
   }
 };
 
+template <typename T_ACTION>
+struct glacial_blast_state_t : public rime_action_state_t<T_ACTION>
+
+{
+  using base_t = rime_action_state_t<T_ACTION>;
+
+  bool glacial_assault_max_stacks;
+  glacial_blast_state_t( action_t* action, player_t* target )
+    : base_t( action, target ), glacial_assault_max_stacks( false )
+  {
+  }
+
+  void initialize() override
+  {
+    base_t::initialize();
+
+    glacial_assault_max_stacks = false;
+  }
+
+  void copy_state( const action_state_t* s )
+  {
+    base_t::copy_state( s );
+    const glacial_blast_state_t* rs = debug_cast<const glacial_blast_state_t*>( s );
+
+    glacial_assault_max_stacks = rs->glacial_assault_max_stacks;
+  }
+};
+
 struct glacial_blast_t : public rime_spell_t
 {
-  glacial_blast_t( util::string_view name, rime_t* p, util::string_view options_str = {} )
-    : rime_spell_t( name, p, options_str )
+  struct glacial_assault_cleave_t : rime_spell_t
+  {
+    glacial_assault_cleave_t( util::string_view name, rime_t* p ) : rime_spell_t( name, p )
+    {
+      id                  = 3;
+      background          = true;
+      may_crit            = false;
+      may_miss            = false;
+      name_str_reporting  = "Glacial Assault Cleave";
+      aoe                 = -1;
+      reduced_aoe_targets = p->talents.glacial_assault_aoe_falloff;
+    }
+
+    size_t available_targets( std::vector<player_t*>& tl ) const override
+    {
+      tl.clear();
+
+      for ( auto* t : sim->target_non_sleeping_list )
+      {
+        if ( t->is_enemy() && ( t != target ) )
+        {
+          tl.push_back( t );
+        }
+      }
+
+      return tl.size();
+    }
+
+    void init_finished() override
+    {
+      rime_spell_t::init_finished();
+
+      snapshot_flags &= STATE_NO_MULTIPLIER;
+    }
+
+    void execute() override
+    {
+      target_cache.is_valid = false;
+      if ( target_list().size() == 0 )
+        return;
+
+      rime_spell_t::execute();
+    }
+  };
+
+  glacial_assault_cleave_t* ga_cleave;
+    glacial_blast_t( util::string_view name, rime_t* p, util::string_view options_str = {} )
+    : rime_spell_t( name, p, options_str ), ga_cleave( nullptr )
   {
     id                 = 3;
     name_str_reporting = "Glacial Blast";
@@ -864,7 +954,43 @@ struct glacial_blast_t : public rime_spell_t
       base_execute_time += p->talents.greater_glacial_blast_added_cast_time;
       base_dd_multiplier *= 1 + p->talents.greater_glacial_blast_amp;
     }
+
+    if ( p->talents.glacial_assault )
+    {
+      ga_cleave = new glacial_assault_cleave_t( "Glacial Assault Cleave", p );
+      add_child( ga_cleave );
+    }
   }
+
+  static const glacial_blast_state_t<base_t>* cast_state( const action_state_t* st )
+  {
+    return debug_cast<const glacial_blast_state_t<base_t>*>( st );
+  }
+
+  static glacial_blast_state_t<base_t>* cast_state( action_state_t* st )
+  {
+    return debug_cast<glacial_blast_state_t<base_t>*>( st );
+  }
+
+  action_state_t* new_state() override
+  {
+    return new glacial_blast_state_t<base_t>( this, target );
+  }
+
+  void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
+  {
+    base_t::update_state( state, flags, rt );
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    auto rs = cast_state( state );
+
+    rs->glacial_assault_max_stacks = p()->buffs.glacial_assault->at_max_stacks();
+
+    base_t::snapshot_state( state, rt );
+  }
+
 
   timespan_t execute_time() const override
   {
@@ -874,7 +1000,7 @@ struct glacial_blast_t : public rime_spell_t
     timespan_t base = base_execute_time.base;
 
     if ( p()->buffs.icy_flow->check() )
-      base -= p()->talents.icy_flow_gb_reduction;
+      return 0_s;
 
     auto mul = base_execute_time.pct_mul * execute_time_pct_multiplier();
     if ( mul <= 0 )
@@ -912,6 +1038,16 @@ struct glacial_blast_t : public rime_spell_t
   {
     return rime_spell_t::composite_crit_chance() + p()->buffs.icy_flow->check_value() +
            p()->buffs.frostweavers_wrath->check_value();
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    rime_spell_t::impact( s );
+
+    if ( cast_state( s )->glacial_assault_max_stacks && ga_cleave )
+    {
+      ga_cleave->execute_on_target( s->target, s->result_amount * p()->talents.glacial_assault_cleave );
+    }
   }
 
   void execute() override
@@ -1065,7 +1201,7 @@ struct flight_of_the_navir_t : public rime_spell_t
 
     if ( p()->talents.navirs_keeper )
     {
-      p()->cooldowns.cold_snap->reset( false, p()->talents.navirs_keeper_cold_snaps );
+      p()->buffs.navirs_keeper->trigger( p()->talents.navirs_keeper_cold_snaps );
     }
   }
 };
@@ -1117,6 +1253,20 @@ struct cold_snap_t : public rime_spell_t
     if ( p->legendary.frostwyrms_spite )
     {
       reduced_aoe_targets = 3;
+    }
+  }
+
+  void update_ready( timespan_t cd_duration ) override
+  {
+    // Decrementing a stack of shadowy insight will consume a max charge. Consuming a max charge loses you a current
+    // charge. Therefore update_ready needs to not be called in that case.
+    if ( p()->buffs.navirs_keeper->up() )
+    {
+      p()->buffs.navirs_keeper->decrement();
+    }
+    else
+    {
+      rime_spell_t::update_ready( cd_duration );
     }
   }
 
@@ -1804,6 +1954,11 @@ void rime_t::init_base_stats()
 
   base_gcd = timespan_t::from_seconds( 1.5 );
   min_gcd  = timespan_t::from_seconds( 0.75 );
+ 
+  if ( legendary.undulating_spirit )
+  {
+    resources.start_at[ RESOURCE_SPIRIT ] = 100;
+  }
 }
 
 // rime_t::init_spells =====================================================
@@ -1881,7 +2036,11 @@ void rime_t::init_rng()
   fs_player_t::init_rng();
 
   if ( talents.soulfrost_torrent )
-    rppm.soulfrost_torrent = get_rppm( "soulfrost_torrent", talents.soulfrost_torrent_rppm, 1.0, RPPM_HASTE );
+    rngs.soulfrost_torrent = get_rppm( "soulfrost_torrent", talents.soulfrost_torrent_rppm, 1.0, RPPM_HASTE );
+
+  if ( talents.frostweavers_wrath )
+    rngs.frostweavers_wrath =
+        get_accumulated_rng( "frostweavers_wrath", rng::CfromP( talents.frostweavers_wrath_chance_per_orb ) );
 }
 
 // rime_t::init_scaling ====================================================
@@ -1965,6 +2124,12 @@ void rime_t::create_buffs()
                                ->set_refresh_behavior( buff_refresh_behavior::DURATION );
 
   buffs.undulating_spirit = make_buff<rime_buff_t>( this, "undulating_spirit" )->set_max_stack( 1 );
+
+  buffs.navirs_keeper = make_buff<rime_buff_t>( this, "navirs_keeper" )
+                            ->set_max_stack( talents.navirs_keeper_cold_snaps )
+                            ->add_stack_change_callback( [ this ]( buff_t*, int old, int _new ) {
+                              cooldowns.cold_snap->adjust_max_charges( _new - old );
+                            } );
 }
 
 // rime_t::invalidate_cache =========================================
@@ -2002,6 +2167,8 @@ void rime_t::create_options()
   add_option( opt_bool( "legendary.frostwyrms_spite", legendary.frostwyrms_spite ) );
   add_option( opt_bool( "legendary.skandis_decree", legendary.skandis_decree ) );
   add_option( opt_bool( "legendary.undulating_spirit", legendary.undulating_spirit ) );
+  add_option( opt_bool( "legendary.undulating_spirit_new", legendary.undulating_spirit_new ) );
+  add_option( opt_float( "legendary.undulating_spirit_new_mul", legendary.undulating_spirit_new_mul ) );
 }
 
 // rime_t::copy_from =======================================================
@@ -2045,6 +2212,10 @@ void rime_t::init_items()
 void rime_t::init_special_effects()
 {
   fs_player_t::init_special_effects();
+  if ( legendary.undulating_spirit )
+  {
+    spirit_refund_mul = legendary.undulating_spirit_spirit_value;
+  }
 }
 
 // rime_t::init_finished ===================================================
@@ -2122,7 +2293,7 @@ double rime_t::resource_gain( resource_e resource_type, double amount, gain_t* s
 
   if ( resource_type == RESOURCE_WINTER_ORB )
   {
-    if ( talents.frostweavers_wrath && rng().roll( talents.frostweavers_wrath_chance_per_orb ) )
+    if ( source != gains.spirit_procs && talents.frostweavers_wrath && rngs.frostweavers_wrath->trigger() )
     {
       buffs.frostweavers_wrath->trigger();
     }

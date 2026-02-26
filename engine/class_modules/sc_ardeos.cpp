@@ -374,7 +374,7 @@ public:
     timespan_t brimstone_cataclysm_cdr_cap     = 30_s;
 
     bool devouring_flame       = false;
-    double devouring_flame_amp = 0.06;
+    double devouring_flame_amp = 0.08;
 
     bool explosivo                    = false;
     double explosivo_boss_bonus       = 1.5;

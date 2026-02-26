@@ -154,7 +154,7 @@ public:
     bool icy_flow                     = false;
     timespan_t icy_flow_gb_reduction  = 0.5_s;
     timespan_t icy_flow_buff_duration = 8_s;
-    double icy_flow_cc                = 0.25;
+    double icy_flow_cc                = 0.3;
     int icy_flow_max_stacks           = 2;
 
     bool avalanche          = false;
@@ -204,11 +204,11 @@ public:
     bool skandis_decree                      = false;
     timespan_t skandis_decree_duration_bonus = 2_s;
 
-    bool undulating_spirit                = false;
-    double undulating_spirit_chance       = 0.10;
-    double undulating_spirit_spirit_value = 3.0;
-    bool undulating_spirit_alternative_check            = false;
-    double undulating_spirit_alternative_check_mul      = 2.0;
+    bool undulating_spirit                         = false;
+    double undulating_spirit_chance                = 0.10;
+    double undulating_spirit_spirit_value          = 3.0;
+    bool undulating_spirit_alternative_check       = false;
+    double undulating_spirit_alternative_check_mul = 2.0;
   } legendary;
 
   struct options_t
@@ -764,7 +764,8 @@ public:
       }
     }
 
-     if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background && !p()->legendary.undulating_spirit_new )
+     if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background &&
+         !p()->legendary.undulating_spirit_alternative_check )
      {
        if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
        {

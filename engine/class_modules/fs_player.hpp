@@ -34,6 +34,7 @@ public:
     buff_t* triggered_first_strike;
     buff_t* diamond_strike_amp;
     buff_t* voidbringer_debuff;
+    buff_t* aurastone_accumulator;
   } debuffs;
 
   struct buffs_t
@@ -87,6 +88,7 @@ public:
   {
     action_t* amethyst_splinters;
     action_t* voidbringer_dmg;
+    action_t* aurastone_dmg;
   } fs_actions;
 
   struct fs_buffs_t
@@ -259,23 +261,35 @@ public:
 
   struct fs_weapon_trait_values_t
   {
-    const double willful_momentum_spirit[ 5 ]     = { 0, 59, 89, 118, 148 };
-    const double willful_momentum_amp[ 5 ]        = { 0, 0.03, 0.036, 0.042, 0.048 };
-    const double vengeful_soul_amp[ 5 ]           = { 0, 0.04, 0.048, 0.056, 0.064 };
-    const double seized_opportunity_crit[ 5 ]     = { 0, 112, 168, 224, 280 };
-    const double martial_initiative_duration[ 5 ] = { 0, 0.2, 0.24, 0.28, 0.32 };
-    const double kindling_tick_damage[ 5 ]        = { 0, 0.92, 1.1, 1.33, 1.66 };
-    const timespan_t inspired_allegiance_cdr[ 5 ] = { 0_s, 3_s, 4_s, 5_s, 6_s };
-    const int inspired_allegiance_allies[ 5 ]     = { 0, 1, 2, 3, 3 };
-    const double inspired_allegiance_haste[ 5 ]   = { 0, 170.0, 170.0, 170.0, 213.0 };
-    const double hidden_power_amp[ 5 ]            = { 0, 0.075, 0.09, 0.105, 0.12 };
-    const double emerald_judgement_dmg[ 5 ]       = { 0, 6.0, 7.0, 8.0, 9.0 };
-    const double diamond_strike_dmg[ 5 ]          = { 0, 1.48, 1.78, 2.0, 2.37 };
-    const double diamond_strike_ppm[ 5 ]          = { 0, 5.0, 5.5, 6.1, 6.7 };
-    const double amethyst_splinters_fraction[ 5 ] = { 0, 0.07, 0.08, 0.09, 0.1 };
-    const double hunters_focus_haste[ 5 ]         = { 0, 18, 27, 36, 45 };
-    const double brave_machinations_crit[ 5 ]     = { 0, 0.2, 0.24, 0.28, 0.38 };
-    const double heroic_brand_amp[ 5 ]            = { 1.0, 1.5, 1.6, 1.7, 1.8 };
+    const double willful_momentum_spirit[ 5 ]           = { 0, 59, 89, 118, 148 };
+    const double willful_momentum_amp[ 5 ]              = { 0, 0.03, 0.036, 0.042, 0.048 };
+    const double vengeful_soul_amp[ 5 ]                 = { 0, 0.04, 0.048, 0.056, 0.064 };
+    const double seized_opportunity_crit[ 5 ]           = { 0, 112, 168, 224, 280 };
+    const double martial_initiative_duration[ 5 ]       = { 0, 0.2, 0.24, 0.28, 0.32 };
+    const double kindling_tick_damage[ 5 ]              = { 0, 0.92, 1.1, 1.33, 1.66 };
+    const timespan_t inspired_allegiance_cdr[ 5 ]       = { 0_s, 2_s, 3_s, 4_s, 5_s };
+    const int inspired_allegiance_allies[ 5 ]           = { 0, 1, 2, 3, 3 };
+    const double inspired_allegiance_haste[ 5 ]         = { 0, 85.0, 85.0, 85.0, 127.0 };
+    const double hidden_power_amp[ 5 ]                  = { 0, 0.075, 0.09, 0.105, 0.12 };
+    const double emerald_judgement_dmg[ 5 ]             = { 0, 6.0, 7.0, 8.0, 9.0 };
+    const double diamond_strike_dmg[ 5 ]                = { 0, 1.48, 1.78, 2.0, 2.37 };
+    const double diamond_strike_ppm[ 5 ]                = { 0, 5.0, 5.5, 6.1, 6.7 };
+    const double amethyst_splinters_fraction[ 5 ]       = { 0, 0.07, 0.08, 0.09, 0.1 };
+    const double brave_machinations_crit[ 5 ]           = { 0, 0.2, 0.24, 0.28, 0.38 };
+    const double heroic_brand_amp[ 5 ]                  = { 1.0, 1.5, 1.6, 1.7, 1.8 };
+    const double ruby_storm_ppm[ 5 ]                    = { 1.3, 1.3, 1.3, 1.3, 1.3 };
+    const double ruby_storm_damage[ 5 ]                 = { 0.0, 0.065, 0.078, 0.091, 0.104 };
+    const double sapphire_aurastone_dmg_acc[ 5 ]        = { 0.0, 0.10, 0.12, 0.14, 0.16 };
+    const double sapphire_aurastone_heal_acc[ 5 ]       = { 0.0, 0.10, 0.12, 0.14, 0.16 };
+    const double sapphire_aurastone_cap[ 5 ]            = { 0.0, 50.0, 50.0, 50.0, 50.0 };
+    const timespan_t sapphire_aura_period               = 3_s;
+    const double navigators_intuition_stats[ 5 ]        = { 0.0, 276.0, 414.0, 552.0, 690.0 };
+    const timespan_t navigators_intuition_duration[ 5 ] = { 0_s, 30_s, 30_s, 30_s, 30_s };
+    const timespan_t navigators_intuition_cd[ 5 ]       = { 0_s, 90_s, 90_s, 90_s, 90_s };
+    const double navigators_intuition_chance[ 5 ]       = { 0.0, 0.2, 0.2, 0.2, 0.2 };
+    const double hunters_focus_haste[ 5 ]               = { 0.0, 20.0, 32.0, 43.0, 55.0 };
+    const timespan_t hunters_focus_duration[ 5 ]        = { 0_s, 8_s, 8_s, 8_s, 8_s };
+    const int hunters_focus_max_stacks[ 5 ]             = { 5, 5, 5, 5, 5 };
   } fs_weapon_trait_values;
 
   double spirit_refund_mul = 1;
@@ -285,6 +299,7 @@ public:
 
   target_specific_t<fs_player_td_t> target_data;
   std::vector<buff_t*> active_voidbringer_buffs;
+  std::vector<buff_t*> active_aurastone_buffs;
 
   virtual const fs_player_td_t* find_target_data( const player_t* target ) const override
   {
@@ -361,6 +376,7 @@ public:
   void spirit_refund();
   void used_ultimate();
   void voidbringer_accumulate( double damage );
+  void sapphire_aurastone_accumulate( double damage );
 
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
 

@@ -50,9 +50,67 @@ struct voidbringer_debuff_t : fs_player_buff_t
   }
 };
 
+struct aurastone_buff_t : fs_player_buff_t
+{
+  double current_cap;
+  double max_pct_cap;
+  aurastone_buff_t( player_t* target, fs_player_t* pl )
+    : fs_player_buff_t( target, pl, "aurastone_accumulator" ),
+      max_pct_cap( pl->fs_weapon_trait_values.sapphire_aurastone_cap[ pl->fs_weapons.ruby_storm ] )
+  {
+    default_value = 0;
+
+    buff_period = pl->fs_weapon_trait_values.sapphire_aura_period;
+
+    set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+
+    add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
+      if ( _new )
+      {
+        p()->active_aurastone_buffs.push_back( this );
+      }    } );
+
+      p()->fs_buffs.spirit_of_heroism->add_stack_change_callback( [ this ]( buff_t*, int old, int _new ) {
+      if ( !_new )
+      {
+        expire();
+      }
+    } );
+
+    set_tick_callback( [ this ]( buff_t* b, int, timespan_t ) {
+      if ( p()->fs_actions.aurastone_dmg->target_list().size() > 0 )
+      {
+        p()->fs_actions.aurastone_dmg->execute_on_target( player, b->current_value );
+        b->current_value = 0;
+      }
+    } );
+  }
+
+  bool trigger( int stacks, double value, double chance, timespan_t duration ) override
+  {
+    current_cap = max_pct_cap * std::max( p()->cache.attack_power(), p()->cache.spell_power( SCHOOL_MAGIC ) );
+
+    return fs_player_buff_t::trigger( stacks, value, chance, duration );
+  }
+
+  void expire_override( int expiration_stacks, timespan_t remaining_duration ) override
+  {
+    fs_player_buff_t::expire_override( expiration_stacks, remaining_duration );
+
+    auto it = range::find( p()->active_aurastone_buffs, this );
+    if ( it != p()->active_aurastone_buffs.end() )
+    {
+      erase_unordered( p()->active_aurastone_buffs, it );
+    }
+  }
+};
+
 fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
   : actor_target_data_t( target, source ), fs_dots(), debuffs(), buffs()
 {
+  if ( target->is_enemy() || target == source )
+    debuffs.aurastone_accumulator = make_buff<aurastone_buff_t>( target, source );
+
   if ( target->is_enemy() )
   {
     fs_dots.curse_of_anzhyr    = target->get_dot( "curse_of_anzhyr", source );
@@ -64,7 +122,7 @@ fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
     debuffs.diamond_strike_amp =
         make_buff( *this, "diamond_strike_amp" )->set_max_stack( 5 )->set_duration( 20_s )->set_default_value( 0.4 );
 
-    debuffs.voidbringer_debuff = make_buff<voidbringer_debuff_t>( target, source );
+    debuffs.voidbringer_debuff    = make_buff<voidbringer_debuff_t>( target, source );
   }
   else
   {
@@ -329,7 +387,6 @@ struct amethyst_splinters_t : public residual_action::residual_periodic_action_t
     update_flags &= ~STATE_HASTE;
   }
 };
-
 
 struct fated_strike_t : fs_weapon_action_t<attack_t>
 {
@@ -763,6 +820,7 @@ struct voidbringers_touch_t : fs_weapon_action_t<spell_t>
     }
   }
 };
+
 struct voidbringers_touch_dmg_t : fs_weapon_action_t<spell_t>
 {
   voidbringers_touch_dmg_t( util::string_view n, fs_player_t* p )
@@ -780,6 +838,28 @@ struct voidbringers_touch_dmg_t : fs_weapon_action_t<spell_t>
 
     if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_VOIDBRINGERS_TOUCH )
       active_weapon = true;
+  }
+
+  void init_finished() override
+  {
+    base_t::init_finished();
+    snapshot_flags |= STATE_TARGET_NO_PET | STATE_CRIT | STATE_VERSATILITY | STATE_MUL_DA | STATE_MUL_PLAYER_DAM |
+                      STATE_MUL_PERSISTENT;
+  }
+};
+
+struct sapphire_aurastone_dmg_t : fs_player_action_t<spell_t>
+{
+  sapphire_aurastone_dmg_t( util::string_view n, fs_player_t* p ) : fs_player_action_t( n, p )
+  {
+    id = 127156;
+
+    name_str_reporting = "Sapphire Aurastone";
+    school             = SCHOOL_MAGIC;
+
+    aoe                 = -1;
+    background          = true;
+    reduced_aoe_targets = 1;
   }
 
   void init_finished() override
@@ -824,6 +904,7 @@ struct sahrils_wrath_t : fs_weapon_action_t<spell_t>
     base_t::execute();
   }
 };
+
 struct alzeracs_essence_t : fs_relic_action_t<attack_t>
 {
   alzeracs_essence_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
@@ -971,8 +1052,8 @@ void fs_player_t::init_base_stats()
 
   resources.base[ RESOURCE_SPIRIT ] = resources.max[ RESOURCE_SPIRIT ] = 100;
 
-  resources.start_at[ RESOURCE_SPIRIT ]                                = 0;
-  resources.base_regen_per_second[ RESOURCE_SPIRIT ]                   = 100.0 / 300 * 1.20;
+  resources.start_at[ RESOURCE_SPIRIT ]              = 0;
+  resources.base_regen_per_second[ RESOURCE_SPIRIT ] = 100.0 / 300 * 1.20;
 
   // resources.base_regen_per_second[ RESOURCE_ENERGY ] = 10;
 
@@ -1947,6 +2028,89 @@ void fs_player_t::init_special_effects()
     dbc->activate();
   }
 
+  if ( fs_weapons.ruby_storm )
+  {
+    struct ruby_storm_t : public actions::fs_proc_spell_t
+    {
+      ruby_storm_t( std::string_view n, fs_player_t* p ) : actions::fs_proc_spell_t( n, p )
+      {
+        id = 2297;
+
+        name_str_reporting = "Ruby Storm";
+      }
+
+      void execute() override
+      {
+        base_dd_min = base_dd_max = fs_p()->resources.current[ RESOURCE_HEALTH ] *
+                                    fs_p()->fs_weapon_trait_values.ruby_storm_damage[ fs_p()->fs_weapons.ruby_storm ];
+
+        base_t::execute();
+      }
+    };
+
+    auto effect          = new special_effect_t( this );
+    effect->spell_id     = 2297;
+    effect->name_str     = "ruby_storm";
+    effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
+    effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
+    effect->cooldown_    = 0_s;
+    effect->ppm_         = -fs_weapon_trait_values.ruby_storm_ppm[ fs_weapons.ruby_storm ];
+    effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
+    effect->rppm_blp_    = real_ppm_t::BLP_ENABLED;
+    effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+    special_effects.push_back( effect );
+
+    effect->execute_action = create_fs_proc_action<ruby_storm_t>( "ruby_storm" );
+
+    auto dbc = new dbc_proc_callback_t( this, *effect );
+
+    dbc->initialize();
+    dbc->activate();
+  }
+
+  if ( fs_weapons.navigators_intuition )
+  {
+    std::unordered_map<stat_e, buff_t*> buffs;
+    static constexpr std::array<stat_e, 4> secondary_ratings = { STAT_VERSATILITY_RATING, STAT_MASTERY_RATING,
+                                                                 STAT_HASTE_RATING, STAT_CRIT_RATING };
+    for ( stat_e stat : secondary_ratings )
+    {
+      buffs[ stat ] =
+          make_buff<stat_buff_t>( this, fmt::format( "navigators_intuition_{}", util::stat_type_abbrev( stat ) ) )
+              ->add_stat( stat, fs_weapon_trait_values.navigators_intuition_stats[ fs_weapons.navigators_intuition ] )
+              ->set_name_reporting( fmt::format( "Navigator's Intuition {}", util::stat_type_abbrev( stat ) ) );
+    }
+
+    auto effect                   = new special_effect_t( this );
+    effect->spell_id              = 15123;
+    effect->name_str              = "navigators_intuition";
+    effect->proc_flags_           = PF_ALL_DAMAGE;
+    effect->proc_flags2_          = PF2_ALL_HIT;
+    effect->has_use_buff_override = true;
+    effect->rppm_scale_           = rppm_scale_e::RPPM_DISABLE;
+    effect->cooldown_             = fs_weapon_trait_values.navigators_intuition_cd[ fs_weapons.navigators_intuition ];
+    effect->proc_chance_ = fs_weapon_trait_values.navigators_intuition_chance[ fs_weapons.navigators_intuition ];
+    effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+    callbacks.register_callback_execute_function(
+        effect->spell_id, [ buffs ]( const dbc_proc_callback_t* cb, action_t*, const action_state_t* ) {
+          auto stat = util::highest_stat( cb->listener, secondary_ratings );
+          for ( auto [ s, b ] : buffs )
+          {
+            if ( s == stat )
+              b->trigger();
+            else
+              b->expire();
+          }
+        } );
+
+    auto dbc = new dbc_proc_callback_t( this, *effect );
+
+    dbc->initialize();
+    dbc->activate();
+  }
+
   if ( fs_weapons.diamond_strike )
   {
     struct diamond_strike_t : public actions::fs_proc_spell_t
@@ -2141,7 +2305,6 @@ void fs_player_t::init_special_effects()
 
         }
       }
-
     };
 
     auto fs_effect                   = new special_effect_t( this );
@@ -2195,6 +2358,16 @@ void fs_player_t::init_assessors()
       return assessor::CONTINUE;
     } );
   }
+
+  if ( fs_weapons.sapphire_aurastone)
+  {
+    assessor_out_damage.add( assessor::TARGET_DAMAGE + 3, [ this ]( result_amount_type, action_state_t* s ) {
+      if ( s->result_amount > 0 )
+        sapphire_aurastone_accumulate( s->result_amount );
+
+      return assessor::CONTINUE;
+    } );
+  }
 }
 
 // fs_player_t::init_finished ===================================================
@@ -2238,14 +2411,23 @@ void fs_player_t::used_ultimate()
   {
     fs_buffs.drakheims_absolution->trigger();
   }
+
+  if ( fs_weapons.sapphire_aurastone )
+  {
+    get_target_data( this )->debuffs.aurastone_accumulator->trigger();
+  }
 }
 
 void fs_player_t::init_background_actions()
 {
   player_t::init_background_actions();
 
-  fs_actions.amethyst_splinters = new actions::amethyst_splinters_t( "amethyst_splinters", this );
-  fs_actions.voidbringer_dmg    = new actions::voidbringers_touch_dmg_t( "voidbringers_touch_dmg", this );
+  if ( fs_weapons.amethyst_splinters )
+    fs_actions.amethyst_splinters = new actions::amethyst_splinters_t( "amethyst_splinters", this );
+  if ( fs_weapons.equipped_weapon == FSWEAPON_VOIDBRINGERS_TOUCH )
+    fs_actions.voidbringer_dmg = new actions::voidbringers_touch_dmg_t( "voidbringers_touch_dmg", this );
+  if ( fs_weapons.sapphire_aurastone )
+    fs_actions.aurastone_dmg = new actions::sapphire_aurastone_dmg_t( "sapphire_aurastone_dmg", this );
 }
 
 // fs_player_t::reset ===========================================================
@@ -2356,6 +2538,39 @@ void fs_player_t::voidbringer_accumulate( double damage )
     {
       i++;
     }
+  }
+}
+
+void fs_player_t::sapphire_aurastone_accumulate( double damage )
+{
+  if ( !fs_buffs.spirit_of_heroism->check() )
+    return;
+
+  auto accumulated = fs_weapon_trait_values.sapphire_aurastone_dmg_acc[ fs_weapons.sapphire_aurastone ] * damage;
+
+  for ( size_t i = 0; i < active_aurastone_buffs.size(); )
+  {
+    auto* buff = debug_cast<aurastone_buff_t*>( active_aurastone_buffs[ i ] );
+
+    if ( !buff )
+    {
+      sim->error( "{} has invalid aurastone debuff in active_aurastone_buffs vector.", *this );
+      continue;
+    }
+
+    if ( !buff->check() )
+    {
+      sim->print_debug( "{} has aurastone debuff on target {} in vector while buff is not active.", *this,
+                        *buff->player );
+      i++;
+      continue;
+    }
+    auto cap = buff->current_cap;
+
+    auto old_value      = buff->current_value;
+    buff->current_value = std::min( cap, buff->current_value + accumulated );
+    sim->print_debug( "{} aurastone accumulates {} dmg on target {}. (Stored: {} was: {})", *this, accumulated,
+                      *buff->player, buff->current_value, old_value );
   }
 }
 

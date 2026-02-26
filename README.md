@@ -18,7 +18,7 @@ Increasing class synergy and the prevalence of proc-based combat modifiers have 
 
 SimulationCraft allows raid/party creation of arbitrary size, generating detailed charts and reports for both individual and raid performance.
 
-A simple graphical interface is included with the tool, allowing players to download and analyze characters from the Armory. It can also be run from the command-line in which case the player profiles are specified via parameter files. 
+Graphical interface is slated for removal to remove dependencies due to it being based on the World of Warcraft code. It will not be supported.
 
 ## How Can I Contribute?
 See [Contributing](CONTRIBUTING.md).

@@ -326,7 +326,7 @@ static constexpr std::string_view talent_name_formatted( lisa_talents_t t )
 
     double synchronicity_threshold    = 0.5;
     double synchronicity_amp          = 0.15;
-    double synchronicity_resource_amp = 0.25;
+    double synchronicity_resource_amp = 0.15;
 
     timespan_t temporal_shift_extension = 0.3_s;
     timespan_t temporal_shift_cdr       = 0.3_s;
@@ -994,13 +994,13 @@ struct lisa_heal_t : public lisa_action_t<fellowship::actions::fs_player_action_
 
     if ( result_is_hit( s->result ) )
     {
-      if ( s->result == RESULT_HIT && chrona_on_hit > 0 )
-      {
-        p()->resource_gain( RESOURCE_CHRONA, chrona_on_hit * chrona_multiplier( s ), gain, this );
-      }
-      if ( s->result == RESULT_CRIT && chrona_on_crit > 0 )
+      if ( p()->rng().roll( p()->cache.spell_crit_chance() ) )
       {
         p()->resource_gain( RESOURCE_CHRONA, chrona_on_crit * chrona_multiplier( s ), gain, this );
+      }
+      else
+      {
+        p()->resource_gain( RESOURCE_CHRONA, chrona_on_hit * chrona_multiplier( s ), gain, this );
       }
     }
   }
@@ -1011,13 +1011,13 @@ struct lisa_heal_t : public lisa_action_t<fellowship::actions::fs_player_action_
 
     if ( result_is_hit( d->state->result ) )
     {
-      if ( d->state->result == RESULT_HIT && chrona_on_tick > 0 )
-      {
-        p()->resource_gain( RESOURCE_CHRONA, chrona_on_tick * chrona_multiplier( d->state ), gain, this );
-      }
-      if ( d->state->result == RESULT_CRIT && chrona_on_tick_crit > 0 )
+      if ( p()->rng().roll( p()->cache.spell_crit_chance() ) )
       {
         p()->resource_gain( RESOURCE_CHRONA, chrona_on_tick_crit * chrona_multiplier( d->state ), gain, this );
+      }
+      else
+      {
+        p()->resource_gain( RESOURCE_CHRONA, chrona_on_tick * chrona_multiplier( d->state ), gain, this );
       }
     }
   }
@@ -1988,9 +1988,9 @@ void lisa_t::init_base_stats()
   base.stats.attribute[ STAT_STAMINA ]   = 1000;
   resources.base[ RESOURCE_HEALTH ]      = 16180;
 
-  base.health_per_stamina = 38.005;
+  base.health_per_stamina = 47.506;
 
-  resources.base[ RESOURCE_CHRONA ]   = 100;
+  resources.base[ RESOURCE_CHRONA ]                = 100;
   resources.base[ RESOURCE_MANA ]                  = 1440;
   resources.base_regen_per_second[ RESOURCE_MANA ] = 0.005 * resources.base[ RESOURCE_MANA ];
 

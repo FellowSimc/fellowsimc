@@ -1843,7 +1843,7 @@ void elarion_t::init_base_stats()
   base.stats.attribute[ STAT_STAMINA ] = 1000;
   resources.base[ RESOURCE_HEALTH ]    = 17135;
 
-  base.health_per_stamina = 39.081;
+  base.health_per_stamina = 48.851;
 
   resources.base[ RESOURCE_FOCUS ]                  = 100;
   resources.base_regen_per_second[ RESOURCE_FOCUS ] = 0.05 / 0.01;

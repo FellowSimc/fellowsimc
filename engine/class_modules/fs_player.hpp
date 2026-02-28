@@ -278,9 +278,9 @@ public:
     const double brave_machinations_crit[ 5 ]           = { 0, 0.2, 0.24, 0.28, 0.38 };
     const double heroic_brand_amp[ 5 ]                  = { 1.0, 1.5, 1.6, 1.7, 1.8 };
     const double ruby_storm_ppm[ 5 ]                    = { 1.3, 1.3, 1.3, 1.3, 1.3 };
-    const double ruby_storm_damage[ 5 ]                 = { 0.0, 0.065, 0.078, 0.091, 0.104 };
-    const double sapphire_aurastone_dmg_acc[ 5 ]        = { 0.0, 0.10, 0.12, 0.14, 0.16 };
-    const double sapphire_aurastone_heal_acc[ 5 ]       = { 0.0, 0.10, 0.12, 0.14, 0.16 };
+    const double ruby_storm_damage[ 5 ]                 = { 0.0, 0.045, 0.054, 0.063, 0.073 };
+    const double sapphire_aurastone_dmg_acc[ 5 ]        = { 0.0, 0.069, 0.083, 0.10, 0.12 };
+    const double sapphire_aurastone_heal_acc[ 5 ]       = { 0.0, 0.093, 0.111, 0.133, 0.16 };
     const double sapphire_aurastone_cap[ 5 ]            = { 0.0, 50.0, 50.0, 50.0, 50.0 };
     const timespan_t sapphire_aura_period               = 3_s;
     const double navigators_intuition_stats[ 5 ]        = { 0.0, 276.0, 414.0, 552.0, 690.0 };

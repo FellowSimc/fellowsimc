@@ -1000,8 +1000,11 @@ struct glacial_blast_t : public rime_spell_t
 
     timespan_t base = base_execute_time.base;
 
+    /*if ( p()->buffs.icy_flow->check() )
+      return 0_s;*/
+
     if ( p()->buffs.icy_flow->check() )
-      return 0_s;
+      base -= p()->talents.icy_flow_gb_reduction;
 
     auto mul = base_execute_time.pct_mul * execute_time_pct_multiplier();
     if ( mul <= 0 )
@@ -1947,7 +1950,7 @@ void rime_t::init_base_stats()
   base.stats.attribute[ STAT_STAMINA ]   = 1000;
   resources.base[ RESOURCE_HEALTH ]      = 16180;
 
-  base.health_per_stamina = 38.005;
+  base.health_per_stamina = 47.506;
 
   resources.base[ RESOURCE_ANIMA ] = 18;
 

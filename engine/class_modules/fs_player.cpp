@@ -52,15 +52,17 @@ struct voidbringer_debuff_t : fs_player_buff_t
 
 struct aurastone_buff_t : fs_player_buff_t
 {
-  double current_cap;
-  double max_pct_cap;
+  //double current_cap;
+  //double max_pct_cap;
   aurastone_buff_t( player_t* target, fs_player_t* pl )
-    : fs_player_buff_t( target, pl, "aurastone_accumulator" ),
-      max_pct_cap( pl->fs_weapon_trait_values.sapphire_aurastone_cap[ pl->fs_weapons.ruby_storm ] )
+    : fs_player_buff_t( target, pl, "aurastone_accumulator" )/*,
+      max_pct_cap( pl->fs_weapon_trait_values.sapphire_aurastone_cap[ pl->fs_weapons.sapphire_aurastone ] )*/
   {
     default_value = 0;
 
     buff_period = pl->fs_weapon_trait_values.sapphire_aura_period;
+
+    set_tick_behavior( buff_tick_behavior::REFRESH );
 
     set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
@@ -80,6 +82,7 @@ struct aurastone_buff_t : fs_player_buff_t
     set_tick_callback( [ this ]( buff_t* b, int, timespan_t ) {
       if ( p()->fs_actions.aurastone_dmg->target_list().size() > 0 )
       {
+        // current_cap = max_pct_cap * std::max( p()->cache.attack_power(), p()->cache.spell_power( SCHOOL_MAGIC ) );
         p()->fs_actions.aurastone_dmg->execute_on_target( player, b->current_value );
         b->current_value = 0;
       }
@@ -88,7 +91,7 @@ struct aurastone_buff_t : fs_player_buff_t
 
   bool trigger( int stacks, double value, double chance, timespan_t duration ) override
   {
-    current_cap = max_pct_cap * std::max( p()->cache.attack_power(), p()->cache.spell_power( SCHOOL_MAGIC ) );
+    // current_cap = max_pct_cap * std::max( p()->cache.attack_power(), p()->cache.spell_power( SCHOOL_MAGIC ) );
 
     return fs_player_buff_t::trigger( stacks, value, chance, duration );
   }
@@ -856,17 +859,17 @@ struct sapphire_aurastone_dmg_t : fs_player_action_t<spell_t>
 
     name_str_reporting = "Sapphire Aurastone";
     school             = SCHOOL_MAGIC;
-
+    may_miss            = false;
+    may_crit            = false;
     aoe                 = -1;
     background          = true;
-    reduced_aoe_targets = 1;
+    split_aoe_damage    = true;
   }
 
   void init_finished() override
   {
     base_t::init_finished();
-    snapshot_flags |= STATE_TARGET_NO_PET | STATE_CRIT | STATE_VERSATILITY | STATE_MUL_DA | STATE_MUL_PLAYER_DAM |
-                      STATE_MUL_PERSISTENT;
+    snapshot_flags &= STATE_NO_MULTIPLIER;
   }
 };
 
@@ -2041,7 +2044,7 @@ void fs_player_t::init_special_effects()
 
       void execute() override
       {
-        base_dd_min = base_dd_max = fs_p()->resources.current[ RESOURCE_HEALTH ] *
+        base_dd_min = base_dd_max = fs_p()->resources.max[ RESOURCE_HEALTH ] *
                                     fs_p()->fs_weapon_trait_values.ruby_storm_damage[ fs_p()->fs_weapons.ruby_storm ];
 
         base_t::execute();
@@ -2359,10 +2362,10 @@ void fs_player_t::init_assessors()
     } );
   }
 
-  if ( fs_weapons.sapphire_aurastone)
+  if ( fs_weapons.sapphire_aurastone )
   {
     assessor_out_damage.add( assessor::TARGET_DAMAGE + 3, [ this ]( result_amount_type, action_state_t* s ) {
-      if ( s->result_amount > 0 )
+      if ( s->result_amount > 0 && s->action && s->action->id != fs_actions.aurastone_dmg->id )
         sapphire_aurastone_accumulate( s->result_amount );
 
       return assessor::CONTINUE;
@@ -2548,7 +2551,7 @@ void fs_player_t::sapphire_aurastone_accumulate( double damage )
 
   auto accumulated = fs_weapon_trait_values.sapphire_aurastone_dmg_acc[ fs_weapons.sapphire_aurastone ] * damage;
 
-  for ( size_t i = 0; i < active_aurastone_buffs.size(); )
+  for ( size_t i = 0; i < active_aurastone_buffs.size(); i++ )
   {
     auto* buff = debug_cast<aurastone_buff_t*>( active_aurastone_buffs[ i ] );
 
@@ -2562,13 +2565,16 @@ void fs_player_t::sapphire_aurastone_accumulate( double damage )
     {
       sim->print_debug( "{} has aurastone debuff on target {} in vector while buff is not active.", *this,
                         *buff->player );
-      i++;
       continue;
     }
-    auto cap = buff->current_cap;
 
-    auto old_value      = buff->current_value;
-    buff->current_value = std::min( cap, buff->current_value + accumulated );
+
+    auto old_value = buff->current_value;
+
+    // auto cap = buff->current_cap;
+    // buff->current_value = std::min( cap, buff->current_value + accumulated );
+
+    buff->current_value += accumulated;
     sim->print_debug( "{} aurastone accumulates {} dmg on target {}. (Stored: {} was: {})", *this, accumulated,
                       *buff->player, buff->current_value, old_value );
   }

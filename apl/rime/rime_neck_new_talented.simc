@@ -12,7 +12,7 @@ vary_combat_length=0
 single_actor_batch=1
 desired_targets=8
 
-# apl/chuey_dungeon.simc
+apl/chuey_dungeon.simc
 
 rime="Rime"
 level=80
@@ -49,7 +49,8 @@ gear_mastery_rating=0
 
 
 weapon=voidbringers_touch
-weapon_trait.visions_of_grandeur=4
+weapon_trait.sapphire_aurastone=4
+# weapon_trait.visions_of_grandeur=4
 weapon_trait.kindling=4
 weapon_trait.inspired_allegiance=4
 
@@ -88,10 +89,10 @@ level=80
 
 apl/rime/rime.simc
 gear_intellect=1442
-gear_haste_rating=2317
+gear_haste_rating=2117
 gear_crit_rating=1053
 gear_versatility_rating=1145
-gear_mastery_rating=0
+gear_mastery_rating=200
 
 gems.emerald_power=2640
 gems.diamond_power=2280

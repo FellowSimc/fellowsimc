@@ -8513,7 +8513,7 @@ void player_t::assess_damage( school_e school, result_amount_type rt, action_sta
 {
   using namespace assess_dmg_helper_functions;
 
-  account_parry_haste( *this, s );
+  //account_parry_haste( *this, s );
 
   if ( s->result_amount <= 0.0 )
     return;

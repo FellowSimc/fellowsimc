@@ -2728,6 +2728,29 @@ void mara_t::init_spells()
 void mara_t::init_talents()
 {
   fs_player_t::init_talents();
+
+  auto talents = util::string_split<std::string_view>( talents_str, "/" );
+  for ( const auto talent : talents )
+  {
+    auto talent_split = util::string_split<std::string_view>( talent, ":" );
+    if ( talent_split.size() != 2 )
+    {
+      sim->error( "Invalid talent string {}", talent );
+      sim->cancel();
+      return;
+    }
+
+    auto ranks = util::to_unsigned( talent_split[ 1 ] );
+
+    for ( mara_talents_t t = static_cast<mara_talents_t>( 1U ); t < mara_talents_t::MAX; t++ )
+    {
+      if ( util::str_compare_ci( talent_split[ 0 ], talent_name( t ) ) )
+      {
+        set_talent_points( t, ranks >= 1 );
+        break;
+      }
+    }
+  }
 }
 
 // mara_t::init_gains ======================================================
@@ -2988,29 +3011,6 @@ void mara_t::init_special_effects()
 void mara_t::init_finished()
 {
   fs_player_t::init_finished();
-
-  auto talents = util::string_split<std::string_view>( talents_str, "/" );
-  for ( const auto talent : talents )
-  {
-    auto talent_split = util::string_split<std::string_view>( talent, ":" );
-    if ( talent_split.size() != 2 )
-    {
-      sim->error( "Invalid talent string {}", talent );
-      sim->cancel();
-      return;
-    }
-
-    auto ranks = util::to_unsigned( talent_split[ 1 ] );
-
-    for ( mara_talents_t t = static_cast<mara_talents_t>( 1U ); t < mara_talents_t::MAX; t++ )
-    {
-      if ( util::str_compare_ci( talent_split[ 0 ], talent_name( t ) ) )
-      {
-        set_talent_points( t, ranks >= 1 );
-        break;
-      }
-    }
-  }
 }
 
 void mara_t::init_background_actions()

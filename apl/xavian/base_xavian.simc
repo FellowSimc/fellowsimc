@@ -1,0 +1,86 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=300
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=1
+
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_intellect=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=0
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# # dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=8
+# dps_plot_step=150
+# dps_plot_positive=0
+
+xavian="Xavian"
+level=80
+
+# initial_resource=spirit=100
+
+apl/xavian/xavian_apl.simc
+
+gear_strength=1442
+gear_stamina=3695
+
+gear_haste_rating=2187
+gear_crit_rating=1386
+gear_versatility_rating=683
+gear_mastery_rating=254
+
+
+# # gems.emerald_power=2670
+# gems.amethyst_power=2670
+# gems.ruby_power=1206
+# # gems.topaz_power=972
+# # gems.sapphire_power=240
+# gems.emerald_power=1206
+
+
+# gems.amethyst_power=2664
+# gems.ruby_power=120
+# gems.diamond_power=2304
+
+
+weapon_trait.ruby_storm=4
+
+# copy="Suns Touch","Xavian"
+# talents=suns_touch:1
+# copy="Grand Halo","Xavian"
+# talents=grand_halo:1
+# copy="Solar Burn","Xavian"
+# talents=solar_burn:1
+# copy="lights_oath","Xavian"
+# talents=lights_oath:1
+copy="Rising Sun","Xavian"
+talents=rising_sun:1
+copy="Celestial Favor","Xavian"
+talents=celestial_favor:1
+copy="gleaming_strikes","Xavian"
+talents=gleaming_strikes:1
+copy="Suns Verdict","Xavian"
+talents=suns_verdict:1
+# copy="Hallowed Shield","Xavian"
+# talents=hallowed_shield:1
+# copy="Vanguard of Vengenace","Xavian"
+# talents=vanguard_of_vengeance:1
+# copy="Invictus","Xavian"
+# talents=invictus:1
+copy="Golden Hour","Xavian"
+talents=golden_hour:1

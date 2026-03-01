@@ -4,11 +4,11 @@
 
 namespace fellowship
 {
-namespace lisa
+namespace aeona
 {
 
 // Forward Declarations
-class lisa_t;
+class aeona_t;
 
 enum class secondary_trigger
 {
@@ -17,13 +17,13 @@ enum class secondary_trigger
 
 namespace actions
 {
-struct lisa_heal_t;
-struct lisa_spell_t;
+struct aeona_heal_t;
+struct aeona_spell_t;
 
 struct melee_t;
 }  // namespace actions
 
-class lisa_td_t : public fs_player_td_t
+class aeona_td_t : public fs_player_td_t
 {
 public:
   struct dots_t
@@ -40,27 +40,27 @@ public:
     buff_t* unfolding_doom;
   } debuffs;
 
-  lisa_td_t( player_t* target, lisa_t* source );
+  aeona_td_t( player_t* target, aeona_t* source );
 };
 
-struct lisa_buff_t : public fs_player_buff_t
+struct aeona_buff_t : public fs_player_buff_t
 {
-  lisa_buff_t( player_t* p, util::string_view name ) : fs_player_buff_t( p, name )
+  aeona_buff_t( player_t* p, util::string_view name ) : fs_player_buff_t( p, name )
   {
   }
 
-  lisa_t* p()
+  aeona_t* p()
   {
-    return debug_cast<lisa_t*>( player );
+    return debug_cast<aeona_t*>( player );
   }
 
-  const lisa_t* p() const
+  const aeona_t* p() const
   {
-    return debug_cast<const lisa_t*>( player );
+    return debug_cast<const aeona_t*>( player );
   }
 };
 
-class lisa_t : public fellowship::fs_player_t
+class aeona_t : public fellowship::fs_player_t
 {
 public:
   struct actions_t
@@ -183,7 +183,7 @@ public:
     double oblivion_sp_coeff      = 7.896;
   } spell_const;
 
-  enum lisa_talents_t : unsigned long long
+  enum aeona_talents_t : unsigned long long
   {
     NONE               = 0ULL,
     ENTROPIC_BURST     = 1ULL << 0,
@@ -207,90 +207,90 @@ public:
     MAX                = 1ULL << 18
   };
 
-static constexpr std::string_view talent_name_formatted( lisa_talents_t t )
+static constexpr std::string_view talent_name_formatted( aeona_talents_t t )
   {
     switch ( t )
     {
-      case lisa_talents_t::ENTROPIC_BURST:
+      case aeona_talents_t::ENTROPIC_BURST:
         return "Entropic Burst";
-      case lisa_talents_t::ERASURE:
+      case aeona_talents_t::ERASURE:
         return "Erasure";
-      case lisa_talents_t::KIND_REWIND:
+      case aeona_talents_t::KIND_REWIND:
         return "Kind Rewind";
-      case lisa_talents_t::CHRONA_TAP:
+      case aeona_talents_t::CHRONA_TAP:
         return "Chrona Tap";
-      case lisa_talents_t::QUICKENING:
+      case aeona_talents_t::QUICKENING:
         return "Quickening";
-      case lisa_talents_t::UCHRONIA:
+      case aeona_talents_t::UCHRONIA:
         return "Uchronia";
-      case lisa_talents_t::HASTENING_DOOM:
+      case aeona_talents_t::HASTENING_DOOM:
         return "Hastening Doom";
-      case lisa_talents_t::SYNCHRONICITY:
+      case aeona_talents_t::SYNCHRONICITY:
         return "Synchronicity";
-      case lisa_talents_t::TEMPORAL_SHIFT:
+      case aeona_talents_t::TEMPORAL_SHIFT:
         return "Temporal Shift";
-      case lisa_talents_t::SURGING_CHRONA:
+      case aeona_talents_t::SURGING_CHRONA:
         return "Surging Chrona";
-      case lisa_talents_t::MAGIC_WARD:
+      case aeona_talents_t::MAGIC_WARD:
         return "Magic Ward";
-      case lisa_talents_t::RESONANT_FATE:
+      case aeona_talents_t::RESONANT_FATE:
         return "Resonant Fate";
-      case lisa_talents_t::PARADOXICAL_TWIST:
+      case aeona_talents_t::PARADOXICAL_TWIST:
         return "Paradoxical Twist";
-      case lisa_talents_t::OBLIVIONS_EMBRACE:
+      case aeona_talents_t::OBLIVIONS_EMBRACE:
         return "Oblivion's Embrace";
-      case lisa_talents_t::CONTINUUM_SHIFT:
+      case aeona_talents_t::CONTINUUM_SHIFT:
         return "Continuum Shift";
-      case lisa_talents_t::ECHOES_OF_DIVINITY:
+      case aeona_talents_t::ECHOES_OF_DIVINITY:
         return "Echoes of Divinity";
-      case lisa_talents_t::SPIRITED_FORTITUDE:
+      case aeona_talents_t::SPIRITED_FORTITUDE:
         return "Spirited Fortitude";
-      case lisa_talents_t::VESTIGE_OF_TRUTH:
+      case aeona_talents_t::VESTIGE_OF_TRUTH:
         return "Vestige of Truth";
       default:
         return "Unknown Talent";
     }
   }
 
-  static constexpr std::string_view talent_name( lisa_talents_t t )
+  static constexpr std::string_view talent_name( aeona_talents_t t )
   {
     switch ( t )
     {
-      case lisa_talents_t::ENTROPIC_BURST:
+      case aeona_talents_t::ENTROPIC_BURST:
         return "entropic_burst";
-      case lisa_talents_t::ERASURE:
+      case aeona_talents_t::ERASURE:
         return "erasure";
-      case lisa_talents_t::KIND_REWIND:
+      case aeona_talents_t::KIND_REWIND:
         return "kind_rewind";
-      case lisa_talents_t::CHRONA_TAP:
+      case aeona_talents_t::CHRONA_TAP:
         return "chrona_tap";
-      case lisa_talents_t::QUICKENING:
+      case aeona_talents_t::QUICKENING:
         return "quickening";
-      case lisa_talents_t::UCHRONIA:
+      case aeona_talents_t::UCHRONIA:
         return "uchronia";
-      case lisa_talents_t::HASTENING_DOOM:
+      case aeona_talents_t::HASTENING_DOOM:
         return "hastening_doom";
-      case lisa_talents_t::SYNCHRONICITY:
+      case aeona_talents_t::SYNCHRONICITY:
         return "synchronicity";
-      case lisa_talents_t::TEMPORAL_SHIFT:
+      case aeona_talents_t::TEMPORAL_SHIFT:
         return "temporal_shift";
-      case lisa_talents_t::SURGING_CHRONA:
+      case aeona_talents_t::SURGING_CHRONA:
         return "surging_chrona";
-      case lisa_talents_t::MAGIC_WARD:
+      case aeona_talents_t::MAGIC_WARD:
         return "magic_ward";
-      case lisa_talents_t::RESONANT_FATE:
+      case aeona_talents_t::RESONANT_FATE:
         return "resonant_fate";
-      case lisa_talents_t::PARADOXICAL_TWIST:
+      case aeona_talents_t::PARADOXICAL_TWIST:
         return "paradoxical_twist";
-      case lisa_talents_t::OBLIVIONS_EMBRACE:
+      case aeona_talents_t::OBLIVIONS_EMBRACE:
         return "oblivions_embrace";
-      case lisa_talents_t::CONTINUUM_SHIFT:
+      case aeona_talents_t::CONTINUUM_SHIFT:
         return "continuum_shift";
-      case lisa_talents_t::ECHOES_OF_DIVINITY:
+      case aeona_talents_t::ECHOES_OF_DIVINITY:
         return "echoes_of_divinity";
-      case lisa_talents_t::SPIRITED_FORTITUDE:
+      case aeona_talents_t::SPIRITED_FORTITUDE:
         return "spirited_fortitude";
-      case lisa_talents_t::VESTIGE_OF_TRUTH:
+      case aeona_talents_t::VESTIGE_OF_TRUTH:
         return "vestige_of_truth";
       default:
         return "unknown_talent";
@@ -374,19 +374,19 @@ static constexpr std::string_view talent_name_formatted( lisa_talents_t t )
     double max_mana_multiplier = 1.0;
   } options;
 
-  target_specific_t<lisa_td_t> target_data;
+  target_specific_t<aeona_td_t> target_data;
 
-  const lisa_td_t* find_target_data( const player_t* target ) const override
+  const aeona_td_t* find_target_data( const player_t* target ) const override
   {
     return target_data[ target ];
   }
 
-  lisa_td_t* get_target_data( player_t* target ) const override
+  aeona_td_t* get_target_data( player_t* target ) const override
   {
-    lisa_td_t*& td = target_data[ target ];
+    aeona_td_t*& td = target_data[ target ];
     if ( !td )
     {
-      td = new lisa_td_t( target, const_cast<lisa_t*>( this ) );
+      td = new aeona_td_t( target, const_cast<aeona_t*>( this ) );
     }
     return td;
   }
@@ -450,7 +450,7 @@ static constexpr std::string_view talent_name_formatted( lisa_talents_t t )
   {
     auto m = fs_player_t::composite_action_ta_multiplier( s );
 
-    if ( talents_enabled( lisa_t::SYNCHRONICITY ) && s->action->secondary_costs[ RESOURCE_CHRONA ] < 1 &&
+    if ( talents_enabled( aeona_t::SYNCHRONICITY ) && s->action->secondary_costs[ RESOURCE_CHRONA ] < 1 &&
          resources.pct( RESOURCE_CHRONA ) >= talents.synchronicity_threshold )
     {
       m *= 1 + talents.synchronicity_amp;
@@ -463,7 +463,7 @@ static constexpr std::string_view talent_name_formatted( lisa_talents_t t )
   {
     auto m = fs_player_t::composite_action_da_multiplier( s );
 
-    if ( talents_enabled( lisa_t::SYNCHRONICITY ) && s->action->secondary_costs[ RESOURCE_CHRONA ] < 1 &&
+    if ( talents_enabled( aeona_t::SYNCHRONICITY ) && s->action->secondary_costs[ RESOURCE_CHRONA ] < 1 &&
          resources.pct( RESOURCE_CHRONA ) >= talents.synchronicity_threshold )
     {
       m *= 1 + talents.synchronicity_amp;
@@ -520,8 +520,8 @@ static constexpr std::string_view talent_name_formatted( lisa_talents_t t )
     return "disabled";
   }
 
-  lisa_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
-    : fs_player_t( sim, name, r, LISA ), target_data()
+  aeona_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
+    : fs_player_t( sim, name, r, AEONA ), target_data()
   {
     create_cooldowns();
   }
@@ -589,26 +589,26 @@ struct secondary_action_trigger_t : public event_t
 };
 
 template <typename T_ACTION>
-struct lisa_action_state_t : public action_state_t
+struct aeona_action_state_t : public action_state_t
 {
 private:
   T_ACTION* action;
 
 public:
   double temporal_pct;
-  lisa_action_state_t( action_t* action, player_t* target )
+  aeona_action_state_t( action_t* action, player_t* target )
     : action_state_t( action, target ), action( dynamic_cast<T_ACTION*>( action ) )
   {
   }
 
-  lisa_t* p() const
+  aeona_t* p() const
   {
-    return debug_cast<lisa_t*>( action->player );
+    return debug_cast<aeona_t*>( action->player );
   }
 
-  lisa_t* p()
+  aeona_t* p()
   {
-    return debug_cast<lisa_t*>( action->player );
+    return debug_cast<aeona_t*>( action->player );
   }
 
   void initialize() override
@@ -626,7 +626,7 @@ public:
   void copy_state( const action_state_t* s )
   {
     action_state_t::copy_state( s );
-    const lisa_action_state_t* rs = debug_cast<const lisa_action_state_t*>( s );
+    const aeona_action_state_t* rs = debug_cast<const aeona_action_state_t*>( s );
     temporal_pct                  = rs->temporal_pct;
   }
 
@@ -637,11 +637,11 @@ public:
 };
 
 template <typename Base>
-class lisa_action_t : public Base
+class aeona_action_t : public Base
 {
 protected:
-  /// typedef for lisa_action_t<action_base_t>
-  using base_t = lisa_action_t<Base>;
+  /// typedef for aeona_action_t<action_base_t>
+  using base_t = aeona_action_t<Base>;
 
 private:
   /// typedef for the templated action type, eg. spell_t, attack_t, heal_t
@@ -651,13 +651,13 @@ public:
   secondary_trigger secondary_trigger_type;
 
   // Init =====================================================================
-  lisa_action_t( util::string_view n, lisa_t* p, util::string_view options = {} )
+  aeona_action_t( util::string_view n, aeona_t* p, util::string_view options = {} )
     : ab( n, p, options ), secondary_trigger_type( secondary_trigger::NONE )
   {
     ab::may_crit = ab::tick_may_crit = true;
     ab::school                       = SCHOOL_ARCANE;
 
-    // lisa_t sets base and min GCD to 1.5_s hasted
+    // aeona_t sets base and min GCD to 1.5_s hasted
     ab::gcd_type = gcd_haste_type::SPELL_HASTE;
   }
 
@@ -668,27 +668,27 @@ public:
 
   // Type Wrappers ============================================================
 
-  static const lisa_action_state_t<base_t>* cast_state( const action_state_t* st )
+  static const aeona_action_state_t<base_t>* cast_state( const action_state_t* st )
   {
-    return debug_cast<const lisa_action_state_t<base_t>*>( st );
+    return debug_cast<const aeona_action_state_t<base_t>*>( st );
   }
 
-  static lisa_action_state_t<base_t>* cast_state( action_state_t* st )
+  static aeona_action_state_t<base_t>* cast_state( action_state_t* st )
   {
-    return debug_cast<lisa_action_state_t<base_t>*>( st );
+    return debug_cast<aeona_action_state_t<base_t>*>( st );
   }
 
-  lisa_t* p()
+  aeona_t* p()
   {
-    return debug_cast<lisa_t*>( ab::player );
+    return debug_cast<aeona_t*>( ab::player );
   }
 
-  const lisa_t* p() const
+  const aeona_t* p() const
   {
-    return debug_cast<const lisa_t*>( ab::player );
+    return debug_cast<const aeona_t*>( ab::player );
   }
 
-  lisa_td_t* td( player_t* t ) const
+  aeona_td_t* td( player_t* t ) const
   {
     return p()->get_target_data( t );
   }
@@ -697,7 +697,7 @@ public:
 
   action_state_t* new_state() override
   {
-    return new lisa_action_state_t<base_t>( this, ab::target );
+    return new aeona_action_state_t<base_t>( this, ab::target );
   }
 
   void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
@@ -907,7 +907,7 @@ public:
 
     if ( ab::current_resource() == RESOURCE_CHRONA )
     {
-      if ( p()->talents_enabled( lisa_t::CHRONA_TAP ) )
+      if ( p()->talents_enabled( aeona_t::CHRONA_TAP ) )
       {
         p()->buffs.chrona_tap->trigger();
       }
@@ -918,7 +918,7 @@ public:
         return;
       }
 
-      if ( p()->talents_enabled( lisa_t::UCHRONIA ) )
+      if ( p()->talents_enabled( aeona_t::UCHRONIA ) )
       {
         p()->buffs.uchronia->trigger();
       }
@@ -958,14 +958,14 @@ public:
   }
 };
 
-struct lisa_heal_t : public lisa_action_t<fellowship::actions::fs_player_action_t<heal_t>>
+struct aeona_heal_t : public aeona_action_t<fellowship::actions::fs_player_action_t<heal_t>>
 {
   double chrona_on_hit;
   double chrona_on_crit;
   double chrona_on_tick;
   double chrona_on_tick_crit;
 
-  lisa_heal_t( util::string_view n, lisa_t* p, util::string_view o = {} )
+  aeona_heal_t( util::string_view n, aeona_t* p, util::string_view o = {} )
     : base_t( n, p, o ),
       chrona_on_hit( 0 ),
       chrona_on_crit( 0 ),
@@ -979,7 +979,7 @@ struct lisa_heal_t : public lisa_action_t<fellowship::actions::fs_player_action_
 
   virtual double chrona_multiplier( const action_state_t* s ) const
   {
-    if ( p()->talent_enabled( lisa_t::SYNCHRONICITY ) &&
+    if ( p()->talent_enabled( aeona_t::SYNCHRONICITY ) &&
          p()->resources.pct( RESOURCE_CHRONA ) < p()->talents.synchronicity_threshold )
     {
       return 1.0 + p()->talents.synchronicity_resource_amp;
@@ -1023,14 +1023,14 @@ struct lisa_heal_t : public lisa_action_t<fellowship::actions::fs_player_action_
   }
 };
 
-struct lisa_spell_t : public lisa_action_t<fellowship::actions::fs_player_action_t<spell_t>>
+struct aeona_spell_t : public aeona_action_t<fellowship::actions::fs_player_action_t<spell_t>>
 {
   double chrona_on_hit;
   double chrona_on_crit;
   double chrona_on_tick;
   double chrona_on_tick_crit;
 
-  lisa_spell_t( util::string_view n, lisa_t* p, util::string_view o = {} )
+  aeona_spell_t( util::string_view n, aeona_t* p, util::string_view o = {} )
     : base_t( n, p, o ), chrona_on_hit( 0 ), chrona_on_crit( 0 ), chrona_on_tick( 0 ), chrona_on_tick_crit( 0 )
   {
     resource_current = RESOURCE_MANA;
@@ -1038,7 +1038,7 @@ struct lisa_spell_t : public lisa_action_t<fellowship::actions::fs_player_action
 
   virtual double chrona_multiplier( const action_state_t* s ) const
   {
-    if ( p()->talent_enabled( lisa_t::SYNCHRONICITY ) &&
+    if ( p()->talent_enabled( aeona_t::SYNCHRONICITY ) &&
          p()->resources.pct( RESOURCE_CHRONA ) < p()->talents.synchronicity_threshold )
     {
       return 1.0 + p()->talents.synchronicity_resource_amp;
@@ -1082,10 +1082,10 @@ struct lisa_spell_t : public lisa_action_t<fellowship::actions::fs_player_action
   }
 };
 
-struct time_shard_t : public lisa_spell_t
+struct time_shard_t : public aeona_spell_t
 {
-  time_shard_t( util::string_view name, lisa_t* p, util::string_view options_str = {} )
-    : lisa_spell_t( name, p, options_str )
+  time_shard_t( util::string_view name, aeona_t* p, util::string_view options_str = {} )
+    : aeona_spell_t( name, p, options_str )
   {
     id = 2;
 
@@ -1105,7 +1105,7 @@ struct time_shard_t : public lisa_spell_t
 
   double chrona_multiplier( const action_state_t* s ) const override
   {
-    double m = lisa_spell_t::chrona_multiplier( s );
+    double m = aeona_spell_t::chrona_multiplier( s );
 
     if ( p()->buffs.continuum_shift->check() )
     {
@@ -1116,7 +1116,7 @@ struct time_shard_t : public lisa_spell_t
 
   double composite_target_crit_chance( player_t* target ) const override
   {
-    double c = lisa_spell_t::composite_target_crit_chance( target );
+    double c = aeona_spell_t::composite_target_crit_chance( target );
 
     if ( p()->legendary.chrono_trigger && p()->get_target_data( target )->debuffs.unfolding_doom->check() )
     {
@@ -1128,7 +1128,7 @@ struct time_shard_t : public lisa_spell_t
 
   double execute_time_pct_multiplier() const override
   {
-    auto m = lisa_spell_t::execute_time_pct_multiplier();
+    auto m = aeona_spell_t::execute_time_pct_multiplier();
 
     if ( p()->buffs.continuum_shift->check() )
     {
@@ -1140,7 +1140,7 @@ struct time_shard_t : public lisa_spell_t
 
   double composite_da_multiplier( const action_state_t* s ) const override
   {
-    double m = lisa_spell_t::composite_da_multiplier( s );
+    double m = aeona_spell_t::composite_da_multiplier( s );
     if ( p()->buffs.continuum_shift->check() )
     {
       m *= p()->talents.continuum_shift_time_shard_dmg_mul;
@@ -1150,8 +1150,8 @@ struct time_shard_t : public lisa_spell_t
 
   void impact( action_state_t* s ) override
   {
-    lisa_spell_t::impact( s );
-    if ( p()->talents_enabled( lisa_t::KIND_REWIND ) &&
+    aeona_spell_t::impact( s );
+    if ( p()->talents_enabled( aeona_t::KIND_REWIND ) &&
          p()->get_target_data( s->target )->dots.echoes_of_ruin->is_ticking() )
     {
       p()->cooldowns.temporal_barrage->adjust( -p()->talents.time_rewind_cdr, false );
@@ -1160,9 +1160,9 @@ struct time_shard_t : public lisa_spell_t
 
   void execute() override
   {
-    lisa_spell_t::execute();
+    aeona_spell_t::execute();
 
-    if ( p()->talents_enabled( lisa_t::QUICKENING ) && rng().roll( p()->talents.quickening_chance ) )
+    if ( p()->talents_enabled( aeona_t::QUICKENING ) && rng().roll( p()->talents.quickening_chance ) )
     {
       p()->buffs.quickening->trigger();
     }
@@ -1171,10 +1171,10 @@ struct time_shard_t : public lisa_spell_t
   }
 };
 
-struct echoes_of_ruin_t : public lisa_spell_t
+struct echoes_of_ruin_t : public aeona_spell_t
 {
-  echoes_of_ruin_t( lisa_t* p, util::string_view options_str = {} )
-    : lisa_spell_t( "echoes_of_ruin", p, options_str )
+  echoes_of_ruin_t( aeona_t* p, util::string_view options_str = {} )
+    : aeona_spell_t( "echoes_of_ruin", p, options_str )
   {
     id                 = 3;
     name_str_reporting = "Echoes of Ruin";
@@ -1203,12 +1203,12 @@ struct echoes_of_ruin_t : public lisa_spell_t
   int n_targets() const override
   {
     return p()->buffs.continuum_shift->check() ? p()->talents.continuum_shift_echoes_of_ruin_targets
-                                               : lisa_spell_t::n_targets();
+                                               : aeona_spell_t::n_targets();
   }
 
   double tick_time_pct_multiplier( const action_state_t* s ) const override
   {
-    double m = lisa_spell_t::tick_time_pct_multiplier( s );
+    double m = aeona_spell_t::tick_time_pct_multiplier( s );
 
     if ( p()->legendary.chrono_trigger && p()->get_target_data( target )->debuffs.unfolding_doom->check() )
     {
@@ -1238,9 +1238,9 @@ struct echoes_of_ruin_t : public lisa_spell_t
   }
 };
 
-struct entropys_calm_t : public lisa_spell_t
+struct entropys_calm_t : public aeona_spell_t
 {
-  entropys_calm_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "entropys_calm", p, options_str )
+  entropys_calm_t( aeona_t* p, util::string_view options_str = {} ) : aeona_spell_t( "entropys_calm", p, options_str )
   {
     id                     = 4;
     name_str_reporting     = "Entropys Calm";
@@ -1274,7 +1274,7 @@ struct entropys_calm_t : public lisa_spell_t
 
   double tick_time_pct_multiplier( const action_state_t* s ) const override
   {
-    double m = lisa_spell_t::tick_time_pct_multiplier( s );
+    double m = aeona_spell_t::tick_time_pct_multiplier( s );
 
     if ( p()->legendary.chrono_trigger && p()->get_target_data( target )->debuffs.unfolding_doom->check() )
     {
@@ -1286,9 +1286,9 @@ struct entropys_calm_t : public lisa_spell_t
 
   void last_tick( dot_t* d ) override
   {
-    lisa_spell_t::last_tick( d );
+    aeona_spell_t::last_tick( d );
 
-    if ( p()->talents_enabled( lisa_t::ENTROPIC_BURST ) )
+    if ( p()->talents_enabled( aeona_t::ENTROPIC_BURST ) )
     {
       player_t* target = d->target;
 
@@ -1313,15 +1313,15 @@ struct entropys_calm_t : public lisa_spell_t
 
   void execute() override
   {
-    lisa_spell_t::execute();
+    aeona_spell_t::execute();
     
     p()->buffs.continuum_shift->expire();
   }
 };
 
-struct unfolding_doom_t : public lisa_spell_t
+struct unfolding_doom_t : public aeona_spell_t
 {
-  unfolding_doom_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "unfolding_doom", p, options_str )
+  unfolding_doom_t( aeona_t* p, util::string_view options_str = {} ) : aeona_spell_t( "unfolding_doom", p, options_str )
   {
     id                     = 5;
     name_str_reporting     = "Unfolding Doom";
@@ -1357,19 +1357,19 @@ struct unfolding_doom_t : public lisa_spell_t
   {
     base_t::execute();
 
-    if ( p()->talents_enabled( lisa_t::CONTINUUM_SHIFT ) )
+    if ( p()->talents_enabled( aeona_t::CONTINUUM_SHIFT ) )
     {
       p()->buffs.continuum_shift->trigger();
     }
   }
 };
 
-struct temporal_barrage_t : public lisa_spell_t
+struct temporal_barrage_t : public aeona_spell_t
 {
-    struct temporal_barrage_projectile_t : public lisa_spell_t
+    struct temporal_barrage_projectile_t : public aeona_spell_t
   {
-    temporal_barrage_projectile_t( lisa_t* p, util::string_view options_str = {} )
-      : lisa_spell_t( "temporal_barrage_projectile", p, options_str )
+    temporal_barrage_projectile_t( aeona_t* p, util::string_view options_str = {} )
+      : aeona_spell_t( "temporal_barrage_projectile", p, options_str )
     {
       id = 6;
 
@@ -1388,7 +1388,7 @@ struct temporal_barrage_t : public lisa_spell_t
 
     int n_targets() const override
     {
-      if ( p()->talents_enabled( lisa_t::PARADOXICAL_TWIST ) && p()->buffs.fleeting_hour->check() )
+      if ( p()->talents_enabled( aeona_t::PARADOXICAL_TWIST ) && p()->buffs.fleeting_hour->check() )
       {
         return 1 + p()->talents.paradoxical_twist_cleave_targets;
       }
@@ -1397,7 +1397,7 @@ struct temporal_barrage_t : public lisa_spell_t
 
     double chrona_multiplier( const action_state_t* s ) const override
     {
-      double m = lisa_spell_t::chrona_multiplier( s );
+      double m = aeona_spell_t::chrona_multiplier( s );
 
       if ( s->chain_target > 0 )
       {
@@ -1409,9 +1409,9 @@ struct temporal_barrage_t : public lisa_spell_t
 
     double composite_da_multiplier( const action_state_t* s ) const override
     {
-      double m = lisa_spell_t::composite_da_multiplier( s );
+      double m = aeona_spell_t::composite_da_multiplier( s );
 
-      if ( p()->talents_enabled( lisa_t::PARADOXICAL_TWIST ) && s->chain_target == 0 &&
+      if ( p()->talents_enabled( aeona_t::PARADOXICAL_TWIST ) && s->chain_target == 0 &&
            p()->buffs.fleeting_hour->check() )
       {
         m *= 1.0 + p()->talents.paradoxical_twist_amp;
@@ -1427,9 +1427,9 @@ struct temporal_barrage_t : public lisa_spell_t
 
     void execute() override
     {
-      lisa_spell_t::execute();
+      aeona_spell_t::execute();
 
-      if ( p()->talents_enabled( lisa_t::TEMPORAL_SHIFT ) )
+      if ( p()->talents_enabled( aeona_t::TEMPORAL_SHIFT ) )
       {
         if ( p()->buffs.fleeting_hour->check() )
         {
@@ -1443,7 +1443,7 @@ struct temporal_barrage_t : public lisa_spell_t
     }
   };
 
-  temporal_barrage_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "temporal_barrage", p, options_str )
+  temporal_barrage_t( aeona_t* p, util::string_view options_str = {} ) : aeona_spell_t( "temporal_barrage", p, options_str )
   {
     id = 6;
 
@@ -1478,9 +1478,9 @@ struct temporal_barrage_t : public lisa_spell_t
   }
 };
 
-struct fleeting_hour_t : public lisa_spell_t
+struct fleeting_hour_t : public aeona_spell_t
 {
-  fleeting_hour_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "fleeting_hour", p, options_str )
+  fleeting_hour_t( aeona_t* p, util::string_view options_str = {} ) : aeona_spell_t( "fleeting_hour", p, options_str )
   {
     id = 7;
 
@@ -1501,10 +1501,10 @@ struct fleeting_hour_t : public lisa_spell_t
 
   void execute() override
   {
-    lisa_spell_t::execute();
+    aeona_spell_t::execute();
     p()->buffs.fleeting_hour->trigger();
 
-    if ( p()->talents_enabled( lisa_t::SURGING_CHRONA ) )
+    if ( p()->talents_enabled( aeona_t::SURGING_CHRONA ) )
     {
       p()->resource_gain( RESOURCE_CHRONA, p()->talents.surging_chrona_resource, gain, this );
     }
@@ -1519,9 +1519,9 @@ struct fleeting_hour_t : public lisa_spell_t
   }
 };
 
-struct epoch_break_t : public lisa_spell_t
+struct epoch_break_t : public aeona_spell_t
 {
-  epoch_break_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "epoch_break", p, options_str )
+  epoch_break_t( aeona_t* p, util::string_view options_str = {} ) : aeona_spell_t( "epoch_break", p, options_str )
   {
     id = 8;
 
@@ -1537,16 +1537,16 @@ struct epoch_break_t : public lisa_spell_t
 
   void execute() override
   {
-    lisa_spell_t::execute();
+    aeona_spell_t::execute();
     p()->fs_buffs.spirit_of_heroism->trigger();
     p()->buffs.epoch_break->trigger();
     p()->used_ultimate();
   }
 };
 
-struct oblivion_t : public lisa_spell_t
+struct oblivion_t : public aeona_spell_t
 {
-  oblivion_t( lisa_t* p, util::string_view options_str = {} ) : lisa_spell_t( "oblivion", p, options_str )
+  oblivion_t( aeona_t* p, util::string_view options_str = {} ) : aeona_spell_t( "oblivion", p, options_str )
   {
     id = 9;
 
@@ -1567,14 +1567,14 @@ struct oblivion_t : public lisa_spell_t
     if ( p()->buffs.epoch_break->check() )
       return 0;
 
-    return lisa_spell_t::cost();
+    return aeona_spell_t::cost();
   }
 
   double composite_player_critical_multiplier( const action_state_t* s ) const override
   {
-    double cm = lisa_spell_t::composite_player_critical_multiplier( s );
+    double cm = aeona_spell_t::composite_player_critical_multiplier( s );
 
-    if ( p()->talents_enabled( lisa_t::OBLIVIONS_EMBRACE ) )
+    if ( p()->talents_enabled( aeona_t::OBLIVIONS_EMBRACE ) )
     {
       cm *= 1.0 + p()->talents.oblivions_embrace_crit_dmg;
     }
@@ -1584,8 +1584,8 @@ struct oblivion_t : public lisa_spell_t
 
   void impact( action_state_t* s ) override
   {
-    lisa_spell_t::impact( s );
-    if ( p()->talents_enabled( lisa_t::ERASURE ) )
+    aeona_spell_t::impact( s );
+    if ( p()->talents_enabled( aeona_t::ERASURE ) )
     {
       residual_action::trigger( p()->actions.erasure, s->target, s->result_amount * p()->talents.erasure_multiplier );
     }
@@ -1593,16 +1593,16 @@ struct oblivion_t : public lisa_spell_t
 
   void execute() override
   {
-    lisa_spell_t::execute();
+    aeona_spell_t::execute();
 
     if ( p()->legendary.lonesome_song )
       p()->buffs.lonesome_song->trigger();
   }
 };
 
-struct erasure_t : public residual_action::residual_periodic_action_t<lisa_spell_t>
+struct erasure_t : public residual_action::residual_periodic_action_t<aeona_spell_t>
 {
-  erasure_t( util::string_view name, lisa_t* p ) : residual_action_t( name, p )
+  erasure_t( util::string_view name, aeona_t* p ) : residual_action_t( name, p )
   {
     id = 10;
 
@@ -1630,9 +1630,9 @@ struct erasure_t : public residual_action::residual_periodic_action_t<lisa_spell
   }
 };
 
-struct entropic_burst_t : public lisa_spell_t
+struct entropic_burst_t : public aeona_spell_t
 {
-  entropic_burst_t( util::string_view name, lisa_t* p ) : lisa_spell_t( name, p )
+  entropic_burst_t( util::string_view name, aeona_t* p ) : aeona_spell_t( name, p )
   {
     id = 11;
 
@@ -1654,9 +1654,9 @@ struct entropic_burst_t : public lisa_spell_t
   }
 };
 
-struct restore_continuity_t : public lisa_heal_t
+struct restore_continuity_t : public aeona_heal_t
 {
-  restore_continuity_t( lisa_t* p, util::string_view options_str = {} ) : lisa_heal_t( "restore_continuity", p, options_str )
+  restore_continuity_t( aeona_t* p, util::string_view options_str = {} ) : aeona_heal_t( "restore_continuity", p, options_str )
   {
     id = 12;
 
@@ -1676,14 +1676,14 @@ struct restore_continuity_t : public lisa_heal_t
     if ( p()->buffs.epoch_break->check() )
       return 0;
 
-    return lisa_heal_t::cost();
+    return aeona_heal_t::cost();
   }
 };
 
-struct amend_fate_t : public lisa_heal_t
+struct amend_fate_t : public aeona_heal_t
 {
-  amend_fate_t( lisa_t* p, util::string_view options_str = {} )
-    : lisa_heal_t( "amend_fate", p, options_str )
+  amend_fate_t( aeona_t* p, util::string_view options_str = {} )
+    : aeona_heal_t( "amend_fate", p, options_str )
   {
     id = 13;
 
@@ -1703,7 +1703,7 @@ struct amend_fate_t : public lisa_heal_t
     if ( p()->buffs.epoch_break->check() )
       return 0;
 
-    return lisa_heal_t::cost();
+    return aeona_heal_t::cost();
   }
 };
 
@@ -1713,7 +1713,7 @@ struct amend_fate_t : public lisa_heal_t
 // Rogue Targetdata Definitions
 // ==========================================================================
 
-lisa_td_t::lisa_td_t( player_t* target, lisa_t* source )
+aeona_td_t::aeona_td_t( player_t* target, aeona_t* source )
   : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
 {
   dots.echoes_of_ruin = target->get_dot( "echoes_of_ruin", source );
@@ -1728,7 +1728,7 @@ lisa_td_t::lisa_td_t( player_t* target, lisa_t* source )
                                ->set_duration( source->spell_const.unfolding_doom_debuff_duration )
                                ->set_default_value( source->spell_const.unfolding_doom_debuff_amp );
 
-  if ( source->talents_enabled( lisa_t::HASTENING_DOOM ) )
+  if ( source->talents_enabled( aeona_t::HASTENING_DOOM ) )
   {
     debuffs.unfolding_doom->add_stack_change_callback( [ this, source ]( buff_t* b, int old, int _new ) {
       if ( _new > old )
@@ -1749,91 +1749,91 @@ lisa_td_t::lisa_td_t( player_t* target, lisa_t* source )
 // Rogue Character Definition
 // ==========================================================================
 
-// lisa_t::composite_attribute_multiplier ==================================
+// aeona_t::composite_attribute_multiplier ==================================
 
-double lisa_t::composite_attribute_multiplier( attribute_e a ) const
+double aeona_t::composite_attribute_multiplier( attribute_e a ) const
 {
   double am = fs_player_t::composite_attribute_multiplier( a );
 
   return am;
 }
-// lisa_t::composite_spell_haste ==========================================
+// aeona_t::composite_spell_haste ==========================================
 
-double lisa_t::composite_spell_haste() const
+double aeona_t::composite_spell_haste() const
 {
   double h = fs_player_t::composite_spell_haste();
 
   return h;
 }
 
-// lisa_t::composite_spell_crit_chance =========================================
+// aeona_t::composite_spell_crit_chance =========================================
 
-double lisa_t::composite_spell_crit_chance() const
+double aeona_t::composite_spell_crit_chance() const
 {
   double crit = fs_player_t::composite_spell_crit_chance();
 
   return crit;
 }
 
-// lisa_t::composite_damage_versatility ===================================
+// aeona_t::composite_damage_versatility ===================================
 
-double lisa_t::composite_damage_versatility() const
+double aeona_t::composite_damage_versatility() const
 {
   double cdv = fs_player_t::composite_damage_versatility();
 
   return cdv;
 }
 
-// lisa_t::composite_heal_versatility =====================================
+// aeona_t::composite_heal_versatility =====================================
 
-double lisa_t::composite_heal_versatility() const
+double aeona_t::composite_heal_versatility() const
 {
   double chv = fs_player_t::composite_heal_versatility();
 
   return chv;
 }
 
-// lisa_t::composite_leech ===============================================
+// aeona_t::composite_leech ===============================================
 
-double lisa_t::composite_leech() const
+double aeona_t::composite_leech() const
 {
   double l = fs_player_t::composite_leech();
 
   return l;
 }
 
-// lisa_t::matching_gear_multiplier ========================================
+// aeona_t::matching_gear_multiplier ========================================
 
-double lisa_t::matching_gear_multiplier( attribute_e attr ) const
+double aeona_t::matching_gear_multiplier( attribute_e attr ) const
 {
   return 0.0;
 }
 
-// lisa_t::composite_player_multiplier =====================================
+// aeona_t::composite_player_multiplier =====================================
 
-double lisa_t::composite_player_multiplier( school_e school ) const
+double aeona_t::composite_player_multiplier( school_e school ) const
 {
   double m = fs_player_t::composite_player_multiplier( school );
 
   return m;
 }
 
-// lisa_t::composite_player_pet_damage_multiplier ==========================
+// aeona_t::composite_player_pet_damage_multiplier ==========================
 
-double lisa_t::composite_player_pet_damage_multiplier( const action_state_t* s, bool guardian ) const
+double aeona_t::composite_player_pet_damage_multiplier( const action_state_t* s, bool guardian ) const
 {
   double m = fs_player_t::composite_player_pet_damage_multiplier( s, guardian );
 
   return m;
 }
 
-// lisa_t::composite_player_target_multiplier ==============================
+// aeona_t::composite_player_target_multiplier ==============================
 
-double lisa_t::composite_player_target_multiplier( player_t* target, school_e school ) const
+double aeona_t::composite_player_target_multiplier( player_t* target, school_e school ) const
 {
   double m = fs_player_t::composite_player_target_multiplier( target, school );
 
-  const lisa_td_t* tdata = find_target_data( target );
+  const aeona_td_t* tdata = find_target_data( target );
 
   if ( tdata )
     m *= 1.0 + tdata->debuffs.unfolding_doom->check_value();
@@ -1841,18 +1841,18 @@ double lisa_t::composite_player_target_multiplier( player_t* target, school_e sc
   return m;
 }
 
-// lisa_t::composite_player_target_crit_chance =============================
+// aeona_t::composite_player_target_crit_chance =============================
 
-double lisa_t::composite_player_target_crit_chance( player_t* target ) const
+double aeona_t::composite_player_target_crit_chance( player_t* target ) const
 {
   double c = fs_player_t::composite_player_target_crit_chance( target );
 
   return c;
 }
 
-// lisa_t::composite_player_target_armor ===================================
+// aeona_t::composite_player_target_armor ===================================
 
-double lisa_t::composite_player_target_armor( player_t* target ) const
+double aeona_t::composite_player_target_armor( player_t* target ) const
 {
   return 0.0;
 
@@ -1860,9 +1860,9 @@ double lisa_t::composite_player_target_armor( player_t* target ) const
 
   return a;
 }
-// lisa_t::init_actions ====================================================
+// aeona_t::init_actions ====================================================
 
-void lisa_t::init_action_list()
+void aeona_t::init_action_list()
 {
   if ( !action_list_str.empty() )
   {
@@ -1877,9 +1877,9 @@ void lisa_t::init_action_list()
   fs_player_t::init_action_list();
 }
 
-// lisa_t::create_action  ==================================================
+// aeona_t::create_action  ==================================================
 
-action_t* lisa_t::create_action( util::string_view name, util::string_view options_str )
+action_t* aeona_t::create_action( util::string_view name, util::string_view options_str )
 {
   using namespace actions;
 
@@ -1907,16 +1907,16 @@ action_t* lisa_t::create_action( util::string_view name, util::string_view optio
   return fs_player_t::create_action( name, options_str );
 }
 
-// lisa_t::create_expression ===============================================
+// aeona_t::create_expression ===============================================
 
-std::unique_ptr<expr_t> lisa_t::create_action_expression( action_t& action, std::string_view name_str )
+std::unique_ptr<expr_t> aeona_t::create_action_expression( action_t& action, std::string_view name_str )
 {
   // auto split = util::string_split<util::string_view>( name_str, "." );
 
   return fs_player_t::create_action_expression( action, name_str );
 }
 
-std::unique_ptr<expr_t> lisa_t::create_expression( util::string_view name_str )
+std::unique_ptr<expr_t> aeona_t::create_expression( util::string_view name_str )
 {
   auto split = util::string_split<util::string_view>( name_str, "." );
 
@@ -1938,11 +1938,11 @@ std::unique_ptr<expr_t> lisa_t::create_expression( util::string_view name_str )
   {
     if ( split.size() == 2 )
     {
-      for ( lisa_talents_t t = static_cast<lisa_talents_t>( 1U ); t < lisa_talents_t::MAX; t++ )
+      for ( aeona_talents_t t = static_cast<aeona_talents_t>( 1U ); t < aeona_talents_t::MAX; t++ )
       {
         if ( util::str_compare_ci( split[ 1 ], talent_name( t ) ) )
         {
-          return make_fn_expr( name_str, std::bind( std::mem_fn( &lisa_t::talents_enabled ), this, t ) );
+          return make_fn_expr( name_str, std::bind( std::mem_fn( &aeona_t::talents_enabled ), this, t ) );
         }
       }
     }
@@ -1963,21 +1963,21 @@ std::unique_ptr<expr_t> lisa_t::create_expression( util::string_view name_str )
   return fs_player_t::create_expression( name_str );
 }
 
-std::unique_ptr<expr_t> lisa_t::create_resource_expression( util::string_view name_str )
+std::unique_ptr<expr_t> aeona_t::create_resource_expression( util::string_view name_str )
 {
   return fs_player_t::create_resource_expression( name_str );
 }
 
-double lisa_t::resource_regen_per_second( resource_e r ) const
+double aeona_t::resource_regen_per_second( resource_e r ) const
 {
   double reg = fs_player_t::resource_regen_per_second( r );
 
   return reg;
 }
 
-// lisa_t::init_base =======================================================
+// aeona_t::init_base =======================================================
 
-void lisa_t::init_base_stats()
+void aeona_t::init_base_stats()
 {
   if ( base.distance < 1 )
     base.distance = 25;
@@ -2000,18 +2000,18 @@ void lisa_t::init_base_stats()
   min_gcd  = timespan_t::from_seconds( 0.75 );
 }
 
-// lisa_t::init_spells =====================================================
+// aeona_t::init_spells =====================================================
 
-void lisa_t::init_spells()
+void aeona_t::init_spells()
 {
   fs_player_t::init_spells();
 
   // actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
 }
 
-// lisa_t::init_talents ====================================================
+// aeona_t::init_talents ====================================================
 
-void lisa_t::init_talents()
+void aeona_t::init_talents()
 {
   fs_player_t::init_talents();
 
@@ -2028,7 +2028,7 @@ void lisa_t::init_talents()
 
     auto ranks = util::to_unsigned( talent_split[ 1 ] );
 
-    for ( lisa_talents_t t = static_cast<lisa_talents_t>( 1U ); t < lisa_talents_t::MAX; t++ )
+    for ( aeona_talents_t t = static_cast<aeona_talents_t>( 1U ); t < aeona_talents_t::MAX; t++ )
     {
       if ( util::str_compare_ci( talent_split[ 0 ], talent_name( t ) ) )
       {
@@ -2039,9 +2039,9 @@ void lisa_t::init_talents()
   }
 }
 
-// lisa_t::init_gains ======================================================
+// aeona_t::init_gains ======================================================
 
-void lisa_t::init_gains()
+void aeona_t::init_gains()
 {
   fs_player_t::init_gains();
 
@@ -2051,22 +2051,22 @@ void lisa_t::init_gains()
 
 }
 
-// lisa_t::init_procs ======================================================
+// aeona_t::init_procs ======================================================
 
-void lisa_t::init_procs()
+void aeona_t::init_procs()
 {
   fs_player_t::init_procs();
 }
 
-// lisa_t::init_rng ========================================================
-void lisa_t::init_rng()
+// aeona_t::init_rng ========================================================
+void aeona_t::init_rng()
 {
   fs_player_t::init_rng();
 }
 
-// lisa_t::init_scaling ====================================================
+// aeona_t::init_scaling ====================================================
 
-void lisa_t::init_scaling()
+void aeona_t::init_scaling()
 {
   fs_player_t::init_scaling();
 
@@ -2081,23 +2081,23 @@ void lisa_t::init_scaling()
   }
 }
 
-// lisa_t::init_resources =================================================
+// aeona_t::init_resources =================================================
 
-void lisa_t::init_resources( bool force )
+void aeona_t::init_resources( bool force )
 {
   fs_player_t::init_resources( force );
 }
 
-// lisa_t::init_buffs ======================================================
+// aeona_t::init_buffs ======================================================
 
-void lisa_t::create_buffs()
+void aeona_t::create_buffs()
 {
   fs_player_t::create_buffs();
 
-  buffs.continuum_shift = make_buff<lisa_buff_t>( this, "continuum_shift" )
+  buffs.continuum_shift = make_buff<aeona_buff_t>( this, "continuum_shift" )
                               ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
-  buffs.chrona_tap = make_buff<lisa_buff_t>( this, "chrona_tap" )
+  buffs.chrona_tap = make_buff<aeona_buff_t>( this, "chrona_tap" )
                          ->set_duration( talents.chrona_tap_duration )
                          ->set_default_value( talents.chrona_tap_mana_recovery_pct )
                          ->set_max_stack( talents.chrona_tap_max_stacks )
@@ -2108,20 +2108,20 @@ void lisa_t::create_buffs()
                            }
                          } );
 
-  buffs.uchronia = make_buff<lisa_buff_t>( this, "uchronia" )
+  buffs.uchronia = make_buff<aeona_buff_t>( this, "uchronia" )
                        ->set_max_stack( talents.uchronia_required_spenders )
                        ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
-  buffs.quickening = make_buff<lisa_buff_t>( this, "quickening" )
+  buffs.quickening = make_buff<aeona_buff_t>( this, "quickening" )
                          ->set_max_stack( talents.quickening_max_stacks )
                          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
-  buffs.hastening_doom = make_buff<lisa_buff_t>( this, "hastening_doom" )
+  buffs.hastening_doom = make_buff<aeona_buff_t>( this, "hastening_doom" )
                              ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
                              ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
                              ->set_default_value( talents.hastening_doom_haste );
 
-  buffs.hastening_dooms = make_buff<lisa_buff_t>( this, "hastening_dooms" )
+  buffs.hastening_dooms = make_buff<aeona_buff_t>( this, "hastening_dooms" )
                               ->set_max_stack( 99 )
                               ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
                               ->add_stack_change_callback( [ this ]( buff_t* b, int old, int _new ) {
@@ -2136,11 +2136,11 @@ void lisa_t::create_buffs()
                               } );
 
 
-  struct fleeting_hour_buff_t : lisa_buff_t
+  struct fleeting_hour_buff_t : aeona_buff_t
   {
     double cdr_mod;
-    fleeting_hour_buff_t( lisa_t* pl )
-      : lisa_buff_t( pl, "fleeting_hour" ), cdr_mod( pl->spell_const.fleeting_hour_cdr )
+    fleeting_hour_buff_t( aeona_t* pl )
+      : aeona_buff_t( pl, "fleeting_hour" ), cdr_mod( pl->spell_const.fleeting_hour_cdr )
     {
       set_duration( pl->spell_const.fleeting_hour_duration );
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
@@ -2170,11 +2170,11 @@ void lisa_t::create_buffs()
 
   buffs.fleeting_hour = make_buff<fleeting_hour_buff_t>( this );
 
-  struct lonesome_song_t : lisa_buff_t
+  struct lonesome_song_t : aeona_buff_t
   {
     double cdr_mod;
-    lonesome_song_t( lisa_t* pl )
-      : lisa_buff_t( pl, "lonesome_song" ), cdr_mod( pl->legendary.lonesome_song_cdr_mul )
+    lonesome_song_t( aeona_t* pl )
+      : aeona_buff_t( pl, "lonesome_song" ), cdr_mod( pl->legendary.lonesome_song_cdr_mul )
     {
       set_duration( pl->legendary.lonesome_song_duration);
       set_refresh_behavior( buff_refresh_behavior::DURATION );
@@ -2201,11 +2201,11 @@ void lisa_t::create_buffs()
 
   buffs.lonesome_song = make_buff<lonesome_song_t>( this );
 
-  struct epoch_break_buff_t : lisa_buff_t
+  struct epoch_break_buff_t : aeona_buff_t
   {
     double cdr_mod;
-    epoch_break_buff_t( lisa_t* pl )
-      : lisa_buff_t( pl, "epoch_break" ), cdr_mod( pl->spell_const.epoch_break_cd_recovery )
+    epoch_break_buff_t( aeona_t* pl )
+      : aeona_buff_t( pl, "epoch_break" ), cdr_mod( pl->spell_const.epoch_break_cd_recovery )
     {
       set_duration( pl->spell_const.epoch_break_duration );
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
@@ -2232,14 +2232,14 @@ void lisa_t::create_buffs()
   buffs.epoch_break = make_buff<epoch_break_buff_t>( this );
 }
 
-// lisa_t::invalidate_cache =========================================
+// aeona_t::invalidate_cache =========================================
 
-void lisa_t::invalidate_cache( cache_e c )
+void aeona_t::invalidate_cache( cache_e c )
 {
   fs_player_t::invalidate_cache( c );
 }
 
-void lisa_t::create_options()
+void aeona_t::create_options()
 {
   fs_player_t::create_options();
 
@@ -2249,22 +2249,22 @@ void lisa_t::create_options()
   add_option( opt_float( "aeona.max_mana_multiplier", options.max_mana_multiplier ) );
 }
 
-// lisa_t::copy_from =======================================================
+// aeona_t::copy_from =======================================================
 
-void lisa_t::copy_from( player_t* source )
+void aeona_t::copy_from( player_t* source )
 {
-  lisa_t* lisa = static_cast<lisa_t*>( source );
+  aeona_t* aeona = static_cast<aeona_t*>( source );
   fs_player_t::copy_from( source );
 
-  talents     = lisa->talents;
-  legendary   = lisa->legendary;
-  options     = lisa->options;
-  spell_const = lisa->spell_const;
+  talents     = aeona->talents;
+  legendary   = aeona->legendary;
+  options     = aeona->options;
+  spell_const = aeona->spell_const;
 }
 
-// lisa_t::create_profile  =================================================
+// aeona_t::create_profile  =================================================
 
-std::string lisa_t::create_profile( save_e stype )
+std::string aeona_t::create_profile( save_e stype )
 {
   std::string profile_str = fs_player_t::create_profile( stype );
 
@@ -2279,16 +2279,16 @@ std::string lisa_t::create_profile( save_e stype )
   return profile_str;
 }
 
-// lisa_t::init_items ======================================================
+// aeona_t::init_items ======================================================
 
-void lisa_t::init_items()
+void aeona_t::init_items()
 {
   fs_player_t::init_items();
 }
 
-// lisa_t::init_special_effects ============================================
+// aeona_t::init_special_effects ============================================
 
-void lisa_t::init_special_effects()
+void aeona_t::init_special_effects()
 {
   fs_player_t::init_special_effects();
 
@@ -2312,14 +2312,14 @@ void lisa_t::init_special_effects()
   }*/
 }
 
-// lisa_t::init_finished ===================================================
+// aeona_t::init_finished ===================================================
 
-void lisa_t::init_finished()
+void aeona_t::init_finished()
 {
   fs_player_t::init_finished();
 }
 
-void lisa_t::init_background_actions()
+void aeona_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
@@ -2327,9 +2327,9 @@ void lisa_t::init_background_actions()
   actions.erasure        = new actions::erasure_t( "erasure", this );
 }
 
-// lisa_t::reset ===========================================================
+// aeona_t::reset ===========================================================
 
-void lisa_t::reset()
+void aeona_t::reset()
 {
   fs_player_t::reset();
 
@@ -2339,28 +2339,28 @@ void lisa_t::reset()
   // }
 }
 
-// lisa_t::activate ========================================================
+// aeona_t::activate ========================================================
 
-void lisa_t::activate()
+void aeona_t::activate()
 {
   fs_player_t::activate();
 }
 
-// lisa_t::arise ===========================================================
+// aeona_t::arise ===========================================================
 
-void lisa_t::arise()
+void aeona_t::arise()
 {
   fs_player_t::arise();
 }
 
-// lisa_t::combat_begin ====================================================
+// aeona_t::combat_begin ====================================================
 
-void lisa_t::combat_begin()
+void aeona_t::combat_begin()
 {
   fs_player_t::combat_begin();
 }
 
-double lisa_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
+double aeona_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
   double actual_amount = fs_player_t::resource_gain( resource_type, amount, source, action );
 
@@ -2368,25 +2368,25 @@ double lisa_t::resource_gain( resource_e resource_type, double amount, gain_t* s
   return actual_amount;
 }
 
-double lisa_t::resource_loss( resource_e resource_type, double amount, gain_t* source, action_t* action )
+double aeona_t::resource_loss( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
   double actual_amount = fs_player_t::resource_loss( resource_type, amount, source, action );
 
   return actual_amount;
 }
 
-// lisa_t::non_stacking_movement_modifier ==================================
+// aeona_t::non_stacking_movement_modifier ==================================
 
-double lisa_t::non_stacking_movement_modifier() const
+double aeona_t::non_stacking_movement_modifier() const
 {
   double ms = fs_player_t::non_stacking_movement_modifier();
 
   return ms;
 }
 
-// lisa_t::stacking_movement_modifier===================================
+// aeona_t::stacking_movement_modifier===================================
 
-double lisa_t::stacking_movement_modifier() const
+double aeona_t::stacking_movement_modifier() const
 {
   double ms = fs_player_t::stacking_movement_modifier();
 
@@ -2394,7 +2394,7 @@ double lisa_t::stacking_movement_modifier() const
 }
 
 template <typename Base>
-void actions::lisa_action_t<Base>::trigger_spirit_refund( const action_state_t* state, double resource_refund )
+void actions::aeona_action_t<Base>::trigger_spirit_refund( const action_state_t* state, double resource_refund )
 {
   make_event( ab::sim, 200_ms, [ resource_refund, this ] {
     p()->resource_gain( RESOURCE_MANA, resource_refund, p()->gains.spirit_procs, this );
@@ -2407,7 +2407,7 @@ void actions::lisa_action_t<Base>::trigger_spirit_refund( const action_state_t* 
 }
 
 template <typename Base>
-void actions::lisa_action_t<Base>::spend_resource_costs( const action_state_t* s )
+void actions::aeona_action_t<Base>::spend_resource_costs( const action_state_t* s )
 {
   if ( ab::last_resource_cost <= 0 || ab::current_resource() != RESOURCE_MANA )
     return;
@@ -2421,9 +2421,9 @@ void actions::lisa_action_t<Base>::spend_resource_costs( const action_state_t* s
   }
 }
 
-// lisa_t::convert_hybrid_stat ==============================================
+// aeona_t::convert_hybrid_stat ==============================================
 
-stat_e lisa_t::convert_hybrid_stat( stat_e s ) const
+stat_e aeona_t::convert_hybrid_stat( stat_e s ) const
 {
   // this converts hybrid stats that either morph based on spec or only work
   // for certain specs into the appropriate "basic" stats
@@ -2442,27 +2442,27 @@ stat_e lisa_t::convert_hybrid_stat( stat_e s ) const
   }
 }
 
-void lisa_t::analyze( sim_t& sim )
+void aeona_t::analyze( sim_t& sim )
 {
   fs_player_t::analyze( sim );
 }
 
-void lisa_t::create_cooldowns()
+void aeona_t::create_cooldowns()
 {
   cooldowns.fleeting_hour    = get_cooldown( "fleeting_hour" );
   cooldowns.temporal_barrage = get_cooldown( "temporal_barrage" );
 }
 
-class lisa_module_t : public module_t
+class aeona_module_t : public module_t
 {
 public:
-  lisa_module_t() : module_t( LISA )
+  aeona_module_t() : module_t( AEONA )
   {
   }
 
   player_t* create_player( sim_t* sim, util::string_view name, race_e r = RACE_NONE ) const override
   {
-    return new lisa_t( sim, name, r );
+    return new aeona_t( sim, name, r );
   }
 
   bool valid() const override
@@ -2489,11 +2489,11 @@ public:
   }
 };
 
-}  // namespace lisa
+}  // namespace aeona
 }  // namespace fellowship
 
-const module_t* module_t::lisa()
+const module_t* module_t::aeona()
 {
-  static fellowship::lisa::lisa_module_t m;
+  static fellowship::aeona::aeona_module_t m;
   return &m;
 }

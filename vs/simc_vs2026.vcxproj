@@ -25,9 +25,10 @@
     <ClCompile Include="..\engine\class_modules\fs_player.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_ardeos.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_elarion.cpp" />
-    <ClCompile Include="..\engine\class_modules\sc_lisa.cpp" />
+    <ClCompile Include="..\engine\class_modules\sc_aeona.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_mara.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_rime.cpp" />
+    <ClCompile Include="..\engine\class_modules\sc_xavian.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

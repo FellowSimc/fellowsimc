@@ -643,8 +643,8 @@ const char* util::player_type_string( player_e type )
     case HELENA:                  return "helena";
     case SYLVIE:                  return "sylvie";
     case VIGOUR:                  return "vigour";
-    case LISA:                    return "lisa";
-    case SUNE:                    return "sune";
+    case AEONA:                   return "aeona";
+    case XAVIAN:                  return "xavian";
     case PLAYER_SIMPLIFIED:       return "player_simplified";
     case PLAYER_PET:              return "pet";
     case PLAYER_GUARDIAN:         return "guardian";
@@ -696,8 +696,8 @@ const char* util::player_type_string_long( player_e type )
     case HELENA:          return "Helena";
     case SYLVIE:          return "Sylvie";
     case VIGOUR:          return "Vigour";
-    case LISA:            return "Lisa";
-    case SUNE:            return "Sune";
+    case AEONA:           return "Aeona";
+    case XAVIAN:          return "Xavian";
     case PLAYER_SIMPLIFIED:         return "Simplified Player";
     case PLAYER_PET:      return "Pet";
     case PLAYER_GUARDIAN: return "Guardian";
@@ -1390,7 +1390,7 @@ item_subclass_armor util::matching_armor_type( player_e ptype )
     case DEATH_KNIGHT:
     case PLAYER_SIMPLIFIED:
     case HELENA:
-    case SUNE:
+    case XAVIAN:
       return ITEM_SUBCLASS_ARMOR_PLATE;
     case HUNTER:
     case SHAMAN:
@@ -1411,7 +1411,7 @@ item_subclass_armor util::matching_armor_type( player_e ptype )
     case WARLOCK:
     case RIME:
     case ARDEOS:
-    case LISA:
+    case AEONA:
       return ITEM_SUBCLASS_ARMOR_CLOTH;
     default:
       return ITEM_SUBCLASS_ARMOR_MISC;

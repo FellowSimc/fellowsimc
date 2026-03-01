@@ -57,9 +57,9 @@ struct module_t
   static const module_t* mara();
   static const module_t* rime();
   static const module_t* ardeos();
-  static const module_t* lisa();
+  static const module_t* aeona();
   static const module_t* elarion();
-  //static const module_t* sune();
+  static const module_t* xavian();
   static const module_t* player_simplified();
   static const module_t* enemy();
   static const module_t* tank_dummy_enemy();
@@ -101,8 +101,10 @@ struct module_t
         return rime();
       case ARDEOS:
         return ardeos();
-      case LISA:
-        return lisa();
+      case AEONA:
+        return aeona();
+      case XAVIAN:
+        return xavian();
       case ELARION:
         return elarion();
       case PLAYER_SIMPLIFIED:

@@ -2470,7 +2470,7 @@ double fs_player_t::resource_regen_per_second( resource_e r ) const
 {
   double reg = player_t::resource_regen_per_second( r );
 
-  if ( r == RESOURCE_MANA && type == LISA && fs_buffs.spirit_of_heroism->check() )
+  if ( r == RESOURCE_MANA && ( type == AEONA || type == XAVIAN ) && fs_buffs.spirit_of_heroism->check() )
   {
     // Half Tick Time and 2x regen rate.
     reg *= 6;

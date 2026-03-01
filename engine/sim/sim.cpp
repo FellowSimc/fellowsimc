@@ -3830,7 +3830,7 @@ void sim_t::create_options()
   add_option( opt_func( "elarion", parse_player ) );
   add_option( opt_func( "sylvie", parse_player ) );
   add_option( opt_func( "vigour", parse_player ) );
-  add_option( opt_func( "lisa", parse_player ) );
+  add_option( opt_func( "aeona", parse_player ) );
   add_option( opt_func( "sune", parse_player ) );
   add_option( opt_func( "enemy", parse_player ) );
   add_option( opt_func( "tank_dummy", parse_player ) );

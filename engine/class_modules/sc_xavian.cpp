@@ -1668,8 +1668,9 @@ void xavian_t::create_buffs()
                           ->set_max_stack( 1 )
                           ->set_refresh_behavior( buff_refresh_behavior::DURATION );
 
-  buffs.omega_reprieval =
-      make_buff<xavian_buff_t>( this, "omega_reprieval" )->set_max_stack( spell_const.omega_reprieval_max_stacks );
+  buffs.omega_reprieval = make_buff<xavian_buff_t>( this, "omega_reprieval" )
+                              ->set_max_stack( spell_const.omega_reprieval_max_stacks )
+                              ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 }
 
 // xavian_t::invalidate_cache =========================================

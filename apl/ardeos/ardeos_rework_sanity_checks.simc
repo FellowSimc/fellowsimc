@@ -11,9 +11,10 @@ desired_targets=1
 max_time=120
 desired_targets=1
 # max_time=60
+max_time=720
+desired_targets=16
 
-
-apl/chuey_dungeon.simc
+# apl/chuey_dungeon.simc
 
 # apl/dungeon.simc
 
@@ -96,7 +97,7 @@ weapon_trait.inspired_allegiance=4
 legendary.devouring_flame=0
 legendary.fire_toad=0
 legendary.explosivo=1
-# legendary.explosivo_boss_bonus=0.5
+legendary.explosivo_boss_bonus=0.5
 
 talents=great_balls_of_fire:1/undying_flame:1/flare_up:1/ouroboros:1/agonizing_blaze:1/crackling_inferno:1/reign_of_fire:1/intensifying_inferno:1
 

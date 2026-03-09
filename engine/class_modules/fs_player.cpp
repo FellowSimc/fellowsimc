@@ -809,7 +809,8 @@ struct voidbringers_touch_t : fs_weapon_action_t<spell_t>
 
     parse_options( options );
 
-    add_child( p->fs_actions.voidbringer_dmg );
+    if ( p->fs_actions.voidbringer_dmg )
+      add_child( p->fs_actions.voidbringer_dmg );
   }
 
   void impact( action_state_t* state ) override

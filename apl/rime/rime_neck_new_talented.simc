@@ -10,9 +10,39 @@ iterations=100000
 chart_show_relative_difference=1
 vary_combat_length=0
 single_actor_batch=1
-desired_targets=8
+desired_targets=16
 
 apl/chuey_dungeon.simc
+
+rime="Toonics"
+level=80
+apl/rime/rime.simc
+
+gear_intellect=1442
+
+gear_crit_rating=941
+gear_versatility_rating=1802
+gear_haste_rating=1416
+gear_mastery_rating=451
+gems.sapphire_power=2904
+gems.amethyst_power=972
+sets.drakheims_absolution=1
+sets.deaths_grasp=1
+
+legendary.undulating_spirit=1
+talent.winters_embrace=1
+talent.burstbolter=1
+talent.biting_cold=1
+talent.icy_flow=1
+talent.avalanche=1
+talent.greater_glacial_blast=1
+talent.frostweavers_wrath=1
+talent.wisdom_of_the_north=1
+
+weapon=voidbringers_touch
+weapon_trait.sapphire_aurastone=4
+weapon_trait.willful_momentum=4
+weapon_trait.kindling=4
 
 rime="Rime"
 level=80
@@ -65,7 +95,6 @@ gems.ruby_power=1296
 gems.diamond_power=1206
 
 talent.burstbolter=0
-talent.winters_embrace=0
 talent.supreme_torrent=0
 talent.coalescing_frost=0
 talent.cascading_blitz=0
@@ -74,8 +103,8 @@ talent.wisdom_of_the_north=0
 legendary.skandis_decree=0
 
 legendary.undulating_spirit=1
-talent.winters_embrace=1
-talent.burstbolter=1
+talent.icy_flow=1
+talent.navirs_keeper=1
 talent.avalanche=1
 talent.cascading_blitz=1
 talent.frostweavers_wrath=1
@@ -83,6 +112,54 @@ talent.biting_cold=1
 talent.wisdom_of_the_north=1
 # legendary.undulating_spirit_new=1
 # legendary.undulating_spirit_new_mul=2
+
+copy="Spend Coal","Rime"
+talent.navirs_keeper=0
+talent.supreme_torrent=1
+talent.icy_flow=0
+talent.coalescing_frost=1 
+
+# copy="Spend Coal","Rime"
+# talent.navirs_keeper=0
+# talent.supreme_torrent=1
+# talent.icy_flow=0
+# talent.coalescing_frost=1 
+
+copy="Spend Full Bursting","Rime"
+talent.icy_flow=0
+talent.navirs_keeper=0
+talent.biting_cold=0
+
+talent.harrowing_ice=1
+talent.bursting_swallows=1
+talent.burstbolter=1
+
+copy="Spend Full Bursting BC>Wis","Rime"
+talent.icy_flow=0
+talent.navirs_keeper=0
+talent.biting_cold=1
+talent.wisdom_of_the_north=0
+
+talent.harrowing_ice=1
+talent.bursting_swallows=1
+talent.burstbolter=1
+
+# copy="GA Wis","Rime"
+# talent.navirs_keeper=0
+# talent.biting_cold=0
+# talent.glacial_assault=1
+
+# copy="GA NK","Rime"
+# talent.biting_cold=0
+# talent.wisdom_of_the_north=0
+# talent.glacial_assault=1
+
+# copy="GA NK GGB","Rime"
+# talent.biting_cold=0
+# talent.wisdom_of_the_north=0
+# talent.navirs_keeper=0
+# talent.greater_glacial_blast=1
+# talent.glacial_assault=1
 
 rime="Beam"
 level=80
@@ -105,13 +182,14 @@ weapon_trait.inspired_allegiance=4
 
 
 talent.burstbolter=1
-talent.winters_embrace=1
+talent.chilling_finesse=1
 talent.supreme_torrent=1
 talent.coalescing_frost=1
 talent.cascading_blitz=1
 talent.soulfrost_torrent=1
 talent.wisdom_of_the_north=1
 legendary.skandis_decree=1
+
 
 
 rime="Skandis Spend"
@@ -136,165 +214,42 @@ weapon_trait.inspired_allegiance=4
 
 legendary.undulating_spirit=0
 legendary.skandis_decree=1
-talent.winters_embrace=1
-talent.burstbolter=1
-talent.avalanche=1
-talent.cascading_blitz=1
-talent.frostweavers_wrath=1
-talent.biting_cold=1
-talent.wisdom_of_the_north=1
-
-
-copy="NK over Wis","Rime"
-talent.wisdom_of_the_north=0
-talent.navirs_keeper=1
-
-
-copy="Axels Cook","Rime"
-talent.winters_embrace=0
-talent.burstbolter=0
-talent.avalanche=0
-talent.cascading_blitz=0
-talent.frostweavers_wrath=0
-talent.biting_cold=0
-talent.wisdom_of_the_north=0
-
-talent.winters_embrace=1
-talent.glacial_assault=1
-talent.navirs_keeper=1
-talent.avalanche=1
-talent.greater_glacial_blast=1
-talent.frostweavers_wrath=1
-talent.biting_cold=1
-talent.wisdom_of_the_north=1
-
-copy="CB FWW GA","Rime"
-talent.winters_embrace=0
-talent.burstbolter=0
-talent.avalanche=0
-talent.cascading_blitz=0
-talent.frostweavers_wrath=0
-talent.biting_cold=0
-talent.wisdom_of_the_north=0
-
-talent.glacial_assault=1
-talent.burstbolter=1
-talent.navirs_keeper=1
-talent.avalanche=1
-talent.greater_glacial_blast=1
-talent.cascading_blitz=1
-talent.frostweavers_wrath=1
-
-copy="CB IF GA","Rime"
-talent.winters_embrace=0
-talent.burstbolter=0
-talent.avalanche=0
-talent.cascading_blitz=0
-talent.frostweavers_wrath=0
-talent.biting_cold=0
-talent.wisdom_of_the_north=0
-
-talent.glacial_assault=1
-talent.burstbolter=1
-talent.navirs_keeper=1
 talent.icy_flow=1
-talent.avalanche=1
-talent.greater_glacial_blast=1
-talent.cascading_blitz=1
-talent.biting_cold=1
-
-copy="CB IF FWW","Rime"
-talent.winters_embrace=0
-talent.burstbolter=0
-talent.avalanche=0
-talent.cascading_blitz=0
-talent.frostweavers_wrath=0
-talent.biting_cold=0
-talent.wisdom_of_the_north=0
-
-talent.burstbolter=1
-talent.navirs_keeper=1
-talent.icy_flow=1
-talent.avalanche=1
-talent.cascading_blitz=1
-talent.frostweavers_wrath=1
-talent.biting_cold=1
-
-
-copy="NK over BC","Rime"
-talent.winters_embrace=0
-talent.burstbolter=0
-talent.avalanche=0
-talent.cascading_blitz=0
-talent.frostweavers_wrath=0
-talent.biting_cold=0
-talent.wisdom_of_the_north=0
-
-talent.winters_embrace=1
 talent.burstbolter=1
 talent.avalanche=1
 talent.cascading_blitz=1
 talent.frostweavers_wrath=1
-talent.navirs_keeper=1
-talent.wisdom_of_the_north=1
+talent.biting_cold=1
+# talent.wisdom_of_the_north=1
 
-copy="GA GGB over FWW","Rime"
-talent.winters_embrace=0
+copy="CB Beam FWS BC","Beam"
+legendary.undulating_spirit=0
+legendary.skandis_decree=0
+talent.icy_flow=0
 talent.burstbolter=0
 talent.avalanche=0
 talent.cascading_blitz=0
 talent.frostweavers_wrath=0
 talent.biting_cold=0
-talent.wisdom_of_the_north=0
+legendary.skandis_decree=0
 
-talent.winters_embrace=1
 talent.burstbolter=1
-talent.avalanche=1
-talent.cascading_blitz=1
-talent.glacial_assault=1
-talent.greater_glacial_blast=1
-talent.biting_cold=1
-talent.wisdom_of_the_north=1
-
-copy="IF GGB over FWW","Rime"
-talent.winters_embrace=0
-talent.burstbolter=0
-talent.avalanche=0
-talent.cascading_blitz=0
-talent.frostweavers_wrath=0
-talent.biting_cold=0
-talent.wisdom_of_the_north=0
-
 talent.winters_embrace=1
-talent.burstbolter=1
-talent.avalanche=1
+talent.supreme_torrent=1
+talent.coalescing_frost=1
 talent.cascading_blitz=1
-talent.icy_flow=1
-talent.greater_glacial_blast=1
+talent.soulfrost_torrent=1
+legendary.frostwyrms_spite=1
 talent.biting_cold=1
-talent.wisdom_of_the_north=1
-
-copy="IF NK over FWW","Rime"
-talent.winters_embrace=0
-talent.burstbolter=0
-talent.avalanche=0
-talent.cascading_blitz=0
-talent.frostweavers_wrath=0
-talent.biting_cold=0
-talent.wisdom_of_the_north=0
-
-talent.winters_embrace=1
-talent.burstbolter=1
-talent.avalanche=1
-talent.cascading_blitz=1
-talent.icy_flow=1
-talent.navirs_keeper=1
-talent.biting_cold=1
-talent.wisdom_of_the_north=1
 
 
-# copy="Axels Cook -GA","Rime"
-# talent.winters_embrace=0
+
+# copy="NK over Wis","Rime"
+# talent.wisdom_of_the_north=0
+# talent.navirs_keeper=1
+
+
+# copy="Axels Cook","Rime"
 # talent.burstbolter=0
 # talent.avalanche=0
 # talent.cascading_blitz=0
@@ -302,7 +257,208 @@ talent.wisdom_of_the_north=1
 # talent.biting_cold=0
 # talent.wisdom_of_the_north=0
 
-# talent.winters_embrace=1
+# talent.icy_flow=1
+# talent.glacial_assault=1
+# talent.navirs_keeper=1
+# talent.avalanche=1
+# talent.greater_glacial_blast=1
+# talent.frostweavers_wrath=1
+# talent.biting_cold=1
+# talent.wisdom_of_the_north=1
+
+# copy="CB FWW GA","Rime"
+# talent.burstbolter=0
+# talent.avalanche=0
+# talent.cascading_blitz=0
+# talent.frostweavers_wrath=0
+# talent.biting_cold=0
+# talent.wisdom_of_the_north=0
+
+# talent.glacial_assault=1
+# talent.burstbolter=1
+# talent.navirs_keeper=1
+# talent.avalanche=1
+# talent.greater_glacial_blast=1
+# talent.cascading_blitz=1
+# talent.frostweavers_wrath=1
+
+# copy="CB IF GA","Rime"
+# talent.burstbolter=0
+# talent.avalanche=0
+# talent.cascading_blitz=0
+# talent.frostweavers_wrath=0
+# talent.biting_cold=0
+# talent.wisdom_of_the_north=0
+
+# talent.glacial_assault=1
+# talent.burstbolter=1
+# talent.navirs_keeper=1
+# talent.icy_flow=1
+# talent.avalanche=1
+# talent.greater_glacial_blast=1
+# talent.cascading_blitz=1
+# talent.biting_cold=1
+
+# copy="CB IF FWW","Rime"
+# talent.burstbolter=0
+# talent.avalanche=0
+# talent.cascading_blitz=0
+# talent.frostweavers_wrath=0
+# talent.biting_cold=0
+# talent.wisdom_of_the_north=0
+
+# talent.burstbolter=1
+# talent.navirs_keeper=1
+# talent.icy_flow=1
+# talent.avalanche=1
+# talent.cascading_blitz=1
+# talent.frostweavers_wrath=1
+# talent.biting_cold=1
+
+
+# copy="NK over BC","Rime"
+# talent.burstbolter=0
+# talent.avalanche=0
+# talent.cascading_blitz=0
+# talent.frostweavers_wrath=0
+# talent.biting_cold=0
+# talent.wisdom_of_the_north=0
+
+# talent.icy_flow=1
+# talent.burstbolter=1
+# talent.avalanche=1
+# talent.cascading_blitz=1
+# talent.frostweavers_wrath=1
+# talent.navirs_keeper=1
+# talent.wisdom_of_the_north=1
+
+# copy="GA GGB over FWW","Rime"
+# talent.burstbolter=0
+# talent.avalanche=0
+# talent.cascading_blitz=0
+# talent.frostweavers_wrath=0
+# talent.biting_cold=0
+# talent.wisdom_of_the_north=0
+
+# talent.icy_flow=1
+# talent.burstbolter=1
+# talent.avalanche=1
+# talent.cascading_blitz=1
+# talent.glacial_assault=1
+# talent.greater_glacial_blast=1
+# talent.biting_cold=1
+# talent.wisdom_of_the_north=1
+
+# copy="IF GGB over FWW","Rime"
+# talent.burstbolter=0
+# talent.avalanche=0
+# talent.cascading_blitz=0
+# talent.frostweavers_wrath=0
+# talent.biting_cold=0
+# talent.wisdom_of_the_north=0
+
+# talent.glacial_assault=1
+# talent.burstbolter=1
+# talent.avalanche=1
+# talent.cascading_blitz=1
+# talent.icy_flow=1
+# talent.greater_glacial_blast=1
+# talent.biting_cold=1
+# talent.wisdom_of_the_north=1
+
+# copy="IF NK over FWW","Rime"
+# talent.burstbolter=0
+# talent.avalanche=0
+# talent.cascading_blitz=0
+# talent.frostweavers_wrath=0
+# talent.biting_cold=0
+# talent.wisdom_of_the_north=0
+
+# talent.glacial_assault=1
+# talent.burstbolter=1
+# talent.avalanche=1
+# talent.cascading_blitz=1
+# talent.icy_flow=1
+# talent.navirs_keeper=1
+# talent.biting_cold=1
+# talent.wisdom_of_the_north=1
+
+copy="Frostbolt Simulator","Beam"
+talent.burstbolter=0
+talent.chilling_finesse=0
+talent.supreme_torrent=0
+talent.coalescing_frost=0
+talent.cascading_blitz=0
+talent.soulfrost_torrent=0
+talent.wisdom_of_the_north=0
+
+talent.chilling_finesse=1
+#2
+talent.harrowing_ice=1
+#4
+talent.burstbolter=1
+#5
+talent.supreme_torrent=1
+#6
+talent.navirs_keeper=1
+#7
+talent.bursting_swallows=1
+#8
+talent.cascading_blitz=1
+#11
+talent.biting_cold=1
+#12
+talent.wisdom_of_the_north=1
+#13
+
+
+copy="Frostbolt Simulator Beamed","Beam"
+talent.burstbolter=0
+talent.chilling_finesse=0
+talent.supreme_torrent=0
+talent.coalescing_frost=0
+talent.cascading_blitz=0
+talent.soulfrost_torrent=0
+talent.wisdom_of_the_north=0
+
+talent.harrowing_ice=1
+talent.burstbolter=1
+talent.supreme_torrent=1
+talent.bursting_swallows=1
+talent.cascading_blitz=1
+talent.biting_cold=1
+talent.wisdom_of_the_north=1
+talent.navirs_keeper=1
+talent.coalescing_frost=1
+
+copy="Frostbolt Simulator Beamed Full","Beam"
+talent.burstbolter=0
+talent.chilling_finesse=0
+talent.supreme_torrent=0
+talent.coalescing_frost=0
+talent.cascading_blitz=0
+talent.soulfrost_torrent=0
+talent.wisdom_of_the_north=0
+
+talent.harrowing_ice=1
+talent.burstbolter=1
+talent.supreme_torrent=1
+talent.bursting_swallows=1
+talent.cascading_blitz=1
+talent.soulfrost_torrent=1
+talent.coalescing_frost=1
+
+
+
+# copy="Axels Cook -GA","Rime"
+# # talent.burstbolter=0
+# talent.avalanche=0
+# talent.cascading_blitz=0
+# talent.frostweavers_wrath=0
+# talent.biting_cold=0
+# talent.wisdom_of_the_north=0
+
+# # 2pts
 # talent.glacial_assault=0
 # talent.navirs_keeper=1
 # talent.avalanche=1
@@ -312,15 +468,14 @@ talent.wisdom_of_the_north=1
 # talent.wisdom_of_the_north=1
 
 # copy="Axels Cook -NK","Rime"
-# talent.winters_embrace=0
-# talent.burstbolter=0
+# # talent.burstbolter=0
 # talent.avalanche=0
 # talent.cascading_blitz=0
 # talent.frostweavers_wrath=0
 # talent.biting_cold=0
 # talent.wisdom_of_the_north=0
 
-# talent.winters_embrace=1
+# # 2pts
 # talent.glacial_assault=1
 # talent.navirs_keeper=0
 # talent.avalanche=1
@@ -330,15 +485,14 @@ talent.wisdom_of_the_north=1
 # talent.wisdom_of_the_north=1
 
 # copy="Axels Cook -WW","Rime"
-# talent.winters_embrace=0
-# talent.burstbolter=0
+# # talent.burstbolter=0
 # talent.avalanche=0
 # talent.cascading_blitz=0
 # talent.frostweavers_wrath=0
 # talent.biting_cold=0
 # talent.wisdom_of_the_north=0
 
-# talent.winters_embrace=1
+# # 2pts
 # talent.glacial_assault=1
 # talent.navirs_keeper=1
 # talent.avalanche=1
@@ -349,16 +503,14 @@ talent.wisdom_of_the_north=1
 
 
 # copy="Axels Cook -WE","Rime"
-# talent.winters_embrace=0
-# talent.burstbolter=0
+# # talent.burstbolter=0
 # talent.avalanche=0
 # talent.cascading_blitz=0
 # talent.frostweavers_wrath=0
 # talent.biting_cold=0
 # talent.wisdom_of_the_north=0
 
-# talent.winters_embrace=0
-# talent.glacial_assault=1
+# # talent.glacial_assault=1
 # talent.navirs_keeper=1
 # talent.avalanche=1
 # talent.greater_glacial_blast=1
@@ -367,15 +519,14 @@ talent.wisdom_of_the_north=1
 # talent.wisdom_of_the_north=1
 
 # copy="Axels Cook -BC","Rime"
-# talent.winters_embrace=0
-# talent.burstbolter=0
+# # talent.burstbolter=0
 # talent.avalanche=0
 # talent.cascading_blitz=0
 # talent.frostweavers_wrath=0
 # talent.biting_cold=0
 # talent.wisdom_of_the_north=0
 
-# talent.winters_embrace=1
+# # 2pts
 # talent.glacial_assault=1
 # talent.navirs_keeper=1
 # talent.avalanche=1
@@ -385,7 +536,7 @@ talent.wisdom_of_the_north=1
 # talent.wisdom_of_the_north=1
 
 # copy="Axels Cook -Wis","Rime"
-# talent.winters_embrace=1
+# # 2pts
 # talent.burstbolter=0
 # talent.avalanche=0
 # talent.cascading_blitz=0
@@ -393,7 +544,7 @@ talent.wisdom_of_the_north=1
 # talent.biting_cold=0
 # talent.wisdom_of_the_north=0
 
-# talent.winters_embrace=1
+# # 2pts
 # talent.glacial_assault=1
 # talent.navirs_keeper=1
 # talent.avalanche=1

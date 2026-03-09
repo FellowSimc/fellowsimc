@@ -96,6 +96,7 @@ public:
     buff_t* frostwyrms_spite;
     buff_t* undulating_spirit;
     buff_t* navirs_keeper;
+    buff_t* harrowing_ice;
   } buffs;
 
   struct cooldowns_t
@@ -124,6 +125,7 @@ public:
   {
     real_ppm_t* soulfrost_torrent;
     accumulated_rng_t* frostweavers_wrath;
+    accumulated_rng_t* bursting_swallows;
   } rngs;
 
   struct talents_t
@@ -132,17 +134,17 @@ public:
     timespan_t chilling_finesse_bursting_ice_cdr_per_tick = 0.3_s;
     timespan_t chilling_finesse_torrent_cdr_per_snap      = 1.5_s;
 
-    bool winters_embrace       = false;
+    bool winters_embrace       = true;
     double winters_embrace_amp = 0.2;
 
     bool glacial_assault            = false;
     int glacial_assault_stacks      = 4;
     double glacial_assault_amp      = 0.4;
-    double glacial_assault_cleave   = 0.1;
+    double glacial_assault_cleave   = 0.2;
     int glacial_assault_aoe_falloff = 12;
 
     bool burstbolter                    = false;
-    int burstbolter_additional_anima    = 1;
+    int burstbolter_additional_anima    = 0;
     int burstbolter_bursting_ice_pulses = 1;
 
     bool supreme_torrent                = false;
@@ -191,7 +193,16 @@ public:
     double biting_cold_crit_power = 0.1;
 
     bool wisdom_of_the_north           = false;
-    timespan_t wisdom_of_the_north_cdr = 0.3_s;
+    timespan_t wisdom_of_the_north_cdr = 0.2_s;
+
+    bool harrowing_ice                 = false;
+    double harrowing_ice_mul_per_stack = 0.05;
+    int harrowing_ice_max_stacks       = 30;
+    timespan_t harrowing_ice_duration  = 8_s;
+    timespan_t harrowing_ice_cdr       = 5_s;
+
+    bool bursting_swallows          = false;
+    double bursting_swallows_chance = 0.12;
   } talents;
 
   struct legendary_t
@@ -284,6 +295,8 @@ public:
   double composite_player_target_armor( player_t* target ) const override;
   double non_stacking_movement_modifier() const override;
   double stacking_movement_modifier() const override;
+
+  void handle_wisdom_of_the_north( int orbs_spent );
 
   double composite_mastery() const override
   {
@@ -784,9 +797,6 @@ public:
     if ( !ab::ready() )
       return false;
 
-    if ( ab::base_costs[ RESOURCE_WINTER_ORB ] > 0 && p()->current_worbs() < ab::base_costs[ RESOURCE_WINTER_ORB ] )
-      return false;
-
     return true;
   }
 
@@ -834,7 +844,7 @@ struct frost_bolt_t : public rime_spell_t
 
     energize_type     = action_energize::ON_CAST;
     energize_resource = RESOURCE_ANIMA;
-    energize_amount   = 1.0;
+    energize_amount   = 3.0;
 
     if ( p->talents.burstbolter )
     {
@@ -1326,7 +1336,7 @@ struct cold_snap_t : public rime_spell_t
 
 struct bursting_ice_tick_t : public rime_spell_t
 {
-  bursting_ice_tick_t( util::string_view name, rime_t* p ) : rime_spell_t( name, p )
+  bursting_ice_tick_t( util::string_view name, rime_t* p, bool main_spell = false ) : rime_spell_t( name, p )
   {
     id = 11;
 
@@ -1339,9 +1349,12 @@ struct bursting_ice_tick_t : public rime_spell_t
 
     spell_power_mod.direct = 0.578;
 
-    energize_type     = action_energize::ON_CAST;
-    energize_resource = RESOURCE_ANIMA;
-    energize_amount   = 1;
+    if ( main_spell )
+    {
+      energize_type     = action_energize::ON_CAST;
+      energize_resource = RESOURCE_ANIMA;
+      energize_amount   = 1;
+    }
   }
 
   double composite_da_multiplier( const action_state_t* s ) const override
@@ -1353,7 +1366,27 @@ struct bursting_ice_tick_t : public rime_spell_t
       m *= parent_dot->get_tick_factor();
     }
 
+    m *= 1.0 + p()->buffs.harrowing_ice->check_stack_value();
+
     return m;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    if ( p()->talents.harrowing_ice )
+    {
+      if ( p()->buffs.harrowing_ice->at_max_stacks() )
+      {
+        p()->cooldowns.flight_of_the_navir->adjust( -p()->talents.harrowing_ice_cdr );
+        p()->buffs.harrowing_ice->expire();
+      }
+      else
+      {
+        p()->buffs.harrowing_ice->trigger();
+      }
+    }
   }
 };
 
@@ -1365,7 +1398,7 @@ struct bursting_ice_t : public rime_spell_t
     id = 12;
 
     name_str_reporting = "Bursting Ice";
-    tick_action        = new bursting_ice_tick_t( "bursting_ice_tick", p );
+    tick_action        = new bursting_ice_tick_t( "bursting_ice_tick", p, true );
     add_child( tick_action );
 
     base_execute_time      = 2_s;
@@ -1592,6 +1625,7 @@ struct coalescing_frost_t : public rime_spell_t
 
 struct frost_swallow_t : public rime_spell_t
 {
+  action_t* bursting_ice_tick;
   frost_swallow_t( util::string_view name, rime_t* p ) : rime_spell_t( name, p )
   {
     id = 15;
@@ -1601,6 +1635,31 @@ struct frost_swallow_t : public rime_spell_t
     background = true;
 
     spell_power_mod.direct = 0.68;
+
+    if ( p->talents.bursting_swallows )
+    {
+      bursting_ice_tick = new bursting_ice_tick_t( fmt::format( "bursting_ice_tick_{}", name ), p );
+      add_child( bursting_ice_tick );
+    }
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    double m = base_t::composite_da_multiplier( s );
+
+    m *= 1.0 + p()->cache.mastery() * 1.5;
+
+    return m;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    if ( p()->talents.bursting_swallows && p()->rngs.bursting_swallows->trigger() )
+    {
+      bursting_ice_tick->execute_on_target( s->target );
+    }
   }
 
   void execute() override
@@ -1914,6 +1973,10 @@ std::unique_ptr<expr_t> rime_t::create_expression( util::string_view name_str )
         return make_ref_expr( name_str, talents.biting_cold );
       if ( util::str_compare_ci( split[ 1 ], "wisdom_of_the_north" ) )
         return make_ref_expr( name_str, talents.wisdom_of_the_north );
+      if ( util::str_compare_ci( split[ 1 ], "harrowing_ice" ) )
+        return make_ref_expr( name_str, talents.harrowing_ice );
+      if ( util::str_compare_ci( split[ 1 ], "bursting_swallows" ) )
+        return make_ref_expr( name_str, talents.bursting_swallows );
     }
   }
   else if ( util::str_compare_ci( split[ 0 ], "legendary" ) )
@@ -2045,6 +2108,10 @@ void rime_t::init_rng()
   if ( talents.frostweavers_wrath )
     rngs.frostweavers_wrath =
         get_accumulated_rng( "frostweavers_wrath", rng::CfromP( talents.frostweavers_wrath_chance_per_orb ) );
+
+  if ( talents.bursting_swallows )
+    rngs.bursting_swallows =
+        get_accumulated_rng( "bursting_swallows", rng::CfromP( talents.bursting_swallows_chance ) );
 }
 
 // rime_t::init_scaling ====================================================
@@ -2131,9 +2198,14 @@ void rime_t::create_buffs()
 
   buffs.navirs_keeper = make_buff<rime_buff_t>( this, "navirs_keeper" )
                             ->set_max_stack( talents.navirs_keeper_cold_snaps )
+                            ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
                             ->add_stack_change_callback( [ this ]( buff_t*, int old, int _new ) {
                               cooldowns.cold_snap->adjust_max_charges( _new - old );
                             } );
+
+  buffs.harrowing_ice = make_buff<rime_buff_t>( this, "harrowing_ice" )
+                            ->set_max_stack( talents.harrowing_ice_max_stacks )
+                            ->set_default_value( talents.harrowing_ice_mul_per_stack );
 }
 
 // rime_t::invalidate_cache =========================================
@@ -2167,6 +2239,11 @@ void rime_t::create_options()
 
   add_option( opt_bool( "talent.biting_cold", talents.biting_cold ) );
   add_option( opt_bool( "talent.wisdom_of_the_north", talents.wisdom_of_the_north ) );
+
+  
+  add_option( opt_bool( "talent.harrowing_ice", talents.harrowing_ice ) );
+  add_option( opt_bool( "talent.bursting_swallows", talents.bursting_swallows ) );
+
 
   add_option( opt_bool( "legendary.frostwyrms_spite", legendary.frostwyrms_spite ) );
   add_option( opt_bool( "legendary.skandis_decree", legendary.skandis_decree ) );
@@ -2274,6 +2351,18 @@ void rime_t::combat_begin()
   fs_player_t::combat_begin();
 }
 
+void rime_t::handle_wisdom_of_the_north( int orbs_spent )
+{
+  if ( !talents.wisdom_of_the_north )
+    return;
+
+  timespan_t total_reduction = -orbs_spent * talents.wisdom_of_the_north_cdr;
+
+  cooldowns.ice_blitz->adjust( total_reduction );
+  cooldowns.flight_of_the_navir->adjust( total_reduction );
+  cooldowns.winters_blessing->adjust( total_reduction );
+}
+
 double rime_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
   if ( resource_type == RESOURCE_ANIMA && talents.cascading_blitz && buffs.ice_blitz->check() )
@@ -2297,7 +2386,8 @@ double rime_t::resource_gain( resource_e resource_type, double amount, gain_t* s
 
   if ( resource_type == RESOURCE_WINTER_ORB )
   {
-    if ( source != gains.spirit_procs && talents.frostweavers_wrath && rngs.frostweavers_wrath->trigger() )
+    if ( source != gains.spirit_procs && actual_amount > 0 && talents.frostweavers_wrath &&
+         rngs.frostweavers_wrath->trigger() )
     {
       buffs.frostweavers_wrath->trigger();
     }
@@ -2305,6 +2395,11 @@ double rime_t::resource_gain( resource_e resource_type, double amount, gain_t* s
     for ( int i = 0; i < amount; i++ )
     {
       actions.frost_swallow->execute();
+    }
+
+    if ( actual_amount < amount )
+    {
+      handle_wisdom_of_the_north( as<int>( amount - actual_amount ) );
     }
   }
 
@@ -2361,14 +2456,7 @@ void actions::rime_action_t<Base>::spend_winter_orbs( const action_state_t* s )
     trigger_spirit_refund( s, orbs_spent );
   }
 
-  if ( p()->talents.wisdom_of_the_north )
-  {
-    timespan_t total_reduction = -orbs_spent * p()->talents.wisdom_of_the_north_cdr;
-
-    p()->cooldowns.ice_blitz->adjust( total_reduction );
-    p()->cooldowns.flight_of_the_navir->adjust( total_reduction );
-    p()->cooldowns.winters_blessing->adjust( total_reduction );
-  }
+  p()->handle_wisdom_of_the_north( as<int>( orbs_spent ) );
 }
 
 template <typename Base>

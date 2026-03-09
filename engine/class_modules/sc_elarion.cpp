@@ -1184,12 +1184,12 @@ struct heartseeker_barrage_t : public elarion_attack_t
 
       if ( tl.size() > 1 )
       {
-        /*std::sort( tl.begin() + 1, tl.end(), [ this ]( player_t* a, player_t* b ) {
+        std::sort( tl.begin() + 1, tl.end(), [ this ]( player_t* a, player_t* b ) {
           return p()->get_target_data( a )->debuffs.lunarlight_mark->check() >
                  p()->get_target_data( b )->debuffs.lunarlight_mark->check();
-        } );*/
+        } );
 
-        rng().shuffle( tl.begin() + 1, tl.end() );
+        // rng().shuffle( tl.begin() + 1, tl.end() );
       }
 
       base_t::execute();

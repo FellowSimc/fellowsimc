@@ -166,118 +166,64 @@ public:
     timespan_t hemorrhaging_strike_period = 3_s;
   } spell_const;
 
+#define MARA_TALENT_LIST( X )                                         \
+  X( RED_LEDGER, "red_ledger", "Red Ledger" )                         \
+  X( CORROSIVE_SPILL, "corrosive_spill", "Corrosive Spill" )          \
+  X( ASSASSINS_GUILE, "assassins_guile", "Assassins Guile" )          \
+  X( BLOODRUSH, "bloodrush", "Bloodrush" )                            \
+  X( VENOMOUS_DELIGHT, "venomous_delight", "Venomous Delight" )       \
+  X( EFFICIENT_KILLER, "efficient_killer", "Efficient Killer" )       \
+  X( GUSHING_BLOOD, "gushing_blood", "Gushing Blood" )                \
+  X( FEED_THE_QUEEN, "feed_the_queen", "Feed the Queen" )             \
+  X( DEADLY_SCHEME, "deadly_scheme", "Deadly Scheme" )                \
+  X( VEIL_OF_SHADOWS, "veil_of_shadows", "Veil of Shadows" )          \
+  X( MAIDENS_DOOM, "maidens_doom", "Maidens Doom" )                   \
+  X( MAGIC_WARD, "magic_ward", "Magic Ward" )                         \
+  X( HEMOTOXIN, "hemotoxin", "Hemotoxin" )                            \
+  X( SINNERS_PRIDE, "sinners_pride", "Sinners Pride" )                \
+  X( MALEVOLENCE, "malevolence", "Malevolence" )                      \
+  X( ARACHNID_ONSLAUGHT, "arachnid_onslaught", "Arachnid Onslaught" ) \
+  X( SPIRITED_FORTITUDE, "spirited_fortitude", "Spirited Fortitude" ) \
+  X( PUNCTURE, "puncture", "Puncture" )
+
   enum mara_talents_t : unsigned long long
   {
-    NONE               = 0ULL,
-    RED_LEDGER         = 1ULL << 0,
-    CORROSIVE_SPILL    = 1ULL << 1,
-    ASSASSINS_GUILE    = 1ULL << 2,
-    BLOODRUSH          = 1ULL << 3,
-    VENOMOUS_DELIGHT   = 1ULL << 4,
-    EFFICIENT_KILLER   = 1ULL << 5,
-    GUSHING_BLOOD      = 1ULL << 6,
-    FEED_THE_QUEEN     = 1ULL << 7,
-    DEADLY_SCHEME      = 1ULL << 8,
-    VEIL_OF_SHADOWS    = 1ULL << 9,
-    MAIDENS_DOOM       = 1ULL << 10,
-    MAGIC_WARD         = 1ULL << 11,
-    HEMOTOXIN          = 1ULL << 12,
-    SINNERS_PRIDE      = 1ULL << 13,
-    MALEVOLENCE        = 1ULL << 14,
-    ARACHNID_ONSLAUGHT = 1ULL << 15,
-    SPIRITED_FORTITUDE = 1ULL << 16,
-    PUNCTURE           = 1ULL << 17,
-    MAX                = 1ULL << 18
+    NONE = 0,
+#define X( name, id, pretty ) name = 1ULL << __COUNTER__,
+    MARA_TALENT_LIST( X )
+#undef X
+        MAX = 1ULL << __COUNTER__
   };
 
-  static constexpr std::string_view talent_name_formatted( mara_talents_t t )
+  struct talent_info
   {
-    switch ( t )
-    {
-      case mara_t::RED_LEDGER:
-        return "Red Ledger";
-      case mara_talents_t::CORROSIVE_SPILL:
-        return "Corrosive Spill";
-      case mara_talents_t::ASSASSINS_GUILE:
-        return "Assassins Guile";
-      case mara_talents_t::BLOODRUSH:
-        return "Bloodrush";
-      case mara_talents_t::VENOMOUS_DELIGHT:
-        return "Venomous Delight";
-      case mara_talents_t::EFFICIENT_KILLER:
-        return "Efficient Killer";
-      case mara_talents_t::GUSHING_BLOOD:
-        return "Gushing Blood";
-      case mara_talents_t::FEED_THE_QUEEN:
-        return "Feed the Queen";
-      case mara_talents_t::DEADLY_SCHEME:
-        return "Deadly Scheme";
-      case mara_talents_t::VEIL_OF_SHADOWS:
-        return "Veil of Shadows";
-      case mara_talents_t::MAIDENS_DOOM:
-        return "Maidens Doom";
-      case mara_talents_t::MAGIC_WARD:
-        return "Magic Ward";
-      case mara_talents_t::HEMOTOXIN:
-        return "Hemotoxin";
-      case mara_talents_t::SINNERS_PRIDE:
-        return "Sinners Pride";
-      case mara_talents_t::MALEVOLENCE:
-        return "Malevolence";
-      case mara_talents_t::ARACHNID_ONSLAUGHT:
-        return "Arachnid Onslaught";
-      case mara_talents_t::SPIRITED_FORTITUDE:
-        return "Spirited Fortitude";
-      case mara_talents_t::PUNCTURE:
-        return "Puncture";
-      default:
-        return "Unknown Talent";
-    }
-  }
+    mara_talents_t flag;
+    std::string_view id;
+    std::string_view pretty;
+  };
+
+  static constexpr talent_info MARA_TALENTS[] = {
+#define X( name, id, pretty ) { mara_talents_t::name, id, pretty },
+      MARA_TALENT_LIST( X )
+#undef X
+  };
 
   static constexpr std::string_view talent_name( mara_talents_t t )
   {
-    switch ( t )
-    {
-      case mara_t::RED_LEDGER:
-        return "red_ledger";
-      case mara_talents_t::CORROSIVE_SPILL:
-        return "corrosive_spill";
-      case mara_talents_t::ASSASSINS_GUILE:
-        return "assassins_guile";
-      case mara_talents_t::BLOODRUSH:
-        return "bloodrush";
-      case mara_talents_t::VENOMOUS_DELIGHT:
-        return "venomous_delight";
-      case mara_talents_t::EFFICIENT_KILLER:
-        return "efficient_killer";
-      case mara_talents_t::GUSHING_BLOOD:
-        return "gushing_blood";
-      case mara_talents_t::FEED_THE_QUEEN:
-        return "feed_the_queen";
-      case mara_talents_t::DEADLY_SCHEME:
-        return "deadly_scheme";
-      case mara_talents_t::VEIL_OF_SHADOWS:
-        return "veil_of_shadows";
-      case mara_talents_t::MAIDENS_DOOM:
-        return "maidens_doom";
-      case mara_talents_t::MAGIC_WARD:
-        return "magic_ward";
-      case mara_talents_t::HEMOTOXIN:
-        return "hemotoxin";
-      case mara_talents_t::SINNERS_PRIDE:
-        return "sinners_pride";
-      case mara_talents_t::MALEVOLENCE:
-        return "malevolence";
-      case mara_talents_t::ARACHNID_ONSLAUGHT:
-        return "arachnid_onslaught";
-      case mara_talents_t::SPIRITED_FORTITUDE:
-        return "spirited_fortitude";
-      case mara_talents_t::PUNCTURE:
-        return "puncture";
-      default:
-        return "unknown_talent";
-    }
+    for ( const auto& talent : MARA_TALENTS )
+      if ( talent.flag == t )
+        return talent.id;
+
+    return "unknown_talent";
+  }
+
+  static constexpr std::string_view talent_name_formatted( mara_talents_t t )
+  {
+    for ( const auto& talent : MARA_TALENTS )
+      if ( talent.flag == t )
+        return talent.pretty;
+
+    return "Unknown Talent";
   }
 
   struct talents_t

@@ -100,6 +100,7 @@ public:
     actions::melee_t* melee_hit;
     actions::mara_attack_t* backstab;
     actions::mara_poison_t* caustic_poison;
+    actions::mara_poison_t* caustic_wounds_poison;
     actions::mara_attack_t* queens_fang;
     actions::mara_attack_t* queens_fang_ult_clone;
     actions::mara_attack_t* queens_fang_fts_clone;
@@ -113,6 +114,7 @@ public:
     actions::mara_spell_t* brooding_shadows;
     actions::mara_attack_t* widows_bite;
     actions::mara_poison_t* seething_poison;
+    actions::mara_poison_t* seething_burst;
     actions::mara_attack_t* hemorrhaging_strike;
     actions::mara_spell_t* maiden_of_death;
     actions::mara_spell_t* final_stratagem;         // 3m reset cd
@@ -184,7 +186,10 @@ public:
   X( MALEVOLENCE, "malevolence", "Malevolence" )                      \
   X( ARACHNID_ONSLAUGHT, "arachnid_onslaught", "Arachnid Onslaught" ) \
   X( SPIRITED_FORTITUDE, "spirited_fortitude", "Spirited Fortitude" ) \
-  X( PUNCTURE, "puncture", "Puncture" )
+  X( PUNCTURE, "puncture", "Puncture" )                               \
+  X( SEETHING_BURST, "seething_burst", "Seething Burst" )             \
+  X( CAUSTIC_WOUNDS, "caustic_wounds", "Caustic Wounds" )             \
+  X( MACABRE_STRATAGEM, "macabre_stratagem", "Macabre Stratagem" )    \
 
   enum mara_talents_t : unsigned long long
   {
@@ -295,6 +300,14 @@ public:
 
     double assassins_guile_finisher_boost     = 0.4;
     timespan_t assassins_guile_buff_duration = 4.99_s;
+
+    double seething_burst_chance = 0.2;
+    double seething_burst_damage = 2.2;
+    int seething_burst_max_targets = 20;
+
+    double caustic_wounds_chance = 0.1;
+
+    timespan_t macabre_stratagem_duration = 10_s;
   } talents;
 
   struct legendary_t
@@ -1174,6 +1187,11 @@ struct backstab_t : public mara_attack_t
     base_costs[ RESOURCE_ENERGY ] = 20;
 
     name_str_reporting = "Backstab";
+
+    if ( p->actions.caustic_wounds_poison && !p->actions.caustic_wounds_poison->stats->parent )
+    {
+      add_child( p->actions.caustic_wounds_poison );
+    }
   }
 
   void execute() override
@@ -1211,6 +1229,17 @@ struct backstab_t : public mara_attack_t
     trigger_combo_point_gain( state->result == RESULT_CRIT ? 3 : 2, gain );
 
     roll_for_hemotoxin( state );
+
+    if ( p()->talent_enabled( mara_t::CAUSTIC_WOUNDS ) )
+    {
+      auto td = p()->get_target_data( state->target );
+
+      if ( td->dots.hemorrhaging_strike->is_ticking() && p()->rng().roll( p()->talents.caustic_wounds_chance ) )
+      {
+        p()->actions.caustic_wounds_poison->set_target( state->target );
+        p()->actions.caustic_wounds_poison->execute();
+      }
+    }
   }
 };
 
@@ -1544,6 +1573,11 @@ struct seething_poison_t : public mara_poison_t
     name_str_reporting = "Seething Poison";
 
     attack_power_mod.tick = 1.116;
+
+    if ( p->talents_enabled( mara_t::SEETHING_BURST ) && p->actions.seething_burst && !p->actions.seething_burst->stats->parent )
+    {
+      add_child( p->actions.seething_burst );
+    }
   }
   void trigger_dot( action_state_t* s ) override
   {
@@ -1556,11 +1590,52 @@ struct seething_poison_t : public mara_poison_t
     p()->buffs.predators_rush->trigger();
   }
 
+  void tick ( dot_t* d ) override
+  {
+    mara_poison_t::tick( d );
+    if ( p()->talents_enabled( mara_t::SEETHING_BURST ) && p()->rng().roll( p()->talents.seething_burst_chance ) )
+    {
+      p()->actions.seething_burst->execute_on_target( d->target );
+    }
+  }
+
   void last_tick( dot_t* d ) override
   {
     mara_poison_t::last_tick( d );
 
     p()->buffs.predators_rush->expire();
+  }
+};
+
+struct seething_burst_t : public mara_poison_t
+{
+  seething_burst_t( util::string_view name, mara_t* p ) : mara_poison_t( name, p )
+  {
+    background = true;
+    id         = 20;
+
+    attack_power_mod.direct = p->talents.seething_burst_damage;
+
+    name_str_reporting = "Seething Burst";
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->talents.seething_burst_max_targets;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    double m = mara_poison_t::composite_da_multiplier( s );
+   
+    // Already includes 1
+    m *= s->haste;
+
+    return m;
+  }
+
+  void init_finished() override
+  {
+    mara_poison_t::init_finished();
+    snapshot_flags |= STATE_HASTE;
   }
 };
 
@@ -1745,6 +1820,14 @@ struct final_stratagem_t : public mara_spell_t
     cooldown->charges  = 1;
   }
 
+    bool ready() override
+  {
+    if ( p()->talents_enabled( mara_t::MACABRE_STRATAGEM ) )
+      return false;
+
+    return mara_spell_t::ready();
+  }
+
   void execute() override
   {
     mara_spell_t::execute();
@@ -1753,7 +1836,40 @@ struct final_stratagem_t : public mara_spell_t
     p()->cooldowns.stalker_step->reset( false, -1 );
     p()->cooldowns.widows_bite->reset( false, -1 );
     trigger_combo_point_gain( COMBO_POINT_MAX, gain );
+  }
+};
 
+struct macabre_stratagem_t : public mara_spell_t
+{
+  macabre_stratagem_t( util::string_view name, mara_t* p, util::string_view options_str = {} )
+    : mara_spell_t( name, p, options_str )
+  {
+    id = 101;
+
+    _breaks_stealth = false;
+
+    name_str_reporting = "Macabre Stratagem";
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = 180_s;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+  }
+
+  bool ready() override
+  {
+    if ( !p()->talents_enabled( mara_t::MACABRE_STRATAGEM ) )
+      return false;
+
+    return mara_spell_t::ready();
+  }
+
+  void execute() override
+  {
+    mara_spell_t::execute();
+
+    p()->buffs.ultimate_buff_window->extend_duration_or_trigger( p()->talents.macabre_stratagem_duration );
   }
 };
 
@@ -2461,6 +2577,8 @@ action_t* mara_t::create_action( util::string_view name, util::string_view optio
     return new maiden_of_death_t( name, this, options_str );
   if ( name == "final_stratagem" )
     return new final_stratagem_t( name, this, options_str );
+  if ( name == "macabre_stratagem" )
+    return new macabre_stratagem_t( name, this, options_str );
   if ( name == "matriach_macabre" )
     return new matriach_macabre_t( name, this, options_str );
   if ( name == "stalker_step" )
@@ -2896,6 +3014,12 @@ void mara_t::create_options()
   add_option( opt_bool( "legendary.spirit_procs_clones_proc_on_next", legendary.spirit_procs_clones_proc_on_next ) );
   add_option( opt_int( "legendary.spirit_procs_clones_clones", legendary.spirit_procs_clones_clones, 1, 200 ) );
 
+  add_option( opt_float( "talent.seething_burst_chance", talents.seething_burst_chance, 0, 100 ) );
+  add_option( opt_float( "talent.seething_burst_damage", talents.seething_burst_damage, 0, 100 ) );
+  add_option( opt_int( "talent.seething_burst_max_targets", talents.seething_burst_max_targets, 0, 20 ) );
+  add_option( opt_float( "talent.caustic_wounds_chance", talents.caustic_wounds_chance, 0, 100 ) );
+  add_option( opt_timespan( "talent.macabre_stratagem_duration", talents.macabre_stratagem_duration ) );
+
 
   /*add_option( opt_bool( "ready_trigger", options.mara_ready_trigger ) );
 
@@ -2963,8 +3087,10 @@ void mara_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
+  actions.seething_burst = new actions::seething_burst_t( "seething_burst", this );
   actions.seething_poison = new actions::seething_poison_t( "seething_poison", this );
   actions.caustic_poison  = new actions::caustic_poison_t( "caustic_poison", this );
+  actions.caustic_wounds_poison  = new actions::caustic_poison_t( "caustic_wounds_poison", this );
 
   actions.maiden_of_death = new actions::maiden_of_death_t( "maiden_of_death", this );
 

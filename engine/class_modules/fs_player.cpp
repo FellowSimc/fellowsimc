@@ -402,7 +402,7 @@ struct fated_strike_t : fs_weapon_action_t<attack_t>
   {
     id = 20001;
 
-    base_execute_time = trigger_gcd = min_gcd = 0.15_s;
+    base_execute_time = trigger_gcd = min_gcd = 0.3_s;
 
     gcd_type                = gcd_haste_type::NONE;
     attack_power_mod.direct = st_mod;

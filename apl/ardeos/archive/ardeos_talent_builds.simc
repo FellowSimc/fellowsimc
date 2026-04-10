@@ -1,0 +1,132 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=290
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=1
+
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_intellect=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+ardeos="Ardeos"
+level=80
+
+# initial_resource=spirit=100
+initial_resource=cinders=240
+
+apl/ardeos_apl.simc
+
+gear_intellect=1442
+
+# gear_haste_rating=1650
+gear_haste_rating=1850
+gear_crit_rating=1215
+gear_versatility_rating=1250
+# gear_versatility_rating=960
+gear_mastery_rating=200
+
+# gems.amethyst_power=2640
+# gems.ruby_power=162
+# gems.topaz_power=2304
+
+gems.amethyst_power=2664
+gems.ruby_power=1296
+gems.topaz_power=1296
+
+# gems.amethyst_power=2742
+# gems.ruby_power=120
+
+# gems.amethyst_power=2658
+# gems.ruby_power=972
+
+# gems.amethyst_power=1200
+# gems.ruby_power=1296
+# gems.topaz_power=1200
+
+# gems.amethyst_power=3960
+# gems.amethyst_power=2988
+# gems.topaz_power=972
+# gems.ruby_power=1296
+
+
+
+# gems.amethyst_power=2904
+# gems.ruby_power=1296
+# gems.topaz_power=324
+
+# sets.deaths_grasp=1
+# sets.draconic_might=1
+# sets.dark_prophecy=1
+
+# weapon=icicles_of_anzhyr
+weapon=chronoshift
+weapon_trait.amethyst_splinters=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+
+# talents+=/slow_burn:1/firestarter:1/undying_flame:1/pyrophibian_frenzy:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1
+# legendary.untamed_flame=0
+
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1
+
+copy="No Slowburn Rolling Frog Squad CI + II","Ardeos"
+talents=rolling_flames:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1
+
+copy="No Undying Rolling Frog Squad CI","Ardeos"
+talents=rolling_flames:1/pyrophibian_frenzy:1/firestarter:1/frog_squad:1/crackling_inferno:1/slow_burn:1
+
+
+copy="No FrogSquad Rolling CI II","Ardeos"
+talents=rolling_flames:1/pyrophibian_frenzy:1/firestarter:1/intensifying_inferno:1/crackling_inferno:1/slow_burn:1/undying_flame:1
+
+
+copy="Core + Squad + Crackling (11pts)","Ardeos"
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/crackling_inferno:1
+
+copy="AOE Pad 13Pts","Ardeos"
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/reign_of_fire:1/great_balls_of_fire:1
+
+copy="ST Blast FU","Ardeos"
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1
+
+copy="ST Blast SC","Ardeos"
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1/spontaneous_combustion:1
+
+
+copy="ST Blast Double Det","Ardeos"
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1
+talent.double_detonate_cost_efficiency=1
+
+
+copy="Frogs Rolling","Ardeos"
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/rolling_flames:1
+
+copy="Frogs Agonizing Crackling","Ardeos"
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/agonizing_blaze:1/crackling_inferno:1
+
+copy="Frogs Agonizing SC","Ardeos"
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/agonizing_blaze:1/spontaneous_combustion:1
+
+copy="Frogs GBOF Crackling","Ardeos"
+talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/great_balls_of_fire:1/crackling_inferno:1

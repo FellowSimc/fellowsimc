@@ -1,0 +1,84 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=290
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+
+max_time=720
+desired_targets=12
+# desired_targets=16
+
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+ardeos="Ardeos"
+level=80
+
+# initial_resource=spirit=100
+# initial_resource=cinders=240
+
+# override.precombat_state=cooldown.pyromania=45000
+
+apl/ardeos/ardeos_apl.simc
+
+gear_intellect=1442
+
+gear_haste_rating=1650
+gear_crit_rating=1415
+gear_versatility_rating=1250
+gear_mastery_rating=200
+
+# gems.amethyst_power=2754
+# gems.ruby_power=1206
+# gems.sapphire_power=1296
+
+gems.amethyst_power=1296
+gems.ruby_power=1206
+gems.sapphire_power=2754
+
+weapon=chronoshift
+weapon_trait.visions_of_grandeur=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+
+legendary.devouring_flame=1
+legendary.fire_toad=0
+legendary.explosivo=0
+legendary.explosivo_boss_bonus=0.5
+
+talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1
+
+# copy="Apoc Surge","Ardeos"
+# talents+=/apocalyptic_surge:1
+
+# copy="Burning Initiative","Ardeos"
+# talents+=/burning_initiative:1
+# copy="Cascading Inferno","Ardeos"
+# talents+=/cascading_inferno:1
+
+# copy="+IW Talents","Ardeos"
+# talents+=/crackling_inferno:1/flare_up:1/intensifying_inferno:1
+
+# copy="Cascading Inferno IW Talents","Ardeos"
+# talents+=/cascading_inferno:1/crackling_inferno:1/flare_up:1/intensifying_inferno:1
+
+copy="CB BI"
+talents=slow_burn:1/crash_and_burn:1/burning_initiative:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1
+
+copy="CB AS"
+talents=slow_burn:1/crash_and_burn:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1
+
+copy="BI AS"
+talents=slow_burn:1/burning_initiative:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1
+
+copy="BI AS C&B GBOF"
+talents=slow_burn:1/burning_initiative:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/rolling_flames:1/crash_and_burn:1/great_balls_of_fire:1
+
+copy="Agonizing C&B GBOF"
+talents=slow_burn:1/agonizing_blaze:1/backdraft:1/undying_flame:1/rolling_flames:1/crash_and_burn:1/great_balls_of_fire:1

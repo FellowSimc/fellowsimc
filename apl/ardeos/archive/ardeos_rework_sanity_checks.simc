@@ -1,0 +1,368 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+desired_targets=1
+max_time=120
+desired_targets=1
+# max_time=60
+max_time=720
+desired_targets=16
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_intellect=100
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+ardeos="Ardeos"
+level=80
+
+# initial_resource=spirit=100
+initial_resource=cinders=240
+
+apl/ardeos/ardeos_apl.simc
+
+gear_intellect=1442
+
+gear_haste_rating=1650
+gear_crit_rating=1415
+gear_versatility_rating=1250
+gear_mastery_rating=200
+
+# gems.amethyst_power=2640
+# gems.ruby_power=162
+# gems.topaz_power=2304
+
+# gems.amethyst_power=2754
+# gems.ruby_power=1206
+# gems.topaz_power=1296
+
+gems.emerald_power=1296
+gems.ruby_power=1296
+gems.amethyst_power=2664
+
+# gems.amethyst_power=1296
+# gems.ruby_power=1206
+# gems.topaz_power=2754
+
+
+# gems.amethyst_power=2742
+# gems.ruby_power=120
+
+# gems.amethyst_power=2658
+# gems.ruby_power=972
+
+# gems.amethyst_power=1200
+# gems.ruby_power=1296
+# gems.topaz_power=1200
+
+# gems.amethyst_power=3960
+# gems.amethyst_power=2988
+# gems.topaz_power=972
+# gems.ruby_power=1296
+
+
+
+# gems.amethyst_power=2904
+# gems.ruby_power=1296
+# gems.topaz_power=324
+
+# sets.deaths_grasp=1
+# sets.draconic_might=1
+# sets.dark_prophecy=1
+
+weapon=chronoshift
+weapon_trait.emerald_judgement=4
+weapon_trait.kindling=4
+weapon_trait.inspired_allegiance=4
+
+legendary.devouring_flame=0
+legendary.fire_toad=0
+legendary.explosivo=1
+legendary.explosivo_boss_bonus=0.5
+
+talents=great_balls_of_fire:1/undying_flame:1/flare_up:1/crash_and_burn:1/agonizing_blaze:1/crackling_inferno:1/reign_of_fire:1/intensifying_inferno:1
+
+copy="Slowburn over Agonizing","Ardeos"
+talents=great_balls_of_fire:1/undying_flame:1/flare_up:1/crash_and_burn:1/slow_burn:1/crackling_inferno:1/reign_of_fire:1/intensifying_inferno:1
+
+# copy="Undying over Agonizing","Ardeos"
+# legendary.explosivo=1
+# talents=great_balls_of_fire:1/backdraft:1/flare_up:1/crash_and_burn:1/undying_flame:1/crackling_inferno:1/reign_of_fire:1/intensifying_inferno:1
+
+copy="Sunnys Build Explosivo","Ardeos"
+legendary.explosivo=1
+talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/flare_up:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/intensifying_inferno:1
+
+
+copy="Sunnys Build Rolling Devouring ROF GBOF Ouro","Ardeos"
+legendary.devouring_flame=1
+legendary.explosivo=0
+talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
+
+copy="Sunnys Build Rolling Devouring ROF GBOF Spont","Ardeos"
+legendary.devouring_flame=1
+legendary.explosivo=0
+talents=slow_burn:1/great_balls_of_fire:1/spontaneous_combustion:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
+
+copy="Froggers ROF GBOF Ouro FU","Ardeos"
+legendary.fire_toad=1
+legendary.explosivo=0
+talents=great_balls_of_fire:1/backdraft:1/crash_and_burn:1/reign_of_fire:1/pyrophibian_frenzy:1/firestarter:1/flare_up:1
+copy="Froggers ROF GBOF CI FU","Ardeos"
+legendary.fire_toad=1
+legendary.explosivo=0
+talents=great_balls_of_fire:1/backdraft:1/crackling_inferno:1/reign_of_fire:1/pyrophibian_frenzy:1/firestarter:1/flare_up:1
+
+copy="Froggers ROF GBOF FrogSq","Ardeos"
+legendary.fire_toad=1
+legendary.explosivo=0
+talents=great_balls_of_fire:1/backdraft:1/frog_squad:1/reign_of_fire:1/pyrophibian_frenzy:1/firestarter:1
+copy="Froggers ROF CI FU FrogSq","Ardeos"
+legendary.fire_toad=1
+legendary.explosivo=0
+talents=crackling_inferno:1/flare_up:1/backdraft:1/frog_squad:1/reign_of_fire:1/pyrophibian_frenzy:1/firestarter:1
+copy="Froggers ROF GBOF FU FrogSq no backdraft","Ardeos"
+legendary.fire_toad=1
+legendary.explosivo=0
+talents=flare_up:1/great_balls_of_fire:1/frog_squad:1/reign_of_fire:1/pyrophibian_frenzy:1/firestarter:1
+
+copy="Sunnys Build Rolling Devouring ROF GBOF FU","Ardeos"
+legendary.devouring_flame=1
+legendary.explosivo=0
+talents=slow_burn:1/great_balls_of_fire:1/flare_up:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
+
+copy="Sunny Froggers","Ardeos"
+legendary.fire_toad=1
+legendary.explosivo=0
+talents=slow_burn:1/frog_squad:1/backdraft:1/crash_and_burn:1/firestarter:1/crackling_inferno:1/pyrophibian_frenzy:1/intensifying_inferno:1
+
+copy="Sunnys Build Rolling Devouring ROF FlareUp CI","Ardeos"
+legendary.devouring_flame=1
+legendary.explosivo=0
+talents=slow_burn:1/flare_up:1/crackling_inferno:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
+
+copy="Sunnys Build Rolling Devouring ROF FlareUp II","Ardeos"
+legendary.devouring_flame=1
+legendary.explosivo=0
+talents=slow_burn:1/flare_up:1/intensifying_inferno:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
+
+copy="Sunnys Build Rolling Devouring ROF FlareUp II Ouro","Ardeos"
+legendary.devouring_flame=1
+legendary.explosivo=0
+talents=slow_burn:1/flare_up:1/intensifying_inferno:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
+
+
+copy="Sunnys Build Full IW Explosivo","Ardeos"
+legendary.explosivo=1
+talents=slow_burn:1/great_balls_of_fire:1/crackling_inferno:1/flare_up:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/intensifying_inferno:1
+
+# copy="SlowBurn","Ardeos"
+# talents+=/slow_burn:1
+# copy="FrogSquad","Ardeos"
+# talents+=/frog_squad:1
+# copy="GBOF","Ardeos"
+# talents+=/great_balls_of_fire:1
+# # copy="Backdraft","Ardeos"
+# # talents+=/backdraft:1
+# copy="FlareUp","Ardeos"
+# talents+=/flare_up:1
+# copy="Ouro","Ardeos"
+# talents+=/crash_and_burn:1
+# copy="Agonizing","Ardeos"
+# talents+=/agonizing_blaze:1
+# copy="Firestarter","Ardeos"
+# talents+=/firestarter:1
+# copy="Undying Flame","Ardeos"
+# talents+=/undying_flame:1
+# copy="Crackling Inferno","Ardeos"
+# talents+=/crackling_inferno:1
+# copy="Rolling","Ardeos"
+# talents+=/rolling_flames:1
+# copy="Pyrophibian","Ardeos"
+# talents+=/pyrophibian_frenzy:1
+# copy="Reign","Ardeos"
+# talents+=/reign_of_fire:1
+# copy="Intensifying","Ardeos"
+# talents+=/intensifying_inferno:1
+# copy="Spontaneous","Ardeos"
+# talents+=/spontaneous_combustion:1
+
+# copy="GBOF Reign (5)","Ardeos"
+# talents+=/great_balls_of_fire:1/reign_of_fire:1
+# copy="GBOF Ouro (3)","Ardeos"
+# talents+=/great_balls_of_fire:1/crash_and_burn:1
+# copy="Reign Ouro (4)","Ardeos"
+# talents+=/reign_of_fire:1/crash_and_burn:1
+# copy="SlowBurn Reign (5)","Ardeos"
+# talents+=/slow_burn:1/reign_of_fire:1
+# copy="SlowBurn Ouro (3)","Ardeos"
+# talents+=/slow_burn:1/crash_and_burn:1
+# copy="SlowBurn Reign Ouro (6)","Ardeos"
+# talents+=/slow_burn:1/crash_and_burn:1/reign_of_fire:1
+# copy="GBOF Reign Ouro (6)","Ardeos"
+# talents+=/great_balls_of_fire:1/reign_of_fire:1/crash_and_burn:1
+
+# copy="Intensifying Crackling (2)","Ardeos"
+# talents+=/intensifying_inferno:1/crackling_inferno:1
+# copy="Intensifying FlareUp (2)","Ardeos"
+# talents+=/intensifying_inferno:1/flare_up:1
+# copy="Crackling FlareUp (2)","Ardeos"
+# talents+=/crackling_inferno:1/flare_up:1
+# copy="Intensifying Crackling FlareUp (3)","Ardeos"
+# talents+=/intensifying_inferno:1/crackling_inferno:1/flare_up:1
+
+# copy="Firestarter Pyrophibian (5)","Ardeos"
+# talents+=/firestarter:1/pyrophibian_frenzy:1
+# copy="Crackling Pyrophibian (4)","Ardeos"
+# talents+=/crackling_inferno:1/pyrophibian_frenzy:1
+# copy="FrogSquad Pyrophibian (5)","Ardeos"
+# talents+=/frog_squad:1/pyrophibian_frenzy:1
+# copy="FrogSquad Firestarter Pyrophibian (7)","Ardeos"
+# talents+=/frog_squad:1/firestarter:1/pyrophibian_frenzy:1
+# copy="FrogSquad Crackling Pyrophibian (6)","Ardeos"
+# talents+=/frog_squad:1/crackling_inferno:1/pyrophibian_frenzy:1
+# copy="Firestarter Crackling Pyrophibian (6)","Ardeos"
+# talents+=/firestarter:1/crackling_inferno:1/pyrophibian_frenzy:1
+# copy="FrogSquad Firestarter Crackling Pyrophibian (8)","Ardeos"
+# talents+=/frog_squad:1/firestarter:1/crackling_inferno:1/pyrophibian_frenzy:1
+
+# copy="Rolling Undying (5)","Ardeos"
+# talents+=/rolling_flames:1/undying_flame:1
+# copy="Slow Burn Undying (5)","Ardeos"
+# talents+=/slow_burn:1/undying_flame:1
+# copy="Rolling Slow Burn Undying (7)","Ardeos"
+# talents+=/rolling_flames:1/slow_burn:1/undying_flame:1
+# legendary.fire_toad=1
+
+# talents=slow_burn:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/frog_squad:1/crackling_inferno:1/intensifying_inferno:1
+
+# copy="Axels Ball Build 12pt Explosivo","Ardeos"
+# legendary.fire_toad=0
+# legendary.explosivo=1
+# talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/flare_up:1/crash_and_burn:1/agonizing_blaze:1/reign_of_fire:1
+
+# copy="Axels Ball Build 12pt No Explosivo","Ardeos"
+# legendary.fire_toad=0
+# legendary.explosivo=0
+# talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/flare_up:1/crash_and_burn:1/agonizing_blaze:1/reign_of_fire:1
+
+# copy="Rolling Ball Build 13pt Explosivo","Ardeos"
+# legendary.fire_toad=0
+# legendary.explosivo=1
+# talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1
+
+# copy="Rolling Ball Build 13pt Devouring","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1
+
+# copy="Rolling Ball Build 13pt Devouring GBOF0","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:1/great_balls_of_fire:0/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1
+
+# copy="Rolling Ball Build 13pt Devouring BD0","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:1/great_balls_of_fire:1/backdraft:0/undying_flame:1/rolling_flames:1/reign_of_fire:1
+
+# copy="Rolling Ball Build 13pt Devouring ROF0","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:0
+
+# copy="Rolling Ball Build 13pt Devouring ROF0 Ouro","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:0/crash_and_burn:1
+# copy="Rolling Ball Build 13pt Devouring ROF0 Ouro/FU/IN","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:0/crash_and_burn:1/flare_up:1/intensifying_inferno:1
+
+# copy="Rolling Ball Build 13pt Devouring ROF Ouro BD0","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:1/great_balls_of_fire:1/undying_flame:1/rolling_flames:1/reign_of_fire:1/crash_and_burn:1
+
+
+# copy="Frog Ball FU II","Ardeos"
+# legendary.fire_toad=1
+# talents=flare_up:1/intensifying_inferno:1/great_balls_of_fire:1/firestarter:1/pyrophibian_frenzy:1/reign_of_fire:1/crash_and_burn:1
+
+# copy="Frog Ball SB","Ardeos"
+# legendary.fire_toad=1
+# talents=slow_burn:1/great_balls_of_fire:1/firestarter:1/pyrophibian_frenzy:1/reign_of_fire:1/crash_and_burn:1
+
+# copy="Frog Ball FU BD","Ardeos"
+# legendary.fire_toad=1
+# talents=flare_up:1/backdraft:1/great_balls_of_fire:1/firestarter:1/pyrophibian_frenzy:1/reign_of_fire:1/crash_and_burn:1
+
+# copy="Frog Ball FU BD FS","Ardeos"
+# legendary.fire_toad=1
+# talents=flare_up:1/backdraft:1/great_balls_of_fire:1/frog_squad:1/pyrophibian_frenzy:1/reign_of_fire:1/crash_and_burn:1
+
+# copy="Frog Ball No ROF","Ardeos"
+# legendary.fire_toad=1
+# talents=agonizing_blaze:1/backdraft:1/great_balls_of_fire:1/frog_squad:1/pyrophibian_frenzy:1/reign_of_fire:0/crash_and_burn:1/firestarter:1
+
+
+# # copy="Frog Ball FU BD Explo","Ardeos"
+# # legendary.fire_toad=0
+# # legendary.explosivo=1
+# # talents=flare_up:1/backdraft:1/great_balls_of_fire:1/firestarter:1/pyrophibian_frenzy:1/reign_of_fire:1/crash_and_burn:1
+
+# copy="Rolling Ball Build 13pt Devouring ROF Ouro BD1 GBOF0 SC","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:1/great_balls_of_fire:0/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1/crash_and_burn:1/spontaneous_combustion:1
+# copy="Rolling Ball Build 13pt Devouring ROF Ouro BD1 GBOF0 FU","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:1/great_balls_of_fire:0/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1/crash_and_burn:1/flare_up:1
+# copy="Rolling Ball Build 13pt Devouring ROF Ouro BD1 SB0 SC","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:0/great_balls_of_fire:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1/crash_and_burn:1/spontaneous_combustion:1
+# copy="Rolling Ball Build 13pt Devouring ROF Ouro BD1 SB0 FU","Ardeos"
+# legendary.fire_toad=0
+# legendary.devouring_flame=1
+# talents=slow_burn:0/great_balls_of_fire:1/backdraft:1/undying_flame:1/rolling_flames:1/reign_of_fire:1/crash_and_burn:1/flare_up:1
+# copy="Ball Build 13pt Explosivo Infernal Wave","Ardeos"
+# legendary.fire_toad=0
+# legendary.explosivo=1
+# talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/flare_up:1/crash_and_burn:1/agonizing_blaze:1/reign_of_fire:1/intensifying_inferno:1
+
+# copy="Ball Build 13pt Explosivo Infernal Wave FS nto Agon","Ardeos"
+# legendary.fire_toad=0
+# legendary.explosivo=1
+# talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/flare_up:1/crash_and_burn:1/firestarter:1/reign_of_fire:1/intensifying_inferno:1
+
+# copy="Ball Build 13pt Explosivo Infernal Wave not backdraft fs","Ardeos"
+# legendary.fire_toad=0
+# legendary.explosivo=1
+# talents=slow_burn:1/great_balls_of_fire:1/flare_up:1/crash_and_burn:1/crackling_inferno:1/firestarter:1/reign_of_fire:1/intensifying_inferno:1
+
+# copy="Ball Build 13pt Explosivo Infernal Wave not backdraft ag","Ardeos"
+# legendary.fire_toad=0
+# legendary.explosivo=1
+# talents=slow_burn:1/great_balls_of_fire:1/flare_up:1/crash_and_burn:1/crackling_inferno:1/agonizing_blaze:1/reign_of_fire:1/intensifying_inferno:1

@@ -105,6 +105,8 @@ public:
     buff_t* wildfire;
     buff_t* untamed_flame_crit;
     buff_t* untamed_flame_spirit;
+    buff_t* apocalyptic_surge;
+    buff_t* cascading_inferno;
   } buffs;
 
   struct cooldowns_t
@@ -195,138 +197,75 @@ public:
 
   } spell_const;
 
+  #define ARDEOS_TALENT_LIST( X )                                             \
+    X( SLOW_BURN, "slow_burn", "Slow Burn" )                                  \
+    X( FROG_SQUAD, "frog_squad", "Frog Squad" )                               \
+    X( GREAT_BALLS_OF_FIRE, "great_balls_of_fire", "Great Balls of Fire" )    \
+    X( BACKDRAFT, "backdraft", "Backdraft" )                                  \
+    X( FLARE_UP, "flare_up", "Flare Up" )                                     \
+    X( CRASH_AND_BURN, "crash_and_burn", "Crash and Burn" )                   \
+    X( AGONIZING_BLAZE, "agonizing_blaze", "Agonizing Blaze" )                \
+    X( FIRESTARTER, "firestarter", "Firestarter" )                            \
+    X( UNDYING_FLAME, "undying_flame", "Undying Flame" )                      \
+    X( FIERY_RESILIENCE, "fiery_resilience", "Fiery Resilience" )             \
+    X( CRACKLING_INFERNO, "crackling_inferno", "Crackling Inferno" )          \
+    X( MAGIC_WARD, "magic_ward", "Magic Ward" )                               \
+    X( ROLLING_FLAMES, "rolling_flames", "Rolling Flames" )                   \
+    X( PYROPHIBIAN_FRENZY, "pyrophibian_frenzy", "Pyrophibian Frenzy" )       \
+    X( REIGN_OF_FIRE, "reign_of_fire", "Reign of Fire" )                      \
+    X( INTENSIFYING_INFERNO, "intensifying_inferno", "Intensifying Inferno" ) \
+    X( SPIRITED_FORTITUDE, "spirited_fortitude", "Spirited Fortitude" )       \
+    X( SPONTANEOUS_COMBUSTION, "spontaneous_combustion", "Spontaneous Combustion" ) \
+    X( APOCALYPTIC_SURGE, "apocalyptic_surge", "Apocalyptic Surge" ) \
+    X( BURNING_INITIATIVE, "burning_initiative", "Burning Initiative" ) \
+    X( CASCADING_INFERNO, "cascading_inferno", "Cascading Inferno" )
+
+  enum ardeos_talent_index_t
+  {
+#define X( name, id, pretty ) name##_INDEX,
+    ARDEOS_TALENT_LIST( X )
+#undef X
+    ARDEOS_TALENT_MAX
+  };
+
   enum ardeos_talents_t : unsigned long long
   {
-    TALENT_NONE = 0,
-    TALENT_1    = 1ULL << 0,
-    TALENT_2    = 1ULL << 1,
-    TALENT_3    = 1ULL << 2,
-    TALENT_4    = 1ULL << 3,
-    TALENT_5    = 1ULL << 4,
-    TALENT_6    = 1ULL << 5,
-    TALENT_7    = 1ULL << 6,
-    TALENT_8    = 1ULL << 7,
-    TALENT_9    = 1ULL << 8,
-    TALENT_10   = 1ULL << 9,
-    TALENT_11   = 1ULL << 10,
-    TALENT_12   = 1ULL << 11,
-    TALENT_13   = 1ULL << 12,
-    TALENT_14   = 1ULL << 13,
-    TALENT_15   = 1ULL << 14,
-    TALENT_16   = 1ULL << 15,
-    TALENT_17   = 1ULL << 16,
-    TALENT_18   = 1ULL << 17,
-    TALENT_MAX  = 1ULL << 18,
-
-    NONE                   = TALENT_NONE,
-    SLOW_BURN              = TALENT_1,
-    FROG_SQUAD             = TALENT_2,
-    GREAT_BALLS_OF_FIRE    = TALENT_3,
-    BACKDRAFT              = TALENT_4,
-    FLARE_UP               = TALENT_5,
-    OUROBOROS              = TALENT_6,
-    AGONIZING_BLAZE        = TALENT_7,
-    FIRESTARTER            = TALENT_8,
-    UNDYING_FLAME          = TALENT_9,
-    FIERY_RESILIENCE       = TALENT_10,
-    CRACKLING_INFERNO      = TALENT_11,
-    MAGIC_WARD             = TALENT_12,
-    ROLLING_FLAMES         = TALENT_13,
-    PYROPHIBIAN_FRENZY     = TALENT_14,
-    REIGN_OF_FIRE          = TALENT_15,
-    INTENSIFYING_INFERNO   = TALENT_16,
-    SPIRITED_FORTITUDE     = TALENT_17,
-    SPONTANEOUS_COMBUSTION = TALENT_18,
-    MAX                    = TALENT_MAX
+    NONE = 0,
+#define X( name, id, pretty ) name = 1ULL << name##_INDEX,
+    ARDEOS_TALENT_LIST( X )
+#undef X
+        MAX = 1ULL << ARDEOS_TALENT_MAX
   };
+
+  struct talent_info
+  {
+    ardeos_talents_t flag;
+    std::string_view id;
+    std::string_view pretty;
+  };
+
+  static constexpr talent_info ARDEOS_TALENTS[] = {
+#define X( name, id, pretty ) { ardeos_talents_t::name, id, pretty },
+      ARDEOS_TALENT_LIST( X )
+#undef X
+  };
+
+  static constexpr std::string_view talent_name( ardeos_talents_t t )
+  {
+    for ( const auto& talent : ARDEOS_TALENTS )
+      if ( talent.flag == t )
+        return talent.id;
+
+    return "unknown_talent";
+  }
 
   static constexpr std::string_view talent_name_formatted( ardeos_talents_t t )
   {
-    switch ( t )
-    {
-      case ardeos_talents_t::SLOW_BURN:
-        return "Slow Burn";
-      case ardeos_talents_t::GREAT_BALLS_OF_FIRE:
-        return "Great Balls of Fire";
-      case ardeos_talents_t::FROG_SQUAD:
-        return "Frog Squad";
-      case ardeos_talents_t::BACKDRAFT:
-        return "Backdraft";
-      case ardeos_talents_t::FLARE_UP:
-        return "Flare Up";
-      case ardeos_talents_t::UNDYING_FLAME:
-        return "Undying Flame";
-      case ardeos_talents_t::AGONIZING_BLAZE:
-        return "Agonizing Blaze";
-      case ardeos_talents_t::FIRESTARTER:
-        return "Firestarter";
-      case ardeos_talents_t::OUROBOROS:
-        return "Ouroboros";
-      case ardeos_talents_t::FIERY_RESILIENCE:
-        return "Fiery Resilience";
-      case ardeos_talents_t::CRACKLING_INFERNO:
-        return "Crackling Inferno";
-      case ardeos_talents_t::MAGIC_WARD:
-        return "Magic Ward";
-      case ardeos_talents_t::ROLLING_FLAMES:
-        return "Rolling Flames";
-      case ardeos_talents_t::PYROPHIBIAN_FRENZY:
-        return "Pyrophibian Frenzy";
-      case ardeos_talents_t::REIGN_OF_FIRE:
-        return "Reign of Fire";
-      case ardeos_talents_t::INTENSIFYING_INFERNO:
-        return "Intensifying Inferno";
-      case ardeos_talents_t::SPIRITED_FORTITUDE:
-        return "Spirited Fortitude";
-      case ardeos_talents_t::SPONTANEOUS_COMBUSTION:
-        return "Spontaneous Combustion";
-      default:
-        return "Unknown Talent";
-    }
-  }
-  static constexpr std::string_view talent_name( ardeos_talents_t t )
-  {
-    switch ( t )
-    {
-      case ardeos_talents_t::SLOW_BURN:
-        return "slow_burn";
-      case ardeos_talents_t::FROG_SQUAD:
-        return "frog_squad";
-      case ardeos_talents_t::GREAT_BALLS_OF_FIRE:
-        return "great_balls_of_fire";
-      case ardeos_talents_t::BACKDRAFT:
-        return "backdraft";
-      case ardeos_talents_t::FLARE_UP:
-        return "flare_up";
-      case ardeos_talents_t::UNDYING_FLAME:
-        return "undying_flame";
-      case ardeos_talents_t::AGONIZING_BLAZE:
-        return "agonizing_blaze";
-      case ardeos_talents_t::FIRESTARTER:
-        return "firestarter";
-      case ardeos_talents_t::OUROBOROS:
-        return "ouroboros";
-      case ardeos_talents_t::FIERY_RESILIENCE:
-        return "fiery_resilience";
-      case ardeos_talents_t::CRACKLING_INFERNO:
-        return "crackling_inferno";
-      case ardeos_talents_t::MAGIC_WARD:
-        return "magic_ward";
-      case ardeos_talents_t::ROLLING_FLAMES:
-        return "rolling_flames";
-      case ardeos_talents_t::PYROPHIBIAN_FRENZY:
-        return "pyrophibian_frenzy";
-      case ardeos_talents_t::REIGN_OF_FIRE:
-        return "reign_of_fire";
-      case ardeos_talents_t::INTENSIFYING_INFERNO:
-        return "intensifying_inferno";
-      case ardeos_talents_t::SPIRITED_FORTITUDE:
-        return "spirited_fortitude";
-      case ardeos_talents_t::SPONTANEOUS_COMBUSTION:
-        return "spontaneous_combustion";
-      default:
-        return "unknown_talent";
-    }
+    for ( const auto& talent : ARDEOS_TALENTS )
+      if ( talent.flag == t )
+        return talent.pretty;
+
+    return "Unknown Talent";
   }
 
   struct talents_t
@@ -351,7 +290,7 @@ public:
 
     double firestarter_crit_chance = 0.2;
 
-    timespan_t ouroboros_cdr      = 0.1_s;
+    timespan_t crash_and_burn_cdr      = 0.1_s;
 
     double crackling_inferno_crit_chance      = 0.2;
     double crackling_inferno_dot_fraction     = 0.6;
@@ -375,6 +314,17 @@ public:
     bool rolling_flames_instant = false;
 
     bool double_detonate_cost_efficiency = false;
+
+    timespan_t apocalyptic_surge_cast_reduction = 1.5_s;
+    int apocalyptic_surge_stacks                = 2;
+
+    double burning_initiative_initial_spirit = 50;
+    double burning_initiative_initial_embers = 2;
+
+    int cascading_inferno_stacks_per_detonate     = 1;
+    int cascading_inferno_max_stacks              = 20;
+    int cascading_inferno_consumed_stacks         = 10;
+    double cascading_inferno_additive_crit_chance = 3.0;
   } talents;
 
   struct legendary_t
@@ -1137,6 +1087,25 @@ struct infernal_wave_t : public ardeos_spell_t
     {
       p()->cooldowns.engulfing_flames->adjust( -p()->talents.rolling_flames_infernal_wave_cdr, false );
     }
+
+    if ( p()->talents_enabled( ardeos_t::CASCADING_INFERNO ) &&
+         p()->buffs.cascading_inferno->stack() >= p()->talents.cascading_inferno_consumed_stacks )
+    {
+      p()->buffs.cascading_inferno->decrement( p()->talents.cascading_inferno_consumed_stacks );
+    }
+  }
+
+  double composite_crit_chance() const override
+  {
+    auto cc = ardeos_spell_t::composite_crit_chance();
+
+    if ( p()->talents_enabled( ardeos_t::CASCADING_INFERNO ) &&
+         p()->buffs.cascading_inferno->stack() >= p()->talents.cascading_inferno_consumed_stacks )
+    {
+      cc += p()->talents.cascading_inferno_additive_crit_chance;
+    }
+
+    return cc;
   }
 
   void impact( action_state_t* s ) override
@@ -1285,9 +1254,26 @@ struct detonate_t : public ardeos_spell_t
     damage_action->stats = stats;
   }
 
+  double cost() const override
+  {
+    if ( p()->buffs.apocalyptic_surge->check() )
+    {
+      return 0.0;
+    }
+
+    return base_t::cost();
+  }
+
   void execute() override
   {
     ardeos_spell_t::execute();
+
+    p()->buffs.apocalyptic_surge->decrement();
+
+    if ( p()->talents_enabled( ardeos_t::CASCADING_INFERNO ) )
+    {
+      p()->buffs.cascading_inferno->trigger( p()->talents.cascading_inferno_stacks_per_detonate );
+    }
 
     for ( int i = 0; i < p()->spell_const.detonate_hits; ++i )
     {
@@ -1561,9 +1547,9 @@ struct searing_blaze_t : public ardeos_spell_t
       p()->cooldowns.engulfing_flames->adjust( -p()->talents.rolling_flames_cdr, true );
     }
 
-    if ( p()->talents_enabled( ardeos_t::OUROBOROS ) )
+    if ( p()->talents_enabled( ardeos_t::CRASH_AND_BURN ) )
     {
-      p()->cooldowns.fire_ball->adjust( -( p()->talents.ouroboros_cdr ), true );
+      p()->cooldowns.fire_ball->adjust( -( p()->talents.crash_and_burn_cdr ), true );
     }
   }
 
@@ -1783,6 +1769,11 @@ struct apocalypse_t : public ardeos_spell_t
     cooldown->duration = p->spell_const.apocalypse_cooldown;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
+
+    if ( p->talents_enabled( ardeos_t::APOCALYPTIC_SURGE ) )
+    {
+      base_execute_time -= p->talents.apocalyptic_surge_cast_reduction;
+    }
   }
 
   void impact( action_state_t* s ) override
@@ -1820,6 +1811,11 @@ struct apocalypse_t : public ardeos_spell_t
                                  p()->legendary.brimstone_cataclysm_cdr_per_hit * execute_state->n_targets );
 
       p()->cooldowns.apocalypse->adjust( -cdr, false );
+    }
+
+    if ( p()->talents_enabled( ardeos_t::APOCALYPTIC_SURGE ) )
+    {
+      p()->buffs.apocalyptic_surge->trigger( p()->talents.apocalyptic_surge_stacks );
     }
   }
 };
@@ -2506,6 +2502,13 @@ void ardeos_t::init_base_stats()
 
   base_gcd = timespan_t::from_seconds( 1.5 );
   min_gcd  = timespan_t::from_seconds( 0.75 );
+
+  
+  if ( talents_enabled( ardeos_t::BURNING_INITIATIVE ) )
+  {
+    resources.start_at[ RESOURCE_SPIRIT ]  = talents.burning_initiative_initial_spirit;
+    resources.start_at[ RESOURCE_CINDERS ] = talents.burning_initiative_initial_embers * 100;
+  }
 }
 
 // ardeos_t::init_spells =====================================================
@@ -2620,6 +2623,14 @@ void ardeos_t::create_buffs()
                                    ->set_default_value( legendary.untamed_flame_crit_chance )
                                    ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
 
+  buffs.apocalyptic_surge = make_buff<ardeos_buff_t>( this, "apocalyptic_surge" )
+                                ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                                ->set_max_stack( talents.apocalyptic_surge_stacks );
+
+  buffs.cascading_inferno = make_buff<ardeos_buff_t>( this, "cascading_inferno" )
+                                ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                                ->set_max_stack( talents.cascading_inferno_max_stacks );
+
   if ( legendary.untamed_flame )
   {
     buffs.wildfire->add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
@@ -2656,6 +2667,9 @@ void ardeos_t::create_options()
   add_option( opt_int( "ardeos.engulfing_flames_charges", spell_const.engulfing_flames_charges ) );
   add_option( opt_timespan( "ardeos.engulfing_flames_cooldown", spell_const.engufling_flames_cooldown ) );
   add_option( opt_timespan( "talent.rolling_flames_infernal_wave_cdr", talents.rolling_flames_infernal_wave_cdr ) );
+
+  add_option( opt_float( "talent.burning_initiative_initial_spirit", talents.burning_initiative_initial_spirit, 0, 100 ) );
+  add_option( opt_float( "talent.burning_initiative_initial_embers", talents.burning_initiative_initial_embers, 0, 4 ) );
 
 
   /*add_option( opt_bool( "talent.chilling_finesse", talents.chilling_finesse ) );

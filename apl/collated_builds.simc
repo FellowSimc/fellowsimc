@@ -531,24 +531,24 @@ legendary.fire_toad=0
 legendary.explosivo=1
 legendary.explosivo_boss_bonus=0.5
 
-talents=great_balls_of_fire:1/undying_flame:1/flare_up:1/ouroboros:1/agonizing_blaze:1/crackling_inferno:1/reign_of_fire:1/intensifying_inferno:1
+talents=great_balls_of_fire:1/undying_flame:1/flare_up:1/crash_and_burn:1/agonizing_blaze:1/crackling_inferno:1/reign_of_fire:1/intensifying_inferno:1
 
 copy="Slowburn over Agonizing","Ardeos"
-talents=great_balls_of_fire:1/undying_flame:1/flare_up:1/ouroboros:1/slow_burn:1/crackling_inferno:1/reign_of_fire:1/intensifying_inferno:1
+talents=great_balls_of_fire:1/undying_flame:1/flare_up:1/crash_and_burn:1/slow_burn:1/crackling_inferno:1/reign_of_fire:1/intensifying_inferno:1
 
 # copy="Undying over Agonizing","Ardeos"
 # legendary.explosivo=1
-# talents=great_balls_of_fire:1/backdraft:1/flare_up:1/ouroboros:1/undying_flame:1/crackling_inferno:1/reign_of_fire:1/intensifying_inferno:1
+# talents=great_balls_of_fire:1/backdraft:1/flare_up:1/crash_and_burn:1/undying_flame:1/crackling_inferno:1/reign_of_fire:1/intensifying_inferno:1
 
 copy="Sunnys Build Explosivo","Ardeos"
 legendary.explosivo=1
-talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/flare_up:1/ouroboros:1/undying_flame:1/reign_of_fire:1/intensifying_inferno:1
+talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/flare_up:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/intensifying_inferno:1
 
 
 copy="Sunnys Build Rolling Devouring ROF GBOF Ouro","Ardeos"
 legendary.devouring_flame=1
 legendary.explosivo=0
-talents=slow_burn:1/great_balls_of_fire:1/ouroboros:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
+talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
 
 copy="Sunnys Build Rolling Devouring ROF GBOF Spont","Ardeos"
 legendary.devouring_flame=1
@@ -558,7 +558,7 @@ talents=slow_burn:1/great_balls_of_fire:1/spontaneous_combustion:1/undying_flame
 copy="Froggers ROF GBOF Ouro FU","Ardeos"
 legendary.fire_toad=1
 legendary.explosivo=0
-talents=great_balls_of_fire:1/backdraft:1/ouroboros:1/reign_of_fire:1/pyrophibian_frenzy:1/firestarter:1/flare_up:1
+talents=great_balls_of_fire:1/backdraft:1/crash_and_burn:1/reign_of_fire:1/pyrophibian_frenzy:1/firestarter:1/flare_up:1
 copy="Froggers ROF GBOF CI FU","Ardeos"
 legendary.fire_toad=1
 legendary.explosivo=0
@@ -585,27 +585,27 @@ talents=slow_burn:1/great_balls_of_fire:1/flare_up:1/undying_flame:1/reign_of_fi
 copy="Sunny Froggers","Ardeos"
 legendary.fire_toad=1
 legendary.explosivo=0
-talents=slow_burn:1/frog_squad:1/backdraft:1/ouroboros:1/firestarter:1/crackling_inferno:1/pyrophibian_frenzy:1/intensifying_inferno:1
+talents=slow_burn:1/frog_squad:1/backdraft:1/crash_and_burn:1/firestarter:1/crackling_inferno:1/pyrophibian_frenzy:1/intensifying_inferno:1
 
 copy="Sunnys Build Rolling Devouring ROF FlareUp CI","Ardeos"
 legendary.devouring_flame=1
 legendary.explosivo=0
-talents=slow_burn:1/flare_up:1/crackling_inferno:1/ouroboros:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
+talents=slow_burn:1/flare_up:1/crackling_inferno:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
 
 copy="Sunnys Build Rolling Devouring ROF FlareUp II","Ardeos"
 legendary.devouring_flame=1
 legendary.explosivo=0
-talents=slow_burn:1/flare_up:1/intensifying_inferno:1/ouroboros:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
+talents=slow_burn:1/flare_up:1/intensifying_inferno:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
 
 copy="Sunnys Build Rolling Devouring ROF FlareUp II Ouro","Ardeos"
 legendary.devouring_flame=1
 legendary.explosivo=0
-talents=slow_burn:1/flare_up:1/intensifying_inferno:1/ouroboros:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
+talents=slow_burn:1/flare_up:1/intensifying_inferno:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/rolling_flames:1
 
 
 copy="Sunnys Build Full IW Explosivo","Ardeos"
 legendary.explosivo=1
-talents=slow_burn:1/great_balls_of_fire:1/crackling_inferno:1/flare_up:1/ouroboros:1/undying_flame:1/reign_of_fire:1/intensifying_inferno:1
+talents=slow_burn:1/great_balls_of_fire:1/crackling_inferno:1/flare_up:1/crash_and_burn:1/undying_flame:1/reign_of_fire:1/intensifying_inferno:1
 
 
 rime="Rime"

@@ -189,15 +189,23 @@ public:
   X( PUNCTURE, "puncture", "Puncture" )                               \
   X( SEETHING_BURST, "seething_burst", "Seething Burst" )             \
   X( CAUSTIC_WOUNDS, "caustic_wounds", "Caustic Wounds" )             \
-  X( MACABRE_STRATAGEM, "macabre_stratagem", "Macabre Stratagem" )    \
+  X( MACABRE_STRATAGEM, "macabre_stratagem", "Macabre Stratagem" )
+
+  enum mara_talent_index_t
+  {
+#define X( name, id, pretty ) name##_INDEX,
+    MARA_TALENT_LIST( X )
+#undef X
+        MARA_TALENT_MAX
+  };
 
   enum mara_talents_t : unsigned long long
   {
     NONE = 0,
-#define X( name, id, pretty ) name = 1ULL << __COUNTER__,
+#define X( name, id, pretty ) name = 1ULL << name##_INDEX,
     MARA_TALENT_LIST( X )
 #undef X
-        MAX = 1ULL << __COUNTER__
+        MAX = 1ULL << MARA_TALENT_MAX
   };
 
   struct talent_info

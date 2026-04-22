@@ -321,6 +321,23 @@ public:
     return composite_mastery() / ( 1 + composite_mastery() );
   }
 
+  struct talent_info
+  {
+    long long flag;
+    std::string_view id;
+    std::string_view pretty;
+  };
+
+  virtual constexpr std::string_view talent_name( long long t )
+  {
+    return "";
+  }
+
+  virtual constexpr std::string_view talent_name_formatted( long long t )
+  {
+    return "";
+  }
+
   // Character Definition
   void init_spells() override;
   void init_base_stats() override;

@@ -237,20 +237,13 @@ public:
         MAX = 1ULL << ARDEOS_TALENT_MAX
   };
 
-  struct talent_info
-  {
-    ardeos_talents_t flag;
-    std::string_view id;
-    std::string_view pretty;
-  };
-
   static constexpr talent_info ARDEOS_TALENTS[] = {
 #define X( name, id, pretty ) { ardeos_talents_t::name, id, pretty },
       ARDEOS_TALENT_LIST( X )
 #undef X
   };
 
-  static constexpr std::string_view talent_name( ardeos_talents_t t )
+  constexpr std::string_view talent_name( long long t ) override
   {
     for ( const auto& talent : ARDEOS_TALENTS )
       if ( talent.flag == t )
@@ -259,7 +252,7 @@ public:
     return "unknown_talent";
   }
 
-  static constexpr std::string_view talent_name_formatted( ardeos_talents_t t )
+  constexpr std::string_view talent_name_formatted( long long t ) override
   {
     for ( const auto& talent : ARDEOS_TALENTS )
       if ( talent.flag == t )
@@ -1576,7 +1569,7 @@ struct engulfing_flames_t : public ardeos_spell_t
     dot_allow_partial_tick = true;
     hasted_ticks           = true;
 
-    dot_behavior = DOT_REFRESH_PANDEMIC;
+    dot_behavior = DOT_REFRESH_DURATION;
 
     cooldown->duration = p->spell_const.engufling_flames_cooldown;
     cooldown->hasted   = false;

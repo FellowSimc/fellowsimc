@@ -24,6 +24,8 @@ class elarion_td_t : public fs_player_td_t
 public:
   struct dots_t
   {
+    dot_t* starfall_volley;
+    std::vector<dot_t*> starfall_volley_individual;
   } dots;
 
   struct
@@ -175,117 +177,65 @@ public:
     double barrage_mark_aoe_chance = 0.2;
   } spell_const;
 
-  enum elarion_talents_t : unsigned long long
+#define ELARION_TALENT_LIST(X) \
+  X( FOCUSED_EXPANSE,        "focused_expanse",        "Focused Expanse" ) \
+  X( PIERCING_SEEKERS,       "piercing_seekers",       "Piercing Seekers" ) \
+  X( FINAL_CRESCENDO,        "final_crescendo",        "Final Crescendo" ) \
+  X( SKYLIT_GRACE,           "skylit_grace",           "Skylit Grace" ) \
+  X( FUSILLADE,              "fusillade",              "Fusillade" ) \
+  X( SKYWARD_MUNITIONS,      "skyward_munitions",      "Skyward Munitions" ) \
+  X( REPEATING_STARS,        "repeating_stars",        "Repeating Stars" ) \
+  X( LUNARLIGHT_AFFINITY,    "lunarlight_affinity",    "Lunarlight Affinity" ) \
+  X( LETHAL_SHOTS,           "lethal_shots",           "Lethal Shots" ) \
+  X( PRECISION_STRIKE,       "precision_strike",       "Precision Strike" ) \
+  X( LUNAR_FURY,             "lunar_fury",             "Lunar Fury" ) \
+  X( STARS_ALIGNED,             "stars_aligned",             "Stars Aligned" ) \
+  X( FERVENT_SUPREMACY,      "fervent_supremacy",      "Fervent Supremacy" ) \
+  X( IMPENDING_HEARTSEEKER,  "impending_heartseeker",  "Impending Heartseeker" ) \
+  X( RESURGENT_WINDS,        "resurgent_winds",        "Resurgent Winds" ) \
+  X( LAST_LIGHTS,            "last_lights",            "Last Lights" ) \
+  X( RISING_MOON,     "rising_moon",     "Rising Moon" ) \
+  X( HIGH_IMPACT,  "high_impact",  "High Impact" )
+
+  enum elarion_talent_index_t
   {
-    NONE      = 0ULL,
-    TALENT_1  = 1ULL << 0,
-    TALENT_2  = 1ULL << 1,
-    TALENT_3  = 1ULL << 2,
-    TALENT_4  = 1ULL << 3,
-    TALENT_5  = 1ULL << 4,
-    TALENT_6  = 1ULL << 5,
-    TALENT_7  = 1ULL << 6,
-    TALENT_11  = 1ULL << 7,
-    TALENT_9  = 1ULL << 8,
-    TALENT_10 = 1ULL << 9,
-    TALENT_8 = 1ULL << 10,
-    TALENT_12 = 1ULL << 11,
-    TALENT_13 = 1ULL << 12,
-    TALENT_14 = 1ULL << 13,
-    TALENT_15 = 1ULL << 14,
-    TALENT_16 = 1ULL << 15,
-    TALENT_17 = 1ULL << 16,
-    TALENT_18 = 1ULL << 17,
-    MAX       = 1ULL << 18
+#define X( name, id, pretty ) name##_INDEX,
+    ELARION_TALENT_LIST( X )
+#undef X
+        ELARION_TALENT_MAX
   };
 
-  static constexpr std::string_view talent_name_formatted( elarion_talents_t t )
+  enum elarion_talents_t : unsigned long long
   {
-    switch ( t )
-    {
-      case elarion_talents_t::TALENT_1:
-        return "Focused Expanse";
-      case elarion_talents_t::TALENT_2:
-        return "Piercing Seekers";
-      case elarion_talents_t::TALENT_3:
-        return "Final Crescendo";
-      case elarion_talents_t::TALENT_4:
-        return "Skylit Grace";
-      case elarion_talents_t::TALENT_5:
-        return "Fusillade";
-      case elarion_talents_t::TALENT_6:
-        return "Skyward Munitions";
-      case elarion_talents_t::TALENT_7:
-        return "Repeating Stars";
-      case elarion_talents_t::TALENT_11:
-        return "Lunarlight Affinity";
-      case elarion_talents_t::TALENT_9:
-        return "Lethal Shots";
-      case elarion_talents_t::TALENT_10:
-        return "Path of Twilight";
-      case elarion_talents_t::TALENT_8:
-        return "Lunar Fury";
-      case elarion_talents_t::TALENT_12:
-        return "Magic Ward";
-      case elarion_talents_t::TALENT_13:
-        return "Fervent Supremacy";
-      case elarion_talents_t::TALENT_14:
-        return "Impending Heartseeker";
-      case elarion_talents_t::TALENT_15:
-        return "Resurgent Winds";
-      case elarion_talents_t::TALENT_16:
-        return "Last Lights";
-      case elarion_talents_t::TALENT_17:
-        return "Spirited Fortitude";
-      case elarion_talents_t::TALENT_18:
-        return "The Weight of Gravity";
-      default:
-        return "Unknown Talent";
-    }
+    NONE = 0,
+#define X( name, id, pretty ) name = 1ULL << name##_INDEX,
+    ELARION_TALENT_LIST( X )
+#undef X
+        MAX = 1ULL << ELARION_TALENT_MAX
+  };
+
+  static constexpr talent_info ELARION_TALENTS[] = {
+#define X( name, id, pretty ) { elarion_talents_t::name, id, pretty },
+      ELARION_TALENT_LIST( X )
+#undef X
+  };
+
+  constexpr std::string_view talent_name( long long t ) override
+  {
+    for ( const auto& talent : ELARION_TALENTS )
+      if ( talent.flag == t )
+        return talent.id;
+
+    return "unknown_talent";
   }
-  static constexpr std::string_view talent_name( elarion_talents_t t )
+
+  constexpr std::string_view talent_name_formatted( long long t ) override
   {
-    switch ( t )
-    {
-      case elarion_talents_t::TALENT_1:
-        return "focused_expanse";
-      case elarion_talents_t::TALENT_2:
-        return "piercing_seekers";
-      case elarion_talents_t::TALENT_3:
-        return "final_crescendo";
-      case elarion_talents_t::TALENT_4:
-        return "skylit_grace";
-      case elarion_talents_t::TALENT_5:
-        return "fusillade";
-      case elarion_talents_t::TALENT_6:
-        return "skyward_munitions";
-      case elarion_talents_t::TALENT_7:
-        return "repeating_stars";
-      case elarion_talents_t::TALENT_8:
-        return "lunar_fury";
-      case elarion_talents_t::TALENT_9:
-        return "lethal_shots";
-      case elarion_talents_t::TALENT_10:
-        return "path_of_twilight";
-      case elarion_talents_t::TALENT_11:
-        return "lunarlight_affinity";
-      case elarion_talents_t::TALENT_12:
-        return "magic_ward";
-      case elarion_talents_t::TALENT_13:
-        return "fervent_supremacy";
-      case elarion_talents_t::TALENT_14:
-        return "impending_heartseeker";
-      case elarion_talents_t::TALENT_15:
-        return "resurgent_winds";
-      case elarion_talents_t::TALENT_16:
-        return "last_lights";
-      case elarion_talents_t::TALENT_17:
-        return "spirited_fortitude";
-      case elarion_talents_t::TALENT_18:
-        return "the_weight_of_gravity";
-      default:
-        return "unknown_talent";
-    }
+    for ( const auto& talent : ELARION_TALENTS )
+      if ( talent.flag == t )
+        return talent.pretty;
+
+    return "Unknown Talent";
   }
 
   struct talents_t
@@ -422,6 +372,9 @@ public:
   double composite_player_target_armor( player_t* target ) const override;
   void invalidate_cache( cache_e ) override;
 
+  // ardeos_t::extend_starfall_volleys ========================================
+  void extend_starfall_volleys( player_t* t, timespan_t extension );
+
   std::string default_flask() const override
   {
     return "disabled";
@@ -465,10 +418,10 @@ public:
     return "disabled";
   }
 
-  std::set<ground_aoe_event_t*> starfall_volleys;
+  std::set<player_t*> starfall_volley_players;
 
   elarion_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
-    : fs_player_t( sim, name, r, ELARION ), target_data(), starfall_volleys()
+    : fs_player_t( sim, name, r, ELARION ), target_data(), starfall_volley_players()
   {
     resource_regeneration              = regen_type::DYNAMIC;
     regen_caches[ CACHE_HASTE ]        = true;
@@ -540,12 +493,14 @@ private:
 public:
   double lunarlight_salvo_chance_hit;
   double lunarlight_salvo_chance_crit;
+  bool trigger_lunarlight_without_consume;
 
   // Init =====================================================================
   elarion_action_t( util::string_view n, elarion_t* p, util::string_view options = {} )
     : ab( n, p, options ),
       lunarlight_salvo_chance_hit( p->spell_const.lunarlight_mark_chance_hit ),
-      lunarlight_salvo_chance_crit( p->spell_const.lunarlight_mark_chance_crit )
+      lunarlight_salvo_chance_crit( p->spell_const.lunarlight_mark_chance_crit ),
+      trigger_lunarlight_without_consume( false )
   {
     ab::may_crit = ab::tick_may_crit = true;
     ab::school                       = SCHOOL_PHYSICAL;
@@ -664,13 +619,15 @@ public:
         if ( s->result == RESULT_HIT && ab::rng().roll( lunarlight_salvo_chance_hit ) )
         {
           p()->actions.lunarlight_salvo->execute_on_target( s->target );
-          td->debuffs.lunarlight_mark->decrement();
+          if ( !trigger_lunarlight_without_consume )
+            td->debuffs.lunarlight_mark->decrement();
         }
 
         if ( s->result == RESULT_CRIT && ab::rng().roll( lunarlight_salvo_chance_crit ) )
         {
           p()->actions.lunarlight_salvo->execute_on_target( s->target );
-          td->debuffs.lunarlight_mark->decrement();
+          if ( !trigger_lunarlight_without_consume )
+            td->debuffs.lunarlight_mark->decrement();
         }
       }
     }
@@ -747,7 +704,7 @@ struct focused_shot_t : public elarion_attack_t
       p()->buffs.celestial_impetus->trigger();
     }
 
-    if ( p()->talents_enabled( elarion_t::TALENT_1 ) && rng().roll( p()->talents.focused_expanse_chance ) )
+    if ( p()->talents_enabled( elarion_t::FOCUSED_EXPANSE ) && rng().roll( p()->talents.focused_expanse_chance ) )
     {
       p()->buffs.focused_expanse->trigger();
     }
@@ -801,7 +758,7 @@ struct celestial_shot_t : public elarion_attack_t
 
     if ( p()->buffs.celestial_impetus->check() )
     {
-      if ( p()->talents_enabled( elarion_t::TALENT_14 ) )
+      if ( p()->talents_enabled( elarion_t::IMPENDING_HEARTSEEKER ) )
       {
         p()->cooldowns.heartseeker_barrage->reset( false, 1 );
         p()->buffs.impending_heartseeker->trigger();
@@ -810,7 +767,7 @@ struct celestial_shot_t : public elarion_attack_t
       p()->buffs.celestial_impetus->decrement();
     }
 
-    if ( p()->talents_enabled( elarion_t::TALENT_6 ) )
+    if ( p()->talents_enabled( elarion_t::SKYWARD_MUNITIONS ) )
     {
       p()->cooldowns.heartseeker_barrage->adjust( -p()->talents.skyward_munitions_cdr );
       p()->cooldowns.highwind_arrow->adjust( -p()->talents.skyward_munitions_cdr );
@@ -843,7 +800,7 @@ struct multishot_t : public elarion_attack_t
 
     if ( result_is_hit( s->result ) )
     {
-      if ( p()->talent_enabled( elarion_t::TALENT_7 ) )
+      if ( p()->talent_enabled( elarion_t::REPEATING_STARS ) )
       {
         p()->cooldowns.starfall_volley->adjust( -p()->talents.repeating_stars_cdr );
       }
@@ -889,7 +846,7 @@ struct multishot_t : public elarion_attack_t
     {
       auto empowered_amp = 1.0 + p()->buffs.skystriders_supremacy->check_value();
 
-      if ( p()->talents_enabled( elarion_t::TALENT_1 ) )
+      if ( p()->talents_enabled( elarion_t::FOCUSED_EXPANSE ) )
         empowered_amp += p()->talents.focused_expanse_amp;
 
       m *= empowered_amp;
@@ -940,7 +897,7 @@ struct multishot_t : public elarion_attack_t
   {
     base_t::execute();
 
-    if ( p()->talents_enabled( elarion_t::TALENT_6 ) )
+    if ( p()->talents_enabled( elarion_t::SKYWARD_MUNITIONS ) )
     {
       p()->cooldowns.heartseeker_barrage->adjust( -p()->talents.skyward_munitions_cdr );
       p()->cooldowns.highwind_arrow->adjust( -p()->talents.skyward_munitions_cdr );
@@ -948,7 +905,7 @@ struct multishot_t : public elarion_attack_t
 
     if ( p()->buffs.skystriders_supremacy->check() )
     {
-      if ( p()->talents_enabled( elarion_t::TALENT_13 ) )
+      if ( p()->talents_enabled( elarion_t::FERVENT_SUPREMACY ) )
         p()->buffs.skystriders_supremacy->decrement();
     }
     else if ( p()->buffs.focused_expanse->check() )
@@ -962,8 +919,9 @@ struct multishot_t : public elarion_attack_t
 
     if ( p()->legendary.astronomers_hail )
     {
-      for ( auto volley : p()->starfall_volleys )
+      for ( auto volleyed_player : p()->starfall_volley_players )
       {
+        p()->extend_starfall_volleys( volleyed_player, p()->legendary.astronomers_hail_multishot_extend );
         /* volley->params->duration_ += p()->legendary.astronomers_hail_multishot_extend;*/
 
         // volley->_time_left
@@ -1053,10 +1011,10 @@ struct highwind_arrow_t : public elarion_attack_t
       m *= 1.0 + p()->talents.final_crescendo_dmg_mul;
     }
 
-    if ( p()->buffs.resurgent_winds->check() && p()->get_target_data( s->target )->debuffs.lunarlight_mark->check() )
-    {
-      m *= 1.0 + p()->talents.resurgent_winds_mul;
-    }
+    //if ( p()->buffs.resurgent_winds->check() && p()->get_target_data( s->target )->debuffs.lunarlight_mark->check() )
+    //{
+    //  m *= 1.0 + p()->talents.resurgent_winds_mul;
+    //}
 
     return m;
   }
@@ -1065,7 +1023,7 @@ struct highwind_arrow_t : public elarion_attack_t
   {
     double cc = base_t::composite_crit_chance();
 
-    if ( p()->talents_enabled( elarion_t::TALENT_9 ) && rng().roll( p()->talents.lethal_shots_proc_chance ) )
+    if ( p()->talents_enabled( elarion_t::LETHAL_SHOTS ) && rng().roll( p()->talents.lethal_shots_proc_chance ) )
     {
       cc += p()->talents.lethal_shots_added_cc;
     }
@@ -1112,7 +1070,7 @@ struct highwind_arrow_t : public elarion_attack_t
     {
       p()->buffs.final_crescendo->expire();
     }
-    else if ( p()->talents_enabled( elarion_t::TALENT_3 ) )
+    else if ( p()->talents_enabled( elarion_t::FINAL_CRESCENDO ) )
     {
       p()->buffs.final_crescendo->trigger();
     }
@@ -1138,14 +1096,14 @@ struct heartseeker_barrage_t : public elarion_attack_t
       name_str_reporting = "Heartseeker Barrage";
 
       attack_power_mod.direct = p->spell_const.heartseeker_barrage_ap_coeff;
-      aoe = p->talents_enabled( elarion_t::TALENT_2 ) ? 1 + p->talents.piercing_seekers_ricochet_targets : 0;
+      aoe = p->talents_enabled( elarion_t::PIERCING_SEEKERS ) ? 1 + p->talents.piercing_seekers_ricochet_targets : 0;
 
-      if ( p->talents_enabled( elarion_t::TALENT_5 ) )
+      if ( p->talents_enabled( elarion_t::FUSILLADE ) )
       {
         base_crit += p->talents.fusillade_crit;
       }
 
-      if ( p->talents_enabled( elarion_t::TALENT_8 ) )
+      if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
       {
         lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunar_fury_barrage_chance_mul;
         lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunar_fury_barrage_chance_mul;
@@ -1236,7 +1194,7 @@ struct heartseeker_barrage_t : public elarion_attack_t
     tick_on_application    = false;
     channeled              = true;
 
-    if ( p->talents_enabled( elarion_t::TALENT_5 ) )
+    if ( p->talents_enabled( elarion_t::FUSILLADE ) )
     {
       dot_duration += p->talents.fusillade_duration;
     }
@@ -1313,7 +1271,7 @@ struct skystriders_supremacy_t : public elarion_spell_t
 
     cooldown->duration = p->spell_const.skystriders_supremacy_cooldown;
 
-    if ( p->talents_enabled( elarion_t::TALENT_13 ) )
+    if ( p->talents_enabled( elarion_t::FERVENT_SUPREMACY ) )
       cooldown->duration -= p->talents.fervent_supremacy_reduced_cooldown;
     parse_options( options_str );
   }
@@ -1388,11 +1346,11 @@ struct lunarlight_salvo_t : public elarion_spell_t
 
     attack_power_mod.direct = p->spell_const.lunarlight_mark_ap_coeff;
 
-    if ( p->talents_enabled( elarion_t::TALENT_8 ) )
+    if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
     {
       base_multiplier *= 1.0 + p->talents.lunar_fury_mul;
     }
-    if ( p->talents_enabled( elarion_t::TALENT_11 ) )
+    if ( p->talents_enabled( elarion_t::LUNARLIGHT_AFFINITY ) )
     {
       base_crit += p->talents.lunarlight_affinity_salvo_cc;
     }
@@ -1415,11 +1373,11 @@ struct lunarlight_salvo_aoe_t : public elarion_spell_t
 
     aoe = 12;
 
-    if ( p->talents_enabled( elarion_t::TALENT_8 ) )
+    if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
     {
       base_multiplier *= 1.0 + p->talents.lunar_fury_mul;
     }
-    if ( p->talents_enabled( elarion_t::TALENT_11 ) )
+    if ( p->talents_enabled( elarion_t::LUNARLIGHT_AFFINITY ) )
     {
       base_crit += p->talents.lunarlight_affinity_salvo_cc;
     }
@@ -1459,7 +1417,7 @@ struct lunarlight_mark_t : public elarion_spell_t
   {
     elarion_spell_t::execute();
 
-    if ( p()->talents_enabled( elarion_t::TALENT_15 ) )
+    if ( p()->talents_enabled( elarion_t::RESURGENT_WINDS ) )
     {
       p()->buffs.resurgent_winds->trigger();
     }
@@ -1518,18 +1476,17 @@ struct starfall_volley_damage_t : public elarion_attack_t
 
     reduced_aoe_targets = p->spell_const.starfall_volley_target_falloff;
 
-    if ( p->talents_enabled( elarion_t::TALENT_11 ) )
+    if ( p->talents_enabled( elarion_t::LUNARLIGHT_AFFINITY ) )
     {
-      lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_mul;
-      lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_mul;
+      trigger_lunarlight_without_consume = true;
+      // lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_mul;
+      // lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_mul;
     }
   }
 };
 
 struct starfall_volley_t : public elarion_spell_t
 {
-  ground_aoe_params_t aoe_params;
-
   starfall_volley_t( elarion_t* p, util::string_view options_str = {} )
     : elarion_spell_t( "starfall_volley", p, options_str )
   {
@@ -1543,46 +1500,175 @@ struct starfall_volley_t : public elarion_spell_t
     if ( !p->actions.starfall_volley->stats->parent )
       add_child( p->actions.starfall_volley );
 
-    aoe_params = ground_aoe_params_t()
-                     .duration( p->legendary.astronomers_hail ? p->spell_const.starfall_volley_duration +
-                                                                    p->legendary.astronomers_hail_volley_duration
-                                                              : p->spell_const.starfall_volley_duration )
-                     .pulse_time( p->spell_const.starfall_volley_period )
-                     .hasted( ground_aoe_params_t::SPELL_HASTE )
-                     .action( p->actions.starfall_volley )
-                     .state_callback( [ this, p ]( ground_aoe_params_t::state_type type, ground_aoe_event_t* event ) {
-                       switch ( type )
-                       {
-                         case ground_aoe_params_t::EVENT_STARTED:
-                           p->buffs.starfall_volleys->increment();
-                           break;
-                         case ground_aoe_params_t::EVENT_STOPPED:
-                           p->buffs.starfall_volleys->decrement();
-                           break;
-                         case ground_aoe_params_t::EVENT_CREATED:
-                           p->starfall_volleys.insert( event );
-                           break;
-                         case ground_aoe_params_t::EVENT_DESTRUCTED:
-                           p->starfall_volleys.erase( event );
-                           break;
-                         default:
-                           break;
-                       }
-                     } );
+    dot_behavior           = DOT_REFRESH_DURATION;
+    dot_allow_partial_tick = false;
+    hasted_ticks           = true;
+    base_tick_time         = p->spell_const.starfall_volley_period;
+    dot_duration           = p->spell_const.starfall_volley_duration;
+    tick_on_application    = true;
+
+    if ( p->legendary.astronomers_hail )
+      dot_duration += p->legendary.astronomers_hail_volley_duration;
+
 
     base_costs[ RESOURCE_FOCUS ] = p->spell_const.starfall_volley_focus_cost;
+  }
+
+  void init_finished() override
+  {
+    elarion_spell_t::init_finished();
+
+    snapshot_flags |= STATE_HASTE;
+    update_flags |= STATE_HASTE;
+  }
+  
+  dot_t* get_dot( player_t* t, size_t i )
+  {
+    if ( !t )
+      t = target;
+    if ( !t )
+      return nullptr;
+
+    std::vector<dot_t*>& target_dots = p()->get_target_data( t )->dots.starfall_volley_individual;
+
+    if ( i >= target_dots.size() )
+    {
+      for ( size_t j = target_dots.size(); j <= i; ++j )
+      {
+        target_dots.push_back( t->get_dot( fmt::format( "{}_{}", name_str, j + 1 ), player ) );
+      }
+    }
+
+    return target_dots.at( i );
+  }
+
+  dot_t* get_first_ticking( player_t* t )
+  {
+    if ( !t )
+      t = target;
+    if ( !t )
+      return nullptr;
+
+    std::vector<dot_t*>& target_dots = p()->get_target_data( t )->dots.starfall_volley_individual;
+
+    for ( dot_t* d : target_dots )
+    {
+      if ( d->is_ticking() )
+        return d;
+    }
+
+    return nullptr;
+  }
+
+  dot_t* get_first_missing( player_t* t )
+  {
+    if ( !t )
+      t = target;
+    if ( !t )
+      return nullptr;
+
+    std::vector<dot_t*>& target_dots = p()->get_target_data( t )->dots.starfall_volley_individual;
+
+    for ( dot_t* d : target_dots )
+    {
+      if ( !d->is_ticking() )
+        return d;
+    }
+
+    return get_dot( t, target_dots.size() );
+  }
+
+  dot_t* get_dot( player_t* t ) override
+  {
+    elarion_spell_t::get_dot( t );
+    return get_first_missing( t );
+  }
+
+  void trigger_dot( action_state_t* s ) override
+  {
+    elarion_spell_t::trigger_dot( s );
+
+    dot_t* base_dot = elarion_spell_t::get_dot( s->target );
+
+    base_dot->current_action = this;
+    base_dot->max_stack      = 9999;
+
+    if ( !base_dot->state )
+      base_dot->state = get_state();
+    base_dot->state->copy_state( s );
+
+    base_dot->false_start( composite_dot_duration( s ) + 1_ms );
+    p()->buffs.starfall_volleys->increment();
+
+    p()->starfall_volley_players.insert( s->target );
+  }
+
+  void last_tick( dot_t* d ) override
+  {
+    elarion_spell_t::last_tick( d );
+    dot_t* base_dot = elarion_spell_t::get_dot( d->target );
+    if ( d != base_dot )
+    {
+      p()->buffs.starfall_volleys->decrement();
+
+      if ( d->duration() > 0_s )
+      {
+        target_cache.is_valid = false;
+        if ( target_list().size() > 0 )
+        {
+          player_t* new_target      = rng().range( target_list() );
+          action_state_t* new_state = get_state( d->state );
+          new_state->target         = new_target;
+
+          timespan_t old_dot_duration = dot_duration;
+          dot_duration                = d->duration();
+          trigger_dot( new_state );
+          dot_duration = old_dot_duration;
+        }
+      }
+
+      if ( base_dot->current_stack() > 1 )
+      {
+        base_dot->decrement( 1 );
+        p()->remove_active_dot( base_dot );
+      }
+      else
+      {
+        base_dot->reset();
+        p()->starfall_volley_players.erase( d->target );
+      }
+    }
+    else
+    {
+      sim->print_debug( "Starfall Volley DoT Expired. Is Ticking: {}, stacks: {}, end event: {}", base_dot->is_ticking(),
+                        base_dot->current_stack(), base_dot->end_event ? "end" : "no end" );
+    }
+  }
+
+  void reset() override
+  {
+    elarion_spell_t::reset();
+    auto dot = elarion_spell_t::get_dot();
+
+    while ( p()->get_active_dots( dot ) )
+      p()->remove_active_dot( dot );
+  }
+
+  bool dot_refreshable( const dot_t*, timespan_t ) const override
+  {
+    return true;
   }
 
   void execute() override
   {
     elarion_spell_t::execute();
 
-    aoe_params.target( execute_state->target ).start_time( sim->current_time() );
+    //aoe_params.target( execute_state->target ).start_time( sim->current_time() );
 
-    if ( sim->distance_targeting_enabled )
-      aoe_params.x( execute_state->target->x_position ).y( execute_state->target->y_position );
+    //if ( sim->distance_targeting_enabled )
+    //  aoe_params.x( execute_state->target->x_position ).y( execute_state->target->y_position );
 
-    make_event<ground_aoe_event_t>( *sim, p(), aoe_params, true );
+    //make_event<ground_aoe_event_t>( *sim, p(), aoe_params, true );
   }
 };
 
@@ -1595,6 +1681,9 @@ struct starfall_volley_t : public elarion_spell_t
 elarion_td_t::elarion_td_t( player_t* target, elarion_t* source )
   : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
 {
+  dots.starfall_volley            = target->get_dot( "starfall_volley", source );
+  dots.starfall_volley_individual = {};
+
   debuffs.lunarlight_mark = make_buff( *this, "lunarlight_mark" )
                                 ->set_duration( source->spell_const.lunarlight_mark_duration )
                                 ->set_max_stack( 20 );
@@ -1702,7 +1791,7 @@ double elarion_t::composite_player_target_crit_chance( player_t* target ) const
 {
   double c = fs_player_t::composite_player_target_crit_chance( target );
 
-  if ( talents_enabled( TALENT_16 ) )
+  if ( talents_enabled( LAST_LIGHTS ) )
   {
     if ( target->health_percentage() <= talents.last_light_hp_pct )
       c += talents.last_lights_cc;
@@ -1966,7 +2055,7 @@ void elarion_t::create_buffs()
                                     ->set_max_stack( 1 )
                                     ->set_duration( spell_const.skystriders_supremacy_duration );
 
-  if ( talents_enabled( TALENT_13 ) )
+  if ( talents_enabled( FERVENT_SUPREMACY ) )
   {
     buffs.skystriders_supremacy->set_max_stack( talents.fervent_supremacy_stacks )
         ->set_duration( talents.fervent_supremacy_duration )
@@ -2011,7 +2100,7 @@ void elarion_t::create_buffs()
     }
   };
 
-  if ( talents_enabled( TALENT_4 ) )
+  if ( talents_enabled( SKYLIT_GRACE ) )
   {
     buffs.starfall_volleys = make_buff<skylit_grace_buff_t>( this );
   }
@@ -2171,6 +2260,29 @@ void actions::elarion_action_t<Base>::spend_resource_costs( const action_state_t
                            p()->cache.mastery_value() * 100.0, p()->cache.mastery() * 100.0 );
 
     trigger_spirit_refund( s, ab::last_resource_cost );
+  }
+}
+
+// elarion_t::extend_starfall_volleys ========================================
+void elarion_t::extend_starfall_volleys( player_t* t, timespan_t extension )
+{
+  if ( !t )
+    return;
+
+  dot_t* base_dot = get_target_data( t )->dots.starfall_volley;
+
+  if ( !base_dot->current_action )
+    return;
+
+  std::vector<dot_t*> target_dots = get_target_data( t )->dots.starfall_volley_individual;
+
+  timespan_t dot_max = base_dot->current_action->dot_duration;
+  base_dot->adjust_duration( extension, dot_max + 1_ms );
+
+  for ( dot_t* d : target_dots )
+  {
+    if ( d && d->is_ticking() )
+      d->adjust_duration( extension );
   }
 }
 

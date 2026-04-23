@@ -24,8 +24,6 @@ class elarion_td_t : public fs_player_td_t
 public:
   struct dots_t
   {
-    dot_t* starfall_volley;
-    std::vector<dot_t*> starfall_volley_individual;
   } dots;
 
   struct
@@ -78,6 +76,7 @@ public:
     buff_t* resurgent_winds;
     buff_t* impending_heartseeker;
     buff_t* impending_heartseeker_channel;
+    buff_t* stars_aligned;
   } buffs;
 
   struct cooldowns_t
@@ -286,6 +285,18 @@ public:
 
     double last_lights_cc    = 0.2;
     double last_light_hp_pct = 30;
+
+    timespan_t rising_moon_cdr = 1.5_s;
+
+    double high_impact_ratio = 0.3;
+
+    timespan_t stars_aligned_interval = 3_s;
+    bool stars_aligned_hasted         = false;
+    int stars_aligned_max_stacks      = 2;
+    timespan_t stars_aligned_duration = 15_s;
+
+    double precision_strike_effectiveness = 0.5;
+    timespan_t precision_strike_delay     = 0.2_s;
   } talents;
 
   struct legendary_t
@@ -327,6 +338,216 @@ public:
       td = new elarion_td_t( target, const_cast<elarion_t*>( this ) );
     }
     return td;
+  }
+
+
+  struct starfall_volley_event_handler_t
+  {
+  private:
+    elarion_t* elarion;
+
+  public:
+    player_t* current_target;
+    event_t* tick_event;
+    event_t* stars_aligned_event;
+    event_t* end_event;
+    int tick_number;
+    bool active;
+
+    starfall_volley_event_handler_t( elarion_t* p )
+      : elarion( p ),
+        current_target( nullptr ),
+        tick_event( nullptr ),
+        stars_aligned_event( nullptr ),
+        end_event( nullptr ),
+        tick_number( 0 ),
+        active( false )
+    {
+    }
+
+    elarion_t* p()
+    {
+      return elarion;
+    }
+
+    const elarion_t* p() const
+    {
+      return elarion;
+    }
+
+    timespan_t initial_duration()
+    {
+      timespan_t duration = p()->spell_const.starfall_volley_duration;
+
+      if ( p()->legendary.astronomers_hail )
+        duration += p()->legendary.astronomers_hail_volley_duration;
+
+      return duration;
+    }
+
+    player_t* get_target()
+    {
+      if ( !current_target || current_target->is_sleeping() )
+      {
+        p()->actions.starfall_volley->target_cache.is_valid = false;
+
+        if ( p()->actions.starfall_volley->target_list().size() < 1 )
+        {
+          return nullptr;
+        }
+
+        current_target = p()->rng().range( p()->actions.starfall_volley->target_list() );
+      }
+
+      return current_target;
+    }
+
+    void tick()
+    {
+      if ( !is_active() )
+        return;
+
+      player_t* t = get_target();
+
+      assert( !t || t && !t->is_sleeping() );
+
+      if ( !t )
+      {
+        reset();
+        return;
+      }
+
+      p()->actions.starfall_volley->execute_on_target( t );
+
+      tick_number++;
+
+      make_event( p()->sim, tick_interval(), std::bind( std::mem_fn( &starfall_volley_event_handler_t::tick ), this ) );
+    }
+
+    void stars_aligned_tick()
+    {
+      if ( !is_active() )
+        return;
+
+      p()->buffs.stars_aligned->trigger();
+
+      stars_aligned_event = make_event( p()->sim, stars_aligned_interval(),
+                  std::bind( std::mem_fn( &starfall_volley_event_handler_t::stars_aligned_event ), this ) );
+    }
+
+    timespan_t tick_interval() const
+    {
+      return p()->spell_const.starfall_volley_period * p()->cache.spell_haste();
+    }
+
+    timespan_t stars_aligned_interval() const
+    {
+      timespan_t interval = p()->talents.stars_aligned_interval;
+
+      if ( p()->talents.stars_aligned_hasted )
+        return interval * p()->cache.spell_haste();
+
+      return interval;
+    }
+
+    void extend_duration( timespan_t extension )
+    {
+      assert( is_active() && "Attempted to extend a Starfall Volley that is not active" );
+
+      timespan_t new_remains = extension + end_event->remains();
+      if ( extension > 0_s )
+      {
+        end_event->reschedule( new_remains );
+      }
+      else
+      {
+        event_t::cancel( end_event );
+
+        if ( new_remains > p()->sim->current_time() )
+        {
+          end_event = make_event( p()->sim, new_remains,
+                                  std::bind( std::mem_fn( &starfall_volley_event_handler_t::reset ), this ) );
+        }
+        else
+        {
+          reset();
+        }
+      }
+    }
+
+    void expire()
+    {
+      p()->buffs.starfall_volleys->decrement();
+
+      erase_unordered( p()->active_starfall_volley_handlers, range::find( p()->active_starfall_volley_handlers, this ) );
+      p()->cached_starfall_volley_handlers.push_back( this );
+
+      reset();
+    }
+
+    void reset()
+    {
+      event_t::cancel( stars_aligned_event );
+      event_t::cancel( tick_event );
+      event_t::cancel( end_event );
+      tick_number = 0;
+      active      = false;
+    }
+
+    bool is_active()
+    {
+      return active;
+    }
+
+    void start( player_t* t = nullptr )
+    {
+      reset();
+
+      if ( t )
+      {
+        current_target = t;
+      }
+
+      assert( !tick_event && "Attempted to start an already active Starfall Volley" );
+
+      active = true;
+
+      p()->buffs.starfall_volleys->trigger();
+
+      end_event = make_event( p()->sim, initial_duration(),
+                              std::bind( std::mem_fn( &starfall_volley_event_handler_t::expire ), this ) );
+
+      // ticks on application, so we don't need to schedule the first tick
+      tick();
+
+      if ( p()->talents_enabled( elarion_t::STARS_ALIGNED ) )
+      {
+        stars_aligned_event = make_event(
+            p()->sim, p()->talents.stars_aligned_interval,
+                    std::bind( std::mem_fn( &starfall_volley_event_handler_t::stars_aligned_event ), this ) );
+      }
+    }
+  };
+
+  auto_dispose<std::vector<starfall_volley_event_handler_t*>> active_starfall_volley_handlers;
+  auto_dispose<std::vector<starfall_volley_event_handler_t*>> cached_starfall_volley_handlers;
+
+  starfall_volley_event_handler_t* start_starfall_volley( player_t* t )
+  {
+    assert( t && !t->is_sleeping() && "Started a starfall volley on a null or sleeping enemy" );
+
+    starfall_volley_event_handler_t* handler = nullptr;
+    if ( cached_starfall_volley_handlers.size() > 0 )
+    {
+      handler = cached_starfall_volley_handlers.back();
+      cached_starfall_volley_handlers.pop_back();
+    }
+
+    handler = new starfall_volley_event_handler_t( this );
+    handler->start( t );
+    active_starfall_volley_handlers.push_back( handler );
+
+    return handler;
   }
 
   // Character Definition
@@ -373,7 +594,7 @@ public:
   void invalidate_cache( cache_e ) override;
 
   // ardeos_t::extend_starfall_volleys ========================================
-  void extend_starfall_volleys( player_t* t, timespan_t extension );
+  void extend_starfall_volleys( timespan_t extension );
 
   std::string default_flask() const override
   {
@@ -809,7 +1030,7 @@ struct multishot_t : public elarion_attack_t
 
   bool is_empowered() const
   {
-    return p()->buffs.skystriders_supremacy->check() || p()->buffs.focused_expanse->check();
+    return p()->buffs.skystriders_supremacy->check() || p()->buffs.focused_expanse->check() || p()->buffs.stars_aligned->check();
   }
 
   double cost_pct_multiplier() const override
@@ -872,12 +1093,18 @@ struct multishot_t : public elarion_attack_t
         target_cache.is_valid = false;
       }
     } );
+
+    p()->buffs.stars_aligned->add_stack_change_callback( [ this ]( buff_t*, int old, int _new ) {
+      if ( old && !_new || !old && _new )
+      {
+        target_cache.is_valid = false;
+      }
+    } );
   }
 
   bool action_ready() override
   {
-    if ( !( p()->buffs.focused_expanse->check() || p()->buffs.multishot->check() ||
-            p()->buffs.skystriders_supremacy->check() ) )
+    if ( !( is_empowered() || p()->buffs.multishot->check() ) )
       return false;
 
     return base_t::action_ready();
@@ -908,6 +1135,10 @@ struct multishot_t : public elarion_attack_t
       if ( p()->talents_enabled( elarion_t::FERVENT_SUPREMACY ) )
         p()->buffs.skystriders_supremacy->decrement();
     }
+    else if ( p()->buffs.stars_aligned->check() )
+    {
+      p()->buffs.stars_aligned->decrement();
+    }
     else if ( p()->buffs.focused_expanse->check() )
     {
       p()->buffs.focused_expanse->decrement();
@@ -919,14 +1150,7 @@ struct multishot_t : public elarion_attack_t
 
     if ( p()->legendary.astronomers_hail )
     {
-      for ( auto volleyed_player : p()->starfall_volley_players )
-      {
-        p()->extend_starfall_volleys( volleyed_player, p()->legendary.astronomers_hail_multishot_extend );
-        /* volley->params->duration_ += p()->legendary.astronomers_hail_multishot_extend;*/
-
-        // volley->_time_left
-        // volley->extend_duration(p()->legendary.astronomers_hail_multishot_extend);
-      }
+      p()->extend_starfall_volleys( p()->legendary.astronomers_hail_multishot_extend );
     }
   }
 };
@@ -1500,175 +1724,15 @@ struct starfall_volley_t : public elarion_spell_t
     if ( !p->actions.starfall_volley->stats->parent )
       add_child( p->actions.starfall_volley );
 
-    dot_behavior           = DOT_REFRESH_DURATION;
-    dot_allow_partial_tick = false;
-    hasted_ticks           = true;
-    base_tick_time         = p->spell_const.starfall_volley_period;
-    dot_duration           = p->spell_const.starfall_volley_duration;
-    tick_on_application    = true;
-
-    if ( p->legendary.astronomers_hail )
-      dot_duration += p->legendary.astronomers_hail_volley_duration;
-
 
     base_costs[ RESOURCE_FOCUS ] = p->spell_const.starfall_volley_focus_cost;
-  }
-
-  void init_finished() override
-  {
-    elarion_spell_t::init_finished();
-
-    snapshot_flags |= STATE_HASTE;
-    update_flags |= STATE_HASTE;
-  }
-  
-  dot_t* get_dot( player_t* t, size_t i )
-  {
-    if ( !t )
-      t = target;
-    if ( !t )
-      return nullptr;
-
-    std::vector<dot_t*>& target_dots = p()->get_target_data( t )->dots.starfall_volley_individual;
-
-    if ( i >= target_dots.size() )
-    {
-      for ( size_t j = target_dots.size(); j <= i; ++j )
-      {
-        target_dots.push_back( t->get_dot( fmt::format( "{}_{}", name_str, j + 1 ), player ) );
-      }
-    }
-
-    return target_dots.at( i );
-  }
-
-  dot_t* get_first_ticking( player_t* t )
-  {
-    if ( !t )
-      t = target;
-    if ( !t )
-      return nullptr;
-
-    std::vector<dot_t*>& target_dots = p()->get_target_data( t )->dots.starfall_volley_individual;
-
-    for ( dot_t* d : target_dots )
-    {
-      if ( d->is_ticking() )
-        return d;
-    }
-
-    return nullptr;
-  }
-
-  dot_t* get_first_missing( player_t* t )
-  {
-    if ( !t )
-      t = target;
-    if ( !t )
-      return nullptr;
-
-    std::vector<dot_t*>& target_dots = p()->get_target_data( t )->dots.starfall_volley_individual;
-
-    for ( dot_t* d : target_dots )
-    {
-      if ( !d->is_ticking() )
-        return d;
-    }
-
-    return get_dot( t, target_dots.size() );
-  }
-
-  dot_t* get_dot( player_t* t ) override
-  {
-    elarion_spell_t::get_dot( t );
-    return get_first_missing( t );
-  }
-
-  void trigger_dot( action_state_t* s ) override
-  {
-    elarion_spell_t::trigger_dot( s );
-
-    dot_t* base_dot = elarion_spell_t::get_dot( s->target );
-
-    base_dot->current_action = this;
-    base_dot->max_stack      = 9999;
-
-    if ( !base_dot->state )
-      base_dot->state = get_state();
-    base_dot->state->copy_state( s );
-
-    base_dot->false_start( composite_dot_duration( s ) + 1_ms );
-    p()->buffs.starfall_volleys->increment();
-
-    p()->starfall_volley_players.insert( s->target );
-  }
-
-  void last_tick( dot_t* d ) override
-  {
-    elarion_spell_t::last_tick( d );
-    dot_t* base_dot = elarion_spell_t::get_dot( d->target );
-    if ( d != base_dot )
-    {
-      p()->buffs.starfall_volleys->decrement();
-
-      if ( d->duration() > 0_s )
-      {
-        target_cache.is_valid = false;
-        if ( target_list().size() > 0 )
-        {
-          player_t* new_target      = rng().range( target_list() );
-          action_state_t* new_state = get_state( d->state );
-          new_state->target         = new_target;
-
-          timespan_t old_dot_duration = dot_duration;
-          dot_duration                = d->duration();
-          trigger_dot( new_state );
-          dot_duration = old_dot_duration;
-        }
-      }
-
-      if ( base_dot->current_stack() > 1 )
-      {
-        base_dot->decrement( 1 );
-        p()->remove_active_dot( base_dot );
-      }
-      else
-      {
-        base_dot->reset();
-        p()->starfall_volley_players.erase( d->target );
-      }
-    }
-    else
-    {
-      sim->print_debug( "Starfall Volley DoT Expired. Is Ticking: {}, stacks: {}, end event: {}", base_dot->is_ticking(),
-                        base_dot->current_stack(), base_dot->end_event ? "end" : "no end" );
-    }
-  }
-
-  void reset() override
-  {
-    elarion_spell_t::reset();
-    auto dot = elarion_spell_t::get_dot();
-
-    while ( p()->get_active_dots( dot ) )
-      p()->remove_active_dot( dot );
-  }
-
-  bool dot_refreshable( const dot_t*, timespan_t ) const override
-  {
-    return true;
   }
 
   void execute() override
   {
     elarion_spell_t::execute();
 
-    //aoe_params.target( execute_state->target ).start_time( sim->current_time() );
-
-    //if ( sim->distance_targeting_enabled )
-    //  aoe_params.x( execute_state->target->x_position ).y( execute_state->target->y_position );
-
-    //make_event<ground_aoe_event_t>( *sim, p(), aoe_params, true );
+    p()->start_starfall_volley( target );
   }
 };
 
@@ -1681,9 +1745,6 @@ struct starfall_volley_t : public elarion_spell_t
 elarion_td_t::elarion_td_t( player_t* target, elarion_t* source )
   : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
 {
-  dots.starfall_volley            = target->get_dot( "starfall_volley", source );
-  dots.starfall_volley_individual = {};
-
   debuffs.lunarlight_mark = make_buff( *this, "lunarlight_mark" )
                                 ->set_duration( source->spell_const.lunarlight_mark_duration )
                                 ->set_max_stack( 20 );
@@ -2033,6 +2094,11 @@ void elarion_t::create_buffs()
                               ->set_max_stack( talents.focused_expanse_max_stacks )
                               ->set_duration( talents.focused_expanse_duration );
 
+  
+  buffs.stars_aligned = make_buff<elarion_buff_t>( this, "stars_aligned" )
+                              ->set_max_stack( talents.stars_aligned_max_stacks )
+                              ->set_duration( talents.stars_aligned_duration );
+
   buffs.impending_heartseeker = make_buff<elarion_buff_t>( this, "impending_heartseeker" )
                                     ->set_duration( talents.impending_heartseeker_duration );
 
@@ -2264,25 +2330,11 @@ void actions::elarion_action_t<Base>::spend_resource_costs( const action_state_t
 }
 
 // elarion_t::extend_starfall_volleys ========================================
-void elarion_t::extend_starfall_volleys( player_t* t, timespan_t extension )
+void elarion_t::extend_starfall_volleys( timespan_t extension )
 {
-  if ( !t )
-    return;
-
-  dot_t* base_dot = get_target_data( t )->dots.starfall_volley;
-
-  if ( !base_dot->current_action )
-    return;
-
-  std::vector<dot_t*> target_dots = get_target_data( t )->dots.starfall_volley_individual;
-
-  timespan_t dot_max = base_dot->current_action->dot_duration;
-  base_dot->adjust_duration( extension, dot_max + 1_ms );
-
-  for ( dot_t* d : target_dots )
+  for ( auto* volley : active_starfall_volley_handlers )
   {
-    if ( d && d->is_ticking() )
-      d->adjust_duration( extension );
+    volley->extend_duration( extension );
   }
 }
 

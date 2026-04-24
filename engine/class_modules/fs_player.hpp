@@ -643,81 +643,11 @@ public:
   }
 
 public:
-
-  // General Methods ==========================================================
-
-  void update_ready( timespan_t cd_duration = timespan_t::min() ) override
-  {
-    ab::update_ready( cd_duration );
-  }
-
-  timespan_t gcd() const override
-  {
-    timespan_t t = ab::gcd();
-
-    return t;
-  }
-
-  double composite_da_multiplier( const action_state_t* state ) const override
-  {
-    double m = ab::composite_da_multiplier( state );
-
-    return m;
-  }
-
-  double composite_ta_multiplier( const action_state_t* state ) const override
-  {
-    double m = ab::composite_ta_multiplier( state );
-
-    return m;
-  }
-
-  double composite_target_multiplier( player_t* target ) const override
-  {
-    double m = ab::composite_target_multiplier( target );
-
-    return m;
-  }
-
-  double composite_target_crit_chance( player_t* target ) const override
-  {
-    double c = ab::composite_target_crit_chance( target );
-    return c;
-  }
-
-  double composite_crit_chance() const override
-  {
-    double c = ab::composite_crit_chance();
-
-    return c;
-  }
-
-  double composite_crit_damage_bonus_multiplier() const override
-  {
-    double cm = ab::composite_crit_damage_bonus_multiplier();
-
-    return cm;
-  }
-
-  double composite_target_crit_damage_bonus_multiplier( player_t* target ) const override
-  {
-    double cm = ab::composite_target_crit_damage_bonus_multiplier( target );
-
-    return cm;
-  }
-
   double total_crit_bonus( const action_state_t* state ) const override
   {
     double crit_bonus = ab::total_crit_bonus( state );
 
     return crit_bonus + std::clamp( state->composite_crit_chance() - 1.0, 0.0, 99.0 );
-  }
-
-
-  std::unique_ptr<expr_t> create_expression( std::string_view name ) override
-  {
-
-    return ab::create_expression( name );
   }
 };
 

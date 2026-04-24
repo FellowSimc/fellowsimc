@@ -5,12 +5,12 @@ optimal_raid=0
 max_time=250
 # max_time=60
 target_error=0.1
-iterations=100000
+iterations=15000
 chart_show_relative_difference=1
 vary_combat_length=0
 single_actor_batch=1
 max_time=720
-desired_targets=16
+desired_targets=1
 
 
 # apl/chuey_dungeon.simc
@@ -18,7 +18,6 @@ desired_targets=16
 # apl/dungeon.simc
 
 # scale_only=crit,haste,mastery,vers
-# scale_intellect=100
 # scale_crit_rating=590
 # scale_haste_rating=590
 # scale_mastery_rating=590
@@ -61,11 +60,17 @@ gear_crit_rating=865
 gear_versatility_rating=800
 gear_mastery_rating=1600
 
+legendary.starstrikers_ascent=1
+
 # less 
 # gear_haste_rating=1150
 # gear_crit_rating=965
 # gear_versatility_rating=1300
 # gear_mastery_rating=1100
 
+copy="Mark Volley Build"
+talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:1/last_lights:1
 
-
+copy="Mark Volley Build Boots"
+legendary.astronomers_hail=1
+legendary.starstrikers_ascent=0

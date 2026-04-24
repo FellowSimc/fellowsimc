@@ -85,6 +85,7 @@ public:
     cooldown_t* starfall_volley;
     cooldown_t* heartseeker_barrage;
     cooldown_t* highwind_arrow;
+    cooldown_t* lunarlight_mark;
   } cooldowns;
 
   struct gains_t
@@ -421,7 +422,10 @@ public:
 
       tick_number++;
 
-      make_event( p()->sim, tick_interval(), std::bind( std::mem_fn( &starfall_volley_event_handler_t::tick ), this ) );
+      //if ( p()->talents_enabled( elarion_t::STARS_ALIGNED ) )
+      //  p()->buffs.stars_aligned->trigger();
+
+      tick_event = make_event( p()->sim, tick_interval(), std::bind( std::mem_fn( &starfall_volley_event_handler_t::tick ), this ) );
     }
 
     void stars_aligned_tick()
@@ -432,7 +436,7 @@ public:
       p()->buffs.stars_aligned->trigger();
 
       stars_aligned_event = make_event( p()->sim, stars_aligned_interval(),
-                  std::bind( std::mem_fn( &starfall_volley_event_handler_t::stars_aligned_event ), this ) );
+                      std::bind( std::mem_fn( &starfall_volley_event_handler_t::stars_aligned_tick ), this ) );
     }
 
     timespan_t tick_interval() const
@@ -455,6 +459,7 @@ public:
       assert( is_active() && "Attempted to extend a Starfall Volley that is not active" );
 
       timespan_t new_remains = extension + end_event->remains();
+      
       if ( extension > 0_s )
       {
         end_event->reschedule( new_remains );
@@ -479,19 +484,22 @@ public:
     {
       p()->buffs.starfall_volleys->decrement();
 
-      erase_unordered( p()->active_starfall_volley_handlers, range::find( p()->active_starfall_volley_handlers, this ) );
-      p()->cached_starfall_volley_handlers.push_back( this );
+      event_t::cancel( tick_event );
+      event_t::cancel( stars_aligned_event );
+      
+      //erase_unordered( p()->active_starfall_volley_handlers, range::find( p()->active_starfall_volley_handlers, this ) );
+      //p()->cached_starfall_volley_handlers.push_back( this );
 
       reset();
     }
 
     void reset()
     {
-      event_t::cancel( stars_aligned_event );
-      event_t::cancel( tick_event );
-      event_t::cancel( end_event );
-      tick_number = 0;
-      active      = false;
+      stars_aligned_event = nullptr;
+      tick_event          = nullptr;
+      end_event           = nullptr;
+      tick_number         = 0;
+      active              = false;
     }
 
     bool is_active()
@@ -502,6 +510,7 @@ public:
     void start( player_t* t = nullptr )
     {
       reset();
+      active = true;
 
       if ( t )
       {
@@ -509,8 +518,6 @@ public:
       }
 
       assert( !tick_event && "Attempted to start an already active Starfall Volley" );
-
-      active = true;
 
       p()->buffs.starfall_volleys->trigger();
 
@@ -522,30 +529,33 @@ public:
 
       if ( p()->talents_enabled( elarion_t::STARS_ALIGNED ) )
       {
-        stars_aligned_event = make_event(
-            p()->sim, p()->talents.stars_aligned_interval,
-                    std::bind( std::mem_fn( &starfall_volley_event_handler_t::stars_aligned_event ), this ) );
+        stars_aligned_event =
+            make_event( p()->sim, stars_aligned_interval(),
+                        std::bind( std::mem_fn( &starfall_volley_event_handler_t::stars_aligned_tick ), this ) );
       }
     }
   };
 
-  auto_dispose<std::vector<starfall_volley_event_handler_t*>> active_starfall_volley_handlers;
-  auto_dispose<std::vector<starfall_volley_event_handler_t*>> cached_starfall_volley_handlers;
+  auto_dispose<std::vector<starfall_volley_event_handler_t*>> starfall_volley_handlers;
 
   starfall_volley_event_handler_t* start_starfall_volley( player_t* t )
   {
     assert( t && !t->is_sleeping() && "Started a starfall volley on a null or sleeping enemy" );
 
     starfall_volley_event_handler_t* handler = nullptr;
-    if ( cached_starfall_volley_handlers.size() > 0 )
+    for ( auto it : starfall_volley_handlers )
     {
-      handler = cached_starfall_volley_handlers.back();
-      cached_starfall_volley_handlers.pop_back();
+      if ( !it->is_active() )
+        handler = it;
     }
 
-    handler = new starfall_volley_event_handler_t( this );
+    if ( !handler )
+    {
+      handler = new starfall_volley_event_handler_t( this );
+      starfall_volley_handlers.push_back( handler );
+    }
+
     handler->start( t );
-    active_starfall_volley_handlers.push_back( handler );
 
     return handler;
   }
@@ -592,6 +602,7 @@ public:
   double composite_player_target_crit_chance( player_t* target ) const override;
   double composite_player_target_armor( player_t* target ) const override;
   void invalidate_cache( cache_e ) override;
+  void reset() override;
 
   // ardeos_t::extend_starfall_volleys ========================================
   void extend_starfall_volleys( timespan_t extension );
@@ -1302,6 +1313,11 @@ struct highwind_arrow_t : public elarion_attack_t
     if ( hit_any_target && execute_state->n_targets >= p()->spell_const.highwind_arrow_targets_for_multishot )
     {
       p()->buffs.multishot->trigger();
+    }
+
+    if ( p()->talents_enabled( elarion_t::RISING_MOON ) )
+    {
+      p()->cooldowns.lunarlight_mark->adjust( -p()->talents.rising_moon_cdr );
     }
   }
 };
@@ -2184,6 +2200,7 @@ void elarion_t::create_buffs()
 
   buffs.event_horizon =
       make_buff<elarion_buff_t>( this, "event_horizon" )
+          ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER )
           ->set_duration( spell_const.event_horizon_duration )
           ->add_stack_change_callback( [ this ]( buff_t*, int, int ) { adjust_dynamic_cooldowns(); } );
 }
@@ -2329,12 +2346,23 @@ void actions::elarion_action_t<Base>::spend_resource_costs( const action_state_t
   }
 }
 
+void elarion_t::reset()
+{
+  fs_player_t::reset();
+
+  for ( auto*& volley : starfall_volley_handlers )
+  {
+    volley->reset();
+  }
+}
+
 // elarion_t::extend_starfall_volleys ========================================
 void elarion_t::extend_starfall_volleys( timespan_t extension )
 {
-  for ( auto* volley : active_starfall_volley_handlers )
+  for ( auto*& volley : starfall_volley_handlers )
   {
-    volley->extend_duration( extension );
+    if ( volley->is_active() )
+      volley->extend_duration( extension );
   }
 }
 
@@ -2365,6 +2393,7 @@ void elarion_t::create_cooldowns()
   cooldowns.highwind_arrow      = get_cooldown( "highwind_arrow" );
   cooldowns.skystriders_grace   = get_cooldown( "skystriders_grace" );
   cooldowns.starfall_volley     = get_cooldown( "starfall_volley" );
+  cooldowns.lunarlight_mark     = get_cooldown( "lunarlight_mark" );
 }
 
 class elarion_module_t : public module_t

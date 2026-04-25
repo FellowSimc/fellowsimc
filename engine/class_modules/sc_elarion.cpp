@@ -61,6 +61,9 @@ public:
     action_t* lunarlight_salvo_aoe;
     action_t* starfall_volley;
     action_t* lunarlight_marks_spirit;
+    action_t* high_impact;
+    action_t* precision_strike;
+
   } actions;
 
   struct buffs_t
@@ -1168,15 +1171,51 @@ struct multishot_t : public elarion_attack_t
 
 struct highwind_arrow_t : public elarion_attack_t
 {
-  highwind_arrow_t( elarion_t* p, util::string_view options_str = {} )
-    : elarion_attack_t( "highwind_arrow", p, options_str )
+  struct high_impact_t : public elarion_spell_t
+  {
+    high_impact_t( elarion_t* p ) : elarion_spell_t( "high_impact", p )
+    {
+      id = 51;
+
+      name_str_reporting = "High Impact";
+
+      aoe = -1;
+      may_crit = false;
+      background = true;
+    }
+
+    void init_finished()
+    {
+      elarion_spell_t::init_finished();
+      snapshot_flags &= ~( STATE_CRIT | STATE_TGT_CRIT | STATE_VERSATILITY | STATE_MUL_PERSISTENT | STATE_MUL_PLAYER_DAM );
+    }
+  };
+
+  bool is_precision_strike;
+  highwind_arrow_t( elarion_t* p, util::string_view options_str = {}, util::string_view name = "highwind_arrow",
+                    bool is_precision_strike = false )
+    : elarion_attack_t( name, p, options_str ), is_precision_strike( is_precision_strike )
   {
     id = 5;
+
+    if ( is_precision_strike )
+    {
+      background = true;
+      base_multiplier *= p->talents.precision_strike_effectiveness;
+    }
+    else
+    {
+      if ( p->talents_enabled( elarion_t::PRECISION_STRIKE ) )
+      {
+        if ( !p->actions.precision_strike->stats->parent )
+          add_child( p->actions.precision_strike );
+      }
+    }
 
     attack_power_mod.direct = p->spell_const.highwind_arrow_ap_coeff;
     aoe                     = p->spell_const.highwind_arrow_targets;
 
-    name_str_reporting = "Highwind Arrow";
+    name_str_reporting = is_precision_strike ? "Precision Strike" : "Highwind Arrow";
 
     base_execute_time = p->spell_const.highwind_arrow_cast_time;
 
@@ -1185,6 +1224,12 @@ struct highwind_arrow_t : public elarion_attack_t
     cooldown->duration = p->spell_const.highwind_arrow_cooldown;
     cooldown->charges  = p->spell_const.highwind_arrow_charges;
     cooldown->hasted   = true;
+
+    if ( p->talents_enabled( elarion_t::HIGH_IMPACT ) && !is_precision_strike )
+    {
+      if ( !p->actions.high_impact->stats->parent )
+        add_child( p->actions.high_impact );
+    }
 
     parse_options( options_str );
   }
@@ -1210,6 +1255,11 @@ struct highwind_arrow_t : public elarion_attack_t
 
     if ( result_is_hit( s->result ) )
     {
+      if ( s->chain_target == 0 && p()->talents_enabled( elarion_t::HIGH_IMPACT ) )
+      {
+        p()->actions.high_impact->execute_on_target( s->target, s->result_amount * p()->talents.high_impact_ratio );
+      }
+
       if ( p()->legendary.shimmer )
       {
         p()->get_target_data( s->target )->debuffs.shimmer->trigger();
@@ -1301,23 +1351,41 @@ struct highwind_arrow_t : public elarion_attack_t
 
     base_t::execute();
 
-    if ( p()->buffs.final_crescendo->at_max_stacks() )
+    if ( !is_precision_strike && p()->talents_enabled( elarion_t::PRECISION_STRIKE ) && execute_state &&
+         execute_state->n_targets == 1 )
     {
-      p()->buffs.final_crescendo->expire();
+      auto precision_strike = p()->actions.precision_strike;
+      precision_strike->set_target( execute_state->target );
+
+      action_state_t* damage_state = precision_strike->get_state();
+      damage_state->target         = precision_strike->target;
+
+      precision_strike->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+
+      make_event( p()->sim, p()->talents.precision_strike_delay,
+                  [ this, damage_state ] { p()->actions.precision_strike->schedule_execute( damage_state ); } );
     }
-    else if ( p()->talents_enabled( elarion_t::FINAL_CRESCENDO ) )
+
+    if ( !is_precision_strike )
     {
-      p()->buffs.final_crescendo->trigger();
+      if ( p()->buffs.final_crescendo->at_max_stacks() )
+      {
+        p()->buffs.final_crescendo->expire();
+      }
+      else if ( p()->talents_enabled( elarion_t::FINAL_CRESCENDO ) )
+      {
+        p()->buffs.final_crescendo->trigger();
+      }
+
+      if ( p()->talents_enabled( elarion_t::RISING_MOON ) )
+      {
+        p()->cooldowns.lunarlight_mark->adjust( -p()->talents.rising_moon_cdr );
+      }
     }
 
     if ( hit_any_target && execute_state->n_targets >= p()->spell_const.highwind_arrow_targets_for_multishot )
     {
       p()->buffs.multishot->trigger();
-    }
-
-    if ( p()->talents_enabled( elarion_t::RISING_MOON ) )
-    {
-      p()->cooldowns.lunarlight_mark->adjust( -p()->talents.rising_moon_cdr );
     }
   }
 };
@@ -2150,7 +2218,7 @@ void elarion_t::create_buffs()
   {
     double cdr_mod;
     skylit_grace_buff_t( elarion_t* pl )
-      : elarion_buff_t( pl, "skylit_grace" ), cdr_mod( 1 + pl->talents.skylit_grace_cdr )
+      : elarion_buff_t( pl, "starfall_volleys" ), cdr_mod( 1 + pl->talents.skylit_grace_cdr )
     {
       set_max_stack( 99 );
       set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
@@ -2307,6 +2375,8 @@ void elarion_t::init_background_actions()
   actions.lunarlight_salvo_aoe    = new actions::lunarlight_salvo_aoe_t( this );
   actions.starfall_volley         = new actions::starfall_volley_damage_t( this );
   actions.lunarlight_marks_spirit = new actions::lunarlight_mark_spirit_t( this );
+  actions.high_impact             = new actions::highwind_arrow_t::high_impact_t( this );
+  actions.precision_strike        = new actions::highwind_arrow_t( this, {}, "precision_stirke", true );
 }
 
 template <typename Base>

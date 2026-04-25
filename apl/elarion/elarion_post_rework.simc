@@ -40,12 +40,18 @@ apl/elarion/elarion_apl.simc
 gear_agility=1442
 
 
-weapon=voidbringers_touch
+# weapon=voidbringers_touch
+weapon=chronoshift
 
 gear_haste_rating=1350
 gear_crit_rating=1165
 gear_versatility_rating=1500
 gear_mastery_rating=500
+
+gems.sapphire_power=2640
+gems.topaz_power=1620
+weapon_trait.visions_of_grandeur=4
+# weapon_trait.sapphire_aurastone=4
 
 # legendary.shimmer=1
 # legendary.astronomers_hail
@@ -68,9 +74,31 @@ legendary.starstrikers_ascent=1
 # gear_versatility_rating=1300
 # gear_mastery_rating=1100
 
-copy="Mark Volley Build"
-talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:1/last_lights:1
+# copy="Mark Volley Build"
+# talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:1/last_lights:1
 
-copy="Mark Volley Build Boots"
-legendary.astronomers_hail=1
+# copy="Mark Volley Build Boots"
+# legendary.astronomers_hail=1
+# legendary.starstrikers_ascent=0
+
+# copy="Mark Volley Simple"
+# apl/elarion/elarion_apl_volley.simc
+
+# copy="More Haste"
+# gear_haste_rating=2050
+# gear_crit_rating=965
+# gear_versatility_rating=1000
+# gear_mastery_rating=500
+
+
+copy="HWA"
+talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+copy="HWA Shimmer"
 legendary.starstrikers_ascent=0
+legendary.shimmer=1
+talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+copy="HWA Hail"
+legendary.starstrikers_ascent=0
+legendary.shimmer=0
+legendary.astronomers_hail=1
+talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1

@@ -1355,15 +1355,16 @@ struct highwind_arrow_t : public elarion_attack_t
          execute_state->n_targets == 1 )
     {
       auto precision_strike = p()->actions.precision_strike;
-      precision_strike->set_target( execute_state->target );
 
       action_state_t* damage_state = precision_strike->get_state();
       damage_state->target         = precision_strike->target;
 
       precision_strike->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
 
-      make_event( p()->sim, p()->talents.precision_strike_delay,
-                  [ this, damage_state ] { p()->actions.precision_strike->schedule_execute( damage_state ); } );
+      make_event( p()->sim, p()->talents.precision_strike_delay, [ this, damage_state ] {
+        p()->actions.precision_strike->set_target( execute_state->target );
+        p()->actions.precision_strike->schedule_execute( damage_state );
+      } );
     }
 
     if ( !is_precision_strike )

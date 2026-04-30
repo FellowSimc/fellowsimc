@@ -41,26 +41,12 @@ struct module_t
   virtual void combat_begin( sim_t* ) const = 0;
   virtual void combat_end( sim_t* ) const   = 0;
 
-  static const module_t* death_knight();
-  static const module_t* demon_hunter();
-  static const module_t* druid();
-  static const module_t* evoker();
-  static const module_t* hunter();
-  static const module_t* mage();
-  static const module_t* monk();
-  static const module_t* paladin();
-  static const module_t* priest();
-  static const module_t* rogue();
-  static const module_t* shaman();
-  static const module_t* warlock();
-  static const module_t* warrior();
   static const module_t* mara();
   static const module_t* rime();
   static const module_t* ardeos();
   static const module_t* aeona();
   static const module_t* elarion();
   static const module_t* xavian();
-  static const module_t* player_simplified();
   static const module_t* enemy();
   static const module_t* tank_dummy_enemy();
   static const module_t* heal_enemy();
@@ -69,32 +55,6 @@ struct module_t
   {
     switch ( t )
     {
-      case DEATH_KNIGHT:
-        return death_knight();
-      case DEMON_HUNTER:
-        return demon_hunter();
-      case DRUID:
-        return druid();
-      case EVOKER:
-        return evoker();
-      case HUNTER:
-        return hunter();
-      case MAGE:
-        return mage();
-      case MONK:
-        return monk();
-      case PALADIN:
-        return paladin();
-      case PRIEST:
-        return priest();
-      case ROGUE:
-        return rogue();
-      case SHAMAN:
-        return shaman();
-      case WARLOCK:
-        return warlock();
-      case WARRIOR:
-        return warrior();
       case MARA:
         return mara();
       case RIME:
@@ -107,8 +67,6 @@ struct module_t
         return xavian();
       case ELARION:
         return elarion();
-      case PLAYER_SIMPLIFIED:
-        return player_simplified();
       case ENEMY:
         return enemy();
       case TANK_DUMMY:

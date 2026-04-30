@@ -1040,7 +1040,7 @@ void fs_player_t::init_base_stats()
   player_t::init_base_stats();
 
   base.rating.attack_crit = base.rating.attack_haste = base.rating.damage_versatility = base.rating.mastery =
-      base.rating.heal_versatility = base.rating.spell_crit = base.rating.spell_haste = base.rating.spell_hit = 0.00017;
+      base.rating.heal_versatility = base.rating.spell_crit = base.rating.spell_haste = base.rating.spell_hit = 0.00016;
 
   /*base.stats.attribute[ STAT_AGILITY ] = 1000;*/
   base.stats.attribute[ STAT_STAMINA ] = 1000;

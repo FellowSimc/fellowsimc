@@ -463,6 +463,8 @@ public:
 
       timespan_t new_remains = extension + end_event->remains();
       
+      p()->sim->print_debug( "{} extends Starfall Volley with extension {}. Previous remains: {}, new remains: {}", *p(), extension, end_event->occurs(), new_remains );
+
       if ( extension > 0_s )
       {
         end_event->reschedule( new_remains );
@@ -474,11 +476,11 @@ public:
         if ( new_remains > p()->sim->current_time() )
         {
           end_event = make_event( p()->sim, new_remains,
-                                  std::bind( std::mem_fn( &starfall_volley_event_handler_t::reset ), this ) );
+                                  std::bind( std::mem_fn( &starfall_volley_event_handler_t::expire ), this ) );
         }
         else
         {
-          reset();
+          expire();
         }
       }
     }
@@ -526,6 +528,9 @@ public:
 
       end_event = make_event( p()->sim, initial_duration(),
                               std::bind( std::mem_fn( &starfall_volley_event_handler_t::expire ), this ) );
+
+      p()->sim->print_debug( "{} starts Starfall Volley with duration {}. Event Occurs at: {} in {}", *p(),
+                             initial_duration(), end_event->occurs(), end_event->remains() );
 
       // ticks on application, so we don't need to schedule the first tick
       tick();

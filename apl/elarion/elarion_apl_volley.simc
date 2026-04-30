@@ -6,7 +6,7 @@ actions=run_action_list,name=main
 
 actions.main=event_horizon,target_if=target.time_to_die>=16|fight_remains<=20
 #,if=(cooldown.chronoshift.remains>0|!weapon.chronoshift)&(cooldown.voidbringer.remains>0|!weapon.voidbringer)|!weapon_trait.visions_of_grandeur
-actions.main+=/skystriders_grace,if=buff.event_horizon.up&target.time_to_die>=10|(target.time_to_die>=16|fight_remains<=20)
+actions.main+=/skystriders_grace,if=(buff.event_horizon.up&target.time_to_die>=10|(target.time_to_die>=16|fight_remains<=20))&!buff.skystriders_grace.up
 actions.main+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up&talent.fervent_supremacy
 actions.main+=/lunarlight_mark,if=!buff.resurgent_winds.at_max_stacks|!talent.resurgent_winds
 #,if=!talent.final_crescendo|!talent.resurgent_winds|buff.final_crescendo.at_max_stacks
@@ -14,11 +14,11 @@ actions.main+=/voidbringer,target_if=(target.time_to_die>=12|fight_remains<=20)&
 actions.main+=/natures_fury
 actions.main+=/starfall_volley
 actions.main+=/chronoshift
-actions.main+=/highwind_arrow,if=(!buff.multishot.at_max_stacks&active_enemies>2)&full_recharge_time<=gcd.max*4&active_enemies<3
-actions.main+=/heartseeker_barrage,if=active_enemies=1|buff.event_horizon.up
-actions.main+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up&!talent.fervent_supremacy
+actions.main+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,if=active_enemies=1|buff.event_horizon.up,cancel_if=debuff.lunarlight_mark.stack=0&active_enemies>1
+actions.main+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=buff.celestial_impetus.react&buff.event_horizon.up&talent.impending_heartseeker
+actions.main+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up&!talent.fervent_supremacy&(buff.stars_aligned.stack<1)
 actions.main+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=buff.celestial_impetus.react&active_enemies<3
-actions.main+=/multishot,if=is_empowered|active_enemies>1|buff.starfall_volleys.up
-actions.main+=/highwind_arrow,if=(!buff.multishot.at_max_stacks&active_enemies>2|active_enemies<3)
+actions.main+=/multishot,if=is_empowered|active_enemies>1|buff.starfall_volleys.up&legendary.astronomers_hail
+actions.main+=/highwind_arrow,if=(!buff.multishot.up&active_enemies>2|active_enemies<3|talent.high_impact)
 actions.main+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=focus>=60&active_enemies=1
 actions.main+=/focused_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value)

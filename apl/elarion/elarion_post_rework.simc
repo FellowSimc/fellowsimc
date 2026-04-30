@@ -30,7 +30,7 @@ desired_targets=1
 # dps_plot_step=300
 # dps_plot_positive=1
 
-elarion="Starstriker Mark"
+elarion="HWA Shimmer"
 level=80
 
 # initial_resource=spirit=100
@@ -49,7 +49,7 @@ gear_versatility_rating=1500
 gear_mastery_rating=500
 
 gems.sapphire_power=2640
-gems.topaz_power=1620
+# gems.topaz_power=1620
 weapon_trait.visions_of_grandeur=4
 # weapon_trait.sapphire_aurastone=4
 
@@ -59,14 +59,27 @@ weapon_trait.visions_of_grandeur=4
 # legendary.new_spirit_legendary=1
 
 # copy="Starstriker Mark"
-talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/repeating_stars:0/skylit_grace:0/last_lights:1/impending_heartseeker:1/last_lights:1
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/repeating_stars:0/skylit_grace:0/last_lights:1/impending_heartseeker:1/last_lights:1
 # talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/skylit_grace:1/impending_heartseeker:1/last_lights:1
-gear_haste_rating=1250
+# gear_haste_rating=1250
+# gear_crit_rating=865
+# gear_versatility_rating=800
+# gear_mastery_rating=1600
+
+
+gear_haste_rating=2050
 gear_crit_rating=865
 gear_versatility_rating=800
-gear_mastery_rating=1600
+gear_mastery_rating=800
 
-legendary.starstrikers_ascent=1
+# legendary.starstrikers_ascent=1
+
+
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+legendary.astronomers_hail=0
+talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
 
 # less 
 # gear_haste_rating=1150
@@ -91,14 +104,113 @@ legendary.starstrikers_ascent=1
 # gear_mastery_rating=500
 
 
-copy="HWA"
-talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
-copy="HWA Shimmer"
-legendary.starstrikers_ascent=0
-legendary.shimmer=1
-talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
-copy="HWA Hail"
+# copy="HWA"
+# talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
+# copy="HWA Shimmer"
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+# legendary.astronomers_hail=0
+# talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
+# copy="HWA Hail"
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=0
+# legendary.astronomers_hail=1
+# talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
+# copy="HWA Shimmer -RM +SA"
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+# legendary.astronomers_hail=0
+# talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/stars_aligned:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
+# copy="HWA Shimmer -RM"
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+# legendary.astronomers_hail=0
+# talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
+# copy="HWA Hail -RM +SA"
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=0
+# legendary.astronomers_hail=1
+# talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/stars_aligned:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
+# copy="HWA Shimmer -RM -FC"
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+# legendary.astronomers_hail=0
+# talents=high_impact:1/lethal_shots:1/precision_strike:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
+# copy="HWA Shimmer -RM -FC +IC +FS"
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=1
+# legendary.astronomers_hail=0
+# talents=high_impact:1/lethal_shots:1/precision_strike:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1/impending_heartseeker:1/fusillade:1
+
+# # copy="HWA SA -RM -FC +IC +FS"
+# # legendary.starstrikers_ascent=1
+# # legendary.shimmer=0
+# # legendary.astronomers_hail=0
+# # talents=high_impact:1/lethal_shots:1/precision_strike:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1/impending_heartseeker:1/fusillade:1
+
+# copy="HWA Hail -RM -FC +SA +FS"
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=0
+# legendary.astronomers_hail=1
+# talents=high_impact:1/lethal_shots:1/precision_strike:1/fervent_supremacy:1/stars_aligned:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
+
+# copy="Starstriker Mark"
+# legendary.starstrikers_ascent=1
+# legendary.shimmer=0
+# legendary.astronomers_hail=0
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/repeating_stars:0/skylit_grace:0/last_lights:1/impending_heartseeker:1/last_lights:1
+
+copy="Volley Hail"
 legendary.starstrikers_ascent=0
 legendary.shimmer=0
 legendary.astronomers_hail=1
-talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:1/last_lights:1
+
+apl/elarion/elarion_apl_volley.simc
+
+copy="Volley Hail -FS"
+legendary.starstrikers_ascent=0
+legendary.shimmer=0
+legendary.astronomers_hail=1
+talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:0/last_lights:1
+
+apl/elarion/elarion_apl_volley.simc
+
+# copy="Volley Hail High Impact"
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=0
+# legendary.astronomers_hail=1
+# talents=high_impact:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:1/last_lights:1
+
+copy="Volley Hail -FS +IHS"
+legendary.starstrikers_ascent=0
+legendary.shimmer=0
+legendary.astronomers_hail=1
+talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:0/last_lights:1/impending_heartseeker:1
+
+apl/elarion/elarion_apl_volley.simc
+
+copy="Volley Hail -FS +HI +RM"
+legendary.starstrikers_ascent=0
+legendary.shimmer=0
+legendary.astronomers_hail=1
+talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:0/last_lights:1/high_impact:1/rising_moon:1
+
+apl/elarion/elarion_apl_volley.simc
+
+
+copy="Volley Hail -FS +HI +RW"
+legendary.starstrikers_ascent=0
+legendary.shimmer=0
+legendary.astronomers_hail=1
+talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:0/last_lights:1/high_impact:1/resurgent_winds:1
+
+apl/elarion/elarion_apl_volley.simc

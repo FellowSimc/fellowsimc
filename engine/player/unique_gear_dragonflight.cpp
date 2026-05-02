@@ -141,48 +141,6 @@ void phial_of_charged_isolation( special_effect_t& effect )
 
 void phial_of_elemental_chaos( special_effect_t& effect )
 {
-  if ( create_fallback_buffs( effect, { "elemental_chaos_fire", "elemental_chaos_air", "elemental_chaos_earth",
-                                        "elemental_chaos_frost" } ) )
-  {
-    return;
-  }
-
-  auto buff = buff_t::find( effect.player, effect.name() );
-  if ( !buff )
-  {
-    std::vector<buff_t*> buff_list;
-    auto amount = effect.driver()->effectN( 1 ).average( effect.item );
-    auto duration = effect.driver()->effectN( 1 ).period();
-
-    effect.player->buffs.elemental_chaos_fire = buff_list.emplace_back(
-        make_buff<stat_buff_t>( effect.player, "elemental_chaos_fire", effect.player->find_spell( 371348 ) )
-            ->add_stat( STAT_CRIT_RATING, amount )
-            ->set_default_value_from_effect_type( A_MOD_CRIT_DAMAGE_BONUS )
-            ->set_duration( duration ) );
-    effect.player->buffs.elemental_chaos_air = buff_list.emplace_back(
-        make_buff<stat_buff_t>( effect.player, "elemental_chaos_air", effect.player->find_spell( 371350 ) )
-            ->add_stat( STAT_HASTE_RATING, amount )
-            ->set_default_value_from_effect_type( A_MOD_SPEED_ALWAYS )
-            ->add_invalidate( CACHE_RUN_SPEED )
-            ->set_duration( duration ) );
-    effect.player->buffs.elemental_chaos_earth = buff_list.emplace_back(
-        make_buff<stat_buff_t>( effect.player, "elemental_chaos_earth", effect.player->find_spell( 371351 ) )
-            ->add_stat( STAT_MASTERY_RATING, amount )
-            ->set_default_value_from_effect_type( A_MOD_DAMAGE_PERCENT_TAKEN )
-            ->set_duration( duration ) );
-    effect.player->buffs.elemental_chaos_frost = buff_list.emplace_back(
-        make_buff<stat_buff_t>( effect.player, "elemental_chaos_frost", effect.player->find_spell( 371353 ) )
-            ->add_stat( STAT_VERSATILITY_RATING, amount )
-            ->set_default_value_from_effect_type( A_MOD_CRITICAL_HEALING_AMOUNT )
-            ->set_duration( duration ) );
-
-    buff = make_buff( effect.player, effect.name(), effect.driver() )
-      ->set_tick_callback( [ buff_list ]( buff_t* b, int, timespan_t ) {
-        b->rng().range( buff_list )->trigger();
-      } );
-  }
-
-  effect.custom_buff = buff;
 }
 
 void phial_of_glacial_fury( special_effect_t& effect )
@@ -372,15 +330,6 @@ void bottled_putrescence( special_effect_t& effect )
 
 void chilled_clarity( special_effect_t& effect )
 {
-  if ( create_fallback_buffs( effect, { "potion_of_chilled_clarity" } ) )
-    return;
-
-  auto buff = create_buff<buff_t>( effect.player, effect.trigger() );
-  buff->set_default_value_from_effect_type( A_HASTE_SPELLS )
-      ->set_duration( timespan_t::from_seconds( effect.driver()->effectN( 1 ).base_value() ) )
-      ->set_duration_multiplier( inhibitor_mul( effect.player ) );
-
-  effect.custom_buff = effect.player->buffs.chilled_clarity = buff;
 }
 
 void elemental_power( special_effect_t& effect )
@@ -2367,69 +2316,6 @@ void umbrelskuls_fractured_heart( special_effect_t& effect )
 
 void way_of_controlled_currents( special_effect_t& effect )
 {
-  auto stack =
-      create_buff<buff_t>( effect.player, "way_of_controlled_currents_stack", effect.player->find_spell( 381965 ) )
-          ->set_name_reporting( "Stack" )
-          ->add_invalidate( CACHE_AUTO_ATTACK_SPEED );
-
-  stack->set_default_value( stack->data().effectN( 1 ).base_value() * 0.01 );
-
-  effect.player->buffs.way_of_controlled_currents = stack;
-
-  auto surge =
-      create_buff<buff_t>( effect.player, "way_of_controlled_currents_surge", effect.player->find_spell( 381966 ) )
-          ->set_name_reporting( "Surge" );
-
-  auto lockout =
-      create_buff<buff_t>( effect.player, "way_of_controlled_currents_lockout", effect.player->find_spell( 397621 ) )
-          ->set_quiet( true );
-
-  auto surge_driver = new special_effect_t( effect.player );
-  surge_driver->type = SPECIAL_EFFECT_EQUIP;
-  surge_driver->source = SPECIAL_EFFECT_SOURCE_ITEM;
-  surge_driver->spell_id = surge->data().id();
-  surge_driver->cooldown_ = surge->data().internal_cooldown();
-  effect.player->special_effects.push_back( surge_driver );
-
-  auto surge_damage = create_proc_action<generic_proc_t>( "way_of_controlled_currents", *surge_driver,
-                                                          "way_of_controlled_currents", 381967 );
-
-  surge_damage->base_dd_min = surge_damage->base_dd_max = effect.driver()->effectN( 5 ).average( effect.item );
-
-  surge_driver->execute_action = surge_damage;
-
-  auto surge_cb = new dbc_proc_callback_t( effect.player, *surge_driver );
-  surge_cb->initialize();
-  surge_cb->deactivate();
-
-  stack->set_stack_change_callback( [ surge ]( buff_t* b, int, int ) {
-    if ( b->at_max_stacks() )
-      surge->trigger();
-  } );
-
-  surge->set_stack_change_callback( [ stack, lockout, surge_cb ]( buff_t*, int, int new_ ) {
-    if ( new_ )
-    {
-      surge_cb->activate();
-    }
-    else
-    {
-      surge_cb->deactivate();
-      stack->expire();
-      lockout->trigger();
-    }
-  } );
-
-  effect.custom_buff = stack;
-  effect.proc_flags2_ = PF2_CRIT;
-  auto stack_cb = new dbc_proc_callback_t( effect.player, effect );
-
-  lockout->set_stack_change_callback( [ stack_cb ]( buff_t*, int, int new_ ) {
-    if ( new_ )
-      stack_cb->deactivate();
-    else
-      stack_cb->activate();
-  } );
 }
 
 void whispering_incarnate_icon( special_effect_t& effect )
@@ -2650,61 +2536,6 @@ void rumbling_ruby( special_effect_t& effect )
 // 382092 Damage Value
 void storm_eaters_boon( special_effect_t& effect )
 {
-  if ( create_fallback_buffs( effect, { "stormeaters_boon" } ) )
-    return;
-
-  buff_t* stack_buff;
-  buff_t* main_buff;
-
-  main_buff = make_buff( effect.player, "stormeaters_boon", effect.player->find_spell(377453))
-      ->set_cooldown( 0_ms );
-  stack_buff = make_buff( effect.player, "stormeaters_boon_stacks", effect.player->find_spell( 382090 ))
-      ->set_duration( effect.player -> find_spell( 377453 )->duration() )
-      ->set_cooldown( 0_ms );
-
-  effect.custom_buff = effect.player->buffs.stormeaters_boon = main_buff;
-
-  struct storm_eaters_boon_damage_t : public proc_spell_t
-  {
-    buff_t* stack_buff;
-    storm_eaters_boon_damage_t( const special_effect_t& e, buff_t* b ) :
-      proc_spell_t( "stormeaters_boon_damage", e.player, e.player->find_spell( 382090 ), e.item ), stack_buff( b )
-    {
-      background = true;
-      base_dd_min = base_dd_max = e.player->find_spell( 382092 )->effectN( 1 ).average(e.item);
-      name_str_reporting = "stormeaters_boon";
-      reduced_aoe_targets = 5;  // from logs, not found in spell data
-    }
-
-     double composite_da_multiplier( const action_state_t* s ) const override
-    {
-      double m = proc_spell_t::composite_da_multiplier( s );
-
-      m *= 1.0 + ( stack_buff -> stack() * 0.1 );
-
-      return m;
-    }
-
-     void execute() override
-     {
-       proc_spell_t::execute();
-       stack_buff -> trigger();
-     }
-  };
-  action_t* boon_action = create_proc_action<storm_eaters_boon_damage_t>( "stormeaters_boon_damage", effect, stack_buff );
-  main_buff->set_refresh_behavior( buff_refresh_behavior::DISABLED );
-  main_buff->set_tick_callback(
-      [ boon_action, effect ]( buff_t* /* buff */, int /* current_tick */, timespan_t /* tick_time */ ) {
-        boon_action->execute();
-        effect.player->get_cooldown( effect.cooldown_group_name() )->start( effect.cooldown_group_duration() );
-      } );
-  main_buff->set_stack_change_callback( [ stack_buff ](buff_t*, int, int new_)
-  {
-    if( new_ == 0 )
-    {
-      stack_buff->expire();
-    }
-  } );
 }
 
 // Decoration of Flame
@@ -7840,55 +7671,6 @@ void forgestorm( special_effect_t& effect )
 // 397478 unique target debuff
 void neltharax( special_effect_t& effect )
 {
-  auto buff = create_buff<buff_t>( effect.player, "heavens_nemesis", effect.player->find_spell( 397118 ) )
-    ->set_default_value_from_effect( 1 );
-
-  if ( buff->data().effectN( 1 ).subtype() == A_MOD_RANGED_AND_MELEE_AUTO_ATTACK_SPEED )
-    buff->add_invalidate( CACHE_AUTO_ATTACK_SPEED );
-
-  effect.player -> buffs.heavens_nemesis = buff;
-
-  struct auto_cb_t : public dbc_proc_callback_t
-  {
-    buff_t* attack_speed;
-
-    auto_cb_t( const special_effect_t& e, buff_t* buff ) : dbc_proc_callback_t( e.player, e ), attack_speed( buff )
-    {
-      target_debuff = e.player->find_spell( 397478 );
-    }
-
-    void execute( action_t*, action_state_t* s ) override
-    {
-      auto mark = get_debuff( s->target );
-      if ( mark->check() )
-      {
-        // Increment the attack speed if target is our current mark.
-        attack_speed->trigger();
-      }
-      else
-      {
-        attack_speed->expire();
-        // Find a current mark if there is one and remove the mark on it.
-        auto i = range::find_if( effect.player->sim->target_non_sleeping_list, [ this ]( player_t* t ) {
-          auto m = get_debuff( t );
-          if ( m->check() )
-          {
-            m->expire();
-            return true;
-          }
-          return false;
-        } );
-        // Only set a new mark and start stacking the buff if there was no mark cleared on this impact.
-        if ( i == effect.player->sim->target_non_sleeping_list.end() )
-        {
-          mark->trigger();
-          attack_speed->trigger();
-        }
-      }
-    }
-  };
-
-  new auto_cb_t( effect, buff );
 }
 
 // Ashkandur

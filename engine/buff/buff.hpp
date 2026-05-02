@@ -24,7 +24,6 @@
 #include "util/format.hpp"
 
 struct buff_t;
-class conduit_data_t;
 struct stat_buff_t;
 struct spelleffect_data_t;
 struct absorb_buff_t;
@@ -420,8 +419,6 @@ public:
 
   virtual buff_t* apply_affecting_aura( const spell_data_t* spell );
   virtual buff_t* apply_affecting_effect( const spelleffect_data_t& effect );
-  virtual buff_t* apply_affecting_conduit( const conduit_data_t& conduit, int effect_num = 1 );
-  virtual buff_t* apply_affecting_conduit_effect( const conduit_data_t& conduit, size_t effect_num );
 
   friend void sc_format_to( const buff_t&, fmt::format_context::iterator );
 private:
@@ -556,7 +553,6 @@ struct damage_buff_t : public buff_t
 
   damage_buff_t( actor_pair_t q, util::string_view name );
   damage_buff_t( actor_pair_t q, util::string_view name, const spell_data_t*, bool parse_data = true );
-  damage_buff_t( actor_pair_t q, util::string_view name, const spell_data_t*, const conduit_data_t& );
   damage_buff_t( actor_pair_t q, util::string_view name, const spell_data_t*, double );
 
   damage_buff_t* parse_spell_data( const spell_data_t*, double = 0.0, double = 0.0 );
@@ -568,12 +564,6 @@ struct damage_buff_t : public buff_t
   damage_buff_t* apply_affecting_aura( const spell_data_t* spell ) override
   {
     buff_t::apply_affecting_aura( spell );
-    return this;
-  }
-
-  damage_buff_t* apply_affecting_conduit( const conduit_data_t& conduit, int effect_num = 1 ) override
-  {
-    buff_t::apply_affecting_conduit( conduit, effect_num );
     return this;
   }
 

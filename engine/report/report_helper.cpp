@@ -10,7 +10,6 @@
 #include "dbc/sc_spell_info.hpp"
 #include "dbc/spell_query/spell_data_expr.hpp"
 #include "item/item.hpp"
-#include "player/covenant.hpp"
 #include "player/pet.hpp"
 #include "player/player.hpp"
 #include "player/stats.hpp"

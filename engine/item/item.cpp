@@ -950,28 +950,6 @@ void item_t::parse_options()
     }
   }
 
-  if ( !option_azerite_powers_str.empty() )
-  {
-    auto split = util::string_split<util::string_view>( option_azerite_powers_str, "/:" );
-    for ( const auto& power_str : split )
-    {
-      auto power_id = util::to_unsigned_ignore_error( power_str, 0 );
-      if ( power_id > 0 )
-      {
-        parsed.azerite_ids.push_back( power_id );
-      }
-      // Try to convert the name to a power (id)
-      else
-      {
-        const auto& power = player->dbc->azerite_power( power_str, true );
-        if ( power.id > 0 )
-        {
-          parsed.azerite_ids.push_back( power.id );
-        }
-      }
-    }
-  }
-
   if ( !option_enchant_id_str.empty() )
     parsed.enchant_id = util::to_unsigned( option_enchant_id_str );
 

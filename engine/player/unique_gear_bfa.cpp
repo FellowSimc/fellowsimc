@@ -517,40 +517,12 @@ void consumables::potion_of_empowered_proximity( special_effect_t& effect )
 
 void enchants::galeforce_striking( special_effect_t& effect )
 {
-  buff_t* buff = effect.player->buffs.galeforce_striking;
-  if ( !buff )
-  {
-    auto spell = effect.trigger();
-    buff       = make_buff( effect.player, util::tokenized_name( spell ), spell )
-               ->add_invalidate( CACHE_AUTO_ATTACK_SPEED )
-               ->set_default_value( spell->effectN( 1 ).percent() )
-               ->set_activated( false );
-    effect.player->buffs.galeforce_striking = buff;
-  }
-
-  effect.custom_buff = buff;
-
-  new dbc_proc_callback_t( effect.player, effect );
 }
 
 // Torrent of Elements ======================================================
 
 void enchants::torrent_of_elements( special_effect_t& effect )
 {
-  buff_t* buff = effect.player->buffs.torrent_of_elements;
-  if ( !buff )
-  {
-    auto spell = effect.trigger();
-    buff       = make_buff<buff_t>( effect.player, util::tokenized_name( spell ), spell )
-               ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER )
-               ->set_default_value( spell->effectN( 1 ).percent() )
-               ->set_activated( false );
-    effect.player->buffs.torrent_of_elements = buff;
-  }
-
-  effect.custom_buff = buff;
-
-  new dbc_proc_callback_t( effect.player, effect );
 }
 
 // 'XXX' Navigation (weapon enchant) ========================================
@@ -1034,19 +1006,6 @@ void items::bygone_bee_almanac( special_effect_t& effect )
 
 void items::leyshocks_grand_compilation( special_effect_t& effect )
 {
-  // Crit
-  effect.player->buffs.leyshock_crit =
-      create_buff<stat_buff_t>( effect.player, "precision_module", effect.player->find_spell( 281791 ), effect.item );
-  effect.player->buffs.leyshock_haste = create_buff<stat_buff_t>( effect.player, "iteration_capacitor",
-                                                                  effect.player->find_spell( 281792 ), effect.item );
-  effect.player->buffs.leyshock_mastery =
-      create_buff<stat_buff_t>( effect.player, "efficiency_widget", effect.player->find_spell( 281794 ), effect.item );
-  effect.player->buffs.leyshock_versa =
-      create_buff<stat_buff_t>( effect.player, "adaptive_circuit", effect.player->find_spell( 281795 ), effect.item );
-
-  // We don't need to make a special effect from this item at all, since it needs very special
-  // handling. Just going to use the callback to initialize the buffs.
-  effect.type = SPECIAL_EFFECT_NONE;
 }
 
 // Jes' Howler ==============================================================
@@ -3012,26 +2971,6 @@ void items::legplates_of_unbound_anguish( special_effect_t& effect )
 
 void items::damage_to_aberrations( special_effect_t& effect )
 {
-  if ( !effect.player->sim->bfa_opts.nazjatar )
-    return;
-
-  auto buff = buff_t::find( effect.player, "damage_to_aberrations" );
-  // TODO: Multiple items stack or not?
-  if ( buff )
-  {
-    buff->default_value += effect.driver()->effectN( 1 ).percent();
-  }
-  else
-  {
-    buff = make_buff( effect.player, "damage_to_aberrations", effect.driver() );
-    buff->set_default_value( effect.driver()->effectN( 1 ).percent() );
-    buff->set_quiet( true );
-
-    effect.player->buffs.damage_to_aberrations = buff;
-    effect.player->register_combat_begin( buff );
-  }
-
-  effect.type = SPECIAL_EFFECT_NONE;
 }
 
 // Benthic Armor Exploding Pufferfish =====================================
@@ -3074,21 +3013,6 @@ void items::exploding_pufferfish( special_effect_t& effect )
 
 void items::fathom_hunter( special_effect_t& effect )
 {
-  if ( !effect.player->sim->bfa_opts.nazjatar )
-    return;
-
-  auto buff = buff_t::find( effect.player, "fathom_hunter" );
-  if ( !buff )
-  {
-    buff = make_buff( effect.player, "fathom_hunter", effect.driver() );
-    buff->set_default_value( effect.driver()->effectN( 1 ).percent() );
-    buff->set_quiet( true );
-
-    effect.player->buffs.fathom_hunter = buff;
-    effect.player->register_combat_begin( buff );
-  }
-
-  effect.type = SPECIAL_EFFECT_NONE;
 }
 
 // Nazjatar/Eternal Palace check ==========================================
@@ -4255,34 +4179,6 @@ void items::reclaimed_shock_coil( special_effect_t& effect )
 
 void items::dreams_end( special_effect_t& effect )
 {
-  struct delirious_frenzy_cb_t : public dbc_proc_callback_t
-  {
-    player_t* target;
-
-    delirious_frenzy_cb_t( const special_effect_t& e ) : dbc_proc_callback_t( e.player, e )
-    {
-    }
-
-    void execute( action_t*, action_state_t* s ) override
-    {
-      if ( !target || target != s->target )  // new target
-      {
-        target = s->target;
-        listener->buffs.delirious_frenzy->expire();  // cancel buff, restart below
-      }
-
-      listener->buffs.delirious_frenzy->trigger();
-    }
-  };
-
-  if ( !effect.player->buffs.delirious_frenzy )
-  {
-    effect.player->buffs.delirious_frenzy = make_buff( effect.player, "delirious_frenzy", effect.trigger() )
-                                                ->set_default_value( effect.trigger()->effectN( 1 ).percent() )
-                                                ->add_invalidate( CACHE_AUTO_ATTACK_SPEED );
-  }
-
-  new delirious_frenzy_cb_t( effect );
 }
 
 /**Diver's Folly
@@ -6446,44 +6342,10 @@ void register_leyshocks_trigger( unsigned spell_id, stat_e stat_buff )
 
 void trigger_leyshocks_grand_compilation( unsigned spell_id, player_t* actor )
 {
-  if ( !actor || !actor->buffs.leyshock_crit )
-  {
-    return;
-  }
-
-  auto it = __ls_cb_map.find( spell_id );
-  if ( it == __ls_cb_map.end() )
-  {
-    return;
-  }
-
-  trigger_leyshocks_grand_compilation( it->second, actor );
 }
 
 void trigger_leyshocks_grand_compilation( stat_e stat, player_t* actor )
 {
-  if ( !actor || !actor->buffs.leyshock_crit )
-  {
-    return;
-  }
-
-  switch ( stat )
-  {
-    case STAT_CRIT_RATING:
-      actor->buffs.leyshock_crit->trigger();
-      break;
-    case STAT_HASTE_RATING:
-      actor->buffs.leyshock_haste->trigger();
-      break;
-    case STAT_MASTERY_RATING:
-      actor->buffs.leyshock_mastery->trigger();
-      break;
-    case STAT_VERSATILITY_RATING:
-      actor->buffs.leyshock_versa->trigger();
-      break;
-    default:
-      break;
-  }
 }
 
 }  // namespace expansion

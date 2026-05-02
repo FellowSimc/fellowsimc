@@ -486,7 +486,6 @@ struct pull_event_t final : raid_event_t
   std::string enemies_str;
   timespan_t delay;
   timespan_t spawn_time;
-  bool bloodlust;
   bool shared_health;
   bool has_boss;
   event_t* spawn_event;
@@ -511,7 +510,6 @@ struct pull_event_t final : raid_event_t
       enemies_str(),
       delay( 0_ms ),
       spawn_time( 0_s ),
-      bloodlust( false ),
       shared_health( false ),
       has_boss( false ),
       spawn_event( nullptr ),
@@ -520,7 +518,6 @@ struct pull_event_t final : raid_event_t
   {
     add_option( opt_string( "enemies", enemies_str ) );
     add_option( opt_timespan( "delay", delay ) );
-    add_option( opt_bool( "bloodlust", bloodlust ) );
     add_option( opt_bool( "shared_health", shared_health ) );
 
     parse_options( options_str );
@@ -636,32 +633,6 @@ struct pull_event_t final : raid_event_t
   void _start() override
   {
     spawn_time = sim->current_time();
-
-    if ( bloodlust )
-    {
-      if ( !sim->single_actor_batch )
-      {
-        // use indices since it's possible to spawn new actors when bloodlust is triggered
-        for ( size_t i = 0; i < sim->player_non_sleeping_list.size(); i++ )
-        {
-          auto* p = sim->player_non_sleeping_list[ i ];
-          if ( p->is_pet() )
-            continue;
-
-          p->buffs.bloodlust->trigger();
-          p->buffs.exhaustion->trigger();
-        }
-      }
-      else
-      {
-        auto p = sim->player_no_pet_list[ sim->current_index ];
-        if ( p )
-        {
-          p->buffs.bloodlust->trigger();
-          p->buffs.exhaustion->trigger();
-        }
-      }
-    }
 
     auto adds = adds_spawner->spawn( as<unsigned>( spawn_parameters.size() ) );
     double total_health = 0;

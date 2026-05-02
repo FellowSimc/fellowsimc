@@ -39,9 +39,6 @@ struct action_callback_t;
 struct action_variable_t;
 struct actor_target_data_t;
 struct attack_t;
-class azerite_essence_t;
-class azerite_power_t;
-class conduit_data_t;
 class dbc_t;
 class dbc_override_t;
 struct benefit_t;
@@ -74,10 +71,6 @@ struct spell_data_t;
 struct player_talent_points_t;
 struct uptime_t;
 struct ground_aoe_params_t;
-namespace azerite {
-  class azerite_state_t;
-  class azerite_essence_state_t;
-}
 namespace io {
   class ofstream;
 }
@@ -87,10 +80,6 @@ namespace report {
 namespace js {
   struct JsonOutput;
 }
-namespace covenant {
-  class covenant_state_t;
-}
-
 /* Player Report Extension
  * Allows class modules to write extension to the report sections based on the dynamic class of the player.
  *
@@ -242,15 +231,6 @@ struct player_t : public actor_t
 
   // Profs
   std::array<int, PROFESSION_MAX> profession;
-
-  /// Azerite state object
-  std::unique_ptr<azerite::azerite_state_t> azerite;
-
-  /// Azerite essence state object
-  std::unique_ptr<azerite::azerite_essence_state_t> azerite_essence;
-
-  /// Covenant state object
-  std::unique_ptr<covenant::covenant_state_t> covenant;
 
   // TODO: FIXME, these stats should not be increased by scale factor deltas
   struct base_initial_current_t
@@ -492,137 +472,11 @@ struct player_t : public actor_t
   struct buffs_t
   {
     std::array<std::vector<buff_t*>, STAT_PCT_BUFF_MAX> stat_pct_buffs;
-    buff_t* angelic_feather;
-    buff_t* beacon_of_light;
-    buff_t* blood_fury;
-    buff_t* body_and_soul;
     buff_t* damage_done;
-    buff_t* darkflight;
-    buff_t* devotion_aura;
-    buff_t* entropic_embrace;
-    buff_t* exhaustion;
-    buff_t* guardian_spirit;
-    buff_t* blessing_of_sacrifice;
-    buff_t* nitro_boosts;
-    buff_t* pain_suppression;
     buff_t* movement;
-    buff_t* stampeding_roar;
-    buff_t* shadowmeld;
-    buff_t* close_to_heart_aura;
-    buff_t* generous_pour_aura;
-    buff_t* windwalking_movement_aura;
-    buff_t* stoneform;
     buff_t* stunned;
     buff_t* rooted;
-    std::array<buff_t*, 4> ancestral_call;
-    buff_t* fireblood;
-    buff_t* symbol_of_hope; // Priest spell
 
-    buff_t* berserking;
-    buff_t* bloodlust;
-
-    // Legendary meta stuff
-    buff_t* courageous_primal_diamond_lucidity;
-    buff_t* tempus_repit;
-    buff_t* fortitude;
-
-    buff_t* legendary_aoe_ring; // Legendary ring buff.
-
-    // 7.0 trinket proxy buffs
-    buff_t* incensed;
-    buff_t* taste_of_mana; // Gnawed Thumb Ring buff
-
-    // 7.1
-    buff_t* nefarious_pact; // Whispers in the dark good buff
-    buff_t* devils_due; // Whispers in the dark bad buff
-
-    buff_t* demon_damage_buff; // 6.2.3 Heirloom trinket demon damage buff
-
-    // Darkmoon Faire versatility food
-    buff_t* dmf_well_fed;
-
-    // 8.0
-    buff_t* galeforce_striking; // Gale-Force Striking weapon enchant
-    buff_t* torrent_of_elements; // Torrent of Elements weapon enchant
-
-    // 8.0 - Leyshock's Grand Compendium stat buffs
-    buff_t* leyshock_crit;
-    buff_t* leyshock_haste;
-    buff_t* leyshock_mastery;
-    buff_t* leyshock_versa;
-
-    // Azerite power
-    buff_t* normalization_increase;
-
-    /// 8.2 Azerite Essences
-    buff_t* memory_of_lucid_dreams;
-    buff_t* lucid_dreams; // Versatility Buff from Rank 3
-    buff_t* seething_rage_essence; // Blood of the Enemy major - 25% crit dam
-
-    // 8.2 misc
-    buff_t* damage_to_aberrations; // Benthic belt special effect
-    buff_t* fathom_hunter; // Follower themed Benthic boots special effect
-    buff_t* delirious_frenzy; // Dream's End 1H STR axe attack speed buff
-
-    // 9.0 class buffs
-    buff_t* focus_magic; // Mage talent
-    buff_t* power_infusion; // Priest spell
-    buff_t* rallying_cry; // Warrior spell
-
-    // 9.0 class covenant buffs
-    buff_t* conquerors_banner; // Necrolord Warrior spell
-
-    // 9.0 Soulbinds
-    buff_t* wild_hunt_tactics;  // night_fae/korayn - dummy buff used to quickly check if soulbind is enabled
-    buff_t* volatile_solvent_humanoid; // necrolord/marileth - humanoid (mastery) buff
-    buff_t* volatile_solvent_stats; // necrolord/marileth - beast (primary) and dragonkin (crit) buffs
-    buff_t* volatile_solvent_damage; // necrolord/marileth - elemental (magic) and giant (physical) % damage done buffs
-    buff_t* battlefield_presence; // venthyr/draven - damage increase buff based on number of enemies
-    buff_t* emenis_magnificent_skin; //necrolord/emeni - buff applied when using fleshcraft that increases max health
-    buff_t* trembling_pustules; //necrolord/emeni - buff applied when using fleshcraft that increases procs Pustule Eruption damage
-    buff_t* hold_your_ground; //venthyr/draven - stamina % buff when standing still
-    buff_t* waking_bone_breastplate; //necrolord/heirmir - max health % buff when near 3 or more enemies
-
-    // 9.1 Soulbinds
-    buff_t* wild_hunt_strategem_tracking; //night_fae/korayn - tracking buff to allow procs of wild_hunt_strategem on enemy targets
-
-    // 9.0 Runecarves
-    buff_t* norgannons_sagacity;         // consume stacks to allow casting while moving
-    buff_t* echo_of_eonar;               // passive self buff
-
-    // 9.1 Legendary Buffs
-    buff_t* pact_of_the_soulstalkers; // Kyrian Hunter Legendary
-
-    // 9.1 Shards of Domination
-    buff_t* coldhearted; // Shard of Cor
-
-    // Trinkets
-    buff_t* soleahs_secret_technique_external;
-    buff_t* elegy_of_the_eternals_external;
-
-    // 9.2 Sepulcher of the First Ones
-    buff_t* boon_of_azeroth; // Jailer fight buff
-    buff_t* boon_of_azeroth_mythic; // Jailer fight buff (Mythic)
-
-    // 10.0 Buffs
-    buff_t* chilled_clarity;  // potion of chilled clarity
-    buff_t* elemental_chaos_fire;  // phial of elemental chaos
-    buff_t* elemental_chaos_air;
-    buff_t* elemental_chaos_earth;
-    buff_t* elemental_chaos_frost;
-    buff_t* tome_of_unstable_power;
-    buff_t* way_of_controlled_currents;
-    buff_t* stormeaters_boon;
-    buff_t* heavens_nemesis; // Neltharax, Enemy of the Sky
-
-    // 11.0 The War Within
-    buff_t* ingest_mineral;  // earthen well fed racial
-    buff_t* surekian_grace;  // sik'ran's shadow arsenal barrage movement speed buff
-    buff_t* earthen_ire;     // sigil of algari concordance tank buff
-    buff_t* quickwicks_quick_trick_wick_walk;  // quickwick candlestick movement speed buff
-    buff_t* building_momentum;  // scroll of momentum counter buff
-    buff_t* full_momentum;      // scroll of momentum max buff
-    buff_t* potion_bomb_of_power; // potion bomb of power primary stat
   } buffs;
 
   struct debuffs_t
@@ -634,17 +488,6 @@ struct player_t : public actor_t
     buff_t* invulnerable;
     buff_t* vulnerable;
     buff_t* damage_taken;
-
-    // WoD debuffs
-    buff_t* mortal_wounds;
-
-    // BfA Raid Damage Modifier Debuffs
-    buff_t* chaos_brand;  // Demon Hunter
-    buff_t* mystic_touch; // Monk
-
-    // Dragonflight Raid Damage Modifier Debuffs
-    buff_t* hunters_mark;
-
   } debuffs;
 
   struct external_buffs_t
@@ -1043,17 +886,6 @@ public:
   pet_t* cast_pet();
   const pet_t* cast_pet() const;
 
-  azerite_power_t find_azerite_spell( util::string_view name, bool tokenized = false ) const;
-  azerite_power_t find_azerite_spell( unsigned power_id ) const;
-  azerite_essence_t find_azerite_essence( util::string_view name, bool tokenized = false ) const;
-  azerite_essence_t find_azerite_essence( unsigned power_id ) const;
-
-  item_runeforge_t find_runeforge_legendary( util::string_view name, bool tokenized = false, bool force_unity = false ) const;
-
-  conduit_data_t find_conduit_spell( util::string_view name ) const;
-  const spell_data_t* find_soulbind_spell( util::string_view name ) const;
-  const spell_data_t* find_covenant_spell( util::string_view name ) const;
-
   const spell_data_t* find_racial_spell( util::string_view name, race_e r = RACE_NONE ) const;
   const spell_data_t* find_class_spell( util::string_view name, specialization_e s = SPEC_NONE ) const;
   const spell_data_t* find_rank_spell( util::string_view name, util::string_view rank,
@@ -1157,7 +989,6 @@ public:
   virtual void init_professions();
   virtual void init_spells();
   virtual void init_items();
-  virtual void init_azerite(); /// Initialize azerite-related support structures for the actor
   virtual void init_weapon( weapon_t& );
   virtual void init_base_stats();
   virtual void init_initial_stats();
@@ -1506,9 +1337,6 @@ public:
   virtual void adjust_dynamic_cooldowns();
   virtual void adjust_global_cooldown( gcd_haste_type );
   virtual void adjust_auto_attack( gcd_haste_type );
-
-  // 8.2 Vision of Perfection essence
-  virtual void vision_of_perfection_proc();
 
 private:
   void do_update_movement( double yards );

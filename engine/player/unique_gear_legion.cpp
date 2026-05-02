@@ -506,11 +506,6 @@ void item::giant_ornamental_pearl( special_effect_t& effect )
 
 void item::gnawed_thumb_ring( special_effect_t& effect )
 {
-  effect.custom_buff = make_buff( effect.player, "taste_of_mana", effect.player -> find_spell( 228461 ), effect.item )
-    ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER )
-    ->set_default_value( effect.player -> find_spell( 228461 ) -> effectN( 1 ).percent() );
-
-  effect.player -> buffs.taste_of_mana = effect.custom_buff;
 }
 
 // Naraxa's Spiked Tongue ==================================================
@@ -2902,31 +2897,6 @@ void item::windscar_whetstone( special_effect_t& effect )
 
 void item::whispers_in_the_dark( special_effect_t& effect )
 {
-  auto good_buff_data = effect.player -> find_spell( 225774 );
-  auto good_amount = good_buff_data -> effectN( 1 ).average( effect.item ) / 100.0;
-
-  auto bad_buff_data = effect.player -> find_spell( 225776 );
-  auto bad_amount = bad_buff_data -> effectN( 1 ).average( effect.item ) / 100.0;
-
-  buff_t* bad_buff = make_buff( effect.player, "devils_due", bad_buff_data, effect.item );
-  bad_buff->add_invalidate( CACHE_SPELL_CAST_SPEED )
-    ->set_default_value( bad_amount );
-
-  buff_t* good_buff = make_buff( effect.player, "nefarious_pact", good_buff_data, effect.item );
-  good_buff->add_invalidate( CACHE_SPELL_CAST_SPEED )
-    ->set_default_value( good_amount )
-    ->set_stack_change_callback( [ bad_buff ]( buff_t*, int old_, int ) {
-      if ( old_ == 1 )
-      {
-        bad_buff -> trigger();
-      }
-    } );
-
-  effect.custom_buff = good_buff;
-  effect.player -> buffs.nefarious_pact = good_buff;
-  effect.player -> buffs.devils_due = bad_buff;
-
-  new dbc_proc_callback_t( effect.item, effect );
 }
 
 // Nightblooming Frond ======================================================
@@ -4635,13 +4605,6 @@ void item::infernal_alchemist_stone( special_effect_t& effect )
 
 void item::marfisis_giant_censer( special_effect_t& effect )
 {
-  const spell_data_t* driver = effect.player -> find_spell( effect.spell_id );
-  effect.player -> buffs.incensed = make_buff( effect.player, "incensed", driver -> effectN( 1 ).trigger() )
-    ->set_default_value( driver -> effectN( 1 ).trigger() -> effectN( 1 ).average( effect.item ) / 100 )
-    ->set_chance ( 1 );
-  effect.custom_buff = effect.player -> buffs.incensed;
-
-  new dbc_proc_callback_t( effect.player, effect );
 }
 
 // Devilsaur's Bite =========================================================
@@ -5280,19 +5243,6 @@ void consumables::lavish_suramar_feast( special_effect_t& effect )
 
 void consumables::darkmoon_faire_food( special_effect_t& effect )
 {
-  double value = effect.driver() -> effectN( 1 ).percent();
-
-  if ( is_pandaren( effect.player -> race ) )
-  {
-    value *= 2.0;
-  }
-
-  buff_t* dmf_well_fed = make_buff( effect.player, "darkmoon_faire_food", effect.driver() )
-    ->set_default_value( value )
-    ->add_invalidate( CACHE_VERSATILITY );
-
-  effect.custom_buff = dmf_well_fed;
-  effect.player -> buffs.dmf_well_fed = dmf_well_fed;
 }
 
 // Pepper Breath (generic) ==================================================

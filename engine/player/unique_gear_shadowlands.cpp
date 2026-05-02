@@ -13,7 +13,6 @@
 #include "item/item.hpp"
 #include "player/action_priority_list.hpp"
 #include "player/action_variable.hpp"
-#include "player/covenant.hpp"
 #include "player/pet.hpp"
 #include "player/pet_spawner.hpp"
 #include "player/stats.hpp"
@@ -25,7 +24,6 @@
 #include "unique_gear.hpp"
 #include "unique_gear_helper.hpp"
 
-#include <dbc/covenant_data.hpp>
 
 namespace unique_gear::shadowlands
 {
@@ -59,10 +57,6 @@ struct SL_buff_t : public buff_t
   {
     buff_t::set_default_value_from_effect_type( a, p, m, e );
 
-    auto cov_player = player->is_enemy() ? source : player;
-    auto ep  = cov_player->find_soulbind_spell( "Exacting Preparation" );
-    if ( ep->ok() )
-      apply_affecting_aura( ep );
 
     return this;
   }
@@ -75,19 +69,6 @@ struct SL_proc_spell_t : public proc_spell_t
 
   SL_proc_spell_t( util::string_view n, player_t* p, const spell_data_t* s ) : proc_spell_t( n, p, s ) {}
 
-  void init() override
-  {
-    proc_spell_t::init();
-
-    auto ep = player->find_soulbind_spell( "Exacting Preparation" );
-    for ( const auto& eff : ep->effects() )
-    {
-      if ( data().affected_by_label( eff ) )
-      {
-        base_multiplier *= 1.0 + eff.percent();
-      }
-    }
-  }
 };
 
 namespace consumables
@@ -1295,8 +1276,6 @@ void inscrutable_quantum_device ( special_effect_t& effect )
       proc_spell_t::init_finished();
 
       bonus_buffs.clear();
-
-      bonus_buffs.push_back( player->buffs.bloodlust );
 
       if ( player->type == MAGE )
       {
@@ -3279,84 +3258,6 @@ void resonant_reservoir( special_effect_t& effect )
 // TODO: use a separate fleshcraft_t action to trigger the effect so that the channel is cancelled correctly
 void the_first_sigil( special_effect_t& effect )
 {
-  if ( unique_gear::create_fallback_buffs( effect, { "the_first_sigil" } ) )
-    return;
-
-  auto buff = buff_t::find( effect.player, "the_first_sigil" );
-  if ( !buff )
-  {
-    buff = make_buff<stat_buff_t>( effect.player, "the_first_sigil", effect.player->find_spell( 367241 ) )
-               ->add_stat( STAT_VERSATILITY_RATING,
-                           effect.player->find_spell( 367241 )->effectN( 1 ).average( effect.item ) );
-  }
-
-  struct the_first_sigil_t : generic_proc_t
-  {
-    action_t* covenant_action;
-    cooldown_t* orig_cd;
-    cooldown_t* dummy_cd;
-
-    the_first_sigil_t( const special_effect_t& effect )
-      : generic_proc_t( effect, "the_first_sigil", effect.trigger() ),
-        covenant_action( nullptr ),
-        orig_cd( cooldown ),
-        dummy_cd( player->get_cooldown( "the_first_sigil_covenant" ) )
-    {
-    }
-
-    void init() override
-    {
-      proc_spell_t::init();
-      unsigned covenant_signature_id = 0;
-
-      // Find any covenant signature abilities in the action list
-      for ( const auto& e : covenant_ability_entry_t::data( player->dbc->ptr ) )
-      {
-        if ( e.class_id == 0 && e.ability_type == 1 &&
-             e.covenant_id == static_cast<unsigned>( player->covenant->type() ) )
-        {
-          covenant_signature_id = e.spell_id;
-          break;
-        }
-      }
-
-      for ( auto a : player->action_list )
-      {
-        if ( covenant_signature_id == a->data().id() )
-        {
-          covenant_action = a;
-          break;
-        }
-      }
-    }
-
-    void execute() override
-    {
-      if ( covenant_action )
-      {
-        // Night Fae's Soulshape (NYI) and Venthyr's Door of Shadows (NYI) CDs are Reset
-        if ( player->covenant->type() == covenant_e::NIGHT_FAE || player->covenant->type() == covenant_e::VENTHYR )
-        {
-          player->sim->print_debug( "{} resets cooldown of {} from the_first_sigil.", player->name(),
-                                    covenant_action->name() );
-          covenant_action->cooldown->reset( false );
-        }
-        // Necrolord's Fleshcraft and Kyrian's Phial of Serenity (NYI) cast a free use of the CD
-        if ( player->covenant->type() == covenant_e::NECROLORD || player->covenant->type() == covenant_e::KYRIAN )
-        {
-          player->sim->print_debug( "{} casts a free {} from the_first_sigil.", player->name(),
-                                    covenant_action->name() );
-          // TODO: don't alter the cooldown of Fleshcraft if it is off cooldown when we execute it
-          covenant_action->execute();
-          make_event( *sim, player->sim->shadowlands_opts.the_first_sigil_fleshcraft_cancel_time,
-                      [ this ] { covenant_action->cancel(); } );
-        }
-      }
-    }
-  };
-
-  effect.custom_buff    = buff;
-  effect.execute_action = create_proc_action<the_first_sigil_t>( "the_first_sigil", effect );
 }
 
 void cosmic_gladiators_resonator( special_effect_t& effect )
@@ -4941,19 +4842,6 @@ void soulwarped_seal_of_menethil( special_effect_t& effect )
 
 void echo_of_eonar( special_effect_t& effect )
 {
-  if ( !effect.player->buffs.echo_of_eonar )
-  {
-    effect.player->buffs.echo_of_eonar =
-      make_buff( effect.player, "echo_of_eonar", effect.player->find_spell( 347458 ) )
-        ->set_default_value_from_effect_type( A_MOD_DAMAGE_PERCENT_DONE )
-        ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
-  }
-
-  // TODO: buff to allies? (id=338489)
-
-  effect.custom_buff = effect.player->buffs.echo_of_eonar;
-
-  new dbc_proc_callback_t( effect.player, effect );
 }
 
 void judgment_of_the_arbiter( special_effect_t& effect )
@@ -5031,25 +4919,6 @@ void maw_rattle( special_effect_t& /* effect */ )
 
 void norgannons_sagacity( special_effect_t& effect )
 {
-  effect.proc_flags2_ |= PF2_ALL_CAST;
-
-  auto movement = make_buff( effect.player, "norgannons_sagacity", effect.player->find_spell( 339445 ) );
-  effect.player->buffs.norgannons_sagacity = movement;
-
-  auto stacks = make_buff( effect.player, "norgannons_sagacity_stacks", effect.player->find_spell( 339443 ) )
-    ->set_expire_callback( [ movement ]( buff_t*, int s, timespan_t ) {
-      movement->buff_duration_multiplier = s;
-      movement->trigger();
-    } );
-
-  effect.player->register_movement_callback( [ stacks ]( bool start ) {
-    if ( start )
-      stacks->expire();
-  } );
-
-  effect.custom_buff = stacks;
-
-  new dbc_proc_callback_t( effect.player, effect );
 }
 
 void sephuzs_proclamation( special_effect_t& effect )
@@ -5716,49 +5585,6 @@ void shard_of_dyz( special_effect_t& effect )
  */
 void shard_of_cor( special_effect_t& effect )
 {
-  if ( !effect.player->sim->shadowlands_opts.enable_domination_gems )
-  {
-    effect.type = SPECIAL_EFFECT_NONE;
-    return;
-  }
-
-  struct shard_of_cor_cb_t : public dbc_proc_callback_t
-  {
-    std::vector<int> target_list;
-
-    shard_of_cor_cb_t( const special_effect_t& e )
-      : dbc_proc_callback_t( e.player, e ),
-        target_list()
-    {
-    }
-
-    void execute( action_t* a, action_state_t* s ) override
-    {
-      if ( range::contains( target_list, s->target->actor_spawn_index ) )
-        return;
-
-      dbc_proc_callback_t::execute( a, s );
-      target_list.push_back( s->target->actor_spawn_index );
-    }
-
-    void reset() override
-    {
-      dbc_proc_callback_t::reset();
-      target_list.clear();
-    }
-  };
-
-  buff_t* buff = buff_t::find( effect.player, "coldhearted" );
-  if ( !buff )
-  {
-    buff = make_buff( effect.player, "coldhearted", effect.player->find_spell( 356364 ) )
-               ->set_default_value( 0.0001 * effect.driver()->effectN( 1 ).average( effect.player ), 1 )
-               ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
-  }
-
-  effect.custom_buff = effect.player->buffs.coldhearted = buff;
-  effect.proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
-  new shard_of_cor_cb_t( effect );
 }
 
 /**Shard of Bek

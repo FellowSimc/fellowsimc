@@ -1638,145 +1638,6 @@ void aberrant_spellforge( special_effect_t& effect )
 // TODO: confirm decimation damage on crit to shield only counts the absorbed amount, instead of the full damage
 void sikrans_endless_arsenal( special_effect_t& effect )
 {
-  unsigned equip_id = 445203;
-  auto equip = find_special_effect( effect.player, equip_id );
-  assert( equip && "Sikran's Shadow Arsenal missing equip effect" );
-
-  auto data = equip->driver();
-
-  struct sikrans_endless_arsenal_t : public generic_proc_t
-  {
-    std::vector<std::pair<action_t*, buff_t*>> stance;
-
-    sikrans_endless_arsenal_t( const special_effect_t& e, const spell_data_t* data )
-      : generic_proc_t( e, "sikrans_endless_arsenal", e.driver() )
-    {
-      // stances are populated in order: flourish->decimation->barrage
-      // TODO: confirm order is flourish->decimation->barrage
-
-      // setup flourish
-      auto f_dam = create_proc_action<generic_proc_t>( "surekian_flourish", e, 445434 );
-      f_dam->base_td = data->effectN( 1 ).average( e ) * f_dam->base_tick_time / f_dam->dot_duration;
-      f_dam->base_multiplier *= role_mult( e.player, e.player->find_spell( 445434 ) );
-      add_child( f_dam );
-
-      auto f_stance = create_buff<stat_buff_t>( e.player, e.player->find_spell( 447962 ) )
-        ->add_stat_from_effect( 1, data->effectN( 2 ).base_value() )
-        ->add_stat_from_effect( 2, data->effectN( 3 ).base_value() );
-
-      stance.emplace_back( f_dam, f_stance );
-
-      // setup decimation
-      auto d_dam = create_proc_action<generic_aoe_proc_t>( "surekian_decimation", e, 448090, true );
-      d_dam->base_dd_min = d_dam->base_dd_max = data->effectN( 4 ).average( e );
-      d_dam->base_multiplier *= role_mult( e.player, e.player->find_spell( 448090 ) );
-      add_child( d_dam );
-
-      auto d_shield = create_proc_action<generic_proc_t>( "surekian_brutality", e, 448519 );
-      d_shield->base_dd_min = d_shield->base_dd_max = 1.0;  // for snapshot flag parsing
-      add_child( d_shield );
-
-      auto d_stance = create_buff<buff_t>( e.player, e.player->find_spell( 447978 ) );
-
-      auto d_driver = new special_effect_t( e.player );
-      d_driver->name_str = d_stance->name();
-      d_driver->spell_id = d_stance->data().id();
-      d_driver->proc_flags2_ = PF2_CRIT;
-      e.player->special_effects.push_back( d_driver );
-
-      // assume that absorbed amount equals result_mitigated - result_absorbed. this assumes everything in
-      // player_t::assess_damage_imminent_pre_absorb are absorbs, but as for enemies this is currently unused and highly
-      // unlikely to be used in the future, we should be fine with this assumption.
-      // TODO: confirm only the absorbed amount counts, instead of the full damage
-      e.player->callbacks.register_callback_execute_function( d_driver->spell_id,
-          [ d_shield, mul = data->effectN( 5 ).percent() ]
-          ( const dbc_proc_callback_t*, action_t*, const action_state_t* s ) {
-            auto absorbed = s->result_mitigated - s->result_absorbed;
-            if ( absorbed > 0 )
-            {
-              // TODO: determine if this is affected by role mult
-              d_shield->base_dd_min = d_shield->base_dd_max = mul * absorbed;
-              d_shield->execute_on_target( s->target );
-            }
-          } );
-
-      e.player->callbacks.register_callback_trigger_function( d_driver->spell_id,
-        dbc_proc_callback_t::trigger_fn_type::CONDITION,
-        []( const dbc_proc_callback_t*, action_t*, const action_state_t* s ) { return s->target->is_enemy(); } );
-
-      auto d_cb = new dbc_proc_callback_t( e.player, *d_driver );
-      d_cb->activate_with_buff( d_stance );
-
-      stance.emplace_back( d_dam, d_stance );
-
-      // setup barrage
-      auto b_dam = create_proc_action<generic_aoe_proc_t>( "surekian_barrage", e, 445475 );
-      b_dam->split_aoe_damage = false;
-      b_dam->base_dd_min = b_dam->base_dd_max = data->effectN( 6 ).average( e );
-      b_dam->base_multiplier *= role_mult( e.player, e.player->find_spell( 445475 ) );
-      add_child( b_dam );
-
-      auto b_speed = create_buff<buff_t>( e.player, e.player->find_spell( 448436 ) )
-        ->add_invalidate( CACHE_RUN_SPEED );
-
-      e.player->buffs.surekian_grace = b_speed;
-
-      auto b_stack = create_buff<buff_t>( e.player, e.player->find_spell( 448433 ) );
-      b_stack->set_default_value( data->effectN( 7 ).percent() / b_stack->max_stack() )
-        ->set_expire_callback( [ b_speed ]( buff_t* b, int s, timespan_t ) {
-          b_speed->trigger( 1, b->default_value * s );
-        } );
-
-      e.player->register_movement_callback( [ b_stack ]( bool start ) {
-        if ( start )
-          b_stack->expire();
-      } );
-
-      auto b_stance = create_buff<buff_t>( e.player, e.player->find_spell( 448036 ) )
-        ->set_tick_callback( [ b_stack ]( buff_t*, int, timespan_t ) {
-          b_stack->trigger();
-        } );
-
-      stance.emplace_back( b_dam, b_stance );
-
-      // adjust for thewarwithin.sikrans.shadow_arsenal_stance= option
-      const auto& option = e.player->thewarwithin_opts.sikrans_endless_arsenal_stance;
-      if ( !option.is_default() )
-      {
-        if ( util::str_compare_ci( option, "decimation" ) )
-          std::rotate( stance.begin(), stance.begin() + 1, stance.end() );
-        else if ( util::str_compare_ci( option, "barrage" ) )
-          std::rotate( stance.begin(), stance.begin() + 2, stance.end() );
-        else if ( !util::str_compare_ci( option, "flourish" ) )
-          throw std::invalid_argument( "Valid thewarwithin.sikrans.shadow_arsenal_stance: flourish, decimation, barrage" );
-      }
-
-      e.player->register_precombat_begin( [ this ]( player_t* ) {
-        cycle_stance( false );
-      } );
-    }
-
-    void cycle_stance( bool action = true )
-    {
-      stance.back().second->expire();
-
-      if ( action && target )
-        stance.front().first->execute_on_target( target );
-
-      stance.front().second->trigger();
-
-      std::rotate( stance.begin(), stance.begin() + 1, stance.end() );
-    }
-
-    void execute() override
-    {
-      generic_proc_t::execute();
-      cycle_stance();
-    }
-  };
-
-  effect.has_use_damage_override = true;
-  effect.execute_action = create_proc_action<sikrans_endless_arsenal_t>( "sikrans_endless_arsenal", effect, data );
 }
 
 // 444292 equip
@@ -2628,7 +2489,6 @@ struct earthen_ire_buff_t : public algari_concodance_pet_spell_t
   void execute() override
   {
     algari_concodance_pet_spell_t::execute();
-    p()->buffs.earthen_ire->trigger();
   }
 };
 
@@ -2872,9 +2732,6 @@ void sigil_of_algari_concordance( special_effect_t& e )
   earthen_ire_damage->base_dd_min = earthen_ire_damage->base_dd_max = e.driver()->effectN( 10 ).average( e );
 
   auto earthen_ire_buff_spell = e.player->find_spell( 452514 );
-  e.player->buffs.earthen_ire =
-      create_buff<buff_t>( e.player, earthen_ire_buff_spell )
-          ->set_tick_callback( [ earthen_ire_damage ]( buff_t*, int, timespan_t ) { earthen_ire_damage->execute(); } );
 
   e.execute_action =
       create_proc_action<sigil_of_algari_concordance_t>( "sigil_of_algari_concordance", e, earthen_ire_damage );
@@ -4680,7 +4537,6 @@ void quickwick_candlestick( special_effect_t& effect )
     ->set_default_value_from_effect_type( A_MOD_INCREASE_SPEED )
     ->add_invalidate( CACHE_RUN_SPEED );
 
-  effect.player->buffs.quickwicks_quick_trick_wick_walk = buff;
   effect.custom_buff = buff;
 }
 
@@ -5207,61 +5063,6 @@ void detachable_fang( special_effect_t& effect )
 // 459231 damage
 void scroll_of_momentum( special_effect_t& effect )
 {
-  if ( unique_gear::create_fallback_buffs( effect, { "full_momentum" } ) )
-    return;
-
-  // setup stacking buff + driver
-  auto counter = create_buff<buff_t>( effect.player, effect.player->find_spell( 459224 ) )
-    ->set_default_value_from_effect_type( A_MOD_INCREASE_SPEED )
-    ->add_invalidate( CACHE_RUN_SPEED )
-    ->set_expire_at_max_stack( true );
-
-  effect.player->buffs.building_momentum = counter;
-  effect.custom_buff = counter;
-
-  auto cb = new dbc_proc_callback_t( effect.player, effect );
-
-  // setup max buff
-  auto max = create_buff<buff_t>( effect.player, effect.player->find_spell( 459228 ) )
-    ->set_default_value_from_effect_type( A_MOD_INCREASE_SPEED )
-    ->add_invalidate( CACHE_RUN_SPEED )
-    ->set_stack_change_callback( [ cb ]( buff_t*, int, int new_ ) {
-      if ( new_ )
-        cb->deactivate();
-      else
-        cb->activate();
-    } );
-
-  effect.player->buffs.full_momentum = max;
-
-  counter->set_expire_callback( [ max ]( buff_t*, int, timespan_t ) {
-    max->trigger();
-  } );
-
-  // setup damage
-  struct high_velocity_impact_t : public generic_proc_t
-  {
-    high_velocity_impact_t( const special_effect_t& e ) : generic_proc_t( e, "highvelocity_impact", 459231 )
-    {
-      base_dd_min = base_dd_max = e.driver()->effectN( 1 ).average( e );
-      base_multiplier *= role_mult( e );
-    }
-
-    double action_multiplier() const override
-    {
-      // hard scripted values, not in spell data
-      return generic_proc_t::action_multiplier() * ( player->composite_movement_speed() + 17 ) * 0.04;
-    }
-  };
-
-  auto full_momentum = new special_effect_t( effect.player );
-  full_momentum->name_str = max->name();
-  full_momentum->spell_id = max->data().id();
-  full_momentum->execute_action = create_proc_action<high_velocity_impact_t>( "highvelocity_impact", effect );
-  effect.player->special_effects.push_back( full_momentum );
-
-  auto damage_cb = new dbc_proc_callback_t( effect.player, *full_momentum );
-  damage_cb->activate_with_buff( max );
 }
 
 // 442429 driver
@@ -7462,17 +7263,6 @@ void zees_thug_hotline( special_effect_t& effect )
       thwack_jack_spawner.set_max_pets( 1 );
       thwack_jack_spawner.set_replacement_strategy( spawner::pet_replacement_strategy::REPLACE_OLDEST );
       add_child( thwack_jack );
-
-      e.player->buffs.bloodlust->add_stack_change_callback( [ & ]( buff_t*, int, int new_ ) {
-          if ( new_ )
-          {
-            make_event( sim, [ this ] {
-              pocket_ace_spawner.spawn();
-              snake_eyes_spawner.spawn();
-              thwack_jack_spawner.spawn();
-            } );
-          }
-        } );
     }
 
     void execute() override

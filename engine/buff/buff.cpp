@@ -10,7 +10,6 @@
 #include "dbc/dbc.hpp"
 #include "dbc/item_database.hpp"
 #include "dbc/spell_data.hpp"
-#include "player/covenant.hpp"
 #include "player/expansion_effects.hpp"
 #include "player/player.hpp"
 #include "player/stats.hpp"
@@ -1765,36 +1764,6 @@ buff_t* buff_t::apply_affecting_effect( const spelleffect_data_t& effect )
         break;
     }
   }
-
-  return this;
-}
-
-buff_t* buff_t::apply_affecting_conduit( const conduit_data_t& conduit, int effect_num )
-{
-  assert( effect_num == -1 || effect_num > 0 );
-
-  if ( !conduit.ok() )
-    return this;
-
-  for ( size_t i = 1; i <= conduit->effect_count(); i++ )
-  {
-    if ( effect_num == -1 || as<size_t>( effect_num ) == i )
-      apply_affecting_conduit_effect( conduit, i );
-    else
-      apply_affecting_effect( conduit->effectN( i ) );
-  }
-
-  return this;
-}
-
-buff_t* buff_t::apply_affecting_conduit_effect( const conduit_data_t& conduit, size_t effect_num )
-{
-  if ( !conduit.ok() )
-    return this;
-
-  spelleffect_data_t effect = conduit->effectN( effect_num );
-  effect._base_value = conduit.value();
-  apply_affecting_effect( effect );
 
   return this;
 }
@@ -3822,16 +3791,6 @@ damage_buff_t::damage_buff_t( actor_pair_t q, util::string_view name, const spel
   if ( parse_data )
   {
     parse_spell_data( spell );
-  }
-}
-
-damage_buff_t::damage_buff_t( actor_pair_t q, util::string_view name, const spell_data_t* spell, const conduit_data_t& conduit )
-  : buff_t( q, name, spell, nullptr ),
-  is_stacking( true )
-{
-  if ( conduit.ok() )
-  {
-    parse_spell_data( spell, conduit.percent() );
   }
 }
 

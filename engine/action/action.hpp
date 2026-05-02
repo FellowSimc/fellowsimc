@@ -27,7 +27,6 @@ struct action_priority_list_t;
 struct action_state_t;
 struct spell_data_t;
 struct cooldown_t;
-class conduit_data_t;
 struct dot_t;
 struct buff_t;
 struct event_t;
@@ -784,8 +783,6 @@ public:
 
   void apply_affecting_aura( const spell_data_t*, const spell_data_t* modifier = nullptr );
   void apply_affecting_effect( const spelleffect_data_t& effect, const spelleffect_data_t* modifier = nullptr );
-  void apply_affecting_conduit( const conduit_data_t& conduit, int effect_num = 1 );
-  void apply_affecting_conduit_effect( const conduit_data_t& conduit, size_t effect_num );
 
   action_state_t* get_state( const action_state_t* = nullptr );
 

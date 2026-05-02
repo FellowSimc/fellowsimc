@@ -1162,56 +1162,6 @@ std::string get_api_key()
   return {};
 }
 
-/// Setup a periodic check for Bloodlust
-struct bloodlust_check_t : public event_t
-{
-  bloodlust_check_t( sim_t& sim, timespan_t time_until_next_check = timespan_t::from_seconds( 1.0 ) )
-    : event_t( sim, time_until_next_check )
-  {}
-
-  const char* name() const override
-  {
-    return "Bloodlust Check";
-  }
-
-  void execute() override
-  {
-    sim_t& sim = this->sim();
-    player_t* t = sim.target;
-    if ( ( sim.bloodlust_percent > 0 && t->health_percentage() < sim.bloodlust_percent ) ||
-         ( sim.bloodlust_time < timespan_t::zero() && t->time_to_percent( 0.0 ) < -sim.bloodlust_time ) ||
-         ( sim.bloodlust_time >= timespan_t::zero() && sim.current_time() >= sim.bloodlust_time ) )
-    {
-      if ( !sim.single_actor_batch )
-      {
-        // use indices since it's possible to spawn new actors when bloodlust is triggered
-        for ( size_t i = 0; i < sim.player_non_sleeping_list.size(); i++ )
-        {
-          auto* p = sim.player_non_sleeping_list[ i ];
-          if ( p->is_pet() || p->buffs.exhaustion->check() )
-            continue;
-
-          p->buffs.bloodlust->trigger();
-          p->buffs.exhaustion->trigger();
-        }
-      }
-      else
-      {
-        auto p = sim.player_no_pet_list[ sim.current_index ];
-        if ( p )
-        {
-          p->buffs.bloodlust->trigger();
-          p->buffs.exhaustion->trigger();
-        }
-      }
-    }
-    else
-    {
-      make_event<bloodlust_check_t>( sim, sim );
-    }
-  }
-};
-
 struct heartbeat_event_t : public event_t
 {
   heartbeat_event_t( sim_t& s, timespan_t t ) : event_t( s, t ) {}
@@ -1939,11 +1889,6 @@ void sim_t::combat_begin()
   if ( requires_regen_event )
     make_event<regen_event_t>( *this, *this );
 
-  if ( overrides.bloodlust )
-  {
-    make_event<bloodlust_check_t>( *this, *this, timespan_t::from_seconds( 0.0 ) );
-  }
-
   if ( fixed_time || ( target -> resources.base[ RESOURCE_HEALTH ] == 0 ) )
   {
     make_event<sim_end_event_t>( *this, *this, expected_iteration_time );
@@ -2583,10 +2528,6 @@ void sim_t::init_actor( player_t* p )
 
     // Initialize each actor's items, construct gear information & stats
     p->init_items();
-
-    // Must be done after init_items (processes item options, so we know selected azerite powers in
-    // each item), and before init_spells (class modules "find_azerite_spell" in these).
-    p->init_azerite();
 
     // Main spell looksup. Populate class/spec/hero talents & spells.
     p->init_spells();
@@ -4644,24 +4585,6 @@ void sim_t::activate_actors()
       progress_bar.set_phase( player_no_pet_list[ current_index ] -> name_str );
     }
   }
-
-  if ( overrides.hunters_mark )
-    target_non_sleeping_list.register_callback( [ this ]( player_t* ) {
-      player_t* new_mark = nullptr;
-      for (size_t i = 0; i < target_non_sleeping_list.size(); i++)
-      {
-        player_t* t = target_non_sleeping_list[ i ];
-        if ( !t->debuffs.hunters_mark )
-          continue;
-
-        if ( !new_mark )
-          new_mark = t;
-        else
-          t->debuffs.hunters_mark->expire();
-      }
-      if ( new_mark )
-        new_mark->debuffs.hunters_mark->trigger();
-    } );
 
   progress_bar.progress();
 

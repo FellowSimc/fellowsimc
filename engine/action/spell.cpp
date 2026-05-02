@@ -36,18 +36,12 @@ spell_base_t::spell_base_t( action_e at, util::string_view token, player_t* p, c
 
 double spell_base_t::cost() const
 {
-  if ( current_resource() == RESOURCE_MANA && player->buffs.chilled_clarity && player->buffs.chilled_clarity->check() )
-    return 0;
-
   return action_t::cost();
 }
 
 double spell_base_t::execute_time_pct_multiplier() const
 {
   auto mul = action_t::execute_time_pct_multiplier() * composite_haste();
-
-  if ( player->buffs.chilled_clarity )
-    mul *= 1.0 - player->buffs.chilled_clarity->check_value();
 
   return mul;
 }

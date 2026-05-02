@@ -14,7 +14,6 @@
 #include "dbc/sc_spell_info.hpp"
 #include "player/action_priority_list.hpp"
 #include "player/actor_target_data.hpp"
-#include "player/covenant.hpp"
 #include "player/expansion_effects.hpp"  // try to implement leyshocks_grand_compilation as a callback
 #include "player/pet.hpp"
 #include "player/player.hpp"
@@ -1192,12 +1191,6 @@ double action_t::cost_flat_modifier() const
 
 double action_t::cost_pct_multiplier() const
 {
-  if ( player->buffs.courageous_primal_diamond_lucidity && current_resource() == RESOURCE_MANA &&
-       player->buffs.courageous_primal_diamond_lucidity->check() )
-  {
-    return 0.0;
-  }
-
   return 1.0;
 }
 
@@ -2362,9 +2355,6 @@ void action_t::update_ready( timespan_t cd_duration /* = timespan_t::min() */ )
 
 bool action_t::usable_moving() const
 {
-  if ( player->buffs.norgannons_sagacity && player->buffs.norgannons_sagacity->check() )
-    return true;
-
   if ( execute_time() > 0_ms )
     return false;
 
@@ -6010,32 +6000,6 @@ void action_t::apply_affecting_effect( const spelleffect_data_t& effect, const s
 
   if ( value_ )
     affecting_list.emplace_back( &effect, value_ );
-}
-
-void action_t::apply_affecting_conduit( const conduit_data_t& conduit, int effect_num )
-{
-  assert( effect_num == -1 || effect_num > 0 );
-
-  if ( !conduit.ok() )
-    return;
-
-  for ( size_t i = 1; i <= conduit->effect_count(); i++ )
-  {
-    if ( effect_num == -1 || as<size_t>( effect_num ) == i )
-      apply_affecting_conduit_effect( conduit, i );
-    else
-      apply_affecting_effect( conduit->effectN( i ) );
-  }
-}
-
-void action_t::apply_affecting_conduit_effect( const conduit_data_t& conduit, size_t effect_num )
-{
-  if ( !conduit.ok() )
-    return;
-
-  spelleffect_data_t effect = conduit->effectN( effect_num );
-  effect._base_value = conduit.value();
-  apply_affecting_effect( effect );
 }
 
 void action_t::execute_on_target( player_t* t, double amount )

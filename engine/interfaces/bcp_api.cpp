@@ -13,8 +13,6 @@
 #include "interfaces/sc_http.hpp"
 #include "interfaces/sc_js.hpp"
 #include "item/item.hpp"
-#include "player/azerite_data.hpp"
-#include "player/covenant.hpp"
 #include "player/player.hpp"
 #include "player/player_talent_points.hpp"
 #include "sc_enums.hpp"
@@ -609,8 +607,6 @@ void parse_items( player_t* p, const player_spec_t& spec, const std::string& url
       }
     }
 
-    azerite::parse_blizzard_azerite_information( item, slot_data );
-
     auto it = __ILEVEL_OVERRIDE_MAP.find( item.parsed.data.id );
     if ( it != __ILEVEL_OVERRIDE_MAP.end() )
     {
@@ -658,8 +654,6 @@ void parse_soulbinds( player_t*            p,
         spec.local_json_soulbinds ) ) );
     }
   }
-
-  covenant::parse_blizzard_covenant_information( p, soulbinds_data );
 }
 
 void parse_media( player_t*            p,

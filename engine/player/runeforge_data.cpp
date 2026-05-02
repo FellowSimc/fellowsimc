@@ -2,7 +2,6 @@
 
 #include "item/item.hpp"
 #include "player/player.hpp"
-#include "player/covenant.hpp"
 #include "dbc/dbc.hpp"
 #include "dbc/spell_data.hpp"
 
@@ -108,18 +107,6 @@ std::unique_ptr<expr_t> create_expression( const player_t* player,
     return nullptr;
   }
 
-  const auto runeforge = player->find_runeforge_legendary( expr_str[ 1 ], true );
-  if ( runeforge == item_runeforge_t::nil() )
-  {
-    throw std::invalid_argument(
-        fmt::format( "Unknown runeforge legendary name '{}'", expr_str[ 1 ] ) );
-  }
-
-  if ( expr_str.size() == 2 || ( expr_str.size() == 3 && util::str_compare_ci( expr_str[ 2 ], "equipped" ) ) )
-  {
-    return expr_t::create_constant( full_expression_str, runeforge->ok() );
-  }
-
   throw std::invalid_argument(
         fmt::format( "Invalid runeforge legendary expression '{}', allowed values are 'equipped'.",
           expr_str[ 2 ] ) );
@@ -136,14 +123,6 @@ report::sc_html_stream& generate_report( const player_t& player, report::sc_html
     if ( s_data->ok() )
     {
       auto html_str = report_decorators::decorated_spell_data( *player.sim, s_data );
-      if ( util::str_compare_ci( entry.name, "Unity" ) )
-      {
-        auto cov = player.covenant->type();
-        if ( cov != covenant_e::DISABLED && cov != covenant_e::INVALID )
-        {
-          html_str.insert( html_str.find( "\">" ), "?covenant=" + std::to_string( static_cast<unsigned>( cov ) ) );
-        }
-      }
       legendary_str +=
           fmt::format( "<li class=\"nowrap\">{} ({})</li>\n", report_decorators::decorated_item( item ), html_str );
       return true;

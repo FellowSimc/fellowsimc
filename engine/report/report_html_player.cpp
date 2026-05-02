@@ -8,7 +8,6 @@
 #include "dbc/temporary_enchant.hpp"
 #include "dbc/trait_data.hpp"
 #include "player/consumable.hpp"
-#include "player/covenant.hpp"
 #include "player/player_talent_points.hpp"
 #include "player/scaling_metric_data.hpp"
 #include "player/set_bonus.hpp"
@@ -1279,66 +1278,6 @@ void print_html_gear( report::sc_html_stream& os, const player_t& p )
       item_sim_desc += " }";
     }
 
-    if ( !item.parsed.azerite_ids.empty() )
-    {
-      std::stringstream s;
-      for ( size_t i = 0; i < item.parsed.azerite_ids.size(); ++i )
-      {
-        const auto& power = item.player -> dbc->azerite_power( item.parsed.azerite_ids[ i ] );
-        if ( power.id == 0 || ! item.player -> azerite -> is_enabled( power.id ) )
-        {
-          continue;
-        }
-
-        const auto spell = item.player -> find_spell( power.spell_id );
-
-        s << report_decorators::decorated_spell_data_item(*item.sim, spell, item);
-
-        if ( i < item.parsed.azerite_ids.size() - 1 )
-        {
-          s << ", ";
-        }
-      }
-
-      if ( ! s.str().empty() )
-      {
-        item_sim_desc += "<br/>";
-        item_sim_desc += "azerite powers: { ";
-        item_sim_desc += s.str();
-        item_sim_desc += " }";
-      }
-    }
-
-    if ( item.parsed.data.id == 158075 )
-    {
-      std::stringstream s;
-      s << "level: " << item.parsed.azerite_level;
-
-      if ( item.player->azerite_essence )
-      {
-        std::stringstream s2;
-        auto spell_list = item.player->azerite_essence->enabled_essences();
-
-        for ( size_t i = 0; i < spell_list.size(); ++i )
-        {
-          const auto spell = item.player->find_spell( spell_list[ i ] );
-
-          s2 << report_decorators::decorated_spell_data_item(*item.sim, spell, item);
-
-          if ( i < spell_list.size() - 1 )
-            s2 << ", ";
-        }
-
-        if ( !s2.str().empty() )
-          s << ", azerite essences: { " << s2.str() << " }";
-      }
-
-      if ( !s.str().empty() )
-      {
-        item_sim_desc += "<br/>";
-        item_sim_desc += s.str();
-      }
-    }
 
     // Handle items with special effect gems
     if ( !item.parsed.gem_color.empty() )
@@ -2652,9 +2591,6 @@ std::string find_matching_decorator( const player_t& p, std::string_view n )
   if ( !spell->ok() ) spell = p.find_specialization_spell( n_token );
   if ( !spell->ok() ) spell = p.find_class_spell( n );
   if ( !spell->ok() ) spell = p.find_class_spell( n_token );
-  if ( !spell->ok() ) spell = p.find_runeforge_legendary( n );
-  if ( !spell->ok() ) spell = p.find_conduit_spell( n );
-  if ( !spell->ok() ) spell = p.find_conduit_spell( n_token );
   if ( spell->ok() )
     return report_decorators::decorated_spell_data( *p.sim, spell );
 
@@ -3734,12 +3670,6 @@ void print_html_player_description( report::sc_html_stream& os, const player_t& 
              util::encode_html( p.position_str ).c_str(),
              util::profile_source_string( p.profile_source_ ) );
 
-  if ( p.covenant && p.covenant->enabled() )
-  {
-    os.format( "<li><b>Covenant:</b> {}</li>\n",
-               util::inverse_tokenize( util::covenant_type_string( p.covenant->type() ) ) );
-  }
-
   os.format("</ul>\n");
 
   if ( !p.report_information.thumbnail_url.empty() )
@@ -3955,30 +3885,6 @@ void print_html_player_results_spec_gear( report::sc_html_stream& os, const play
         os << "</ul></td></tr>\n";
       }
     }
-
-    // Essence
-    if ( p.azerite_essence )
-    {
-      p.azerite_essence->generate_report( os );
-    }
-
-    // Azerite
-    if ( p.azerite )
-    {
-      p.azerite->generate_report( os );
-    }
-
-    // Covenant, Soulbinds, and Conduits
-    if ( p.covenant && p.covenant->enabled() )
-    {
-      p.covenant->generate_report( os );
-    }
-
-    // Runeforge Legendaries
-    runeforge::generate_report( p, os );
-
-    // Shards of Domination (9.1)
-    unique_gear::shadowlands::items::shards_of_domination::generate_report( p, os );
 
     // Professions
     if ( !p.professions_str.empty() )

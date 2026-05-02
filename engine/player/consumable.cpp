@@ -361,21 +361,6 @@ struct flask_base_t : public dbc_consumable_base_t
 
     if ( !consumable_buff )
       return;
-
-    // Apply modifiers on the buff stats. Note, presumes that there's a single flask APL line in the profile or bad
-    // things will happen, but that's a relatively good presumption.
-    if ( auto buff = dynamic_cast<stat_buff_t*>( consumable_buff ) )
-    {
-      double mul = 1.0;
-
-      auto ep = player->find_soulbind_spell( "Exacting Preparation" );
-      if ( ep->ok() )
-        mul *= 1.0 + ep->effectN( 1 ).percent();  // While all effects have the same value, effect#1 applies to flasks
-
-      range::for_each( buff->stats, [ mul ]( stat_buff_t::buff_stat_t& s ) {
-        s.amount *= mul;
-      } );
-    }
   }
 
   bool ready() override
@@ -445,13 +430,6 @@ struct potion_t : public dbc_consumable_base_t
     add_option( opt_timespan( "pre_pot_time", pre_pot_time ) );
     add_option( opt_bool( "dynamic_prepot", dynamic_prepot ) );
     parse_options( options_str );
-
-    auto refined = p->find_soulbind_spell( "Refined Palate" );
-    if ( refined->ok() )
-    {
-      dur_mod_low = refined->effectN( 1 ).percent();
-      dur_mod_high = refined->effectN( 2 ).percent();
-    }
 
     type = ITEM_SUBCLASS_POTION;
     cooldown = player->get_cooldown( "potion" );
@@ -773,25 +751,6 @@ struct food_t : public dbc_consumable_base_t
 
     if ( !consumable_buff )
       return;
-
-    // Apply modifiers on the buff stats. Note, presumes that there's a single food APL line in the profile or bad
-    // things will happen, but that's a relatively good presumption.
-    if ( auto buff = dynamic_cast<stat_buff_t*>( consumable_buff ) )
-    {
-      double mul = 1.0;
-
-      if ( is_pandaren( player->race ) )
-        mul *= 2.0;
-
-      // TODO: confirm if these two modifiers are multiplicative or additive
-      auto ep = player->find_soulbind_spell( "Exacting Preparation" );
-      if ( ep->ok() )
-        mul *= 1.0 + ep->effectN( 2 ).percent();  // While all effects have the same value, effect#2 applies to well fed
-
-      range::for_each( buff->stats, [ mul ]( stat_buff_t::buff_stat_t& s ) {
-        s.amount *= mul;
-      } );
-    }
   }
 
   bool ready() override

@@ -4,19 +4,14 @@
 // ==========================================================================
 
 #include "dbc.hpp"
-#include "dbc/item_runeforge.hpp"
 #include "dbc/trait_data.hpp"
 #include "specialization_spell.hpp"
 #include "active_spells.hpp"
-#include "covenant_data.hpp"
 #include "mastery_spells.hpp"
 #include "racial_spells.hpp"
 #include "sim/expressions.hpp"
-#include "azerite.hpp"
 #include "spell_query/spell_data_expr.hpp"
 #include "sim/sim.hpp"
-#include "player/covenant.hpp"
-#include "player/runeforge_data.hpp"
 #include "util/util.hpp"
 
 #include <unordered_set>
@@ -156,26 +151,6 @@ static const char* spell_desc_vars( const dbc_t& dbc, const spell_data_t& data )
   return dbc.spell_desc_vars( data.id() ).desc_vars();
 }
 
-static const char* spell_covenant_id( const dbc_t& dbc, const spell_data_t& data ) {
-  const auto& covenant_entry = covenant_ability_entry_t::find( data.name_cstr(), dbc.ptr );
-  if ( covenant_entry.spell_id && covenant_entry.spell_id == data.id() )
-    return util::covenant_type_string( static_cast<covenant_e>( covenant_entry.covenant_id ) );
-
-  const auto& soulbind_entry = soulbind_ability_entry_t::find( data.id(), dbc.ptr );
-  if ( soulbind_entry.spell_id && soulbind_entry.spell_id == data.id() )
-    return util::covenant_type_string( static_cast<covenant_e>( soulbind_entry.covenant_id ) );
-
-  return "";
-}
-
-static unsigned spell_conduit_id( const dbc_t& dbc, const spell_data_t& data ) {
-  const auto& conduit_entry = conduit_entry_t::find_by_spellid( data.id(), dbc.ptr );
-  if ( conduit_entry.spell_id && conduit_entry.spell_id == data.id() )
-    return conduit_entry.id;
-
-  return 0;
-}
-
 static constexpr std::array<sdata_field_t, 43> _spell_data_fields { {
   { "name",              nontype< &spell_data_t::_name > },
   { "id",                nontype< &spell_data_t::_id > },
@@ -217,9 +192,7 @@ static constexpr std::array<sdata_field_t, 43> _spell_data_fields { {
   { "desc_vars",         nontype< spell_desc_vars > },
   { "max_aura_level",    nontype< &spell_data_t::_max_aura_level > },
   { "dmg_class",         nontype< &spell_data_t::_dmg_class > },
-  { "max_targets",       nontype< &spell_data_t::_max_targets > },
-  { "covenant",          nontype< spell_covenant_id > },
-  { "conduit_id",        nontype< spell_conduit_id > },
+  { "max_targets",       nontype< &spell_data_t::_max_targets > }
 } };
 
 struct class_info_t {
@@ -488,41 +461,6 @@ struct spell_list_expr_t : public spell_data_expr_t
         } );
         break;
       }
-      case DATA_AZERITE_SPELL:
-      {
-        for ( const auto& p : azerite_power_entry_t::data( dbc.ptr ) )
-        {
-          if ( range::find( result_spell_list, p.spell_id ) == result_spell_list.end() )
-          {
-            result_spell_list.push_back( p.spell_id );
-          }
-        }
-        break;
-      }
-      case DATA_COVENANT_SPELL:
-        range::for_each( covenant_ability_entry_t::data( dbc.ptr ),
-            [this]( const covenant_ability_entry_t& e ) {
-              result_spell_list.push_back( e.spell_id );
-        } );
-        break;
-      case DATA_SOULBIND_SPELL:
-        range::for_each( soulbind_ability_entry_t::data( dbc.ptr ),
-            [this]( const soulbind_ability_entry_t& e ) {
-              result_spell_list.push_back( e.spell_id );
-        } );
-        break;
-      case DATA_CONDUIT_SPELL:
-        range::for_each( conduit_entry_t::data( dbc.ptr ),
-            [this]( const conduit_entry_t& e ) {
-              result_spell_list.push_back( e.spell_id );
-        } );
-        break;
-      case DATA_RUNEFORGE_SPELL:
-        range::for_each( runeforge_legendary_entry_t::data( dbc.ptr ),
-            [this]( const runeforge_legendary_entry_t& e ) {
-              result_spell_list.push_back( e.spell_id );
-        } );
-        break;
       default:
         return expression::TOK_UNKNOWN;
     }
@@ -841,27 +779,6 @@ struct spell_class_expr_t : public spell_list_expr_t
   // returns true for spells that should check spell class family
   bool check_spell_class_family( const spell_data_t& spell ) const
   {
-    auto check_spell = []( unsigned spell_id, bool ptr ) {
-      // conduit spells are safe to match by spell family
-      const auto& conduit = conduit_entry_t::find_by_spellid( spell_id, ptr );
-      if ( conduit.spell_id && conduit.spell_id == spell_id )
-        return true;
-
-      // legendary spells are safe to match by spell family
-      const auto legendary = runeforge_legendary_entry_t::find_by_spellid( spell_id, ptr );
-      return !legendary.empty();
-    };
-
-    if ( check_spell( spell.id(), dbc.ptr ) )
-      return true;
-
-    // Also sub-spells of eligible drivers, only search one level deep
-    for ( auto driver_spell : spell.drivers() )
-    {
-      if ( check_spell( driver_spell->id(), dbc.ptr ) )
-        return true;
-    }
-
     return false;
   }
 

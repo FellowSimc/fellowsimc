@@ -108,40 +108,12 @@ double pet_t::composite_player_multiplier( school_e school ) const
 {
   double m = player_t::composite_player_multiplier( school );
 
-  if ( owner -> buffs.legendary_aoe_ring && owner -> buffs.legendary_aoe_ring -> check() )
-    m *= 1.0 + owner -> buffs.legendary_aoe_ring -> default_value;
-
   return m;
 }
 
 double pet_t::composite_player_target_multiplier( player_t* t, school_e school ) const
 {
   double m = player_t::composite_player_target_multiplier( t, school );
-
-  // Same logic as in player_t::composite_player_target_multiplier() above
-  // As the Covenant buff isn't created on pets, we need to check the owner
-  // Testing shows this appears to work on all pets, even trinkets and such
-  if ( owner->buffs.wild_hunt_tactics )
-  {
-    double health_threshold = 100.0 - ( 100.0 - owner->buffs.wild_hunt_tactics->data().effectN( 5 ).base_value() ) *
-                                        sim->shadowlands_opts.wild_hunt_tactics_duration_multiplier;
-
-    if ( t->health_percentage() > health_threshold )
-      m *= 1.0 + owner->buffs.wild_hunt_tactics->default_value;
-  }
-
-  if ( auto td = owner->find_target_data( t ) )
-  {
-    m *= 1.0 + td->debuff.condensed_lifeforce->check_value();
-    m *= 1 + td->debuff.adversary->check_value();
-    m *= 1 + td->debuff.plagueys_preemptive_strike->check_value();
-    m *= 1 + td->debuff.soulglow_spectrometer->check_stack_value();
-    m *= 1.0 + td->debuff.scouring_touch->check_stack_value();
-    m *= 1.0 + td->debuff.exsanguinated->check_value();
-    m *= 1.0 + td->debuff.kevins_wrath->check_value();
-    m *= 1.0 + td->debuff.wild_hunt_strategem->check_value();
-    m *= 1.0 + td->debuff.dream_delver->check_stack_value();
-  }
 
   return m;
 }
@@ -338,10 +310,6 @@ void pet_t::create_buffs()
       } );
 
     buffs.movement = new movement_buff_t( this );
-
-    // Blood of the Enemy Essence Major R3 increase crit damage buff
-    buffs.seething_rage_essence = make_buff( this, "seething_rage_essence", find_spell( 297126 ) )
-      ->set_default_value( find_spell( 297126 )->effectN( 1 ).percent() );
 
     debuffs.casting = make_buff( this, "casting" )
       ->set_max_stack( 1 )

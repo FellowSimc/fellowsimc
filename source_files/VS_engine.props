@@ -25,11 +25,9 @@ To change the list of source files run synchronize.py
 		<ClInclude Include="..\engine\config.hpp" />
 		<ClInclude Include="..\engine\dbc\active_spells.hpp" />
 		<ClInclude Include="..\engine\dbc\assisted_combat.hpp" />
-		<ClInclude Include="..\engine\dbc\azerite.hpp" />
 		<ClInclude Include="..\engine\dbc\character_loadout.hpp" />
 		<ClInclude Include="..\engine\dbc\client_data.hpp" />
 		<ClInclude Include="..\engine\dbc\client_hotfix_entry.hpp" />
-		<ClInclude Include="..\engine\dbc\covenant_data.hpp" />
 		<ClInclude Include="..\engine\dbc\data_definitions.hh" />
 		<ClInclude Include="..\engine\dbc\data_enums.hh" />
 		<ClInclude Include="..\engine\dbc\dbc.hpp" />
@@ -89,9 +87,7 @@ To change the list of source files run synchronize.py
 		<ClInclude Include="..\engine\player\actor_pair.hpp" />
 		<ClInclude Include="..\engine\player\actor_target_data.hpp" />
 		<ClInclude Include="..\engine\player\assessor.hpp" />
-		<ClInclude Include="..\engine\player\azerite_data.hpp" />
 		<ClInclude Include="..\engine\player\consumable.hpp" />
-		<ClInclude Include="..\engine\player\covenant.hpp" />
 		<ClInclude Include="..\engine\player\darkmoon_deck.hpp" />
 		<ClInclude Include="..\engine\player\effect_callbacks.hpp" />
 		<ClInclude Include="..\engine\player\expansion_effects.hpp" />
@@ -115,7 +111,6 @@ To change the list of source files run synchronize.py
 		<ClInclude Include="..\engine\player\sample_data_helper.hpp" />
 		<ClInclude Include="..\engine\player\scaling_metric_data.hpp" />
 		<ClInclude Include="..\engine\player\set_bonus.hpp" />
-		<ClInclude Include="..\engine\player\soulbinds.hpp" />
 		<ClInclude Include="..\engine\player\spawner_base.hpp" />
 		<ClInclude Include="..\engine\player\special_effect_db_item.hpp" />
 		<ClInclude Include="..\engine\player\stats.hpp" />
@@ -204,11 +199,9 @@ To change the list of source files run synchronize.py
 		<ClCompile Include="..\engine\class_modules\sc_enemy.cpp" />
 		<ClCompile Include="..\engine\dbc\active_spells.cpp" />
 		<ClCompile Include="..\engine\dbc\assisted_combat.cpp" />
-		<ClCompile Include="..\engine\dbc\azerite.cpp" />
 		<ClCompile Include="..\engine\dbc\character_loadout.cpp" />
 		<ClCompile Include="..\engine\dbc\client_data.cpp" />
 		<ClCompile Include="..\engine\dbc\client_hotfix_entry.cpp" />
-		<ClCompile Include="..\engine\dbc\covenant_data.cpp" />
 		<ClCompile Include="..\engine\dbc\embellishment_data.cpp" />
 		<ClCompile Include="..\engine\dbc\expected_stat.cpp" />
 		<ClCompile Include="..\engine\dbc\gem_data.cpp" />
@@ -258,9 +251,7 @@ To change the list of source files run synchronize.py
 		<ClCompile Include="..\engine\player\action_variable.cpp" />
 		<ClCompile Include="..\engine\player\actor.cpp" />
 		<ClCompile Include="..\engine\player\actor_target_data.cpp" />
-		<ClCompile Include="..\engine\player\azerite_data.cpp" />
 		<ClCompile Include="..\engine\player\consumable.cpp" />
-		<ClCompile Include="..\engine\player\covenant.cpp" />
 		<ClCompile Include="..\engine\player\darkmoon_deck.cpp" />
 		<ClCompile Include="..\engine\player\effect_callbacks.cpp" />
 		<ClCompile Include="..\engine\player\ground_aoe.cpp" />
@@ -273,7 +264,6 @@ To change the list of source files run synchronize.py
 		<ClCompile Include="..\engine\player\rating.cpp" />
 		<ClCompile Include="..\engine\player\runeforge_data.cpp" />
 		<ClCompile Include="..\engine\player\set_bonus.cpp" />
-		<ClCompile Include="..\engine\player\soulbinds.cpp" />
 		<ClCompile Include="..\engine\player\spawner_base.cpp" />
 		<ClCompile Include="..\engine\player\talent.cpp" />
 		<ClCompile Include="..\engine\player\target_specific.cpp" />

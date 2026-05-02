@@ -570,10 +570,6 @@ struct player_t : public actor_t
     buff_t* rallying_cry; // Warrior spell
 
     // 9.0 class covenant buffs
-    buff_t* blessing_of_summer; // Night Fae Paladin spell
-    buff_t* blessing_of_autumn; // Night Fae Paladin spell
-    buff_t* blessing_of_winter; // Night Fae Paladin spell
-    buff_t* blessing_of_spring; // Night Fae Paladin spell
     buff_t* conquerors_banner; // Necrolord Warrior spell
 
     // 9.0 Soulbinds

@@ -5694,9 +5694,6 @@ double player_t::composite_player_heal_multiplier( const action_state_t* ) const
 
   m *= 1.0 + racials.holy_providence->effectN( 2 ).percent();
 
-  if ( buffs.blessing_of_spring->check() )
-    m *= 1.0 + buffs.blessing_of_spring->data().effectN( 1 ).percent();
-
   if ( buffs.entropic_embrace && buffs.entropic_embrace->check() )
     m *= 1.0 + buffs.entropic_embrace->data().effectN( 3 ).percent();
 
@@ -6304,13 +6301,6 @@ void player_t::combat_begin()
                                                                   timespan_t duration = timespan_t::min() ) {
     add_timed_buff_triggers( times, buff, duration );
   };
-
-  timespan_t summer_duration =
-    buffs.blessing_of_summer->buff_duration() * ( 1.0 + external_buffs.blessing_of_summer_duration_multiplier );
-  add_timed_blessing_triggers( external_buffs.blessing_of_summer, buffs.blessing_of_summer, summer_duration );
-  add_timed_blessing_triggers( external_buffs.blessing_of_autumn, buffs.blessing_of_autumn );
-  add_timed_blessing_triggers( external_buffs.blessing_of_winter, buffs.blessing_of_winter );
-  add_timed_blessing_triggers( external_buffs.blessing_of_spring, buffs.blessing_of_spring );
 
   // Trigger registered combat-begin functions
   for ( const auto& f : combat_begin_functions)
@@ -8280,25 +8270,25 @@ void account_parry_haste( player_t& p, action_state_t* s )
 
 void account_blessing_of_sacrifice( player_t& p, action_state_t* s )
 {
-  if ( p.buffs.blessing_of_sacrifice->check() )
-  {
-    // figure out how much damage gets redirected
-    double redirected_damage = s->result_amount * ( p.buffs.blessing_of_sacrifice->data().effectN( 1 ).percent() );
+  //if ( p.buffs.blessing_of_sacrifice->check() )
+  //{
+  //  // figure out how much damage gets redirected
+  //  double redirected_damage = s->result_amount * ( p.buffs.blessing_of_sacrifice->data().effectN( 1 ).percent() );
 
-    // apply that damage to the source paladin
-    double chance = p.buffs.blessing_of_sacrifice->default_chance;
-    if ( chance < 0 )
-      chance = s->action->ppm_proc_chance( -chance );
+  //  // apply that damage to the source paladin
+  //  double chance = p.buffs.blessing_of_sacrifice->default_chance;
+  //  if ( chance < 0 )
+  //    chance = s->action->ppm_proc_chance( -chance );
 
-    p.buffs.blessing_of_sacrifice->trigger( 0, redirected_damage, chance, 0_ms );
+  //  p.buffs.blessing_of_sacrifice->trigger( 0, redirected_damage, chance, 0_ms );
 
-    // mitigate that amount from the target.
-    // Slight inaccuracy: We do not get a feedback of paladin health buffer expiration here.
-    s->result_amount -= redirected_damage;
+  //  // mitigate that amount from the target.
+  //  // Slight inaccuracy: We do not get a feedback of paladin health buffer expiration here.
+  //  s->result_amount -= redirected_damage;
 
-    if ( p.sim->debug && s->action && !s->target->is_enemy() && !s->target->is_add() )
-      p.sim->out_debug.printf( "Damage to %s after Blessing of Sacrifice is %f", s->target->name(), s->result_amount );
-  }
+  //  if ( p.sim->debug && s->action && !s->target->is_enemy() && !s->target->is_add() )
+  //    p.sim->out_debug.printf( "Damage to %s after Blessing of Sacrifice is %f", s->target->name(), s->result_amount );
+  //}
 }
 
 bool absorb_sort( absorb_buff_t* a, absorb_buff_t* b )
@@ -8686,9 +8676,6 @@ void player_t::assess_heal( school_e, result_amount_type, action_state_t* s )
   // and other effects based on raw healing.
   if ( buffs.guardian_spirit->up() )
     s->result_total *= 1.0 + buffs.guardian_spirit->data().effectN( 1 ).percent();
-
-  if ( buffs.blessing_of_spring->up() )
-    s->result_total *= 1.0 + buffs.blessing_of_spring->data().effectN( 2 ).percent();
 
   s->result_total *= composite_player_healing_received_multiplier();
 

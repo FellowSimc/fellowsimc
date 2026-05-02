@@ -6,8 +6,10 @@
 #pragma once
 
 #include "config.hpp"
+
 #include <cassert>
 #include <cstdint>
+#include <string_view>
 
 // Enumerations =============================================================
 // annex _e to enumerations
@@ -24,22 +26,231 @@ enum gem_type_e : unsigned
   GEM_MAX
 };
 
+constexpr std::string_view gem_type_lower( gem_type_e t )
+{
+  switch ( t )
+  {
+    case GEM_RUBY:
+      return "ruby";
+    case GEM_AMETHYST:
+      return "amethyst";
+    case GEM_TOPAZ:
+      return "topaz";
+    case GEM_EMERALD:
+      return "emerald";
+    case GEM_SAPPHIRE:
+      return "sapphire";
+    case GEM_DIAMOND:
+      return "diamond";
+    default:
+      assert( false );
+      return "unknown";
+  }
+}
+
+struct enum_data_t
+{
+  long long enum_id;
+  std::string_view lower_string;
+  std::string_view pretty_string;
+};
+
+#define WEAPON_TRAIT_LIST( X )                                                         \
+  X( AMETHYST_SPLINTERS, amethyst_splinters, "Amethyst Splinters" )                    \
+  X( BRAVE_MACHINATIONS, brave_machinations, "Brave Machinations" )                    \
+  X( DIAMOND_STRIKE, diamond_strike, "Diamond Strike" )                                \
+  X( DIVINE_MEDIATION, divine_mediation, "Divine Mediation" )                          \
+  X( EMERALD_JUDGEMENT, emerald_judgement, "Emerald Judgement" )                       \
+  X( FIRST_MAN_STANDING, first_man_standing, "First Man Standing" )                    \
+  X( GROUNDED_SPIRIT, grounded_spirit, "Grounded Spirit" )                             \
+  X( HEART_OF_STONE, heart_of_stone, "Heart of Stone" )                                \
+  X( HEROIC_BRAND, heroic_brand, "Heroic Brand" )                                      \
+  X( HIDDEN_POWER, hidden_power, "Hidden Power" )                                      \
+  X( HUNTERS_FOCUS, hunters_focus, "Hunter's Focus" )                                  \
+  X( INSPIRED_ALLEGIANCE, inspired_allegiance, "Inspired Allegiance" )                 \
+  X( IRON_SPIKES, iron_spikes, "Iron Spikes" )                                         \
+  X( KINDLING, kindling, "Kindling" )                                                  \
+  X( KING_OF_THE_HILL, king_of_the_hill, "King of the Hill" )                          \
+  X( LATENT_RESURGENCE, latent_resurgence, "Latent Resurgence" )                       \
+  X( MARTIAL_INITIATIVE, martial_initiative, "Martial Initiative" )                    \
+  X( NAVIGATORS_INTUITION, navigators_intuition, "Navigator's Intuition" )             \
+  X( PATIENT_SOUL, patient_soul, "Patient Soul" )                                      \
+  X( RUBY_STORM, ruby_storm, "Ruby Storm" )                                            \
+  X( SAPPHIRE_AURASTONE, sapphire_aurastone, "Sapphire Aurastone" )                    \
+  X( SEIZED_OPPORTUNITY, seized_opportunity, "Seized Opportunity" )                    \
+  X( STALWART_READINESS, stalwart_readiness, "Stalwart Readiness" )                    \
+  X( TREASURE_HUNTERS_DELIGHT, treasure_hunters_delight, "Treasure Hunter's Delight" ) \
+  X( VENGEFUL_SOUL, vengeful_soul, "Vengeful Soul" )                                   \
+  X( VISIONS_OF_GRANDEUR, visions_of_grandeur, "Visions of Grandeur" )                 \
+  X( WILLFUL_MOMENTUM, willful_momentum, "Willful Momentum" )
+
+enum weapon_trait_e : unsigned
+{
+  WEAPON_TRAIT_NONE = 0,
+
+#define X( UPPER, lower, pretty ) WEAPON_TRAIT_##UPPER,
+  WEAPON_TRAIT_LIST( X )
+#undef X
+
+      WEAPON_TRAIT_MAX
+};
+
+static constexpr enum_data_t WEAPON_TRAITS[] = {
+#define X( upper, lower, pretty ) { weapon_trait_e::WEAPON_TRAIT_##upper, #lower, pretty },
+    WEAPON_TRAIT_LIST( X )
+#undef X
+};
+
+constexpr std::string_view weapon_trait_lower( weapon_trait_e t )
+{
+  if ( t == weapon_trait_e::WEAPON_TRAIT_NONE || t >= weapon_trait_e::WEAPON_TRAIT_MAX )
+    return "unknown";
+
+  return WEAPON_TRAITS[ t - 1 ].lower_string;
+}
+
+constexpr std::string_view weapon_trait_pretty( weapon_trait_e t )
+{
+  if ( t == weapon_trait_e::WEAPON_TRAIT_NONE || t >= weapon_trait_e::WEAPON_TRAIT_MAX )
+    return "Unknown";
+
+  return WEAPON_TRAITS[ t - 1 ].pretty_string;
+}
+
+constexpr weapon_trait_e weapon_trait_pretty( std::string_view trait )
+{
+  for ( const auto& talent : WEAPON_TRAITS )
+    if ( talent.lower_string == trait )
+      return static_cast<weapon_trait_e>( talent.enum_id );
+
+  return weapon_trait_e::WEAPON_TRAIT_NONE;
+}
+
+#define FINESSE_LIST( X )                                                                 \
+  X( FINESSE_A, finesse_a, "Finesse A" )                                                  \
+  X( FINESSE_B, finesse_b, "Finesse B" )                                                  \
+  X( FINESSE_C, finesse_c, "Finesse C" )                                                  \
+  X( FINESSE_D, finesse_d, "Finesse D" )                                                  \
+  X( FINESSE_E, finesse_e, "Finesse E" )                                                  \
+  X( FINESSE_F, finesse_f, "Finesse F" )                                                  \
+  X( FINESSE_G, finesse_g, "Finesse G" )                                                  \
+  X( FINESSE_H, finesse_h, "Finesse H" )                                                  \
+  X( FINESSE_I, finesse_i, "Finesse I" )                                                  \
+  X( FINESSE_J, finesse_j, "Finesse J" )                                                  \
+  X( FINESSE_K, finesse_k, "Finesse K" )                                                  \
+  X( FINESSE_L, finesse_l, "Finesse L" )                                                  \
+  X( FINESSE_M, finesse_m, "Finesse M" )                                                  \
+  X( FINESSE_N, finesse_n, "Finesse N" )                                                  \
+  X( FINESSE_O, finesse_o, "Finesse O" )                                                  \
+  X( FINESSE_P, finesse_p, "Finesse P" )                                                  \
+  X( FINESSE_Q, finesse_q, "Finesse Q" )                                                  \
+  X( FINESSE_R, finesse_r, "Finesse R" )                                                  \
+  X( FINESSE_S, finesse_s, "Finesse S" )                                                  \
+  X( FINESSE_T, finesse_t, "Finesse T" )                                                  \
+  X( FINESSE_CHARACTER_SPECIFIC_1, finesse_character_specific_1, "Character Specific 1" ) \
+  X( FINESSE_CHARACTER_SPECIFIC_2, finesse_character_specific_2, "Character Specific 2" ) \
+  X( FINESSE_CHARACTER_SPECIFIC_3, finesse_character_specific_3, "Character Specific 3" ) \
+  X( FINESSE_CHARACTER_SPECIFIC_4, finesse_character_specific_4, "Character Specific 4" ) \
+  X( FINESSE_CHARACTER_SPECIFIC_5, finesse_character_specific_5, "Character Specific 5" ) \
+  X( FINESSE_CHARACTER_SPECIFIC_6, finesse_character_specific_6, "Character Specific 6" ) \
+  X( FINESSE_CHARACTER_SPECIFIC_7, finesse_character_specific_7, "Character Specific 7" ) \
+  X( FINESSE_CHARACTER_SPECIFIC_8, finesse_character_specific_8, "Character Specific 8" )
+
+enum finesse_trait_e : unsigned
+{
+  FINESSE_NONE = 0,
+
+#define X( UPPER, lower, pretty ) FINESSE_##UPPER,
+  FINESSE_LIST( X )
+#undef X
+
+      FINESSE_MAX
+};
+
+static constexpr enum_data_t FINESSE_TRAITS[] = {
+#define X( upper, lower, pretty ) { finesse_trait_e::FINESSE_##upper, #lower, pretty },
+    FINESSE_LIST( X )
+#undef X
+};
+
+constexpr std::string_view finesse_trait_lower( finesse_trait_e t )
+{
+  if ( t == finesse_trait_e::FINESSE_NONE || t >= finesse_trait_e::FINESSE_MAX )
+    return "unknown";
+
+  return FINESSE_TRAITS[ t - 1 ].lower_string;
+}
+
+constexpr std::string_view finesse_trait_pretty( finesse_trait_e t )
+{
+  if ( t == finesse_trait_e::FINESSE_NONE || t >= finesse_trait_e::FINESSE_MAX )
+    return "Unknown";
+
+  return FINESSE_TRAITS[ t - 1 ].pretty_string;
+}
+
+constexpr finesse_trait_e finesse_trait_from_string( std::string_view trait )
+{
+  for ( const auto& entry : FINESSE_TRAITS )
+    if ( entry.lower_string == trait )
+      return static_cast<finesse_trait_e>( entry.enum_id );
+
+  return finesse_trait_e::FINESSE_NONE;
+}
+
+enum gear_affix_e : unsigned
+{
+  GEAR_AFFIX_NONE = 0,
+
+  GEAR_AFFIX_STAT_START,
+  GEAR_AFFIX_STAT_PRIMARY,
+  GEAR_AFFIX_STAT_STAMINA,
+  GEAR_AFFIX_STAT_HASTE,
+  GEAR_AFFIX_STAT_CRIT,
+  GEAR_AFFIX_STAT_EXPERTISE,
+  GEAR_AFFIX_STAT_SPIRIT,
+  GEAR_AFFIX_STAT_END,
+
+  GEAR_AFFIX_ATTUNEMENT_START,
+  GEAR_AFFIX_ATTUNEMENT_RUBY,
+  GEAR_AFFIX_ATTUNEMENT_AMETHYST,
+  GEAR_AFFIX_ATTUNEMENT_TOPAZ,
+  GEAR_AFFIX_ATTUNEMENT_EMERALD,
+  GEAR_AFFIX_ATTUNEMENT_SAPPHIRE,
+  GEAR_AFFIX_ATTUNEMENT_DIAMOND,
+  GEAR_AFFIX_ATTUNEMENT_END,
+
+  GEAR_AFFIX_TRAIT_START,
+#define X( UPPER, lower, pretty ) GEAR_AFFIX_TRAIT_##UPPER,
+  WEAPON_TRAIT_LIST( X )
+#undef X
+      GEAR_AFFIX_TRAIT_END,
+
+  GEAR_AFFIX_FINESSE_START,
+#define X( UPPER, lower, pretty ) GEAR_AFFIX_FINESSE_##UPPER,
+  FINESSE_LIST( X )
+#undef X
+      GEAR_AFFIX_FINESSE_END,
+
+  GEAR_AFFIX_MAX
+};
+
 enum fsweapon_e : unsigned
 {
-    FSWEAPON_NONE = 0,
-    FSWEAPON_REPOSITORY_OF_FROZEN_LIGHT,
-    FSWEAPON_NATURES_FURY,
-    FSWEAPON_CHRONOSHIFT,
-    FSWEAPON_ALZERACS_SHACKLE,
-    FSWEAPON_TWILIGHT_SKYBOLT,
-    FSWEAPON_FATED_STRIKE,
-    FSWEAPON_ICICLES_OF_ANZHYR,
-    FSWEAPON_SAHRILS_AEGIS,
-    FSWEAPON_SAHRILS_WRATH,
-    FSWEAPON_VOIDBRINGERS_TOUCH,
-    FSWEAPON_EARTHBREAKER,
-    FSWEAPON_ZERALETHS_HUNGER,
-    FSWEAPON_MAX
+  FSWEAPON_NONE = 0,
+  FSWEAPON_REPOSITORY_OF_FROZEN_LIGHT,
+  FSWEAPON_NATURES_FURY,
+  FSWEAPON_CHRONOSHIFT,
+  FSWEAPON_ALZERACS_SHACKLE,
+  FSWEAPON_TWILIGHT_SKYBOLT,
+  FSWEAPON_FATED_STRIKE,
+  FSWEAPON_ICICLES_OF_ANZHYR,
+  FSWEAPON_SAHRILS_AEGIS,
+  FSWEAPON_SAHRILS_WRATH,
+  FSWEAPON_VOIDBRINGERS_TOUCH,
+  FSWEAPON_EARTHBREAKER,
+  FSWEAPON_ZERALETHS_HUNGER,
+  FSWEAPON_MAX
 };
 
 enum fsrelic_e : unsigned
@@ -49,7 +260,6 @@ enum fsrelic_e : unsigned
   FSRELIC_MAX
 };
 
-
 // Type of internal execution of an action
 enum class execute_type : unsigned
 {
@@ -58,11 +268,10 @@ enum class execute_type : unsigned
   CAST_WHILE_CASTING
 };
 
-
 // Source of the profile, defaults to command line / addon / etc
 enum class profile_source
 {
-  DEFAULT, /// Anything non-blizzard-api
+  DEFAULT,  /// Anything non-blizzard-api
   BLIZZARD_API
 };
 
@@ -87,15 +296,14 @@ enum class attack_power_type : unsigned
   DEFAULT = WEAPON_MAINHAND,
 };
 
-
 // Retargeting request (event) sources. Context in ACTOR_ is the actor that triggered the event
 enum class retarget_source
 {
-  ACTOR_ARISE,          // Any actor arises
-  ACTOR_DEMISE,         // Any actor demises
-  ACTOR_INVULNERABLE,   // Actor becomes invulnerable
-  ACTOR_VULNERABLE,     // Actor becomes vulnerable (after becoming invulnerable)
-  SELF_ARISE            // Actor has arisen (no context provided)
+  ACTOR_ARISE,         // Any actor arises
+  ACTOR_DEMISE,        // Any actor demises
+  ACTOR_INVULNERABLE,  // Actor becomes invulnerable
+  ACTOR_VULNERABLE,    // Actor becomes vulnerable (after becoming invulnerable)
+  SELF_ARISE           // Actor has arisen (no context provided)
 };
 
 // Misc Constants
@@ -122,9 +330,9 @@ constexpr auto DIMINISHING_RETURN_VERS_MITIG_CR_CURVE = 21035u;
 // Enable/Disable azerite effects
 enum class azerite_control
 {
-  ENABLED,          // All azerite-related effects enabled (default)
-  DISABLED_ITEMS,   // Azerite effects from items are disabled
-  DISABLED_ALL      // All azerite-related effects disabled
+  ENABLED,         // All azerite-related effects enabled (default)
+  DISABLED_ITEMS,  // Azerite effects from items are disabled
+  DISABLED_ALL     // All azerite-related effects disabled
 };
 
 enum class regen_type
@@ -135,7 +343,7 @@ enum class regen_type
    Actors regen every 'periodicity' seconds through a single global event.
    Default.
    */
-   STATIC,
+  STATIC,
 
   /*
    Dynamic resource regeneration model.
@@ -224,7 +432,7 @@ enum class movement_direction_type : int
   OMNI,
   TOWARDS,
   AWAY,
-  RANDOM, // Reserved for raid event. Chooses random direction from {OMNI, TOWARDS, AWAY}
+  RANDOM,  // Reserved for raid event. Chooses random direction from {OMNI, TOWARDS, AWAY}
   MAX,
 };
 
@@ -408,7 +616,7 @@ enum pet_e
   PET_WARP_STALKER,
   PET_WORM,
   PET_DUCK,
-  //PET_RIVERBEAST,
+  // PET_RIVERBEAST,
 
   PET_TENACITY_TYPE,
 
@@ -482,9 +690,9 @@ enum pet_e
 
 enum class result_amount_type
 {
-  NONE = -1,
-  DMG_DIRECT       = 0,
-  DMG_OVER_TIME    = 1,
+  NONE          = -1,
+  DMG_DIRECT    = 0,
+  DMG_OVER_TIME = 1,
   HEAL_DIRECT,
   HEAL_OVER_TIME,
   ABSORB
@@ -500,18 +708,18 @@ enum stats_e
 
 enum dot_behavior_e
 {
-  DOT_CLIP,             // DoT is restarted from scratch with Duration
-  DOT_EXTEND,           // DoT is extended indefinitely by Duration
-  DOT_REFRESH_DURATION, // Duration + Current Tick
-  DOT_REFRESH_PANDEMIC, // Duration + Current Duration up to 1.3x
-  DOT_ROLLING,          // Duration + Current Tick, except for during last partial tick
-  DOT_NONE              // Does not refresh
+  DOT_CLIP,              // DoT is restarted from scratch with Duration
+  DOT_EXTEND,            // DoT is extended indefinitely by Duration
+  DOT_REFRESH_DURATION,  // Duration + Current Tick
+  DOT_REFRESH_PANDEMIC,  // Duration + Current Duration up to 1.3x
+  DOT_ROLLING,           // Duration + Current Tick, except for during last partial tick
+  DOT_NONE               // Does not refresh
 };
 
 enum dot_copy_e
 {
-  DOT_COPY_START,          // Start a new DoT with the same remaining duration
-  DOT_COPY_CLONE          // Clone everything from source DoT (tick time, stacks, remaining duration, etc)
+  DOT_COPY_START,  // Start a new DoT with the same remaining duration
+  DOT_COPY_CLONE   // Clone everything from source DoT (tick time, stacks, remaining duration, etc)
 };
 
 enum attribute_e
@@ -606,8 +814,7 @@ enum full_result_e
   FULLTYPE_MAX
 };
 
-const unsigned RESULT_HIT_MASK =
-    ( 1 << RESULT_GLANCE ) | ( 1 << RESULT_CRIT ) | ( 1 << RESULT_HIT );
+const unsigned RESULT_HIT_MASK = ( 1 << RESULT_GLANCE ) | ( 1 << RESULT_CRIT ) | ( 1 << RESULT_HIT );
 
 const unsigned RESULT_CRIT_MASK = ( 1 << RESULT_CRIT );
 
@@ -626,7 +833,7 @@ enum special_effect_e
   SPECIAL_EFFECT_NONE = -1,
   SPECIAL_EFFECT_EQUIP,
   SPECIAL_EFFECT_USE,
-  SPECIAL_EFFECT_FALLBACK // Internal use only for fallback special effects
+  SPECIAL_EFFECT_FALLBACK  // Internal use only for fallback special effects
 };
 
 enum special_effect_source_e
@@ -742,7 +949,7 @@ enum action_var_e
   /// Raise variable to next integer value
   OPERATION_CEIL,
 
-  ///Set variable to value if condition met
+  /// Set variable to value if condition met
   OPERATION_SETIF
 };
 
@@ -801,14 +1008,10 @@ enum school_mask_e
   SCHOOL_MASK_ARCANE   = 0x40,
 };
 
-const int64_t SCHOOL_ATTACK_MASK = ( ( int64_t( 1 ) << SCHOOL_PHYSICAL ) |
-                                     ( int64_t( 1 ) << SCHOOL_HOLYSTRIKE ) |
-                                     ( int64_t( 1 ) << SCHOOL_FLAMESTRIKE ) |
-                                     ( int64_t( 1 ) << SCHOOL_STORMSTRIKE ) |
-                                     ( int64_t( 1 ) << SCHOOL_FROSTSTRIKE ) |
-                                     ( int64_t( 1 ) << SCHOOL_SHADOWSTRIKE ) |
-                                     ( int64_t( 1 ) << SCHOOL_SPELLSTRIKE ) |
-                                     ( int64_t( 1 ) << SCHOOL_COSMIC ) );
+const int64_t SCHOOL_ATTACK_MASK = ( ( int64_t( 1 ) << SCHOOL_PHYSICAL ) | ( int64_t( 1 ) << SCHOOL_HOLYSTRIKE ) |
+                                     ( int64_t( 1 ) << SCHOOL_FLAMESTRIKE ) | ( int64_t( 1 ) << SCHOOL_STORMSTRIKE ) |
+                                     ( int64_t( 1 ) << SCHOOL_FROSTSTRIKE ) | ( int64_t( 1 ) << SCHOOL_SHADOWSTRIKE ) |
+                                     ( int64_t( 1 ) << SCHOOL_SPELLSTRIKE ) | ( int64_t( 1 ) << SCHOOL_COSMIC ) );
 // SCHOOL_CHAOS should probably be added here too.
 
 const int64_t SCHOOL_SPELL_MASK( ( int64_t( 1 ) << SCHOOL_ARCANE ) | ( int64_t( 1 ) << SCHOOL_CHAOS ) |
@@ -829,12 +1032,9 @@ const int64_t SCHOOL_SPELL_MASK( ( int64_t( 1 ) << SCHOOL_ARCANE ) | ( int64_t( 
                                  ( int64_t( 1 ) << SCHOOL_CHROMATIC ) | ( int64_t( 1 ) << SCHOOL_CHROMASTRIKE ) |
                                  ( int64_t( 1 ) << SCHOOL_MAGIC ) );
 
-const int64_t SCHOOL_MAGIC_MASK( ( int64_t( 1 ) << SCHOOL_ARCANE ) |
-                                 ( int64_t( 1 ) << SCHOOL_FIRE ) |
-                                 ( int64_t( 1 ) << SCHOOL_FROST ) |
-                                 ( int64_t( 1 ) << SCHOOL_FROSTFIRE ) |
-                                 ( int64_t( 1 ) << SCHOOL_HOLY ) |
-                                 ( int64_t( 1 ) << SCHOOL_NATURE ) |
+const int64_t SCHOOL_MAGIC_MASK( ( int64_t( 1 ) << SCHOOL_ARCANE ) | ( int64_t( 1 ) << SCHOOL_FIRE ) |
+                                 ( int64_t( 1 ) << SCHOOL_FROST ) | ( int64_t( 1 ) << SCHOOL_FROSTFIRE ) |
+                                 ( int64_t( 1 ) << SCHOOL_HOLY ) | ( int64_t( 1 ) << SCHOOL_NATURE ) |
                                  ( int64_t( 1 ) << SCHOOL_SHADOW ) );
 
 const int64_t SCHOOL_ALL_MASK( -1 );
@@ -895,7 +1095,7 @@ enum slot_e  // these enum values match armory settings
 };
 
 // 1, 2, 3, 4
-const unsigned N_SEASON = 5;
+const unsigned N_SEASON   = 5;
 const unsigned MIN_SEASON = 1;
 
 // Set bonus .. bonus. They map to a vector internally, so each enum value is just the vector
@@ -1085,14 +1285,14 @@ enum stat_e
   STAT_RESILIENCE_RATING,
   STAT_DODGE_RATING,
   STAT_PARRY_RATING,
-  STAT_BLOCK_RATING, // Block CHANCE rating. Block damage reduction is in player_t::composite_block_reduction()
+  STAT_BLOCK_RATING,  // Block CHANCE rating. Block damage reduction is in player_t::composite_block_reduction()
   STAT_PVP_POWER,
   STAT_WEAPON_DPS,
   STAT_WEAPON_OFFHAND_DPS,
   STAT_ALL,
   STAT_MAX,
 
-  STAT_ANY_DPS, // Only for use with buff_has_stat() queries
+  STAT_ANY_DPS,  // Only for use with buff_has_stat() queries
 };
 #define check( x )                                                             \
   static_assert( static_cast<int>( STAT_##x ) == static_cast<int>( ATTR_##x ), \
@@ -1229,10 +1429,9 @@ enum stat_pct_buff_type
   STAT_PCT_BUFF_MAX
 };
 
-#define check( x )                                                   \
-  static_assert(                                                     \
-      static_cast<int>( CACHE_##x ) == static_cast<int>( ATTR_##x ), \
-      "cache_e and attribute_e must be kept in sync" )
+#define check( x )                                                              \
+  static_assert( static_cast<int>( CACHE_##x ) == static_cast<int>( ATTR_##x ), \
+                 "cache_e and attribute_e must be kept in sync" )
 check( STRENGTH );
 check( AGILITY );
 check( STAMINA );
@@ -1247,57 +1446,57 @@ check( STR_AGI_INT );
 inline cache_e cache_from_stat( stat_e st )
 {
   switch ( st )
-    {
-      case STAT_STRENGTH:
-      case STAT_AGILITY:
-      case STAT_STAMINA:
-      case STAT_INTELLECT:
-      case STAT_SPIRIT:
-      case STAT_AGI_INT:
-      case STAT_STR_AGI:
-      case STAT_STR_INT:
-      case STAT_STR_AGI_INT:
-        return static_cast<cache_e>( st );
-      case STAT_SPELL_POWER:
-        return CACHE_SPELL_POWER;
-      case STAT_ATTACK_POWER:
-        return CACHE_ATTACK_POWER;
-      case STAT_WEAPON_DPS:
-      case STAT_WEAPON_OFFHAND_DPS:
-        return CACHE_WEAPON_DPS;
-      case STAT_EXPERTISE_RATING:
-      case STAT_EXPERTISE_RATING2:
-        return CACHE_EXP;
-      case STAT_HIT_RATING:
-      case STAT_HIT_RATING2:
-        return CACHE_HIT;
-      case STAT_CRIT_RATING:
-        return CACHE_CRIT_CHANCE;
-      case STAT_HASTE_RATING:
-        return CACHE_HASTE;
-      case STAT_MASTERY_RATING:
-        return CACHE_MASTERY;
-      case STAT_DODGE_RATING:
-        return CACHE_DODGE;
-      case STAT_PARRY_RATING:
-        return CACHE_PARRY;
-      case STAT_BLOCK_RATING:
-        return CACHE_BLOCK;
-      case STAT_ARMOR:
-        return CACHE_ARMOR;
-      case STAT_BONUS_ARMOR:
-        return CACHE_BONUS_ARMOR;
-      case STAT_VERSATILITY_RATING:
-        return CACHE_VERSATILITY;
-      case STAT_LEECH_RATING:
-        return CACHE_LEECH;
-      case STAT_SPEED_RATING:
-        return CACHE_RUN_SPEED;
-      case STAT_AVOIDANCE_RATING:
-        return CACHE_AVOIDANCE;
-      default:
-        break;
-    }
+  {
+    case STAT_STRENGTH:
+    case STAT_AGILITY:
+    case STAT_STAMINA:
+    case STAT_INTELLECT:
+    case STAT_SPIRIT:
+    case STAT_AGI_INT:
+    case STAT_STR_AGI:
+    case STAT_STR_INT:
+    case STAT_STR_AGI_INT:
+      return static_cast<cache_e>( st );
+    case STAT_SPELL_POWER:
+      return CACHE_SPELL_POWER;
+    case STAT_ATTACK_POWER:
+      return CACHE_ATTACK_POWER;
+    case STAT_WEAPON_DPS:
+    case STAT_WEAPON_OFFHAND_DPS:
+      return CACHE_WEAPON_DPS;
+    case STAT_EXPERTISE_RATING:
+    case STAT_EXPERTISE_RATING2:
+      return CACHE_EXP;
+    case STAT_HIT_RATING:
+    case STAT_HIT_RATING2:
+      return CACHE_HIT;
+    case STAT_CRIT_RATING:
+      return CACHE_CRIT_CHANCE;
+    case STAT_HASTE_RATING:
+      return CACHE_HASTE;
+    case STAT_MASTERY_RATING:
+      return CACHE_MASTERY;
+    case STAT_DODGE_RATING:
+      return CACHE_DODGE;
+    case STAT_PARRY_RATING:
+      return CACHE_PARRY;
+    case STAT_BLOCK_RATING:
+      return CACHE_BLOCK;
+    case STAT_ARMOR:
+      return CACHE_ARMOR;
+    case STAT_BONUS_ARMOR:
+      return CACHE_BONUS_ARMOR;
+    case STAT_VERSATILITY_RATING:
+      return CACHE_VERSATILITY;
+    case STAT_LEECH_RATING:
+      return CACHE_LEECH;
+    case STAT_SPEED_RATING:
+      return CACHE_RUN_SPEED;
+    case STAT_AVOIDANCE_RATING:
+      return CACHE_AVOIDANCE;
+    default:
+      break;
+  }
   return CACHE_NONE;
 }
 
@@ -1305,18 +1504,29 @@ inline cache_e cache_from_stat_pct_buff( stat_pct_buff_type spb )
 {
   switch ( spb )
   {
-    case STAT_PCT_BUFF_CRIT: return CACHE_CRIT_CHANCE;
-    case STAT_PCT_BUFF_HASTE: return CACHE_HASTE;
-    case STAT_PCT_BUFF_VERSATILITY: return CACHE_VERSATILITY;
-    case STAT_PCT_BUFF_MASTERY: return CACHE_MASTERY;
-    case STAT_PCT_BUFF_STRENGTH: return CACHE_STRENGTH;
-    case STAT_PCT_BUFF_AGILITY: return CACHE_AGILITY;
-    case STAT_PCT_BUFF_STAMINA: return CACHE_STAMINA;
-    case STAT_PCT_BUFF_INTELLECT: return CACHE_INTELLECT;
-    case STAT_PCT_BUFF_SPIRIT: return CACHE_SPIRIT;
-    case STAT_PCT_BUFF_MAX: break;
+    case STAT_PCT_BUFF_CRIT:
+      return CACHE_CRIT_CHANCE;
+    case STAT_PCT_BUFF_HASTE:
+      return CACHE_HASTE;
+    case STAT_PCT_BUFF_VERSATILITY:
+      return CACHE_VERSATILITY;
+    case STAT_PCT_BUFF_MASTERY:
+      return CACHE_MASTERY;
+    case STAT_PCT_BUFF_STRENGTH:
+      return CACHE_STRENGTH;
+    case STAT_PCT_BUFF_AGILITY:
+      return CACHE_AGILITY;
+    case STAT_PCT_BUFF_STAMINA:
+      return CACHE_STAMINA;
+    case STAT_PCT_BUFF_INTELLECT:
+      return CACHE_INTELLECT;
+    case STAT_PCT_BUFF_SPIRIT:
+      return CACHE_SPIRIT;
+    case STAT_PCT_BUFF_MAX:
+      break;
   }
-  assert( false ); return CACHE_NONE;
+  assert( false );
+  return CACHE_NONE;
 }
 
 // Gear Rating Conversions ==================================================
@@ -1325,33 +1535,59 @@ inline cache_e cache_from_rating( rating_e r )
 {
   switch ( r )
   {
-    case RATING_SPELL_HASTE: return CACHE_SPELL_HASTE;
-    case RATING_SPELL_HIT: return CACHE_SPELL_HIT;
-    case RATING_SPELL_CRIT: return CACHE_SPELL_CRIT_CHANCE;
-    case RATING_MELEE_HASTE: return CACHE_ATTACK_HASTE;
-    case RATING_MELEE_HIT: return CACHE_ATTACK_HIT;
-    case RATING_MELEE_CRIT: return CACHE_ATTACK_CRIT_CHANCE;
-    case RATING_RANGED_HASTE: return CACHE_ATTACK_HASTE;
-    case RATING_RANGED_HIT: return CACHE_ATTACK_HIT;
-    case RATING_RANGED_CRIT: return CACHE_ATTACK_CRIT_CHANCE;
-    case RATING_EXPERTISE: return CACHE_EXP;
-    case RATING_DODGE: return CACHE_DODGE;
-    case RATING_PARRY: return CACHE_PARRY;
-    case RATING_BLOCK: return CACHE_BLOCK;
-    case RATING_MASTERY: return CACHE_MASTERY;
-    case RATING_PVP_POWER: return CACHE_NONE;
-    case RATING_PVP_RESILIENCE: return CACHE_NONE;
-    case RATING_DAMAGE_VERSATILITY: return CACHE_DAMAGE_VERSATILITY;
-    case RATING_HEAL_VERSATILITY: return CACHE_HEAL_VERSATILITY;
-    case RATING_MITIGATION_VERSATILITY: return CACHE_MITIGATION_VERSATILITY;
-    case RATING_LEECH: return CACHE_LEECH;
-    case RATING_SPEED: return CACHE_RUN_SPEED;
-    case RATING_AVOIDANCE: return CACHE_AVOIDANCE;
-    case RATING_CORRUPTION: return CACHE_CORRUPTION;
-    case RATING_CORRUPTION_RESISTANCE: return CACHE_CORRUPTION_RESISTANCE;
-    default: break;
+    case RATING_SPELL_HASTE:
+      return CACHE_SPELL_HASTE;
+    case RATING_SPELL_HIT:
+      return CACHE_SPELL_HIT;
+    case RATING_SPELL_CRIT:
+      return CACHE_SPELL_CRIT_CHANCE;
+    case RATING_MELEE_HASTE:
+      return CACHE_ATTACK_HASTE;
+    case RATING_MELEE_HIT:
+      return CACHE_ATTACK_HIT;
+    case RATING_MELEE_CRIT:
+      return CACHE_ATTACK_CRIT_CHANCE;
+    case RATING_RANGED_HASTE:
+      return CACHE_ATTACK_HASTE;
+    case RATING_RANGED_HIT:
+      return CACHE_ATTACK_HIT;
+    case RATING_RANGED_CRIT:
+      return CACHE_ATTACK_CRIT_CHANCE;
+    case RATING_EXPERTISE:
+      return CACHE_EXP;
+    case RATING_DODGE:
+      return CACHE_DODGE;
+    case RATING_PARRY:
+      return CACHE_PARRY;
+    case RATING_BLOCK:
+      return CACHE_BLOCK;
+    case RATING_MASTERY:
+      return CACHE_MASTERY;
+    case RATING_PVP_POWER:
+      return CACHE_NONE;
+    case RATING_PVP_RESILIENCE:
+      return CACHE_NONE;
+    case RATING_DAMAGE_VERSATILITY:
+      return CACHE_DAMAGE_VERSATILITY;
+    case RATING_HEAL_VERSATILITY:
+      return CACHE_HEAL_VERSATILITY;
+    case RATING_MITIGATION_VERSATILITY:
+      return CACHE_MITIGATION_VERSATILITY;
+    case RATING_LEECH:
+      return CACHE_LEECH;
+    case RATING_SPEED:
+      return CACHE_RUN_SPEED;
+    case RATING_AVOIDANCE:
+      return CACHE_AVOIDANCE;
+    case RATING_CORRUPTION:
+      return CACHE_CORRUPTION;
+    case RATING_CORRUPTION_RESISTANCE:
+      return CACHE_CORRUPTION_RESISTANCE;
+    default:
+      break;
   }
-  assert( false ); return CACHE_NONE;
+  assert( false );
+  return CACHE_NONE;
 }
 
 enum position_e
@@ -1405,17 +1641,17 @@ enum save_e : unsigned
 
 enum power_e
 {
-  POWER_HEALTH        = -2,
-  POWER_MANA          = 0,
-  POWER_RAGE          = 1,
-  POWER_FOCUS         = 2,
-  POWER_ENERGY        = 3,
-  POWER_COMBO_POINT   = 4,
-  POWER_RUNE          = 5,
-  POWER_RUNIC_POWER   = 6,
-  POWER_SOUL_SHARDS   = 7,
-  POWER_ASTRAL_POWER  = 8,
-  POWER_HOLY_POWER    = 9,
+  POWER_HEALTH       = -2,
+  POWER_MANA         = 0,
+  POWER_RAGE         = 1,
+  POWER_FOCUS        = 2,
+  POWER_ENERGY       = 3,
+  POWER_COMBO_POINT  = 4,
+  POWER_RUNE         = 5,
+  POWER_RUNIC_POWER  = 6,
+  POWER_SOUL_SHARDS  = 7,
+  POWER_ASTRAL_POWER = 8,
+  POWER_HOLY_POWER   = 9,
   // Not yet used (MoP Monk deprecated resource #1)
   POWER_MAELSTROM     = 11,
   POWER_CHI           = 12,
@@ -1423,72 +1659,73 @@ enum power_e
   POWER_BURNING_EMBER = 14,
   POWER_DEMONIC_FURY  = 15,
   // Not yet used?
-  POWER_FURY          = 17,
-  POWER_PAIN          = 18,
-  POWER_ESSENSE       = 19,
+  POWER_FURY    = 17,
+  POWER_PAIN    = 18,
+  POWER_ESSENSE = 19,
   // Helpers
   POWER_MAX,
-  POWER_NONE          = 0xFFFFFFFF,  // None.
-  POWER_OFFSET        = 2,
+  POWER_NONE   = 0xFFFFFFFF,  // None.
+  POWER_OFFSET = 2,
 };
 
 // New stuff
 enum snapshot_state_e
 {
-  STATE_HASTE          = 0x000001,
-  STATE_CRIT           = 0x000002,
-  STATE_AP             = 0x000004,
-  STATE_SP             = 0x000008,
+  STATE_HASTE = 0x000001,
+  STATE_CRIT  = 0x000002,
+  STATE_AP    = 0x000004,
+  STATE_SP    = 0x000008,
 
   STATE_MUL_SPELL_DA   = 0x000010,  // Add Percent Modifier (108): Spell Direct Amount (0) list-based multiplier
   STATE_MUL_SPELL_TA   = 0x000020,  // Add Percent Modifier (108): Spell Periodic Amount (22) list-based multiplier
   STATE_VERSATILITY    = 0x000040,
   STATE_MUL_PERSISTENT = 0x000080,  // Persistent modifier for the few abilities that snapshot
 
-  STATE_TGT_CRIT       = 0x000100,
-  STATE_TGT_MUL_DA     = 0x000200,
-  STATE_TGT_MUL_TA     = 0x000400,
+  STATE_TGT_CRIT   = 0x000100,
+  STATE_TGT_MUL_DA = 0x000200,
+  STATE_TGT_MUL_TA = 0x000400,
 
   STATE_MUL_PLAYER_DAM = 0x000800,  // Modify Damage Done% (79) school-based player-wide multiplier
 
-  STATE_MUL_DA         = STATE_MUL_SPELL_DA | STATE_MUL_PLAYER_DAM,
-  STATE_MUL_TA         = STATE_MUL_SPELL_TA | STATE_MUL_PLAYER_DAM,
+  STATE_MUL_DA = STATE_MUL_SPELL_DA | STATE_MUL_PLAYER_DAM,
+  STATE_MUL_TA = STATE_MUL_SPELL_TA | STATE_MUL_PLAYER_DAM,
 
   // User-defined state flags
-  STATE_USER_1         = 0x001000,
-  STATE_USER_2         = 0x002000,
-  STATE_USER_3         = 0x004000,
-  STATE_USER_4         = 0x008000,
+  STATE_USER_1 = 0x001000,
+  STATE_USER_2 = 0x002000,
+  STATE_USER_3 = 0x004000,
+  STATE_USER_4 = 0x008000,
 
-  STATE_TGT_MITG_DA    = 0x010000,
-  STATE_TGT_MITG_TA    = 0x020000,
-  STATE_TGT_ARMOR      = 0x040000,
+  STATE_TGT_MITG_DA = 0x010000,
+  STATE_TGT_MITG_TA = 0x020000,
+  STATE_TGT_ARMOR   = 0x040000,
 
   /// Multiplier from the owner to pet damage
-  STATE_MUL_PET        = 0x100000,
-  STATE_TGT_MUL_PET    = 0x200000,
+  STATE_MUL_PET     = 0x100000,
+  STATE_TGT_MUL_PET = 0x200000,
 
-  STATE_ROLLING_TA     = 0x400000,
+  STATE_ROLLING_TA = 0x400000,
 
   // User-defined target-specific state flags
-  STATE_TGT_USER_1     = 0x10000000,
-  STATE_TGT_USER_2     = 0x20000000,
-  STATE_TGT_USER_3     = 0x40000000,
-  STATE_TGT_USER_4     = 0x80000000,
+  STATE_TGT_USER_1 = 0x10000000,
+  STATE_TGT_USER_2 = 0x20000000,
+  STATE_TGT_USER_3 = 0x40000000,
+  STATE_TGT_USER_4 = 0x80000000,
 
   /**
    * No multiplier helper, use in action_t::init() (after parent init) by issuing snapshot_flags &= STATE_NO_MULTIPLIER
    * (and/or update_flags &= STATE_NO_MULTIPLIER if a dot). This disables all multipliers, including versatility, and
    * any/all persistent multipliers the action would use. */
-  STATE_NO_MULTIPLIER  = ~( STATE_MUL_DA | STATE_MUL_TA | STATE_VERSATILITY | STATE_MUL_PERSISTENT | STATE_TGT_MUL_DA |
-                            STATE_TGT_MUL_TA | STATE_TGT_ARMOR | STATE_MUL_PET | STATE_TGT_MUL_PET ),
+  STATE_NO_MULTIPLIER = ~( STATE_MUL_DA | STATE_MUL_TA | STATE_VERSATILITY | STATE_MUL_PERSISTENT | STATE_TGT_MUL_DA |
+                           STATE_TGT_MUL_TA | STATE_TGT_ARMOR | STATE_MUL_PET | STATE_TGT_MUL_PET ),
 
   /// Target-specific state variables, excluding the pet damage multiplier
-  STATE_TARGET_NO_PET  = ( STATE_TGT_CRIT | STATE_TGT_MUL_DA | STATE_TGT_MUL_TA | STATE_TGT_ARMOR | STATE_TGT_MITG_DA |
-                           STATE_TGT_MITG_TA | STATE_TGT_USER_1 | STATE_TGT_USER_2 | STATE_TGT_USER_3 | STATE_TGT_USER_4 ),
+  STATE_TARGET_NO_PET =
+      ( STATE_TGT_CRIT | STATE_TGT_MUL_DA | STATE_TGT_MUL_TA | STATE_TGT_ARMOR | STATE_TGT_MITG_DA | STATE_TGT_MITG_TA |
+        STATE_TGT_USER_1 | STATE_TGT_USER_2 | STATE_TGT_USER_3 | STATE_TGT_USER_4 ),
 
   /// Target-specific state variables
-  STATE_TARGET         = STATE_TARGET_NO_PET | STATE_TGT_MUL_PET
+  STATE_TARGET = STATE_TARGET_NO_PET | STATE_TGT_MUL_PET
 };
 
 enum ready_e
@@ -1584,3 +1821,237 @@ enum error_level_e : unsigned short
   MODERATE,
   SEVERE
 };
+
+// stat_type_string =========================================================
+constexpr std::string_view stat_type_string_view( stat_e stat )
+{
+  switch ( stat )
+  {
+    case STAT_STRENGTH:
+      return "strength";
+    case STAT_AGILITY:
+      return "agility";
+    case STAT_STAMINA:
+      return "stamina";
+    case STAT_INTELLECT:
+      return "intellect";
+    case STAT_SPIRIT:
+      return "spirit";
+
+    case STAT_AGI_INT:
+      return "agiint";
+    case STAT_STR_AGI:
+      return "stragi";
+    case STAT_STR_INT:
+      return "strint";
+    case STAT_STR_AGI_INT:
+      return "stragiint";
+
+    case STAT_HEALTH:
+      return "health";
+    case STAT_MAX_HEALTH:
+      return "maximum_health";
+    case STAT_MANA:
+      return "mana";
+    case STAT_MAX_MANA:
+      return "maximum_mana";
+    case STAT_RAGE:
+      return "rage";
+    case STAT_MAX_RAGE:
+      return "maximum_rage";
+    case STAT_ENERGY:
+      return "energy";
+    case STAT_MAX_ENERGY:
+      return "maximum_energy";
+    case STAT_FOCUS:
+      return "focus";
+    case STAT_MAX_FOCUS:
+      return "maximum_focus";
+    case STAT_RUNIC:
+      return "runic";
+    case STAT_MAX_RUNIC:
+      return "maximum_runic";
+
+    case STAT_SPELL_POWER:
+      return "spell_power";
+
+    case STAT_ATTACK_POWER:
+      return "attack_power";
+    case STAT_EXPERTISE_RATING:
+      return "expertise_rating";
+    case STAT_EXPERTISE_RATING2:
+      return "inverse_expertise_rating";
+
+    case STAT_HIT_RATING:
+      return "hit_rating";
+    case STAT_HIT_RATING2:
+      return "inverse_hit_rating";
+    case STAT_CRIT_RATING:
+      return "crit_rating";
+    case STAT_HASTE_RATING:
+      return "haste_rating";
+
+    case STAT_WEAPON_DPS:
+      return "weapon_dps";
+
+    case STAT_WEAPON_OFFHAND_DPS:
+      return "weapon_offhand_dps";
+
+    case STAT_ARMOR:
+      return "armor";
+    case STAT_BONUS_ARMOR:
+      return "bonus_armor";
+    case STAT_RESILIENCE_RATING:
+      return "resilience_rating";
+    case STAT_DODGE_RATING:
+      return "dodge_rating";
+    case STAT_PARRY_RATING:
+      return "parry_rating";
+
+    case STAT_BLOCK_RATING:
+      return "block_rating";
+
+    case STAT_MASTERY_RATING:
+      return "mastery_rating";
+
+    case STAT_PVP_POWER:
+      return "pvp_power";
+    case STAT_VERSATILITY_RATING:
+      return "versatility_rating";
+
+    case STAT_LEECH_RATING:
+      return "leech_rating";
+    case STAT_SPEED_RATING:
+      return "speed_rating";
+    case STAT_AVOIDANCE_RATING:
+      return "avoidance_rating";
+
+    case STAT_CORRUPTION:
+      return "corruption";
+    case STAT_CORRUPTION_RESISTANCE:
+      return "corruption_resistance";
+
+    case STAT_ALL:
+      return "all";
+    default:
+      return "unknown";
+  }
+}
+
+constexpr gear_affix_e gear_affix_from_finesse( finesse_trait_e t )
+{
+  return static_cast<gear_affix_e>( t + gear_affix_e::GEAR_AFFIX_FINESSE_START );
+}
+
+constexpr gear_affix_e gear_affix_from_weapon_trait( weapon_trait_e t )
+{
+  return static_cast<gear_affix_e>( t + gear_affix_e::GEAR_AFFIX_TRAIT_START );
+}
+
+constexpr gear_affix_e gear_affix_from_gem_type( gem_type_e t )
+{
+  return static_cast<gear_affix_e>( t + gear_affix_e::GEAR_AFFIX_ATTUNEMENT_START );
+}
+
+constexpr gear_affix_e gear_affix_from_stat( stat_e t )
+{
+  switch ( t )
+  {
+    case STAT_STRENGTH:
+    case STAT_AGILITY:
+    case STAT_INTELLECT:
+    case STAT_AGI_INT:
+    case STAT_STR_AGI:
+    case STAT_STR_INT:
+    case STAT_STR_AGI_INT:
+      return gear_affix_e::GEAR_AFFIX_STAT_PRIMARY;
+    case STAT_MASTERY_RATING:
+    case STAT_SPIRIT:
+      return gear_affix_e::GEAR_AFFIX_STAT_SPIRIT;
+    case STAT_HASTE_RATING:
+      return gear_affix_e::GEAR_AFFIX_STAT_HASTE;
+    case STAT_CRIT_RATING:
+      return gear_affix_e::GEAR_AFFIX_STAT_CRIT;
+    case STAT_EXPERTISE_RATING:
+    case STAT_VERSATILITY_RATING:
+      return gear_affix_e::GEAR_AFFIX_STAT_EXPERTISE;
+    case STAT_STAMINA:
+      return gear_affix_e::GEAR_AFFIX_STAT_STAMINA;
+    default:
+      return gear_affix_e::GEAR_AFFIX_NONE;
+  }
+}
+
+constexpr finesse_trait_e finesse_trait_from_gear_affix( gear_affix_e t )
+{
+  if ( t < gear_affix_e::GEAR_AFFIX_FINESSE_START || t >= gear_affix_e::GEAR_AFFIX_FINESSE_END )
+    return finesse_trait_e::FINESSE_NONE;
+
+  return static_cast<finesse_trait_e>( t - gear_affix_e::GEAR_AFFIX_FINESSE_START );
+}
+
+constexpr weapon_trait_e weapon_trait_from_gear_affix( gear_affix_e t )
+{
+  if ( t < gear_affix_e::GEAR_AFFIX_TRAIT_START || t >= gear_affix_e::GEAR_AFFIX_TRAIT_END )
+    return weapon_trait_e::WEAPON_TRAIT_NONE;
+
+  return static_cast<weapon_trait_e>( t - gear_affix_e::GEAR_AFFIX_TRAIT_START );
+}
+
+constexpr gem_type_e gem_type_from_gear_affix( gear_affix_e t )
+{
+  if ( t < gear_affix_e::GEAR_AFFIX_ATTUNEMENT_START || t >= gear_affix_e::GEAR_AFFIX_ATTUNEMENT_END )
+    return gem_type_e::GEM_NONE;
+
+  return static_cast<gem_type_e>( t - gear_affix_e::GEAR_AFFIX_ATTUNEMENT_START );
+}
+
+constexpr stat_e stat_from_gear_affix( gear_affix_e t )
+{
+  switch ( t )
+  {
+    case gear_affix_e::GEAR_AFFIX_STAT_PRIMARY:
+      return STAT_STR_AGI_INT;
+    case gear_affix_e::GEAR_AFFIX_STAT_STAMINA:
+      return STAT_STAMINA;
+    case gear_affix_e::GEAR_AFFIX_STAT_HASTE:
+      return STAT_HASTE_RATING;
+    case gear_affix_e::GEAR_AFFIX_STAT_CRIT:
+      return STAT_CRIT_RATING;
+    case gear_affix_e::GEAR_AFFIX_STAT_EXPERTISE:
+      return STAT_VERSATILITY_RATING;
+    case gear_affix_e::GEAR_AFFIX_STAT_SPIRIT:
+      return STAT_MASTERY_RATING;
+    default:
+      return STAT_NONE;
+  }
+}
+
+constexpr std::string_view gear_affix_lower( gear_affix_e t )
+{
+  if ( t == finesse_trait_e::FINESSE_NONE || t >= finesse_trait_e::FINESSE_MAX )
+    return "unknown gear affix";
+
+  if ( t >= gear_affix_e::GEAR_AFFIX_FINESSE_START && t < gear_affix_e::GEAR_AFFIX_FINESSE_END )
+    return finesse_trait_lower( finesse_trait_from_gear_affix( t ) );
+
+  if ( t >= gear_affix_e::GEAR_AFFIX_TRAIT_START && t < gear_affix_e::GEAR_AFFIX_TRAIT_END )
+    return weapon_trait_lower( weapon_trait_from_gear_affix( t ) );
+
+  if ( t >= gear_affix_e::GEAR_AFFIX_ATTUNEMENT_START && t < gear_affix_e::GEAR_AFFIX_ATTUNEMENT_END )
+    return gem_type_lower( gem_type_from_gear_affix( t ) );
+
+  if ( t >= gear_affix_e::GEAR_AFFIX_STAT_START && t < gear_affix_e::GEAR_AFFIX_STAT_END )
+    return stat_type_string_view( stat_from_gear_affix( t ) );
+
+  return "error gear affix";
+  // return FINESSE_TRAITS[ t - 1 ].lower_string;
+}
+
+constexpr std::string_view gear_affix_pretty( gear_affix_e t )
+{
+  if ( t == finesse_trait_e::FINESSE_NONE || t >= finesse_trait_e::FINESSE_MAX )
+    return "Unknown";
+
+  return FINESSE_TRAITS[ t - 1 ].pretty_string;
+}

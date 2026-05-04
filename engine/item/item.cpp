@@ -822,8 +822,12 @@ void item_t::parse_options()
     option_name_str = options_str.substr( 0, cut_pt );
   }
 
-  std::array<std::unique_ptr<option_t>, 34> options { {
+  std::array<std::unique_ptr<option_t>, 38> options { {
     opt_uint("id", parsed.data.id),
+    opt_string( "variant", option_item_variant_str ),
+    opt_string( "main_secondary", option_main_secondary_str ),
+    opt_string( "fixed_secondary", option_fixed_secondarys_str ),
+    opt_string( "affixes", option_affix_list_str ),
     opt_string("stats", option_stats_str),
     opt_string("gems", option_gems_str),
     opt_string("enchant", option_enchant_str),
@@ -1087,6 +1091,9 @@ std::string item_t::encoded_item() const
 
   if ( !option_ilevel_str.empty() )
     s << ",ilevel=" << option_ilevel_str;
+    
+  if ( !option_item_variant_str.empty() )
+    s << ",variant=" << option_item_variant_str;
 
   if ( !option_azerite_level_str.empty() )
     s << ",azerite_level=" << option_azerite_level_str;
@@ -1516,13 +1523,21 @@ void item_t::init()
   if ( name_str.empty() || name_str == "empty" || name_str == "none" )
     return;
 
+  decode_ilevel();
+  decode_item_variant();
+  decode_item_rarity();
+
+  handle_base_stats();
+  decode_main_secondary();
+  decode_fixed_secondarys();
+  decode_affix_list();
+
   // Process basic stats
   decode_warforged();
   decode_lfr();
   decode_heroic();
   decode_mythic();
   decode_quality();
-  decode_ilevel();
   decode_armor_type();
 
   // Process complex input, and initialize item in earnest
@@ -1556,6 +1571,264 @@ void item_t::init()
   if ( source_str.empty() )
     source_str = "Manual";
 }
+
+// item_t::decode_item_variant ==================================================
+
+void item_t::decode_item_variant()
+{
+  if ( slot == SLOT_NECK || slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 )
+  {
+    parsed.item_variant = VARIANT_JEWELLERY;
+    return;
+  }
+  if ( slot == SLOT_TRINKET_1 || slot == SLOT_TRINKET_2 )
+  {
+    parsed.item_variant = VARIANT_RELIC;
+    return;
+  }
+
+  if ( !option_item_variant_str.empty() )
+  {
+    parsed.item_variant = item_variant_from_string( option_item_variant_str );
+    if ( parsed.item_variant == VARIANT_NONE )
+    {
+      throw std::invalid_argument( fmt::format( "Invalid item variant '{}'.", option_item_variant_str ) );
+    }
+    return;
+  }
+
+  parsed.item_variant = VARIANT_EVENS;
+}
+
+// item_t::decode_item_rarity ==================================================
+
+void item_t::decode_item_rarity()
+{
+  if ( !option_rarity_str.empty() )
+  {
+    parsed.rarity = item_rarity_from_string( option_rarity_str );
+    if ( parsed.rarity == RARITY_NONE )
+    {
+      throw std::invalid_argument( fmt::format( "Invalid item rarity '{}'.", option_rarity_str ) );
+    }
+    
+    return;
+  }
+
+  parsed.rarity = RARITY_HEROIC;
+}
+
+double item_t::slot_multiplier() const
+{
+  switch ( slot )
+  {
+    case SLOT_HEAD:
+      return 0.08;
+    case SLOT_NECK:
+      return 0.07;
+    case SLOT_SHOULDERS:
+      return 0.08;
+    case SLOT_BACK:
+      return 0.05;
+    case SLOT_CHEST:
+      return 0.1;
+    case SLOT_WRISTS:
+      return 0.05;
+    case SLOT_HANDS:
+      return 0.06;
+    case SLOT_LEGS:
+      return 0.09;
+    case SLOT_FEET:
+      return 0.07;
+    case SLOT_FINGER_1:
+    case SLOT_FINGER_2:
+      return 0.06;
+    case SLOT_TRINKET_1:
+    case SLOT_TRINKET_2:
+      return 0.06;
+    case SLOT_MAIN_HAND:
+    case SLOT_OFF_HAND:
+      return 0.11;
+    default:
+      return 0.0;
+  }
+}
+
+double item_t::get_stat_value( gear_affix_e stat_affix, bool random_stat ) const
+{
+  stat_e stat = stat_from_gear_affix( stat_affix );
+
+  if ( stat == STAT_NONE )
+    return 0.0;
+
+  double amount = 0.0;
+
+  if ( parsed.item_level < 1 )
+    return 0.0;
+
+  if ( parsed.item_variant == VARIANT_NONE || parsed.rarity == RARITY_NONE )
+    return 0.0;
+
+  if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_PRIMARY || stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
+  {
+    amount = pow( primary_power_base, parsed.item_level / primary_divisor ) * pow( parsed.item_level, 0.5 ) *
+        primary_pool_multiplier * fixed_slot_main_stat_mul / fixed_slot_base_weight;
+
+    
+    if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
+    {
+      amount *= fixed_slot_stamina_weight;
+    }
+    else
+    {
+      amount *= fixed_slot_primary_weight;
+    }
+
+    sim->print_debug( "{} item {} decoded stat {}, main_stat_amount: {}", *player, name(),
+                      gear_affix_lower( stat_affix ), amount );
+  }
+  else
+  {
+    amount = pow( parsed.item_level * secondary_pool_multiplier, 0.5 ) * secondary_mul * fixed_slot_secondary_weight
+             / fixed_slot_base_weight;
+
+    if ( random_stat )
+    {
+      amount *= randomized_slot_secondary_mul;
+    }
+    else
+    {
+      amount *= fixed_slot_secondary_mul;
+    }
+  }
+
+  if ( random_stat )
+  {
+    amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].rolled_weight;
+    sim->print_debug( "{} item {} decoded stat {}, variant: {}, rolled_weight: {}", *player, name(),
+                      gear_affix_lower( stat_affix ), item_variant_lower( parsed.item_variant ),
+                      ITEM_VARIANTS[ parsed.item_variant - 1 ].rolled_weight );
+  }
+  else
+  {
+    if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
+    {
+      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].stamina_weight;
+      sim->print_debug( "{} item {} decoded stat {}, variant: {}, stamina_weight: {}", *player, name(),
+                        gear_affix_lower( stat_affix ), item_variant_lower( parsed.item_variant ),
+                        ITEM_VARIANTS[ parsed.item_variant - 1 ].stamina_weight );
+    }
+    else if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_PRIMARY )
+    {
+      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].primary_weight;
+      sim->print_debug( "{} item {} decoded stat {}, variant: {}, primary_weight: {}", *player, name(),
+                        gear_affix_lower( stat_affix ), item_variant_lower( parsed.item_variant ),
+                        ITEM_VARIANTS[ parsed.item_variant - 1 ].primary_weight );
+    }
+    else
+    {
+      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_weight;
+      sim->print_debug( "{} item {} decoded stat {}, variant: {}, secondary_weight: {}", *player, name(),
+                        gear_affix_lower( stat_affix ), item_variant_lower( parsed.item_variant ),
+                        ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_weight );
+    }
+  }
+
+
+  amount *= pow( slot_rarity_base, RARITY_DATA[ parsed.rarity - 1 ].stat_scale_factor );
+
+  amount *= slot_multiplier();
+
+  sim->print_debug( "{} item {} decoded stat {}, slot_multiplier: {}, random: {}", *player, name(), gear_affix_lower( stat_affix ),
+                    slot_multiplier(), random_stat );
+
+  return round( amount );
+}
+
+// item_t::handle_base_stats ==================================================
+void item_t::add_gear_affix_stats( gear_affix_e affix_stat, bool random_stat )
+{
+  stat_e stat = stat_from_gear_affix( affix_stat );
+  if ( stat != STAT_NONE )
+  {
+    auto value = get_stat_value( affix_stat, random_stat );
+    sim->print_debug( "{} item {} decoded base stat {}, quantity: {}", *player, name(), stat, value );
+    if ( value > 0 )
+    {
+      base_stats.add_stat( stat, value );
+      stats.add_stat( stat, value );
+    }
+  }
+}
+
+
+// item_t::decode_main_secondary ==================================================
+
+void item_t::decode_main_secondary()
+{
+  if ( !option_main_secondary_str.empty() )
+  {
+    gear_affix_e affix_stat = gear_affix_from_string( option_main_secondary_str );
+    add_gear_affix_stats( affix_stat, false );
+  }
+}
+
+
+
+// item_t::handle_base_stats ==================================================
+void item_t::handle_base_stats()
+{
+  for ( gear_affix_e affix_stat : { GEAR_AFFIX_STAT_PRIMARY, GEAR_AFFIX_STAT_STAMINA } )
+  {
+    add_gear_affix_stats( affix_stat, false );
+  }
+}
+
+// item_t::decode_fixed_secondarys ==================================================
+
+void item_t::decode_fixed_secondarys()
+{
+  if ( !option_fixed_secondarys_str.empty() )
+  {
+    auto split = util::string_split<util::string_view>( option_fixed_secondarys_str, "/" );
+
+    for ( auto& affix_str : split )
+    {
+      gear_affix_e affix_stat = gear_affix_from_string( affix_str );
+      add_gear_affix_stats( affix_stat, true );
+    }
+  }
+}
+
+// item_t::decoe_affix_list ==================================================
+
+void item_t::decode_affix_list()
+{
+  if ( !option_affix_list_str.empty() )
+  {
+    auto split = util::string_split<util::string_view>( option_affix_list_str, "/" );
+
+    for ( auto& affix_str : split )
+    {
+      gear_affix_e affix_stat = gear_affix_from_string( affix_str );
+      add_gear_affix_stats( affix_stat, true );
+
+      if ( affix_stat >= GEAR_AFFIX_FINESSE_START && affix_stat <= GEAR_AFFIX_FINESSE_END )
+      {
+        
+      }
+
+      if ( affix_stat >= GEAR_AFFIX_ATTUNEMENT_START && affix_stat <= GEAR_AFFIX_ATTUNEMENT_END )
+      {
+      }
+
+      if ( affix_stat >= GEAR_AFFIX_TRAIT_START && affix_stat <= GEAR_AFFIX_TRAIT_END )
+      {
+      }
+    }
+  }
+}
+
 
 // item_t::decode_heroic ====================================================
 

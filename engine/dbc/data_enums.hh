@@ -1469,7 +1469,7 @@ enum spell_label : unsigned
   LABEL_SINGING_CITRINE            = 3922u,
 };
 
-enum difficulty_e : unsigned
+enum class difficulty_e : unsigned
 {
   NONE = 0,
   DUNGEON = 8,

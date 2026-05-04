@@ -122,6 +122,10 @@ struct item_t
     std::vector<int>                                 crafted_stat_mod;
     unsigned                                         titan_disc_driver_id;
 
+    item_variant_e item_variant;
+    item_rarity_e rarity;
+
+
     // Priority state tracking for item bonuses
     int base_level_priority;
     int scaling_level_priority;
@@ -137,6 +141,12 @@ struct item_t
   std::string options_str;
 
   // Option Data
+  std::string option_affix_list_str;
+  std::string option_rarity_str;
+  std::string option_item_variant_str;
+  std::string option_main_secondary_str;
+  std::string option_fixed_secondarys_str;
+
   std::string option_name_str;
   std::string option_stats_str;
   std::string option_gems_str;
@@ -210,6 +220,17 @@ struct item_t
   std::string encoded_enchant() const;
   std::string encoded_addon() const;
 
+  double get_stat_value( gear_affix_e stat, bool random_stat ) const;
+
+  double slot_multiplier() const;
+
+  void add_gear_affix_stats( gear_affix_e affix, bool random_stat );
+  void decode_item_variant();
+  void decode_item_rarity();
+  void decode_main_secondary();
+  void decode_fixed_secondarys();
+  void decode_affix_list();
+  void handle_base_stats();
   void decode_stats();
   void decode_gems();
   void decode_enchant();

@@ -197,9 +197,55 @@ public:
     double sapphire_spirit_cost_multiplier_major = 0.85;
   } fs_gems;
 
+  std::array<unsigned short, FINESSE_MAX> finesse_traits = {};
+
+  struct finesse_values_t
+  {
+    const double finesse_a_per_stack[ 5 ] = { 0, 0.01, 0.015, 0.02, 0.035 };
+    const int finesse_a_max_stacks        = 5;
+
+    const timespan_t finesse_b_duration = 4_s;
+    const double finesse_b_crit[ 5 ]    = { 0, 0.02, 0.03, 0.05, 0.08 };
+
+    const timespan_t finesse_c_duration[ 5 ] = { 0_s, 1_s, 2_s, 3_s, 4_s };
+    const timespan_t finesse_c_divisor       = 60_s;
+
+    const double finesse_d_chance[ 5 ]   = { 0, 0.05, 0.08, 0.13, 0.2 };
+    const double finesse_d_spirit_points = 1.0;
+
+    const double finesse_e_cdmg[ 5 ] = { 0, 0.01, 0.02, 0.03, 0.04 };
+
+    const double finesse_f_drain[ 5 ]   = { 0, 1.6, 2.56, 4.1, 6.55 };
+    const double finesse_f_drain_chance = 0.1;
+
+    const double finesse_g_spirit_to_expertise = 1.0;
+    const timespan_t finesse_g_duration[ 5 ]   = { 0_s, 3_s, 5_s, 8_s, 12_s };
+
+    const double finesse_h_added[ 5 ] = { 0, 0.05, 0.08, 0.13, 0.20 };
+
+    const double finesse_i_haste[ 5 ]   = { 0, 0.02, 0.032, 0.051, 0.082 };
+    const timespan_t finesse_i_interval = 30_s;
+    const timespan_t finesse_i_duration = 5_s;
+    const timespan_t finesse_i_cdr      = 2_s;
+
+    const double finesse_j_amp[ 5 ] = { 0, 0.005, 0.008, 0.013, 0.02 };
+    const double finesse_j_divisor  = 3.0;
+
+    const double finesse_k_cdr[ 5 ]        = { 0, 0.02, 0.03, 0.05, 0.08 };
+    const double finesse_k_boss_multiplier = 2.0;
+
+    const double finesse_l_dmg[ 5 ]     = { 0, 0.45, 0.72, 1.15, 1.84 };
+    const double finesse_l_heal[ 5 ]    = { 0, 0.58, 0.93, 1.48, 2.38 };
+    const int finesse_l_targets         = 4;
+    const int finesse_l_max_stacks      = 1;
+    const timespan_t finesse_l_duration = 15_s;
+  } finesse_trait_values;
+
   struct fs_weapons_t
   {
     fsweapon_e equipped_weapon = fsweapon_e::FSWEAPON_NONE;
+
+    std::array<unsigned short, WEAPON_TRAIT_MAX> weapon_traits = {};
 
     // You know I should have made these into an enum and an array shouldn't I...
     unsigned amethyst_splinters               = 0;

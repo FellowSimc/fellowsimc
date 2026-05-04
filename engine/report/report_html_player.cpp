@@ -1206,6 +1206,26 @@ void print_html_gear( report::sc_html_stream& os, const player_t& p )
 
     std::string item_sim_desc = "ilevel: " + util::to_string( item.item_level() );
 
+    if ( item.option_item_variant_str != "" )
+    {
+      item_sim_desc += ", variant: " + item.option_item_variant_str;
+    }
+
+    if ( item.option_main_secondary_str != "" )
+    {
+      item_sim_desc += ", main_secondary: " + item.option_main_secondary_str;
+    }
+
+    if ( item.option_fixed_secondarys_str != "" )
+    {
+      item_sim_desc += ", fixed_secondarys: " + item.option_fixed_secondarys_str;
+    }
+
+    if ( item.option_affix_list_str != "" )
+    {
+      item_sim_desc += ", affixes: " + item.option_affix_list_str;
+    }
+
     if ( item.parsed.data.item_class == ITEM_CLASS_WEAPON )
     {
       item_sim_desc += ", weapon: { " + item.weapon_stats_str() + " }";

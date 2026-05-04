@@ -14,6 +14,21 @@
 #define MAX_ITEM_STAT 10
 #define MAX_ITEM_SOCKET_SLOT 3
 
+
+constexpr double primary_divisor               = 15;
+constexpr double primary_power_base            = 1.03;
+constexpr double primary_pool_multiplier       = 10;
+constexpr double secondary_pool_multiplier     = 72;
+constexpr double secondary_mul                 = 2.4;
+constexpr double fixed_slot_base_weight        = 0.15;
+constexpr double fixed_slot_primary_weight     = 0.25;
+constexpr double fixed_slot_stamina_weight     = 0.5;
+constexpr double fixed_slot_secondary_weight   = 0.3;
+constexpr double fixed_slot_main_stat_mul        = 0.7;
+constexpr double fixed_slot_secondary_mul      = 0.6;
+constexpr double randomized_slot_secondary_mul = 1.5;
+constexpr double slot_rarity_base              = 0.92;
+
 struct dbc_item_data_t {
   struct stats_t {
     int16_t type_e; // item_mod_type

@@ -48,6 +48,24 @@ constexpr std::string_view gem_type_lower( gem_type_e t )
   }
 }
 
+constexpr gem_type_e gem_type_from_string( std::string_view s )
+{
+  if ( s == "ruby" )
+    return GEM_RUBY;
+  if ( s == "amethyst" )
+    return GEM_AMETHYST;
+  if ( s == "topaz" )
+    return GEM_TOPAZ;
+  if ( s == "emerald" )
+    return GEM_EMERALD;
+  if ( s == "sapphire" )
+    return GEM_SAPPHIRE;
+  if ( s == "diamond" )
+    return GEM_DIAMOND;
+
+  return GEM_NONE;
+}
+
 struct enum_data_t
 {
   long long enum_id;
@@ -2027,6 +2045,27 @@ constexpr stat_e stat_from_gear_affix( gear_affix_e t )
   }
 }
 
+constexpr std::string_view gear_affix_stat_lower( gear_affix_e t )
+{
+  switch ( t )
+  {
+    case gear_affix_e::GEAR_AFFIX_STAT_PRIMARY:
+      return "primary";
+    case gear_affix_e::GEAR_AFFIX_STAT_STAMINA:
+      return "stamina";
+    case gear_affix_e::GEAR_AFFIX_STAT_HASTE:
+      return "haste";
+    case gear_affix_e::GEAR_AFFIX_STAT_CRIT:
+      return "crit";
+    case gear_affix_e::GEAR_AFFIX_STAT_EXPERTISE:
+      return "expertise";
+    case gear_affix_e::GEAR_AFFIX_STAT_SPIRIT:
+      return "spirit";
+    default:
+      return "unknown";
+  }
+}
+
 constexpr std::string_view gear_affix_lower( gear_affix_e t )
 {
   if ( t == finesse_trait_e::FINESSE_NONE || t >= finesse_trait_e::FINESSE_MAX )
@@ -2042,10 +2081,37 @@ constexpr std::string_view gear_affix_lower( gear_affix_e t )
     return gem_type_lower( gem_type_from_gear_affix( t ) );
 
   if ( t >= gear_affix_e::GEAR_AFFIX_STAT_START && t < gear_affix_e::GEAR_AFFIX_STAT_END )
-    return stat_type_string_view( stat_from_gear_affix( t ) );
+    return gear_affix_stat_lower( t );
 
   return "error gear affix";
   // return FINESSE_TRAITS[ t - 1 ].lower_string;
+}
+
+constexpr gear_affix_e gear_affix_from_string( std::string_view affix )
+{
+  if ( affix == "unknown" || affix == "none" )
+    return GEAR_AFFIX_NONE;
+
+  for ( const auto& entry : FINESSE_TRAITS )
+    if ( entry.lower_string == affix )
+      return static_cast<gear_affix_e>( entry.enum_id + gear_affix_e::GEAR_AFFIX_FINESSE_START );
+
+  for ( const auto& entry : WEAPON_TRAITS )
+    if ( entry.lower_string == affix )
+      return static_cast<gear_affix_e>( entry.enum_id + gear_affix_e::GEAR_AFFIX_TRAIT_START );
+  
+  gem_type_e parsed_gem = gem_type_from_string( affix );
+  if ( parsed_gem != GEM_NONE)
+    return gear_affix_from_gem_type( parsed_gem );
+
+  for ( unsigned stat = gear_affix_e::GEAR_AFFIX_STAT_START; stat < gear_affix_e::GEAR_AFFIX_STAT_END; stat++ )
+  {
+    auto stat_e = static_cast<gear_affix_e>( stat );
+    if ( affix == gear_affix_stat_lower( stat_e ) )
+      return static_cast<gear_affix_e>( stat_e );
+  }
+  
+  return gear_affix_e::GEAR_AFFIX_NONE;
 }
 
 constexpr std::string_view gear_affix_pretty( gear_affix_e t )
@@ -2054,4 +2120,125 @@ constexpr std::string_view gear_affix_pretty( gear_affix_e t )
     return "Unknown";
 
   return FINESSE_TRAITS[ t - 1 ].pretty_string;
+}
+
+#define ITEM_VARIANT_LIST( X )                                              \
+  X( EVENS, evens, "Evens", 0.28, 0.28, 0.28, 0.16 )                        \
+  X( BIG_SECONDARY, big_secondary, "Big Secondary", 0.22, 0.22, 0.4, 0.16 ) \
+  X( BIG_STAMINA, big_stamina, "Big Stamina", 0.4, 0.17, 0.27, 0.16 )       \
+  X( RELIC, relic, "Relic", 0, 0.48, 0.36, 0.16 )                           \
+  X( JEWELLERY, jewellery, "Jewellery", 0.28, 0, 0.56, 0.16 )               
+
+enum item_variant_e : unsigned
+{
+  VARIANT_NONE = 0,
+
+#define X( UPPER, lower, pretty, stamina, primary, secondary, rolled ) VARIANT_##UPPER,
+  ITEM_VARIANT_LIST( X )
+#undef X
+
+  VARIANT_MAX
+};
+
+struct item_variant_data_t
+{
+  long long enum_id;
+  std::string_view lower_string;
+  std::string_view pretty_string;
+  double stamina_weight;
+  double primary_weight;
+  double secondary_weight;
+  double rolled_weight;
+};
+
+static constexpr item_variant_data_t ITEM_VARIANTS[] = {
+#define X( upper, lower, pretty, stamina, primary, secondary, rolled ) \
+  { item_variant_e::VARIANT_##upper, #lower, pretty, stamina, primary, secondary, rolled },
+    ITEM_VARIANT_LIST( X )
+#undef X
+};
+
+constexpr std::string_view item_variant_lower( item_variant_e t )
+{
+  if ( t == item_variant_e::VARIANT_NONE || t >= item_variant_e::VARIANT_MAX )
+    return "unknown";
+
+  return ITEM_VARIANTS[ t - 1 ].lower_string;
+}
+
+constexpr std::string_view item_variant_pretty( item_variant_e t )
+{
+  if ( t == item_variant_e::VARIANT_NONE || t >= item_variant_e::VARIANT_MAX )
+    return "Unknown";
+
+  return ITEM_VARIANTS[ t - 1 ].pretty_string;
+}
+
+constexpr item_variant_e item_variant_from_string( std::string_view trait )
+{
+  for ( const auto& entry : ITEM_VARIANTS )
+    if ( entry.lower_string == trait )
+      return static_cast<item_variant_e>( entry.enum_id );
+  return item_variant_e::VARIANT_NONE;
+}
+
+#define ITEM_RARITY_DATA( X )                  \
+  X( UNCOMMON, uncommon, "Uncommon", 4, 1, 0 ) \
+  X( RARE, rare, "Rare", 3, 1, 1 )             \
+  X( EPIC, epic, "Epic", 2, 1, 2 )             \
+  X( CHAMPION, champion, "Champion", 1, 2, 2 ) \
+  X( HEROIC, heroic, "Heroic", 0, 2, 3 )       \
+  X( LEGENDARY, legendary, "Legendary", 0, 2, 3 )
+
+enum item_rarity_e : unsigned
+{
+  RARITY_NONE = 0,
+
+#define X( UPPER, lower, pretty, scale_factor, fixed_secondarys, free_traits ) RARITY_##UPPER,
+  ITEM_RARITY_DATA( X )
+#undef X
+
+  RARITY_MAX
+};
+
+struct item_rarity_data_t
+{
+  long long enum_id;
+  std::string_view lower_string;
+  std::string_view pretty_string;
+  double stat_scale_factor;
+  int fixed_secondarys;
+  int free_traits;
+};
+
+static constexpr item_rarity_data_t RARITY_DATA[] = {
+#define X( upper, lower, pretty, scale_factor, fixed_secondarys, free_traits ) \
+  { item_rarity_e::RARITY_##upper, #lower, pretty, scale_factor, fixed_secondarys, free_traits },
+    ITEM_RARITY_DATA( X )
+#undef X
+};
+
+constexpr std::string_view item_rarity_lower( item_rarity_e t )
+{
+  if ( t == item_rarity_e::RARITY_NONE || t >= item_rarity_e::RARITY_MAX )
+    return "unknown";
+
+  return RARITY_DATA[ t - 1 ].lower_string;
+}
+
+constexpr std::string_view item_rarity_pretty( item_rarity_e t )
+{
+  if ( t == item_rarity_e::RARITY_NONE || t >= item_rarity_e::RARITY_MAX )
+    return "Unknown";
+
+  return RARITY_DATA[ t - 1 ].pretty_string;
+}
+
+constexpr item_rarity_e item_rarity_from_string( std::string_view trait )
+{
+  for ( const auto& entry : RARITY_DATA )
+    if ( entry.lower_string == trait )
+      return static_cast<item_rarity_e>( entry.enum_id );
+
+  return item_rarity_e::RARITY_NONE;
 }

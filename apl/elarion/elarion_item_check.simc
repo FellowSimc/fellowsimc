@@ -30,7 +30,7 @@ desired_targets=1
 # dps_plot_step=300
 # dps_plot_positive=1
 
-elarion="HWA Shimmer"
+elarion="Initial Stat Spread"
 level=80
 
 # initial_resource=spirit=100
@@ -71,12 +71,20 @@ weapon_trait.visions_of_grandeur=4
 # legendary.starstrikers_ascent=1
 
 
-legendary.starstrikers_ascent=0
-legendary.shimmer=0
-legendary.astronomers_hail=1
-talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:1/last_lights:1
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=0
+# legendary.astronomers_hail=1
+# talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:1/last_lights:1
 
-apl/elarion/elarion_apl_volley.simc
+# apl/elarion/elarion_apl_volley.simc
+
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+legendary.astronomers_hail=0
+talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
+
+# gems.sapphire_power=1200
 
 head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
 neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
@@ -89,6 +97,645 @@ legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/
 feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
 finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
 finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
-trinket2=relic2,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
-main_hand=weap,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+
+# weapon_trait.emerald_judgement=1
+
+copy="E6R6S6J1T2A2D2 (1 affix and 3 ring mods) 3 mainstat ring","Initial Stat Spread"
+gems.ruby_power=1200
+gems.sapphire_power=1200
+gems.emerald_power=1200
+
+gems.topaz_power=240
+gems.amethyst_power=240
+gems.diamond_power=240
+
+weapon_trait.emerald_judgement=1
+finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise,affixes=primary
+finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=primary/primary
+
+copy="E6R6S6J1T2A2D2 (1 affix and 3 ring mods)","Initial Stat Spread"
+gems.ruby_power=1200
+gems.sapphire_power=1200
+gems.emerald_power=1200
+
+gems.topaz_power=240
+gems.amethyst_power=240
+gems.diamond_power=240
+
+weapon_trait.emerald_judgement=1
+
+
+copy="S10E6J1 (6 Ring Mods and 1 affix)","Initial Stat Spread"
+gems.sapphire_power=2640
+gems.emerald_power=1200
+weapon_trait.emerald_judgement=1
+
+copy="S10E4J1T2A2D2 (6 Ring Mods and 1 affix)","Initial Stat Spread"
+gems.sapphire_power=2640
+gems.emerald_power=720
+gems.topaz_power=240
+gems.amethyst_power=240
+gems.diamond_power=240
+gems.ruby_power=240
+weapon_trait.emerald_judgement=1
+
+# copy="R6","Initial Stat Spread"
+# gems.ruby_power=1200
+# copy="S6","Initial Stat Spread"
+# gems.sapphire_power=1200
+# copy="T6","Initial Stat Spread"
+# gems.topaz_power=1200
+# copy="A6","Initial Stat Spread"
+# gems.amethyst_power=1200
+# copy="E6","Initial Stat Spread"
+# gems.emerald_power=1200
+# # copy="D6","Initial Stat Spread"
+# # gems.diamond_power=1200
+# copy="E6Judge1","Initial Stat Spread"
+# gems.emerald_power=1200
+# weapon_trait.emerald_judgement=1
+# copy="R10 2880","Initial Stat Spread"
+# gems.ruby_power=2880
+# copy="S10 2880","Initial Stat Spread"
+# gems.sapphire_power=2880
+# copy="T10 2880","Initial Stat Spread"
+# gems.topaz_power=2880
+# copy="A10 2880","Initial Stat Spread"
+# gems.amethyst_power=2880
+# copy="E10 2880","Initial Stat Spread"
+# gems.emerald_power=2880
+# copy="E10 2880 Judge1","Initial Stat Spread"
+# gems.emerald_power=2880
+# weapon_trait.emerald_judgement=1
+# copy="R4","Initial Stat Spread"
+# gems.ruby_power=720
+# copy="S4","Initial Stat Spread"
+# gems.sapphire_power=720
+# copy="T4","Initial Stat Spread"
+# gems.topaz_power=720
+# copy="A4","Initial Stat Spread"
+# gems.amethyst_power=720
+# copy="E4","Initial Stat Spread"
+# gems.emerald_power=720
+# copy="D4","Initial Stat Spread"
+# gems.diamond_power=720
+# copy="E4Judge1","Initial Stat Spread"
+# gems.emerald_power=720
+# weapon_trait.emerald_judgement=1
+# copy="R2","Initial Stat Spread"
+# gems.ruby_power=240
+# copy="S2","Initial Stat Spread"
+# gems.sapphire_power=240
+# copy="T2","Initial Stat Spread"
+# gems.topaz_power=240
+# copy="A2","Initial Stat Spread"
+# gems.amethyst_power=240
+# copy="E2","Initial Stat Spread"
+# gems.emerald_power=240
+# copy="D2","Initial Stat Spread"
+# gems.diamond_power=240
+# copy="E2Judge1","Initial Stat Spread"
+# gems.emerald_power=240
+# weapon_trait.emerald_judgement=1
+# copy="R1","Initial Stat Spread"
+# gems.ruby_power=120
+# copy="S1","Initial Stat Spread"
+# gems.sapphire_power=120
+# copy="T1","Initial Stat Spread"
+# gems.topaz_power=120
+# copy="A1","Initial Stat Spread"
+# gems.amethyst_power=120
+# copy="E1","Initial Stat Spread"
+# gems.emerald_power=120
+# copy="D1","Initial Stat Spread"
+# gems.diamond_power=120
+# copy="E1Judge1","Initial Stat Spread"
+# gems.emerald_power=120
+# weapon_trait.emerald_judgement=1
+# copy="Judge1","Initial Stat Spread"
+# weapon_trait.emerald_judgement=1
+# copy="Judge4","Initial Stat Spread"
+# weapon_trait.emerald_judgement=4
+# copy="Dia1","Initial Stat Spread"
+# weapon_trait.diamond_strike=1
+# copy="Dia4","Initial Stat Spread"
+# weapon_trait.diamond_strike=4
+# copy="Splinter1","Initial Stat Spread"
+# weapon_trait.amethyst_splinters=1
+# copy="Splinter4","Initial Stat Spread"
+# weapon_trait.amethyst_splinters=4
+# copy="BM1","Initial Stat Spread"
+# weapon_trait.brave_machinations=1
+# copy="BM4","Initial Stat Spread"
+# weapon_trait.brave_machinations=4
+# copy="HB1","Initial Stat Spread"
+# weapon_trait.heroic_brand=1
+# copy="HB4","Initial Stat Spread"
+# weapon_trait.heroic_brand=4
+# copy="Kindling1","Initial Stat Spread"
+# weapon_trait.kindling=1
+# copy="Kindling4","Initial Stat Spread"
+# weapon_trait.kindling=4
+# copy="WM1","Initial Stat Spread"
+# weapon_trait.willful_momentum=1
+# copy="WM4","Initial Stat Spread"
+# weapon_trait.willful_momentum=4
+# # copy="IA1","Initial Stat Spread"
+# # weapon_trait.inspired_allegiance=1
+# # copy="IA4","Initial Stat Spread"
+# # weapon_trait.inspired_allegiance=4
+# copy="RS1","Initial Stat Spread"
+# weapon_trait.ruby_storm=1
+# copy="RS4","Initial Stat Spread"
+# weapon_trait.ruby_storm=4
+# copy="SO1","Initial Stat Spread"
+# weapon_trait.seized_opportunity=1
+# copy="SO4","Initial Stat Spread"
+# weapon_trait.seized_opportunity=4
+# copy="SA1","Initial Stat Spread"
+# weapon_trait.sapphire_aurastone=1
+# copy="SA4","Initial Stat Spread"
+# weapon_trait.sapphire_aurastone=4
+# copy="VS1","Initial Stat Spread"
+# weapon_trait.vengeful_soul=1
+# copy="VS4","Initial Stat Spread"
+# weapon_trait.vengeful_soul=4
+
+
+# copy="Head Primary","Initial Stat Spread"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit/primary
+
+# copy="Head Secondary","Initial Stat Spread"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit/expertise
+
+# copy="Neck Primary","Initial Stat Spread"
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit,affixes=primary
+
+# copy="Neck Secondary","Initial Stat Spread"
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit,affixes=expertise
+
+# copy="Shoulder Primary","Initial Stat Spread"
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit/primary
+
+# copy="Shoulder Secondary","Initial Stat Spread"
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit/expertise
+
+# copy="Back Primary","Initial Stat Spread"
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit,affixes=primary
+
+# copy="Back Secondary","Initial Stat Spread"
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit,affixes=expertise
+
+
+# copy="Chest Primary","Initial Stat Spread"
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary/primary
+
+# copy="Chest Secondary","Initial Stat Spread"
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary/expertise
+
+
+# copy="Wrist Primary","Initial Stat Spread"
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=primary
+
+# copy="Wrist Secondary","Initial Stat Spread"
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=expertise
+
+
+# copy="Hands Primary","Initial Stat Spread"
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit,affixes=primary
+
+# copy="Hands Secondary","Initial Stat Spread"
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit,affixes=expertise
+
+
+# copy="Legs Primary","Initial Stat Spread"
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit/primary
+
+# copy="Legs Secondary","Initial Stat Spread"
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit/expertise
+
+# copy="Feet Primary","Initial Stat Spread"
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary
+
+# copy="Feet Secondary","Initial Stat Spread"
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=expertise
+
+# copy="Finger Primary","Initial Stat Spread"
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=primary
+
+# copy="Finger Secondary","Initial Stat Spread"
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=expertise
+
+
+# copy="Relic Primary","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=primary
+
+# copy="Relic Secondary","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=expertise
+
+# copy="Main Hand Primary","Initial Stat Spread"
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise/primary
+
+# copy="Main Hand Secondary","Initial Stat Spread"
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise/expertise
+
+# copy="D6DS4","Initial Stat Spread"
+# gems.diamond_power=1200
+# weapon_trait.diamond_strike=4
+
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary
+
+# copy="More Spirit"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+# copy="More Spirit Less Primary - Expertise"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/expertise,affixes=primary/primary
+
+
+# copy="More Spirit Less Primary - haste"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/haste,affixes=primary/primary
+
+# copy="More Spirit Less Primary - crit"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/crit,affixes=primary/primary
+
+# copy="More Spirit Less Primary - spirit"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit,affixes=primary/primary
+
+
+# copy="More Spirit Less Primary - crit/expertise"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=primary/primary
+
+# copy="More Spirit Less Primary - critx2/expertise"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/primary
+
+
+# copy="More Spirit Less Primary - critx2/expertisex2"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+
+
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx2/expx2"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx2/expx2 feet haste"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx2/expx2 feet spirit"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=spirit/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx2/expx2 feet crit"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx2/expx2 feet expertise"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=expertise/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+
+
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx2/expx2 haste=>expert"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx2/expx2 haste=>expertx2"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx2/expx2 haste=>expertxcrit"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx2/expx2 haste=>expertxspirit"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx2/expx2 haste=>expertxspiritxcrit"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+# copy="More Spirit Less Primary - critx2/expertisex2 trinket critx1/expx1"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+# copy="More Spirit Less Primary - critx2/expertisex1/spirit"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/spirit
+
+
+# copy="More Spirit Less Primary - critx2/expertisex1/haste"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/haste
+
+
+# copy="More Spirit Less Primary - critx1/expertisex2/haste"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/expertise,affixes=crit/haste
+
+# copy="More Spirit Less Primary - critx1/expertisex2/spirit"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/expertise,affixes=crit/spirit

@@ -1,0 +1,124 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=250
+# max_time=60
+target_error=0.1
+iterations=15000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+max_time=720
+desired_targets=1
+
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+elarion="Initial Stat Spread"
+level=80
+
+# initial_resource=spirit=100
+
+apl/elarion/elarion_apl.simc
+
+# gear_agility=1442
+
+
+# weapon=voidbringers_touch
+weapon=chronoshift
+
+
+# gems.sapphire_power=2640
+# gems.topaz_power=1620
+weapon_trait.visions_of_grandeur=4
+# weapon_trait.sapphire_aurastone=4
+
+# legendary.shimmer=1
+# legendary.astronomers_hail
+
+# legendary.new_spirit_legendary=1
+
+# copy="Starstriker Mark"
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/repeating_stars:0/skylit_grace:0/last_lights:1/impending_heartseeker:1/last_lights:1
+# talents=fusillade:1/piercing_seekers:1/lunarlight_affinity:1/lunar_fury:1/skylit_grace:1/impending_heartseeker:1/last_lights:1
+# gear_haste_rating=1250
+# gear_crit_rating=865
+# gear_versatility_rating=800
+# gear_mastery_rating=1600
+
+
+# gear_haste_rating=2050
+# gear_crit_rating=865
+# gear_versatility_rating=800
+# gear_mastery_rating=800
+
+# legendary.starstrikers_ascent=1
+
+
+# legendary.starstrikers_ascent=0
+# legendary.shimmer=0
+# legendary.astronomers_hail=1
+# talents=focused_expanse:1/skylit_grace:1/repeating_stars:1/lunar_fury:1/lunarlight_affinity:1/stars_aligned:1/fervent_supremacy:1/last_lights:1
+
+# apl/elarion/elarion_apl_volley.simc
+
+legendary.starstrikers_ascent=0
+legendary.shimmer=1
+legendary.astronomers_hail=0
+talents=high_impact:1/lethal_shots:1/precision_strike:1/final_crescendo:1/rising_moon:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/last_lights:1
+
+
+# gems.sapphire_power=1200
+
+head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+
+# weapon_trait.emerald_judgement=1
+
+
+copy="Finesse_A1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_a
+
+copy="Finesse_A4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+
+copy="Finesse_B1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_b
+
+copy="Finesse_B4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+
+copy="Finesse_D1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_d
+
+copy="Finesse_D4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d

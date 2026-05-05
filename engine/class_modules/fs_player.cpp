@@ -1087,6 +1087,7 @@ void fs_player_t::init_gains()
 
   fs_gains.grandeur     = get_gain( "Visions of Grandeur" );
   fs_gains.spirit_procs = get_gain( "Spirit Procs" );
+  fs_gains.finesse_d = get_gain( "Finesse D" );
 }
 
 // fs_player_t::init_procs ======================================================
@@ -1128,6 +1129,24 @@ void fs_player_t::init_resources( bool force )
 void fs_player_t::create_buffs()
 {
   player_t::create_buffs();
+
+  if ( finesse_traits[ FINESSE_A ] > 0 )
+  {
+    auto rank          = finesse_traits[ FINESSE_A ];
+    fs_buffs.finesse_a = make_buff<fs_player_buff_t>( this, "finesse_a" )
+                             ->set_default_value( finesse_trait_values.finesse_a_per_stack[ rank ] )
+                             ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                             ->set_max_stack( finesse_trait_values.finesse_a_max_stacks );
+  }
+
+  if ( finesse_traits[ FINESSE_B ] > 0 )
+  {
+    auto rank          = finesse_traits[ FINESSE_B ];
+    fs_buffs.finesse_b = make_buff<fs_player_buff_t>( this, "finesse_b" )
+                             ->set_default_value( finesse_trait_values.finesse_b_crit[ rank ] )
+                             ->set_duration( finesse_trait_values.finesse_b_duration );
+  }
+
 
   fs_buffs.spirit_of_heroism = make_buff<fs_player_buff_t>( this, "spirit_of_heroism" )
                                    ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
@@ -1602,6 +1621,18 @@ std::string fs_player_t::create_profile( save_e stype )
 void fs_player_t::init_items()
 {
   player_t::init_items();
+
+  for ( auto& v : finesse_traits )
+  {
+    if ( v > 4 )
+      v = 4;
+  }
+
+  for ( auto& v : fs_weapons.weapon_traits )
+  {
+    if ( v > 4 )
+      v = 4;
+  }
 }
 
 // fs_player_t::init_special_effects ============================================
@@ -1620,67 +1651,67 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_RUBY ] >= 1560 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 45 );
-    passive.add_stat( STAT_STAMINA, 420 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 6 );
+    passive.add_stat( STAT_STAMINA, 42 );
   }
   else if ( fs_gems.gem_powers[ GEM_RUBY ] >= 240 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 15 );
-    passive.add_stat( STAT_STAMINA, 140 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 2 );
+    passive.add_stat( STAT_STAMINA, 14 );
   }
 
   if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 1560 )
   {
-    passive.add_stat( STAT_CRIT_RATING, 300 );
-    passive.add_stat( STAT_STAMINA, 300 );
+    passive.add_stat( STAT_CRIT_RATING, 30 );
+    passive.add_stat( STAT_STAMINA, 30 );
   }
   else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 240 )
   {
-    passive.add_stat( STAT_CRIT_RATING, 100 );
-    passive.add_stat( STAT_STAMINA, 100 );
+    passive.add_stat( STAT_CRIT_RATING, 10 );
+    passive.add_stat( STAT_STAMINA, 10 );
   }
 
   if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 1560 )
   {
-    passive.add_stat( STAT_HASTE_RATING, 300 );
-    passive.add_stat( STAT_STAMINA, 300 );
+    passive.add_stat( STAT_HASTE_RATING, 30 );
+    passive.add_stat( STAT_STAMINA, 30 );
   }
   else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 240 )
   {
-    passive.add_stat( STAT_HASTE_RATING, 100 );
-    passive.add_stat( STAT_STAMINA, 100 );
+    passive.add_stat( STAT_HASTE_RATING, 10 );
+    passive.add_stat( STAT_STAMINA, 10 );
   }
 
   if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 1560 )
   {
-    passive.add_stat( STAT_VERSATILITY_RATING, 300 );
-    passive.add_stat( STAT_STAMINA, 300 );
+    passive.add_stat( STAT_VERSATILITY_RATING, 30 );
+    passive.add_stat( STAT_STAMINA, 30 );
   }
   else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 240 )
   {
-    passive.add_stat( STAT_VERSATILITY_RATING, 100 );
-    passive.add_stat( STAT_STAMINA, 100 );
+    passive.add_stat( STAT_VERSATILITY_RATING, 10 );
+    passive.add_stat( STAT_STAMINA, 10 );
   }
 
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1560 )
   {
-    passive.add_stat( STAT_MASTERY_RATING, 300 );
-    passive.add_stat( STAT_STAMINA, 300 );
+    passive.add_stat( STAT_MASTERY_RATING, 30 );
+    passive.add_stat( STAT_STAMINA, 30 );
   }
   else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 240 )
   {
-    passive.add_stat( STAT_MASTERY_RATING, 100 );
-    passive.add_stat( STAT_STAMINA, 100 );
+    passive.add_stat( STAT_MASTERY_RATING, 10 );
+    passive.add_stat( STAT_STAMINA, 10 );
   }
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1560 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 75 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 9 );
     passive.add_stat( STAT_ARMOR, 1500 );
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 240 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 25 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 3 );
     passive.add_stat( STAT_ARMOR, 500 );
   }
 
@@ -2432,6 +2463,23 @@ void fs_player_t::init_background_actions()
     fs_actions.voidbringer_dmg = new actions::voidbringers_touch_dmg_t( "voidbringers_touch_dmg", this );
   if ( fs_weapons.sapphire_aurastone )
     fs_actions.aurastone_dmg = new actions::sapphire_aurastone_dmg_t( "sapphire_aurastone_dmg", this );
+}
+
+void fs_player_t::init_rng()
+{
+  player_t::init_rng();
+
+  if ( finesse_traits[ FINESSE_D ] > 0 )
+  {
+    fs_rng_objects.finesse_d = get_accumulated_rng(
+        "finesse_d", rng::CfromP( finesse_trait_values.finesse_d_chance[ finesse_traits[ FINESSE_D ] ] ) );
+  }
+
+  if ( finesse_traits[ FINESSE_F ] > 0 )
+  {
+    fs_rng_objects.finesse_f =
+        get_accumulated_rng( "finesse_f", rng::CfromP( finesse_trait_values.finesse_f_drain_chance ) );
+  }
 }
 
 // fs_player_t::reset ===========================================================

@@ -166,6 +166,8 @@ public:
   /// Spell school prior to set_school_override()
   school_e original_school;
 
+  unsigned ability_flags;
+
   /// Spell id if available, 0 otherwise
   unsigned id;
 

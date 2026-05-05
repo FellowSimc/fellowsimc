@@ -355,6 +355,7 @@ public:
     event_t* tick_event;
     event_t* stars_aligned_event;
     event_t* end_event;
+    double persistent_multiplier;
     int tick_number;
     bool active;
 
@@ -364,6 +365,7 @@ public:
         tick_event( nullptr ),
         stars_aligned_event( nullptr ),
         end_event( nullptr ),
+        persistent_multiplier( 1 ),
         tick_number( 0 ),
         active( false )
     {
@@ -421,7 +423,16 @@ public:
         return;
       }
 
-      p()->actions.starfall_volley->execute_on_target( t );
+      auto dmg_action = p()->actions.starfall_volley;
+
+      dmg_action->set_target( t );
+      action_state_t* damage_state = dmg_action->get_state();
+      damage_state->target         = dmg_action->target;
+
+      dmg_action->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+      damage_state->persistent_multiplier = persistent_multiplier;
+
+      dmg_action->schedule_execute( damage_state );
 
       tick_number++;
 
@@ -512,10 +523,13 @@ public:
       return active;
     }
 
-    void start( player_t* t = nullptr )
+    void start( const action_state_t* s )
     {
       reset();
       active = true;
+
+      player_t* t = s->target;
+      persistent_multiplier = s->persistent_multiplier;
 
       if ( t )
       {
@@ -546,9 +560,9 @@ public:
 
   auto_dispose<std::vector<starfall_volley_event_handler_t*>> starfall_volley_handlers;
 
-  starfall_volley_event_handler_t* start_starfall_volley( player_t* t )
+  starfall_volley_event_handler_t* start_starfall_volley( action_state_t* s )
   {
-    assert( t && !t->is_sleeping() && "Started a starfall volley on a null or sleeping enemy" );
+    assert( s->target && !s->target->is_sleeping() && "Started a starfall volley on a null or sleeping enemy" );
 
     starfall_volley_event_handler_t* handler = nullptr;
     for ( auto it : starfall_volley_handlers )
@@ -563,7 +577,7 @@ public:
       starfall_volley_handlers.push_back( handler );
     }
 
-    handler->start( t );
+    handler->start( s );
 
     return handler;
   }
@@ -932,6 +946,8 @@ struct focused_shot_t : public elarion_attack_t
     energize_type     = action_energize::ON_CAST;
     energize_resource = RESOURCE_FOCUS;
 
+    ability_flags |= ability_type_e::ABILITY_BASIC;
+
     parse_options( options_str );
   }
 
@@ -967,6 +983,8 @@ struct celestial_shot_t : public elarion_attack_t
     base_execute_time = 0_s;
 
     base_costs[ RESOURCE_FOCUS ] = p->spell_const.celestial_shot_focus_cost;
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
 
     parse_options( options_str );
   }
@@ -1030,6 +1048,8 @@ struct multishot_t : public elarion_attack_t
     base_execute_time = 0_s;
 
     base_costs[ RESOURCE_FOCUS ] = p->spell_const.multishot_focus_cost;
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
 
     parse_options( options_str );
   }
@@ -1230,6 +1250,8 @@ struct highwind_arrow_t : public elarion_attack_t
     cooldown->charges  = p->spell_const.highwind_arrow_charges;
     cooldown->hasted   = true;
 
+    ability_flags |= ability_type_e::ABILITY_POWER;
+
     if ( p->talents_enabled( elarion_t::HIGH_IMPACT ) && !is_precision_strike )
     {
       if ( !p->actions.high_impact->stats->parent )
@@ -1422,6 +1444,8 @@ struct heartseeker_barrage_t : public elarion_attack_t
         lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunar_fury_barrage_chance_mul;
         lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunar_fury_barrage_chance_mul;
       }
+
+      ability_flags |= ability_type_e::ABILITY_POWER;
     }
 
     void handle_lunarlight_salvo( const action_state_t* s ) override
@@ -1520,6 +1544,8 @@ struct heartseeker_barrage_t : public elarion_attack_t
 
     arrow = new heartseeker_barrage_arrow_t( p, options_str );
 
+    ability_flags |= ability_type_e::ABILITY_POWER;
+
     add_child( arrow );
 
     parse_options( options_str );
@@ -1545,6 +1571,7 @@ struct heartseeker_barrage_t : public elarion_attack_t
     damage_state->target         = arrow->target;
 
     arrow->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+    damage_state->persistent_multiplier = d->state->persistent_multiplier;
 
     if ( p()->buffs.impending_heartseeker_channel->check() )
     {
@@ -1588,6 +1615,8 @@ struct skystriders_supremacy_t : public elarion_spell_t
     if ( p->talents_enabled( elarion_t::FERVENT_SUPREMACY ) )
       cooldown->duration -= p->talents.fervent_supremacy_reduced_cooldown;
     parse_options( options_str );
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
   void execute() override
@@ -1612,6 +1641,7 @@ struct skystriders_grace_t : public elarion_spell_t
 
     cooldown->duration = p->spell_const.skystriders_grace_cooldown;
     parse_options( options_str );
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
   void execute() override
@@ -1636,6 +1666,7 @@ struct event_horizon_t : public elarion_spell_t
     base_costs[ RESOURCE_SPIRIT ] = 100;
 
     parse_options( options_str );
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
   }
 
   void execute() override
@@ -1714,6 +1745,7 @@ struct lunarlight_mark_t : public elarion_spell_t
     aoe = p->spell_const.lunarlight_mark_max_targets;
 
     cooldown->duration = p->spell_const.lunarlight_mark_cooldown;
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
     parse_options( options_str );
   }
 
@@ -1816,13 +1848,14 @@ struct starfall_volley_t : public elarion_spell_t
 
 
     base_costs[ RESOURCE_FOCUS ] = p->spell_const.starfall_volley_focus_cost;
+    
+    ability_flags |= ability_type_e::ABILITY_POWER;
   }
 
-  void execute() override
+  void impact( action_state_t* s ) override
   {
-    elarion_spell_t::execute();
-
-    p()->start_starfall_volley( target );
+    elarion_spell_t::impact( s );
+    p()->start_starfall_volley( s );
   }
 };
 

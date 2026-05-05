@@ -2759,8 +2759,8 @@ void mara_t::init_base_stats()
 
   fs_player_t::init_base_stats();
 
-  base.stats.attribute[ STAT_AGILITY ] = 1000;
-  resources.base[ RESOURCE_HEALTH ]    = 17239;
+  base.stats.attribute[ STAT_AGILITY ] = 100;
+  resources.base[ RESOURCE_HEALTH ]    = 1724;
 
   base.health_per_stamina = 53.099;
 

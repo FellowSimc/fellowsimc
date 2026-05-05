@@ -17,7 +17,7 @@
 #include "interfaces/bcp_api.hpp"
 #include "player/unique_gear.hpp"
 #include "util/util.hpp"
-
+#include "class_modules/fs_player.hpp"
 #include <sstream>
 
 namespace { // UNNAMED NAMESPACE ==========================================
@@ -1813,17 +1813,28 @@ void item_t::decode_affix_list()
       gear_affix_e affix_stat = gear_affix_from_string( affix_str );
       add_gear_affix_stats( affix_stat, true );
 
-      if ( affix_stat >= GEAR_AFFIX_FINESSE_START && affix_stat <= GEAR_AFFIX_FINESSE_END )
-      {
-        
-      }
+      fellowship::fs_player_t* casted_player = dynamic_cast<fellowship::fs_player_t*>( player );
 
-      if ( affix_stat >= GEAR_AFFIX_ATTUNEMENT_START && affix_stat <= GEAR_AFFIX_ATTUNEMENT_END )
+      if ( casted_player )
       {
-      }
+        if ( affix_stat >= GEAR_AFFIX_FINESSE_START && affix_stat <= GEAR_AFFIX_FINESSE_END )
+        {
+          casted_player->finesse_traits[ finesse_trait_from_gear_affix( affix_stat ) ]++;
+        }
 
-      if ( affix_stat >= GEAR_AFFIX_TRAIT_START && affix_stat <= GEAR_AFFIX_TRAIT_END )
-      {
+        if ( affix_stat >= GEAR_AFFIX_ATTUNEMENT_START && affix_stat <= GEAR_AFFIX_ATTUNEMENT_END )
+        {
+          auto ring = ( slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 );
+
+          auto attunement_value = ring ? 120 : 40;
+
+          casted_player->fs_gems.gem_powers[ gem_type_from_gear_affix( affix_stat ) ] += attunement_value;
+        }
+
+        if ( affix_stat >= GEAR_AFFIX_TRAIT_START && affix_stat <= GEAR_AFFIX_TRAIT_END )
+        {
+          casted_player->fs_weapons.weapon_traits[ weapon_trait_from_gear_affix( affix_stat ) ]++;
+        }
       }
     }
   }

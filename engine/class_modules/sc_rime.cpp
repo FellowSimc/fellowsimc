@@ -2009,9 +2009,8 @@ void rime_t::init_base_stats()
 
   fs_player_t::init_base_stats();
 
-  base.stats.attribute[ STAT_INTELLECT ] = 1000;
-  base.stats.attribute[ STAT_STAMINA ]   = 1000;
-  resources.base[ RESOURCE_HEALTH ]      = 16180;
+  base.stats.attribute[ STAT_INTELLECT ] = 100;
+  resources.base[ RESOURCE_HEALTH ]      = 1618;
 
   base.health_per_stamina = 47.506;
 

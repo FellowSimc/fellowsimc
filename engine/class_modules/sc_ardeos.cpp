@@ -2485,9 +2485,8 @@ void ardeos_t::init_base_stats()
 
   fs_player_t::init_base_stats();
 
-  base.stats.attribute[ STAT_INTELLECT ] = 1000;
-  base.stats.attribute[ STAT_STAMINA ]   = 1000;
-  resources.base[ RESOURCE_HEALTH ]      = 15927;
+  base.stats.attribute[ STAT_INTELLECT ] = 100;
+  resources.base[ RESOURCE_HEALTH ]      = 1592;
 
   base.health_per_stamina = 48.12;
 

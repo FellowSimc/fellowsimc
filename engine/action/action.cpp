@@ -340,6 +340,7 @@ action_t::action_t( action_e ty, util::string_view token, player_t* p, const spe
     default_target( p->target ),
     school( SCHOOL_NONE ),
     original_school( SCHOOL_NONE ),
+    ability_flags( 0 ),
     id(),
     internal_id( p->get_action_id( name_str ) ),
     resource_current( RESOURCE_NONE ),

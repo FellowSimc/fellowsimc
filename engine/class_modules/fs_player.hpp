@@ -113,7 +113,18 @@ public:
     buff_t* hidden_power;
     buff_t* sundering_wrath;
     buff_t* harmonious_soul;
+    buff_t* finesse_a;
+    buff_t* finesse_b;
+    buff_t* finesse_g;
+    buff_t* finesse_i;
+    buff_t* finesse_l;
   } fs_buffs;
+
+  struct rng_objects_t
+  {
+    accumulated_rng_t* finesse_d;
+    accumulated_rng_t* finesse_f;
+  } fs_rng_objects;
 
   struct fs_cooldowns_t
   {
@@ -123,6 +134,7 @@ public:
   {
     gain_t* grandeur;
     gain_t* spirit_procs;
+    gain_t* finesse_d;
   } fs_gains;
 
   struct options_t
@@ -197,7 +209,7 @@ public:
     double sapphire_spirit_cost_multiplier_major = 0.85;
   } fs_gems;
 
-  std::array<unsigned short, FINESSE_MAX> finesse_traits = {};
+  std::array<unsigned short, FINESSE_MAX + 1> finesse_traits = {};
 
   struct finesse_values_t
   {
@@ -307,33 +319,34 @@ public:
 
   struct fs_weapon_trait_values_t
   {
-    const double willful_momentum_spirit[ 5 ]           = { 0, 59, 89, 118, 148 };
-    const double willful_momentum_amp[ 5 ]              = { 0, 0.03, 0.036, 0.042, 0.048 };
-    const double vengeful_soul_amp[ 5 ]                 = { 0, 0.04, 0.048, 0.056, 0.064 };
-    const double seized_opportunity_crit[ 5 ]           = { 0, 112, 168, 224, 280 };
-    const double martial_initiative_duration[ 5 ]       = { 0, 0.2, 0.24, 0.28, 0.32 };
-    const double kindling_tick_damage[ 5 ]              = { 0, 0.92, 1.1, 1.33, 1.66 };
-    const timespan_t inspired_allegiance_cdr[ 5 ]       = { 0_s, 2_s, 3_s, 4_s, 5_s };
+    const double willful_momentum_spirit[ 5 ]           = { 0, 4, 7, 10, 13 };
+    const double willful_momentum_amp[ 5 ]              = { 0, 0.015, 0.026, 0.037, 0.048 };
+    const double vengeful_soul_amp[ 5 ]                 = { 0, 0.02, 0.034, 0.048, 0.062 };
+    const double seized_opportunity_crit[ 5 ]           = { 0, 7, 13, 19, 25 };
+    const double martial_initiative_duration[ 5 ]       = { 0, 0.1, 0.18, 0.25, 0.32 };
+    const double kindling_tick_damage[ 5 ]              = { 0, 0.46, 0.84, 1.22, 1.6 };
+    const timespan_t inspired_allegiance_cdr[ 5 ]       = { 0_s, 1_s, 2.5_s, 4_s, 5.5_s };
     const int inspired_allegiance_allies[ 5 ]           = { 0, 1, 2, 3, 3 };
-    const double inspired_allegiance_haste[ 5 ]         = { 0, 85.0, 85.0, 85.0, 127.0 };
+    const double inspired_allegiance_haste[ 5 ]         = { 0, 5.0, 8.0, 11.0, 14.0 };
     const double hidden_power_amp[ 5 ]                  = { 0, 0.075, 0.09, 0.105, 0.12 };
-    const double emerald_judgement_dmg[ 5 ]             = { 0, 6.0, 7.0, 8.0, 9.0 };
-    const double diamond_strike_dmg[ 5 ]                = { 0, 1.48, 1.78, 2.0, 2.37 };
-    const double diamond_strike_ppm[ 5 ]                = { 0, 5.0, 5.5, 6.1, 6.7 };
-    const double amethyst_splinters_fraction[ 5 ]       = { 0, 0.07, 0.08, 0.09, 0.1 };
-    const double brave_machinations_crit[ 5 ]           = { 0, 0.2, 0.24, 0.28, 0.38 };
-    const double heroic_brand_amp[ 5 ]                  = { 1.0, 1.5, 1.6, 1.7, 1.8 };
+    const double emerald_judgement_dmg[ 5 ]             = { 0, 3.0, 5.0, 7.0, 9.0 };
+    const double diamond_strike_dmg[ 5 ]                = { 0, 0.72, 1.27, 1.82, 2.37 };
+    const double diamond_strike_ppm[ 5 ]                = { 0, 2.5, 3.9, 5.3, 6.7 };
+    const double amethyst_splinters_fraction[ 5 ]       = { 0, 0.0355, 0.057, 0.0785, 0.1 };
+    const double brave_machinations_crit[ 5 ]           = { 0, 0.095, 0.17, 0.245, 0.32 };
+    const double brave_machinations_cdr[ 5 ]            = { 0, 0.15, 0.2, 0.25, 0.3 };
+    const double heroic_brand_amp[ 5 ]                  = { 1.0, 1.24, 1.42, 1.6, 1.78 };
     const double ruby_storm_ppm[ 5 ]                    = { 1.3, 1.3, 1.3, 1.3, 1.3 };
-    const double ruby_storm_damage[ 5 ]                 = { 0.0, 0.045, 0.054, 0.063, 0.073 };
-    const double sapphire_aurastone_dmg_acc[ 5 ]        = { 0.0, 0.069, 0.083, 0.10, 0.12 };
-    const double sapphire_aurastone_heal_acc[ 5 ]       = { 0.0, 0.093, 0.111, 0.133, 0.16 };
+    const double ruby_storm_damage[ 5 ]                 = { 0.0, 0.0235, 0.039, 0.0545, 0.07 };
+    const double sapphire_aurastone_dmg_acc[ 5 ]        = { 0.0, 0.0345, 0.063, 0.0915, 0.12 };
+    const double sapphire_aurastone_heal_acc[ 5 ]       = { 0.0, 0.046, 0.084, 0.122, 0.16 };
     const double sapphire_aurastone_cap[ 5 ]            = { 0.0, 50.0, 50.0, 50.0, 50.0 };
     const timespan_t sapphire_aura_period               = 3_s;
-    const double navigators_intuition_stats[ 5 ]        = { 0.0, 276.0, 414.0, 552.0, 690.0 };
+    const double navigators_intuition_stats[ 5 ]        = { 0.0, 14.0, 33.0, 52.0, 71.0 };
     const timespan_t navigators_intuition_duration[ 5 ] = { 0_s, 30_s, 30_s, 30_s, 30_s };
     const timespan_t navigators_intuition_cd[ 5 ]       = { 0_s, 90_s, 90_s, 90_s, 90_s };
     const double navigators_intuition_chance[ 5 ]       = { 0.0, 0.2, 0.2, 0.2, 0.2 };
-    const double hunters_focus_haste[ 5 ]               = { 0.0, 20.0, 32.0, 43.0, 55.0 };
+    const double hunters_focus_haste[ 5 ]               = { 0.0, 2.0, 4.0, 6.0, 8.0 };
     const timespan_t hunters_focus_duration[ 5 ]        = { 0_s, 8_s, 8_s, 8_s, 8_s };
     const int hunters_focus_max_stacks[ 5 ]             = { 5, 5, 5, 5, 5 };
   } fs_weapon_trait_values;
@@ -396,6 +409,7 @@ public:
   void init_special_effects() override;
   void init_finished() override;
   void init_background_actions() override;
+  void init_rng() override;
 
   void create_buffs() override;
   void create_options() override;
@@ -603,7 +617,7 @@ public:
     : ab( n, p, spell_data_t::nil() )
   {
     ab::may_crit = ab::tick_may_crit = true;
-    ab::school                       = SCHOOL_PHYSICAL;
+    ab::school                       = SCHOOL_PHYSICAL; 
   }
 
 
@@ -615,6 +629,51 @@ public:
   const fs_player_t* fs_p() const
   {
     return debug_cast<const fs_player_t*>( ab::player );
+  }
+
+  double composite_persistent_multiplier( const action_state_t* s ) const
+  {
+    auto m = ab::composite_persistent_multiplier( s );
+
+    if ( fs_p()->fs_buffs.finesse_a && ab::ability_flags & ability_type_e::ABILITY_POWER )
+    {
+      m *= 1.0 + fs_p()->fs_buffs.finesse_a->check_stack_value();
+    }
+
+    return m;
+  }
+
+  void execute() override
+  {
+    ab::execute();
+
+    if ( !ab::background )
+    {
+      if ( fs_p()->finesse_traits[ FINESSE_A ] > 0 )
+      {
+        if ( ab::ability_flags & ability_type_e::ABILITY_BASIC )
+        {
+          fs_p()->fs_buffs.finesse_a->trigger();
+        }
+
+        if ( ab::ability_flags & ability_type_e::ABILITY_POWER )
+        {
+          fs_p()->fs_buffs.finesse_a->expire();
+        }
+      }
+
+      if ( fs_p()->finesse_traits[ FINESSE_B ] > 0 && ab::ability_flags & ability_type_e::ABILITY_POWER )
+      {
+        fs_p()->fs_buffs.finesse_b->trigger();
+      }
+
+      if ( fs_p()->finesse_traits[ FINESSE_D ] > 0 && ab::ability_flags & ability_type_e::ABILITY_POWER &&
+           fs_p()->fs_rng_objects.finesse_d->trigger() )
+      {
+        fs_p()->resource_gain( RESOURCE_SPIRIT, fs_p()->finesse_trait_values.finesse_d_spirit_points,
+                               fs_p()->fs_gains.finesse_d );
+      }
+    }
   }
 
   double cost_pct_multiplier() const override
@@ -798,8 +857,12 @@ public:
       ab::fs_p()->brave_machinations_available = false;
 
       // Event to make sure the CDR is reduced after the weapon goes on CD.
-      make_event( ab::sim, 0_ms,
-                  [ this ]() { ab::fs_p()->weapon_cd->adjust( -ab::fs_p()->weapon_cd->base_duration * 0.3, false ); } );
+      make_event( ab::sim, 0_ms, [ this ]() {
+        ab::fs_p()->weapon_cd->adjust(
+            -ab::fs_p()->weapon_cd->base_duration *
+                ab::fs_p()->fs_weapon_trait_values.brave_machinations_cdr[ ab::fs_p()->fs_weapons.brave_machinations ],
+            false );
+      } );
     }
   }
     

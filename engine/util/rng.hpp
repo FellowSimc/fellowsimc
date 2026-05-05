@@ -58,6 +58,9 @@ constexpr double PfromC( double c )
 
 constexpr double CfromP( double p )
 {
+  if ( p == 0 )
+    return 0;
+
   double c_upper = p;
   double c_lower = 0;
   double c_mid;

@@ -1583,8 +1583,8 @@ void xavian_t::init_base_stats()
 
   fs_player_t::init_base_stats();
 
-  base.stats.attribute[ STAT_STRENGTH ] = 1000;
-  resources.base[ RESOURCE_HEALTH ]     = 25564;
+  base.stats.attribute[ STAT_STRENGTH ] = 100;
+  resources.base[ RESOURCE_HEALTH ]     = 2556;
 
   base.health_per_stamina = 90.303;
 

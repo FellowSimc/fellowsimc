@@ -178,7 +178,7 @@ enum finesse_trait_e : unsigned
 {
   FINESSE_NONE = 0,
 
-#define X( UPPER, lower, pretty ) FINESSE_##UPPER,
+#define X( UPPER, lower, pretty ) UPPER,
   FINESSE_LIST( X )
 #undef X
 
@@ -186,7 +186,7 @@ enum finesse_trait_e : unsigned
 };
 
 static constexpr enum_data_t FINESSE_TRAITS[] = {
-#define X( upper, lower, pretty ) { finesse_trait_e::FINESSE_##upper, #lower, pretty },
+#define X( upper, lower, pretty ) { finesse_trait_e::upper, #lower, pretty },
     FINESSE_LIST( X )
 #undef X
 };
@@ -2242,3 +2242,16 @@ constexpr item_rarity_e item_rarity_from_string( std::string_view trait )
 
   return item_rarity_e::RARITY_NONE;
 }
+
+enum ability_type_e : unsigned
+{
+  ABILITY_NONE     = 0,
+  ABILITY_BASIC    = 1,
+  ABILITY_CORE     = 1 << 1,
+  ABILITY_POWER    = 1 << 2,
+  ABILITY_MAJOR    = 1 << 3,
+  ABILITY_SPIRIT   = 1 << 4,
+  ABILITY_MOVEMENT = 1 << 5,
+  ABILITY_CONTROL  = 1 << 6,
+  ABILITY_MAX      = 1 << 7,
+};

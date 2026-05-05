@@ -1690,6 +1690,7 @@ struct lunarlight_salvo_t : public elarion_spell_t
     name_str_reporting = "Lunarlight Salvo";
 
     attack_power_mod.direct = p->spell_const.lunarlight_mark_ap_coeff;
+    ability_flags |= ability_type_e::ABILITY_CORE;
 
     if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
     {
@@ -1716,6 +1717,7 @@ struct lunarlight_salvo_aoe_t : public elarion_spell_t
 
     attack_power_mod.direct = p->spell_const.lunarlight_mark_ap_coeff;
 
+    ability_flags |= ability_type_e::ABILITY_CORE;
     aoe = 12;
 
     if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
@@ -1745,7 +1747,7 @@ struct lunarlight_mark_t : public elarion_spell_t
     aoe = p->spell_const.lunarlight_mark_max_targets;
 
     cooldown->duration = p->spell_const.lunarlight_mark_cooldown;
-    ability_flags |= ability_type_e::ABILITY_MAJOR;
+    ability_flags |= ability_type_e::ABILITY_CORE;
     parse_options( options_str );
   }
 

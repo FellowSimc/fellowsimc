@@ -91,7 +91,7 @@ neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
 shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
 back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
 chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
-wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertisea
 hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
 legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
 feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
@@ -101,6 +101,7 @@ trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
 
+gems.sapphire_power=2640
 
 # weapon_trait.emerald_judgement=1
 
@@ -122,3 +123,51 @@ trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,
 
 copy="Finesse_D4","Initial Stat Spread"
 trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+
+copy="Finesse_E1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_e
+
+copy="Finesse_E4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+
+copy="Finesse_F1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_f
+
+copy="Finesse_F4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+
+copy="Finesse_G1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g
+
+copy="Finesse_G4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+
+copy="Finesse_H1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_h
+
+copy="Finesse_H4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+
+copy="Finesse_I1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_i
+
+copy="Finesse_I4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+
+copy="Finesse_J1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j
+
+copy="Finesse_J4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+
+copy="Finesse_K1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_k
+
+copy="Finesse_K4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+
+copy="Finesse_L1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_l
+
+copy="Finesse_L4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l

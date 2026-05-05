@@ -874,6 +874,35 @@ struct sapphire_aurastone_dmg_t : fs_player_action_t<spell_t>
   }
 };
 
+struct finesse_f_dmg_t : fs_proc_spell_t
+{
+  finesse_f_dmg_t( util::string_view n, fs_player_t* p ) : fs_proc_spell_t( n, p )
+  {
+    id = 2589871;
+
+    name_str_reporting = "Finesse F";
+    school             = SCHOOL_MAGIC;
+    background         = true;
+
+    spell_power_mod.direct = p->finesse_trait_values.finesse_f_drain[ p->finesse_traits[ FINESSE_F ] ];
+  }
+};
+
+struct finesse_l_dmg_t : fs_proc_spell_t
+{
+  finesse_l_dmg_t( util::string_view n, fs_player_t* p ) : fs_proc_spell_t( n, p )
+  {
+    id = 2589872;
+
+    name_str_reporting = "Finesse L";
+    school             = SCHOOL_MAGIC;
+    background         = true;
+    aoe                = p->finesse_trait_values.finesse_l_targets;
+
+    spell_power_mod.direct = p->finesse_trait_values.finesse_l_dmg[ p->finesse_traits[ FINESSE_L ] ];
+  }
+};
+
 struct sahrils_wrath_t : fs_weapon_action_t<spell_t>
 {
   sahrils_wrath_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
@@ -1143,10 +1172,36 @@ void fs_player_t::create_buffs()
   {
     auto rank          = finesse_traits[ FINESSE_B ];
     fs_buffs.finesse_b = make_buff<fs_player_buff_t>( this, "finesse_b" )
+                             ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
                              ->set_default_value( finesse_trait_values.finesse_b_crit[ rank ] )
                              ->set_duration( finesse_trait_values.finesse_b_duration );
   }
+    
+  if ( finesse_traits[ FINESSE_G ] > 0 )
+  {
+    auto rank          = finesse_traits[ FINESSE_G ];
+    fs_buffs.finesse_g = make_buff<fs_player_buff_t>( this, "finesse_g" )
+                             ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+                             ->set_default_value( 0.0 )
+                             ->set_duration( finesse_trait_values.finesse_g_duration[ rank ] );
+  }
 
+  if ( finesse_traits[ FINESSE_I ] > 0 )
+  {
+    auto rank          = finesse_traits[ FINESSE_I ];
+    fs_buffs.finesse_i = make_buff<fs_player_buff_t>( this, "finesse_i" )
+                             ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                             ->set_default_value( finesse_trait_values.finesse_i_haste[ rank ] )
+                             ->set_duration( finesse_trait_values.finesse_i_duration );
+  }
+
+  if ( finesse_traits[ FINESSE_L ] > 0 )
+  {
+    auto rank          = finesse_traits[ FINESSE_L ];
+    fs_buffs.finesse_l = make_buff<fs_player_buff_t>( this, "finesse_l" )
+                             ->set_duration( finesse_trait_values.finesse_l_duration )
+                             ->set_max_stack( finesse_trait_values.finesse_l_max_stacks );
+  }
 
   fs_buffs.spirit_of_heroism = make_buff<fs_player_buff_t>( this, "spirit_of_heroism" )
                                    ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
@@ -2411,6 +2466,16 @@ void fs_player_t::init_finished()
 {
   player_t::init_finished();
 
+  if ( finesse_traits[ FINESSE_K ] )
+  {
+    sim->target_non_sleeping_list.register_callback( [ this ]( player_t* p ) {
+      for ( auto a : action_list )
+      {
+        a->cooldown->adjust_recharge_multiplier();
+      }
+    } );
+  }
+
   if ( fs_gems.gem_powers[ GEM_RUBY ] >= 960.0 )
   {
     sim->target_non_sleeping_list.register_callback(
@@ -2431,6 +2496,9 @@ void fs_player_t::spirit_refund()
 {
   if ( fs_weapons.willful_momentum )
     fs_buffs.willful_momentum->trigger();
+  
+  if ( fs_buffs.finesse_l )
+    fs_buffs.finesse_l->trigger();
 
   resource_gain( RESOURCE_SPIRIT, spirit_refund_mul, fs_gains.spirit_procs );
 }
@@ -2463,6 +2531,10 @@ void fs_player_t::init_background_actions()
     fs_actions.voidbringer_dmg = new actions::voidbringers_touch_dmg_t( "voidbringers_touch_dmg", this );
   if ( fs_weapons.sapphire_aurastone )
     fs_actions.aurastone_dmg = new actions::sapphire_aurastone_dmg_t( "sapphire_aurastone_dmg", this );
+  if ( finesse_traits[ FINESSE_F ] )
+    fs_actions.finesse_f = new actions::finesse_f_dmg_t( "finesse_f_dmg", this );
+  if ( finesse_traits[ FINESSE_L ] )
+    fs_actions.finesse_l = new actions::finesse_l_dmg_t( "finesse_l_dmg", this );
 }
 
 void fs_player_t::init_rng()
@@ -2490,6 +2562,7 @@ void fs_player_t::reset()
 
   active_voidbringer_buffs.clear();
   brave_machinations_available = false;
+  finesse_i_event              = nullptr;
 }
 
 // fs_player_t::activate ========================================================
@@ -2504,7 +2577,38 @@ void fs_player_t::activate()
 void fs_player_t::arise()
 {
   player_t::arise();
+
+  if ( finesse_traits[ FINESSE_I ] )
+  {
+    finesse_i_event = make_event( sim, finesse_trait_values.finesse_i_interval, [ this ]() { finesse_i_event_fn(); } );
+  }
 }
+
+void fs_player_t::finesse_i_event_fn()
+{
+  if ( is_sleeping() )
+    return;
+
+  fs_buffs.finesse_i->trigger();
+  finesse_i_event = make_event( sim, finesse_trait_values.finesse_i_interval, [ this ]() { finesse_i_event_fn(); } );
+}
+
+void fs_player_t::finesse_i_cdr( timespan_t cdr )
+{
+  if ( !finesse_i_event )
+    return;
+
+  if ( finesse_i_event->remains() < cdr )
+  {
+    event_t::cancel( finesse_i_event );
+    finesse_i_event_fn();
+  }
+  else
+  {
+    finesse_i_event->reschedule( finesse_i_event->remains() - cdr );
+  }
+}
+
 
 // fs_player_t::combat_begin ====================================================
 

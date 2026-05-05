@@ -89,6 +89,8 @@ public:
     action_t* amethyst_splinters;
     action_t* voidbringer_dmg;
     action_t* aurastone_dmg;
+    action_t* finesse_f;
+    action_t* finesse_l;
   } fs_actions;
 
   struct fs_buffs_t
@@ -230,7 +232,7 @@ public:
     const double finesse_f_drain[ 5 ]   = { 0, 1.6, 2.56, 4.1, 6.55 };
     const double finesse_f_drain_chance = 0.1;
 
-    const double finesse_g_spirit_to_expertise = 1.0;
+    const double finesse_g_spirit_to_expertise[ 5 ] = { 0.0, 1.0, 1.0, 1.0, 1.0 };
     const timespan_t finesse_g_duration[ 5 ]   = { 0_s, 3_s, 5_s, 8_s, 12_s };
 
     const double finesse_h_added[ 5 ] = { 0, 0.05, 0.08, 0.13, 0.20 };
@@ -241,7 +243,7 @@ public:
     const timespan_t finesse_i_cdr      = 2_s;
 
     const double finesse_j_amp[ 5 ] = { 0, 0.005, 0.008, 0.013, 0.02 };
-    const double finesse_j_divisor  = 3.0;
+    const double finesse_j_divisor  = 0.03;
 
     const double finesse_k_cdr[ 5 ]        = { 0, 0.02, 0.03, 0.05, 0.08 };
     const double finesse_k_boss_multiplier = 2.0;
@@ -360,6 +362,8 @@ public:
   std::vector<buff_t*> active_voidbringer_buffs;
   std::vector<buff_t*> active_aurastone_buffs;
 
+  event_t* finesse_i_event;
+
   virtual const fs_player_td_t* find_target_data( const player_t* target ) const override
   {
     return target_data[ target ];
@@ -423,6 +427,9 @@ public:
   void activate() override;
   void arise() override;
   void combat_begin() override;
+  void finesse_i_event_fn();
+  void finesse_i_cdr( timespan_t cdr );
+
   action_t* create_action( util::string_view name, util::string_view options ) override;
 
   std::unique_ptr<expr_t> create_action_expression( action_t& action, std::string_view name_str ) override;
@@ -613,11 +620,19 @@ private:
 public:
   // Init =====================================================================
 
+    double finesse_j_mul;
+
   fs_player_action_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
-    : ab( n, p, spell_data_t::nil() )
+      : ab( n, p, spell_data_t::nil() ), finesse_j_mul(0.0)
   {
     ab::may_crit = ab::tick_may_crit = true;
     ab::school                       = SCHOOL_PHYSICAL; 
+
+    if ( fs_p()->finesse_traits[ FINESSE_J ] )
+    {
+      finesse_j_mul = fs_p()->finesse_trait_values.finesse_j_amp[ fs_p()->finesse_traits[ FINESSE_J ] ] /
+                      fs_p()->finesse_trait_values.finesse_j_divisor;
+    }
   }
 
 
@@ -641,6 +656,54 @@ public:
     }
 
     return m;
+  }
+
+  double action_multiplier() const
+  {
+    auto m = ab::action_multiplier();
+
+    if ( fs_p()->finesse_traits[ FINESSE_J ] && ab::ability_flags & ability_type_e::ABILITY_POWER )
+    {
+      m *= 1.0 + finesse_j_mul * fs_p()->cache.mastery();
+    }
+
+    return m;
+  }
+
+
+  double recharge_rate_multiplier( const cooldown_t& c ) const override
+  {
+    auto m = ab::recharge_rate_multiplier( c );
+
+    if ( fs_p()->finesse_traits[ FINESSE_K ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MAJOR )
+    {
+      auto cdr = fs_p()->finesse_trait_values.finesse_k_cdr[ fs_p()->finesse_traits[ FINESSE_K ] ];
+
+      if ( fs_p()->in_boss_encounter )
+        cdr *= fs_p()->finesse_trait_values.finesse_k_boss_multiplier;
+
+      m /= 1.0 + cdr;
+    }
+
+    return m;
+  }
+
+  void init_finished() override
+  {
+    ab::init_finished();
+
+    if ( fs_p()->finesse_traits[ FINESSE_H ] > 0 && ab::ability_flags & ability_type_e::ABILITY_BASIC )
+    {
+      auto added = fs_p()->finesse_trait_values.finesse_h_added[ fs_p()->finesse_traits[ FINESSE_H ] ];
+      if ( ab::spell_power_mod.direct )
+      {
+        ab::spell_power_mod.direct += added;
+      }
+      else if ( ab::attack_power_mod.direct )
+      {
+        ab::attack_power_mod.direct += added;
+      }
+    }
   }
 
   void execute() override
@@ -673,7 +736,44 @@ public:
         fs_p()->resource_gain( RESOURCE_SPIRIT, fs_p()->finesse_trait_values.finesse_d_spirit_points,
                                fs_p()->fs_gains.finesse_d );
       }
+
+      if ( fs_p()->finesse_traits[ FINESSE_G ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MAJOR )
+      {
+        fs_p()->fs_buffs.finesse_g->trigger(
+            1, fs_p()->finesse_trait_values.finesse_g_spirit_to_expertise[ fs_p()->finesse_traits[ FINESSE_G ] ] *
+                   fs_p()->cache.mastery() );
+      }
+
+      if ( fs_p()->finesse_traits[ FINESSE_F ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE &&
+           fs_p()->fs_rng_objects.finesse_f->trigger() )
+      {
+        fs_p()->fs_actions.finesse_f->execute_on_target( ab::target );
+      }
+
+      if ( fs_p()->finesse_traits[ FINESSE_I ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MOVEMENT )
+      {
+        fs_p()->finesse_i_cdr( fs_p()->finesse_trait_values.finesse_i_cdr );
+      }
+
+      if ( fs_p()->fs_buffs.finesse_l && fs_p()->fs_buffs.finesse_l->check() &&
+           ab::ability_flags & ability_type_e::ABILITY_CORE )
+      {
+        fs_p()->fs_actions.finesse_l->execute();
+        fs_p()->fs_buffs.finesse_l->decrement();
+      }
     }
+  }
+
+  double composite_player_critical_multiplier( const action_state_t* s ) const override
+  {
+    double cm = ab::composite_player_critical_multiplier( s );
+
+    if ( fs_p()->finesse_traits[ FINESSE_E ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )
+    {
+      cm *= 1.0 + fs_p()->finesse_trait_values.finesse_e_cdmg[ fs_p()->finesse_traits[ FINESSE_E ] ];
+    }
+
+    return cm;
   }
 
   double cost_pct_multiplier() const override

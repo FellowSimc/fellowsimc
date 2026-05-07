@@ -532,13 +532,14 @@ struct secondary_action_trigger_t : public event_t
       state->target = action_target;
       action->cast_state( state )->set_combo_points( cp, cp );
       // Calling snapshot_internal, snapshot_state would overwrite CP.
-      action->snapshot_internal( state, STATE_CRIT, action->amount_type( state ) );
+      action->snapshot_internal( state, STATE_CRIT | STATE_MUL_PERSISTENT, action->amount_type( state ) );
     }
 
     assert( !action->pre_execute_state );
 
     action->pre_execute_state = state;
-    action->snapshot_internal( state, action->snapshot_flags & ~STATE_CRIT, action->amount_type( state ) );
+    action->snapshot_internal( state, action->snapshot_flags & ~( STATE_CRIT | STATE_MUL_PERSISTENT ),
+                               action->amount_type( state ) );
     action->execute();
     state = nullptr;
   }
@@ -1189,6 +1190,8 @@ struct backstab_t : public mara_attack_t
 
     name_str_reporting = "Backstab";
 
+    ability_flags |= ability_type_e::ABILITY_BASIC;
+
     if ( p->actions.caustic_wounds_poison && !p->actions.caustic_wounds_poison->stats->parent )
     {
       add_child( p->actions.caustic_wounds_poison );
@@ -1261,6 +1264,9 @@ struct queens_fang_t : public mara_attack_t
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 40;
+
+    
+    ability_flags |= ability_type_e::ABILITY_POWER;
 
     /*if ( p->talents.efficient_killer )
       base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;*/
@@ -1366,6 +1372,8 @@ struct hemorrhaging_strike_t : public mara_attack_t
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 20;
+
+    ability_flags |= ability_type_e::ABILITY_POWER;
 
     /*if ( p->talents_enabled( mara_t::EFFICIENT_KILLER ) )
       base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;*/
@@ -1669,11 +1677,13 @@ struct widows_bite_t : public mara_attack_t
     {
       attack_power_mod.direct = coeff;
 
-      dual = true;
+      background = dual = true;
 
       id = 4;
 
       name_str_reporting = "Widows Bite";
+
+      ability_flags |= ability_type_e::ABILITY_CORE;
 
       if ( p->talents_enabled( mara_t::PUNCTURE ) )
       {
@@ -1695,8 +1705,8 @@ struct widows_bite_t : public mara_attack_t
     }
   };
 
-  action_t* widows_bite_hit_1;
-  action_t* widows_bite_hit_2;
+  widows_bite_hit_t* widows_bite_hit_1;
+  widows_bite_hit_t* widows_bite_hit_2;
   widows_bite_t( util::string_view name, mara_t* p, util::string_view options_str = {} )
     : mara_attack_t( name, p, options_str ), widows_bite_hit_1( nullptr ), widows_bite_hit_2( nullptr )
   {
@@ -1719,23 +1729,42 @@ struct widows_bite_t : public mara_attack_t
     cooldown->duration = 9_s;
     cooldown->hasted   = true;
     cooldown->charges  = 3;
+    
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
-  void execute() override
+  void impact( action_state_t* s ) override
   {
-    mara_attack_t::execute();
+    mara_attack_t::impact( s );
+    
+    widows_bite_hit_1->set_target( s->target );
+    widows_bite_hit_2->set_target( s->target );
 
-    widows_bite_hit_1->set_target( target );
-    widows_bite_hit_1->execute();
+    action_state_t* state_1 = widows_bite_hit_1->get_state( s );
+    action_state_t* state_2 = widows_bite_hit_2->get_state( s );
 
-    widows_bite_hit_2->set_target( target );
-    widows_bite_hit_2->execute();
+    state_1->target = widows_bite_hit_1->target;
+    state_2->target = widows_bite_hit_2->target;
+
+    widows_bite_hit_1->snapshot_state( state_1, result_amount_type::DMG_DIRECT );
+    widows_bite_hit_2->snapshot_state( state_2, result_amount_type::DMG_DIRECT );
+
+    state_1->persistent_multiplier = s->persistent_multiplier;
+    state_2->persistent_multiplier = s->persistent_multiplier;
+
+    widows_bite_hit_1->schedule_execute( state_1 );
+    widows_bite_hit_2->schedule_execute( state_2 );
 
     if ( p()->buffs.brooding_shadows->check() )
     {
       p()->actions.seething_poison->set_target( target );
       p()->actions.seething_poison->execute();
     }
+  }
+
+  void execute() override
+  {
+    mara_attack_t::execute();
 
     if ( p()->buffs.maiden_of_death->check() )
     {
@@ -1790,6 +1819,8 @@ struct maiden_of_death_t : public mara_spell_t
     cooldown->duration = 60_s;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
   void execute() override
@@ -1819,6 +1850,8 @@ struct final_stratagem_t : public mara_spell_t
     cooldown->duration = 180_s;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
     bool ready() override
@@ -1856,6 +1889,8 @@ struct macabre_stratagem_t : public mara_spell_t
     cooldown->duration = 180_s;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
+    
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
   bool ready() override
@@ -1891,6 +1926,8 @@ struct matriach_macabre_t : public mara_spell_t
 
     add_child( p->actions.queens_fang_ult_clone );
     add_child( p->actions.arachnid_assault_clone );
+
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
     
   }
 
@@ -2011,7 +2048,9 @@ struct stalker_step_t : public mara_spell_t
 
     cooldown->duration = 30_s;
     cooldown->hasted   = true;
-    cooldown->charges  = 1;
+    cooldown->charges  = 2;
+    
+    ability_flags |= ability_type_e::ABILITY_MOVEMENT;
   }
 
   void impact( action_state_t* s ) override
@@ -2066,6 +2105,8 @@ struct skittering_blades_t : public mara_attack_t
     reduced_aoe_targets = 8;
 
     name_str_reporting = "Skittering Blades";
+    
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   void impact( action_state_t* s ) override
@@ -2116,6 +2157,8 @@ struct arachnid_assault_t : public mara_attack_t
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 45;
+
+    ability_flags |= ability_type_e::ABILITY_POWER;
 
     /*if ( p->talents_enabled( mara_t::EFFICIENT_KILLER ) )
       base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;*/

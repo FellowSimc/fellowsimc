@@ -6,6 +6,17 @@
 namespace fellowship
 {  // UNNAMED NAMESPACE
 
+const double GEM_TIER_1 = 120.0;
+const double GEM_TIER_2 = 240.0;
+const double GEM_TIER_3 = 480.0;
+const double GEM_TIER_4 = 720.0;
+const double GEM_TIER_5 = 960.0;
+const double GEM_TIER_6 = 1200.0;
+const double GEM_TIER_7 = 1560.0;
+const double GEM_TIER_8 = 1920.0;
+const double GEM_TIER_9 = 2280.0;
+const double GEM_TIER_10 = 2640.0;
+
 // Forward Declarations
 class fs_player_t;
 
@@ -120,6 +131,7 @@ public:
     buff_t* finesse_g;
     buff_t* finesse_i;
     buff_t* finesse_l;
+    buff_t* finesse_k;
   } fs_buffs;
 
   struct rng_objects_t
@@ -215,13 +227,13 @@ public:
 
   struct finesse_values_t
   {
-    const double finesse_a_per_stack[ 5 ] = { 0, 0.01, 0.015, 0.02, 0.035 };
+    const double finesse_a_per_stack[ 5 ] = { 0, 0.012, 0.02, 0.03, 0.05 };
     const int finesse_a_max_stacks        = 5;
 
     const timespan_t finesse_b_duration = 4_s;
     const double finesse_b_crit[ 5 ]    = { 0, 0.02, 0.03, 0.05, 0.08 };
 
-    const timespan_t finesse_c_duration[ 5 ] = { 0_s, 1_s, 2_s, 3_s, 4_s };
+    const timespan_t finesse_c_duration[ 5 ] = { 0_s, 0.5_s, 1_s, 2_s, 3_s };
     const timespan_t finesse_c_divisor       = 60_s;
 
     const double finesse_d_chance[ 5 ]   = { 0, 0.05, 0.08, 0.13, 0.2 };
@@ -229,27 +241,28 @@ public:
 
     const double finesse_e_cdmg[ 5 ] = { 0, 0.01, 0.02, 0.03, 0.04 };
 
-    const double finesse_f_drain[ 5 ]   = { 0, 1.6, 2.56, 4.1, 6.55 };
+    const double finesse_f_drain[ 5 ]   = { 0, 2.6, 4.16, 6.66, 10.65 };
     const double finesse_f_drain_chance = 0.1;
 
-    const double finesse_g_spirit_to_expertise[ 5 ] = { 0.0, 1.0, 1.0, 1.0, 1.0 };
-    const timespan_t finesse_g_duration[ 5 ]   = { 0_s, 3_s, 5_s, 8_s, 12_s };
+    const double finesse_g_spirit_to_stats[ 5 ] = { 0.0, 0.25, 0.25, 0.25, 0.25 };
+    const timespan_t finesse_g_duration[ 5 ]    = { 0_s, 3_s, 5_s, 8_s, 12_s };
 
-    const double finesse_h_added[ 5 ] = { 0, 0.05, 0.08, 0.13, 0.20 };
+    const double finesse_h_added[ 5 ] = { 0, 0.12, 0.19, 0.31, 0.49 };
 
-    const double finesse_i_haste[ 5 ]   = { 0, 0.02, 0.032, 0.051, 0.082 };
+    const double finesse_i_haste[ 5 ]   = { 0, 0.03, 0.048, 0.077, 0.123 };
     const timespan_t finesse_i_interval = 30_s;
-    const timespan_t finesse_i_duration = 5_s;
+    const timespan_t finesse_i_duration = 7_s;
     const timespan_t finesse_i_cdr      = 2_s;
 
     const double finesse_j_amp[ 5 ] = { 0, 0.005, 0.008, 0.013, 0.02 };
     const double finesse_j_divisor  = 0.03;
 
-    const double finesse_k_cdr[ 5 ]        = { 0, 0.02, 0.03, 0.05, 0.08 };
-    const double finesse_k_boss_multiplier = 2.0;
+    const double finesse_k_cdr[ 5 ]         = { 0, 0.02, 0.03, 0.05, 0.08 };
+    const double finesse_k_amp_multiplier   = 1.0;
+    const timespan_t finesse_k_amp_duration = 5_s;
 
-    const double finesse_l_dmg[ 5 ]     = { 0, 0.45, 0.72, 1.15, 1.84 };
-    const double finesse_l_heal[ 5 ]    = { 0, 0.58, 0.93, 1.48, 2.38 };
+    const double finesse_l_dmg[ 5 ]     = { 0, 0.68, 1.09, 1.74, 2.79 };
+    const double finesse_l_heal[ 5 ]    = { 0, 0.87, 1.39, 2.23, 3.56 };
     const int finesse_l_targets         = 4;
     const int finesse_l_max_stacks      = 1;
     const timespan_t finesse_l_duration = 15_s;
@@ -679,8 +692,7 @@ public:
     {
       auto cdr = fs_p()->finesse_trait_values.finesse_k_cdr[ fs_p()->finesse_traits[ FINESSE_K ] ];
 
-      if ( fs_p()->in_boss_encounter )
-        cdr *= fs_p()->finesse_trait_values.finesse_k_boss_multiplier;
+      cdr *= 1.0 + fs_p()->fs_buffs.finesse_k->check_value();
 
       m /= 1.0 + cdr;
     }
@@ -740,7 +752,7 @@ public:
       if ( fs_p()->finesse_traits[ FINESSE_G ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MAJOR )
       {
         fs_p()->fs_buffs.finesse_g->trigger(
-            1, fs_p()->finesse_trait_values.finesse_g_spirit_to_expertise[ fs_p()->finesse_traits[ FINESSE_G ] ] *
+            1, fs_p()->finesse_trait_values.finesse_g_spirit_to_stats[ fs_p()->finesse_traits[ FINESSE_G ] ] *
                    fs_p()->cache.mastery() );
       }
 
@@ -964,6 +976,11 @@ public:
             false );
       } );
     }
+  }
+
+  double recharge_rate_multiplier( const cooldown_t& ) const override
+  {
+    return ab::base_recharge_multiplier;
   }
     
   double composite_total_spell_power() const override

@@ -408,7 +408,7 @@ struct fated_strike_t : fs_weapon_action_t<attack_t>
     attack_power_mod.direct = st_mod;
 
     name_str_reporting = "Fated Strike";
-    cooldown->duration = 70_s;
+    cooldown->duration = 60_s;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
 
@@ -545,7 +545,7 @@ struct chronoshift_t : fs_weapon_action_t<spell_t>
     name_str_reporting = "Chronoshift";
     base_execute_time  = 1_s;
 
-    cooldown->duration = 200_s;
+    cooldown->duration = 180_s;
 
     if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT )
       active_weapon = true;
@@ -1182,6 +1182,8 @@ void fs_player_t::create_buffs()
     auto rank          = finesse_traits[ FINESSE_G ];
     fs_buffs.finesse_g = make_buff<fs_player_buff_t>( this, "finesse_g" )
                              ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+                             ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                             ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
                              ->set_default_value( 0.0 )
                              ->set_duration( finesse_trait_values.finesse_g_duration[ rank ] );
   }
@@ -1201,6 +1203,21 @@ void fs_player_t::create_buffs()
     fs_buffs.finesse_l = make_buff<fs_player_buff_t>( this, "finesse_l" )
                              ->set_duration( finesse_trait_values.finesse_l_duration )
                              ->set_max_stack( finesse_trait_values.finesse_l_max_stacks );
+  }
+
+  if ( finesse_traits[ FINESSE_K ] > 0 )
+  {
+    auto rank          = finesse_traits[ FINESSE_K ];
+    fs_buffs.finesse_k = make_buff<fs_player_buff_t>( this, "finesse_k" )
+                             ->set_duration( finesse_trait_values.finesse_k_amp_duration )
+                             ->set_default_value( finesse_trait_values.finesse_k_amp_multiplier )
+                             ->set_stack_change_callback( [ this ]( buff_t*, int, int ) {
+                               for ( auto action : action_list )
+                               {
+                                 if ( action->cooldown )
+                                   action->cooldown->adjust_recharge_multiplier();
+                               }
+                             } );
   }
 
   fs_buffs.spirit_of_heroism = make_buff<fs_player_buff_t>( this, "spirit_of_heroism" )
@@ -2466,16 +2483,6 @@ void fs_player_t::init_finished()
 {
   player_t::init_finished();
 
-  if ( finesse_traits[ FINESSE_K ] )
-  {
-    sim->target_non_sleeping_list.register_callback( [ this ]( player_t* p ) {
-      for ( auto a : action_list )
-      {
-        a->cooldown->adjust_recharge_multiplier();
-      }
-    } );
-  }
-
   if ( fs_gems.gem_powers[ GEM_RUBY ] >= 960.0 )
   {
     sim->target_non_sleeping_list.register_callback(
@@ -2499,6 +2506,9 @@ void fs_player_t::spirit_refund()
   
   if ( fs_buffs.finesse_l )
     fs_buffs.finesse_l->trigger();
+
+  if ( finesse_traits[ FINESSE_K ] > 0 )
+    fs_buffs.finesse_k->trigger();
 
   resource_gain( RESOURCE_SPIRIT, spirit_refund_mul, fs_gains.spirit_procs );
 }

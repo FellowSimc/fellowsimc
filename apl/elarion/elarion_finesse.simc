@@ -7,7 +7,7 @@ max_time=250
 target_error=0.1
 iterations=15000
 chart_show_relative_difference=1
-vary_combat_length=0
+vary_combat_length=0.1
 single_actor_batch=1
 max_time=720
 desired_targets=1
@@ -29,6 +29,8 @@ desired_targets=1
 # dps_plot_points=10
 # dps_plot_step=300
 # dps_plot_positive=1
+
+relative_difference_base="Initial Stat Spread"
 
 elarion="Initial Stat Spread"
 level=80
@@ -91,7 +93,7 @@ neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
 shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
 back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
 chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
-wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertisea
+wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
 hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
 legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
 feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
@@ -101,9 +103,18 @@ trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
 
-gems.sapphire_power=2640
+# gems.sapphire_power=2640
 
-# weapon_trait.emerald_judgement=1
+gems.sapphire_power=1200
+# gems.sapphire_power=240
+gems.ruby_power=1200
+# gems.amethyst_power=1200
+gems.amethyst_power=240
+gems.topaz_power=240
+gems.diamond_power=240
+gems.emerald_power=1200
+weapon_trait.emerald_judgement=1
+weapon_trait.martial_initiative=1
 
 
 copy="Finesse_A1","Initial Stat Spread"

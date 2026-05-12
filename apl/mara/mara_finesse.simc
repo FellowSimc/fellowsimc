@@ -4,7 +4,7 @@ optimal_raid=0
 # max_time=50
 max_time=250
 # max_time=60
-target_error=0.05
+target_error=0.1
 iterations=15000
 chart_show_relative_difference=1
 vary_combat_length=0.1
@@ -41,8 +41,8 @@ apl/mara/mara.simc
 
 weapon=fated_strike
 weapon_trait.visions_of_grandeur=4
-weapon_trait.amethyst_splinters=4
-weapon_trait.brave_machinations=4
+# weapon_trait.amethyst_splinters=4
+# weapon_trait.brave_machinations=4
 
 head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/primary
 neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/crit

@@ -1584,10 +1584,18 @@ raid_event_t* get_next_raid_event( const std::vector<raid_event_t*>& matching_ev
   return result;
 }
 
-raid_event_t* get_next_pull_event( raid_event_t* up )
+raid_event_t* get_next_pull_event( sim_t* s, raid_event_t* up )
 {
   if ( !up )
+  {
+    for ( auto& pull_event : s->raid_events )
+    {
+      if ( pull_event->until_next() > timespan_t::zero() && pull_event->until_next() < timespan_t::max() )
+        return pull_event.get();
+    }
+
     return nullptr;
+  }
 
   for ( auto& pull_event : up->sim->raid_events )
   {
@@ -1797,7 +1805,7 @@ void raid_event_t::finish()
 
   if ( type == "pull" )
   {
-    if ( auto next = get_next_pull_event( this ) )
+    if ( auto next = get_next_pull_event( sim, this ) )
     {
       next->combat_begin();
       return;
@@ -2383,7 +2391,7 @@ double raid_event_t::evaluate_raid_event_expression( sim_t* s, util::string_view
   raid_event_t* e = nullptr;
   // For all remaining expression, go through the list of matching raid events and look for the one happening first
   if ( ( type_or_name == "adds" || type_or_name == "pull" ) && s->fight_style == FIGHT_STYLE_DUNGEON_ROUTE )
-    e = get_next_pull_event( up );
+    e = get_next_pull_event( s, up );
   else
     e = get_next_raid_event( matching_events );
 
@@ -2396,7 +2404,7 @@ double raid_event_t::evaluate_raid_event_expression( sim_t* s, util::string_view
     if ( e->type == "pull" )
     {
       if ( up == nullptr )
-        return timespan_t::max().total_seconds();
+        return e->until_next().total_seconds();
       else
         return ( up->remains() + e->cooldown.mean ).total_seconds();
     }

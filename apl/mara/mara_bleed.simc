@@ -1,0 +1,145 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=250
+# max_time=60
+target_error=0.1
+iterations=15000
+chart_show_relative_difference=1
+vary_combat_length=0.1
+single_actor_batch=1
+max_time=720
+desired_targets=1
+relative_difference_base="Initial Stat Spread"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+mara="Finisher FTQ"
+level=80
+
+# initial_resource=spirit=100
+
+apl/mara/mara.simc
+
+
+
+weapon=fated_strike
+weapon_trait.visions_of_grandeur=4
+# weapon_trait.amethyst_splinters=4
+# weapon_trait.brave_machinations=4
+
+head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/primary
+neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/crit
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/primary
+back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/primary
+feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+trinket2=relic2,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary
+
+gems.sapphire_power=1200
+# gems.sapphire_power=240
+gems.ruby_power=1200
+# gems.amethyst_power=1200
+gems.amethyst_power=240
+gems.topaz_power=240
+gems.diamond_power=240
+gems.emerald_power=1200
+
+talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/sinners_pride:1/feed_the_queen:1
+legendary.vexiras_venom=1
+weapon_trait.emerald_judgement=1
+
+copy="Finisher MD Punc","Finisher FTQ"
+talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/sinners_pride:1/maidens_doom:1/puncture:1
+
+copy="Finisher MD MS","Finisher FTQ"
+talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/sinners_pride:1/maidens_doom:1/macabre_stratagem:1
+
+copy="Finisher MD SB","Finisher FTQ"
+talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/sinners_pride:1/maidens_doom:1/seething_burst:1
+
+copy="Finisher MS SB","Finisher FTQ"
+talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/sinners_pride:1/macabre_stratagem:1/seething_burst:1
+
+copy="Bleed MD SB Vex","Finisher FTQ"
+legendary.vexiras_venom=1
+legendary.from_the_shadows=0
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/maidens_doom:1/seething_burst:1
+
+copy="Bleed MD MS Vex","Finisher FTQ"
+legendary.vexiras_venom=1
+legendary.from_the_shadows=0
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/maidens_doom:1/macabre_stratagem:1
+
+copy="Bleed MS SB Vex","Finisher FTQ"
+legendary.vexiras_venom=1
+legendary.from_the_shadows=0
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/seething_burst:1/macabre_stratagem:1
+
+copy="Bleed MD SB FTS","Finisher FTQ"
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/maidens_doom:1/seething_burst:1
+
+copy="Bleed MD MS FTS","Finisher FTQ"
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/maidens_doom:1/macabre_stratagem:1
+
+copy="Bleed MS SB FTS","Finisher FTQ"
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/seething_burst:1/macabre_stratagem:1
+
+copy="Bleed DS Vex","Finisher FTQ"
+legendary.vexiras_venom=1
+legendary.from_the_shadows=0
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/deadly_scheme:1
+
+copy="Bleed DS FTS","Finisher FTQ"
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/deadly_scheme:1
+
+copy="Bleed CS Vex","Finisher FTQ"
+legendary.vexiras_venom=1
+legendary.from_the_shadows=0
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/corrosive_spill:1
+
+copy="Bleed CS FTS","Finisher FTQ"
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/corrosive_spill:1
+
+copy="Bleed AG Vex","Finisher FTQ"
+legendary.vexiras_venom=1
+legendary.from_the_shadows=0
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/assassins_guile:1
+
+copy="Bleed AG FTS","Finisher FTQ"
+legendary.vexiras_venom=0
+legendary.from_the_shadows=1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/assassins_guile:1

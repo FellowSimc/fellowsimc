@@ -283,7 +283,7 @@ public:
 
     double firestarter_crit_chance = 0.2;
 
-    timespan_t crash_and_burn_cdr      = 0.1_s;
+    timespan_t crash_and_burn_cdr = 0.1_s;
 
     double crackling_inferno_crit_chance      = 0.2;
     double crackling_inferno_dot_fraction     = 0.6;
@@ -1056,6 +1056,8 @@ struct infernal_wave_t : public ardeos_spell_t
 
     base_execute_time = 1.5_s;
 
+    ability_flags |= ability_type_e::ABILITY_BASIC;
+
     if ( !p->actions.flare_up->stats->parent )
       add_child( p->actions.flare_up );
   }
@@ -1138,6 +1140,8 @@ struct detonate_t : public ardeos_spell_t
       // reduced_aoe_targets = 1;
 
       dual = background = true;
+
+      ability_flags |= ability_type_e::ABILITY_POWER;
 
       if ( p->talents.double_detonate_cost_efficiency )
         sample_duration *= 2;
@@ -1245,6 +1249,8 @@ struct detonate_t : public ardeos_spell_t
 
     damage_action        = new detonate_damage_t( name, p, options_str );
     damage_action->stats = stats;
+    
+    ability_flags |= ability_type_e::ABILITY_POWER;
   }
 
   double cost() const override
@@ -1255,6 +1261,11 @@ struct detonate_t : public ardeos_spell_t
     }
 
     return base_t::cost();
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ardeos_spell_t::impact( s );
   }
 
   void execute() override
@@ -1270,7 +1281,13 @@ struct detonate_t : public ardeos_spell_t
 
     for ( int i = 0; i < p()->spell_const.detonate_hits; ++i )
     {
-      damage_action->execute();
+      damage_action->set_target( target );
+      action_state_t* damage_state = damage_action->get_state();
+      damage_action->target        = damage_action->target;
+
+      damage_action->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+      damage_state->persistent_multiplier = execute_state->persistent_multiplier;
+      damage_action->schedule_execute( damage_state );
     }
 
     if ( p()->talents_enabled( ardeos_t::REIGN_OF_FIRE ) )
@@ -1298,6 +1315,8 @@ struct wildfire_t : public ardeos_spell_t
     cooldown->duration = p->spell_const.wildfire_cooldown;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
+    
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
   void execute() override
@@ -1453,6 +1472,8 @@ struct incinerate_t : public ardeos_spell_t
     channel_action        = new incinerate_channel_t( name, p, this, options_str );
     channel_action->stats = stats;
     add_child( channel_action->custom_tick_action );
+    
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
   }
 
   void execute() override
@@ -1486,6 +1507,8 @@ struct searing_blaze_t : public ardeos_spell_t
     energize_resource = RESOURCE_CINDERS;
 
     base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   void execute() override
@@ -1569,7 +1592,7 @@ struct engulfing_flames_t : public ardeos_spell_t
     dot_allow_partial_tick = true;
     hasted_ticks           = true;
 
-    dot_behavior = DOT_REFRESH_DURATION;
+    dot_behavior = DOT_CLIP;
 
     cooldown->duration = p->spell_const.engufling_flames_cooldown;
     cooldown->hasted   = false;
@@ -1593,6 +1616,8 @@ struct engulfing_flames_t : public ardeos_spell_t
     energize_resource = RESOURCE_CINDERS;
 
     base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
+    
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   dot_t* get_dot( player_t* t, size_t i )
@@ -1719,6 +1744,31 @@ struct engulfing_flames_t : public ardeos_spell_t
     }
   }
 
+  timespan_t shortest_active_engulf() const
+  {
+    timespan_t shortest = timespan_t::max();
+
+    std::vector<dot_t*>& target_dots = p()->get_target_data( target )->dots.engulfing_flames_individual;
+
+    for ( dot_t* d : target_dots )
+    {
+      if ( d->is_ticking() && d->remains() < shortest )
+        shortest = d->remains();
+    }
+
+    return shortest;
+  }
+
+  std::unique_ptr<expr_t> create_expression( std::string_view name ) override
+  {
+    if ( util::str_compare_ci( name, "shortest_active_engulf" ) )
+    {
+      return make_mem_fn_expr( "shortest_active_engulf", *this, &engulfing_flames_t::shortest_active_engulf );
+    }
+
+    return ardeos_spell_t::create_expression( name );
+  }
+
   void reset() override
   {
     ardeos_spell_t::reset();
@@ -1767,6 +1817,7 @@ struct apocalypse_t : public ardeos_spell_t
     {
       base_execute_time -= p->talents.apocalyptic_surge_cast_reduction;
     }
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
   void impact( action_state_t* s ) override
@@ -1886,9 +1937,10 @@ struct fire_ball_t : public ardeos_spell_t
 
       if ( p()->talents_enabled( ardeos_t::SLOW_BURN ) )
       {
-        p()->extend_engulfing_flames( d->target, p()->talents.slow_burn_extend );
+        auto corrected_extension = p()->talents.slow_burn_extend * p()->cache.spell_haste();
+        p()->extend_engulfing_flames( d->target, corrected_extension );
         auto td = p()->get_target_data( d->target );
-        p()->extend_dot( td->dots.searing_blaze, p()->talents.slow_burn_extend );
+        p()->extend_dot( td->dots.searing_blaze, corrected_extension );
       }
     }
   };
@@ -1918,6 +1970,7 @@ struct fire_ball_t : public ardeos_spell_t
     {
       base_multiplier *= 1.0 + p->talents.great_balls_of_fire_amp;
     }
+    ability_flags |= ability_type_e::ABILITY_POWER;
   }
 
   double composite_crit_chance() const override
@@ -1966,6 +2019,8 @@ struct pyromania_t : public ardeos_spell_t
     cooldown->duration = p->spell_const.pyromania_cooldown;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
+    
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
   void impact( action_state_t* s ) override
@@ -2078,6 +2133,8 @@ struct fire_frog_hit_t : public ardeos_spell_t
       reduced_aoe_targets = p->legendary.fire_toad_falloff;
       travel_delay        = 0.5;
     }
+    
+    ability_flags |= ability_type_e::ABILITY_POWER;
   }
 
   void impact( action_state_t* s ) override
@@ -2108,6 +2165,8 @@ struct fire_frog_t : public ardeos_spell_t
     {
       frog_hits += p->talents.frog_squad_extra_hits;
     }
+    
+    ability_flags |= ability_type_e::ABILITY_POWER;
   }
 
   void execute() override
@@ -2116,15 +2175,27 @@ struct fire_frog_t : public ardeos_spell_t
 
     if ( p()->legendary.fire_toad && rng().roll( p()->legendary.fire_toad_chance ) )
     {
-      p()->actions.fire_toads_hit->execute();
+      auto act = p()->actions.fire_toads_hit;
+      act->set_target( target );
+      auto state    = act->get_state();
+      state->target = target;
+      act->snapshot_state( state, result_amount_type::DMG_DIRECT );
+      state->persistent_multiplier = execute_state->persistent_multiplier;
+      act->schedule_execute( state );
     }
     else
     {
       for ( int i = 0; i < frog_hits; i++ )
       {
+        auto act                                  = p()->actions.fire_frogs_hit;
         timespan_t frog_delay                     = ( 0.5_s + p()->spell_const.fire_frog_jump_duration * i );
         p()->actions.fire_frogs_hit->travel_delay = frog_delay.total_seconds();
-        p()->actions.fire_frogs_hit->execute();
+        act->set_target( target );
+        auto state    = act->get_state();
+        state->target = target;
+        act->snapshot_state( state, result_amount_type::DMG_DIRECT );
+        state->persistent_multiplier = execute_state->persistent_multiplier;
+        act->schedule_execute( state );
       }
     }
   }
@@ -2152,6 +2223,8 @@ struct fire_frogs_t : public ardeos_spell_t
 
     if ( !p->actions.fire_frog->stats->parent )
       add_child( p->actions.fire_frog );
+
+    ability_flags |= ability_type_e::ABILITY_POWER;
   }
 
   void execute() override
@@ -2160,12 +2233,24 @@ struct fire_frogs_t : public ardeos_spell_t
 
     for ( int i = 0; i < frogs; i++ )
     {
-      p()->actions.fire_frog->execute();
+      auto act = p()->actions.fire_frog;
+      act->set_target( target );
+      auto state    = act->get_state();
+      state->target = target;
+      act->snapshot_state( state, result_amount_type::DMG_DIRECT );
+      state->persistent_multiplier = execute_state->persistent_multiplier;
+      act->schedule_execute( state );
     }
 
     if ( p()->legendary.fire_toad && p()->legendary.fire_toad_on_cast )
     {
-      p()->actions.fire_toads_hit->execute();
+      auto act = p()->actions.fire_toads_hit;
+      act->set_target( target );
+      auto state    = act->get_state();
+      state->target = target;
+      act->snapshot_state( state, result_amount_type::DMG_DIRECT );
+      state->persistent_multiplier = execute_state->persistent_multiplier;
+      act->schedule_execute( state );
     }
   }
 };
@@ -2495,11 +2580,10 @@ void ardeos_t::init_base_stats()
   base_gcd = timespan_t::from_seconds( 1.5 );
   min_gcd  = timespan_t::from_seconds( 0.75 );
 
-  
   if ( talents_enabled( ardeos_t::BURNING_INITIATIVE ) )
   {
-    resources.start_at[ RESOURCE_SPIRIT ]  = talents.burning_initiative_initial_spirit;
-    resources.start_at[ RESOURCE_CINDERS ] = talents.burning_initiative_initial_embers * 100;
+    resources.start_at[ RESOURCE_SPIRIT ] += talents.burning_initiative_initial_spirit;
+    resources.start_at[ RESOURCE_CINDERS ] += talents.burning_initiative_initial_embers * 100;
   }
 }
 

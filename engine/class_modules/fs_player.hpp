@@ -246,6 +246,7 @@ public:
 
     const double finesse_g_spirit_to_stats[ 5 ] = { 0.0, 0.25, 0.25, 0.25, 0.25 };
     const timespan_t finesse_g_duration[ 5 ]    = { 0_s, 3_s, 5_s, 8_s, 12_s };
+    const double finesse_g_max                  = 0.5;
 
     const double finesse_h_added[ 5 ] = { 0, 0.12, 0.19, 0.31, 0.49 };
 
@@ -256,6 +257,7 @@ public:
 
     const double finesse_j_amp[ 5 ] = { 0, 0.005, 0.008, 0.013, 0.02 };
     const double finesse_j_divisor  = 0.03;
+    const double finesse_j_max      = 0.48;
 
     const double finesse_k_cdr[ 5 ]         = { 0, 0.02, 0.03, 0.05, 0.08 };
     const double finesse_k_amp_multiplier   = 1.0;
@@ -266,6 +268,8 @@ public:
     const int finesse_l_targets         = 4;
     const int finesse_l_max_stacks      = 1;
     const timespan_t finesse_l_duration = 15_s;
+
+    const double finesse_m_spirit[ 5 ] = { 0, 10.0, 20.0, 30.0, 40.0 };
   } finesse_trait_values;
 
   struct fs_weapons_t
@@ -677,7 +681,8 @@ public:
 
     if ( fs_p()->finesse_traits[ FINESSE_J ] && ab::ability_flags & ability_type_e::ABILITY_POWER )
     {
-      m *= 1.0 + finesse_j_mul * fs_p()->cache.mastery();
+      auto mast = std::min( fs_p()->finesse_trait_values.finesse_j_max, fs_p()->cache.mastery() );
+      m *= 1.0 + finesse_j_mul * mast;
     }
 
     return m;
@@ -751,9 +756,10 @@ public:
 
       if ( fs_p()->finesse_traits[ FINESSE_G ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MAJOR )
       {
+        auto mast = std::min( fs_p()->finesse_trait_values.finesse_g_max, fs_p()->cache.mastery() );
+
         fs_p()->fs_buffs.finesse_g->trigger(
-            1, fs_p()->finesse_trait_values.finesse_g_spirit_to_stats[ fs_p()->finesse_traits[ FINESSE_G ] ] *
-                   fs_p()->cache.mastery() );
+            1, fs_p()->finesse_trait_values.finesse_g_spirit_to_stats[ fs_p()->finesse_traits[ FINESSE_G ] ] * mast );
       }
 
       if ( fs_p()->finesse_traits[ FINESSE_F ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE &&

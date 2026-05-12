@@ -80,6 +80,7 @@ public:
     buff_t* impending_heartseeker;
     buff_t* impending_heartseeker_channel;
     buff_t* stars_aligned;
+    buff_t* strikers_aim;
   } buffs;
 
   struct cooldowns_t
@@ -192,13 +193,16 @@ public:
   X( LETHAL_SHOTS,           "lethal_shots",           "Lethal Shots" ) \
   X( PRECISION_STRIKE,       "precision_strike",       "Precision Strike" ) \
   X( LUNAR_FURY,             "lunar_fury",             "Lunar Fury" ) \
-  X( STARS_ALIGNED,             "stars_aligned",             "Stars Aligned" ) \
+  X( STARS_ALIGNED,          "stars_aligned",          "Stars Aligned" ) \
   X( FERVENT_SUPREMACY,      "fervent_supremacy",      "Fervent Supremacy" ) \
   X( IMPENDING_HEARTSEEKER,  "impending_heartseeker",  "Impending Heartseeker" ) \
   X( RESURGENT_WINDS,        "resurgent_winds",        "Resurgent Winds" ) \
   X( LAST_LIGHTS,            "last_lights",            "Last Lights" ) \
-  X( RISING_MOON,     "rising_moon",     "Rising Moon" ) \
-  X( HIGH_IMPACT,  "high_impact",  "High Impact" )
+  X( RISING_MOON,            "rising_moon",            "Rising Moon" ) \
+  X( STRIKERS_AIM,           "strikers_aim",           "Striker's Aim" ) \
+  X( SWIFT_RELOAD, "swift_reload", "Swift Reload" ) \
+  X( DEADLY_FOCUS, "deadly_focus", "Deadly Focus" ) \
+  X( HIGH_IMPACT,            "high_impact",            "High Impact" )
 
   enum elarion_talent_index_t
   {
@@ -266,7 +270,7 @@ public:
     timespan_t repeating_stars_cdr = 0.3_s;
 
     double lunarlight_affinity_volley_chance_mul = 0.0;
-    double lunarlight_affinity_salvo_cc          = 0.4;
+    double lunarlight_affinity_salvo_cc          = 0.2;
 
     double lethal_shots_proc_chance = 0.4;
     double lethal_shots_added_cc    = 1.0;
@@ -290,7 +294,7 @@ public:
     double last_lights_cc    = 0.2;
     double last_light_hp_pct = 30;
 
-    timespan_t rising_moon_cdr = 1.5_s;
+    timespan_t rising_moon_cdr = 2_s;
 
     double high_impact_ratio = 0.3;
 
@@ -301,6 +305,16 @@ public:
 
     double precision_strike_effectiveness = 0.5;
     timespan_t precision_strike_delay     = 0.2_s;
+
+    double strikers_aim_expertise    = 0.05;
+    timespan_t strikers_aim_duration = 18_s;
+    unsigned int strikers_aim_threshold       = 1;
+    int strikers_aim_max_stacks      = 3;
+
+    double deadly_focus_dmg_mod   = 1.0;
+    double deadly_focus_focus_mod = -0.5;
+
+    timespan_t swift_reload_cdr = 0.5_s;
   } talents;
 
   struct legendary_t
@@ -951,6 +965,17 @@ struct focused_shot_t : public elarion_attack_t
     parse_options( options_str );
   }
 
+  void init_finished() override
+  {
+    base_t::init_finished();
+
+    if ( p()->talents_enabled( elarion_t::DEADLY_FOCUS ) )
+    {
+      energize_amount *= 1.0 + p()->talents.deadly_focus_focus_mod;
+      attack_power_mod.direct *= 1.0 + p()->talents.deadly_focus_dmg_mod;
+    }
+  }
+
   void execute() override
   {
     base_t::execute();
@@ -987,6 +1012,16 @@ struct celestial_shot_t : public elarion_attack_t
     ability_flags |= ability_type_e::ABILITY_CORE;
 
     parse_options( options_str );
+  }
+
+  void init_finished() override
+  {
+    base_t::init_finished();
+
+    if ( p()->talents_enabled( elarion_t::DEADLY_FOCUS ) )
+    {
+      attack_power_mod.direct *= 1.0 + p()->talents.deadly_focus_dmg_mod;
+    }
   }
 
   double cost_pct_multiplier() const override
@@ -1282,6 +1317,10 @@ struct highwind_arrow_t : public elarion_attack_t
 
     if ( result_is_hit( s->result ) )
     {
+      if ( p()->talents_enabled( elarion_t::SWIFT_RELOAD ) )
+      {
+        p()->cooldowns.highwind_arrow->adjust( -p()->talents.swift_reload_cdr );
+      }
       if ( s->chain_target == 0 && p()->talents_enabled( elarion_t::HIGH_IMPACT ) )
       {
         p()->actions.high_impact->execute_on_target( s->target, s->result_amount * p()->talents.high_impact_ratio );
@@ -1323,10 +1362,10 @@ struct highwind_arrow_t : public elarion_attack_t
       m *= 1.0 + p()->talents.final_crescendo_dmg_mul;
     }
 
-    //if ( p()->buffs.resurgent_winds->check() && p()->get_target_data( s->target )->debuffs.lunarlight_mark->check() )
-    //{
-    //  m *= 1.0 + p()->talents.resurgent_winds_mul;
-    //}
+    if ( p()->buffs.resurgent_winds->check() && p()->get_target_data( s->target )->debuffs.lunarlight_mark->check() )
+    {
+      m *= 1.0 + p()->talents.resurgent_winds_mul;
+    }
 
     return m;
   }
@@ -1392,6 +1431,11 @@ struct highwind_arrow_t : public elarion_attack_t
         p()->actions.precision_strike->set_target( execute_state->target );
         p()->actions.precision_strike->schedule_execute( damage_state );
       } );
+    }
+
+    if ( p()->talents_enabled( elarion_t::STRIKERS_AIM ) && execute_state && execute_state->n_targets <= p()->talents.strikers_aim_threshold )
+    {
+      p()->buffs.strikers_aim->trigger();
     }
 
     if ( !is_precision_strike )
@@ -2206,6 +2250,13 @@ void elarion_t::init_scaling()
 void elarion_t::create_buffs()
 {
   fs_player_t::create_buffs();
+
+  buffs.strikers_aim = make_buff<elarion_buff_t>( this, "strikers_aim" )
+                           ->set_default_value( talents.strikers_aim_expertise )
+                           ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+                            ->set_max_stack( talents.strikers_aim_max_stacks )
+                            ->set_duration( talents.strikers_aim_duration )
+                           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   buffs.celestial_impetus = make_buff<elarion_buff_t>( this, "celestial_impetus" )
                                 ->set_max_stack( spell_const.celestial_impetus_max_stacks )

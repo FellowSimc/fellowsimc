@@ -1088,6 +1088,12 @@ void fs_player_t::init_base_stats()
   resources.start_at[ RESOURCE_SPIRIT ]              = 0;
   resources.base_regen_per_second[ RESOURCE_SPIRIT ] = 100.0 / 300 * 1.20;
 
+  
+  if ( finesse_traits[ FINESSE_M ] )
+  {
+    resources.start_at[ RESOURCE_SPIRIT ] += finesse_trait_values.finesse_m_spirit[ finesse_traits[ FINESSE_M ] ];
+  }
+
   // resources.base_regen_per_second[ RESOURCE_ENERGY ] = 10;
 
   // base_gcd = timespan_t::from_seconds( 1.0 );

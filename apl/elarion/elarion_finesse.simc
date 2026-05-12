@@ -182,3 +182,9 @@ trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,
 
 copy="Finesse_L4","Initial Stat Spread"
 trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+
+copy="Finesse_M1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_m
+
+copy="Finesse_M4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m

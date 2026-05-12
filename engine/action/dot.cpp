@@ -888,11 +888,13 @@ void dot_t::false_start( timespan_t duration )
     sim.print_debug( "{} starts {} on {} with duration={}", *source, *this, *target, duration );
   }
 
-  if ( duration > current_duration )
+  auto new_duration = current_action->calculate_dot_refresh_duration( this, duration );
+
+  if ( new_duration > remains() )
   {
-    current_duration = duration;
+    current_duration = new_duration;
     event_t::cancel( end_event );
-    end_event = make_event<dot_end_event_t>( sim, this, current_duration );
+    end_event = make_event<dot_end_event_t>( sim, this, new_duration );
   }
 
   source->add_active_dot( this );

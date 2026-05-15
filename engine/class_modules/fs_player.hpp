@@ -234,7 +234,7 @@ public:
     const int finesse_a_max_stacks        = 8;
 
     const timespan_t finesse_b_duration = 4_s;
-    const int finesse_b_max_stacks      = 3;
+    const int finesse_b_max_stacks      = 1;
     const double finesse_b_crit[ 5 ]    = { 0, 0.02, 0.03, 0.05, 0.08 };
 
     const timespan_t finesse_c_duration[ 5 ] = { 0_s, 0.5_s, 1_s, 2_s, 3_s };
@@ -243,23 +243,25 @@ public:
     const double finesse_d_chance[ 5 ]   = { 0, 0.05, 0.08, 0.13, 0.2 };
     const double finesse_d_spirit_points = 1.0;
 
-    const double finesse_e_cdmg[ 5 ] = { 0, 0.01, 0.02, 0.03, 0.04 };
+    const double finesse_e_cc[ 5 ]   = { 0, 0.01, 0.02, 0.03, 0.04 };
+    const double finesse_e_cdmg[ 5 ] = { 0, 0.05, 0.10, 0.15, 0.20 };
 
     const double finesse_f_drain[ 5 ]   = { 0, 2.6, 4.16, 6.66, 10.65 };
     const double finesse_f_drain_chance = 0.1;
 
-    const double finesse_g_spirit_to_stats[ 5 ] = { 0.0, 0.25, 0.25, 0.25, 0.25 };
-    const timespan_t finesse_g_duration[ 5 ]    = { 0_s, 3_s, 5_s, 8_s, 12_s };
+    const double finesse_g_spirit_to_stats[ 5 ] = { 0.0, 0.2, 0.2, 0.2, 0.2 };
+    const timespan_t finesse_g_duration[ 5 ]    = { 0_s, 2_s, 4_s, 6_s, 8_s };
     const double finesse_g_max                  = 0.5;
 
     const double finesse_h_added[ 5 ] = { 0, 0.25, 0.40, 0.64, 1.0 };
 
-    const double finesse_i_haste[ 5 ]   = { 0, 0.03, 0.048, 0.077, 0.123 };
-    const timespan_t finesse_i_interval = 30_s;
-    const timespan_t finesse_i_duration = 7_s;
-    const timespan_t finesse_i_cdr      = 2_s;
+    const double finesse_i_haste[ 5 ]      = { 0, 0.03, 0.048, 0.077, 0.123 };
+    const timespan_t finesse_i_interval    = 60_s;
+    const timespan_t finesse_i_duration    = 14_s;
+    const timespan_t finesse_i_cdr         = 4_s;
+    const timespan_t finesse_i_cdr_divisor = 30_s;
 
-    const double finesse_j_amp[ 5 ] = { 0, 0.005, 0.008, 0.013, 0.02 };
+    const double finesse_j_amp[ 5 ] = { 0, 0.003, 0.006, 0.009, 0.012 };
     const double finesse_j_divisor  = 0.03;
     const double finesse_j_max      = 0.48;
 
@@ -717,6 +719,14 @@ public:
     return m;
   }
 
+  void init() override
+  {
+    ab::init();
+
+    if ( ab::ability_flags & ability_type_e::ABILITY_CORE )
+      ab::base_crit += fs_p()->finesse_trait_values.finesse_e_cc[ fs_p()->finesse_traits[ FINESSE_E ] ];
+  }
+
   void init_finished() override
   {
     ab::init_finished();
@@ -784,10 +794,11 @@ public:
 
       if ( fs_p()->finesse_traits[ FINESSE_I ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MOVEMENT )
       {
-        fs_p()->finesse_i_cdr( fs_p()->finesse_trait_values.finesse_i_cdr );
+        fs_p()->finesse_i_cdr( fs_p()->finesse_trait_values.finesse_i_cdr *
+                               ( ab::cooldown->duration / fs_p()->finesse_trait_values.finesse_i_cdr_divisor ) );
       }
 
-      if ( fs_p()->fs_buffs.finesse_l && fs_p()->fs_buffs.finesse_l->check() &&
+      if ( fs_p()->finesse_traits[ FINESSE_L ] > 0 && fs_p()->fs_buffs.finesse_l->check() &&
            ab::ability_flags & ability_type_e::ABILITY_CORE )
       {
         fs_p()->fs_actions.finesse_l->execute();

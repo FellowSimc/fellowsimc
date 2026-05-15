@@ -1,0 +1,1181 @@
+
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=250
+# max_time=60
+# target_error=0.05
+target_error=0.1
+iterations=15000
+chart_show_relative_difference=1
+vary_combat_length=0.1
+single_actor_batch=1
+max_time=720
+desired_targets=1
+relative_difference_base="Base Mara"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+
+# optimal_raid=0
+# fight_style=dungeonslice
+# max_time=2100
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=adds,first=5,type=add_boss,count=1,duration=720,cooldown=10101010
+# raid_events+=/resource,first=1200,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,first=1200,resource=combo_points,reset_to_initial=1,cooldown=10101010
+# raid_events+=/adds,first=1200,count=12,duration=720,cooldown=10101010
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":4000000:Humanoid
+# # raid_events+=/pull,pull=02,delay=240,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":1500000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":8000000:Humanoid
+# # raid_events+=/pull,pull=02,delay=240,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":3000000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+mara="Base Mara"
+level=80
+
+# initial_resource=spirit=100
+
+apl/mara/mara.simc
+
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=primary/spirit
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary
+
+# gems.emerald_power=600
+# gems.amethyst_power=1500
+# gems.sapphire_power=600
+# gems.ruby_power=100
+
+# talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/sinners_pride:1/puncture:1/maidens_doom:1
+# legendary.vexiras_venom=1
+# weapon_trait.emerald_judgement=1
+
+weapon=fated_strike
+# weapon_trait.visions_of_grandeur=4
+# weapon_trait.amethyst_splinters=4
+# weapon_trait.brave_machinations=4
+
+legendary.vexiras_venom=1
+talents=deadly_scheme:1/malevolence:1/assassins_guile:1/seething_burst:1/venomous_delight:1/sinners_pride:1/macabre_stratagem:1
+# 13
+
+# Stats -8
+
+sets.deaths_grasp=1
+sets.draconic_might=1
+#34
+
+# sets -4 = 30
+
+gems.amethyst_power=600
+gems.emerald_power=600
+weapon_trait.emerald_judgement=1
+gems.ruby_power=600
+gems.sapphire_power=600
+
+# Gem Essence 4, trait 1 = 25
+
+weapon_trait.visions_of_grandeur=4
+
+# now 5 total traits, -4, 21 left
+
+sets.drakheims_absolution=1
+# 3rd set, -2, = 19 left
+
+weapon_trait.martial_initiative=1
+weapon_trait.amethyst_splinters=4
+
+# 5 more traits, total 10, 9 left.
+
+gems.emerald_power=1500
+# 9 more essences, 13 essence, 0 traits left.
+
+head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/spirit
+neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=spirit/spirit
+legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+finger1=ring1,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+finger2=ring2,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=spirit/spirit/finesse_g/finesse_g/finesse_g/finesse_g/finesse_j/finesse_j/finesse_j/finesse_j
+
+
+weapon_trait.amethyst_splinters=0
+gems.ruby_power=100
+
+# copy="Sapphire10 48.8% spirit","Base Mara"
+gems.sapphire_power=1500
+gems.emerald_power=600
+head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary
+neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=spirit/spirit
+legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+finger1=ring1,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+finger2=ring2,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g/finesse_j/finesse_j/finesse_j/finesse_j
+
+# copy="Emerald 10 somehow","Base Mara"
+gems.emerald_power=1500
+gems.ruby_power=0
+head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary
+neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=spirit/spirit
+legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+finger1=ring1,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+finger2=ring2,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g/finesse_j/finesse_j/finesse_j/finesse_j
+
+copy="No VD Punc","Base Mara"
+talents=deadly_scheme:1/malevolence:1/assassins_guile:1/seething_burst:1/sinners_pride:1/macabre_stratagem:1/puncture:1
+
+copy="No VD MD","Base Mara"
+talents=deadly_scheme:1/malevolence:1/assassins_guile:1/seething_burst:1/sinners_pride:1/macabre_stratagem:1/maidens_doom:1
+
+# copy="Emerald 10 v2","Base Mara"
+# gems.emerald_power=1500
+# gems.amethyst_power=0
+# # need 400
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=spirit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g/finesse_j/finesse_j/finesse_j/finesse_j
+
+
+
+# copy="A10 E6","Base Mara"
+# gems.emerald_power=600
+# gems.amethyst_power=1500
+
+# copy="Finesse J4 Spirit","Base Mara"
+# weapon_trait.amethyst_splinters=0
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_j/finesse_j/finesse_j/finesse_j
+
+# copy="Finesse J4 Spirit Drenched","Base Mara"
+# weapon_trait.amethyst_splinters=0
+# legendary.vexiras_venom=0
+# legendary.drenched_in_blood=1
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_j/finesse_j/finesse_j/finesse_j
+
+
+
+# copy="Finesse G4 Spirit","Base Mara"
+# weapon_trait.amethyst_splinters=0
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g
+
+
+# copy="Finesse J4 Spirit -R6","Base Mara"
+# gems.ruby_power=100
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/spirit
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_j/finesse_j/finesse_j/finesse_j
+
+
+# copy="Finesse G4 Spirit -R6","Base Mara"
+# gems.ruby_power=100
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/spirit
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g
+
+# copy="Hasteless Mara","Base Mara"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/primary
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit
+# finger2=ring2,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary
+
+
+# copy="Finesse JG4 Spirit","Base Mara"
+# gems.ruby_power=100
+# weapon_trait.amethyst_splinters=0
+
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/spirit
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g/finesse_j/finesse_j/finesse_j/finesse_j
+
+# copy="Finesse JG4 More Spirit -AllHaste","Base Mara"
+# gems.ruby_power=100
+# weapon_trait.amethyst_splinters=0
+
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/spirit
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=spirit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g/finesse_j/finesse_j/finesse_j/finesse_j
+
+# copy="Finesse JG4 More Spirit -AllHaste Spirit48%","Base Mara"
+# gems.ruby_power=100
+# weapon_trait.amethyst_splinters=0
+
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/spirit
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=spirit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=spirit/spirit/finesse_g/finesse_g/finesse_g/finesse_g/finesse_j/finesse_j/finesse_j/finesse_j
+
+# copy="Finesse J4 More Spirit -AllHaste Spirit48%","Base Mara"
+# weapon_trait.amethyst_splinters=0
+
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/spirit
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=spirit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=spirit/spirit/finesse_j/finesse_j/finesse_j/finesse_j
+
+# copy="Finesse G4 More Spirit -AllHaste Spirit48%","Base Mara"
+# weapon_trait.amethyst_splinters=0
+
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/spirit
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=spirit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=spirit/spirit/finesse_g/finesse_g/finesse_g/finesse_g
+
+
+
+
+
+
+
+
+# copy="Finesse JG4 Spirit Drenched","Base Mara"
+# gems.ruby_power=100
+# weapon_trait.amethyst_splinters=0
+# legendary.vexiras_venom=0
+# legendary.drenched_in_blood=1
+
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/spirit
+# neck=neck,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/spirit
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=spirit/spirit
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g/finesse_j/finesse_j/finesse_j/finesse_j
+
+
+copy="Earthbreaker","Base Mara"
+weapon=earthbreaker
+
+copy="Void","Base Mara"
+weapon=voidbringers_touch
+
+copy="Sahrils","Base Mara"
+weapon=sahrils_wrath
+
+# copy="Hat -Primary","Base Mara"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary
+# copy="Hat Primary","Base Mara"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary
+# copy="Hat Secondary crit","Base Mara"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/crit
+# copy="Hat Secondary haste","Base Mara"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste
+# copy="Hat Secondary spirit","Base Mara"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/spirit
+# copy="Hat Secondary exp","Base Mara"
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/expertise
+
+# copy="Shoulder -Primary","Base Mara"
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# copy="Shoulder Primary","Base Mara"
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary
+
+# copy="Neck Primary","Base Mara"
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=expertise/crit,affixes=primary
+# copy="Neck Secondary","Base Mara"
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=expertise/crit,affixes=crit
+
+# copy="Feet Primary","Base Mara"
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+# copy="Feet Secondary","Base Mara"
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=crit
+
+
+# copy="Dark Prophecy","Base Mara"
+# sets.dark_prophecy=1
+
+# # copy="Deaths Grasp","Base Mara"
+# # sets.deaths_grasp=1
+
+# # copy="Draconic Might","Base Mara"
+# # sets.draconic_might=1
+# copy="-Deaths Grasp","Base Mara"
+# sets.deaths_grasp=0
+
+# copy="-Draconic Might","Base Mara"
+# sets.draconic_might=0
+
+# copy="-Drakheims Absolution","Base Mara"
+# sets.drakheims_absolution=0
+
+# # copy="Drakheims Absolution","Base Mara"
+# # sets.drakheims_absolution=1
+
+# copy="Eldrin Deceit","Base Mara"
+# sets.eldrin_deceit=1
+
+# copy="Sin Warding","Base Mara"
+# sets.sin_warding=1
+
+# copy="Torment of Baelaurm","Base Mara"
+# sets.torment_of_baelaurum=1
+
+# copy="Tuzari Grace","Base Mara"
+# sets.tuzari_grace=1
+
+# copy="Grandeur 0","Base Mara"
+# weapon_trait.visions_of_grandeur=0
+
+# # copy="Grandeur_1","Base Mara"
+# # weapon_trait.visions_of_grandeur=1
+# # copy="Grandeur_4","Base Mara"
+# # weapon_trait.visions_of_grandeur=4
+copy="Brave Mach1","Base Mara"
+weapon_trait.brave_machinations=1
+copy="Brave Mach4","Base Mara"
+weapon_trait.brave_machinations=4
+# copy="Amethyst Splinters 0","Base Mara"
+# weapon_trait.amethyst_splinters=0
+copy="Amethyst Splinters1","Base Mara"
+weapon_trait.amethyst_splinters=1
+copy="Amethyst Splinters4","Base Mara"
+weapon_trait.amethyst_splinters=4
+# copy="Heroic Brand1","Base Mara"
+# weapon_trait.heroic_brand=1
+# copy="Heroic Brand4","Base Mara"
+# weapon_trait.heroic_brand=
+copy="Martial Initiative0","Base Mara"
+weapon_trait.martial_initiative=0
+# # copy="Martial Initiative1","Base Mara"
+# # weapon_trait.martial_initiative=1
+# copy="Martial Initiative2","Base Mara"
+# weapon_trait.martial_initiative=2
+# copy="Martial Initiative4","Base Mara"
+# weapon_trait.martial_initiative=4
+# # copy="Emerald Judgement1","Base Mara"
+# # weapon_trait.emerald_judgement=1
+# copy="Emerald Judgement4","Base Mara"
+# weapon_trait.emerald_judgement=4
+# copy="Diamond Strike1","Base Mara"
+# weapon_trait.diamond_strike=1
+# copy="Diamond Strike4","Base Mara"
+# weapon_trait.diamond_strike=4
+copy="Sapphire Aurastone1","Base Mara"
+weapon_trait.sapphire_aurastone=1
+copy="Sapphire Aurastone4","Base Mara"
+weapon_trait.sapphire_aurastone=4
+# copy="Ruby Storm1","Base Mara"
+# weapon_trait.ruby_storm=1
+# copy="Ruby Storm4","Base Mara"
+# weapon_trait.ruby_storm=4
+
+# copy="Heroic Brand4 Brave Mach4","Base Mara"
+# weapon_trait.heroic_brand=4
+# weapon_trait.brave_machinations=4
+# # copy="Grandeur4 Brave Mach4","Base Mara"
+# # weapon_trait.visions_of_grandeur=4
+# # weapon_trait.brave_machinations=4
+# # copy="Grandeur4 Heroic Brand4","Base Mara"
+# # weapon_trait.visions_of_grandeur=4
+# # weapon_trait.heroic_brand=4
+# # copy="Grandeur4 Heroic Brand4 Brave Mach4","Base Mara"
+# # weapon_trait.visions_of_grandeur=4
+# # weapon_trait.heroic_brand=4
+# # weapon_trait.brave_machinations=4
+
+
+# # copy="Navigators Intuition1","Base Mara"
+# # weapon_trait.navigators_intuition=1
+# # copy="Navigators Intuition4","Base Mara"
+# # weapon_trait.navigators_intuition=4
+# # copy="Kindling1","Base Mara"
+# # weapon_trait.kindling=1
+# # copy="Kindling4","Base Mara"
+# # weapon_trait.kindling=4
+# # copy="Hidden Power1","Base Mara"
+# # weapon_trait.hidden_power=1
+# # copy="Hidden Power4","Base Mara"
+# # weapon_trait.hidden_power=4
+# # copy="Hunters Focus1","Base Mara"
+# # weapon_trait.hunters_focus=1
+# # copy="Hunters Focus4","Base Mara"
+# # weapon_trait.hunters_focus=4
+# # copy="Patient Soul1","Base Mara"
+# # weapon_trait.patient_soul=1
+# # copy="Patient Soul4","Base Mara"
+# # weapon_trait.patient_soul=4
+# # copy="Seized Opportunity1","Base Mara"
+# # weapon_trait.seized_opportunity=1
+# # copy="Seized Opportunity4","Base Mara"
+# # weapon_trait.seized_opportunity=4
+# # copy="Vengeful Soul1","Base Mara"
+# # weapon_trait.vengeful_soul=1
+# # copy="Vengeful Soul4","Base Mara"
+# # weapon_trait.vengeful_soul=4
+copy="Willful Momentum1","Base Mara"
+weapon_trait.willful_momentum=1
+copy="Willful Momentum4","Base Mara"
+weapon_trait.willful_momentum=4
+copy="Inspired Allegiance1","Base Mara"
+weapon_trait.inspired_allegiance=1
+copy="Inspired Allegiance4","Base Mara"
+weapon_trait.inspired_allegiance=4
+
+# # copy="Ruby 1","Base Mara"
+# # gems.ruby_power=80
+# # # Wasted 20
+# # copy="Ruby 2","Base Mara"
+# # gems.ruby_power=150
+# # # Wasted 50
+# # copy="Ruby 4","Base Mara"
+# # gems.ruby_power=300
+# # copy="Ruby 5","Base Mara"
+# # # Wasted 50
+# # gems.ruby_power=500
+
+# # copy="Ruby 5 No Boss","Base Mara"
+# # # Wasted 50
+# # gems.ruby_power=500
+# # ruby_allow_boss_amp=0
+# # copy="Ruby 6","Base Mara"
+# # gems.ruby_power=600
+# # copy="Ruby 6 No Boss","Base Mara"
+# # gems.ruby_power=600
+# # ruby_allow_boss_amp=0
+# # copy="Ruby 7","Base Mara"
+# # gems.ruby_power=800
+# # copy="Ruby 7 No Boss","Base Mara"
+# # gems.ruby_power=800
+# # ruby_allow_boss_amp=0
+# # copy="Ruby 9","Base Mara"
+# # # Wasted 50
+# # gems.ruby_power=1300
+# # copy="Ruby 9 No Boss","Base Mara"
+# # # Wasted 50
+# # gems.ruby_power=1300
+# # ruby_allow_boss_amp=0
+# # copy="Ruby 10","Base Mara"
+# # gems.ruby_power=1500
+# # copy="Ruby 10 No Boss","Base Mara"
+# # gems.ruby_power=1500
+# # ruby_allow_boss_amp=0
+
+
+
+# # copy="Amethyst 1","Base Mara"
+# # gems.amethyst_power=80
+# # # Wasted 20
+# # copy="Amethyst 2","Base Mara"
+# # gems.amethyst_power=150
+# # # Wasted 50
+# # copy="Amethyst 4","Base Mara"
+# # gems.amethyst_power=300
+# # copy="Amethyst 5","Base Mara"
+# # # Wasted 50
+# # gems.amethyst_power=500
+# # copy="Amethyst 6","Base Mara"
+# # gems.amethyst_power=600
+# copy="Amethyst 7","Base Mara"
+# gems.amethyst_power=800
+# copy="Amethyst 9","Base Mara"
+# # Wasted 50
+# gems.amethyst_power=1300
+# copy="Amethyst 10","Base Mara"
+# gems.amethyst_power=1500
+
+
+# # copy="Topaz 1","Base Mara"
+# # gems.topaz_power=80
+# # # Wasted 20
+# # copy="Topaz 2","Base Mara"
+# # gems.topaz_power=150
+# # # Wasted 50
+# # copy="Topaz 4","Base Mara"
+# # gems.topaz_power=300
+# # copy="Topaz 5","Base Mara"
+# # # Wasted 50
+# # gems.topaz_power=500
+# # copy="Topaz 6","Base Mara"
+# # gems.topaz_power=600
+# # copy="Topaz 7","Base Mara"
+# # gems.topaz_power=800
+# # copy="Topaz 9","Base Mara"
+# # # Wasted 50
+# # gems.topaz_power=1300
+# # copy="Topaz 10","Base Mara"
+# # gems.topaz_power=1500
+
+# # copy="Emerald 1","Base Mara"
+# # gems.emerald_power=80
+# # # Wasted 20
+# # copy="Emerald 1 Judge1","Base Mara"
+# # gems.emerald_power=80
+# # weapon_trait.emerald_judgement=1
+# # # Wasted 20
+# # copy="Emerald 2","Base Mara"
+# # gems.emerald_power=150
+# # # Wasted 50
+# # copy="Emerald 4","Base Mara"
+# # gems.emerald_power=300
+# # copy="Emerald 5","Base Mara"
+# # # Wasted 50
+# # gems.emerald_power=500
+# # copy="Emerald 6","Base Mara"
+# # gems.emerald_power=600
+# # copy="Emerald 6 Judge 1","Base Mara"
+# # gems.emerald_power=600
+# # weapon_trait.emerald_judgement=1
+# copy="Emerald 7","Base Mara"
+# gems.emerald_power=800
+# copy="Emerald 9","Base Mara"
+# # Wasted 50
+# gems.emerald_power=1300
+# copy="Emerald 10","Base Mara"
+# gems.emerald_power=1500
+
+# # copy="Sapphire 1","Base Mara"
+# # gems.sapphire_power=80
+# # # Wasted 20
+# # copy="Sapphire 2","Base Mara"
+# # gems.sapphire_power=150
+# # # Wasted 50
+# # copy="Sapphire 4","Base Mara"
+# # gems.sapphire_power=300
+# # copy="Sapphire 5","Base Mara"
+# # # Wasted 50
+# # gems.sapphire_power=500
+# # copy="Sapphire 6","Base Mara"
+# # gems.sapphire_power=600
+# copy="Sapphire 7","Base Mara"
+# gems.sapphire_power=800
+# copy="Sapphire 9","Base Mara"
+# # Wasted 50
+# gems.sapphire_power=1300
+# copy="Sapphire 10","Base Mara"
+# gems.sapphire_power=1500
+
+# # copy="Diamond 1","Base Mara"
+# # gems.diamond_power=80
+# # # Wasted 20
+# # copy="Diamond 2","Base Mara"
+# # gems.diamond_power=150
+# # # Wasted 50
+# # copy="Diamond 4","Base Mara"
+# # gems.diamond_power=300
+# # copy="Diamond 6","Base Mara"
+# # gems.diamond_power=600
+# # copy="Diamond 7","Base Mara"
+# # gems.diamond_power=800
+# # copy="Diamond 9","Base Mara"
+# # # Wasted 50
+# # gems.diamond_power=1300
+
+copy="Finesse_A1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a
+
+copy="Finesse_A4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+
+copy="Finesse_B1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b
+
+copy="Finesse_B4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+
+copy="Finesse_D1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d
+
+copy="Finesse_D4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+
+# copy="Finesse_E1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e
+
+# copy="Finesse_E4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+
+# copy="Finesse_F1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f
+
+# copy="Finesse_F4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+
+# copy="Finesse_H1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h
+
+# copy="Finesse_H4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+
+# copy="Finesse_I1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i
+
+# copy="Finesse_I4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+
+# copy="Finesse_K1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k
+
+# copy="Finesse_K4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+
+# copy="Finesse_L1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l
+
+# copy="Finesse_L4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+
+# copy="Finesse_J1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_j
+
+# copy="Finesse_J4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j/
+
+# copy="Finesse_G1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_g
+
+# copy="Finesse_G4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+
+copy="Finesse_M1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m
+
+copy="Finesse_M4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+
+
+# # copy="Willful Momentum1 sapphire 6","Base Mara"
+# # weapon_trait.willful_momentum=1
+# # gems.emerald_power=600
+# # copy="Willful Momentum4 Sapphire 6","Base Mara"
+# # weapon_trait.willful_momentum=4
+# # gems.emerald_power=600
+# # copy="Sapphire Aurastone1 Sapphire 6","Base Mara"
+# # weapon_trait.sapphire_aurastone=1
+# # gems.sapphire_power=600
+# # copy="Sapphire Aurastone4 Sapphire 6","Base Mara"
+# # weapon_trait.sapphire_aurastone=4
+# # gems.sapphire_power=600
+# # copy="Grandeur_1 Sapphire 6","Base Mara"
+# # weapon_trait.visions_of_grandeur=1
+# # gems.sapphire_power=600
+# # copy="Grandeur_4 Sapphire 6","Base Mara"
+# # weapon_trait.visions_of_grandeur=4
+# # gems.sapphire_power=600
+
+# # copy="Finesse_M1 Sapphire 6","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m
+# # gems.sapphire_power=600
+# # copy="Finesse_M4 Sapphire 6","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+# # gems.sapphire_power=600
+
+
+# # # -- Talents
+
+# # copy="Bleed Vex DSAG","Base Mara"
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/assassins_guile:1
+# # copy="Bleed FTS DSAG","Base Mara"
+# # legendary.vexiras_venom=0
+# # legendary.from_the_shadows=1
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/assassins_guile:1
+# # copy="Bleed Vex DSRL","Base Mara"
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/red_ledger:1
+# # copy="Bleed FTS DSRL","Base Mara"
+# # legendary.vexiras_venom=0
+# # legendary.from_the_shadows=1
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/red_ledger:1
+# # copy="Bleed Vex DSMV","Base Mara"
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/malevolence:1
+# # copy="Bleed FTS DSMV","Base Mara"
+# # legendary.vexiras_venom=0
+# # legendary.from_the_shadows=1
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/malevolence:1
+
+# # copy="Vexiras Venom","Base Mara"
+# # legendary.vexiras_venom=1
+
+# # copy="Vexiras Venom VD","Base Mara"
+# # legendary.vexiras_venom=1
+# # talents+=/venomous_delight:1
+
+# # # -- Finisher+-
+
+# # # copy="Drenched","Base Mara"
+# # # legendary.drenched_in_blood=1
+
+# # # copy="From the Shadows","Base Mara"
+# # # legendary.from_the_shadows=1
+
+# # copy="Red Ledger","Base Mara"
+# # talents+=/red_ledger:1
+
+# # copy="Corrosive Spill","Base Mara"
+# # talents+=/corrosive_spill:1
+
+# # # copy="Assassins Guile","Base Mara"
+# # # talents+=/assassins_guile:1
+
+# # copy="Bloodrush","Base Mara"
+# # talents+=/bloodrush:1
+
+# # # copy="Venomous Delight","Base Mara"
+# # # talents+=/venomous_delight:1
+
+# # copy="Efficient Killer","Base Mara"
+# # talents+=/efficient_killer:1
+
+# # copy="Gushing Blood","Base Mara"
+# # talents+=/gushing_blood:1
+
+# # copy="Feed the Queen","Base Mara"
+# # talents+=/feed_the_queen:1
+
+# # # copy="Deadly Scheme","Base Mara"
+# # # talents+=/deadly_scheme:1
+
+# # copy="Maidens Doom","Base Mara"
+# # talents+=/maidens_doom:1
+
+# # copy="Hemotoxin","Base Mara"
+# # talents+=/hemotoxin:1
+
+# # # copy="Sinners Pride","Base Mara"
+# # # talents+=/sinners_pride:1
+
+# # # copy="Malevolence","Base Mara"
+# # # talents+=/malevolence:1
+
+# # # copy="Malevolence Deadly Scheme","Base Mara"
+# # # talents+=/malevolence:1/deadly_scheme:1
+
+# # copy="Arachnid Onslaught","Base Mara"
+# # talents+=/arachnid_onslaught:1
+
+# # copy="Puncture","Base Mara"
+# # talents+=/puncture:1
+
+# # # copy="Seething Burst","Base Mara"
+# # # talents+=/seething_burst:1
+
+# # copy="Caustic Wounds","Base Mara"
+# # talents+=/caustic_wounds:1
+
+# # # copy="Macabre Stratagem","Base Mara"
+# # # talents+=/macabre_stratagem:1
+
+
+# # # copy="-Red Ledger","Base Mara"
+# # # talents+=/red_ledger:0
+
+# # # copy="-Corrosive Spill","Base Mara"
+# # # talents+=/corrosive_spill:0
+
+# # copy="-Assassins Guile","Base Mara"
+# # talents+=/assassins_guile:0
+
+# # # copy="-Bloodrush","Base Mara"
+# # # talents+=/bloodrush:0
+
+# # copy="-Venomous Delight","Base Mara"
+# # talents+=/venomous_delight:0
+
+# # # copy="-Efficient Killer","Base Mara"
+# # # talents+=/efficient_killer:0
+
+# # # copy="-Gushing Blood","Base Mara"
+# # # talents+=/gushing_blood:0
+
+# # # copy="-Feed the Queen","Base Mara"
+# # # talents+=/feed_the_queen:0
+
+# # copy="-Deadly Scheme","Base Mara"
+# # talents+=/deadly_scheme:0
+
+# # # copy="-Maidens Doom","Base Mara"
+# # # talents+=/maidens_doom:0
+
+# # # copy="-Hemotoxin","Base Mara"
+# # # talents+=/hemotoxin:0
+
+# # copy="-Sinners Pride","Base Mara"
+# # talents+=/sinners_pride:0
+
+# # copy="-Malevolence","Base Mara"
+# # talents+=/malevolence:0
+
+# # copy="-Malevolence Deadly Scheme","Base Mara"
+# # talents+=/malevolence:0/deadly_scheme:0
+
+# # # copy="-Arachnid Onslaught","Base Mara"
+# # # talents+=/arachnid_onslaught:0
+
+# # # copy="-Puncture","Base Mara"
+# # # talents+=/puncture:0
+
+# # copy="-Seething Burst","Base Mara"
+# # talents+=/seething_burst:0
+
+# # # copy="-Caustic Wounds","Base Mara"
+# # # talents+=/caustic_wounds:0
+
+# # copy="-Macabre Stratagem","Base Mara"
+# # talents+=/macabre_stratagem:0
+
+# # # -- Finisher+-
+
+# # copy="Wep Prim to Haste","Base Mara"
+# # main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/haste
+
+# # copy="Wep Prim to Crit","Base Mara"
+# # main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/crit
+# # copy="Wep Prim to Expertise","Base Mara"
+# # main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/expertise
+# # copy="Wep Prim to Spirit","Base Mara"
+# # main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/spirit
+
+# # copy="Shoulder Primary to Expertise","Base Mara"
+# # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=expertise
+# # copy="Shoulder Primary to Haste","Base Mara"
+# # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=haste
+# # copy="Shoulder Primary to Crit","Base Mara"
+# # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=crit
+# # copy="Shoulder Primary to Spirit","Base Mara"
+# # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=spirit
+
+
+
+# # copy="Finesse_A1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a
+
+# # copy="Finesse_A4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+
+# # copy="Finesse_B1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b
+
+# # copy="Finesse_B4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+
+# # copy="Finesse_D1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d
+
+# # copy="Finesse_D4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+
+# # copy="Finesse_E1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e
+
+# # copy="Finesse_E4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+
+# # copy="Finesse_F1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f
+
+# # copy="Finesse_F4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+
+# # copy="Finesse_H1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h
+
+# # copy="Finesse_H4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+
+# # copy="Finesse_I1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i
+
+# # copy="Finesse_I4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+
+# # copy="Finesse_K1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k
+
+# # copy="Finesse_K4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+
+# # copy="Finesse_L1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l
+
+# # copy="Finesse_L4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+
+# # copy="Finesse_J1_SPIRIT","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# # chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# # wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# # hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# # legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j
+# # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+# # copy="Finesse_J4_SPIRIT","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# # chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# # wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# # hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# # legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+# # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+
+# # copy="Finesse_G1_SPIRIT","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# # chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# # wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# # hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# # legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g
+# # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+
+# # copy="Finesse_G4_SPIRIT","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# # chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# # wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# # hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# # legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+# # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+# # copy="Finesse_J1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_J
+
+# # copy="Finesse_J4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_J/finesse_J/finesse_J/finesse_J
+
+# # copy="Finesse_G1","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_G
+
+# # copy="Finesse_G4","Base Mara"
+# # trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_G/finesse_G/finesse_G/finesse_G

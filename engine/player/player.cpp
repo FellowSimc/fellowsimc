@@ -11123,7 +11123,10 @@ std::unique_ptr<expr_t> player_t::create_expression( util::string_view expressio
   if ( expression_str == "spell_cast_speed" )
     return make_fn_expr( expression_str, [this] { return cache.spell_cast_speed(); } );
 
-  if ( expression_str == "mastery_value" )
+  if ( expression_str == "spirit_pct" )
+    return make_mem_fn_expr( expression_str, this->cache, &player_stat_cache_t::mastery );
+
+  if ( expression_str == "refund_chance" )
     return make_mem_fn_expr( expression_str, this->cache, &player_stat_cache_t::mastery_value );
 
   if ( expression_str == "attack_crit" )

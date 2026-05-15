@@ -1165,68 +1165,50 @@ void fs_player_t::create_buffs()
 {
   player_t::create_buffs();
 
-  if ( finesse_traits[ FINESSE_A ] > 0 )
-  {
-    auto rank          = finesse_traits[ FINESSE_A ];
-    fs_buffs.finesse_a = make_buff<fs_player_buff_t>( this, "finesse_a" )
-                             ->set_default_value( finesse_trait_values.finesse_a_per_stack[ rank ] )
-                             ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
-                             ->set_max_stack( finesse_trait_values.finesse_a_max_stacks );
-  }
+  auto rank          = finesse_traits[ FINESSE_A ];
+  fs_buffs.finesse_a = make_buff<fs_player_buff_t>( this, "finesse_a" )
+                           ->set_default_value( finesse_trait_values.finesse_a_per_stack[ rank ] )
+                           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                           ->set_max_stack( finesse_trait_values.finesse_a_max_stacks );
 
-  if ( finesse_traits[ FINESSE_B ] > 0 )
-  {
-    auto rank          = finesse_traits[ FINESSE_B ];
-    fs_buffs.finesse_b = make_buff<fs_player_buff_t>( this, "finesse_b" )
-                             ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
-                             ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS )
-                             ->set_default_value( finesse_trait_values.finesse_b_crit[ rank ] )
-                             ->set_max_stack( finesse_trait_values.finesse_a_max_stacks )
-                             ->set_duration( finesse_trait_values.finesse_b_duration );
-  }
-    
-  if ( finesse_traits[ FINESSE_G ] > 0 )
-  {
-    auto rank          = finesse_traits[ FINESSE_G ];
-    fs_buffs.finesse_g = make_buff<fs_player_buff_t>( this, "finesse_g" )
-                             ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
-                             ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-                             ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
-                             ->set_default_value( 0.0 )
-                             ->set_duration( finesse_trait_values.finesse_g_duration[ rank ] );
-  }
+  rank               = finesse_traits[ FINESSE_B ];
+  fs_buffs.finesse_b = make_buff<fs_player_buff_t>( this, "finesse_b" )
+                           ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
+                           //->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS )
+                           ->set_default_value( finesse_trait_values.finesse_b_crit[ rank ] )
+                           //->set_max_stack( finesse_trait_values.finesse_a_max_stacks )
+                           ->set_duration( finesse_trait_values.finesse_b_duration );
 
-  if ( finesse_traits[ FINESSE_I ] > 0 )
-  {
-    auto rank          = finesse_traits[ FINESSE_I ];
-    fs_buffs.finesse_i = make_buff<fs_player_buff_t>( this, "finesse_i" )
-                             ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-                             ->set_default_value( finesse_trait_values.finesse_i_haste[ rank ] )
-                             ->set_duration( finesse_trait_values.finesse_i_duration );
-  }
+  rank               = finesse_traits[ FINESSE_G ];
+  fs_buffs.finesse_g = make_buff<fs_player_buff_t>( this, "finesse_g" )
+                           ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+                           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                           ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
+                           ->set_default_value( 0.0 )
+                           ->set_duration( finesse_trait_values.finesse_g_duration[ rank ] );
 
-  if ( finesse_traits[ FINESSE_L ] > 0 )
-  {
-    auto rank          = finesse_traits[ FINESSE_L ];
-    fs_buffs.finesse_l = make_buff<fs_player_buff_t>( this, "finesse_l" )
-                             ->set_duration( finesse_trait_values.finesse_l_duration )
-                             ->set_max_stack( finesse_trait_values.finesse_l_max_stacks );
-  }
+  rank               = finesse_traits[ FINESSE_I ];
+  fs_buffs.finesse_i = make_buff<fs_player_buff_t>( this, "finesse_i" )
+                           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                           ->set_default_value( finesse_trait_values.finesse_i_haste[ rank ] )
+                           ->set_duration( finesse_trait_values.finesse_i_duration );
 
-  if ( finesse_traits[ FINESSE_K ] > 0 )
-  {
-    auto rank          = finesse_traits[ FINESSE_K ];
-    fs_buffs.finesse_k = make_buff<fs_player_buff_t>( this, "finesse_k" )
-                             ->set_duration( finesse_trait_values.finesse_k_amp_duration )
-                             ->set_default_value( finesse_trait_values.finesse_k_amp_multiplier )
-                             ->set_stack_change_callback( [ this ]( buff_t*, int, int ) {
-                               for ( auto action : action_list )
-                               {
-                                 if ( action->cooldown )
-                                   action->cooldown->adjust_recharge_multiplier();
-                               }
-                             } );
-  }
+  rank               = finesse_traits[ FINESSE_L ];
+  fs_buffs.finesse_l = make_buff<fs_player_buff_t>( this, "finesse_l" )
+                           ->set_duration( finesse_trait_values.finesse_l_duration )
+                           ->set_max_stack( finesse_trait_values.finesse_l_max_stacks );
+
+  rank               = finesse_traits[ FINESSE_K ];
+  fs_buffs.finesse_k = make_buff<fs_player_buff_t>( this, "finesse_k" )
+                           ->set_duration( finesse_trait_values.finesse_k_amp_duration )
+                           ->set_default_value( finesse_trait_values.finesse_k_amp_multiplier )
+                           ->set_stack_change_callback( [ this ]( buff_t*, int, int ) {
+                             for ( auto action : action_list )
+                             {
+                               if ( action->cooldown )
+                                 action->cooldown->adjust_recharge_multiplier();
+                             }
+                           } );
 
   fs_buffs.spirit_of_heroism = make_buff<fs_player_buff_t>( this, "spirit_of_heroism" )
                                    ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )

@@ -2095,7 +2095,8 @@ struct coalescing_frost_t : public rime_spell_t
     }
 
     spell_power_mod.direct *= p->talents.coalescing_frost_sp_mul;
-  }
+    ability_flags |= ability_type_e::ABILITY_CORE;
+  }  
 };
 
 struct frost_swallow_t : public rime_spell_t

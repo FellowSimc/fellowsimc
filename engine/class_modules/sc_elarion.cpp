@@ -1734,7 +1734,7 @@ struct lunarlight_salvo_t : public elarion_spell_t
     name_str_reporting = "Lunarlight Salvo";
 
     attack_power_mod.direct = p->spell_const.lunarlight_mark_ap_coeff;
-    ability_flags |= ability_type_e::ABILITY_CORE;
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
 
     if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
     {
@@ -1761,7 +1761,7 @@ struct lunarlight_salvo_aoe_t : public elarion_spell_t
 
     attack_power_mod.direct = p->spell_const.lunarlight_mark_ap_coeff;
 
-    ability_flags |= ability_type_e::ABILITY_CORE;
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
     aoe = 12;
 
     if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
@@ -1791,7 +1791,7 @@ struct lunarlight_mark_t : public elarion_spell_t
     aoe = p->spell_const.lunarlight_mark_max_targets;
 
     cooldown->duration = p->spell_const.lunarlight_mark_cooldown;
-    ability_flags |= ability_type_e::ABILITY_CORE;
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
     parse_options( options_str );
   }
 
@@ -1818,18 +1818,18 @@ struct lunarlight_mark_t : public elarion_spell_t
 
 struct lunarlight_mark_spirit_t : public elarion_spell_t
 {
-  lunarlight_mark_spirit_t( elarion_t* p, util::string_view options_str = {} )
-    : elarion_spell_t( "lunarlight_mark_spirit_proc", p, options_str )
+  lunarlight_mark_spirit_t( elarion_t* p )
+    : elarion_spell_t( "lunarlight_mark_spirit_proc", p )
   {
     id = 10;
 
     name_str_reporting = "Lunarlight Mark Spirit";
 
-    background = false;
+    background = true;
 
     aoe = 1 + p->spell_const.spirit_refund_marks_extra_targets;
 
-    parse_options( options_str );
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
   void impact( action_state_t* s ) override

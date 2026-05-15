@@ -97,6 +97,7 @@ gems.emerald_power=1200
 weapon_trait.emerald_judgement=1
 weapon_trait.martial_initiative=1
 weapon_trait.visions_of_grandeur=4
+weapon_trait.brave_machinations=4
 
 legendary.fire_toad=0
 legendary.devouring_flame=1
@@ -106,7 +107,7 @@ legendary.explosivo_adds_bonus=0.5
 
 
 talents=/undying_flame:1/slow_burn:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1/rolling_flames:1/burning_initiative:1/apocalyptic_surge:1/cascading_inferno:1
-
+# talents=/undying_flame:1/slow_burn:1/rolling_flames:1/burning_initiative:1/backdraft:1/crash_and_burn:1/apocalyptic_surge:1/agonizing_blaze:1
 
 copy="Crazy Haste"
 head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/haste

@@ -29,7 +29,7 @@ public:
   struct dots_t
   {
     dot_t* echoes_of_ruin;
-    dot_t* entropys_calm;
+    dot_t* entropys_claim;
     dot_t* entropic_burst;
     dot_t* erasure;
   } dots;
@@ -1238,12 +1238,12 @@ struct echoes_of_ruin_t : public aeona_spell_t
   }
 };
 
-struct entropys_calm_t : public aeona_spell_t
+struct entropys_claim_t : public aeona_spell_t
 {
-  entropys_calm_t( aeona_t* p, util::string_view options_str = {} ) : aeona_spell_t( "entropys_calm", p, options_str )
+  entropys_claim_t( aeona_t* p, util::string_view options_str = {} ) : aeona_spell_t( "entropys_claim", p, options_str )
   {
     id                     = 4;
-    name_str_reporting     = "Entropys Calm";
+    name_str_reporting     = "Entropys Claim";
     spell_power_mod.tick   = p->spell_const.entropys_calm_tick_sp_coeff;
     dot_duration           = p->spell_const.entropys_calm_dot_duration;
     base_tick_time         = p->spell_const.entropys_calm_dot_period;
@@ -1717,7 +1717,7 @@ aeona_td_t::aeona_td_t( player_t* target, aeona_t* source )
   : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
 {
   dots.echoes_of_ruin = target->get_dot( "echoes_of_ruin", source );
-  dots.entropys_calm  = target->get_dot( "entropys_calm", source );
+  dots.entropys_claim  = target->get_dot( "entropys_claim", source );
 
   dots.erasure        = target->get_dot( "erasure", source );
   dots.entropic_burst = target->get_dot( "entropic_burst", source );
@@ -1887,8 +1887,8 @@ action_t* aeona_t::create_action( util::string_view name, util::string_view opti
     return new time_shard_t( name, this, options_str );
   if ( name == "echoes_of_ruin" )
     return new echoes_of_ruin_t( this, options_str );
-  if ( name == "entropys_calm" )
-    return new entropys_calm_t( this, options_str );
+  if ( name == "entropys_claim" )
+    return new entropys_claim_t( this, options_str );
   if ( name == "unfolding_doom" )
     return new unfolding_doom_t( this, options_str );
   if ( name == "temporal_barrage" )

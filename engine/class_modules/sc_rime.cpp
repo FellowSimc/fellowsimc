@@ -159,7 +159,7 @@ public:
 #define X( name, id, pretty ) name##_INDEX,
     RIME_TALENT_LIST( X )
 #undef X
-        RIME_TALENT_MAX
+    RIME_TALENT_MAX
   };
 
   enum rime_talents_t : unsigned long long
@@ -168,7 +168,7 @@ public:
 #define X( name, id, pretty ) name = 1ULL << name##_INDEX,
     RIME_TALENT_LIST( X )
 #undef X
-        MAX = 1ULL << RIME_TALENT_MAX
+    MAX = 1ULL << RIME_TALENT_MAX
   };
 
   static constexpr talent_info RIME_TALENTS[] = {
@@ -239,7 +239,7 @@ public:
 
     double cold_shower_chance = 0.06;
 
-    double icy_talons_multiplier = 0.5;
+    double icy_talons_multiplier = 0.35;
 
     double frostweavers_wrath_chance_per_orb    = 0.17;
     timespan_t frostweavers_wrath_buff_duration = 12_s;
@@ -321,9 +321,9 @@ public:
     timespan_t skandis_decree_duration_bonus = 2_s;
 
     bool undulating_spirit                         = false;
-    double undulating_spirit_additional_spirit     = 50.0;
+    double undulating_spirit_additional_spirit     = 0.0;
     double undulating_spirit_chance                = 0.10;
-    double undulating_spirit_spirit_value          = 3.0;
+    double undulating_spirit_spirit_value          = 2.0;
     bool undulating_spirit_alternative_check       = false;
     double undulating_spirit_alternative_check_mul = 2.0;
   } legendary;
@@ -866,9 +866,15 @@ public:
       return;
     }
 
+    auto cr = ab::current_resource();
+
     ab::consume_resource();
 
-    spend_winter_orbs( ab::execute_state );
+    if ( ab::base_cost() == 0 || ab::proc )
+      return;
+
+    if ( cr == RESOURCE_WINTER_ORB )
+      spend_winter_orbs( ab::execute_state );
   }
 
   void execute() override
@@ -1382,23 +1388,17 @@ struct rising_talons_t : public rime_spell_t
 
     return rime_spell_t::ready();
   }
-
-  double cost() const override
-  {
-    if ( p()->buffs.glacial_assault->at_max_stacks() )
-    {
-      return 0.0;
-    }
-
-    return std::max( base_cost(), p()->resources.current[ RESOURCE_WINTER_ORB ] );
-  }
-  
+    
   void execute()
   {
-    auto cp = p()->resources.current[ RESOURCE_WINTER_ORB ];
+    auto orbs = p()->resources.current[ RESOURCE_WINTER_ORB ];
+
+    if ( p()->buffs.glacial_assault->at_max_stacks() )
+      orbs = p()->resources.max[ RESOURCE_WINTER_ORB ];
+
     rime_spell_t::execute();
 
-    for ( int i = 0; i < cp; ++i )
+    for ( int i = 0; i < orbs; ++i )
     {
       p()->actions.rising_talon_hit->set_target( target );
 
@@ -1426,6 +1426,8 @@ struct rising_talons_t : public rime_spell_t
       }
     }
   }
+
+
 };
 
 struct talon_strike_t : public rime_spell_t
@@ -1438,7 +1440,7 @@ struct talon_strike_t : public rime_spell_t
       id         = 95;
       background = true;
 
-      name_str_reporting = "Rising Talons";
+      name_str_reporting = "Talon Strike";
 
       spell_power_mod.direct = p->spell_const.glacial_blast_coeff;
       if ( p->talents_enabled( rime_t::GREATER_GLACIAL_BLAST ) )
@@ -1573,6 +1575,8 @@ struct talon_strike_t : public rime_spell_t
       state->hit_number            = i;
       state->target                = target;
       state->persistent_multiplier = execute_state->persistent_multiplier;
+      sim->print_debug( "{} schedules Talon Strike hit {} with persistent multiplier {:.2f}", *p(), i + 1,
+                        state->persistent_multiplier );
 
       p()->actions.talon_strike_hit->schedule_execute( state );
     }
@@ -1649,7 +1653,7 @@ struct flight_of_the_navir_t : public rime_spell_t
 
     add_child( p->actions.frost_swallow_navir );
 
-    cooldown->duration = p->spell_const.winters_blessing_cd;
+    cooldown->duration = p->spell_const.flight_of_navir_cd;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
 
@@ -1717,7 +1721,7 @@ struct cold_snap_t : public rime_spell_t
     {
       reduced_aoe_targets = 3;
     }
-    ability_flags |= ability_type_e::ABILITY_CORE;
+    ability_flags |= ability_type_e::ABILITY_BASIC;
   }
 
   void update_ready( timespan_t cd_duration ) override
@@ -2789,7 +2793,10 @@ double rime_t::resource_gain( resource_e resource_type, double amount, gain_t* s
 
   if ( resource_type == RESOURCE_WINTER_ORB )
   {
-    handle_wisdom_of_the_north( as<int>( amount ) );
+    if ( actual_amount < amount )
+    {
+      handle_wisdom_of_the_north( as<int>( amount - actual_amount ) );
+    }
 
     if ( source != gains.spirit_procs && actual_amount > 0 && talents_enabled( rime_t::FROSTWEAVERS_WRATH ) &&
          rngs.frostweavers_wrath->trigger() )

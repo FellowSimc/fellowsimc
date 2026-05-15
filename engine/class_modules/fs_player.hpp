@@ -6,16 +6,16 @@
 namespace fellowship
 {  // UNNAMED NAMESPACE
 
-const double GEM_TIER_1 = 120.0;
-const double GEM_TIER_2 = 240.0;
-const double GEM_TIER_3 = 480.0;
-const double GEM_TIER_4 = 720.0;
-const double GEM_TIER_5 = 960.0;
-const double GEM_TIER_6 = 1200.0;
-const double GEM_TIER_7 = 1560.0;
-const double GEM_TIER_8 = 1920.0;
-const double GEM_TIER_9 = 2280.0;
-const double GEM_TIER_10 = 2640.0;
+const double GEM_TIER_1  = 80.0;
+const double GEM_TIER_2  = 150.0;
+const double GEM_TIER_3  = 220.0;
+const double GEM_TIER_4  = 300.0;
+const double GEM_TIER_5  = 450.0;
+const double GEM_TIER_6  = 600.0;
+const double GEM_TIER_7  = 800.0;
+const double GEM_TIER_8  = 1000.0;
+const double GEM_TIER_9  = 1250.0;
+const double GEM_TIER_10 = 1500.0;
 
 // Forward Declarations
 class fs_player_t;
@@ -132,6 +132,8 @@ public:
     buff_t* finesse_i;
     buff_t* finesse_l;
     buff_t* finesse_k;
+    buff_t* hunters_focus;
+    buff_t* patient_soul;
   } fs_buffs;
 
   struct rng_objects_t
@@ -153,6 +155,7 @@ public:
 
   struct options_t
   {
+    bool ruby_allow_boss_amp = true;
   } fs_options;
 
   struct fs_sets_t
@@ -228,9 +231,10 @@ public:
   struct finesse_values_t
   {
     const double finesse_a_per_stack[ 5 ] = { 0, 0.012, 0.02, 0.03, 0.05 };
-    const int finesse_a_max_stacks        = 5;
+    const int finesse_a_max_stacks        = 8;
 
     const timespan_t finesse_b_duration = 4_s;
+    const int finesse_b_max_stacks      = 3;
     const double finesse_b_crit[ 5 ]    = { 0, 0.02, 0.03, 0.05, 0.08 };
 
     const timespan_t finesse_c_duration[ 5 ] = { 0_s, 0.5_s, 1_s, 2_s, 3_s };
@@ -248,7 +252,7 @@ public:
     const timespan_t finesse_g_duration[ 5 ]    = { 0_s, 3_s, 5_s, 8_s, 12_s };
     const double finesse_g_max                  = 0.5;
 
-    const double finesse_h_added[ 5 ] = { 0, 0.12, 0.19, 0.31, 0.49 };
+    const double finesse_h_added[ 5 ] = { 0, 0.25, 0.40, 0.64, 1.0 };
 
     const double finesse_i_haste[ 5 ]   = { 0, 0.03, 0.048, 0.077, 0.123 };
     const timespan_t finesse_i_interval = 30_s;
@@ -269,7 +273,7 @@ public:
     const int finesse_l_max_stacks      = 1;
     const timespan_t finesse_l_duration = 15_s;
 
-    const double finesse_m_spirit[ 5 ] = { 0, 10.0, 20.0, 30.0, 40.0 };
+    const double finesse_m_spirit[ 5 ] = { 0, 12.0, 20.0, 30.0, 50.0 };
   } finesse_trait_values;
 
   struct fs_weapons_t
@@ -307,8 +311,7 @@ public:
     unsigned visions_of_grandeur              = 0;
     unsigned willful_momentum                 = 0;
   } fs_weapons;
-
-  
+    
   struct fs_relic_t
   {
     fsrelic_e relic1 = fsrelic_e::FSRELIC_NONE;
@@ -344,10 +347,10 @@ public:
     const double seized_opportunity_crit[ 5 ]           = { 0, 7, 13, 19, 25 };
     const double martial_initiative_duration[ 5 ]       = { 0, 0.1, 0.18, 0.25, 0.32 };
     const double kindling_tick_damage[ 5 ]              = { 0, 0.46, 0.84, 1.22, 1.6 };
-    const timespan_t inspired_allegiance_cdr[ 5 ]       = { 0_s, 1_s, 2.5_s, 4_s, 5.5_s };
+    const timespan_t inspired_allegiance_cdr[ 5 ]       = { 0_s, 1.5_s, 4_s, 6_s, 8_s };
     const int inspired_allegiance_allies[ 5 ]           = { 0, 1, 2, 3, 3 };
-    const double inspired_allegiance_haste[ 5 ]         = { 0, 5.0, 8.0, 11.0, 14.0 };
-    const double hidden_power_amp[ 5 ]                  = { 0, 0.075, 0.09, 0.105, 0.12 };
+    const double inspired_allegiance_haste[ 5 ]         = { 0, 6.0, 10.0, 13.0, 17.0 };
+    const double hidden_power_amp[ 5 ]                  = { 0, 0.036, 0.064, 0.092, 0.12 };
     const double emerald_judgement_dmg[ 5 ]             = { 0, 3.0, 5.0, 7.0, 9.0 };
     const double diamond_strike_dmg[ 5 ]                = { 0, 0.72, 1.27, 1.82, 2.37 };
     const double diamond_strike_ppm[ 5 ]                = { 0, 2.5, 3.9, 5.3, 6.7 };
@@ -366,8 +369,14 @@ public:
     const timespan_t navigators_intuition_cd[ 5 ]       = { 0_s, 90_s, 90_s, 90_s, 90_s };
     const double navigators_intuition_chance[ 5 ]       = { 0.0, 0.2, 0.2, 0.2, 0.2 };
     const double hunters_focus_haste[ 5 ]               = { 0.0, 2.0, 4.0, 6.0, 8.0 };
-    const timespan_t hunters_focus_duration[ 5 ]        = { 0_s, 8_s, 8_s, 8_s, 8_s };
+    const timespan_t hunters_focus_duration[ 5 ]        = { 8_s, 8_s, 8_s, 8_s, 8_s };
     const int hunters_focus_max_stacks[ 5 ]             = { 5, 5, 5, 5, 5 };
+    const double patient_soul_max_hp[ 5 ]               = { 0.0, 0.05, 0.05, 0.05, 0.05 };
+    const double patient_soul_expertise[ 5 ]            = { 0.0, 6.0, 11.0, 16.0, 21.0 };
+    const timespan_t patient_soul_stationary[ 5 ]       = { 3_s, 3_s, 3_s, 3_s, 3_s };
+    const timespan_t patient_soul_moving[ 5 ]           = { 6_s, 6_s, 6_s, 6_s, 6_s };
+    const double grandeur_weapon_cdr[ 5 ]               = { 0.0, 0.25, 0.5, 0.75, 1.0 };
+    const double grandeur_weapon_spirit[ 5 ]            = { 0.0, 1.0, 1.8, 2.6, 3.4 };
   } fs_weapon_trait_values;
 
   double spirit_refund_mul = 1;
@@ -378,6 +387,8 @@ public:
   target_specific_t<fs_player_td_t> target_data;
   std::vector<buff_t*> active_voidbringer_buffs;
   std::vector<buff_t*> active_aurastone_buffs;
+  event_t* patient_soul_moved;
+  event_t* patient_soul_stopped;
 
   event_t* finesse_i_event;
 
@@ -444,6 +455,7 @@ public:
   void activate() override;
   void arise() override;
   void combat_begin() override;
+
   void finesse_i_event_fn();
   void finesse_i_cdr( timespan_t cdr );
 
@@ -709,6 +721,8 @@ public:
   {
     ab::init_finished();
 
+    ab::snapshot_flags |= STATE_MUL_PERSISTENT;
+
     if ( fs_p()->finesse_traits[ FINESSE_H ] > 0 && ab::ability_flags & ability_type_e::ABILITY_BASIC )
     {
       auto added = fs_p()->finesse_trait_values.finesse_h_added[ fs_p()->finesse_traits[ FINESSE_H ] ];
@@ -725,6 +739,11 @@ public:
 
   void execute() override
   {
+    if ( fs_p()->finesse_traits[ FINESSE_B ] > 0 && ab::ability_flags & ability_type_e::ABILITY_POWER )
+    {
+      fs_p()->fs_buffs.finesse_b->trigger();
+    }
+
     ab::execute();
 
     if ( !ab::background )
@@ -740,11 +759,6 @@ public:
         {
           fs_p()->fs_buffs.finesse_a->expire();
         }
-      }
-
-      if ( fs_p()->finesse_traits[ FINESSE_B ] > 0 && ab::ability_flags & ability_type_e::ABILITY_POWER )
-      {
-        fs_p()->fs_buffs.finesse_b->trigger();
       }
 
       if ( fs_p()->finesse_traits[ FINESSE_D ] > 0 && ab::ability_flags & ability_type_e::ABILITY_POWER &&
@@ -798,10 +812,11 @@ public:
   {
     auto mul = ab::cost_pct_multiplier();
 
-    if ( ab::current_resource() == RESOURCE_SPIRIT && fs_p()->fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 960.0 )
+    if ( ab::current_resource() == RESOURCE_SPIRIT && fs_p()->fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_5 )
     {
-      mul *= fs_p()->fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 2640 ? fs_p()->fs_gems.sapphire_spirit_cost_multiplier_major
-                                                                : fs_p()->fs_gems.sapphire_spirit_cost_multiplier_minor;
+      mul *= fs_p()->fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_10
+                 ? fs_p()->fs_gems.sapphire_spirit_cost_multiplier_major
+                 : fs_p()->fs_gems.sapphire_spirit_cost_multiplier_minor;
     }
 
     return mul;
@@ -907,24 +922,9 @@ public:
     ab::init_finished();
 
     unsigned grandeur = ab::fs_p()->fs_weapons.visions_of_grandeur;
+    double spirit       = ab::fs_p()->fs_weapon_trait_values.grandeur_weapon_spirit[ grandeur ];
     double mul_from_cd = ab::cooldown->duration / 30_s;
-    double max_spirit  = 100;
-
-    switch ( grandeur )
-    {
-      case 1:
-        grandeur_gain = 0.02 * max_spirit * mul_from_cd;
-        break;
-      case 2:
-        grandeur_gain = 0.024 * max_spirit * mul_from_cd;
-        break;
-      case 3:
-        grandeur_gain = 0.028 * max_spirit * mul_from_cd;
-        break;
-      case 4:
-        grandeur_gain = 0.032 * max_spirit * mul_from_cd;
-        break;
-    }
+    grandeur_gain       = mul_from_cd * spirit;
 
     if ( active_weapon && !ab::background && !ab::channeled )
     {

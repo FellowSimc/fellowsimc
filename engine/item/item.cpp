@@ -1826,7 +1826,7 @@ void item_t::decode_affix_list()
         {
           auto ring = ( slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 );
 
-          auto attunement_value = ring ? 120 : 40;
+          auto attunement_value = 100.0;
 
           casted_player->fs_gems.gem_powers[ gem_type_from_gear_affix( affix_stat ) ] += attunement_value;
         }

@@ -592,7 +592,17 @@ struct pull_event_t final : raid_event_t
             if ( splits.size() > 2 )
               spawn.race = util::parse_race_type( util::tokenize_fn( splits[ 2 ] ) );
 
+            int clone = 1;
+            if ( splits.size() > 3 )
+              clone = util::to_int( splits[ 3 ] );
+
             spawn_parameters.emplace_back( spawn );
+            for ( int i = 1; i < clone; i++ )
+            {
+              spawn_parameter spawn_copy{ spawn };
+              spawn_copy.name += fmt::format( "_copy{}", i );
+              spawn_parameters.emplace_back( spawn_copy );
+            }
           }
         }
 
@@ -1473,6 +1483,61 @@ struct buff_raid_event_t final : public raid_event_t
   void _finish() override {}
 };
 
+// Resource Event ==========================================================
+
+struct resource_event_t final : public raid_event_t
+{
+  std::string resource_str;
+  resource_e resource;
+  double resource_to_add;
+  bool reset_to_initial;
+
+  resource_event_t( sim_t* s, std::string_view options_str )
+    : raid_event_t( s, "buff" ), resource( RESOURCE_NONE ), resource_to_add( 0 )
+  {
+    add_option( opt_string( "resource", resource_str ) );
+    add_option( opt_float( "quantity", resource_to_add ) );
+    add_option( opt_bool( "reset_to_initial", reset_to_initial ) );
+    parse_options( options_str );
+
+    players_only = true;
+
+    if ( resource_str.empty() )
+      throw std::invalid_argument( fmt::format( "you must specify a resource." ) );
+
+    resource = util::parse_resource_type( resource_str );
+
+    if ( resource == RESOURCE_NONE )
+      throw std::invalid_argument( fmt::format( "you must specify a valid resource." ) );
+  }
+
+  void _start() override
+  {
+    for ( auto p : affected_players )
+    {
+      if ( !reset_to_initial )
+      {
+        if ( resource_to_add > 0 )
+        {
+          p->resource_gain( resource, resource_to_add, p->gains.raid_events );
+        }
+        else
+        {
+          p->resource_loss( resource, -resource_to_add, p->gains.raid_events );
+        }
+      }
+      else
+      {
+        p->resources.current[ resource ] = p->resources.start_at[ resource ];
+      }
+    }
+  }
+
+  void _finish() override
+  {
+  }
+};
+
 // Vulnerable ===============================================================
 
 struct vulnerable_event_t final : public raid_event_t
@@ -2188,6 +2253,8 @@ std::unique_ptr<raid_event_t> raid_event_t::create( sim_t* sim, util::string_vie
     return std::unique_ptr<raid_event_t>( new damage_done_buff_event_t( sim, options_str ) );
   if ( name == "buff" )
     return std::unique_ptr<raid_event_t>( new buff_raid_event_t( sim, options_str ) );
+  if ( name == "resource" )
+    return std::unique_ptr<raid_event_t>( new resource_event_t( sim, options_str ) );
 
   throw std::invalid_argument( fmt::format( "Invalid raid event type '{}'.", name ) );
 }

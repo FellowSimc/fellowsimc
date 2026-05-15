@@ -66,13 +66,14 @@ gems.diamond_power=240
 gems.emerald_power=1200
 
 weapon_trait.emerald_judgement=1
+weapon_trait.martial_initiative=1
 legendary.undulating_spirit=1
 # legendary.skandis_decree=1
 # legendary.frostwyrms_spite=1
 
-talents=cold_shower:1/icy_flow:1/supreme_torrent:1/greater_glacial_blast:1/soulfrost_torrent:0/icy_talons:1/cascading_blitz:1/wisdom_of_the_north:1/bursting_swallows:1/burstbolter:1
+# talents=cold_shower:1/icy_flow:1/supreme_torrent:1/greater_glacial_blast:1/soulfrost_torrent:0/icy_talons:1/cascading_blitz:1/wisdom_of_the_north:1/bursting_swallows:1/burstbolter:1
 
-
+talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/navirs_keeper:1
 
 
 # copy="CF","Initial Stat Spread"
@@ -383,3 +384,9 @@ trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/experti
 
 copy="Finesse_G4","Initial Stat Spread"
 trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+
+copy="Finesse_M1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m
+
+copy="Finesse_M4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m

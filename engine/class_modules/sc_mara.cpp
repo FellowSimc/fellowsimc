@@ -177,15 +177,12 @@ public:
   X( GUSHING_BLOOD, "gushing_blood", "Gushing Blood" )                \
   X( FEED_THE_QUEEN, "feed_the_queen", "Feed the Queen" )             \
   X( DEADLY_SCHEME, "deadly_scheme", "Deadly Scheme" )                \
-  X( VEIL_OF_SHADOWS, "veil_of_shadows", "Veil of Shadows" )          \
   X( MAIDENS_DOOM, "maidens_doom", "Maidens Doom" )                   \
-  X( MAGIC_WARD, "magic_ward", "Magic Ward" )                         \
   X( HEMOTOXIN_OLD, "hemotoxin_old", "Hemotoxin_old" )                \
   X( HEMOTOXIN, "hemotoxin", "Hemotoxin" )                            \
   X( SINNERS_PRIDE, "sinners_pride", "Sinners Pride" )                \
   X( MALEVOLENCE, "malevolence", "Malevolence" )                      \
   X( ARACHNID_ONSLAUGHT, "arachnid_onslaught", "Arachnid Onslaught" ) \
-  X( SPIRITED_FORTITUDE, "spirited_fortitude", "Spirited Fortitude" ) \
   X( PUNCTURE, "puncture", "Puncture" )                               \
   X( SEETHING_BURST, "seething_burst", "Seething Burst" )             \
   X( CAUSTIC_WOUNDS, "caustic_wounds", "Caustic Wounds" )             \
@@ -1621,6 +1618,8 @@ struct seething_poison_t : public mara_poison_t
     {
       add_child( p->actions.seething_burst );
     }
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
   void trigger_dot( action_state_t* s ) override
   {
@@ -1663,6 +1662,8 @@ struct seething_burst_t : public mara_poison_t
 
     aoe                 = -1;
     reduced_aoe_targets = p->talents.seething_burst_max_targets;
+    
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   double composite_da_multiplier( const action_state_t* s ) const override
@@ -1693,6 +1694,7 @@ struct caustic_poison_t : public mara_poison_t
     attack_power_mod.direct = 4.476;
 
     base_crit += 1.0;
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   void execute() override
@@ -1828,12 +1830,20 @@ struct brooding_shadows_t : public mara_spell_t
     cooldown->duration = 15_s;
     cooldown->hasted   = true;
     cooldown->charges  = 2;
+    
+    ability_flags |= ability_type_e::ABILITY_CORE;
+  }
+
+  void init_finished() override
+  {
+      mara_spell_t::init_finished();
+    snapshot_flags |= STATE_MUL_PERSISTENT;
   }
 
   void execute() override
   {
-    p()->buffs.brooding_shadows->trigger();
     mara_spell_t::execute();
+    p()->buffs.brooding_shadows->trigger( 1, execute_state->persistent_multiplier );
   }
 };
 
@@ -2140,7 +2150,7 @@ struct skittering_blades_t : public mara_attack_t
 
     name_str_reporting = "Skittering Blades";
     
-    ability_flags |= ability_type_e::ABILITY_CORE;
+    ability_flags |= ability_type_e::ABILITY_BASIC;
   }
 
   void impact( action_state_t* s ) override
@@ -2336,6 +2346,7 @@ struct volatile_poison_dot_t : public mara_poison_t
     name_str_reporting = "Volatile Poison";
 
     attack_power_mod.tick = 0.312;
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   mara_t* p()
@@ -2429,6 +2440,8 @@ struct volatile_poison_aoe_t : public mara_poison_t
 
     aoe                 = -1;
     reduced_aoe_targets = 3;
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 };
 

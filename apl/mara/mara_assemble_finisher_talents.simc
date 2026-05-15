@@ -1,0 +1,329 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=250
+# max_time=60
+# target_error=0.05
+target_error=0.1
+iterations=15000
+chart_show_relative_difference=1
+vary_combat_length=0.1
+single_actor_batch=1
+max_time=720
+desired_targets=1
+relative_difference_base="Base Mara"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+
+# optimal_raid=0
+# fight_style=dungeonslice
+# max_time=2100
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=adds,first=5,type=add_boss,count=1,duration=720,cooldown=10101010
+# raid_events+=/resource,first=1200,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,first=1200,resource=combo_points,reset_to_initial=1,cooldown=10101010
+# raid_events+=/adds,first=1200,count=12,duration=720,cooldown=10101010
+
+optimal_raid=0
+fight_style=dungeonroute
+max_time=7200
+vary_combat_length=0.0
+enemy=Dummy
+raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":4000000:Humanoid
+# raid_events+=/pull,pull=02,delay=240,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":1500000:Humanoid:12
+raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+# raid_events+=/resource,first=1200,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,first=1200,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+mara="Base Mara"
+level=80
+
+# initial_resource=spirit=100
+
+apl/mara/mara.simc
+
+head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
+neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/crit
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
+legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary
+feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=primary/spirit
+finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=primary/spirit
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+trinket2=relic2,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary
+
+# gems.emerald_power=600
+# gems.amethyst_power=1500
+# gems.sapphire_power=600
+# gems.ruby_power=100
+
+# talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/sinners_pride:1/puncture:1/maidens_doom:1
+# legendary.vexiras_venom=1
+# weapon_trait.emerald_judgement=1
+
+weapon=fated_strike
+# weapon_trait.visions_of_grandeur=4
+# weapon_trait.amethyst_splinters=4
+# weapon_trait.brave_machinations=4
+
+legendary.vexiras_venom=1
+talents=deadly_scheme:1/malevolence:1/assassins_guile:1/seething_burst:1/venomous_delight:1/sinners_pride:1/macabre_stratagem:1
+# 12
+
+# copy="Vexiras Venom","Base Mara"
+# legendary.vexiras_venom=1
+
+# copy="Vexiras Venom VD","Base Mara"
+# legendary.vexiras_venom=1
+# talents+=/venomous_delight:1
+
+# copy="Drenched","Base Mara"
+# legendary.drenched_in_blood=1
+
+# copy="From the Shadows","Base Mara"
+# legendary.from_the_shadows=1
+
+copy="Red Ledger","Base Mara"
+talents+=/red_ledger:1
+
+copy="Corrosive Spill","Base Mara"
+talents+=/corrosive_spill:1
+
+# copy="Assassins Guile","Base Mara"
+# talents+=/assassins_guile:1
+
+copy="Bloodrush","Base Mara"
+talents+=/bloodrush:1
+
+# copy="Venomous Delight","Base Mara"
+# talents+=/venomous_delight:1
+
+copy="Efficient Killer","Base Mara"
+talents+=/efficient_killer:1
+
+copy="Gushing Blood","Base Mara"
+talents+=/gushing_blood:1
+
+copy="Feed the Queen","Base Mara"
+talents+=/feed_the_queen:1
+
+# copy="Deadly Scheme","Base Mara"
+# talents+=/deadly_scheme:1
+
+copy="Maidens Doom","Base Mara"
+talents+=/maidens_doom:1
+
+copy="Hemotoxin","Base Mara"
+talents+=/hemotoxin:1
+
+# copy="Sinners Pride","Base Mara"
+# talents+=/sinners_pride:1
+
+# copy="Malevolence","Base Mara"
+# talents+=/malevolence:1
+
+# copy="Malevolence Deadly Scheme","Base Mara"
+# talents+=/malevolence:1/deadly_scheme:1
+
+copy="Arachnid Onslaught","Base Mara"
+talents+=/arachnid_onslaught:1
+
+copy="Puncture","Base Mara"
+talents+=/puncture:1
+
+# copy="Seething Burst","Base Mara"
+# talents+=/seething_burst:1
+
+copy="Caustic Wounds","Base Mara"
+talents+=/caustic_wounds:1
+
+# copy="Macabre Stratagem","Base Mara"
+# talents+=/macabre_stratagem:1
+
+
+
+
+# copy="Wep Prim to Haste","Initial Stat Spread"
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/haste
+
+# copy="Wep Prim to Crit","Initial Stat Spread"
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/crit
+# copy="Wep Prim to Expertise","Initial Stat Spread"
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/expertise
+# copy="Wep Prim to Spirit","Initial Stat Spread"
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/spirit
+
+# copy="Shoulder Primary to Expertise","Initial Stat Spread"
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=expertise
+# copy="Shoulder Primary to Haste","Initial Stat Spread"
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=haste
+# copy="Shoulder Primary to Crit","Initial Stat Spread"
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=crit
+# copy="Shoulder Primary to Spirit","Initial Stat Spread"
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=spirit
+
+
+
+# copy="Finesse_A1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a
+
+# copy="Finesse_A4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+
+# copy="Finesse_B1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b
+
+# copy="Finesse_B4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+
+# copy="Finesse_D1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d
+
+# copy="Finesse_D4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+
+# copy="Finesse_E1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e
+
+# copy="Finesse_E4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+
+# copy="Finesse_F1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f
+
+# copy="Finesse_F4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+
+# copy="Finesse_H1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h
+
+# copy="Finesse_H4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+
+# copy="Finesse_I1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i
+
+# copy="Finesse_I4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+
+# copy="Finesse_K1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k
+
+# copy="Finesse_K4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+
+# copy="Finesse_L1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l
+
+# copy="Finesse_L4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+
+# copy="Finesse_J1_SPIRIT","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+# copy="Finesse_J4_SPIRIT","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+
+# copy="Finesse_G1_SPIRIT","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+
+# copy="Finesse_G4_SPIRIT","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+# copy="Finesse_J1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_J
+
+# copy="Finesse_J4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_J/finesse_J/finesse_J/finesse_J
+
+# copy="Finesse_G1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_G
+
+# copy="Finesse_G4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_G/finesse_G/finesse_G/finesse_G

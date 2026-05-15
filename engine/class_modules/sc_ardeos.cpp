@@ -1508,7 +1508,7 @@ struct searing_blaze_t : public ardeos_spell_t
 
     base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
 
-    ability_flags |= ability_type_e::ABILITY_CORE;
+    ability_flags |= ability_type_e::ABILITY_BASIC;
   }
 
   void execute() override
@@ -1937,7 +1937,7 @@ struct fire_ball_t : public ardeos_spell_t
 
       if ( p()->talents_enabled( ardeos_t::SLOW_BURN ) )
       {
-        auto corrected_extension = p()->talents.slow_burn_extend * p()->cache.spell_haste();
+        auto corrected_extension = p()->talents.slow_burn_extend * d->state->haste;
         p()->extend_engulfing_flames( d->target, corrected_extension );
         auto td = p()->get_target_data( d->target );
         p()->extend_dot( td->dots.searing_blaze, corrected_extension );

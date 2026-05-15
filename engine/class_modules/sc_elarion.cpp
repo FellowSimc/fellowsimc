@@ -1009,7 +1009,7 @@ struct celestial_shot_t : public elarion_attack_t
 
     base_costs[ RESOURCE_FOCUS ] = p->spell_const.celestial_shot_focus_cost;
 
-    ability_flags |= ability_type_e::ABILITY_CORE;
+    ability_flags |= ability_type_e::ABILITY_BASIC;
 
     parse_options( options_str );
   }

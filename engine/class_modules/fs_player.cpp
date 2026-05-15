@@ -200,11 +200,11 @@ double fs_player_t::composite_player_critical_damage_multiplier( const action_st
 {
   double cdm = player_t::composite_player_critical_damage_multiplier( s );
 
-  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 2640 )
+  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_10 )
   {
     cdm *= 1.09;
   }
-  else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 960 )
+  else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_5 )
   {
     cdm *= 1.03;
   }
@@ -261,13 +261,13 @@ double fs_player_t::composite_player_multiplier( school_e school ) const
 {
   double m = player_t::composite_player_multiplier( school );
 
-  if ( in_boss_encounter )
+  if ( in_boss_encounter && fs_options.ruby_allow_boss_amp )
   {
-    if ( fs_gems.gem_powers[ GEM_RUBY ] >= 2640 )
+    if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_10 )
     {
       m *= 1.12;
     }
-    else if ( fs_gems.gem_powers[ GEM_RUBY ] >= 960 )
+    else if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_5 )
     {
       m *= 1.04;
     }
@@ -305,9 +305,9 @@ double fs_player_t::composite_player_target_crit_chance( player_t* target ) cons
 {
   double c = player_t::composite_player_target_crit_chance( target );
 
-  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 120 && target->health_percentage() >= 50.0 )
+  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_1 && target->health_percentage() >= 50.0 )
   {
-    if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 1200 )
+    if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_6 )
     {
       c += 0.15;
     }
@@ -1072,7 +1072,7 @@ void fs_player_t::init_base_stats()
       base.rating.heal_versatility = base.rating.spell_crit = base.rating.spell_haste = base.rating.spell_hit = 0.0016;
 
   /*base.stats.attribute[ STAT_AGILITY ] = 1000;*/
-  base.stats.attribute[ STAT_STAMINA ] = 1000;
+  base.stats.attribute[ STAT_STAMINA ] = 100;
   resources.base[ RESOURCE_HEALTH ]    = 11480;
 
   base.health_per_stamina = 36.638;
@@ -1179,7 +1179,9 @@ void fs_player_t::create_buffs()
     auto rank          = finesse_traits[ FINESSE_B ];
     fs_buffs.finesse_b = make_buff<fs_player_buff_t>( this, "finesse_b" )
                              ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
+                             ->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS )
                              ->set_default_value( finesse_trait_values.finesse_b_crit[ rank ] )
+                             ->set_max_stack( finesse_trait_values.finesse_a_max_stacks )
                              ->set_duration( finesse_trait_values.finesse_b_duration );
   }
     
@@ -1233,7 +1235,7 @@ void fs_player_t::create_buffs()
 
 
   fs_buffs.ancestral_surge = make_buff<fs_player_buff_t>( this, "ancestral_surge" )
-                                 ->set_default_value( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1200.0 ? 0.24 : 0.08 );
+                                 ->set_default_value( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_6 ? 0.24 : 0.08 );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -1294,22 +1296,22 @@ void fs_player_t::create_buffs()
   }
 
   fs_buffs.adrenaline_rush = make_buff<fs_player_buff_t>( this, "adrenaline_rush" )
-                                 ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= 1200.0 ? 0.09 : 0.03 )
+                                 ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_6 ? 0.09 : 0.03 )
                                  ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
                                  ->set_duration( 10_s );
 
   fs_buffs.virtuoso = make_buff<fs_player_buff_t>( this, "virtuoso" )
-                          ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= 2640.0 ? 0.09 : 0.03 )
+                          ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_10 ? 0.09 : 0.03 )
                           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
                           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   fs_buffs.first_strike = make_buff<fs_player_buff_t>( this, "first_strike" )
-                              ->set_default_value( fs_gems.gem_powers[ GEM_EMERALD ] >= 1200.0 ? 0.15 : 0.05 )
+                              ->set_default_value( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_6 ? 0.15 : 0.05 )
                               ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
                               ->set_duration( 15_s );
 
   fs_buffs.might_of_the_minotaur = make_buff<fs_player_buff_t>( this, "might_of_the_minotaur" )
-                                       ->set_default_value( fs_gems.gem_powers[ GEM_RUBY ] >= 1200.0 ? 0.09 : 0.03 );
+                                       ->set_default_value( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_6 ? 0.09 : 0.03 );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -1367,6 +1369,32 @@ void fs_player_t::create_buffs()
       break;
   }
 
+  fs_buffs.hunters_focus =
+      make_buff<stat_buff_t>( this, "hunters_focus" )
+          ->add_stat( STAT_HASTE_RATING, fs_weapon_trait_values.hunters_focus_haste[ fs_weapons.hunters_focus ] )
+          ->set_duration( fs_weapon_trait_values.hunters_focus_duration[ fs_weapons.hunters_focus ] )
+          ->set_max_stack( fs_weapon_trait_values.hunters_focus_max_stacks[ fs_weapons.hunters_focus ] )
+          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+  
+  fs_buffs.patient_soul =
+      make_buff<stat_buff_t>( this, "patient_soul" )
+          ->add_stat( STAT_VERSATILITY_RATING,
+                      fs_weapon_trait_values.patient_soul_expertise[ fs_weapons.patient_soul ] )
+          ->set_default_value( fs_weapon_trait_values.patient_soul_expertise[ fs_weapons.patient_soul ] )
+          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+          ->add_stack_change_callback( [ this ]( buff_t* b, int old, int _new ) {
+            if ( _new )
+            {
+              b->player->resources.initial_multiplier[ RESOURCE_HEALTH ] += b->current_value;
+              b->player->recalculate_resource_max( RESOURCE_HEALTH );
+            }
+            else
+            {
+              b->player->resources.initial_multiplier[ RESOURCE_HEALTH ] -= b->current_value;
+              b->player->recalculate_resource_max( RESOURCE_HEALTH );
+            }
+          } );
+
   fs_buffs.martial_initiative =
       make_buff<fs_player_buff_t>( this, "martial_initiative" )
           ->set_default_value( 0.1 )
@@ -1411,7 +1439,7 @@ void fs_player_t::create_buffs()
           ->set_max_stack( fs_gems.harmonious_max_stacks )
           ->set_freeze_stacks( true )
           ->set_period( fs_gems.harmonious_duration )
-          ->set_default_value( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1200 ? fs_gems.harmonious_buff_major
+          ->set_default_value( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_10 ? fs_gems.harmonious_buff_major
                                                                          : fs_gems.harmonious_buff_minor )
           ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
@@ -1661,6 +1689,8 @@ void fs_player_t::create_options()
   add_option( opt_float( "gems.harmonious_diamond_amp", fs_gems.harmonious_diamond_amp ) );
 
   add_option( opt_float( "spirit_refund_mul", spirit_refund_mul ) );
+
+ add_option( opt_bool( "ruby_allow_boss_amp", fs_options.ruby_allow_boss_amp ) );
 }
 
 // fs_player_t::copy_from =======================================================
@@ -1719,110 +1749,110 @@ void fs_player_t::init_special_effects()
 {
   player_t::init_special_effects();
 
-  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 120.0 )
+  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_1 )
   {
-    auto extra_max_spirit = fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1200 ? fs_gems.sapphire_additional_max_spirit_major
+    auto extra_max_spirit = fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_10 ? fs_gems.sapphire_additional_max_spirit_major
                                                                        : fs_gems.sapphire_additional_max_spirit_minor;
     resources.max[ RESOURCE_SPIRIT ] += extra_max_spirit;
     resources.base[ RESOURCE_SPIRIT ] += extra_max_spirit;
   }
 
-  if ( fs_gems.gem_powers[ GEM_RUBY ] >= 1560 )
+  if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_7 )
   {
     passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 6 );
-    passive.add_stat( STAT_STAMINA, 42 );
+    passive.add_stat( STAT_STAMINA, 36 );
   }
-  else if ( fs_gems.gem_powers[ GEM_RUBY ] >= 240 )
+  else if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_2 )
   {
     passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 2 );
-    passive.add_stat( STAT_STAMINA, 14 );
+    passive.add_stat( STAT_STAMINA, 12 );
   }
 
-  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 1560 )
+  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_7 )
   {
     passive.add_stat( STAT_CRIT_RATING, 30 );
     passive.add_stat( STAT_STAMINA, 30 );
   }
-  else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 240 )
+  else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_2 )
   {
     passive.add_stat( STAT_CRIT_RATING, 10 );
     passive.add_stat( STAT_STAMINA, 10 );
   }
 
-  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 1560 )
+  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_7 )
   {
     passive.add_stat( STAT_HASTE_RATING, 30 );
     passive.add_stat( STAT_STAMINA, 30 );
   }
-  else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 240 )
+  else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_2 )
   {
     passive.add_stat( STAT_HASTE_RATING, 10 );
     passive.add_stat( STAT_STAMINA, 10 );
   }
 
-  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 1560 )
+  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_7 )
   {
     passive.add_stat( STAT_VERSATILITY_RATING, 30 );
     passive.add_stat( STAT_STAMINA, 30 );
   }
-  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 240 )
+  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_2 )
   {
     passive.add_stat( STAT_VERSATILITY_RATING, 10 );
     passive.add_stat( STAT_STAMINA, 10 );
   }
 
-  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 1560 )
+  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_7 )
   {
     passive.add_stat( STAT_MASTERY_RATING, 30 );
     passive.add_stat( STAT_STAMINA, 30 );
   }
-  else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 240 )
+  else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_2 )
   {
     passive.add_stat( STAT_MASTERY_RATING, 10 );
     passive.add_stat( STAT_STAMINA, 10 );
   }
 
-  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 1560 )
+  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_7 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 9 );
-    passive.add_stat( STAT_ARMOR, 1500 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 12 );
+    passive.add_stat( STAT_ARMOR, 120 );
   }
-  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 240 )
+  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_2 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 3 );
-    passive.add_stat( STAT_ARMOR, 500 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 4 );
+    passive.add_stat( STAT_ARMOR, 40 );
   }
 
-  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 2280 )
+  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_9 )
   {
     base.spell_crit_chance += 0.09;
     base.attack_crit_chance += 0.09;
   }
-  else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= 720 )
+  else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_4 )
   {
     base.spell_crit_chance += 0.03;
     base.attack_crit_chance += 0.03;
   }
 
-  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 2280 )
+  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_9 )
   {
     base.mastery += 0.09;
   }
-  else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 720 )
+  else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_4 )
   {
     base.mastery += 0.03;
   }
 
-  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 2280 )
+  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_9 )
   {
     base.versatility += 0.09;
   }
-  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 720 )
+  else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_4 )
   {
     base.versatility += 0.03;
   }
 
-  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 120 )
+  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_1 )
   {
     register_on_kill_callback( [ this ]( player_t* t ) { fs_buffs.harmonious_soul->trigger( 1 ); } );
   }
@@ -1832,13 +1862,13 @@ void fs_player_t::init_special_effects()
     base.haste += fs_sets.tuzari_grace_haste;
   }
 
-  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 2280 )
+  if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_9 )
   {
     base.attribute_multiplier[ STAT_STRENGTH ] *= 1.09;
     base.attribute_multiplier[ STAT_INTELLECT ] *= 1.09;
     base.attribute_multiplier[ STAT_AGILITY ] *= 1.09;
   }
-  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= 720 )
+  else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_4 )
   {
     base.attribute_multiplier[ STAT_STRENGTH ] *= 1.03;
     base.attribute_multiplier[ STAT_INTELLECT ] *= 1.03;
@@ -1846,12 +1876,12 @@ void fs_player_t::init_special_effects()
   }
 
   // TODO: Implement as a health based check and buff that turns on & off.
-  if ( fs_gems.gem_powers[ GEM_RUBY ] >= 120 )
+  if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_1 )
   {
     register_on_arise_callback( this, [ this ]() { fs_buffs.might_of_the_minotaur->trigger(); } );
   }
 
-  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 120 )
+  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_1 )
   {
     fs_buffs.spirit_of_heroism->add_stack_change_callback( [ this ]( buff_t*, int, int new_stack ) {
       if ( new_stack )
@@ -1865,7 +1895,7 @@ void fs_player_t::init_special_effects()
     } );
   }
 
-  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 960 )
+  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_5 )
   {
     register_on_arise_callback( this, [ this ]() {
       if ( !fs_buffs.spirit_of_heroism->check() )
@@ -1885,11 +1915,11 @@ void fs_player_t::init_special_effects()
     } );
   }
 
-  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 2640 )
+  if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_10 )
   {
     fs_buffs.spirit_of_heroism->base_buff_duration += 18_s;
   }
-  else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= 960 )
+  else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_5 )
   {
     fs_buffs.spirit_of_heroism->base_buff_duration += 6_s;
   }
@@ -1914,7 +1944,7 @@ void fs_player_t::init_special_effects()
   if ( fs_sets.haunting_lament )
   {
     base.mastery += fs_sets.haunting_lament_spirit;
-    resources.base_multiplier[ RESOURCE_MANA ] += fs_sets.haunting_lament_max_mana;
+    resources.initial_multiplier[ RESOURCE_MANA ] += fs_sets.haunting_lament_max_mana;
   }
 
   if ( fs_sets.sintharas_veil )
@@ -1925,7 +1955,7 @@ void fs_player_t::init_special_effects()
   if ( fs_sets.sin_warding )
   {
     base.versatility += fs_sets.sin_warding_expertise;
-    resources.base_multiplier[ RESOURCE_HEALTH ] += fs_sets.sin_warding_max_hp;
+    resources.initial_multiplier[ RESOURCE_HEALTH ] += fs_sets.sin_warding_max_hp;
   }
 
   if ( fs_sets.torment_of_baelaurum )
@@ -2012,7 +2042,7 @@ void fs_player_t::init_special_effects()
     }
   };
 
-  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 120.0 )
+  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_1 )
   {
     auto fs_effect                   = new special_effect_t( this );
     fs_effect->spell_id              = 1318;
@@ -2034,7 +2064,7 @@ void fs_player_t::init_special_effects()
 
   for ( auto gem_power : fs_gems.gem_powers )
   {
-    overcap += std::max( 0.0, gem_power - 2640.0 );
+    overcap += std::max( 0.0, gem_power - GEM_TIER_10 );
   }
 
   if ( overcap > 0.0 )
@@ -2112,7 +2142,7 @@ void fs_player_t::init_special_effects()
 
       void execute() override
       {
-        if ( fs_p()->fs_gems.gem_powers[ GEM_EMERALD ] >= 120.0 )
+        if ( fs_p()->fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_1 )
         {
           fs_p()->fs_buffs.first_strike->trigger();
         }
@@ -2184,16 +2214,6 @@ void fs_player_t::init_special_effects()
 
   if ( fs_weapons.navigators_intuition )
   {
-    std::unordered_map<stat_e, buff_t*> buffs;
-    static constexpr std::array<stat_e, 4> secondary_ratings = { STAT_VERSATILITY_RATING, STAT_MASTERY_RATING,
-                                                                 STAT_HASTE_RATING, STAT_CRIT_RATING };
-    for ( stat_e stat : secondary_ratings )
-    {
-      buffs[ stat ] =
-          make_buff<stat_buff_t>( this, fmt::format( "navigators_intuition_{}", util::stat_type_abbrev( stat ) ) )
-              ->add_stat( stat, fs_weapon_trait_values.navigators_intuition_stats[ fs_weapons.navigators_intuition ] )
-              ->set_name_reporting( fmt::format( "Navigator's Intuition {}", util::stat_type_abbrev( stat ) ) );
-    }
 
     auto effect                   = new special_effect_t( this );
     effect->spell_id              = 15123;
@@ -2201,24 +2221,46 @@ void fs_player_t::init_special_effects()
     effect->proc_flags_           = PF_ALL_DAMAGE;
     effect->proc_flags2_          = PF2_ALL_HIT;
     effect->has_use_buff_override = true;
-    effect->rppm_scale_           = rppm_scale_e::RPPM_DISABLE;
     effect->cooldown_             = fs_weapon_trait_values.navigators_intuition_cd[ fs_weapons.navigators_intuition ];
     effect->proc_chance_ = fs_weapon_trait_values.navigators_intuition_chance[ fs_weapons.navigators_intuition ];
     effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
-    callbacks.register_callback_execute_function(
-        effect->spell_id, [ buffs ]( const dbc_proc_callback_t* cb, action_t*, const action_state_t* ) {
-          auto stat = util::highest_stat( cb->listener, secondary_ratings );
-          for ( auto [ s, b ] : buffs )
-          {
-            if ( s == stat )
-              b->trigger();
-            else
-              b->expire();
-          }
-        } );
+    static constexpr std::array<stat_e, 4> secondary_ratings = { STAT_VERSATILITY_RATING, STAT_MASTERY_RATING, STAT_HASTE_RATING,
+                                                STAT_CRIT_RATING };
 
-    auto dbc = new dbc_proc_callback_t( this, *effect );
+    struct navigators_intuition_cb_t : dbc_proc_callback_t
+    {
+      std::unordered_map<stat_e, buff_t*> buffs;
+
+      navigators_intuition_cb_t( fs_player_t* p, const special_effect_t& e ) : dbc_proc_callback_t( p, e ), buffs{}
+      {
+        for ( stat_e stat : secondary_ratings )
+        {
+          buffs[ stat ] =
+              make_buff<stat_buff_t>( p, fmt::format( "navigators_intuition_{}", util::stat_type_abbrev( stat ) ) )
+                  ->add_stat(
+                      stat, p->fs_weapon_trait_values.navigators_intuition_stats[ p->fs_weapons.navigators_intuition ] )
+                  ->set_name_reporting( fmt::format( "Navigator's Intuition {}", util::stat_type_abbrev( stat ) ) )
+                  ->set_duration(
+                      p->fs_weapon_trait_values.navigators_intuition_duration[ p->fs_weapons.navigators_intuition ] );
+        }
+      }
+
+      void execute( action_t*, action_state_t* s ) override
+      {
+        listener->sim->print_debug( "Navigator's Intuition proc: checking for highest stat" );
+        auto stat = util::highest_stat( listener, secondary_ratings );
+        for ( auto [ s, b ] : buffs )
+        {
+          if ( s == stat )
+            b->trigger();
+          else
+            b->expire();
+        }
+      }
+    };
+
+    auto dbc = new navigators_intuition_cb_t( this, *effect );
 
     dbc->initialize();
     dbc->activate();
@@ -2355,7 +2397,7 @@ void fs_player_t::init_special_effects()
     effect->cooldown_             = 0_s;
     effect->has_use_buff_override = true;
     effect->ppm_                  = -2.0;
-    effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
+    effect->rppm_scale_           = rppm_scale_e::RPPM_CRIT;
     effect->rppm_blp_             = real_ppm_t::BLP_ENABLED;
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
@@ -2368,6 +2410,28 @@ void fs_player_t::init_special_effects()
     cb->initialize();
     cb->activate();
   }
+
+  if ( fs_weapons.hunters_focus )
+  {
+    auto effect                   = new special_effect_t( this );
+    effect->spell_id              = 1347;
+    effect->name_str              = "hunters_focus";
+    effect->proc_flags_           = PF_ALL_DAMAGE;
+    effect->proc_flags2_          = PF2_HIT;
+    effect->proc_chance_          = 1.0;
+    effect->has_use_buff_override = true;
+    effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+    special_effects.push_back( effect );
+
+    effect->custom_buff = fs_buffs.hunters_focus;
+
+    auto cb = new dbc_proc_callback_t( this, *effect );
+
+    cb->initialize();
+    cb->activate();
+  }
+
 
   if ( fs_weapons.inspired_allegiance )
   {
@@ -2442,7 +2506,7 @@ void fs_player_t::init_assessors()
 {
   player_t::init_assessors();
 
-  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= 120 )
+  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_1 )
   {
     assessor_out_damage.add( assessor::TARGET_DAMAGE + 1, [ this ]( result_amount_type, action_state_t* s ) {
       if ( s->target->health_percentage() < 30.0 )
@@ -2481,6 +2545,30 @@ void fs_player_t::init_assessors()
       return assessor::CONTINUE;
     } );
   }
+
+  if ( fs_weapons.patient_soul )
+  {
+    buffs.movement->add_stack_change_callback( [ this ]( buff_t*, int old, int _new ) {
+      if ( _new )
+      {
+        event_t::cancel( patient_soul_stopped );
+        patient_soul_moved =
+            make_event( sim, fs_weapon_trait_values.patient_soul_moving[ fs_weapons.patient_soul ], [ this ]() {
+              fs_buffs.patient_soul->expire();
+              patient_soul_moved = nullptr;
+            } );
+      }
+      else
+      {
+        patient_soul_stopped =
+            make_event( sim, fs_weapon_trait_values.patient_soul_stationary[ fs_weapons.patient_soul ], [ this ]() {
+              fs_buffs.patient_soul->trigger();
+              patient_soul_stopped = nullptr;
+              event_t::cancel( patient_soul_moved );
+            } );
+      }
+    } );
+  }
 }
 
 // fs_player_t::init_finished ===================================================
@@ -2489,17 +2577,17 @@ void fs_player_t::init_finished()
 {
   player_t::init_finished();
 
-  if ( fs_gems.gem_powers[ GEM_RUBY ] >= 960.0 )
+  if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_5 && fs_options.ruby_allow_boss_amp )
   {
     sim->target_non_sleeping_list.register_callback(
         [ this ]( player_t* p ) { cache.invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER ); } );
   }
 
-  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= 960.0 )
+  if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_5 )
   {
     for ( auto action : action_list )
     {
-      action->base_recharge_multiplier -= fs_gems.gem_powers[ GEM_EMERALD ] >= 2640.0 ? 0.12: 0.04;
+      action->base_recharge_multiplier -= fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_10 ? 0.12: 0.04;
       action->cooldown->adjust_recharge_multiplier();
     }
   }
@@ -2523,7 +2611,11 @@ void fs_player_t::used_ultimate()
 {
   if ( fs_weapons.visions_of_grandeur > 0 && weapon_cd )
   {
-    weapon_cd->reset( false, -1 );
+    //weapon_cd->reset( false, -1 );
+
+    unsigned grandeur = fs_weapons.visions_of_grandeur;
+    double cdr        = fs_weapon_trait_values.grandeur_weapon_cdr[ grandeur ];
+    weapon_cd->adjust( -cdr * cooldown_t::cooldown_duration( weapon_cd ), true, true );
   }
 
   if ( fs_sets.drakheims_absolution )
@@ -2579,6 +2671,8 @@ void fs_player_t::reset()
   active_voidbringer_buffs.clear();
   brave_machinations_available = false;
   finesse_i_event              = nullptr;
+  patient_soul_moved           = nullptr;
+  patient_soul_stopped         = nullptr;
 }
 
 // fs_player_t::activate ========================================================
@@ -2597,6 +2691,11 @@ void fs_player_t::arise()
   if ( finesse_traits[ FINESSE_I ] )
   {
     finesse_i_event = make_event( sim, finesse_trait_values.finesse_i_interval, [ this ]() { finesse_i_event_fn(); } );
+  }
+
+  if ( fs_weapons.patient_soul )
+  {
+    fs_buffs.patient_soul->trigger();
   }
 }
 

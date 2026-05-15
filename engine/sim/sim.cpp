@@ -2283,15 +2283,10 @@ void sim_t::init_fight_style()
 
     case FIGHT_STYLE_DUNGEON_SLICE:
       desired_targets = 1;
-      max_time = timespan_t::from_seconds( 360.0 );
 
       shadowlands_opts.enable_rune_words = false;
       ignore_invulnerable_targets = true;
 
-      raid_events_str +=
-        "/adds,name=Boss,count=1,cooldown=500,duration=135,type=add_boss,duration_stddev=1"
-        "/adds,name=SmallAdd,count=5,count_range=1,first=140,cooldown=45,duration=18,duration_stddev=2"
-        "/adds,name=BigAdd,count=2,count_range=1,first=160,cooldown=50,duration=30,duration_stddev=2";
       break;
 
     case FIGHT_STYLE_DUNGEON_ROUTE:

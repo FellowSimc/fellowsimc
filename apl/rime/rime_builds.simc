@@ -10,7 +10,7 @@ chart_show_relative_difference=1
 vary_combat_length=0.1
 single_actor_batch=1
 max_time=720
-desired_targets=1
+desired_targets=12
 relative_difference_base="Initial Stat Spread"
 
 # apl/chuey_dungeon.simc
@@ -72,8 +72,9 @@ legendary.undulating_spirit=1
 
 # talents=cold_shower:1/icy_flow:1/supreme_torrent:1/greater_glacial_blast:1/soulfrost_torrent:0/icy_talons:1/cascading_blitz:1/wisdom_of_the_north:1/bursting_swallows:1/burstbolter:1
 
-talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/navirs_keeper:1
+# talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/biting_cold:1 <-- better build pls remember
 
+talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/navirs_keeper:1
 
 copy="-IF","Initial Stat Spread"
 talents=icy_flow:0/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/navirs_keeper:1
@@ -102,11 +103,16 @@ talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursti
 copy="-NK","Initial Stat Spread"
 talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/navirs_keeper:0
 
+copy="-WOTN +BC","Initial Stat Spread"
+talents+=/wisdom_of_the_north:0/biting_cold:1
 
-# copy="CF","Initial Stat Spread"
-# talents+=/chilling_finesse:1
-# copy="HI","Initial Stat Spread"
-# talents+=/harrowing_ice:1
+copy="-NK +BC","Initial Stat Spread"
+talents+=/navirs_keeper:0/biting_cold:1
+
+copy="CF","Initial Stat Spread"
+talents+=/chilling_finesse:1
+copy="HI","Initial Stat Spread"
+talents+=/harrowing_ice:1
 # copy="GA","Initial Stat Spread"
 # talents+=/glacial_assault:1
 # copy="BB","Initial Stat Spread"
@@ -117,163 +123,25 @@ talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursti
 # talents+=/navirs_keeper:1
 # copy="CB","Initial Stat Spread"
 # talents+=/cascading_blitz:1
-# copy="AVA","Initial Stat Spread"
-# talents+=/avalanche:1
-# copy="COAL","Initial Stat Spread"
-# talents+=/coalescing_frost:1
-# copy="BS","Initial Stat Spread"
-# talents+=/bursting_swallows:1
+copy="AVA","Initial Stat Spread"
+talents+=/avalanche:1
+copy="COAL","Initial Stat Spread"
+talents+=/coalescing_frost:1
+copy="BS","Initial Stat Spread"
+talents+=/bursting_swallows:1
 # copy="GGB","Initial Stat Spread"
 # talents+=/greater_glacial_blast:1
-# copy="CS","Initial Stat Spread"
-# talents+=/cold_shower:1
+copy="CS","Initial Stat Spread"
+talents+=/cold_shower:1
 # copy="IT","Initial Stat Spread"
 # talents+=/icy_talons:1
-# copy="FWW","Initial Stat Spread"
-# talents+=/frostweavers_wrath:1
-# copy="SFT","Initial Stat Spread"
-# talents+=/soulfrost_torrent:1
-# copy="BC","Initial Stat Spread"
-# talents+=/biting_cold:1
-# copy="ST","Initial Stat Spread"
-# talents+=/supreme_torrent:1
+copy="FWW","Initial Stat Spread"
+talents+=/frostweavers_wrath:1
+copy="SFT","Initial Stat Spread"
+talents+=/soulfrost_torrent:1
+copy="BC","Initial Stat Spread"
+talents+=/biting_cold:1
+copy="ST","Initial Stat Spread"
+talents+=/supreme_torrent:1
 # copy="WOTN","Initial Stat Spread"
 # talents+=/wisdom_of_the_north:1
-
-
-
-# copy="Finesse_A1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a
-
-# copy="Finesse_A4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
-
-# copy="Finesse_B1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b
-
-# copy="Finesse_B4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
-
-# copy="Finesse_D1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d
-
-# copy="Finesse_D4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
-
-# copy="Finesse_E1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e
-
-# copy="Finesse_E4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
-
-# copy="Finesse_F1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f
-
-# copy="Finesse_F4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
-
-# copy="Finesse_H1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h
-
-# copy="Finesse_H4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
-
-# copy="Finesse_I1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i
-
-# copy="Finesse_I4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
-
-# copy="Finesse_K1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k
-
-# copy="Finesse_K4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
-
-# copy="Finesse_L1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l
-
-# copy="Finesse_L4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
-
-# copy="Finesse_J1_SPIRIT","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
-# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
-# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
-# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
-# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
-# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
-# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
-# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
-# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
-# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j
-# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
-
-# copy="Finesse_J4_SPIRIT","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
-# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
-# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
-# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
-# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
-# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
-# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
-# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
-# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
-# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
-# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
-
-
-# copy="Finesse_G1_SPIRIT","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
-# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
-# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
-# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
-# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
-# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
-# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
-# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
-# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
-# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g
-# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
-
-
-# copy="Finesse_G4_SPIRIT","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
-# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
-# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
-# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
-# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
-# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
-# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
-# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
-# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
-# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
-# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
-
-# copy="Finesse_J1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_J
-
-# copy="Finesse_J4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_J/finesse_J/finesse_J/finesse_J
-
-# copy="Finesse_G1","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_G
-
-# copy="Finesse_G4","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_G/finesse_G/finesse_G/finesse_G

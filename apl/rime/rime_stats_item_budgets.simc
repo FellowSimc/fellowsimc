@@ -1,0 +1,595 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=250
+# max_time=60
+target_error=0.05
+iterations=15000
+chart_show_relative_difference=1
+vary_combat_length=0.1
+single_actor_batch=1
+max_time=720
+desired_targets=1
+relative_difference_base="Initial Stat Spread"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+rime="Initial Stat Spread"
+level=80
+
+# initial_resource=spirit=100
+
+apl/rime/rime_apl.simc
+
+# gems.sapphire_power=600
+# gems.sapphire_power=150
+# gems.ruby_power=600
+# gems.amethyst_power=600
+# gems.amethyst_power=150
+# gems.topaz_power=150
+# gems.diamond_power=150
+# gems.emerald_power=600
+
+weapon=voidbringers_touch
+# weapon_trait.visions_of_grandeur=4
+# 4
+# weapon_trait.amethyst_splinters=4
+# # 8
+# weapon_trait.brave_machinations=4
+# # 12
+# weapon_trait.heroic_brand=4
+# # 16
+# weapon_trait.emerald_judgement=1
+# # 17
+# weapon_trait.martial_initiative=1
+# 18
+# 21
+# weapon_trait.willful_momentum=4
+# 38 - 21
+# = 17
+
+
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/crit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=haste/primary/primary
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=haste/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=haste/primary/primary
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=haste/primary
+
+head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
+neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=expertise/crit
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=expertise
+back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
+chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/crit
+wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
+hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
+legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=crit/primary
+feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste
+finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+trinket2=relic2,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
+main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary
+
+legendary.undulating_spirit=1
+# legendary.skandis_decree=1
+# legendary.frostwyrms_spite=1
+
+#42 - 8 = 34
+
+# talents=cold_shower:1/icy_flow:1/supreme_torrent:1/greater_glacial_blast:1/soulfrost_torrent:0/icy_talons:1/cascading_blitz:1/wisdom_of_the_north:1/bursting_swallows:1/burstbolter:1
+
+talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/biting_cold:1
+
+# copy="Weapon Primary","Initial Stat Spread"
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary
+copy="Weapon 1 Secondary","Initial Stat Spread"
+main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/crit
+copy="Weapon 2 Secondary","Initial Stat Spread"
+main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=crit/crit
+
+copy="Chest 2Primary","Initial Stat Spread"
+chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+copy="Chest 2Secondary","Initial Stat Spread"
+chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=crit/crit
+
+copy="Legs 2 Primary","Initial Stat Spread"
+legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary
+copy="Legs 2 Secondary","Initial Stat Spread"
+legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=crit/crit
+
+copy="Hat -Primary","Initial Stat Spread"
+head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary
+copy="Hat Primary","Initial Stat Spread"
+head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary
+copy="Hat Secondary","Initial Stat Spread"
+head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/crit
+
+copy="Shoulder -Exp","Initial Stat Spread"
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+copy="Shoulder Primary","Initial Stat Spread"
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=expertise/primary
+copy="Shoulder Secondary","Initial Stat Spread"
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=expertise/crit
+
+copy="Neck Primary","Initial Stat Spread"
+neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=expertise/crit,affixes=primary
+copy="Neck Secondary","Initial Stat Spread"
+neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=expertise/crit,affixes=crit
+
+copy="Feet Primary","Initial Stat Spread"
+feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
+copy="Feet Secondary","Initial Stat Spread"
+feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=crit
+
+copy="Hands Primary","Initial Stat Spread"
+hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste,affixes=primary
+copy="Hands Secondary","Initial Stat Spread"
+hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit
+
+copy="Ring Primary","Initial Stat Spread"
+finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste,affixes=primary
+copy="Ring Secondary","Initial Stat Spread"
+finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste,affixes=crit
+
+copy="Relic Primary","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=primary
+copy="Relic Secondary","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=crit
+
+copy="Back Primary","Initial Stat Spread"
+back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary,affixes=primary
+copy="Back Secondary","Initial Stat Spread"
+back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary,affixes=crit
+
+copy="Wrists Primary","Initial Stat Spread"
+wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste,affixes=primary
+copy="Wrists Secondary","Initial Stat Spread"
+wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit
+
+# --
+
+# copy="Grandeur_1","Initial Stat Spread"
+# weapon_trait.visions_of_grandeur=1
+# copy="Grandeur_4","Initial Stat Spread"
+# weapon_trait.visions_of_grandeur=4
+# copy="Brave Mach1","Initial Stat Spread"
+# weapon_trait.brave_machinations=1
+# copy="Brave Mach4","Initial Stat Spread"
+# weapon_trait.brave_machinations=4
+# copy="Amethyst Splinters1","Initial Stat Spread"
+# weapon_trait.amethyst_splinters=1
+# copy="Amethyst Splinters4","Initial Stat Spread"
+# weapon_trait.amethyst_splinters=4
+# copy="Heroic Brand1","Initial Stat Spread"
+# weapon_trait.heroic_brand=1
+# copy="Heroic Brand4","Initial Stat Spread"
+# weapon_trait.heroic_brand=4
+# copy="Martial Initiative1","Initial Stat Spread"
+# weapon_trait.martial_initiative=1
+# copy="Martial Initiative4","Initial Stat Spread"
+# weapon_trait.martial_initiative=4
+# copy="Emerald Judgement1","Initial Stat Spread"
+# weapon_trait.emerald_judgement=1
+# copy="Emerald Judgement4","Initial Stat Spread"
+# weapon_trait.emerald_judgement=4
+# copy="Diamond Strike1","Initial Stat Spread"
+# weapon_trait.diamond_strike=1
+# copy="Diamond Strike4","Initial Stat Spread"
+# weapon_trait.diamond_strike=4
+# copy="Sapphire Aurastone1","Initial Stat Spread"
+# weapon_trait.sapphire_aurastone=1
+# copy="Sapphire Aurastone4","Initial Stat Spread"
+# weapon_trait.sapphire_aurastone=4
+# copy="Ruby Storm1","Initial Stat Spread"
+# weapon_trait.ruby_storm=1
+# copy="Ruby Storm4","Initial Stat Spread"
+# weapon_trait.ruby_storm=4
+
+# copy="Heroic Brand4 Brave Mach4","Initial Stat Spread"
+# weapon_trait.heroic_brand=4
+# weapon_trait.brave_machinations=4
+# copy="Grandeur4 Brave Mach4","Initial Stat Spread"
+# weapon_trait.visions_of_grandeur=4
+# weapon_trait.brave_machinations=4
+# copy="Grandeur4 Heroic Brand4","Initial Stat Spread"
+# weapon_trait.visions_of_grandeur=4
+# weapon_trait.heroic_brand=4
+# copy="Grandeur4 Heroic Brand4 Brave Mach4","Initial Stat Spread"
+# weapon_trait.visions_of_grandeur=4
+# weapon_trait.heroic_brand=4
+# weapon_trait.brave_machinations=4
+
+
+# copy="Navigators Intuition1","Initial Stat Spread"
+# weapon_trait.navigators_intuition=1
+# copy="Navigators Intuition4","Initial Stat Spread"
+# weapon_trait.navigators_intuition=4
+# copy="Kindling1","Initial Stat Spread"
+# weapon_trait.kindling=1
+# copy="Kindling4","Initial Stat Spread"
+# weapon_trait.kindling=4
+# copy="Hidden Power1","Initial Stat Spread"
+# weapon_trait.hidden_power=1
+# copy="Hidden Power4","Initial Stat Spread"
+# weapon_trait.hidden_power=4
+# copy="Hunters Focus1","Initial Stat Spread"
+# weapon_trait.hunters_focus=1
+# copy="Hunters Focus4","Initial Stat Spread"
+# weapon_trait.hunters_focus=4
+# copy="Patient Soul1","Initial Stat Spread"
+# weapon_trait.patient_soul=1
+# copy="Patient Soul4","Initial Stat Spread"
+# weapon_trait.patient_soul=4
+# copy="Seized Opportunity1","Initial Stat Spread"
+# weapon_trait.seized_opportunity=1
+# copy="Seized Opportunity4","Initial Stat Spread"
+# weapon_trait.seized_opportunity=4
+# copy="Vengeful Soul1","Initial Stat Spread"
+# weapon_trait.vengeful_soul=1
+# copy="Vengeful Soul4","Initial Stat Spread"
+# weapon_trait.vengeful_soul=4
+# copy="Willful Momentum1","Initial Stat Spread"
+# weapon_trait.willful_momentum=1
+# copy="Willful Momentum4","Initial Stat Spread"
+# weapon_trait.willful_momentum=4
+
+# copy="Ruby 1","Initial Stat Spread"
+# gems.ruby_power=80
+# # Wasted 20
+# copy="Ruby 2","Initial Stat Spread"
+# gems.ruby_power=150
+# # Wasted 50
+# copy="Ruby 4","Initial Stat Spread"
+# gems.ruby_power=300
+# copy="Ruby 5","Initial Stat Spread"
+# # Wasted 50
+# gems.ruby_power=500
+
+# copy="Ruby 5 No Boss","Initial Stat Spread"
+# # Wasted 50
+# gems.ruby_power=500
+# ruby_allow_boss_amp=0
+# copy="Ruby 6","Initial Stat Spread"
+# gems.ruby_power=600
+# copy="Ruby 6 No Boss","Initial Stat Spread"
+# gems.ruby_power=600
+# ruby_allow_boss_amp=0
+# copy="Ruby 7","Initial Stat Spread"
+# gems.ruby_power=800
+# copy="Ruby 7 No Boss","Initial Stat Spread"
+# gems.ruby_power=800
+# ruby_allow_boss_amp=0
+# copy="Ruby 9","Initial Stat Spread"
+# # Wasted 50
+# gems.ruby_power=1300
+# copy="Ruby 9 No Boss","Initial Stat Spread"
+# # Wasted 50
+# gems.ruby_power=1300
+# ruby_allow_boss_amp=0
+# copy="Ruby 10","Initial Stat Spread"
+# gems.ruby_power=1500
+# copy="Ruby 10 No Boss","Initial Stat Spread"
+# gems.ruby_power=1500
+# ruby_allow_boss_amp=0
+
+
+
+# copy="Amethyst 1","Initial Stat Spread"
+# gems.amethyst_power=80
+# # Wasted 20
+# copy="Amethyst 2","Initial Stat Spread"
+# gems.amethyst_power=150
+# # Wasted 50
+# copy="Amethyst 4","Initial Stat Spread"
+# gems.amethyst_power=300
+# copy="Amethyst 5","Initial Stat Spread"
+# # Wasted 50
+# gems.amethyst_power=500
+# copy="Amethyst 6","Initial Stat Spread"
+# gems.amethyst_power=600
+# copy="Amethyst 7","Initial Stat Spread"
+# gems.amethyst_power=800
+# copy="Amethyst 9","Initial Stat Spread"
+# # Wasted 50
+# gems.amethyst_power=1300
+# copy="Amethyst 10","Initial Stat Spread"
+# gems.amethyst_power=1500
+# copy="Amethyst 10 +1","Initial Stat Spread"
+# gems.amethyst_power=1600
+# copy="Amethyst 10 +5","Initial Stat Spread"
+# gems.amethyst_power=2000
+
+
+# copy="Judge 1","Initial Stat Spread"
+# weapon_trait.emerald_judgement=1
+
+# copy="Topaz 1","Initial Stat Spread"
+# gems.topaz_power=80
+# # Wasted 20
+# copy="Topaz 2","Initial Stat Spread"
+# gems.topaz_power=150
+# # Wasted 50
+# copy="Topaz 4","Initial Stat Spread"
+# gems.topaz_power=300
+# copy="Topaz 5","Initial Stat Spread"
+# # Wasted 50
+# gems.topaz_power=500
+# copy="Topaz 6","Initial Stat Spread"
+# gems.topaz_power=600
+# copy="Topaz 7","Initial Stat Spread"
+# gems.topaz_power=800
+# copy="Topaz 9","Initial Stat Spread"
+# # Wasted 50
+# gems.topaz_power=1300
+# copy="Topaz 10","Initial Stat Spread"
+# gems.topaz_power=1500
+
+# copy="Emerald 1","Initial Stat Spread"
+# gems.emerald_power=80
+# # Wasted 20
+# copy="Emerald 1 Judge1","Initial Stat Spread"
+# gems.emerald_power=80
+# weapon_trait.emerald_judgement=1
+# # Wasted 20
+# copy="Emerald 2","Initial Stat Spread"
+# gems.emerald_power=150
+# # Wasted 50
+# copy="Emerald 4","Initial Stat Spread"
+# gems.emerald_power=300
+# copy="Emerald 5","Initial Stat Spread"
+# # Wasted 50
+# gems.emerald_power=500
+# copy="Emerald 6","Initial Stat Spread"
+# gems.emerald_power=600
+# copy="Emerald 6 Judge 1","Initial Stat Spread"
+# gems.emerald_power=600
+# weapon_trait.emerald_judgement=1
+# copy="Emerald 7","Initial Stat Spread"
+# gems.emerald_power=800
+# copy="Emerald 9","Initial Stat Spread"
+# # Wasted 50
+# gems.emerald_power=1300
+# copy="Emerald 10","Initial Stat Spread"
+# gems.emerald_power=1500
+
+# copy="Sapphire 1","Initial Stat Spread"
+# gems.sapphire_power=80
+# # Wasted 20
+# copy="Sapphire 2","Initial Stat Spread"
+# gems.sapphire_power=150
+# # Wasted 50
+# copy="Sapphire 4","Initial Stat Spread"
+# gems.sapphire_power=300
+# copy="Sapphire 5","Initial Stat Spread"
+# # Wasted 50
+# gems.sapphire_power=500
+# copy="Sapphire 6","Initial Stat Spread"
+# gems.sapphire_power=600
+# copy="Sapphire 7","Initial Stat Spread"
+# gems.sapphire_power=800
+# copy="Sapphire 9","Initial Stat Spread"
+# # Wasted 50
+# gems.sapphire_power=1300
+# copy="Sapphire 10","Initial Stat Spread"
+# gems.sapphire_power=1500
+
+# copy="Diamond 1","Initial Stat Spread"
+# gems.diamond_power=80
+# # Wasted 20
+# copy="Diamond 2","Initial Stat Spread"
+# gems.diamond_power=150
+# # Wasted 50
+# copy="Diamond 4","Initial Stat Spread"
+# gems.diamond_power=300
+# copy="Diamond 6","Initial Stat Spread"
+# gems.diamond_power=600
+# copy="Diamond 7","Initial Stat Spread"
+# gems.diamond_power=800
+# copy="Diamond 9","Initial Stat Spread"
+# # Wasted 50
+# gems.diamond_power=1300
+
+# copy="Finesse_A1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a
+
+# copy="Finesse_A4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+
+# copy="Finesse_B1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b
+
+# copy="Finesse_B4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+
+# copy="Finesse_D1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d
+
+# copy="Finesse_D4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+
+# copy="Finesse_E1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e
+
+# copy="Finesse_E4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+
+# copy="Finesse_F1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f
+
+# copy="Finesse_F4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+
+# copy="Finesse_H1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h
+
+# copy="Finesse_H4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+
+# copy="Finesse_I1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i
+
+# copy="Finesse_I4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+
+# copy="Finesse_K1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k
+
+# copy="Finesse_K4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+
+# copy="Finesse_L1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l
+
+# copy="Finesse_L4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+
+# copy="Finesse_J1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_j
+
+# copy="Finesse_J4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+
+# copy="Finesse_G1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_g
+
+# copy="Finesse_G4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+
+# copy="Finesse_M1","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m
+
+# copy="Finesse_M4","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+
+
+# copy="Willful Momentum1 sapphire 6","Initial Stat Spread"
+# weapon_trait.willful_momentum=1
+# gems.emerald_power=600
+# copy="Willful Momentum4 Sapphire 6","Initial Stat Spread"
+# weapon_trait.willful_momentum=4
+# gems.emerald_power=600
+# copy="Emerald Judgement1 Emerald 6","Initial Stat Spread"
+# weapon_trait.emerald_judgement=1
+# gems.emerald_power=600
+# copy="Emerald Judgement4 Emerald 6","Initial Stat Spread"
+# weapon_trait.emerald_judgement=4
+# gems.emerald_power=600
+# copy="Sapphire Aurastone1 Sapphire 6","Initial Stat Spread"
+# weapon_trait.sapphire_aurastone=1
+# gems.sapphire_power=600
+# copy="Sapphire Aurastone4 Sapphire 6","Initial Stat Spread"
+# weapon_trait.sapphire_aurastone=4
+# gems.sapphire_power=600
+# copy="Grandeur_1 Sapphire 6","Initial Stat Spread"
+# weapon_trait.visions_of_grandeur=1
+# gems.sapphire_power=600
+# copy="Grandeur_4 Sapphire 6","Initial Stat Spread"
+# weapon_trait.visions_of_grandeur=4
+# gems.sapphire_power=600
+
+# copy="Finesse_M1 Sapphire 6","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m
+# gems.sapphire_power=600
+# copy="Finesse_M4 Sapphire 6","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+# gems.sapphire_power=600
+
+
+# --
+
+
+
+# copy="Finesse_J1_SPIRIT","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+# copy="Finesse_J4_SPIRIT","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+
+# copy="Finesse_G1_SPIRIT","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+
+# copy="Finesse_G4_SPIRIT","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary

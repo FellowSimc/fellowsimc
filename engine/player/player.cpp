@@ -3185,6 +3185,7 @@ void player_t::init_gains()
     gains.health = get_gain( "external_healing" );
 
   gains.vampiric_embrace = get_gain( "vampiric_embrace" );
+  gains.raid_events = get_gain( "raid_events" );
 }
 
 void player_t::init_procs()

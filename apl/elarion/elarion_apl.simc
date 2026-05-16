@@ -2,7 +2,8 @@
 actions.precombat=snapshot_stats
 actions.precombat+=/focused_shot
 
-actions=run_action_list,name=main
+actions=run_action_list,name=hail,if=legendary.astronomers_hail
+actions+=/run_action_list,name=main
 
 actions.main=event_horizon,target_if=target.time_to_die>=16|fight_remains<=20
 #,if=(cooldown.chronoshift.remains>0|!weapon.chronoshift)&(cooldown.voidbringer.remains>0|!weapon.voidbringer)|!weapon_trait.visions_of_grandeur
@@ -30,3 +31,24 @@ actions.main+=/highwind_arrow,if=!legendary.shimmer&(active_enemies=1|!buff.mult
 actions.main+=/heartseeker_barrage,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=active_enemies=1
 actions.main+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=focus>=60
 actions.main+=/focused_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value)
+
+
+actions.hail=event_horizon,target_if=target.time_to_die>=16|fight_remains<=20
+#,if=(cooldown.chronoshift.remains>0|!weapon.chronoshift)&(cooldown.voidbringer.remains>0|!weapon.voidbringer)|!weapon_trait.visions_of_grandeur
+actions.hail+=/skystriders_grace,if=(buff.event_horizon.up&target.time_to_die>=10|(target.time_to_die>=16|fight_remains<=20))&!buff.skystriders_grace.up
+actions.hail+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up&talent.fervent_supremacy
+actions.hail+=/lunarlight_mark,if=!buff.resurgent_winds.at_max_stacks|!talent.resurgent_winds
+#,if=!talent.final_crescendo|!talent.resurgent_winds|buff.final_crescendo.at_max_stacks
+actions.hail+=/voidbringer,target_if=(target.time_to_die>=12|fight_remains<=20)&!debuff.voidbringer_accumulator.up
+actions.hail+=/natures_fury
+actions.hail+=/starfall_volley
+actions.hail+=/chronoshift
+actions.hail+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,if=active_enemies=1|buff.event_horizon.up|!buff.starfall_volleys.up&debuff.lunarlight_mark.stack>1,cancel_if=debuff.lunarlight_mark.stack=0&active_enemies>1
+actions.hail+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=buff.celestial_impetus.react&buff.event_horizon.up&talent.impending_heartseeker
+actions.hail+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up&!talent.fervent_supremacy&(buff.stars_aligned.stack<1)
+actions.main+=/highwind_arrow,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=active_enemies>=2&!buff.multishot.up&!legendary.shimmer&full_recharge_time<=gcd.max*3
+actions.hail+=/multishot,if=(is_empowered|active_enemies>1)|buff.starfall_volleys.up&legendary.astronomers_hail
+actions.hail+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=buff.celestial_impetus.react&active_enemies<3
+actions.hail+=/highwind_arrow,if=(!buff.multishot.up&active_enemies>2|active_enemies<3|talent.high_impact)
+actions.hail+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=focus>=60&active_enemies=1
+actions.hail+=/focused_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value)

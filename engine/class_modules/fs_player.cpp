@@ -885,6 +885,7 @@ struct finesse_f_dmg_t : fs_proc_spell_t
     background         = true;
 
     spell_power_mod.direct = p->finesse_trait_values.finesse_f_drain[ p->finesse_traits[ FINESSE_F ] ];
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 };
 
@@ -900,6 +901,8 @@ struct finesse_l_dmg_t : fs_proc_spell_t
     aoe                = p->finesse_trait_values.finesse_l_targets;
 
     spell_power_mod.direct = p->finesse_trait_values.finesse_l_dmg[ p->finesse_traits[ FINESSE_L ] ];
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 };
 
@@ -1807,13 +1810,11 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_9 )
   {
-    base.spell_crit_chance += 0.09;
-    base.attack_crit_chance += 0.09;
+    base.crit_chance += 0.09;
   }
   else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_4 )
   {
-    base.spell_crit_chance += 0.03;
-    base.attack_crit_chance += 0.03;
+    base.crit_chance += 0.03;
   }
 
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_9 )
@@ -1832,6 +1833,15 @@ void fs_player_t::init_special_effects()
   else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_4 )
   {
     base.versatility += 0.03;
+  }
+
+  if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_9 )
+  {
+    base.haste += 0.09;
+  }
+  else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_4 )
+  {
+    base.haste += 0.03;
   }
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_1 )
@@ -1908,14 +1918,12 @@ void fs_player_t::init_special_effects()
 
   if ( fs_sets.eldrin_deceit )
   {
-    base.spell_crit_chance += fs_sets.eldrin_deceit_crit;
-    base.attack_crit_chance += fs_sets.eldrin_deceit_crit;
+    base.crit_chance += fs_sets.eldrin_deceit_crit;
   }
 
   if ( fs_sets.eldrin_fury )
   {
-    base.spell_crit_chance += fs_sets.eldrin_fury_crit;
-    base.attack_crit_chance += fs_sets.eldrin_fury_crit;
+    base.crit_chance += fs_sets.eldrin_fury_crit;
   }
 
   if ( fs_sets.deaths_grasp )
@@ -2579,9 +2587,9 @@ void fs_player_t::spirit_refund()
 {
   if ( fs_weapons.willful_momentum )
     fs_buffs.willful_momentum->trigger();
-  
-  if ( fs_buffs.finesse_l )
-    fs_buffs.finesse_l->trigger();
+  //
+  //if ( finesse_traits[ FINESSE_L ] > 0 )
+  //  fs_buffs.finesse_l->trigger();
 
   if ( finesse_traits[ FINESSE_K ] > 0 )
     fs_buffs.finesse_k->trigger();

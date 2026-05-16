@@ -231,7 +231,7 @@ public:
   struct finesse_values_t
   {
     const double finesse_a_per_stack[ 5 ] = { 0, 0.012, 0.02, 0.03, 0.05 };
-    const int finesse_a_max_stacks        = 8;
+    const int finesse_a_max_stacks        = 5;
 
     const timespan_t finesse_b_duration = 4_s;
     const int finesse_b_max_stacks      = 1;
@@ -247,15 +247,15 @@ public:
     const double finesse_e_cdmg[ 5 ] = { 0, 0.05, 0.10, 0.15, 0.20 };
 
     const double finesse_f_drain[ 5 ]   = { 0, 2.6, 4.16, 6.66, 10.65 };
-    const double finesse_f_drain_chance = 0.1;
+    const double finesse_f_drain_chance = 0.2;
 
     const double finesse_g_spirit_to_stats[ 5 ] = { 0.0, 0.2, 0.2, 0.2, 0.2 };
-    const timespan_t finesse_g_duration[ 5 ]    = { 0_s, 2_s, 4_s, 6_s, 8_s };
+    const timespan_t finesse_g_duration[ 5 ]    = { 0_s, 2_s, 3_s, 5_s, 8_s };
     const double finesse_g_max                  = 0.5;
 
-    const double finesse_h_added[ 5 ] = { 0, 0.25, 0.40, 0.64, 1.0 };
+    const double finesse_h_added[ 5 ] = { 0, 0.25, 0.40, 0.65, 1.0 };
 
-    const double finesse_i_haste[ 5 ]      = { 0, 0.03, 0.048, 0.077, 0.123 };
+    const double finesse_i_haste[ 5 ]      = { 0, 0.03, 0.05, 0.08, 0.12 };
     const timespan_t finesse_i_interval    = 60_s;
     const timespan_t finesse_i_duration    = 14_s;
     const timespan_t finesse_i_cdr         = 4_s;
@@ -798,11 +798,15 @@ public:
                                ( ab::cooldown->duration / fs_p()->finesse_trait_values.finesse_i_cdr_divisor ) );
       }
 
-      if ( fs_p()->finesse_traits[ FINESSE_L ] > 0 && fs_p()->fs_buffs.finesse_l->check() &&
-           ab::ability_flags & ability_type_e::ABILITY_CORE )
+      if ( fs_p()->finesse_traits[ FINESSE_L ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )
       {
-        fs_p()->fs_actions.finesse_l->execute();
-        fs_p()->fs_buffs.finesse_l->decrement();
+        auto chance = fs_p()->cache.crit_chance() +
+                      fs_p()->finesse_trait_values.finesse_e_cc[ fs_p()->finesse_traits[ FINESSE_E ] ];
+
+        if ( ab::rng().roll( chance ) )
+        {
+          fs_p()->fs_actions.finesse_l->execute();
+        }
       }
     }
   }

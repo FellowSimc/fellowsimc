@@ -2450,13 +2450,11 @@ void elarion_t::init_finished()
   fs_player_t::init_finished();
 
   range::for_each( cooldown_list, [ this ]( cooldown_t* c ) {
-    if ( !c->hasted )
+    if ( !c->hasted && c->action )
     {
       dynamic_cooldown_list.push_back( c );
     }
   } );
-
-  
 }
 
 void elarion_t::init_background_actions()

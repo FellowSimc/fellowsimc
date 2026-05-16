@@ -1276,7 +1276,7 @@ void enemy_t::init_base_stats()
   if ( waiting_time < timespan_t::from_seconds( 1.0 ) )
     waiting_time = timespan_t::from_seconds( 1.0 );
 
-  base.attack_crit_chance = 0.05;
+  base.crit_chance = 0.05;
 
   if ( !sim->overrides.target_health.empty() )
   {

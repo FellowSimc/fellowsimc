@@ -230,7 +230,7 @@ public:
 
   struct finesse_values_t
   {
-    const double finesse_a_per_stack[ 5 ] = { 0, 0.012, 0.02, 0.03, 0.05 };
+    const double finesse_a_per_stack[ 5 ] = { 0, 0.015, 0.025, 0.04, 0.06 };
     const int finesse_a_max_stacks        = 5;
 
     const timespan_t finesse_b_duration = 4_s;
@@ -246,7 +246,7 @@ public:
     const double finesse_e_cc[ 5 ]   = { 0, 0.01, 0.02, 0.03, 0.04 };
     const double finesse_e_cdmg[ 5 ] = { 0, 0.05, 0.10, 0.15, 0.20 };
 
-    const double finesse_f_drain[ 5 ]   = { 0, 2.6, 4.16, 6.66, 10.65 };
+    const double finesse_f_drain[ 5 ]   = { 0, 2.6 * 1.25, 4.16 * 1.25, 6.66 * 1.25, 10.65 * 1.25 };
     const double finesse_f_drain_chance = 0.2;
 
     const double finesse_g_spirit_to_stats[ 5 ] = { 0.0, 0.2, 0.2, 0.2, 0.2 };
@@ -263,9 +263,11 @@ public:
 
     const double finesse_j_amp[ 5 ] = { 0, 0.003, 0.006, 0.009, 0.012 };
     const double finesse_j_divisor  = 0.03;
-    const double finesse_j_max      = 0.48;
+    const double finesse_j_max      = 0.5;
 
-    const double finesse_k_cdr[ 5 ]         = { 0, 0.02, 0.03, 0.05, 0.08 };
+    const double finesse_k_cdr[ 5 ]         = { 0, 0.03, 0.05, 0.08, 0.12 };
+    const double finesse_k_cdr_per_haste    = 0.1;
+    const double finesse_k_cdr_haste_cap    = 0.5;
     const double finesse_k_amp_multiplier   = 1.0;
     const timespan_t finesse_k_amp_duration = 5_s;
 
@@ -276,6 +278,12 @@ public:
     const timespan_t finesse_l_duration = 15_s;
 
     const double finesse_m_spirit[ 5 ] = { 0, 12.0, 20.0, 30.0, 50.0 };
+
+    const int finesse_n_casts[ 5 ] = { 0, 6, 5, 4, 3 };
+    const double finesse_n_max_crit = 0.5;
+    const double finesse_n_conversion = 1.0;
+    const int finesse_n_target_falloff = 8;
+
   } finesse_trait_values;
 
   struct fs_weapons_t
@@ -711,7 +719,10 @@ public:
     {
       auto cdr = fs_p()->finesse_trait_values.finesse_k_cdr[ fs_p()->finesse_traits[ FINESSE_K ] ];
 
-      cdr *= 1.0 + fs_p()->fs_buffs.finesse_k->check_value();
+      auto current_haste = 1.0 / fs_p()->cache.spell_haste() - 1;
+      current_haste      = std::max( fs_p()->finesse_trait_values.finesse_k_cdr_haste_cap, current_haste );
+
+      cdr += fs_p()->finesse_trait_values.finesse_k_cdr_per_haste * current_haste;
 
       m /= 1.0 + cdr;
     }
@@ -800,7 +811,7 @@ public:
 
       if ( fs_p()->finesse_traits[ FINESSE_L ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )
       {
-        auto chance = fs_p()->cache.crit_chance() +
+        auto chance = fs_p()->cache.spell_crit_chance() +
                       fs_p()->finesse_trait_values.finesse_e_cc[ fs_p()->finesse_traits[ FINESSE_E ] ];
 
         if ( ab::rng().roll( chance ) )

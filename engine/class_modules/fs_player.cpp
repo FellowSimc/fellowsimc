@@ -1810,11 +1810,13 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_9 )
   {
-    base.crit_chance += 0.09;
+    base.spell_crit_chance += 0.09;
+    base.attack_crit_chance += 0.09;
   }
   else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_4 )
   {
-    base.crit_chance += 0.03;
+    base.spell_crit_chance += 0.03;
+    base.attack_crit_chance += 0.03;
   }
 
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_9 )
@@ -1918,12 +1920,14 @@ void fs_player_t::init_special_effects()
 
   if ( fs_sets.eldrin_deceit )
   {
-    base.crit_chance += fs_sets.eldrin_deceit_crit;
+    base.spell_crit_chance += fs_sets.eldrin_deceit_crit;
+    base.attack_crit_chance += fs_sets.eldrin_deceit_crit;
   }
 
   if ( fs_sets.eldrin_fury )
   {
-    base.crit_chance += fs_sets.eldrin_fury_crit;
+    base.spell_crit_chance += fs_sets.eldrin_fury_crit;
+    base.attack_crit_chance += fs_sets.eldrin_fury_crit;
   }
 
   if ( fs_sets.deaths_grasp )

@@ -790,7 +790,7 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
 struct voidbringers_touch_t : fs_weapon_action_t<spell_t>
 {
   voidbringers_touch_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
-    : fs_weapon_action_t( n, p, options )
+    : fs_weapon_action_t( "voidbringers_touch", p, options )
   {
     id = 12712;
 
@@ -1051,7 +1051,8 @@ std::unique_ptr<expr_t> fs_player_t::create_expression( util::string_view name_s
     {
       if ( util::str_compare_ci( split[ 1 ], "chronoshift" ) )
         return make_fn_expr( name_str, [ & ] { return fs_weapons.equipped_weapon == FSWEAPON_CHRONOSHIFT; } );
-      else if ( util::str_compare_ci( split[ 1 ], "voidbringer" ) )
+      else if ( util::str_compare_ci( split[ 1 ], "voidbringer" ) ||
+                util::str_compare_ci( split[ 1 ], "voidbringers" ) || util::str_compare_ci( split[ 1 ], "voidbringers_touch" ) )
         return make_fn_expr( name_str, [ & ] { return fs_weapons.equipped_weapon == FSWEAPON_VOIDBRINGERS_TOUCH; } );
       else if ( util::str_compare_ci( split[ 1 ], "fated_strike" ) )
         return make_fn_expr( name_str, [ & ] { return fs_weapons.equipped_weapon == FSWEAPON_FATED_STRIKE; } );
@@ -1173,6 +1174,13 @@ void fs_player_t::create_buffs()
                            ->set_default_value( finesse_trait_values.finesse_a_per_stack[ rank ] )
                            ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
                            ->set_max_stack( finesse_trait_values.finesse_a_max_stacks );
+
+  rank               = finesse_traits[ FINESSE_N ];
+  fs_buffs.finesse_n =
+      make_buff<fs_player_buff_t>( this, "finesse_n" )->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+
+  if ( rank > 0 )
+    fs_buffs.finesse_n->set_max_stack( finesse_trait_values.finesse_n_casts[ rank ] );
 
   rank               = finesse_traits[ FINESSE_B ];
   fs_buffs.finesse_b = make_buff<fs_player_buff_t>( this, "finesse_b" )
@@ -1477,7 +1485,7 @@ void fs_player_t::create_buffs()
         {
           for ( auto& action : p()->action_list )
           {
-            action->base_recharge_rate_multiplier /= cdr_mod;
+            action->dynamic_recharge_rate_multiplier /= cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
         }
@@ -1485,7 +1493,7 @@ void fs_player_t::create_buffs()
         {
           for ( auto& action : p()->action_list )
           {
-            action->base_recharge_rate_multiplier *= cdr_mod;
+            action->dynamic_recharge_rate_multiplier *= cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
         }
@@ -2174,6 +2182,7 @@ void fs_player_t::init_special_effects()
         id = 2297;
 
         name_str_reporting = "Ruby Storm";
+        aoe                = -1;
       }
 
       void execute() override

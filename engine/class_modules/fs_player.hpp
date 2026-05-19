@@ -134,6 +134,7 @@ public:
     buff_t* finesse_k;
     buff_t* hunters_focus;
     buff_t* patient_soul;
+    buff_t* finesse_n;
   } fs_buffs;
 
   struct rng_objects_t
@@ -659,13 +660,48 @@ private:
 public:
   // Init =====================================================================
 
-    double finesse_j_mul;
+  struct finesse_n_t : public spell_t
+  {
+    finesse_n_t( fs_player_t* p, std::string_view name ) : spell_t( name, p )
+    {
+      id = 192102;
 
+      name_str_reporting = "Finesse N";
+
+      may_crit = false;
+
+      school          = SCHOOL_MAGIC;
+      base_multiplier     = p->finesse_trait_values.finesse_n_conversion;
+      reduced_aoe_targets = p->finesse_trait_values.finesse_n_target_falloff;
+
+      aoe                 = -1;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      auto crit_mul = 1.0 + std::min( 0.5, player->cache.spell_crit_chance() );
+      return spell_t::action_multiplier() * crit_mul;
+    }
+
+    void init() override
+    {
+      spell_t::init();
+
+      snapshot_flags &= STATE_NO_MULTIPLIER;
+      update_flags &= STATE_NO_MULTIPLIER;
+
+      snapshot_flags |= STATE_MUL_DA;
+    }
+  };
+
+  double finesse_j_mul;
+  action_t* finesse_n;
+  bool finesse_n_active;
   fs_player_action_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
-      : ab( n, p, spell_data_t::nil() ), finesse_j_mul(0.0)
+    : ab( n, p, spell_data_t::nil() ), finesse_j_mul( 0.0 ), finesse_n( nullptr ), finesse_n_active( false )
   {
     ab::may_crit = ab::tick_may_crit = true;
-    ab::school                       = SCHOOL_PHYSICAL; 
+    ab::school                       = SCHOOL_PHYSICAL;
 
     if ( fs_p()->finesse_traits[ FINESSE_J ] )
     {
@@ -673,7 +709,6 @@ public:
                       fs_p()->finesse_trait_values.finesse_j_divisor;
     }
   }
-
 
   fs_player_t* fs_p()
   {
@@ -710,7 +745,6 @@ public:
     return m;
   }
 
-
   double recharge_rate_multiplier( const cooldown_t& c ) const override
   {
     auto m = ab::recharge_rate_multiplier( c );
@@ -734,15 +768,15 @@ public:
   {
     ab::init();
 
+    if ( fs_p()->finesse_traits[ FINESSE_N ] > 0 && ab::ability_flags & ability_type_e::ABILITY_BASIC )
+    {
+      finesse_n = new finesse_n_t( fs_p(), std::format( "{}_cleave", ab::name() ) );
+      finesse_n->init();
+      ab::add_child( finesse_n );
+    }
+
     if ( ab::ability_flags & ability_type_e::ABILITY_CORE )
       ab::base_crit += fs_p()->finesse_trait_values.finesse_e_cc[ fs_p()->finesse_traits[ FINESSE_E ] ];
-  }
-
-  void init_finished() override
-  {
-    ab::init_finished();
-
-    ab::snapshot_flags |= STATE_MUL_PERSISTENT;
 
     if ( fs_p()->finesse_traits[ FINESSE_H ] > 0 && ab::ability_flags & ability_type_e::ABILITY_BASIC )
     {
@@ -758,28 +792,56 @@ public:
     }
   }
 
+  void init_finished() override
+  {
+    ab::init_finished();
+
+    ab::snapshot_flags |= STATE_MUL_PERSISTENT;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ab::impact( s );
+    if ( finesse_n && s->result_amount > 0 && s->chain_target == 0 && finesse_n_active )
+    {
+      finesse_n->execute_on_target( s->target, s->result_amount );
+      fs_p()->fs_buffs.finesse_n->expire();
+    }
+  }
+
   void execute() override
   {
-    if ( fs_p()->finesse_traits[ FINESSE_B ] > 0 && ab::ability_flags & ability_type_e::ABILITY_POWER )
+    if ( !ab::background && fs_p()->finesse_traits[ FINESSE_B ] > 0 &&
+         ab::ability_flags & ability_type_e::ABILITY_POWER )
     {
       fs_p()->fs_buffs.finesse_b->trigger();
     }
+
+    finesse_n_active = fs_p()->fs_buffs.finesse_n->at_max_stacks();
 
     ab::execute();
 
     if ( !ab::background )
     {
-      if ( fs_p()->finesse_traits[ FINESSE_A ] > 0 )
+      if ( ab::ability_flags & ability_type_e::ABILITY_BASIC )
       {
-        if ( ab::ability_flags & ability_type_e::ABILITY_BASIC )
+        if ( fs_p()->finesse_traits[ FINESSE_A ] > 0 )
         {
           fs_p()->fs_buffs.finesse_a->trigger();
         }
 
-        if ( ab::ability_flags & ability_type_e::ABILITY_POWER )
+        if ( fs_p()->finesse_traits[ FINESSE_N ] > 0 )
         {
-          fs_p()->fs_buffs.finesse_a->expire();
+          if ( finesse_n_active )
+            fs_p()->fs_buffs.finesse_n->expire();
+
+          fs_p()->fs_buffs.finesse_n->trigger();
         }
+      }
+
+      if ( ab::ability_flags & ability_type_e::ABILITY_POWER )
+      {
+        fs_p()->fs_buffs.finesse_a->expire();
       }
 
       if ( fs_p()->finesse_traits[ FINESSE_D ] > 0 && ab::ability_flags & ability_type_e::ABILITY_POWER &&
@@ -867,7 +929,7 @@ public:
     player_t* primary_target = override_target ? override_target : s->target;
 
     fs_p()->sim->print_debug( "{} triggers residual {} for {:.2f} damage ({:.2f} * {} * {:.3f}) on {}", *fs_p(), *this,
-                           amount, base_damage, multiplier, target_da_multiplier, *primary_target );
+                              amount, base_damage, multiplier, target_da_multiplier, *primary_target );
 
     if ( !ab::callbacks || !trigger_event )
     {
@@ -1012,7 +1074,7 @@ public:
 
   double recharge_rate_multiplier( const cooldown_t& ) const override
   {
-    return ab::base_recharge_multiplier;
+    return 1.0;
   }
     
   double composite_total_spell_power() const override

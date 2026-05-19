@@ -282,6 +282,7 @@ public:
     unsigned agonizing_blaze_maximum_stacks = 10;
 
     double firestarter_crit_chance = 0.2;
+    double firestarter_frog_ball_crit_chance = 0.15;
 
     timespan_t crash_and_burn_cdr = 0.1_s;
 
@@ -995,7 +996,7 @@ struct flare_up_t : public ardeos_spell_t
     aoe = -1;
   }
 
-  double composite_ta_multiplier( const action_state_t* s ) const override
+  double composite_da_multiplier( const action_state_t* s ) const override
   {
     return fs_player_action_t::action_multiplier();
   }
@@ -1892,7 +1893,7 @@ struct fire_ball_t : public ardeos_spell_t
       energize_amount   = p->spell_const.fire_ball_embers_per_tick;
       energize_resource = RESOURCE_CINDERS;
 
-      base_crit = p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
+      base_crit = p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_frog_ball_crit_chance : 0.0;
     }
 
     void snapshot_state( action_state_t* state, result_amount_type rt ) override
@@ -2071,7 +2072,7 @@ struct fire_frog_dot_t : public residual_action::residual_periodic_action_t<arde
 
     base_multiplier *= player->spell_const.fire_frog_coeff;
 
-    base_crit = player->talents_enabled( ardeos_t::FIRESTARTER ) ? player->talents.firestarter_crit_chance : 0.0;
+    base_crit = player->talents_enabled( ardeos_t::FIRESTARTER ) ? player->talents.firestarter_frog_ball_crit_chance : 0.0;
   }
 
   void snapshot_state( action_state_t* state, result_amount_type rt ) override

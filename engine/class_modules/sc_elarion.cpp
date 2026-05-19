@@ -106,6 +106,8 @@ public:
     real_ppm_t* celestial_impetus;
   } rppm;
 
+  dbc_proc_callback_t* lunarlight_mark_external;
+
   struct spell_const_t
   {
     timespan_t auto_attack_time = 2.4_s;
@@ -604,6 +606,7 @@ public:
   void init_scaling() override;
   void init_finished() override;
   void init_background_actions() override;
+  void init_special_effects() override;
   void init_rng() override;
 
   void create_cooldowns();
@@ -622,7 +625,7 @@ public:
 
   role_e primary_role() const override
   {
-    return ROLE_SPELL;
+    return ROLE_ATTACK;
   }
   stat_e convert_hybrid_stat( stat_e s ) const override;
 
@@ -2217,7 +2220,6 @@ void elarion_t::init_gains()
   fs_player_t::init_gains();
 
   gains.spirit_procs = get_gain( "Spirit Procs" );
-  // gains.time_rift    = get_gain( "Time Rift" );
 }
 
 // elarion_t::init_rng ========================================================
@@ -2323,7 +2325,7 @@ void elarion_t::create_buffs()
 
           if ( p()->cooldowns.skystriders_grace->action )
           {
-            p()->cooldowns.skystriders_grace->action->base_recharge_rate_multiplier *= mod_difference;
+            p()->cooldowns.skystriders_grace->action->dynamic_recharge_rate_multiplier *= mod_difference;
             p()->cooldowns.skystriders_grace->adjust_recharge_multiplier();
           }
           else
@@ -2332,7 +2334,7 @@ void elarion_t::create_buffs()
             {
               if ( action->cooldown == p()->cooldowns.skystriders_grace )
               {
-                action->base_recharge_rate_multiplier *= mod_difference;
+                action->dynamic_recharge_rate_multiplier *= mod_difference;
                 action->cooldown->adjust_recharge_multiplier();
               }
             }
@@ -2455,6 +2457,81 @@ void elarion_t::init_finished()
       dynamic_cooldown_list.push_back( c );
     }
   } );
+}
+
+void elarion_t::init_special_effects()
+{
+  fs_player_t::init_special_effects();
+  //``` auto effect      = new special_effect_t( this );
+  //effect->spell_id     = 2297;
+  //effect->name_str     = "ruby_storm";
+  //effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
+  //effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
+  //effect->cooldown_    = 0_s;
+  //effect->ppm_         = -fs_weapon_trait_values.ruby_storm_ppm[ fs_weapons.ruby_storm ];
+  //effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
+  //effect->rppm_blp_    = real_ppm_t::BLP_ENABLED;
+  //effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
+  //```
+
+
+  auto effect = new special_effect_t( this );
+  effect->spell_id = 9;
+  effect->name_str = "lunarlight_salvo";
+  effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
+  effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
+  effect->cooldown_    = 0_s;
+  effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+  struct lunarlight_salvo_cb_t : dbc_proc_callback_t
+  {
+    elarion_t* elarion;
+
+    double lunarlight_salvo_chance_hit = 0.25;
+    double lunarlight_salvo_chance_crit = 0.5;
+    lunarlight_salvo_cb_t( elarion_t* p, const special_effect_t& e )
+      : dbc_proc_callback_t( p, e ),
+        elarion( p ),
+        lunarlight_salvo_chance_hit( p->spell_const.lunarlight_mark_chance_hit ),
+        lunarlight_salvo_chance_crit( p->spell_const.lunarlight_mark_chance_crit )
+    {
+    } 
+    
+    void trigger( action_t* a, action_state_t* s ) override
+    {
+      // Elarion local IDs are currently all sub 100.
+      if ( a->id < 100 )
+        return;
+
+      dbc_proc_callback_t::trigger( a, s );
+    }
+
+    void execute( action_t*, action_state_t* s ) override
+    {
+      if ( s->result_amount > 0 )
+      {
+        auto td = elarion->get_target_data( s->target );
+        if ( td->debuffs.lunarlight_mark->check() )
+        {
+          if ( s->result == RESULT_HIT && rng().roll( lunarlight_salvo_chance_hit ) )
+          {
+            elarion->actions.lunarlight_salvo->execute_on_target( s->target );
+            td->debuffs.lunarlight_mark->decrement();
+          }
+
+          if ( s->result == RESULT_CRIT && rng().roll( lunarlight_salvo_chance_crit ) )
+          {
+            elarion->actions.lunarlight_salvo->execute_on_target( s->target );
+            td->debuffs.lunarlight_mark->decrement();
+          }
+        }
+      }
+    }
+  };
+
+  lunarlight_mark_external = new dbc_proc_callback_t( this, *effect );
+  lunarlight_mark_external->initialize();
+  lunarlight_mark_external->activate();
 }
 
 void elarion_t::init_background_actions()

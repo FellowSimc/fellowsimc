@@ -168,81 +168,141 @@ gems.ruby_power=100
 talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/biting_cold:1
 
 
-copy="4 Leg Stats","Base Rime"
-legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=crit/primary/primary/primary/crit/expertise
+copy="Grandeur_0","Base Rime"
+weapon_trait.visions_of_grandeur=0
+copy="Grandeur_1","Base Rime"
+weapon_trait.visions_of_grandeur=1
+copy="Grandeur_2","Base Rime"
+weapon_trait.visions_of_grandeur=2
+copy="Grandeur_3","Base Rime"
+weapon_trait.visions_of_grandeur=3
+# # copy="Grandeur_4","Base Rime"
+# # weapon_trait.visions_of_grandeur=4
+# # copy="Brave Mach0","Base Rime"
+# # weapon_trait.brave_machinations=0
+# copy="Brave Mach1","Base Rime"
+# weapon_trait.brave_machinations=1
+# copy="Brave Mach2","Base Rime"
+# weapon_trait.brave_machinations=2
+# copy="Brave Mach3","Base Rime"
+# weapon_trait.brave_machinations=3
+# copy="Brave Mach4","Base Rime"
+# weapon_trait.brave_machinations=4
+# copy="Amethyst Splinters0","Base Rime"
+# weapon_trait.amethyst_splinters=0
+# copy="Amethyst Splinters1","Base Rime"
+# weapon_trait.amethyst_splinters=1
+# # copy="Amethyst Splinters4","Base Rime"
+# # weapon_trait.amethyst_splinters=4
+# copy="Heroic Brand1","Base Rime"
+# weapon_trait.heroic_brand=1
+# copy="Heroic Brand4","Base Rime"
+# weapon_trait.heroic_brand=4
+# copy="Martial Initiative0","Base Rime"
+# weapon_trait.martial_initiative=0
+# # copy="Martial Initiative1","Base Rime"
+# # weapon_trait.martial_initiative=1
+# copy="Martial Initiative2","Base Rime"
+# weapon_trait.martial_initiative=2
+# copy="Martial Initiative3","Base Rime"
+# weapon_trait.martial_initiative=3
+# copy="Martial Initiative4","Base Rime"
+# weapon_trait.martial_initiative=4
+copy="Emerald Judgement0","Base Rime"
+weapon_trait.emerald_judgement=0
+# copy="Emerald Judgement1","Base Rime"
+# weapon_trait.emerald_judgement=1
+copy="Emerald Judgement2","Base Rime"
+weapon_trait.emerald_judgement=2
+copy="Emerald Judgement3","Base Rime"
+weapon_trait.emerald_judgement=3
+copy="Emerald Judgement4","Base Rime"
+weapon_trait.emerald_judgement=4
+copy="Diamond Strike1","Base Rime"
+weapon_trait.diamond_strike=1
+copy="Diamond Strike2","Base Rime"
+weapon_trait.diamond_strike=2
+copy="Diamond Strike3","Base Rime"
+weapon_trait.diamond_strike=3
+copy="Diamond Strike4","Base Rime"
+weapon_trait.diamond_strike=4
+# copy="Sapphire Aurastone1","Base Rime"
+# weapon_trait.sapphire_aurastone=1
+# copy="Sapphire Aurastone4","Base Rime"
+# weapon_trait.sapphire_aurastone=4
+# # copy="Ruby Storm1","Base Rime"
+# # weapon_trait.ruby_storm=1
+# # copy="Ruby Storm4","Base Rime"
+# # weapon_trait.ruby_storm=4
 
-copy="4 Shoulder Stats","Base Rime"
-shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=expertise/primary/primary/crit/expertise
+# # # # copy="Heroic Brand4 Brave Mach4","Base Rime"
+# # # # weapon_trait.heroic_brand=4
+# # # # weapon_trait.brave_machinations=4
+# # # # copy="Grandeur4 Brave Mach4","Base Rime"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.brave_machinations=4
+# # # # copy="Grandeur4 Heroic Brand4","Base Rime"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.heroic_brand=4
+# # # # copy="Grandeur4 Heroic Brand4 Brave Mach4","Base Rime"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.heroic_brand=4
+# # # # weapon_trait.brave_machinations=4
 
-copy="4 Hands Stats","Base Rime"
-hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste,affixes=primary/primary/crit/expertise
 
-copy="4 Ring Stats","Base Rime"
-finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste,affixes=primary/primary/crit/expertise
+# # copy="Navigators Intuition1","Base Rime"
+# # weapon_trait.navigators_intuition=1
+# copy="Navigators Intuition4","Base Rime"
+# weapon_trait.navigators_intuition=4
+# # copy="Kindling1","Base Rime"
+# # weapon_trait.kindling=1
+# copy="Kindling4","Base Rime"
+# weapon_trait.kindling=4
+# # copy="Hidden Power1","Base Rime"
+# # weapon_trait.hidden_power=1
+# copy="Hidden Power4","Base Rime"
+# weapon_trait.hidden_power=4
+# # copy="Hunters Focus1","Base Rime"
+# # weapon_trait.hunters_focus=1
+# copy="Hunters Focus4","Base Rime"
+# weapon_trait.hunters_focus=4
+# # copy="Patient Soul1","Base Rime"
+# # weapon_trait.patient_soul=1
+# copy="Patient Soul4","Base Rime"
+# weapon_trait.patient_soul=4
+# # copy="Seized Opportunity1","Base Rime"
+# # weapon_trait.seized_opportunity=1
+# copy="Seized Opportunity4","Base Rime"
+# weapon_trait.seized_opportunity=4
+# # copy="Vengeful Soul1","Base Rime"
+# # weapon_trait.vengeful_soul=1
+# copy="Vengeful Soul4","Base Rime"
+# weapon_trait.vengeful_soul=4
+# # copy="Willful Momentum1","Base Rime"
+# # weapon_trait.willful_momentum=1
+# copy="Willful Momentum4","Base Rime"
+# weapon_trait.willful_momentum=4
+# # copy="Inspired Allegiance1","Base Rime"
+# # weapon_trait.inspired_allegiance=1
+# # copy="Inspired Allegiance2","Base Rime"
+# # weapon_trait.inspired_allegiance=2
+# # copy="Inspired Allegiance3","Base Rime"
+# # weapon_trait.inspired_allegiance=3
+# # copy="Inspired Allegiance4","Base Rime"
+# # weapon_trait.inspired_allegiance=4
 
-copy="-Finesse J","Base Rime"
-main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g
 
-copy="-Finesse G","Base Rime"
-main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/finesse_j/finesse_j/finesse_j/finesse_j
+copy="+Feet Prim","Base Rime"
+feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary
 
+copy="+Feet Crit","Base Rime"
+feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=crit
 
-copy="Finesse_A1","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a
+copy="+Feet Haste","Base Rime"
+feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=haste
 
-copy="Finesse_A4","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+copy="+Feet Exp","Base Rime"
+feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=expertise
 
-copy="Finesse_B1","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b
-
-copy="Finesse_B4","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
-
-copy="Finesse_D1","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d
-
-copy="Finesse_D4","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
-
-copy="Finesse_E1","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e
-
-copy="Finesse_E4","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
-
-copy="Finesse_F1","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f
-
-copy="Finesse_F4","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
-
-copy="Finesse_H1","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h
-
-copy="Finesse_H4","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
-
-copy="Finesse_I1","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i
-
-copy="Finesse_I4","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
-
-copy="Finesse_K1","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k
-
-copy="Finesse_K4","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
-
-copy="Finesse_L1","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l
-
-copy="Finesse_L4","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
-
-copy="Finesse_M1","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m
-
-copy="Finesse_M4","Base Rime"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+copy="+Feet Spirit","Base Rime"
+feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=spirit

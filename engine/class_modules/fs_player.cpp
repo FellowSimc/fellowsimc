@@ -1344,7 +1344,7 @@ void fs_player_t::create_buffs()
   fs_buffs.vengeful_soul =
       make_buff<fs_player_buff_t>( this, "vengeful_soul" )
           ->set_default_value( fs_weapon_trait_values.vengeful_soul_amp[ fs_weapons.vengeful_soul ] )
-          ->set_duration( 6_s )
+          ->set_duration( fs_weapon_trait_values.vengeful_soul_duration )
           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
@@ -2037,7 +2037,7 @@ void fs_player_t::init_special_effects()
 
     void trigger( action_t* a, action_state_t* state ) override
     {
-      if ( p()->get_target_data( state->target )->debuffs.triggered_first_strike->check() )
+      if ( p()->get_target_data( state->target )->debuffs.triggered_first_strike->check() || state->result_amount <= 0 )
         return;
 
       dbc_proc_callback_t::trigger( a, state );
@@ -2052,6 +2052,7 @@ void fs_player_t::init_special_effects()
     fs_effect->proc_flags_           = PF_ALL_DAMAGE;
     fs_effect->proc_flags2_          = PF2_ALL_HIT;
     fs_effect->proc_chance_          = 1.0;
+    fs_effect->set_can_proc_from_procs( true );
     fs_effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
     fs_effect->has_use_buff_override = true;
 
@@ -2113,6 +2114,7 @@ void fs_player_t::init_special_effects()
     effect->proc_flags2_          = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
     effect->cooldown_             = 0_s;
     effect->ppm_                  = -2.1;
+    effect->set_can_proc_from_procs( true );
     effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
     effect->rppm_blp_             = real_ppm_t::BLP_ENABLED;
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
@@ -2158,7 +2160,8 @@ void fs_player_t::init_special_effects()
     effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
     effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
     effect->cooldown_    = 0_s;
-    effect->ppm_         = -2;
+    effect->ppm_         = -fs_weapon_trait_values.emerald_judgement_ppm[ fs_weapons.emerald_judgement ];
+    effect->set_can_proc_from_procs( true );
     effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
     effect->rppm_blp_    = real_ppm_t::BLP_ENABLED;
     effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
@@ -2201,6 +2204,7 @@ void fs_player_t::init_special_effects()
     effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
     effect->cooldown_    = 0_s;
     effect->ppm_         = -fs_weapon_trait_values.ruby_storm_ppm[ fs_weapons.ruby_storm ];
+    effect->set_can_proc_from_procs( true );
     effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
     effect->rppm_blp_    = real_ppm_t::BLP_ENABLED;
     effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
@@ -2310,6 +2314,7 @@ void fs_player_t::init_special_effects()
     effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
     effect->cooldown_    = 0_s;
     effect->ppm_         = -fs_weapon_trait_values.diamond_strike_ppm[ fs_weapons.diamond_strike ];
+    effect->set_can_proc_from_procs( true );
     effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
     effect->rppm_blp_    = real_ppm_t::BLP_ENABLED;
     effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
@@ -2345,7 +2350,7 @@ void fs_player_t::init_special_effects()
 
     void trigger( action_t* a, action_state_t* state ) override
     {
-      if ( blocking_buff && blocking_buff->check() )
+      if ( blocking_buff && blocking_buff->check() || state->result_amount < 0 )
         return;
 
       dbc_proc_callback_t::trigger( a, state );
@@ -2376,9 +2381,10 @@ void fs_player_t::init_special_effects()
     auto fs_effect                   = new special_effect_t( this );
     fs_effect->spell_id              = 1342;
     fs_effect->name_str              = "seized_opportunity";
-    fs_effect->proc_flags_           = PF_ALL_DAMAGE;
+    fs_effect->proc_flags_           = PF_ALL_DAMAGE | PF_PERIODIC;
     fs_effect->proc_flags2_          = PF2_CRIT;
     fs_effect->proc_chance_          = 1.0;
+    fs_effect->set_can_proc_from_procs( true );
     fs_effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
     fs_effect->has_use_buff_override = true;
 
@@ -2399,7 +2405,7 @@ void fs_player_t::init_special_effects()
     effect->proc_flags2_          = PF2_CRIT;
     effect->cooldown_             = 0_s;
     effect->has_use_buff_override = true;
-    effect->ppm_                  = -2.0;
+    effect->ppm_                  = -fs_weapon_trait_values.vengeful_soul_ppm;
     effect->rppm_scale_           = rppm_scale_e::RPPM_CRIT;
     effect->rppm_blp_             = real_ppm_t::BLP_ENABLED;
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;

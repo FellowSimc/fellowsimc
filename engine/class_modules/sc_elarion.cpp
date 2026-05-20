@@ -2482,6 +2482,7 @@ void elarion_t::init_special_effects()
   effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
   effect->cooldown_    = 0_s;
   effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
+  effect->set_can_proc_from_procs( true );
 
   struct lunarlight_salvo_cb_t : dbc_proc_callback_t
   {

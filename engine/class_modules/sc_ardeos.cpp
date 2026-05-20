@@ -2837,6 +2837,7 @@ void ardeos_t::init_special_effects()
     effect->proc_flags_  = PF_PERIODIC;
     effect->proc_flags2_ = PF2_CRIT;
     effect->proc_chance_ = talents.pyrophibian_frenzy_chance;
+    effect->set_can_proc_from_procs( true );
 
     special_effects.push_back( effect );
 

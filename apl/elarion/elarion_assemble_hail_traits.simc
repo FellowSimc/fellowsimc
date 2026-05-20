@@ -1,0 +1,667 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=250
+# max_time=60
+target_error=0.1
+iterations=15000
+chart_show_relative_difference=1
+vary_combat_length=0.1
+single_actor_batch=1
+max_time=720
+desired_targets=1
+
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers,agility
+# scale_crit_rating=64
+# scale_haste_rating=64
+# scale_mastery_rating=64
+# scale_versatility_rating=64
+# scale_agility=30
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# # dps_plot_stat=haste,crit_rating,mastery,versatility
+# # dps_plot_points=10
+# # dps_plot_step=32
+# # dps_plot_positive=0
+
+relative_difference_base="Elarion Base"
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":8000000:Humanoid
+# raid_events+=/pull,pull=02,delay=180,shared_health=1,enemies="12t":3000000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+optimal_raid=0
+fight_style=dungeonroute
+max_time=7200
+vary_combat_length=0.0
+enemy=Dummy
+raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":16000000:Humanoid
+raid_events+=/pull,pull=02,delay=180,shared_health=1,enemies="12t":6000000:Humanoid:12
+raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+elarion="Elarion Base"
+level=80
+
+# initial_resource=spirit=100
+
+apl/elarion/elarion_apl.simc
+
+# gear_agility=1442
+
+
+# weapon=voidbringers_touch
+weapon=chronoshift
+
+head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/spirit
+neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/spirit
+back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary
+wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/crit
+hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=spirit/spirit
+feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g
+
+talents+=/skyward_munitions:1/fervent_supremacy:1/lunarlight_affinity:1/lunar_fury:1/repeating_stars:1/strikers_aim:1/focused_expanse:1/skylit_grace:1
+# 10
+
+legendary.astronomers_hail=1
+gems.sapphire_power=1500
+gems.amethyst_power=600
+
+# 1 Attunement, 8 stats, 33 left.
+
+gems.emerald_power=600
+weapon_trait.emerald_judgement=1
+# 6 attunement 1 trait, 26 left
+
+sets.deaths_grasp=1
+
+# 1 set, 24 left
+gems.ruby_power=100
+# 1 attunement, 23 left.
+
+weapon_trait.visions_of_grandeur=4
+
+# 4 traits, 19 left
+
+sets.drakheims_absolution=1
+#2nd set, 17 left
+# 4 Blessing, 13 left.
+
+weapon_trait.brave_machinations=4
+
+# 9 total traits, 9 left
+
+# 2 spirit, 7 left
+
+weapon_trait.inspired_allegiance=4
+# 13 total traits, 3 left
+weapon_trait.martial_initiative=1
+# 14 total traits, 2 left
+sets.dark_prophecy=1
+# 3rd set, 0 left.
+
+# Total: 3 sets (6), 14 Traits, 4 Blessing, 8 Attunement, 10 stats = 42
+# Drakheims Absolution
+# Deaths Grasp
+# Dark Prophecy
+# Finesse Gx4
+# 1 Amethyst Attunement, 6 Emerald Attunement, 1 Ruby Attunement. 3 Sapphire Gems. 1 Amethyst Gem.
+# Sapphire T10, T6 Emerald, T6 Amethyst, T1 Ruby.
+# R4 Visions of Grandeur
+# R4 Brave Machinations
+# R4 Inspired Allegiance
+# R1 Martial Initiative
+# R1 Emerald Judgement
+# 10 Stats on Gear (Weapon, Chest, Legs, Shoulders, Head)
+
+
+
+copy="Grandeur_0","Elarion Base"
+weapon_trait.visions_of_grandeur=0
+copy="Grandeur_1","Elarion Base"
+weapon_trait.visions_of_grandeur=1
+copy="Grandeur_2","Elarion Base"
+weapon_trait.visions_of_grandeur=2
+copy="Grandeur_3","Elarion Base"
+weapon_trait.visions_of_grandeur=3
+# # copy="Grandeur_4","Elarion Base"
+# # weapon_trait.visions_of_grandeur=4
+# copy="Brave Mach0","Elarion Base"
+# weapon_trait.brave_machinations=0
+# copy="Brave Mach1","Elarion Base"
+# weapon_trait.brave_machinations=1
+# copy="Brave Mach2","Elarion Base"
+# weapon_trait.brave_machinations=2
+# copy="Brave Mach3","Elarion Base"
+# weapon_trait.brave_machinations=3
+# # copy="Brave Mach4","Elarion Base"
+# # weapon_trait.brave_machinations=4
+# copy="Amethyst Splinters1","Elarion Base"
+# weapon_trait.amethyst_splinters=1
+# copy="Amethyst Splinters4","Elarion Base"
+# weapon_trait.amethyst_splinters=4
+# copy="Heroic Brand1","Elarion Base"
+# weapon_trait.heroic_brand=1
+# copy="Heroic Brand4","Elarion Base"
+# weapon_trait.heroic_brand=4
+# copy="Martial Initiative0","Elarion Base"
+# weapon_trait.martial_initiative=0
+# # copy="Martial Initiative1","Elarion Base"
+# # weapon_trait.martial_initiative=1
+# copy="Martial Initiative2","Elarion Base"
+# weapon_trait.martial_initiative=2
+# copy="Martial Initiative3","Elarion Base"
+# weapon_trait.martial_initiative=3
+# copy="Martial Initiative4","Elarion Base"
+# weapon_trait.martial_initiative=4
+copy="Emerald Judgement0","Elarion Base"
+weapon_trait.emerald_judgement=0
+# copy="Emerald Judgement1","Elarion Base"
+# weapon_trait.emerald_judgement=1
+copy="Emerald Judgement2","Elarion Base"
+weapon_trait.emerald_judgement=2
+copy="Emerald Judgement3","Elarion Base"
+weapon_trait.emerald_judgement=3
+copy="Emerald Judgement4","Elarion Base"
+weapon_trait.emerald_judgement=4
+copy="Diamond Strike1","Elarion Base"
+weapon_trait.diamond_strike=1
+copy="Diamond Strike2","Elarion Base"
+weapon_trait.diamond_strike=2
+copy="Diamond Strike3","Elarion Base"
+weapon_trait.diamond_strike=3
+copy="Diamond Strike4","Elarion Base"
+weapon_trait.diamond_strike=4
+# copy="Sapphire Aurastone1","Elarion Base"
+# weapon_trait.sapphire_aurastone=1
+# copy="Sapphire Aurastone4","Elarion Base"
+# weapon_trait.sapphire_aurastone=4
+# copy="Ruby Storm1","Elarion Base"
+# weapon_trait.ruby_storm=1
+# copy="Ruby Storm4","Elarion Base"
+# weapon_trait.ruby_storm=4
+
+# # # # copy="Heroic Brand4 Brave Mach4","Elarion Base"
+# # # # weapon_trait.heroic_brand=4
+# # # # weapon_trait.brave_machinations=4
+# # # # copy="Grandeur4 Brave Mach4","Elarion Base"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.brave_machinations=4
+# # # # copy="Grandeur4 Heroic Brand4","Elarion Base"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.heroic_brand=4
+# # # # copy="Grandeur4 Heroic Brand4 Brave Mach4","Elarion Base"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.heroic_brand=4
+# # # # weapon_trait.brave_machinations=4
+
+
+# copy="Navigators Intuition1","Elarion Base"
+# weapon_trait.navigators_intuition=1
+copy="Navigators Intuition4","Elarion Base"
+weapon_trait.navigators_intuition=4
+# copy="Kindling1","Elarion Base"
+# weapon_trait.kindling=1
+copy="Kindling4","Elarion Base"
+weapon_trait.kindling=4
+# copy="Hidden Power1","Elarion Base"
+# weapon_trait.hidden_power=1
+copy="Hidden Power4","Elarion Base"
+weapon_trait.hidden_power=4
+# copy="Hunters Focus1","Elarion Base"
+# weapon_trait.hunters_focus=1
+copy="Hunters Focus4","Elarion Base"
+weapon_trait.hunters_focus=4
+# copy="Patient Soul1","Elarion Base"
+# weapon_trait.patient_soul=1
+copy="Patient Soul4","Elarion Base"
+weapon_trait.patient_soul=4
+# copy="Seized Opportunity1","Elarion Base"
+# weapon_trait.seized_opportunity=1
+copy="Seized Opportunity4","Elarion Base"
+weapon_trait.seized_opportunity=4
+# copy="Vengeful Soul1","Elarion Base"
+# weapon_trait.vengeful_soul=1
+copy="Vengeful Soul4","Elarion Base"
+weapon_trait.vengeful_soul=4
+# copy="Willful Momentum1","Elarion Base"
+# weapon_trait.willful_momentum=1
+copy="Willful Momentum4","Elarion Base"
+weapon_trait.willful_momentum=4
+# copy="Inspired Allegiance0","Elarion Base"
+# weapon_trait.inspired_allegiance=0
+# copy="Inspired Allegiance1","Elarion Base"
+# weapon_trait.inspired_allegiance=1
+# copy="Inspired Allegiance2","Elarion Base"
+# weapon_trait.inspired_allegiance=2
+# copy="Inspired Allegiance3","Elarion Base"
+# weapon_trait.inspired_allegiance=3
+# copy="Inspired Allegiance4","Elarion Base"
+# weapon_trait.inspired_allegiance=4
+
+
+# # # # copy="+Hat Prim","Elarion Base"
+# # # # head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary
+
+# # # # copy="+Hat Crit","Elarion Base"
+# # # # head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/crit
+
+# # # # copy="+Hat Haste","Elarion Base"
+# # # # head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste
+
+# # # # copy="+Hat Exp","Elarion Base"
+# # # # head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/expertise
+
+# # # # copy="+Hat Spirit","Elarion Base"
+# # # # head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/spirit
+
+copy="+Feet Prim","Elarion Base"
+feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary
+
+copy="+Feet Crit","Elarion Base"
+feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=crit
+
+copy="+Feet Haste","Elarion Base"
+feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste
+
+copy="+Feet Exp","Elarion Base"
+feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=expertise
+
+copy="+Feet Spirit","Elarion Base"
+feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=spirit
+
+# copy="+Ring Prim","Elarion Base"
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise,affixes=primary
+
+# copy="+Ring Crit","Elarion Base"
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise,affixes=crit
+
+# copy="+Ring Haste","Elarion Base"
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise,affixes=haste
+
+# copy="+Ring Exp","Elarion Base"
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise,affixes=expertise
+
+# copy="+Ring Spirit","Elarion Base"
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise,affixes=spirit
+
+
+
+# copy="Ruby 1","Elarion Base"
+# gems.ruby_power=80
+# # # # # Wasted 20
+# # # copy="Ruby 2","Elarion Base"
+# # # gems.ruby_power=150
+# # # # Wasted 50
+# # # copy="Ruby 4","Elarion Base"
+# # # gems.ruby_power=300
+# # # copy="Ruby 5","Elarion Base"
+# # # # Wasted 50
+# # # gems.ruby_power=500
+# # # copy="Ruby 6","Elarion Base"
+# # # gems.ruby_power=600
+# # # copy="Ruby 7","Elarion Base"
+# # # gems.ruby_power=800
+# # # copy="Ruby 9","Elarion Base"
+# # # # Wasted 50
+# # # gems.ruby_power=1300
+# # # copy="Ruby 10","Elarion Base"
+# # # gems.ruby_power=1500
+
+
+
+# # # # copy="Amethyst 1","Elarion Base"
+# # # # gems.amethyst_power=80
+# # # # # Wasted 20
+# # # # copy="Amethyst 2","Elarion Base"
+# # # # gems.amethyst_power=150
+# # # # # Wasted 50
+# # # # copy="Amethyst 4","Elarion Base"
+# # # # gems.amethyst_power=300
+# # # # copy="Amethyst 5","Elarion Base"
+# # # # # Wasted 50
+# # # # gems.amethyst_power=500
+# # # # copy="Amethyst 6","Elarion Base"
+# # # # gems.amethyst_power=600
+# copy="Amethyst 7","Elarion Base"
+# gems.amethyst_power=800
+# copy="Amethyst 9","Elarion Base"
+# # Wasted 50
+# gems.amethyst_power=1300
+# copy="Amethyst 10","Elarion Base"
+# gems.amethyst_power=1500
+
+
+# copy="Topaz 1","Elarion Base"
+# gems.topaz_power=80
+# # Wasted 20
+# copy="Topaz 2","Elarion Base"
+# gems.topaz_power=150
+# # Wasted 50
+# copy="Topaz 4","Elarion Base"
+# gems.topaz_power=300
+# copy="Topaz 5","Elarion Base"
+# # Wasted 50
+# gems.topaz_power=500
+# copy="Topaz 6","Elarion Base"
+# gems.topaz_power=600
+# copy="Topaz 7","Elarion Base"
+# gems.topaz_power=800
+# copy="Topaz 9","Elarion Base"
+# # Wasted 50
+# gems.topaz_power=1300
+# copy="Topaz 10","Elarion Base"
+# gems.topaz_power=1500
+
+# # # # copy="Emerald 1","Elarion Base"
+# # # # gems.emerald_power=80
+# # # # # Wasted 20
+# # # # copy="Emerald 1 Judge1","Elarion Base"
+# # # # gems.emerald_power=80
+# # # # weapon_trait.emerald_judgement=1
+# # # # # Wasted 20
+# # # # copy="Emerald 2","Elarion Base"
+# # # # gems.emerald_power=150
+# # # # # Wasted 50
+# # # # copy="Emerald 4","Elarion Base"
+# # # # gems.emerald_power=300
+# # # # copy="Emerald 5","Elarion Base"
+# # # # # Wasted 50
+# # # # gems.emerald_power=500
+# # # # copy="Emerald 6","Elarion Base"
+# # # # gems.emerald_power=600
+# # # # copy="Emerald 6 Judge 1","Elarion Base"
+# # # # gems.emerald_power=600
+# # # # weapon_trait.emerald_judgement=1
+# copy="Emerald 7","Elarion Base"
+# gems.emerald_power=800
+# copy="Emerald 9","Elarion Base"
+# # Wasted 50
+# gems.emerald_power=1300
+# copy="Emerald 10","Elarion Base"
+# gems.emerald_power=1500
+# # copy="Sapphire 0","Elarion Base"
+# # gems.sapphire_power=0
+# # # Wasted 20
+# # copy="Sapphire 1","Elarion Base"
+# # gems.sapphire_power=80
+# # # Wasted 20
+# # copy="Sapphire 2","Elarion Base"
+# # gems.sapphire_power=150
+# # # Wasted 50
+# # copy="Sapphire 4","Elarion Base"
+# # gems.sapphire_power=300
+# # copy="Sapphire 5","Elarion Base"
+# # # Wasted 50
+# # gems.sapphire_power=500
+# # # copy="Sapphire 6","Elarion Base"
+# # # gems.sapphire_power=600
+# copy="Sapphire 7","Elarion Base"
+# gems.sapphire_power=800
+# copy="Sapphire 9","Elarion Base"
+# # Wasted 50
+# gems.sapphire_power=1300
+# copy="Sapphire 10","Elarion Base"
+# gems.sapphire_power=1500
+
+
+# # # copy="Dark Prophecy","Elarion Base"
+# # # sets.dark_prophecy=1
+
+# # # # copy="Deaths Grasp","Elarion Base"
+# # # # sets.deaths_grasp=1
+
+# # # copy="Draconic Might","Elarion Base"
+# # # sets.draconic_might=1
+
+# # # # copy="Drakheims Absolution","Elarion Base"
+# # # # sets.drakheims_absolution=1
+
+# # # copy="Eldrin Deceit","Elarion Base"
+# # # sets.eldrin_deceit=1
+
+# # # copy="Sin Warding","Elarion Base"
+# # # sets.sin_warding=1
+
+# # # copy="Torment of Baelaurm","Elarion Base"
+# # # sets.torment_of_baelaurum=1
+
+# # # copy="Tuzari Grace","Elarion Base"
+# # # sets.tuzari_grace=1
+
+
+# # # # # -- Lego 
+# # # # copy="Astronomers Hail","Elarion Base"
+# # # # legendary.astronomers_hail=1
+# # # # legendary.shimmer=0
+# # # # legendary.starstrikers_ascent=0
+
+# # # copy="Shimmer","Elarion Base"
+# # # legendary.astronomers_hail=0
+# # # legendary.shimmer=1
+# # # legendary.starstrikers_ascent=0
+# # # copy="Starstrikers Ascent","Elarion Base"
+# # # legendary.astronomers_hail=0
+# # # legendary.shimmer=0
+# # # legendary.starstrikers_ascent=1
+
+
+# # # - Talents
+# # copy="Focused Expanse","Elarion Base"
+# # talents+=/focused_expanse:1
+# # # copy="Piercing Seekers","Elarion Base"
+# # # talents+=/piercing_seekers:1
+# # copy="Final Crescendo","Elarion Base"
+# # talents+=/final_crescendo:1
+# # copy="Skylit Grace","Elarion Base"
+# # talents+=/skylit_grace:1
+# # # copy="Fusillade","Elarion Base"
+# # # talents+=/fusillade:1
+# # copy="Skyward Munitions","Elarion Base"
+# # talents+=/skyward_munitions:1
+# # copy="Repeating Stars","Elarion Base"
+# # talents+=/repeating_stars:1
+# # # copy="Lunar Fury","Elarion Base"
+# # # talents+=/lunar_fury:1
+# # copy="Lethal Shots","Elarion Base"
+# # talents+=/lethal_shots:1
+# # copy="Rising Moon","Elarion Base"
+# # talents+=/rising_moon:1
+# # # copy="Lunarlight Affinity","Elarion Base"
+# # # talents+=/lunarlight_affinity:1
+# # # copy="Strikers Aim","Elarion Base"
+# # # talents+=/strikers_aim:1
+# # copy="Fervent Supremacy","Elarion Base"
+# # talents+=/fervent_supremacy:1
+# # # copy="Impending Heartseeker","Elarion Base"
+# # # talents+=/impending_heartseeker:1
+# # copy="Resurgent Winds","Elarion Base"
+# # talents+=/resurgent_winds:1
+# # # copy="Last Lights","Elarion Base"
+# # # talents+=/last_lights:1
+# # copy="Swift Reload","Elarion Base"
+# # talents+=/swift_reload:1
+# # # copy="Deadly Focus","Elarion Base"
+# # # talents+=/deadly_focus:1
+
+
+# # # # # copy="-Focused Expanse","Elarion Base"
+# # # # # talents+=/focused_expanse:0
+# # # # # copy="-Piercing Seekers","Elarion Base"
+# # # # # talents+=/piercing_seekers:0
+# # # # # copy="-Final Crescendo","Elarion Base"
+# # # # # talents+=/final_crescendo:0
+# # # # # copy="-Skylit Grace","Elarion Base"
+# # # # # talents+=/skylit_grace:0
+# # # # # copy="-Fusillade","Elarion Base"
+# # # # # talents+=/fusillade:0
+# # # # # copy="-Skyward Munitions","Elarion Base"
+# # # # # talents+=/skyward_munitions:0
+# # # # # copy="-Repeating Stars","Elarion Base"
+# # # # # talents+=/repeating_stars:0
+# # # # # copy="-Lunar Fury","Elarion Base"
+# # # # # talents+=/lunar_fury:0
+# # # # # copy="-Lethal Shots","Elarion Base"
+# # # # # talents+=/lethal_shots:0
+# # # # # copy="-Rising Moon","Elarion Base"
+# # # # # talents+=/rising_moon:0
+# # # # # copy="-Lunarlight Affinity","Elarion Base"
+# # # # # talents+=/lunarlight_affinity:0
+# # # # # copy="-Strikers Aim","Elarion Base"
+# # # # # talents+=/strikers_aim:0
+# # # # # copy="-Fervent Supremacy","Elarion Base"
+# # # # # talents+=/fervent_supremacy:0
+# # # # # copy="-Impending Heartseeker","Elarion Base"
+# # # # # talents+=/impending_heartseeker:0
+# # # # # copy="-Resurgent Winds","Elarion Base"
+# # # # # talents+=/resurgent_winds:0
+# # # # # copy="-Last Lights","Elarion Base"
+# # # # # talents+=/last_lights:0
+# # # # # copy="-Swift Reload","Elarion Base"
+# # # # # talents+=/swift_reload:0
+# # # # # copy="-Deadly Focus","Elarion Base"
+# # # # # talents+=/deadly_focus:0
+
+# # # # # copy="Focused Expanse","Elarion Base"
+# # # # # talents+=/focused_expanse:1
+# # # # # copy="Piercing Seekers","Elarion Base"
+# # # # # talents+=/piercing_seekers:1
+# # # # # copy="Final Crescendo","Elarion Base"
+# # # # # talents+=/final_crescendo:1
+# # # # # copy="Skylit Grace","Elarion Base"
+# # # # # talents+=/skylit_grace:1
+# # # # # copy="Fusillade","Elarion Base"
+# # # # # talents+=/fusillade:1
+# # # # # copy="Skyward Munitions","Elarion Base"
+# # # # # talents+=/skyward_munitions:1
+# # # # # copy="Repeating Stars","Elarion Base"
+# # # # # talents+=/repeating_stars:1
+# # # # # copy="Lunar Fury","Elarion Base"
+# # # # # talents+=/lunar_fury:1
+# # # # # copy="Lethal Shots","Elarion Base"
+# # # # # talents+=/lethal_shots:1
+# # # # # copy="Rising Moon","Elarion Base"
+# # # # # talents+=/rising_moon:1
+# # # # # copy="Lunarlight Affinity","Elarion Base"
+# # # # # talents+=/lunarlight_affinity:1
+# # # # # copy="Strikers Aim","Elarion Base"
+# # # # # talents+=/strikers_aim:1
+# # # # # copy="Fervent Supremacy","Elarion Base"
+# # # # # talents+=/fervent_supremacy:1
+# # # # # copy="Impending Heartseeker","Elarion Base"
+# # # # # talents+=/impending_heartseeker:1
+# # # # # copy="Resurgent Winds","Elarion Base"
+# # # # # talents+=/resurgent_winds:1
+# # # # # copy="Last Lights","Elarion Base"
+# # # # # talents+=/last_lights:1
+# # # # # copy="Swift Reload","Elarion Base"
+# # # # # talents+=/swift_reload:1
+# # # # # copy="Deadly Focus","Elarion Base"
+# # # # # talents+=/deadly_focus:1
+
+
+
+# copy="Finesse_A1","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_a
+
+# copy="Finesse_A4","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+
+# copy="Finesse_B1","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_b
+
+# copy="Finesse_B4","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+
+# copy="Finesse_D1","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_d
+
+# copy="Finesse_D4","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+
+# copy="Finesse_E1","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_e
+
+# copy="Finesse_E4","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+
+# # copy="Finesse_F1","Elarion Base"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_f
+
+# # copy="Finesse_F4","Elarion Base"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+
+# # copy="Finesse_G1","Elarion Base"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g
+
+# # copy="Finesse_G4","Elarion Base"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+
+# # copy="Finesse_H1","Elarion Base"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_h
+
+# # copy="Finesse_H4","Elarion Base"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+
+# copy="Finesse_I1","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_i
+
+# copy="Finesse_I4","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+
+# copy="Finesse_J1","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j
+
+# copy="Finesse_J4","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+
+# copy="Finesse_K1","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_k
+
+# copy="Finesse_K4","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+
+# copy="Finesse_L1","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_l
+
+# copy="Finesse_L4","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+
+# copy="Finesse_M1","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_m
+
+# copy="Finesse_M4","Elarion Base"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+
+# # copy="Finesse_N1","Elarion Base"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_n
+
+# # copy="Finesse_N4","Elarion Base"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_n/finesse_n/finesse_n/finesse_n
+
+# # copy="Finesse_NH4","Elarion Base"
+# # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_n/finesse_n/finesse_n/finesse_n/finesse_h/finesse_h/finesse_h/finesse_h
+
+
+# copy="Finesse_G0","Elarion Base"
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=primary/primary

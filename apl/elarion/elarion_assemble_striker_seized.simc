@@ -1,0 +1,225 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=250
+# max_time=60
+target_error=0.1
+iterations=15000
+chart_show_relative_difference=1
+vary_combat_length=0.1
+single_actor_batch=1
+max_time=720
+desired_targets=1
+
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers,agility
+# scale_crit_rating=64
+# scale_haste_rating=64
+# scale_mastery_rating=64
+# scale_versatility_rating=64
+# scale_agility=30
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# # dps_plot_stat=haste,crit_rating,mastery,versatility
+# # dps_plot_points=10
+# # dps_plot_step=32
+# # dps_plot_positive=0
+
+relative_difference_base="Elarion Base"
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":8000000:Humanoid
+# raid_events+=/pull,pull=02,delay=180,shared_health=1,enemies="12t":3000000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":16000000:Humanoid
+# raid_events+=/pull,pull=02,delay=180,shared_health=1,enemies="12t":6000000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+elarion="Elarion Base"
+level=80
+
+# initial_resource=spirit=100
+
+apl/elarion/elarion_apl.simc
+
+# gear_agility=1442
+
+
+# weapon=voidbringers_touch
+weapon=chronoshift
+
+head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/spirit
+neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit,affixes=spirit/spirit
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/spirit
+back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary
+wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/crit
+hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=spirit/spirit
+feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=spirit
+finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g
+
+# talents+=/skyward_munitions:1/fervent_supremacy:1/lunarlight_affinity:1/lunar_fury:1/repeating_stars:1/strikers_aim:1/focused_expanse:1/skylit_grace:1
+# 10
+
+talents+=/strikers_aim:1/fusillade:1/last_lights:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/piercing_seekers:1/skylit_grace:1
+#7
+
+# 13 stats
+
+gems.sapphire_power=1500
+gems.amethyst_power=600
+gems.emerald_power=600
+gems.ruby_power=600
+weapon_trait.emerald_judgement=1
+# 13 Attunements
+
+sets.deaths_grasp=1
+sets.dark_prophecy=1
+# sets.draconic_might=1
+sets.drakheims_absolution=1
+# 6 on sets
+
+legendary.starstrikers_ascent=1
+# 1 on traits
+
+# 4 on blessings
+
+# 37 spent
+weapon_trait.martial_initiative=1
+# 38 spent, probably.
+
+# copy="Void","Elarion Base"
+# weapon=voidbringers_touch
+
+weapon_trait.visions_of_grandeur=4
+
+# 13 Stats, 13 Attunements, 6 Sets, 6 Traits, 4 Blessings
+# T10 Sapphire, T6 Amethyst, T6 Emerald, T6 Ruby
+# Deaths Grasp, Dark Prophecy, Drakheims Absolution
+# R4 Grandeur, R1 Martial Initiative, R1 Emerald Judgement
+# R4 Finesse G.
+
+
+# copy="Fervent over IH","Elarion Base"
+# talents+=/strikers_aim:1/fusillade:1/last_lights:1/lunarlight_affinity:1/lunar_fury:1/fervent_supremacy:1/piercing_seekers:1/skylit_grace:1
+
+# copy="Chrono","Elarion Base"
+# weapon=chronoshift
+
+# # copy="Drakheim over Draconic","Elarion Base"
+# # sets.drakheims_absolution=1
+# # sets.draconic_might=0
+# # copy="Drakheim over Prophecy","Elarion Base"
+# # sets.drakheims_absolution=1
+# # sets.dark_prophecy=0
+# # copy="No Draconic","Elarion Base"
+# # sets.draconic_might=0
+# # copy="No Prophecy","Elarion Base"
+# # sets.dark_prophecy=0
+
+
+# copy="Grandeur_0","Elarion Base"
+# weapon_trait.visions_of_grandeur=0
+# copy="Grandeur_1","Elarion Base"
+# weapon_trait.visions_of_grandeur=1
+# copy="Grandeur_2","Elarion Base"
+# weapon_trait.visions_of_grandeur=2
+# copy="Grandeur_3","Elarion Base"
+# weapon_trait.visions_of_grandeur=3
+# # copy="Grandeur_4","Elarion Base"
+# # weapon_trait.visions_of_grandeur=4
+# # copy="Brave Mach0","Elarion Base"
+# # weapon_trait.brave_machinations=0
+# copy="Brave Mach1","Elarion Base"
+# weapon_trait.brave_machinations=1
+# copy="Brave Mach2","Elarion Base"
+# weapon_trait.brave_machinations=2
+# copy="Brave Mach3","Elarion Base"
+# weapon_trait.brave_machinations=3
+# copy="Brave Mach4","Elarion Base"
+# weapon_trait.brave_machinations=4
+# copy="Amethyst Splinters1","Elarion Base"
+# weapon_trait.amethyst_splinters=1
+# copy="Amethyst Splinters4","Elarion Base"
+# weapon_trait.amethyst_splinters=4
+# copy="Heroic Brand1","Elarion Base"
+# weapon_trait.heroic_brand=1
+# copy="Heroic Brand4","Elarion Base"
+# weapon_trait.heroic_brand=4
+# copy="Martial Initiative0","Elarion Base"
+# weapon_trait.martial_initiative=0
+# # copy="Martial Initiative1","Elarion Base"
+# # weapon_trait.martial_initiative=1
+# copy="Martial Initiative2","Elarion Base"
+# weapon_trait.martial_initiative=2
+# copy="Martial Initiative3","Elarion Base"
+# weapon_trait.martial_initiative=3
+# copy="Martial Initiative4","Elarion Base"
+# weapon_trait.martial_initiative=4
+# copy="Emerald Judgement0","Elarion Base"
+# weapon_trait.emerald_judgement=0
+# # copy="Emerald Judgement1","Elarion Base"
+# # weapon_trait.emerald_judgement=1
+# copy="Emerald Judgement2","Elarion Base"
+# weapon_trait.emerald_judgement=2
+# copy="Emerald Judgement3","Elarion Base"
+# weapon_trait.emerald_judgement=3
+# copy="Emerald Judgement4","Elarion Base"
+# weapon_trait.emerald_judgement=4
+# copy="Diamond Strike1","Elarion Base"
+# weapon_trait.diamond_strike=1
+# copy="Diamond Strike2","Elarion Base"
+# weapon_trait.diamond_strike=2
+# copy="Diamond Strike3","Elarion Base"
+# weapon_trait.diamond_strike=3
+# copy="Diamond Strike4","Elarion Base"
+# weapon_trait.diamond_strike=4
+# copy="Sapphire Aurastone1","Elarion Base"
+# weapon_trait.sapphire_aurastone=1
+# copy="Sapphire Aurastone4","Elarion Base"
+# weapon_trait.sapphire_aurastone=4
+# copy="Ruby Storm1","Elarion Base"
+# weapon_trait.ruby_storm=1
+# copy="Ruby Storm4","Elarion Base"
+# weapon_trait.ruby_storm=4
+
+# # # # copy="Heroic Brand4 Brave Mach4","Elarion Base"
+# # # # weapon_trait.heroic_brand=4
+# # # # weapon_trait.brave_machinations=4
+# # # # copy="Grandeur4 Brave Mach4","Elarion Base"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.brave_machinations=4
+# # # # copy="Grandeur4 Heroic Brand4","Elarion Base"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.heroic_brand=4
+# # # # copy="Grandeur4 Heroic Brand4 Brave Mach4","Elarion Base"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.heroic_brand=4
+# # # # weapon_trait.brave_machinations=4
+
+
+
+copy="Seized Opportunity4","Elarion Base"
+weapon_trait.seized_opportunity=4

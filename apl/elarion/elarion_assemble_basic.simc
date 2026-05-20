@@ -105,6 +105,12 @@ weapon_trait.willful_momentum=1
 
 weapon_trait.visions_of_grandeur=3
 
+# 14 Stats, 4 Attunements, 3 Sets, 6 Traits, 12 Blessings = 42 Affixes
+# R6 Ruby, R6 Emerald, R6 Amethyst, R6 Sapphire
+# Deaths Grasp, Dark Prophecy, Draconic Might
+# R3 Grandeur, R1 Willful, R1 Martial Initiative, R1 Emerald Judgement. Could prob just have R4 grandeur tho.
+# Finesse G4, Finesse H4, Finesse N4
+
 
 copy="Chrono","Elarion Base"
 weapon=chronoshift

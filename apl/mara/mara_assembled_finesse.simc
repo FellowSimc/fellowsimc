@@ -119,6 +119,10 @@ gems.ruby_power=100
 # 16 affixes.
 # 0 left
 # Total spend, 5 stats, 3x2 sets, 6 traits, 8 blessings, 17 essence.
+# Deaths Grasp, Draconic Might, Drakheims Absolution.
+# Grandeur R4, Emerald Judgement R1, Martial Initiative R1.
+# Finesse G4 & Finesse J4
+# R10 Sapphire, R10 Emerald, R6 Amethyst, R1 Ruby
 
 copy="4 Leg Stats","Base Mara"
 legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/spirit,affixes=primary/primary/primary/primary/crit/expertise

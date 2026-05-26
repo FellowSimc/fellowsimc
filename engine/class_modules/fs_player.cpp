@@ -202,11 +202,11 @@ double fs_player_t::composite_player_critical_damage_multiplier( const action_st
 
   if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_10 )
   {
-    cdm *= 1.09;
+    cdm *= fs_gems.amethyst_crit_power_major;
   }
   else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_5 )
   {
-    cdm *= 1.03;
+    cdm *= fs_gems.amethyst_crit_power_minor;
   }
 
   return cdm;
@@ -265,11 +265,11 @@ double fs_player_t::composite_player_multiplier( school_e school ) const
   {
     if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_10 )
     {
-      m *= 1.12;
+      m *= fs_gems.ruby_boss_amp_major;
     }
     else if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_5 )
     {
-      m *= 1.04;
+      m *= fs_gems.ruby_boss_amp_minor;
     }
   }
 
@@ -305,15 +305,15 @@ double fs_player_t::composite_player_target_crit_chance( player_t* target ) cons
 {
   double c = player_t::composite_player_target_crit_chance( target );
 
-  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_1 && target->health_percentage() >= 50.0 )
+  if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_1 && target->health_percentage() >= fs_gems.amethyst_crit_threshold )
   {
     if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_6 )
     {
-      c += 0.15;
+      c += fs_gems.amethyst_crit_major;
     }
     else
     {
-      c += 0.05;
+      c += fs_gems.amethyst_crit_minor;
     }
   }
 
@@ -393,8 +393,8 @@ struct amethyst_splinters_t : public residual_action::residual_periodic_action_t
 
 struct fated_strike_t : fs_weapon_action_t<attack_t>
 {
-  double st_mod       = 11.37;
-  double cleave_mod   = 4.79;
+  double st_mod       = 7.39;
+  double cleave_mod   = 2.874;
   double cleave_ratio = cleave_mod / st_mod;
 
   fated_strike_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
@@ -693,7 +693,7 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
       name_str_reporting = "Curse of An'zhyr";
       school             = SCHOOL_FROST;
 
-      spell_power_mod.tick = 0.256;
+      spell_power_mod.tick = 0.384;
       base_tick_time       = 3.0_s;
       dot_duration         = sim->expected_iteration_time > 0_ms ? 2 * sim->expected_iteration_time
                                                                    : 2 * sim->max_time * ( 1.0 + sim->vary_combat_length );
@@ -723,7 +723,7 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
       name_str_reporting = "Icicles of An'zhyr (Wave)";
       school             = SCHOOL_FROST;
 
-      spell_power_mod.direct = 0.96;
+      spell_power_mod.direct = 1.44;
 
       reduced_aoe_targets = 12;
       aoe                 = -1;
@@ -1228,7 +1228,8 @@ void fs_player_t::create_buffs()
 
 
   fs_buffs.ancestral_surge = make_buff<fs_player_buff_t>( this, "ancestral_surge" )
-                                 ->set_default_value( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_6 ? 0.24 : 0.08 );
+          ->set_default_value( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_6 ? fs_gems.sapphire_surge_major
+                                                                                : fs_gems.sapphire_surge_minor );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -1289,22 +1290,22 @@ void fs_player_t::create_buffs()
   }
 
   fs_buffs.adrenaline_rush = make_buff<fs_player_buff_t>( this, "adrenaline_rush" )
-                                 ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_6 ? 0.09 : 0.03 )
+                                 ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_6 ? fs_gems.topaz_adrenaline_major : fs_gems.topaz_adrenaline_minor )
                                  ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
                                  ->set_duration( 10_s );
 
   fs_buffs.virtuoso = make_buff<fs_player_buff_t>( this, "virtuoso" )
-                          ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_10 ? 0.09 : 0.03 )
+                          ->set_default_value( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_10 ? fs_gems.topaz_virtuoso_major : fs_gems.topaz_virtuoso_minor )
                           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
                           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   fs_buffs.first_strike = make_buff<fs_player_buff_t>( this, "first_strike" )
-                              ->set_default_value( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_6 ? 0.15 : 0.05 )
+                              ->set_default_value( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_6 ? fs_gems.emerald_first_strike_major : fs_gems.emerald_first_strike_minor )
                               ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
-                              ->set_duration( 15_s );
+                              ->set_duration( fs_gems.emerald_first_strike_duration );
 
   fs_buffs.might_of_the_minotaur = make_buff<fs_player_buff_t>( this, "might_of_the_minotaur" )
-                                       ->set_default_value( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_6 ? 0.09 : 0.03 );
+                                       ->set_default_value( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_6 ? fs_gems.ruby_minotaur_major : fs_gems.ruby_minotaur_minor );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -1324,7 +1325,7 @@ void fs_player_t::create_buffs()
   fs_buffs.willful_momentum =
       make_buff<fs_player_buff_t>( this, "willful_momentum" )
           ->set_default_value( fs_weapon_trait_values.willful_momentum_amp[ fs_weapons.willful_momentum ] )
-          ->set_duration( 4_s );
+          ->set_duration( fs_weapon_trait_values.willful_momentum_duration );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -1410,7 +1411,7 @@ void fs_player_t::create_buffs()
     
   fs_buffs.hidden_power = make_buff<fs_player_buff_t>( this, "hidden_power" )
                               ->set_default_value( fs_weapon_trait_values.hidden_power_amp[ fs_weapons.hidden_power ] )
-                              ->set_duration( 15_s );
+                              ->set_duration( fs_weapon_trait_values.hidden_power_buff_duration );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -1429,11 +1430,11 @@ void fs_player_t::create_buffs()
 
   fs_buffs.harmonious_soul =
       make_buff<fs_player_buff_t>( this, "harmonious_soul" )
-          ->set_max_stack( fs_gems.harmonious_max_stacks )
+          ->set_max_stack( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_6 ? fs_gems.harmonious_stacks_major
+                                                                           : fs_gems.harmonious_stacks_minor )
           ->set_freeze_stacks( true )
           ->set_period( fs_gems.harmonious_duration )
-          ->set_default_value( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_10 ? fs_gems.harmonious_buff_major
-                                                                         : fs_gems.harmonious_buff_minor )
+          ->set_default_value( fs_gems.harmonious_buff )
           ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
           ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY )
@@ -1744,7 +1745,7 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_1 )
   {
-    auto extra_max_spirit = fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_10 ? fs_gems.sapphire_additional_max_spirit_major
+    auto extra_max_spirit = fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_6 ? fs_gems.sapphire_additional_max_spirit_major
                                                                        : fs_gems.sapphire_additional_max_spirit_minor;
     resources.max[ RESOURCE_SPIRIT ] += extra_max_spirit;
     resources.base[ RESOURCE_SPIRIT ] += extra_max_spirit;
@@ -1752,106 +1753,106 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_7 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 6 );
-    passive.add_stat( STAT_STAMINA, 36 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), fs_gems.ruby_stat_main_major );
+    passive.add_stat( STAT_STAMINA, fs_gems.ruby_stamina_major );
   }
   else if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_2 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 2 );
-    passive.add_stat( STAT_STAMINA, 12 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), fs_gems.ruby_stat_main_minor );
+    passive.add_stat( STAT_STAMINA, fs_gems.ruby_stamina_minor );
   }
 
   if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_7 )
   {
-    passive.add_stat( STAT_CRIT_RATING, 30 );
-    passive.add_stat( STAT_STAMINA, 30 );
+    passive.add_stat( STAT_CRIT_RATING, fs_gems.stat_major );
+    passive.add_stat( STAT_STAMINA, fs_gems.stat_major );
   }
   else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_2 )
   {
-    passive.add_stat( STAT_CRIT_RATING, 10 );
-    passive.add_stat( STAT_STAMINA, 10 );
+    passive.add_stat( STAT_CRIT_RATING, fs_gems.stat_minor );
+    passive.add_stat( STAT_STAMINA, fs_gems.stat_minor );
   }
 
   if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_7 )
   {
-    passive.add_stat( STAT_HASTE_RATING, 30 );
-    passive.add_stat( STAT_STAMINA, 30 );
+    passive.add_stat( STAT_HASTE_RATING, fs_gems.stat_major );
+    passive.add_stat( STAT_STAMINA, fs_gems.stat_major );
   }
   else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_2 )
   {
-    passive.add_stat( STAT_HASTE_RATING, 10 );
-    passive.add_stat( STAT_STAMINA, 10 );
+    passive.add_stat( STAT_HASTE_RATING, fs_gems.stat_minor );
+    passive.add_stat( STAT_STAMINA, fs_gems.stat_minor );
   }
 
   if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_7 )
   {
-    passive.add_stat( STAT_VERSATILITY_RATING, 30 );
-    passive.add_stat( STAT_STAMINA, 30 );
+    passive.add_stat( STAT_VERSATILITY_RATING, fs_gems.stat_major );
+    passive.add_stat( STAT_STAMINA, fs_gems.stat_major );
   }
   else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_2 )
   {
-    passive.add_stat( STAT_VERSATILITY_RATING, 10 );
-    passive.add_stat( STAT_STAMINA, 10 );
+    passive.add_stat( STAT_VERSATILITY_RATING, fs_gems.stat_minor );
+    passive.add_stat( STAT_STAMINA, fs_gems.stat_minor );
   }
 
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_7 )
   {
-    passive.add_stat( STAT_MASTERY_RATING, 30 );
-    passive.add_stat( STAT_STAMINA, 30 );
+    passive.add_stat( STAT_MASTERY_RATING, fs_gems.stat_major );
+    passive.add_stat( STAT_STAMINA, fs_gems.stat_major );
   }
   else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_2 )
   {
-    passive.add_stat( STAT_MASTERY_RATING, 10 );
-    passive.add_stat( STAT_STAMINA, 10 );
+    passive.add_stat( STAT_MASTERY_RATING, fs_gems.stat_minor );
+    passive.add_stat( STAT_STAMINA, fs_gems.stat_minor );
   }
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_7 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 12 );
-    passive.add_stat( STAT_ARMOR, 120 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), fs_gems.diamond_main_stats_major );
+    passive.add_stat( STAT_ARMOR, fs_gems.diamond_armor_major );
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_2 )
   {
-    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), 4 );
-    passive.add_stat( STAT_ARMOR, 40 );
+    passive.add_stat( convert_hybrid_stat( STAT_STR_AGI_INT ), fs_gems.diamond_main_stats_minor );
+    passive.add_stat( STAT_ARMOR, fs_gems.diamond_armor_minor );
   }
 
   if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_9 )
   {
-    base.spell_crit_chance += 0.09;
-    base.attack_crit_chance += 0.09;
+    base.spell_crit_chance += fs_gems.stat_percent_major;
+    base.attack_crit_chance += fs_gems.stat_percent_major;
   }
   else if ( fs_gems.gem_powers[ GEM_AMETHYST ] >= GEM_TIER_4 )
   {
-    base.spell_crit_chance += 0.03;
-    base.attack_crit_chance += 0.03;
+    base.spell_crit_chance += fs_gems.stat_percent_minor;
+    base.attack_crit_chance += fs_gems.stat_percent_minor;
   }
 
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_9 )
   {
-    base.mastery += 0.09;
+    base.mastery += fs_gems.stat_percent_major;
   }
   else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_4 )
   {
-    base.mastery += 0.03;
+    base.mastery += fs_gems.stat_percent_minor;
   }
 
   if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_9 )
   {
-    base.versatility += 0.09;
+    base.versatility += fs_gems.stat_percent_major;
   }
   else if ( fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_4 )
   {
-    base.versatility += 0.03;
+    base.versatility += fs_gems.stat_percent_minor;
   }
 
   if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_9 )
   {
-    base.haste += 0.09;
+    base.haste += fs_gems.stat_percent_major;
   }
   else if ( fs_gems.gem_powers[ GEM_TOPAZ ] >= GEM_TIER_4 )
   {
-    base.haste += 0.03;
+    base.haste += fs_gems.stat_percent_minor;
   }
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_1 )
@@ -1866,15 +1867,15 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_9 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.09;
-    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.09;
-    base.attribute_multiplier[ STAT_AGILITY ] *= 1.09;
+    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_4 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.03;
-    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.03;
-    base.attribute_multiplier[ STAT_AGILITY ] *= 1.03;
+    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
   }
 
   // TODO: Implement as a health based check and buff that turns on & off.
@@ -1919,11 +1920,11 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_10 )
   {
-    fs_buffs.spirit_of_heroism->base_buff_duration += 18_s;
+    fs_buffs.spirit_of_heroism->base_buff_duration += fs_gems.sapphire_spirit_duration_major;
   }
   else if ( fs_gems.gem_powers[ GEM_SAPPHIRE ] >= GEM_TIER_5 )
   {
-    fs_buffs.spirit_of_heroism->base_buff_duration += 6_s;
+    fs_buffs.spirit_of_heroism->base_buff_duration += fs_gems.sapphire_spirit_duration_minor;
   }
 
   if ( fs_sets.eldrin_deceit )
@@ -2067,12 +2068,12 @@ void fs_player_t::init_special_effects()
 
   for ( auto gem_power : fs_gems.gem_powers )
   {
-    overcap += std::max( 0.0, gem_power - GEM_TIER_10 );
+    overcap += std::max( 0.0, gem_power - fs_gems.gem_power_cap );
   }
 
   if ( overcap > 0.0 )
   {
-    auto mul = overcap * 0.00005;
+    auto mul = overcap * fs_gems.gem_power_mult;
     base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + mul;
     base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + mul;
     base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + mul;

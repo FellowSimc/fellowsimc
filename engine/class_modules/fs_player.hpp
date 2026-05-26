@@ -215,16 +215,69 @@ public:
   {
     std::array<double, GEM_MAX> gem_powers;
 
-    timespan_t harmonious_duration = 5_s;
-    int harmonious_max_stacks      = 10;
-    double harmonious_diamond_amp  = 0.35;
-    double harmonious_buff_minor   = 0.003;
-    double harmonious_buff_major   = 0.009;
+    const timespan_t harmonious_duration = 5_s;
 
-    double sapphire_additional_max_spirit_minor  = 10.0;
-    double sapphire_additional_max_spirit_major  = 30.0;
-    double sapphire_spirit_cost_multiplier_minor = 0.95;
-    double sapphire_spirit_cost_multiplier_major = 0.85;
+    const double stat_minor = 8.0;
+    const double stat_major = 24.0;
+
+    const double ruby_minotaur_minor = 0.02;
+    const double ruby_minotaur_major = 0.06;
+    const double ruby_boss_amp_minor = 1.05;
+    const double ruby_boss_amp_major = 1.15;
+    const double ruby_stamina_minor = 0.03;
+    const double ruby_stamina_major = 0.09;
+
+    const double ruby_stat_stamina_minor = 12.0;
+    const double ruby_stat_stamina_major = 36.0;
+    const double ruby_stat_main_minor = 6.0;
+    const double ruby_stat_main_major = 2.0;
+
+    const double amethyst_crit_minor     = 0.05;
+    const double amethyst_crit_threshold = 50.0;
+    const double amethyst_crit_major     = 0.15;
+
+    const double stat_percent_minor = 0.02;
+    const double stat_percent_major = 0.06;
+
+    const double amethyst_crit_power_minor = 1.02;
+    const double amethyst_crit_power_major = 1.06;
+
+    const double topaz_adrenaline_minor = 0.03;
+    const double topaz_adrenaline_major = 0.09;
+    const double topaz_virtuoso_minor   = 0.02;
+    const double topaz_virtuoso_major   = 0.06;
+
+    const double emerald_first_strike_minor  = 0.05;
+    const double emerald_first_strike_major  = 0.15;
+    const timespan_t emerald_first_strike_duration = 15_s;
+    const double emerald_cdr_minor                 = 0.04;
+    const double emerald_cdr_major                 = 0.12;
+
+    const double sapphire_surge_minor = 0.08;
+    const double sapphire_surge_major = 0.24;
+
+    const timespan_t sapphire_spirit_duration_minor = 6_s;
+    const timespan_t sapphire_spirit_duration_major = 18_s;
+
+    const double sapphire_additional_max_spirit_minor = 10.0;
+    const double sapphire_additional_max_spirit_major = 30.0;
+    const double sapphire_spirit_cost_multiplier_minor = 0.95;
+    const double sapphire_spirit_cost_multiplier_major = 0.85;
+    
+    const double diamond_armor_minor   = 40.0;
+    const double diamond_armor_major   = 120.0;
+    const double diamond_main_stats_minor = 4.0;
+    const double diamond_main_stats_major = 12.0;
+    const double diamond_main_stat_amp_minor = 0.02;
+    const double diamond_main_stat_amp_major = 0.06;
+
+    const double harmonious_diamond_amp = 0.35;
+    const double harmonious_buff        = 0.006;
+    const int harmonious_stacks_minor   = 4;
+    const int harmonious_stacks_major   = 12;
+
+    const double gem_power_cap = 2640.0;
+    const double gem_power_mult = 0.00005;
   } fs_gems;
 
   std::array<unsigned short, FINESSE_MAX + 1> finesse_traits = {};
@@ -238,7 +291,7 @@ public:
     const int finesse_b_max_stacks      = 1;
     const double finesse_b_crit[ 5 ]    = { 0, 0.02, 0.03, 0.05, 0.08 };
 
-    const timespan_t finesse_c_duration[ 5 ] = { 0_s, 0.5_s, 1_s, 2_s, 3_s };
+    const timespan_t finesse_c_duration[ 5 ] = { 0_s, 1_s, 2_s, 3_s, 5_s };
     const timespan_t finesse_c_divisor       = 60_s;
 
     const double finesse_d_chance[ 5 ]   = { 0, 0.05, 0.08, 0.13, 0.2 };
@@ -247,7 +300,7 @@ public:
     const double finesse_e_cc[ 5 ]   = { 0, 0.01, 0.02, 0.03, 0.04 };
     const double finesse_e_cdmg[ 5 ] = { 0, 0.05, 0.10, 0.15, 0.20 };
 
-    const double finesse_f_drain[ 5 ]   = { 0, 2.6 * 1.25, 4.16 * 1.25, 6.66 * 1.25, 10.65 * 1.25 };
+    const double finesse_f_drain[ 5 ]   = { 0, 3.25, 5.2, 8.32, 13.31 };
     const double finesse_f_drain_chance = 0.2;
 
     const double finesse_g_spirit_to_stats[ 5 ] = { 0.0, 0.2, 0.2, 0.2, 0.2 };
@@ -354,6 +407,7 @@ public:
   {
     const double willful_momentum_spirit[ 5 ]           = { 0, 5, 8, 12, 16 };
     const double willful_momentum_amp[ 5 ]              = { 0, 0.015, 0.026, 0.037, 0.048 };
+    const timespan_t willful_momentum_duration          = 4_s;
     const double vengeful_soul_amp[ 5 ]                 = { 0, 0.03, 0.051, 0.072, 0.093 };
     const timespan_t vengeful_soul_duration             = 8_s;
     const double vengeful_soul_ppm                      = 3.0;
@@ -364,14 +418,15 @@ public:
     const int inspired_allegiance_allies[ 5 ]           = { 0, 1, 2, 3, 3 };
     const double inspired_allegiance_haste[ 5 ]         = { 0, 6.0, 10.0, 13.0, 17.0 };
     const double hidden_power_amp[ 5 ]                  = { 0, 0.072, 0.128, 0.184, 0.24 };
+    const timespan_t hidden_power_buff_duration         = 15_s;
     const double emerald_judgement_dmg[ 5 ]             = { 0, 8.0, 8.0, 8.0, 8.0 };
     const double emerald_judgement_ppm[ 5 ]             = { 0, 0.8, 1.3, 1.8, 2.3 };
     const double diamond_strike_dmg[ 5 ]                = { 0, 0.72, 1.27, 1.82, 2.37 };
     const double diamond_strike_ppm[ 5 ]                = { 0, 6.7, 6.7, 6.7, 6.7 };
     const double amethyst_splinters_fraction[ 5 ]       = { 0, 0.04, 0.06, 0.08, 0.11 };
-    const double brave_machinations_crit[ 5 ]           = { 0, 0.095, 0.17, 0.245, 0.32 };
+    const double brave_machinations_crit[ 5 ]           = { 0, 0.095, 0.17, 0.24, 0.32 };
     const double brave_machinations_cdr[ 5 ]            = { 0, 0.15, 0.2, 0.25, 0.3 };
-    const double heroic_brand_amp[ 5 ]                  = { 1.0, 1.24, 1.42, 1.6, 1.78 };
+    const double heroic_brand_amp[ 5 ]                  = { 1.0, 1.24, 1.42, 1.6, 1.8 };
     const double ruby_storm_ppm[ 5 ]                    = { 1.3, 1.3, 1.3, 1.3, 1.3 };
     const double ruby_storm_damage[ 5 ]                 = { 0.0, 0.024, 0.04, 0.054, 0.07 };
     const double sapphire_aurastone_dmg_acc[ 5 ]        = { 0.0, 0.034, 0.063, 0.091, 0.12 };

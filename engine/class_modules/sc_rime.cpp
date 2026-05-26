@@ -239,8 +239,8 @@ public:
 
     double cold_shower_chance = 0.06;
 
-    double icy_talons_st_multiplier = 0.25;
-    double icy_talons_aoe_multiplier = 0.35;
+    double icy_talons_st_multiplier = 0.45;
+    double icy_talons_aoe_multiplier = 0.45;
 
     double frostweavers_wrath_chance_per_orb    = 0.17;
     timespan_t frostweavers_wrath_buff_duration = 12_s;
@@ -1259,7 +1259,10 @@ struct ice_comet_t : public rime_spell_t
     if ( !is_secondary_action() )
     {
       p()->buffs.icy_flow->decrement();
+    }
 
+    if ( !is_secondary_action() || secondary_trigger_type == secondary_trigger::COLD_SHOWER )
+    {
       if ( p()->talents_enabled( rime_t::AVALANCHE ) )
       {
         if ( p()->rng().roll( p()->talents.avalanche_double ) )
@@ -1389,7 +1392,12 @@ struct rising_talons_t : public rime_spell_t
 
     return rime_spell_t::ready();
   }
-    
+
+  double cost() const override
+  {
+    return std::max( base_cost(), p()->resources.current[ RESOURCE_WINTER_ORB ] );
+  }
+
   void execute()
   {
     auto orbs = p()->resources.current[ RESOURCE_WINTER_ORB ];
@@ -1427,8 +1435,6 @@ struct rising_talons_t : public rime_spell_t
       }
     }
   }
-
-
 };
 
 struct talon_strike_t : public rime_spell_t

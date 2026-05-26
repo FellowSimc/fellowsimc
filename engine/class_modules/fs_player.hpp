@@ -135,6 +135,8 @@ public:
     buff_t* hunters_focus;
     buff_t* patient_soul;
     buff_t* finesse_n;
+
+    buff_t* rising_spirit;
   } fs_buffs;
 
   struct rng_objects_t

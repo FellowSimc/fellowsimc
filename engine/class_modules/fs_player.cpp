@@ -1169,6 +1169,33 @@ void fs_player_t::create_buffs()
 {
   player_t::create_buffs();
 
+  fs_buffs.rising_spirit = make_buff<fs_player_buff_t>( this, "rising_spirit" )
+                               ->set_max_stack( 99 )
+                               ->set_default_value( 0.05 )
+                               ->set_refresh_duration_callback( [ this ]( const buff_t* b, timespan_t ) {
+                                 if ( b->check() <= 5 )
+                                   return b->remains() + 2_s;
+                                 return b->remains();
+                               } )
+                               ->set_refresh_behavior( buff_refresh_behavior::CUSTOM )
+                               ->set_duration( 10_s );
+
+  switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
+  {
+    case STAT_INTELLECT:
+      fs_buffs.rising_spirit->set_pct_buff_type( STAT_PCT_BUFF_INTELLECT );
+      break;
+    case STAT_AGILITY:
+      fs_buffs.rising_spirit->set_pct_buff_type( STAT_PCT_BUFF_AGILITY );
+      break;
+    case STAT_STRENGTH:
+      fs_buffs.rising_spirit->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+      break;
+    default:
+      break;
+  }
+
+
   auto rank          = finesse_traits[ FINESSE_A ];
   fs_buffs.finesse_a = make_buff<fs_player_buff_t>( this, "finesse_a" )
                            ->set_default_value( finesse_trait_values.finesse_a_per_stack[ rank ] )
@@ -1678,9 +1705,6 @@ void fs_player_t::create_options()
   add_option( opt_uint( "weapon_trait.vengeful_soul", fs_weapons.vengeful_soul, 0, 4 ) );
   add_option( opt_uint( "weapon_trait.visions_of_grandeur", fs_weapons.visions_of_grandeur, 0, 4 ) );
   add_option( opt_uint( "weapon_trait.willful_momentum", fs_weapons.willful_momentum, 0, 4 ) );
-
-  add_option( opt_timespan( "gems.harmonious_duration", fs_gems.harmonious_duration ) );
-  add_option( opt_float( "gems.harmonious_diamond_amp", fs_gems.harmonious_diamond_amp ) );
 
   add_option( opt_float( "spirit_refund_mul", spirit_refund_mul ) );
 
@@ -2613,6 +2637,8 @@ void fs_player_t::spirit_refund()
 
   if ( finesse_traits[ FINESSE_K ] > 0 )
     fs_buffs.finesse_k->trigger();
+
+  fs_buffs.rising_spirit->trigger();
 
   resource_gain( RESOURCE_SPIRIT, spirit_refund_mul, fs_gains.spirit_procs );
 }

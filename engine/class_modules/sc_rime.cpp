@@ -239,7 +239,8 @@ public:
 
     double cold_shower_chance = 0.06;
 
-    double icy_talons_multiplier = 0.35;
+    double icy_talons_st_multiplier = 0.25;
+    double icy_talons_aoe_multiplier = 0.35;
 
     double frostweavers_wrath_chance_per_orb    = 0.17;
     timespan_t frostweavers_wrath_buff_duration = 12_s;
@@ -1321,7 +1322,7 @@ struct rising_talons_t : public rime_spell_t
       aoe                    = -1;
       reduced_aoe_targets    = p->spell_const.ice_comet_falloff;
 
-      spell_power_mod.direct *= p->talents.icy_talons_multiplier;
+      spell_power_mod.direct *= p->talents.icy_talons_aoe_multiplier;
       ability_flags |= ability_type_e::ABILITY_POWER;
     }
 
@@ -1448,7 +1449,7 @@ struct talon_strike_t : public rime_spell_t
         base_dd_multiplier *= 1 + p->talents.greater_glacial_blast_amp;
       }
 
-      spell_power_mod.direct *= p->talents.icy_talons_multiplier;
+      spell_power_mod.direct *= p->talents.icy_talons_st_multiplier;
 
       if ( p->talents_enabled( rime_t::GLACIAL_ASSAULT ) && p->talents_enabled( rime_t::ICY_TALONS ) )
       {
@@ -2794,20 +2795,25 @@ double rime_t::resource_gain( resource_e resource_type, double amount, gain_t* s
 
   if ( resource_type == RESOURCE_WINTER_ORB )
   {
+    // Overflowed
     if ( actual_amount < amount )
     {
       handle_wisdom_of_the_north( as<int>( amount - actual_amount ) );
     }
 
-    if ( source != gains.spirit_procs && actual_amount > 0 && talents_enabled( rime_t::FROSTWEAVERS_WRATH ) &&
-         rngs.frostweavers_wrath->trigger() )
+    if ( source != gains.spirit_procs )
     {
-      buffs.frostweavers_wrath->trigger();
-    }
+      if ( actual_amount > 0 && talents_enabled( rime_t::FROSTWEAVERS_WRATH ) && rngs.frostweavers_wrath->trigger() )
+      {
+        buffs.frostweavers_wrath->trigger();
+      }
 
-    for ( int i = 0; i < amount; i++ )
-    {
-      actions.frost_swallow->execute();
+      for ( int i = 0; i < amount; i++ )
+      {
+        actions.frost_swallow->execute();
+        actions.frost_swallow->execute();
+        actions.frost_swallow->execute();
+      }
     }
   }
 

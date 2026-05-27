@@ -308,7 +308,7 @@ public:
     const timespan_t finesse_g_duration[ 5 ]    = { 0_s, 8_s, 8_s, 8_s, 8_s };
     const double finesse_g_max                  = 0.5;
 
-    const double finesse_h_added[ 5 ] = { 0, 0.25, 0.40, 0.65, 1.0 };
+    const double finesse_h_added[ 5 ] = { 0, 0.25, 0.40, 0.65, 1.0 }; // The Vainglorious
 
     const double finesse_i_haste[ 5 ]      = { 0, 0.03, 0.05, 0.08, 0.12 }; // The Wayfarer
     const timespan_t finesse_i_interval    = 60_s;
@@ -322,7 +322,7 @@ public:
     const double finesse_j_divisor  = 0.03;
     const double finesse_j_max      = 0.5;
 
-    const double finesse_k_cdr[ 5 ]         = { 0, 0.03, 0.05, 0.08, 0.12 };
+    const double finesse_k_cdr[ 5 ]         = { 0, 0.03, 0.05, 0.08, 0.12 }; // The Monarch
     const double finesse_k_cdr_per_haste    = 0.1;
     const double finesse_k_cdr_haste_cap    = 0.5;
     const double finesse_k_amp_multiplier   = 1.0;
@@ -336,7 +336,7 @@ public:
 
     const double finesse_m_spirit[ 5 ] = { 0, 12.0, 20.0, 30.0, 50.0 };
 
-    const int finesse_n_casts[ 5 ] = { 0, 6, 5, 4, 3 };
+    const int finesse_n_casts[ 5 ] = { 0, 6, 5, 4, 3 }; // The Vehement
     const double finesse_n_max_crit = 0.5;
     const double finesse_n_conversion = 1.0;
     const int finesse_n_target_falloff = 5;
@@ -727,7 +727,7 @@ public:
     {
       id = 192102;
 
-      name_str_reporting = "Finesse N";
+      name_str_reporting = "The Vehement";
 
       may_crit = false;
 

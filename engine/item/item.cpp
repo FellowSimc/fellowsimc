@@ -402,6 +402,7 @@ void sc_format_to( const item_t& item, fmt::format_context::iterator out )
     fmt::format_to( out, " slot={}", item.slot_name() );
   fmt::format_to( out, " quality={}", util::item_quality_string( item.parsed.data.quality ) );
   fmt::format_to( out, " ilevel={}", item.item_level() );
+  fmt::format_to( out, " variant={}", item.option_item_variant_str );
   if ( item.parent_slot == SLOT_INVALID )
   {
     if ( item.parsed.drop_level > 0 )
@@ -822,12 +823,13 @@ void item_t::parse_options()
     option_name_str = options_str.substr( 0, cut_pt );
   }
 
-  std::array<std::unique_ptr<option_t>, 38> options { {
+  std::array<std::unique_ptr<option_t>, 39> options { {
     opt_uint("id", parsed.data.id),
     opt_string( "variant", option_item_variant_str ),
     opt_string( "main_secondary", option_main_secondary_str ),
     opt_string( "fixed_secondary", option_fixed_secondarys_str ),
     opt_string( "affixes", option_affix_list_str ),
+    opt_string( "rarity", option_rarity_str ),
     opt_string("stats", option_stats_str),
     opt_string("gems", option_gems_str),
     opt_string("enchant", option_enchant_str),
@@ -1094,6 +1096,15 @@ std::string item_t::encoded_item() const
     
   if ( !option_item_variant_str.empty() )
     s << ",variant=" << option_item_variant_str;
+  if ( !option_main_secondary_str.empty() )
+    s << ",main_secondary=" << option_main_secondary_str;
+  if ( !option_fixed_secondarys_str.empty() )
+    s << ",fixed_secondary=" << option_fixed_secondarys_str;
+  if ( !option_affix_list_str.empty() )
+    s << ",affixes=" << option_affix_list_str;
+  if ( !option_rarity_str.empty() )
+    s << ",rarity=" << option_rarity_str;
+  
 
   if ( !option_azerite_level_str.empty() )
     s << ",azerite_level=" << option_azerite_level_str;

@@ -9,13 +9,21 @@ vary_combat_length=0
 single_actor_batch=1
 
 max_time=720
-desired_targets=12
+desired_targets=1
 # desired_targets=16
 
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":8000000:Humanoid
+# # raid_events+=/pull,pull=02,delay=240,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":3000000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
 
-# apl/chuey_dungeon.simc
 
-# apl/dungeon.simc
 relative_difference_base="Ardeos Base"
 
 ardeos="Ardeos Base"

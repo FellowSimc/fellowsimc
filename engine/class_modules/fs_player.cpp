@@ -1057,6 +1057,15 @@ std::unique_ptr<expr_t> fs_player_t::create_expression( util::string_view name_s
       else if ( util::str_compare_ci( split[ 1 ], "fated_strike" ) )
         return make_fn_expr( name_str, [ & ] { return fs_weapons.equipped_weapon == FSWEAPON_FATED_STRIKE; } );
     }
+    else if ( util::str_compare_ci( split[ 0 ], "blessing" ) || util::str_compare_ci( split[ 0 ], "finesse" ) )
+    {
+      gear_affix_e affix_stat = gear_affix_from_string( split[ 1 ] );
+
+      if ( affix_stat >= GEAR_AFFIX_FINESSE_START && affix_stat <= GEAR_AFFIX_FINESSE_END )
+      {
+        return make_ref_expr( name_str, finesse_traits[ affix_stat - GEAR_AFFIX_FINESSE_START ] );
+      }
+    }
   }
   // Split expressions
 

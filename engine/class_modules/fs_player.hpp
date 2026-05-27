@@ -339,7 +339,7 @@ public:
     const int finesse_n_casts[ 5 ] = { 0, 6, 5, 4, 3 };
     const double finesse_n_max_crit = 0.5;
     const double finesse_n_conversion = 1.0;
-    const int finesse_n_target_falloff = 8;
+    const int finesse_n_target_falloff = 5;
 
   } finesse_trait_values;
 

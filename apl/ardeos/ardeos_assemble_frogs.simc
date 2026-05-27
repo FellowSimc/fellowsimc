@@ -1,0 +1,637 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=290
+target_error=0.1
+iterations=100000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+
+max_time=720
+desired_targets=12
+# desired_targets=16
+
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+relative_difference_base="Ardeos Base"
+
+ardeos="Ardeos Base"
+level=80
+
+apl/ardeos/ardeos_apl.simc
+
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
+
+head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste
+neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste,affixes=primary/primary
+shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary
+back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/crit
+chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary
+feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste
+finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+trinket2=relic2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+main_hand=weap,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit,affixes=crit/expertise/finesse_n/finesse_n/finesse_n/finesse_n/finesse_h/finesse_h/finesse_h/finesse_h
+
+# gems.sapphire_power=2640
+
+weapon=chronoshift
+# weapon=voidbringers_touch
+
+# 14 stats
+
+gems.sapphire_power=600
+gems.amethyst_power=1500
+gems.ruby_power=100
+# gems.emerald_power=600
+# 8 Attunements
+
+# weapon_trait.emerald_judgement=1
+# weapon_trait.martial_initiative=1
+# weapon_trait.visions_of_grandeur=4
+# weapon_trait.brave_machinations=1
+
+# 7 Traits
+
+sets.dark_prophecy=1
+sets.deaths_grasp=1
+# sets.sin_warding=1
+sets.draconic_might=1
+
+# 6 in sets
+
+# 4 Blessings = 39
+
+legendary.fire_toad=0
+legendary.devouring_flame=1
+legendary.explosivo=0
+legendary.explosivo_boss_bonus=1.5
+legendary.explosivo_adds_bonus=0.5
+
+# talents=/undying_flame:1/slow_burn:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1/rolling_flames:1/burning_initiative:1/apocalyptic_surge:1/cascading_inferno:1
+
+# copy="Hybrid AOE","Ardeos Base"
+# talents=/undying_flame:1/slow_burn:1/crackling_inferno:1/intensifying_inferno:1/rolling_flames:1/burning_initiative:1/apocalyptic_surge:1/crash_and_burn:1/backdraft:1
+
+# copy="AOE Favoured","Ardeos Base"
+# talents=/undying_flame:1/slow_burn:1/great_balls_of_fire:1/rolling_flames:1/burning_initiative:1/apocalyptic_surge:1/crash_and_burn:1/backdraft:1
+
+# copy="Hybrid AOE Frogs","Ardeos Base"
+# talents=/undying_flame:1/slow_burn:1/rolling_flames:1/burning_initiative:1/apocalyptic_surge:1/pyrophibian_frenzy:1/backdraft:1
+
+# 14 Stats, 8 Attunements, 7 Traits, 5 Blessings, 8 Sets
+# T10 Amethyst, T6 Sapphire, T6 Emerald, T1 Ruby
+# T4 Grandeur, T1 Martial Initiative, T1 Brave Mach, T1 Emerald Judgement
+# R4 Finesse M, R1 Finesse B
+# Dark Prophecy, Deaths Grasp, Sin Warding, Drakheims Absolution
+# Sin Warding not optimal DPS, just optimal for tankyness.
+
+
+talents=undying_flame:1/slow_burn:1/rolling_flames:1/burning_initiative:1/apocalyptic_surge:1/pyrophibian_frenzy:1/backdraft:1
+
+copy="Icicles","Ardeos Base"
+weapon=icicles_of_anzhyr
+
+copy="Void","Ardeos Base"
+weapon=voidbringers_touch
+# copy="Chrono","Ardeos Base"
+# weapon=chronoshift
+
+copy="Frogs Rolling Toad","Ardeos Base"
+talents=backdraft:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/rolling_flames:1/frog_squad:1
+legendary.fire_toad=1
+legendary.devouring_flame=0
+copy="Frogs Rolling Devour","Ardeos Base"
+talents=backdraft:1/pyrophibian_frenzy:1/firestarter:1/undying_flame:1/rolling_flames:1/slow_burn:1
+legendary.fire_toad=0
+legendary.devouring_flame=1
+copy="Infernal Wave Simulator Rolling Devour Pyro","Ardeos Base"
+talents=backdraft:1/crackling_inferno:1/intensifying_inferno:1/pyrophibian_frenzy:1/undying_flame:1/rolling_flames:1/slow_burn:1
+legendary.fire_toad=0
+legendary.devouring_flame=1
+copy="Infernal Wave Simulator Rolling Toad Pyro","Ardeos Base"
+talents=backdraft:1/crackling_inferno:1/intensifying_inferno:1/pyrophibian_frenzy:1/undying_flame:1/rolling_flames:1/slow_burn:1
+legendary.fire_toad=1
+legendary.devouring_flame=0
+copy="Infernal Wave Simulator Toad Pyro","Ardeos Base"
+talents=backdraft:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1/cascading_inferno:1/pyrophibian_frenzy:1/firestarter:1/frog_squad:1/apocalyptic_surge:1
+legendary.fire_toad=1
+legendary.devouring_flame=0
+copy="Infernal Wave Simulator Toad Pyro GBOF","Ardeos Base"
+talents=backdraft:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1/great_balls_of_fire:1/pyrophibian_frenzy:1/firestarter:1/frog_squad:1
+legendary.fire_toad=1
+legendary.devouring_flame=0
+copy="Infernal Wave Simulator Devouring","Ardeos Base"
+talents=backdraft:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1/cascading_inferno:1/rolling_flames:1/undying_flame:1/slow_burn:1/apocalyptic_surge:1
+legendary.fire_toad=0
+legendary.devouring_flame=1
+
+# copy="Slow Burn","Ardeos Base"
+# talents+=/slow_burn:1
+
+# copy="Frog Squad","Ardeos Base"
+# talents+=/frog_squad:1
+
+# copy="Great Balls of Fire","Ardeos Base"
+# talents+=/great_balls_of_fire:1
+
+# # copy="Backdraft","Ardeos Base"
+# # talents+=/backdraft:1
+
+# copy="Flare up","Ardeos Base"
+# talents+=/flare_up:1
+
+# copy="Crash and Burn","Ardeos Base"
+# talents+=/crash_and_burn:1
+
+# copy="Agonizing Blaze","Ardeos Base"
+# talents+=/agonizing_blaze:1
+
+# # copy="Firestarter","Ardeos Base"
+# # talents+=/firestarter:1
+
+# # copy="Undying Flame","Ardeos Base"
+# # talents+=/undying_flame:1
+
+# copy="Apocalyptic Surge","Ardeos Base"
+# talents+=/apocalyptic_surge:1
+
+# # copy="Crackling Inferno","Ardeos Base"
+# # talents+=/crackling_inferno:1
+
+# copy="Burning Initiative","Ardeos Base"
+# talents+=/burning_initiative:1
+# # main_hand=weap,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit,affixes=crit/expertise/finesse_m/finesse_m/finesse_m/finesse_m
+
+# # copy="Rolling Flames","Ardeos Base"
+# # talents+=/rolling_flames:1
+
+# # copy="Pyrophibian Frenzy","Ardeos Base"
+# # talents+=/pyrophibian_frenzy:1
+
+# copy="Reign of Fire","Ardeos Base"
+# talents+=/reign_of_fire:1
+
+# # copy="Intensifying Inferno","Ardeos Base"
+# # talents+=/intensifying_inferno:1
+
+# copy="Cascading Inferno","Ardeos Base"
+# talents+=/cascading_inferno:1
+
+# copy="Spontaneous Combustion","Ardeos Base"
+# talents+=/spontaneous_combustion:1
+
+
+# # copy="-Slow Burn","Ardeos Base"
+# # talents+=/slow_burn:0
+
+# # # copy="-Frog Squad","Ardeos Base"
+# # # talents+=/frog_squad:0
+
+# # # copy="-Great Balls of Fire","Ardeos Base"
+# # # talents+=/great_balls_of_fire:0
+
+# # # copy="-Backdraft","Ardeos Base"
+# # # talents+=/backdraft:0
+
+# # copy="-Flare up","Ardeos Base"
+# # talents+=/flare_up:0
+
+# # # copy="-Crash and Burn","Ardeos Base"
+# # # talents+=/crash_and_burn:0
+
+# # # copy="-Agonizing Blaze","Ardeos Base"
+# # # talents+=/agonizing_blaze:0
+
+# # # copy="-Firestarter","Ardeos Base"
+# # # talents+=/firestarter:0
+
+# # copy="-Undying Flame","Ardeos Base"
+# # talents+=/undying_flame:0
+
+# # copy="-Apocalyptic Surge","Ardeos Base"
+# # talents+=/apocalyptic_surge:0
+
+# # copy="-Crackling Inferno","Ardeos Base"
+# # talents+=/crackling_inferno:0
+
+# # copy="-Burning Initiative","Ardeos Base"
+# # talents+=/burning_initiative:0
+
+# # copy="-Rolling Flames","Ardeos Base"
+# # talents+=/rolling_flames:0
+
+# # # copy="-Pyrophibian Frenzy","Ardeos Base"
+# # # talents+=/pyrophibian_frenzy:0
+
+# # # copy="-Reign of Fire","Ardeos Base"
+# # # talents+=/reign_of_fire:0
+
+# # copy="-Intensifying Inferno","Ardeos Base"
+# # talents+=/intensifying_inferno:0
+
+# # copy="-Cascading Inferno","Ardeos Base"
+# # talents+=/cascading_inferno:0
+
+# # # copy="-Spontaneous Combustion","Ardeos Base"
+# # # talents+=/spontaneous_combustion:0
+
+
+# # # talents=/undying_flame:1/slow_burn:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1/rolling_flames:1/burning_initiative:1/firestarter:1
+
+# # # copy="+Neck Prim","Ardeos Base"
+# # # neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste,affixes=primary
+
+# # # copy="+Neck Crit","Ardeos Base"
+# # # neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste,affixes=crit
+
+# # # copy="+Neck Haste","Ardeos Base"
+# # # neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste,affixes=haste
+
+# # # copy="+Neck Exp","Ardeos Base"
+# # # neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste,affixes=expertise
+
+# # # copy="+Neck Spirit","Ardeos Base"
+# # # neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste,affixes=spirit
+
+
+# # # copy="Sapphire10 Amethyst6","Ardeos Base"
+# # # gems.sapphire_power=1500
+# # # gems.amethyst_power=600
+
+
+# # # # copy="Grandeur_1","Ardeos Base"
+# # # # weapon_trait.visions_of_grandeur=1
+# # # # copy="Grandeur_4","Ardeos Base"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # copy="Brave Mach1","Ardeos Base"
+# # # # weapon_trait.brave_machinations=1
+# # # copy="Brave Mach2","Ardeos Base"
+# # # weapon_trait.brave_machinations=2
+# # # copy="Brave Mach4","Ardeos Base"
+# # # weapon_trait.brave_machinations=4
+# # # # copy="Amethyst Splinters1","Ardeos Base"
+# # # # weapon_trait.amethyst_splinters=1
+# # # # copy="Amethyst Splinters4","Ardeos Base"
+# # # # weapon_trait.amethyst_splinters=4
+# # # copy="Heroic Brand1","Ardeos Base"
+# # # weapon_trait.heroic_brand=1
+# # # copy="Heroic Brand4","Ardeos Base"
+# # # weapon_trait.heroic_brand=4
+# # # # copy="Martial Initiative1","Ardeos Base"
+# # # # weapon_trait.martial_initiative=1
+# # # copy="Martial Initiative2","Ardeos Base"
+# # # weapon_trait.martial_initiative=2
+# # # # copy="Martial Initiative4","Ardeos Base"
+# # # # weapon_trait.martial_initiative=4
+# # # # copy="Emerald Judgement1","Ardeos Base"
+# # # # weapon_trait.emerald_judgement=1
+# # # copy="Emerald Judgement4","Ardeos Base"
+# # # weapon_trait.emerald_judgement=4
+# # # copy="Diamond Strike1","Ardeos Base"
+# # # weapon_trait.diamond_strike=1
+# # # copy="Diamond Strike4","Ardeos Base"
+# # # weapon_trait.diamond_strike=4
+# # # copy="Sapphire Aurastone1","Ardeos Base"
+# # # weapon_trait.sapphire_aurastone=1
+# # # copy="Sapphire Aurastone4","Ardeos Base"
+# # # weapon_trait.sapphire_aurastone=4
+# # # copy="Ruby Storm1","Ardeos Base"
+# # # weapon_trait.ruby_storm=1
+# # # copy="Ruby Storm4","Ardeos Base"
+# # # weapon_trait.ruby_storm=4
+
+# # # copy="Heroic Brand4 Brave Mach4","Ardeos Base"
+# # # weapon_trait.heroic_brand=4
+# # # weapon_trait.brave_machinations=4
+# # # # copy="Grandeur4 Brave Mach4","Ardeos Base"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.brave_machinations=4
+# # # # copy="Grandeur4 Heroic Brand4","Ardeos Base"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.heroic_brand=4
+# # # # copy="Grandeur4 Heroic Brand4 Brave Mach4","Ardeos Base"
+# # # # weapon_trait.visions_of_grandeur=4
+# # # # weapon_trait.heroic_brand=4
+# # # # weapon_trait.brave_machinations=4
+
+
+# # # copy="Navigators Intuition1","Ardeos Base"
+# # # weapon_trait.navigators_intuition=1
+# # # copy="Navigators Intuition4","Ardeos Base"
+# # # weapon_trait.navigators_intuition=4
+# # # copy="Kindling1","Ardeos Base"
+# # # weapon_trait.kindling=1
+# # # copy="Kindling4","Ardeos Base"
+# # # weapon_trait.kindling=4
+# # # copy="Hidden Power1","Ardeos Base"
+# # # weapon_trait.hidden_power=1
+# # # copy="Hidden Power4","Ardeos Base"
+# # # weapon_trait.hidden_power=4
+# # # copy="Hunters Focus1","Ardeos Base"
+# # # weapon_trait.hunters_focus=1
+# # # copy="Hunters Focus4","Ardeos Base"
+# # # weapon_trait.hunters_focus=4
+# # # copy="Patient Soul1","Ardeos Base"
+# # # weapon_trait.patient_soul=1
+# # # copy="Patient Soul4","Ardeos Base"
+# # # weapon_trait.patient_soul=4
+# # # copy="Seized Opportunity1","Ardeos Base"
+# # # weapon_trait.seized_opportunity=1
+# # # copy="Seized Opportunity4","Ardeos Base"
+# # # weapon_trait.seized_opportunity=4
+# # # copy="Vengeful Soul1","Ardeos Base"
+# # # weapon_trait.vengeful_soul=1
+# # # copy="Vengeful Soul4","Ardeos Base"
+# # # weapon_trait.vengeful_soul=4
+# # # copy="Willful Momentum1","Ardeos Base"
+# # # weapon_trait.willful_momentum=1
+# # # copy="Willful Momentum4","Ardeos Base"
+# # # weapon_trait.willful_momentum=4
+# # # copy="Inspired Allegiance1","Ardeos Base"
+# # # weapon_trait.inspired_allegiance=1
+# # # copy="Inspired Allegiance4","Ardeos Base"
+# # # weapon_trait.inspired_allegiance=4
+
+# # # copy="Finesse_A1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_a
+
+# # # copy="Finesse_A4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+
+# # # copy="Finesse_B1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_b
+
+# # # copy="Finesse_B4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+
+# # # copy="Finesse_D1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_d
+
+# # # copy="Finesse_D4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+
+# # # copy="Finesse_E1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_e
+
+# # # copy="Finesse_E4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+
+# # # copy="Finesse_F1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_f
+
+# # # copy="Finesse_F4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+
+# # # copy="Finesse_G1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_g
+
+# # # copy="Finesse_G4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+
+# # # copy="Finesse_H1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_h
+
+# # # copy="Finesse_H4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+
+# # # copy="Finesse_I1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_i
+
+# # # copy="Finesse_I4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+
+# # # copy="Finesse_J1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_j
+
+# # # copy="Finesse_J4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+
+# # # copy="Finesse_K1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_k
+
+# # # copy="Finesse_K4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+
+# # # copy="Finesse_L1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_l
+
+# # # copy="Finesse_L4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+
+# # # # copy="Finesse_M1","Ardeos Base"
+# # # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_m
+
+# # # # copy="Finesse_M4","Ardeos Base"
+# # # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+
+# # # copy="Finesse_N1","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_n
+
+# # # copy="Finesse_N4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_n/finesse_n/finesse_n/finesse_n
+
+# # # copy="Finesse_NH4","Ardeos Base"
+# # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_n/finesse_n/finesse_n/finesse_n/finesse_h/finesse_h/finesse_h/finesse_h
+
+
+
+# # # # copy="Ruby 1","Ardeos Base"
+# # # # gems.ruby_power=80
+# # # # # Wasted 20
+# # # # copy="Ruby 2","Ardeos Base"
+# # # # gems.ruby_power=150
+# # # # # Wasted 50
+# # # # copy="Ruby 4","Ardeos Base"
+# # # # gems.ruby_power=300
+# # # # copy="Ruby 5","Ardeos Base"
+# # # # # Wasted 50
+# # # # gems.ruby_power=500
+# # # copy="Ruby 6","Ardeos Base"
+# # # gems.ruby_power=600
+# # # # copy="Ruby 7","Ardeos Base"
+# # # # gems.ruby_power=800
+# # # # copy="Ruby 9","Ardeos Base"
+# # # # # Wasted 50
+# # # # gems.ruby_power=1300
+# # # # copy="Ruby 10","Ardeos Base"
+# # # # gems.ruby_power=1500
+
+
+
+# # # # copy="Amethyst 1","Ardeos Base"
+# # # # gems.amethyst_power=80
+# # # # # Wasted 20
+# # # # copy="Amethyst 2","Ardeos Base"
+# # # # gems.amethyst_power=150
+# # # # # Wasted 50
+# # # # copy="Amethyst 4","Ardeos Base"
+# # # # gems.amethyst_power=300
+# # # # copy="Amethyst 5","Ardeos Base"
+# # # # # Wasted 50
+# # # # gems.amethyst_power=500
+# # # copy="Amethyst 6","Ardeos Base"
+# # # gems.amethyst_power=600
+# # # # copy="Amethyst 7","Ardeos Base"
+# # # # gems.amethyst_power=800
+# # # # copy="Amethyst 9","Ardeos Base"
+# # # # # Wasted 50
+# # # # gems.amethyst_power=1300
+# # # # copy="Amethyst 10","Ardeos Base"
+# # # # gems.amethyst_power=1500
+
+
+# # # copy="Topaz 1","Ardeos Base"
+# # # gems.topaz_power=80
+# # # # Wasted 20
+# # # copy="Topaz 2","Ardeos Base"
+# # # gems.topaz_power=150
+# # # # Wasted 50
+# # # copy="Topaz 4","Ardeos Base"
+# # # gems.topaz_power=300
+# # # copy="Topaz 5","Ardeos Base"
+# # # # Wasted 50
+# # # gems.topaz_power=500
+# # # copy="Topaz 6","Ardeos Base"
+# # # gems.topaz_power=600
+# # # copy="Topaz 7","Ardeos Base"
+# # # gems.topaz_power=800
+# # # copy="Topaz 9","Ardeos Base"
+# # # # Wasted 50
+# # # gems.topaz_power=1300
+# # # copy="Topaz 10","Ardeos Base"
+# # # gems.topaz_power=1500
+
+# # # # copy="Emerald 1","Ardeos Base"
+# # # # gems.emerald_power=80
+# # # # # Wasted 20
+# # # # copy="Emerald 1 Judge1","Ardeos Base"
+# # # # gems.emerald_power=80
+# # # # weapon_trait.emerald_judgement=1
+# # # # # Wasted 20
+# # # # copy="Emerald 2","Ardeos Base"
+# # # # gems.emerald_power=150
+# # # # # Wasted 50
+# # # # copy="Emerald 4","Ardeos Base"
+# # # # gems.emerald_power=300
+# # # # copy="Emerald 5","Ardeos Base"
+# # # # # Wasted 50
+# # # # gems.emerald_power=500
+# # # # copy="Emerald 6","Ardeos Base"
+# # # # gems.emerald_power=600
+# # # # copy="Emerald 6 Judge 1","Ardeos Base"
+# # # # gems.emerald_power=600
+# # # # weapon_trait.emerald_judgement=1
+# # # copy="Emerald 7","Ardeos Base"
+# # # gems.emerald_power=800
+# # # copy="Emerald 9","Ardeos Base"
+# # # # Wasted 50
+# # # gems.emerald_power=1300
+# # # copy="Emerald 10","Ardeos Base"
+# # # gems.emerald_power=1500
+
+# # # # copy="Sapphire 1","Ardeos Base"
+# # # # gems.sapphire_power=80
+# # # # # Wasted 20
+# # # # copy="Sapphire 2","Ardeos Base"
+# # # # gems.sapphire_power=150
+# # # # # Wasted 50
+# # # # copy="Sapphire 4","Ardeos Base"
+# # # # gems.sapphire_power=300
+# # # # copy="Sapphire 5","Ardeos Base"
+# # # # # Wasted 50
+# # # # gems.sapphire_power=500
+# # # # copy="Sapphire 6","Ardeos Base"
+# # # # gems.sapphire_power=600
+# # # copy="Sapphire 7","Ardeos Base"
+# # # gems.sapphire_power=800
+# # # copy="Sapphire 9","Ardeos Base"
+# # # # Wasted 50
+# # # gems.sapphire_power=1300
+# # # copy="Sapphire 10","Ardeos Base"
+# # # gems.sapphire_power=1500
+
+
+# # # # copy="Finesse_J1_SPIRIT","Ardeos Base"
+# # # # head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# # # # neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# # # # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # # # back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# # # # chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# # # # wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # # # hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# # # # legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # # # feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# # # # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# # # # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # # # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # # # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise/expertise/finesse_m/finesse_m/finesse_m/finesse_m
+# # # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_j
+
+# # # # copy="Finesse_J4_SPIRIT","Ardeos Base"
+# # # # head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# # # # neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# # # # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # # # back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# # # # chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# # # # wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # # # hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# # # # legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # # # feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# # # # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# # # # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # # # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # # # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise/expertise/finesse_m/finesse_m/finesse_m/finesse_m
+# # # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+
+# # # # copy="Finesse_G1_SPIRIT","Ardeos Base"
+# # # # head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# # # # neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# # # # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # # # back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# # # # chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# # # # wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # # # hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# # # # legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # # # feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# # # # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# # # # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # # # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # # # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise/expertise/finesse_m/finesse_m/finesse_m/finesse_m
+# # # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_g
+
+# # # # copy="Finesse_G4_SPIRIT","Ardeos Base"
+# # # # head=hat,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# # # # neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# # # # shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # # # back=back,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/crit
+# # # # chest=chest,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# # # # wrist=wrists,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # # # hands=hands,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=haste/spirit
+# # # # legs=legs,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# # # # feet=feet,variant=evens,ilevel=420,main_secondary=haste,fixed_secondary=primary/primary
+# # # # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
+# # # # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# # # # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# # # # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise/expertise/finesse_m/finesse_m/finesse_m/finesse_m
+# # # # trinket1=relic1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g

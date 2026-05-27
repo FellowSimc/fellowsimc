@@ -159,7 +159,7 @@ public:
 #define X( name, id, pretty ) name##_INDEX,
     RIME_TALENT_LIST( X )
 #undef X
-    RIME_TALENT_MAX
+        RIME_TALENT_MAX
   };
 
   enum rime_talents_t : unsigned long long
@@ -168,7 +168,7 @@ public:
 #define X( name, id, pretty ) name = 1ULL << name##_INDEX,
     RIME_TALENT_LIST( X )
 #undef X
-    MAX = 1ULL << RIME_TALENT_MAX
+        MAX = 1ULL << RIME_TALENT_MAX
   };
 
   static constexpr talent_info RIME_TALENTS[] = {
@@ -239,7 +239,7 @@ public:
 
     double cold_shower_chance = 0.06;
 
-    double icy_talons_st_multiplier = 0.45;
+    double icy_talons_st_multiplier  = 0.45;
     double icy_talons_aoe_multiplier = 0.45;
 
     double frostweavers_wrath_chance_per_orb    = 0.17;
@@ -323,7 +323,7 @@ public:
 
     bool undulating_spirit                         = false;
     double undulating_spirit_additional_spirit     = 0.0;
-    double undulating_spirit_chance                = 0.10;
+    double undulating_spirit_chance                = 0.05;
     double undulating_spirit_spirit_value          = 2.0;
     bool undulating_spirit_alternative_check       = false;
     double undulating_spirit_alternative_check_mul = 2.0;
@@ -1243,7 +1243,7 @@ struct ice_comet_t : public rime_spell_t
 
   double composite_crit_chance() const override
   {
-    if ( is_secondary_action() )
+    if ( secondary_trigger_type == secondary_trigger::AVALANCHE )
       return rime_spell_t::composite_crit_chance() + p()->buffs.frostweavers_wrath->check_value();
 
     return rime_spell_t::composite_crit_chance() + p()->buffs.icy_flow->check_value() +
@@ -1256,13 +1256,10 @@ struct ice_comet_t : public rime_spell_t
 
     p()->buffs.frostweavers_wrath->decrement();
 
-    if ( !is_secondary_action() )
-    {
-      p()->buffs.icy_flow->decrement();
-    }
-
     if ( !is_secondary_action() || secondary_trigger_type == secondary_trigger::COLD_SHOWER )
     {
+      p()->buffs.icy_flow->decrement();
+
       if ( p()->talents_enabled( rime_t::AVALANCHE ) )
       {
         if ( p()->rng().roll( p()->talents.avalanche_double ) )
@@ -1377,8 +1374,8 @@ struct rising_talons_t : public rime_spell_t
 
     add_child( p->actions.rising_talon_hit );
 
-    if ( p->talents_enabled( rime_t::ICY_TALONS ) && p->talents_enabled(rime_t::AVALANCHE) )
-        add_child( p->actions.ice_comet_avalanche );
+    if ( p->talents_enabled( rime_t::ICY_TALONS ) && p->talents_enabled( rime_t::AVALANCHE ) )
+      add_child( p->actions.ice_comet_avalanche );
 
     resource_current                  = RESOURCE_WINTER_ORB;
     base_costs[ RESOURCE_WINTER_ORB ] = 1;
@@ -1797,7 +1794,8 @@ struct cold_snap_t : public rime_spell_t
 
 struct bursting_ice_tick_t : public rime_spell_t
 {
-  bursting_ice_tick_t( util::string_view source, rime_t* p, bool main_spell = false ) : rime_spell_t( std::format( "bursting_ice_{}_tick", source ), p )
+  bursting_ice_tick_t( util::string_view source, rime_t* p, bool main_spell = false )
+    : rime_spell_t( std::format( "bursting_ice_{}_tick", source ), p )
   {
     id = 11;
 
@@ -2103,7 +2101,7 @@ struct coalescing_frost_t : public rime_spell_t
 
     spell_power_mod.direct *= p->talents.coalescing_frost_sp_mul;
     ability_flags |= ability_type_e::ABILITY_CORE;
-  }  
+  }
 };
 
 struct frost_swallow_t : public rime_spell_t
@@ -2455,7 +2453,8 @@ void rime_t::init_base_stats()
   resources.base[ RESOURCE_WINTER_ORB ] = 5;
 
   base_gcd = timespan_t::from_seconds( 1.5 );
-  min_gcd  = timespan_t::from_seconds( 0.75 );
+  //min_gcd  = timespan_t::from_seconds( 0.75 );
+  min_gcd  = timespan_t::from_seconds( 0.0 );
 
   if ( legendary.undulating_spirit )
   {

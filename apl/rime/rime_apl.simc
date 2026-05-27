@@ -18,13 +18,14 @@ actions.main+=/bursting_ice,target_if=max:target.health,if=refreshable&(worb>=4|
 actions.main+=/cold_snap,target_if=max:target.health,if=full_recharge_time<=gcd.max*3&worb<5
 actions.main+=/talon_strike,target_if=max:target.health,if=buff.winters_embrace.up&buff.glacial_assault.at_max_stacks
 actions.main+=/rising_talons,target_if=max:target.health,if=(buff.winters_embrace.up&(worb>=5|worb>2&buff.winters_embrace.remains<=gcd.max*(1+buff.undulating_spirit.up))|worb>=5&buff.wrath_of_winter.up)&active_enemies>=3
-actions.main+=/talon_strike,target_if=max:target.health,if=(buff.winters_embrace.up&(worb>=5|worb>2&buff.winters_embrace.remains<=gcd.max*(1+buff.undulating_spirit.up))|worb>=5&buff.wrath_of_winter.up)&active_enemies<3
+actions.main+=/talon_strike,target_if=max:target.health,if=(buff.winters_embrace.up&worb>=5|worb>=4&buff.wrath_of_winter.up|worb>=5&!buff.glacial_assault.at_max_stacks&cooldown.bursting_ice.remains>=gcd.max*2)&active_enemies<3
 actions.main+=/glacial_blast,target_if=max:target.health,if=buff.glacial_assault.at_max_stacks
 actions.main+=/ice_comet,if=active_enemies>=2&(worb>=5|buff.undulating_spirit.react|buff.winters_embrace.up)
 actions.main+=/freezing_torrent,target_if=max:target.health,if=(worb<5|(talent.harrowing_ice))&target.time_to_die>=4
-actions.main+=/glacial_blast,target_if=max:target.health,if=active_enemies=1&(worb>=5|buff.undulating_spirit.react|buff.winters_embrace.up)
+actions.main+=/glacial_blast,target_if=max:target.health,if=active_enemies=1&(worb>=4|buff.undulating_spirit.react|buff.winters_embrace.up)
 actions.main+=/cold_snap,target_if=max:target.health,if=(buff.flight_of_the_navir.up|(cooldown.flight_of_the_navir.remains>=cooldown.cold_snap.duration*2)&(!buff.frostwyrms_spite.up|buff.winters_embrace.up)|target.time_to_die<=12)
 actions.main+=/chronoshift,if=!cooldown.flight_of_the_navir.up&!cooldown.winters_blessing.up&!cooldown.bursting_ice.up
 actions.main+=/icicles_of_anzhyr,if=!raid_event.adds.exists|active_enemies%2>=raid_event.adds.count|raid_event.adds.in>=12
 actions.main+=/natures_fury
+actions.main+=/cold_snap,target_if=max:target.health,if=buff.finesse_n.at_max_stacks
 actions.main+=/frost_bolt,target_if=max:target.health

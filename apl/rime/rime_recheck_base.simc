@@ -117,10 +117,9 @@ finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste
 finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste
 trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
 trinket2=relic2,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
-main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/finesse_a/finesse_a/finesse_a/finesse_a
-# /finesse_j/finesse_j/finesse_j/finesse_j/finesse_g/finesse_g/finesse_g/finesse_g
+main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/finesse_j/finesse_j/finesse_j/finesse_j/finesse_g/finesse_g/finesse_g/finesse_g
 
-# legendary.undulating_spirit=1
+legendary.undulating_spirit=1
 # legendary.skandis_decree=1
 # legendary.frostwyrms_spite=1
 
@@ -132,36 +131,36 @@ sets.sin_warding=1
 
 # # -6 = 28 affixes left (6 affixes for Sets)
 
-# gems.sapphire_power=1500
-# gems.amethyst_power=600
+gems.sapphire_power=1500
+gems.amethyst_power=600
 
 # # -1 = 27 affixes left (1 affix for gems, 4x500 gems)
 
-# sets.drakheims_absolution=1
+sets.drakheims_absolution=1
 
 # # -2 = 25 affixes left (another 2 affixes for Sets, 8 total)
 
-# weapon_trait.visions_of_grandeur=4
+weapon_trait.visions_of_grandeur=4
 
 # # -4 = 21 Affixes left (+4 used on Weapon Traits)
 
 # # Add 4x Finesse G and J -8 affixes
 # # 13 Affixes remain.
 
-# weapon_trait.martial_initiative=1
+weapon_trait.martial_initiative=1
 
 # # 12 affixes remain, +1 on weapon (5 used on weapon traits)
 
-# weapon_trait.amethyst_splinters=4
+weapon_trait.amethyst_splinters=4
 
 # # 8 affixes remain, +4 on weapon (9 used on weapon traits)
 
-# gems.emerald_power=600
-# weapon_trait.emerald_judgement=1
+gems.emerald_power=600
+weapon_trait.emerald_judgement=1
 
 # # 1 affixes remain, +1 on weapon (10 used on weapon traits), +6 on gems (7 affixes total used on gems)
 
-# gems.ruby_power=100
+gems.ruby_power=100
 
 # # 0 affixes remain, +1 on gems (8 affixes total used on gems)
 
@@ -176,51 +175,147 @@ sets.sin_warding=1
 
 # talents=cold_shower:1/icy_flow:1/supreme_torrent:1/greater_glacial_blast:1/soulfrost_torrent:0/icy_talons:1/cascading_blitz:1/wisdom_of_the_north:1/bursting_swallows:1/burstbolter:1
 
-# talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/biting_cold:1
+talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/biting_cold:1
 
-talents=cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/burstbolter:1
+copy="Talons Skandis","Base Rime"
+legendary.undulating_spirit=0
+legendary.skandis_decree=1
 
-copy="CF","Base Rime"
-talents+=/chilling_finesse:1
-copy="HI","Base Rime"
-talents+=/harrowing_ice:1
-copy="GA","Base Rime"
-talents+=/glacial_assault:1
-# copy="BB","Base Rime"
-# talents+=/burstbolter:1
-# copy="IF","Base Rime"
-# talents+=/icy_flow:1
-copy="NK","Base Rime"
-talents+=/navirs_keeper:1
-# copy="CB","Base Rime"
-# talents+=/cascading_blitz:1
-copy="AVA","Base Rime"
-talents+=/avalanche:1
-copy="COAL","Base Rime"
-talents+=/coalescing_frost:1
-copy="COAL ST","Base Rime"
-talents+=/coalescing_frost:1/supreme_torrent:1
-# copy="BS","Base Rime"
-# talents+=/bursting_swallows:1
-# copy="GGB","Base Rime"
-# talents+=/greater_glacial_blast:1
-copy="CS","Base Rime"
-talents+=/cold_shower:1
-copy="CS ST","Base Rime"
-talents+=/cold_shower:1/supreme_torrent:1
-copy="IT","Base Rime"
-talents+=/icy_talons:1
-copy="IT GA","Base Rime"
-talents+=/icy_talons:1/glacial_assault:1
-copy="FWW","Base Rime"
-talents+=/frostweavers_wrath:1
-copy="SFT ST","Base Rime"
-talents+=/soulfrost_torrent:1/supreme_torrent:1
-copy="SFT","Base Rime"
-talents+=/soulfrost_torrent:1
-copy="BC","Base Rime"
-talents+=/biting_cold:1
-copy="ST","Base Rime"
-talents+=/supreme_torrent:1
-copy="WOTN","Base Rime"
-talents+=/wisdom_of_the_north:1
+copy="FWW Undulating","Base Rime"
+talents=icy_flow:1/greater_glacial_blast:1/frostweavers_wrath:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/biting_cold:1
+legendary.undulating_spirit=1
+
+copy="FWW Skandis","Base Rime"
+talents=icy_flow:1/greater_glacial_blast:1/frostweavers_wrath:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/chilling_finesse:1/biting_cold:1
+legendary.undulating_spirit=0
+legendary.skandis_decree=1
+
+# talents=cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/burstbolter:1/avalanche:1/cold_shower:1
+
+# # copy="CF","Base Rime"
+# # talents+=/chilling_finesse:1
+# # copy="HI","Base Rime"
+# # talents+=/harrowing_ice:1
+# # copy="GA","Base Rime"
+# # talents+=/glacial_assault:1
+# # # copy="BB","Base Rime"
+# # # talents+=/burstbolter:1
+# # # copy="IF","Base Rime"
+# # # talents+=/icy_flow:1
+# # copy="NK","Base Rime"
+# # talents+=/navirs_keeper:1
+# # # copy="CB","Base Rime"
+# # # talents+=/cascading_blitz:1
+# # # copy="AVA","Base Rime"
+# # # talents+=/avalanche:1
+# # copy="COAL","Base Rime"
+# # talents+=/coalescing_frost:1
+# # copy="COAL ST","Base Rime"
+# # talents+=/coalescing_frost:1/supreme_torrent:1
+# # # copy="BS","Base Rime"
+# # # talents+=/bursting_swallows:1
+# # # copy="GGB","Base Rime"
+# # # talents+=/greater_glacial_blast:1
+# # # copy="CS","Base Rime"
+# # # talents+=/cold_shower:1
+# # # copy="CS Ava","Base Rime"
+# # # talents+=/cold_shower:1/avalanche:1
+# # # copy="CS Ava ST","Base Rime"
+# # # talents+=/cold_shower:1/avalanche:1/supreme_torrent:1
+# # # copy="CS ST","Base Rime"
+# # # talents+=/cold_shower:1/supreme_torrent:1
+# # copy="IT","Base Rime"
+# # talents+=/icy_talons:1
+# # copy="IT GA","Base Rime"
+# # talents+=/icy_talons:1/glacial_assault:1
+# # copy="FWW","Base Rime"
+# # talents+=/frostweavers_wrath:1
+# # copy="SFT ST","Base Rime"
+# # talents+=/soulfrost_torrent:1/supreme_torrent:1
+# # copy="SFT","Base Rime"
+# # talents+=/soulfrost_torrent:1
+# # copy="BC","Base Rime"
+# # talents+=/biting_cold:1
+# # copy="ST","Base Rime"
+# # talents+=/supreme_torrent:1
+# # copy="WOTN","Base Rime"
+# # talents+=/wisdom_of_the_north:1
+
+# copy="Icicles","Base Rime"
+# weapon=icicles_of_anzhyr
+
+# copy="-Finesse J","Base Rime"
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g
+
+# copy="-Finesse G","Base Rime"
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/finesse_j/finesse_j/finesse_j/finesse_j
+
+
+# copy="Finesse_A1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a
+
+# copy="Finesse_A4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+
+# copy="Finesse_B1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b
+
+# copy="Finesse_B4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+
+# copy="Finesse_D1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d
+
+# copy="Finesse_D4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+
+# copy="Finesse_E1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e
+
+# copy="Finesse_E4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+
+# copy="Finesse_F1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f
+
+# copy="Finesse_F4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+
+# copy="Finesse_H1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h
+
+# copy="Finesse_H4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+
+# copy="Finesse_I1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i
+
+# copy="Finesse_I4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+
+# copy="Finesse_K1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k
+
+# copy="Finesse_K4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+
+# copy="Finesse_L1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l
+
+# copy="Finesse_L4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+
+# copy="Finesse_M1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m
+
+# copy="Finesse_M4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+
+# copy="Finesse_N1","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_n
+
+# copy="Finesse_N4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_n/finesse_n/finesse_n/finesse_n
+
+# copy="Finesse_NH4","Base Rime"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_n/finesse_n/finesse_n/finesse_n/finesse_h/finesse_h/finesse_h/finesse_h

@@ -130,7 +130,6 @@ public:
     buff_t* finesse_b;
     buff_t* finesse_g;
     buff_t* finesse_i;
-    buff_t* finesse_l;
     buff_t* finesse_k;
     buff_t* hunters_focus;
     buff_t* patient_soul;
@@ -286,12 +285,12 @@ public:
 
   struct finesse_values_t
   {
-    const double finesse_a_per_stack[ 5 ] = { 0, 0.015, 0.025, 0.04, 0.06 };
+    const double finesse_a_per_stack[ 5 ] = { 0, 0.015, 0.025, 0.04, 0.06 }; // The Intrepid
     const int finesse_a_max_stacks        = 5;
 
     const timespan_t finesse_b_duration = 4_s;
     const int finesse_b_max_stacks      = 1;
-    const double finesse_b_crit[ 5 ]    = { 0, 0.02, 0.03, 0.05, 0.08 };
+    const double finesse_b_crit[ 5 ]    = { 0, 0.02, 0.03, 0.05, 0.08 }; // The Trickster
 
     const timespan_t finesse_c_duration[ 5 ] = { 0_s, 1_s, 2_s, 3_s, 5_s };
     const timespan_t finesse_c_divisor       = 60_s;
@@ -299,25 +298,27 @@ public:
     const double finesse_d_chance[ 5 ]   = { 0, 0.05, 0.08, 0.13, 0.2 };
     const double finesse_d_spirit_points = 1.0;
 
-    const double finesse_e_cc[ 5 ]   = { 0, 0.01, 0.02, 0.03, 0.04 };
+    const double finesse_e_cc[ 5 ]   = { 0, 0.01, 0.02, 0.03, 0.04 }; // The Sinister
     const double finesse_e_cdmg[ 5 ] = { 0, 0.05, 0.10, 0.15, 0.20 };
 
     const double finesse_f_drain[ 5 ]   = { 0, 3.25, 5.2, 8.32, 13.31 };
     const double finesse_f_drain_chance = 0.2;
 
-    const double finesse_g_spirit_to_stats[ 5 ] = { 0.0, 0.2, 0.2, 0.2, 0.2 };
-    const timespan_t finesse_g_duration[ 5 ]    = { 0_s, 2_s, 3_s, 5_s, 8_s };
+    const double finesse_g_spirit_to_stats[ 5 ] = { 0.0, 0.2 / 4.0, 0.2 / 2.5, 0.2 / 1.6, 0.2 / 1.0 };  // The Philospher
+    const timespan_t finesse_g_duration[ 5 ]    = { 0_s, 8_s, 8_s, 8_s, 8_s };
     const double finesse_g_max                  = 0.5;
 
     const double finesse_h_added[ 5 ] = { 0, 0.25, 0.40, 0.65, 1.0 };
 
-    const double finesse_i_haste[ 5 ]      = { 0, 0.03, 0.05, 0.08, 0.12 };
+    const double finesse_i_haste[ 5 ]      = { 0, 0.03, 0.05, 0.08, 0.12 }; // The Wayfarer
     const timespan_t finesse_i_interval    = 60_s;
     const timespan_t finesse_i_duration    = 14_s;
     const timespan_t finesse_i_cdr         = 4_s;
     const timespan_t finesse_i_cdr_divisor = 30_s;
+    const timespan_t finesse_i_min_cdr     = 0.2_s;
+    const timespan_t finesse_i_max_cdr     = 8_s;
 
-    const double finesse_j_amp[ 5 ] = { 0, 0.003, 0.006, 0.009, 0.012 };
+    const double finesse_j_amp[ 5 ] = { 0, 0.003, 0.006, 0.009, 0.012 }; // The Mystic
     const double finesse_j_divisor  = 0.03;
     const double finesse_j_max      = 0.5;
 
@@ -327,11 +328,11 @@ public:
     const double finesse_k_amp_multiplier   = 1.0;
     const timespan_t finesse_k_amp_duration = 5_s;
 
-    const double finesse_l_dmg[ 5 ]     = { 0, 0.68, 1.09, 1.74, 2.79 };
-    const double finesse_l_heal[ 5 ]    = { 0, 0.87, 1.39, 2.23, 3.56 };
-    const int finesse_l_targets         = 4;
-    const int finesse_l_max_stacks      = 1;
-    const timespan_t finesse_l_duration = 15_s;
+    const double finesse_l_dmg[ 5 ]    = { 0, 0.95, 1.52, 2.43, 3.89 };
+    const double finesse_l_heal[ 5 ]   = { 0, 1.22, 1.95, 3.12, 5.00 };
+    const int finesse_l_targets        = 4;
+    const int finesse_l_max_stacks     = 1;
+    const double finesse_l_both_chance = 0.2;
 
     const double finesse_m_spirit[ 5 ] = { 0, 12.0, 20.0, 30.0, 50.0 };
 
@@ -925,10 +926,15 @@ public:
         fs_p()->fs_actions.finesse_f->execute_on_target( ab::target );
       }
 
-      if ( fs_p()->finesse_traits[ FINESSE_I ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MOVEMENT )
+      if ( fs_p()->finesse_traits[ FINESSE_I ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )
       {
-        fs_p()->finesse_i_cdr( fs_p()->finesse_trait_values.finesse_i_cdr *
-                               ( ab::cooldown->duration / fs_p()->finesse_trait_values.finesse_i_cdr_divisor ) );
+        auto cdr = fs_p()->finesse_trait_values.finesse_i_cdr *
+                   ( ab::cooldown->duration / fs_p()->finesse_trait_values.finesse_i_cdr_divisor );
+
+        cdr = std::min( fs_p()->finesse_trait_values.finesse_i_max_cdr,
+                        std::max( fs_p()->finesse_trait_values.finesse_i_min_cdr, cdr ) );
+        // ab::sim->print_debug( "{} reduces cooldown of Finesse I by {} seconds with {}.", *fs_p(), cdr, ab::name() );
+        fs_p()->finesse_i_cdr( cdr );
       }
 
       if ( fs_p()->finesse_traits[ FINESSE_L ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )

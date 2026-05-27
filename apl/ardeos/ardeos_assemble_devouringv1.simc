@@ -9,7 +9,7 @@ vary_combat_length=0
 single_actor_batch=1
 
 max_time=720
-desired_targets=12
+desired_targets=1
 # desired_targets=16
 
 

@@ -1231,11 +1231,6 @@ void fs_player_t::create_buffs()
                            ->set_default_value( finesse_trait_values.finesse_i_haste[ rank ] )
                            ->set_duration( finesse_trait_values.finesse_i_duration );
 
-  rank               = finesse_traits[ FINESSE_L ];
-  fs_buffs.finesse_l = make_buff<fs_player_buff_t>( this, "finesse_l" )
-                           ->set_duration( finesse_trait_values.finesse_l_duration )
-                           ->set_max_stack( finesse_trait_values.finesse_l_max_stacks );
-
   rank               = finesse_traits[ FINESSE_K ];
   fs_buffs.finesse_k = make_buff<fs_player_buff_t>( this, "finesse_k" )
                            ->set_duration( finesse_trait_values.finesse_k_amp_duration )
@@ -2737,6 +2732,7 @@ void fs_player_t::arise()
 
 void fs_player_t::finesse_i_event_fn()
 {
+  finesse_i_event = nullptr;
   if ( is_sleeping() )
     return;
 
@@ -2749,14 +2745,20 @@ void fs_player_t::finesse_i_cdr( timespan_t cdr )
   if ( !finesse_i_event )
     return;
 
+  
+  // sim->print_debug( "{} reduces cooldown of Finesse I by {}", *this, cdr );
+
   if ( finesse_i_event->remains() < cdr )
   {
     event_t::cancel( finesse_i_event );
     finesse_i_event_fn();
+    // sim->print_debug( "{} Finesse I is less than CDR away. Immediately triggering.", *this );
   }
   else
   {
-    finesse_i_event->reschedule( finesse_i_event->remains() - cdr );
+    auto when = finesse_i_event->remains() - cdr;
+    finesse_i_event->reschedule( when );
+    // sim->print_debug( "{} Finesse I rescheduling event for {} ", *this, when + sim->current_time() );
   }
 }
 

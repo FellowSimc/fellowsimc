@@ -4698,7 +4698,8 @@ double player_t::apply_combat_rating_fellow_dr( double percent ) const
 {
   const double breakPoints[] = { 0.10, 0.15, 0.20, 0.25 };
 
-  const double breakPointMultipliers[] = { 1, 0.95, 0.9, 0.85, 0.8 };
+  const double breakPointMultipliers[] = { 1, 0.98, 0.96 * 0.98, 0.94 * 0.96 * 0.98, 0.92 * 0.94 * 0.96 * 0.98 };
+  // const double breakPointMultipliers[] = { 1, 0.95, 0.9, 0.85, 0.8 };
   // const double breakPointMultipliers[] = { 1, 0.95, 0.95 * 0.9, 0.95 * 0.9 * 0.85, 0.95 * 0.9 * 0.85 * 0.8 };
 
   if ( percent <= breakPoints[ 0 ] )

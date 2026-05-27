@@ -10,7 +10,7 @@ chart_show_relative_difference=1
 vary_combat_length=0.1
 single_actor_batch=1
 max_time=720
-desired_targets=1
+desired_targets=12
 
 
 # apl/chuey_dungeon.simc

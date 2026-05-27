@@ -122,7 +122,7 @@ public:
     timespan_t celestial_impetus_duration = 15_s;
 
     double celestial_shot_ap_coeff   = 2.879;
-    double celestial_shot_focus_cost = 15;
+    double celestial_shot_focus_cost = 15.0;
 
     double multishot_ap_coeff       = 2.415;
     double multishot_target_falloff = 12;
@@ -156,6 +156,8 @@ public:
     double lunarlight_mark_chance_hit   = 0.25;
     double lunarlight_mark_chance_crit  = 0.5;
 
+    double barrage_mark_aoe_chance = 0.2;
+
     timespan_t skystriders_supremacy_duration = 4_s;
     double skystriders_supremacy_focus_mul    = 0.5;
     int skystriders_supremacy_minimum_arrows  = 3;
@@ -163,9 +165,9 @@ public:
 
     timespan_t starfall_volley_duration   = 8_s;
     double starfall_volley_target_falloff = 10;
-    timespan_t starfall_volley_cooldown   = 30_s;
+    timespan_t starfall_volley_cooldown   = 40_s;
     timespan_t starfall_volley_period     = 1_s;
-    double starfall_volley_ap_coeff       = 1.0864;
+    double starfall_volley_ap_coeff       = 1.249;
     double starfall_volley_focus_cost     = 30;
 
     timespan_t event_horizon_duration             = 20_s;
@@ -179,8 +181,6 @@ public:
     int spirit_refund_marks_applied       = 5;
     int spirit_refund_marks_cleave        = 2;
     int spirit_refund_marks_extra_targets = 2;
-
-    double barrage_mark_aoe_chance = 0.2;
   } spell_const;
 
 #define ELARION_TALENT_LIST(X) \
@@ -277,13 +277,13 @@ public:
     double lethal_shots_proc_chance = 0.4;
     double lethal_shots_added_cc    = 1.0;
 
-    double lunar_fury_mul                = 0.3;
-    double lunar_fury_barrage_chance_mul = 1.0;
+    double lunar_fury_mod                = 0.3;
+    double lunar_fury_barrage_chance_mod = 1.0;
 
     timespan_t fervent_supremacy_duration         = 15_s;
-    timespan_t fervent_supremacy_reduced_cooldown = 20_s;
+    timespan_t fervent_supremacy_reduced_cooldown = 10_s;
     int fervent_supremacy_stacks                  = 4;
-    double fervent_supremacy_mul                  = 0.25;
+    double fervent_supremacy_mod                  = 0.35;
 
     double impending_heartseeker_mul_per_arrow = 0.1;
     timespan_t impending_heartseeker_duration  = 15_s;
@@ -308,10 +308,10 @@ public:
     double precision_strike_effectiveness = 0.5;
     timespan_t precision_strike_delay     = 0.2_s;
 
-    double strikers_aim_expertise    = 0.05;
-    timespan_t strikers_aim_duration = 18_s;
-    unsigned int strikers_aim_threshold       = 1;
-    int strikers_aim_max_stacks      = 3;
+    double strikers_aim_expertise       = 0.05;
+    timespan_t strikers_aim_duration    = 18_s;
+    unsigned int strikers_aim_threshold = 1;
+    int strikers_aim_max_stacks         = 3;
 
     double deadly_focus_dmg_mod   = 1.0;
     double deadly_focus_focus_mod = -0.5;
@@ -1488,8 +1488,8 @@ struct heartseeker_barrage_t : public elarion_attack_t
 
       if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
       {
-        lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunar_fury_barrage_chance_mul;
-        lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunar_fury_barrage_chance_mul;
+        lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunar_fury_barrage_chance_mod;
+        lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunar_fury_barrage_chance_mod;
       }
 
       ability_flags |= ability_type_e::ABILITY_POWER;
@@ -1741,7 +1741,7 @@ struct lunarlight_salvo_t : public elarion_spell_t
 
     if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
     {
-      base_multiplier *= 1.0 + p->talents.lunar_fury_mul;
+      base_multiplier *= 1.0 + p->talents.lunar_fury_mod;
     }
     if ( p->talents_enabled( elarion_t::LUNARLIGHT_AFFINITY ) )
     {
@@ -1769,7 +1769,7 @@ struct lunarlight_salvo_aoe_t : public elarion_spell_t
 
     if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
     {
-      base_multiplier *= 1.0 + p->talents.lunar_fury_mul;
+      base_multiplier *= 1.0 + p->talents.lunar_fury_mod;
     }
     if ( p->talents_enabled( elarion_t::LUNARLIGHT_AFFINITY ) )
     {
@@ -2171,7 +2171,8 @@ void elarion_t::init_base_stats()
   resources.base_regen_per_second[ RESOURCE_FOCUS ] = 0.05 / 0.01;
 
   base_gcd = timespan_t::from_seconds( 1.5 );
-  min_gcd  = timespan_t::from_seconds( 0.75 );
+  // min_gcd  = timespan_t::from_seconds( 0.75 );
+  min_gcd = timespan_t::from_seconds( 0.0 );
 }
 
 // elarion_t::init_spells =====================================================
@@ -2303,7 +2304,7 @@ void elarion_t::create_buffs()
   {
     buffs.skystriders_supremacy->set_max_stack( talents.fervent_supremacy_stacks )
         ->set_duration( talents.fervent_supremacy_duration )
-        ->set_default_value( talents.fervent_supremacy_mul )
+        ->set_default_value( talents.fervent_supremacy_mod )
         ->set_max_stack( talents.fervent_supremacy_stacks )
         ->set_initial_stack( talents.fervent_supremacy_stacks );
   }

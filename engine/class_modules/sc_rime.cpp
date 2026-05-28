@@ -213,7 +213,7 @@ public:
     int burstbolter_bursting_ice_pulses = 1;
     double burstbolter_bursting_ice_amp = 0.2;
 
-    timespan_t icy_flow_buff_duration = 8_s;
+    timespan_t icy_flow_buff_duration = 15_s;
     double icy_flow_cc                = 0.15;
     double icy_flow_temp_haste        = 0.5;
     int icy_flow_max_stacks           = 2;

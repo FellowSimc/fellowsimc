@@ -10,7 +10,7 @@ chart_show_relative_difference=1
 vary_combat_length=0.1
 single_actor_batch=1
 max_time=720
-desired_targets=12
+desired_targets=1
 relative_difference_base="Base Rime"
 
 # apl/chuey_dungeon.simc
@@ -37,7 +37,7 @@ relative_difference_base="Base Rime"
 # vary_combat_length=0.0
 # enemy=Dummy
 # raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":16000000:Humanoid
-# # raid_events+=/pull,pull=02,delay=240,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# # raid_events+=/pull,pull=02,delay=315,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
 # raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":6000000:Humanoid:12
 # raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
 # raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
@@ -48,7 +48,7 @@ relative_difference_base="Base Rime"
 # vary_combat_length=0.0
 # enemy=Dummy
 # raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":4000000:Humanoid
-# # raid_events+=/pull,pull=02,delay=240,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# # raid_events+=/pull,pull=02,delay=315,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
 # raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":1500000:Humanoid:12
 # raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
 # raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
@@ -104,68 +104,65 @@ weapon=voidbringers_touch
 # trinket2=relic2,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
 # main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=haste/primary
 
-head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
-neck=neck,ilevel=420,main_secondary=haste,fixed_secondary=expertise/crit
-shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=expertise
-back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/primary
-chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/crit
-wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
-hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=haste/haste
-legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=crit/primary
-feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
-finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste
-finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
-trinket2=relic2,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
-main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/finesse_j/finesse_j/finesse_j/finesse_j/finesse_g/finesse_g/finesse_g/finesse_g
+head=hat,variant=big_secondary,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
+neck=neck,ilevel=315,main_secondary=haste,fixed_secondary=expertise/crit
+shoulder=shoulder,variant=big_secondary,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=expertise
+back=back,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/primary
+chest=chest,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/haste
+wrist=wrists,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
+hands=hands,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
+legs=legs,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=haste/primary
+feet=feet,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary
+finger1=ring1,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+finger2=ring2,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+trinket1=relic1,ilevel=315,main_secondary=expertise,fixed_secondary=crit/haste
+trinket2=relic2,ilevel=315,main_secondary=expertise,fixed_secondary=crit/haste
+main_hand=weap,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary
+#/finesse_j/finesse_j/finesse_j/finesse_j/finesse_g/finesse_g/finesse_g/finesse_g
 
-legendary.undulating_spirit=1
+# legendary.undulating_spirit=1
 # legendary.skandis_decree=1
 # legendary.frostwyrms_spite=1
 
 #42 - 8 = 34 (8 affixes for Stats - 5 Primary, 3 Secondary)
 
-sets.dark_prophecy=1
-sets.deaths_grasp=1
-sets.sin_warding=1
+# sets.dark_prophecy=1
+# sets.deaths_grasp=1
+# sets.sin_warding=1
 
-# # -6 = 28 affixes left (6 affixes for Sets)
+# # # -6 = 28 affixes left (6 affixes for Sets)
 
-gems.sapphire_power=1500
-gems.amethyst_power=600
+# gems.sapphire_power=1500
+# gems.amethyst_power=600
 
-# # -1 = 27 affixes left (1 affix for gems, 4x500 gems)
+# # # -1 = 27 affixes left (1 affix for gems, 4x500 gems)
 
-sets.drakheims_absolution=1
+# sets.drakheims_absolution=1
 
-# # -2 = 25 affixes left (another 2 affixes for Sets, 8 total)
+# # # -2 = 25 affixes left (another 2 affixes for Sets, 8 total)
 
-weapon_trait.visions_of_grandeur=4
+# weapon_trait.visions_of_grandeur=4
 
-# # -4 = 21 Affixes left (+4 used on Weapon Traits)
+# # # -4 = 21 Affixes left (+4 used on Weapon Traits)
 
-# # Add 4x Finesse G and J -8 affixes
-# # 13 Affixes remain.
+# # # Add 4x Finesse G and J -8 affixes
+# # # 13 Affixes remain.
 
-weapon_trait.martial_initiative=1
+# weapon_trait.martial_initiative=1
 
-# # 12 affixes remain, +1 on weapon (5 used on weapon traits)
+# # # 12 affixes remain, +1 on weapon (5 used on weapon traits)
 
-weapon_trait.amethyst_splinters=4
+# weapon_trait.amethyst_splinters=4
 
-# # 8 affixes remain, +4 on weapon (9 used on weapon traits)
+# # # 8 affixes remain, +4 on weapon (9 used on weapon traits)
 
-gems.emerald_power=600
-weapon_trait.emerald_judgement=1
+# gems.emerald_power=600
+# weapon_trait.emerald_judgement=2
 
-# # 1 affixes remain, +1 on weapon (10 used on weapon traits), +6 on gems (7 affixes total used on gems)
+# # 0 affixes remain, +2 on weapon (11 used on weapon traits), +6 on gems (7 affixes total used on gems)
 
-gems.ruby_power=100
-
-# # 0 affixes remain, +1 on gems (8 affixes total used on gems)
-
-# # 8 Affixes on Essence, 10 on Traits, 8 on Blessings, 8 on Sets, 8 on Stats.
-# # 100 Ruby, 100 Amethyst, 600 Emerald. T10 Sapphire, T6 Amethyst, T6 Emerald, T1 Ruby
+# # 7 Affixes on Essence, 11 on Traits, 8 on Blessings, 8 on Sets, 8 on Stats.
+# # 100 Amethyst, 600 Emerald. T10 Sapphire, T6 Amethyst, T6 Emerald, T1 Ruby
 # # Splinters 4,  Grandeur4, Martial Init1, Emerald Judgement 1
 # # Finesse J4, Finesse G4
 # # Drakheim, Dark Prophecy, Deaths Grasp, Sin Warding
@@ -175,71 +172,107 @@ gems.ruby_power=100
 
 # talents=cold_shower:1/icy_flow:1/supreme_torrent:1/greater_glacial_blast:1/soulfrost_torrent:0/icy_talons:1/cascading_blitz:1/wisdom_of_the_north:1/bursting_swallows:1/burstbolter:1
 
-talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/biting_cold:1
+# talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/biting_cold:1
 
-copy="Talons Skandis","Base Rime"
-legendary.undulating_spirit=0
-legendary.skandis_decree=1
+# copy="Talons Skandis","Base Rime"
+# legendary.undulating_spirit=0
+# legendary.skandis_decree=1
 
-copy="FWW Undulating","Base Rime"
-talents=icy_flow:1/greater_glacial_blast:1/frostweavers_wrath:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/biting_cold:1
-legendary.undulating_spirit=1
+# copy="FWW Undulating","Base Rime"
+# talents=icy_flow:1/greater_glacial_blast:1/frostweavers_wrath:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/biting_cold:1
+# legendary.undulating_spirit=1
 
-copy="FWW Skandis","Base Rime"
-talents=icy_flow:1/greater_glacial_blast:1/frostweavers_wrath:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/chilling_finesse:1/biting_cold:1
-legendary.undulating_spirit=0
-legendary.skandis_decree=1
+# copy="FWW Skandis","Base Rime"
+# talents=icy_flow:1/greater_glacial_blast:1/frostweavers_wrath:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/chilling_finesse:1/biting_cold:1
+# legendary.undulating_spirit=0
+# legendary.skandis_decree=1
 
 # talents=cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/burstbolter:1/avalanche:1/cold_shower:1
 
-# # copy="CF","Base Rime"
-# # talents+=/chilling_finesse:1
-# # copy="HI","Base Rime"
-# # talents+=/harrowing_ice:1
-# # copy="GA","Base Rime"
-# # talents+=/glacial_assault:1
-# # # copy="BB","Base Rime"
-# # # talents+=/burstbolter:1
-# # # copy="IF","Base Rime"
-# # # talents+=/icy_flow:1
-# # copy="NK","Base Rime"
-# # talents+=/navirs_keeper:1
-# # # copy="CB","Base Rime"
-# # # talents+=/cascading_blitz:1
-# # # copy="AVA","Base Rime"
-# # # talents+=/avalanche:1
-# # copy="COAL","Base Rime"
-# # talents+=/coalescing_frost:1
-# # copy="COAL ST","Base Rime"
-# # talents+=/coalescing_frost:1/supreme_torrent:1
-# # # copy="BS","Base Rime"
-# # # talents+=/bursting_swallows:1
-# # # copy="GGB","Base Rime"
-# # # talents+=/greater_glacial_blast:1
-# # # copy="CS","Base Rime"
-# # # talents+=/cold_shower:1
-# # # copy="CS Ava","Base Rime"
-# # # talents+=/cold_shower:1/avalanche:1
-# # # copy="CS Ava ST","Base Rime"
-# # # talents+=/cold_shower:1/avalanche:1/supreme_torrent:1
-# # # copy="CS ST","Base Rime"
-# # # talents+=/cold_shower:1/supreme_torrent:1
-# # copy="IT","Base Rime"
-# # talents+=/icy_talons:1
-# # copy="IT GA","Base Rime"
-# # talents+=/icy_talons:1/glacial_assault:1
-# # copy="FWW","Base Rime"
-# # talents+=/frostweavers_wrath:1
-# # copy="SFT ST","Base Rime"
-# # talents+=/soulfrost_torrent:1/supreme_torrent:1
-# # copy="SFT","Base Rime"
-# # talents+=/soulfrost_torrent:1
-# # copy="BC","Base Rime"
-# # talents+=/biting_cold:1
-# # copy="ST","Base Rime"
-# # talents+=/supreme_torrent:1
-# # copy="WOTN","Base Rime"
-# # talents+=/wisdom_of_the_north:1
+talents=cascading_blitz:1/bursting_swallows:1/burstbolter:1/icy_flow:1/greater_glacial_blast:1/icy_talons:1/glacial_assault:1
+copy="Undulating","Base Rime"
+legendary.undulating_spirit=1
+legendary.skandis_decree=0
+legendary.frostwyrms_spite=0
+copy="Skandis","Base Rime"
+legendary.undulating_spirit=0
+legendary.skandis_decree=1
+legendary.frostwyrms_spite=0
+copy="Frostwyrms Spite","Base Rime"
+legendary.undulating_spirit=0
+legendary.skandis_decree=0
+legendary.frostwyrms_spite=1
+
+copy="CF","Base Rime"
+talents+=/chilling_finesse:1
+copy="HI","Base Rime"
+talents+=/harrowing_ice:1
+copy="GA","Base Rime"
+talents+=/glacial_assault:1
+# copy="BB","Base Rime"
+# talents+=/burstbolter:1
+# copy="IF","Base Rime"
+# talents+=/icy_flow:1
+copy="NK","Base Rime"
+talents+=/navirs_keeper:1
+# copy="IF NK","Base Rime"
+# talents+=/icy_flow:1/navirs_keeper:1
+# copy="IF GGB","Base Rime"
+# talents+=/icy_flow:1/greater_glacial_blast:1
+# copy="IF GGB NK","Base Rime"
+# talents+=/icy_flow:1/greater_glacial_blast:1/navirs_keeper:1
+# copy="CB","Base Rime"
+# talents+=/cascading_blitz:1
+# copy="CB BS","Base Rime"
+# talents+=/cascading_blitz:1/bursting_swallows:1
+copy="AVA","Base Rime"
+talents+=/avalanche:1
+copy="COAL","Base Rime"
+talents+=/coalescing_frost:1
+copy="COAL ST","Base Rime"
+talents+=/coalescing_frost:1/supreme_torrent:1
+# copy="BS","Base Rime"
+# talents+=/bursting_swallows:1
+# copy="GGB","Base Rime"
+# talents+=/greater_glacial_blast:1
+copy="CS","Base Rime"
+talents+=/cold_shower:1
+copy="CS Ava","Base Rime"
+talents+=/cold_shower:1/avalanche:1
+copy="CS Ava ST","Base Rime"
+talents+=/cold_shower:1/avalanche:1/supreme_torrent:1
+copy="CS ST","Base Rime"
+talents+=/cold_shower:1/supreme_torrent:1
+# copy="IT","Base Rime"
+# talents+=/icy_talons:1
+# copy="IT GA","Base Rime"
+# talents+=/icy_talons:1/glacial_assault:1
+# copy="IT GA NK","Base Rime"
+# talents+=/icy_talons:1/glacial_assault:1/navirs_keeper:1
+# copy="IT GGB","Base Rime"
+# talents+=/icy_talons:1/greater_glacial_blast:1
+# copy="IT GGB IF","Base Rime"
+# talents+=/icy_talons:1/greater_glacial_blast:1/icy_flow:1
+# copy="IT GA GGB","Base Rime"
+# talents+=/icy_talons:1/glacial_assault:1/greater_glacial_blast:1
+# copy="IT GA GGB IF","Base Rime"
+# talents+=/icy_talons:1/glacial_assault:1/greater_glacial_blast:1/icy_flow:1
+# copy="IT GA GGB NK","Base Rime"
+# talents+=/icy_talons:1/glacial_assault:1/greater_glacial_blast:1/navirs_keeper:1
+# copy="IT GA GGB IF NK","Base Rime"
+# talents+=/icy_talons:1/glacial_assault:1/greater_glacial_blast:1/icy_flow:1/navirs_keeper:1
+copy="FWW","Base Rime"
+talents+=/frostweavers_wrath:1
+copy="SFT ST","Base Rime"
+talents+=/soulfrost_torrent:1/supreme_torrent:1
+copy="SFT","Base Rime"
+talents+=/soulfrost_torrent:1
+copy="BC","Base Rime"
+talents+=/biting_cold:1
+copy="ST","Base Rime"
+talents+=/supreme_torrent:1
+copy="WOTN","Base Rime"
+talents+=/wisdom_of_the_north:1
 
 # copy="Icicles","Base Rime"
 # weapon=icicles_of_anzhyr

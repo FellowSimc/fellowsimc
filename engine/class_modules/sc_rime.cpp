@@ -894,10 +894,10 @@ public:
     if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background &&
          !p()->legendary.undulating_spirit_alternative_check )
     {
-      if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
-      {
-        p()->buffs.undulating_spirit->trigger();
-      }
+      //if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
+      //{
+      //  p()->buffs.undulating_spirit->trigger();
+      //}
     }
   }
 
@@ -942,6 +942,18 @@ struct rime_spell_t : public rime_action_t<fellowship::actions::fs_player_action
 {
   rime_spell_t( util::string_view n, rime_t* p, util::string_view o = {} ) : base_t( n, p, o )
   {
+  }
+
+  double composite_persistent_multiplier( const action_state_t* state ) const override
+  {
+    double m = base_t::composite_persistent_multiplier( state );
+
+    if ( current_resource() == RESOURCE_WINTER_ORB && p()->buffs.undulating_spirit->check() && !is_secondary_action() )
+    {
+      m *= 1.0 + p()->cache.mastery();
+    }
+
+    return m;
   }
 };
 
@@ -1643,6 +1655,11 @@ struct winters_blessing_t : public rime_spell_t
   {
     p()->buffs.winters_blessing->trigger();
     rime_spell_t::execute();
+
+    if ( p()->legendary.undulating_spirit )
+    {
+      p()->buffs.undulating_spirit->trigger( 2 );
+    }
   }
 };
 
@@ -2626,7 +2643,7 @@ void rime_t::create_buffs()
                                ->set_default_value( legendary.frostwyrms_spite_dmg_per_stack )
                                ->set_refresh_behavior( buff_refresh_behavior::DURATION );
 
-  buffs.undulating_spirit = make_buff<rime_buff_t>( this, "undulating_spirit" )->set_max_stack( 1 );
+  buffs.undulating_spirit = make_buff<rime_buff_t>( this, "undulating_spirit" )->set_max_stack( 4 );
 
   buffs.navirs_keeper = make_buff<rime_buff_t>( this, "navirs_keeper" )
                             ->set_max_stack( talents.navirs_keeper_cold_snaps )
@@ -2863,7 +2880,7 @@ void actions::rime_action_t<Base>::spend_winter_orbs( const action_state_t* s )
 
   if ( p()->legendary.undulating_spirit && p()->buffs.undulating_spirit->check() )
   {
-    p()->buffs.undulating_spirit->expire();
+    p()->buffs.undulating_spirit->decrement();
     p()->sim->print_debug( "{} proc'd Undulating Spirit Refund", *p() );
     trigger_spirit_refund( s, orbs_spent );
   }

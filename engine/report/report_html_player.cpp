@@ -1625,35 +1625,6 @@ void print_html_stats( report::sc_html_stream& os, const player_t& p )
                "<td>{:.2f}%</td>"
                "<td>{:.0f}</td></tr>\n",
                100.0 * buffed_stats.mastery, 100.0 * p.cache.mastery(), p.composite_mastery_rating() );
-    if ( buffed_stats.mh_attack_expertise > 7.5 )
-    {
-      if ( p.dual_wield() )
-      {
-        os.format( R"(<tr class="right"><th class="left">Expertise</th>)"
-                   "<td></td>"
-                   "<td></td>"
-                   "<td>{:.2f}% / {:.2f}%</td>"
-                   "<td>{:.2f}% / {:.2f}%</td>"
-                   "<td>{:.0f}</td></tr>\n",
-                   100 * buffed_stats.mh_attack_expertise,
-                   100 * buffed_stats.oh_attack_expertise,
-                   100 * p.composite_melee_expertise( &( p.main_hand_weapon ) ),
-                   100 * p.composite_melee_expertise( &( p.off_hand_weapon ) ),
-                   p.composite_expertise_rating() );
-      }
-      else
-      {
-        os.format( R"(<tr class="right"><th class="left">Expertise</th>)"
-                   "<td></td>"
-                   "<td></td>"
-                   "<td>{:.2f}%</td>"
-                   "<td>{:.2f}%</td>"
-                   "<td>{:.0f}</td></tr>\n",
-                   100 * buffed_stats.mh_attack_expertise,
-                   100 * p.composite_melee_expertise( &( p.main_hand_weapon ) ),
-                   p.composite_expertise_rating() );
-      }
-    }
     os.format( R"(<tr class="right"><th class="left">Armor</th>)"
                "<td></td>"
                "<td></td>"

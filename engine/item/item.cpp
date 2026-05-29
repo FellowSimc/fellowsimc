@@ -113,11 +113,9 @@ item_t::item_t( player_t* p, util::string_view o ) :
 
 bool item_t::has_stats() const
 {
-  for ( int stat_type : parsed.data.stat_type_e )
-  {
-    if ( stat_type > 0 )
+  for ( stat_e e = STAT_NONE; e < STAT_MAX; ++e )
+    if ( stats.get_stat( e ) > 0 )
       return true;
-  }
 
   return false;
 }
@@ -280,28 +278,35 @@ std::string item_t::item_stats_str() const
     s << parsed.armor << " Armor, ";
   else if ( item_database::armor_value( *this ) )
     s << item_database::armor_value( *this ) << " Armor, ";
-
-  for ( size_t i = 0; i < std::size( parsed.data.stat_type_e ); i++ )
+  
+  for ( stat_e e = STAT_NONE; e < STAT_MAX; ++e )
   {
-    if ( parsed.data.stat_type_e[ i ] <= 0 )
-      continue;
-
-    int v = stat_value( i );
-    stat_e stat = util::translate_item_mod( parsed.data.stat_type_e[ i ] );
-
-    if ( v == 0 )
-      continue;
-
-    if ( v > 0 )
-      s << "+";
-
-    s << v << " " << util::stat_type_abbrev( stat );
-    if ( stat == STAT_NONE )
+    if ( stats.get_stat( e ) > 0 )
     {
-      s << "(" << parsed.data.stat_type_e[ i ] << ")";
+      s << stats.get_stat( e ) << " " << util::stat_type_abbrev( e ) << ", ";
     }
-    s << ", ";
   }
+  //for ( size_t i = 0; i < std::size( parsed.data.stat_type_e ); i++ )
+  //{
+  //  if ( parsed.data.stat_type_e[ i ] <= 0 )
+  //    continue;
+
+  //  int v = stat_value( i );
+  //  stat_e stat = util::translate_item_mod( parsed.data.stat_type_e[ i ] );
+
+  //  if ( v == 0 )
+  //    continue;
+
+  //  if ( v > 0 )
+  //    s << "+";
+
+  //  s << v << " " << util::stat_type_abbrev( stat );
+  //  if ( stat == STAT_NONE )
+  //  {
+  //    s << "(" << parsed.data.stat_type_e[ i ] << ")";
+  //  }
+  //  s << ", ";
+  //}
 
   std::string str = s.str();
   if ( str.size() > 2 )

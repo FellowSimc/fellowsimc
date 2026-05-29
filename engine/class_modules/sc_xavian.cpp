@@ -70,6 +70,11 @@ public:
     action_t* auto_attack;
     actions::melee_t* melee_hit;
     action_t* suns_verdict;
+    action_t* brilliant_flash_heal;
+    action_t* vanguard_of_vengeance;
+    action_t* solaris;
+    action_t* decree_of_the_sun_dmg;
+    action_t* decree_of_the_sun_heal;
   } actions;
 
   struct buffs_t
@@ -114,118 +119,65 @@ public:
     accumulated_rng_t* rising_sun;
   } rng_objects;
 
-  enum xavian_talents_t : unsigned long long
+  #define XAVIAN_TALENT_LIST( X )                                                \
+  X( SUNS_TOUCH, "suns_touch", "Suns Touch" )                                  \
+  X( GRAND_HALO, "grand_halo", "Grand Halo" )                                  \
+  X( SOLAR_BURN, "solar_burn", "Solar Burn" )                                  \
+  X( TEMPERED_DESCENT, "tempered_descent", "Tempered Descent" )                \
+  X( LIGHTS_OATH, "lights_oath", "Lights Oath" )                               \
+  X( RISING_SUN, "rising_sun", "Rising Sun" )                                  \
+  X( IMPOSING_PRESENCE, "imposing_presence", "Imposing Presence" )             \
+  X( CELESTIAL_FAVOR, "celestial_favor", "Celestial Favor" )                   \
+  X( GLEAMING_STRIKES, "gleaming_strikes", "Gleaming Strikes" )                \
+  X( SUNS_VERDICT, "suns_verdict", "Suns Verdict" )                            \
+  X( MAGIC_WARD, "magic_ward", "Magic Ward" )                                  \
+  X( HALLOWED_SHIELD, "hallowed_shield", "Hallowed Shield" )                   \
+  X( VANGUARD_OF_VENGEANCE, "vanguard_of_vengeance", "Vanguard of Vengeance" ) \
+  X( INVICTUS, "invictus", "Invictus" )                                        \
+  X( GOLDEN_HOUR, "golden_hour", "Golden Hour" )                               \
+  X( ZENITH_TECHNIQUE, "zenith_technique", "Zenith Technique" )                \
+  X( HEALING_HALO, "healing_halo", "Healing Halo" )                            \
+  X( SHIFTING_SPECTRUM, "shifting_spectrum", "Shifting Spectrum" )
+
+  enum xavian_talent_index_t
   {
-    NONE                  = 0ULL,
-    SUNS_TOUCH            = 1ULL << 0,
-    GRAND_HALO            = 1ULL << 1,
-    SOLAR_BURN            = 1ULL << 2,
-    TEMPERED_DESCENT      = 1ULL << 3,
-    LIGHTS_OATH           = 1ULL << 4,
-    RISING_SUN            = 1ULL << 5,
-    IMPOSING_PRESENCE     = 1ULL << 6,
-    CELESTIAL_FAVOR       = 1ULL << 7,
-    GLEAMING_STRIKES      = 1ULL << 8,
-    SUNS_VERDICT          = 1ULL << 9,
-    MAGIC_WARD            = 1ULL << 10,
-    HALLOWED_SHIELD       = 1ULL << 11,
-    VANGUARD_OF_VENGEANCE = 1ULL << 12,
-    INVICTUS              = 1ULL << 13,
-    GOLDEN_HOUR           = 1ULL << 14,
-    ZENITH_TECHNIQUE      = 1ULL << 15,
-    HEALING_HALO          = 1ULL << 16,
-    SHIFTING_SPECTRUM     = 1ULL << 17,
-    MAX                   = 1ULL << 18
+#define X( name, id, pretty ) name##_INDEX,
+    XAVIAN_TALENT_LIST( X )
+#undef X
+        XAVIAN_TALENT_MAX
   };
 
-  static constexpr std::string_view talent_name_formatted( xavian_talents_t t )
+  enum xavian_talents_t : unsigned long long
   {
-    switch ( t )
-    {
-      case xavian_talents_t::SUNS_TOUCH:
-        return "Suns Touch";
-      case xavian_talents_t::GRAND_HALO:
-        return "Grand Halo";
-      case xavian_talents_t::SOLAR_BURN:
-        return "Solar Burn";
-      case xavian_talents_t::TEMPERED_DESCENT:
-        return "Tempered Descent";
-      case xavian_talents_t::LIGHTS_OATH:
-        return "Lights Oath";
-      case xavian_talents_t::RISING_SUN:
-        return "Rising Sun";
-      case xavian_talents_t::IMPOSING_PRESENCE:
-        return "Imposing Presence";
-      case xavian_talents_t::CELESTIAL_FAVOR:
-        return "Celestial Favor";
-      case xavian_talents_t::GLEAMING_STRIKES:
-        return "Gleaming Strikes";
-      case xavian_talents_t::SUNS_VERDICT:
-        return "Suns Verdict";
-      case xavian_talents_t::MAGIC_WARD:
-        return "Magic Ward";
-      case xavian_talents_t::HALLOWED_SHIELD:
-        return "Hallowed Shield";
-      case xavian_talents_t::VANGUARD_OF_VENGEANCE:
-        return "Vanguard of Vengeance";
-      case xavian_talents_t::INVICTUS:
-        return "Invictus";
-      case xavian_talents_t::GOLDEN_HOUR:
-        return "Golden Hour";
-      case xavian_talents_t::ZENITH_TECHNIQUE:
-        return "Zenith Technique";
-      case xavian_talents_t::HEALING_HALO:
-        return "Healing Halo";
-      case xavian_talents_t::SHIFTING_SPECTRUM:
-        return "Shifting Spectrum";
-      default:
-        return "Unknown Talent";
-    }
+    NONE = 0,
+#define X( name, id, pretty ) name = 1ULL << name##_INDEX,
+    XAVIAN_TALENT_LIST( X )
+#undef X
+        MAX = 1ULL << XAVIAN_TALENT_MAX
+  };
+
+  static constexpr talent_info XAVIAN_TALENTS[] = {
+#define X( name, id, pretty ) { xavian_talents_t::name, id, pretty },
+      XAVIAN_TALENT_LIST( X )
+#undef X
+  };
+
+  constexpr std::string_view talent_name( long long t ) override
+  {
+    for ( const auto& talent : XAVIAN_TALENTS )
+      if ( talent.flag == t )
+        return talent.id;
+
+    return "unknown_talent";
   }
 
-  static constexpr std::string_view talent_name( xavian_talents_t t )
+  constexpr std::string_view talent_name_formatted( long long t ) override
   {
-    switch ( t )
-    {
-      case xavian_talents_t::SUNS_TOUCH:
-        return "suns_touch";
-      case xavian_talents_t::GRAND_HALO:
-        return "grand_halo";
-      case xavian_talents_t::SOLAR_BURN:
-        return "solar_burn";
-      case xavian_talents_t::TEMPERED_DESCENT:
-        return "tempered_descent";
-      case xavian_talents_t::LIGHTS_OATH:
-        return "lights_oath";
-      case xavian_talents_t::RISING_SUN:
-        return "rising_sun";
-      case xavian_talents_t::IMPOSING_PRESENCE:
-        return "imposing_presence";
-      case xavian_talents_t::CELESTIAL_FAVOR:
-        return "celestial_favor";
-      case xavian_talents_t::GLEAMING_STRIKES:
-        return "gleaming_strikes";
-      case xavian_talents_t::SUNS_VERDICT:
-        return "suns_verdict";
-      case xavian_talents_t::MAGIC_WARD:
-        return "magic_ward";
-      case xavian_talents_t::HALLOWED_SHIELD:
-        return "hallowed_shield";
-      case xavian_talents_t::VANGUARD_OF_VENGEANCE:
-        return "vanguard_of_vengeance";
-      case xavian_talents_t::INVICTUS:
-        return "invictus";
-      case xavian_talents_t::GOLDEN_HOUR:
-        return "golden_hour";
-      case xavian_talents_t::ZENITH_TECHNIQUE:
-        return "zenith_technique";
-      case xavian_talents_t::HEALING_HALO:
-        return "healing_halo";
-      case xavian_talents_t::SHIFTING_SPECTRUM:
-        return "shifting_spectrum";
-      default:
-        return "unknown_talent";
-    }
+    for ( const auto& talent : XAVIAN_TALENTS )
+      if ( talent.flag == t )
+        return talent.pretty;
+
+    return "Unknown Talent";
   }
 
   struct spell_const_t
@@ -235,41 +187,39 @@ public:
     timespan_t sunstruck_duration          = 20_s;
     int suntruck_max_stacks                = 10;
 
-    double magic_ward_magic_mul = 0.9;
-
     double solaris_overheal_scaler       = 0.05;
     int solaris_target_scaling_threshold = 5;
 
     timespan_t auto_attack_time = 3_s;
     double auto_attack_coeff    = 0.85;
 
-    double sun_strike_coeff                = 1.6;
+    double sun_strike_coeff                = 1.28;
     double sun_strike_resource_proc_chance = 0.15;
     double sun_strike_cleave_mod           = 0.15;
     int sun_strike_scaling_thresold        = 3;
 
-    double blinding_slash_coeff                = 1.41;
+    double blinding_slash_coeff                = 1.14;
     int blinding_slash_scaling_threshold       = 8;
     timespan_t blinding_slash_cd               = 6_s;
     double blinding_slash_resource_proc_chance = 0.15;
-    int blinding_slash_max_stacks              = 1;
+    int blinding_slash_max_stacks              = 2;
     double blinding_slash_parry_chance         = 0.2;
     timespan_t blinding_slash_blind_duration   = 8_s;
 
-    double omnistrike_coeff                = 2.82;
+    double omnistrike_coeff                = 2.26;
     int omnistrike_scaling_threshold       = 8;
     timespan_t omnistrike_cooldown         = 18_s;
     double omnistrike_resource_proc_chance = 0.3;
     double omnistrike_spirit_gain          = 4;
 
-    double solar_blades_coeff           = 1.86;
+    double solar_blades_coeff           = 1.49;
     int solar_blades_scaling_threshold  = 5;
     double solar_blades_main_target_mul = 2;
     double solar_blades_resource_chance = 1.0;
     double solar_blades_mana_cost       = 55;
     timespan_t solar_blades_cd          = 9_s;
 
-    double shining_halo_coeff                     = 0.32;
+    double shining_halo_coeff                     = 0.25;
     int shining_halo_scaling_thresold             = 12;
     timespan_t shining_halo_duration              = 12_s;
     timespan_t shining_halo_period                = 1.5_s;
@@ -277,11 +227,11 @@ public:
     double shining_halo_dr_mul                    = 0.8;
     timespan_t shining_halo_extension_per_spender = 1.5_s;
 
-    double brilliant_flare_coeff     = 13.9;  // Brilliant Flare
+    double brilliant_flare_coeff     = 6.95;  // Brilliant Flare
     double brilliant_flare_mana_cost = 132;
 
-    double brilliant_flash_dmg_coeff     = 2.79;  // Brilliant Flash
-    double brilliant_flash_heal_coeff    = 13.9;
+    double brilliant_flash_dmg_coeff     = 2.22;  // Brilliant Flash
+    double brilliant_flash_heal_coeff    = 6.95;
     double brilliant_flash_self_heal_mul = 1.2;
     int swift_reprieval_max_stacks       = 3;
 
@@ -297,7 +247,7 @@ public:
     timespan_t interrupt_cd = 12_s;
     timespan_t taunt_cd     = 8_s;
 
-    double solar_shield_coeff        = 38.33;
+    double solar_shield_coeff        = 19.165;
     timespan_t solar_shield_duration = 8_s;
     timespan_t solar_shield_cd       = 15_s;
     double solar_shield_mana_cost    = 182;
@@ -310,19 +260,19 @@ public:
     int omega_reprieval_falloff            = 3;
     double omega_reprieval_mana_pct        = 0.12;
 
-    double aura_of_solace_coeff         = 0.38;
+    double aura_of_solace_coeff         = 0.31;
     timespan_t aura_of_solace_period    = 1.5_s;
     int aura_of_solace_falloff          = 5;
     double aura_of_solace_parry         = 0.08;
     double aura_of_solace_mana_per_tick = 10;
 
-    double decree_of_solace_dmg_coeff           = 6.43;
-    double decree_of_solace_heal_coeff          = 2.84;
-    int decree_of_solace_falloff                = 8;
-    timespan_t decree_of_solace_pulse_period    = 1_s;
-    timespan_t decree_of_solace_invuln_duration = 3_s;
-    timespan_t decree_of_solace_dr_duration     = 5_s;
-    double decree_of_solace_dr_mul              = 0.5;
+    double decree_of_the_sun_dmg_coeff           = 5.12;
+    double decree_of_the_sun_heal_coeff          = 1.42;
+    int decree_of_the_sun_falloff                = 8;
+    timespan_t decree_of_the_sun_pulse_period    = 1_s;
+    timespan_t decree_of_the_sun_invuln_duration = 3_s;
+    timespan_t decree_of_the_sun_dr_duration     = 5_s;
+    double decree_of_the_sun_dr_mul              = 0.5;
 
   } spell_const;
 
@@ -352,8 +302,8 @@ public:
 
     timespan_t suns_verdict_duration      = 12_s;
     int suns_verdict_max_stacks           = 2;
-    double suns_verdict_chance            = 0.15;
-    double suns_verdict_coeff             = 1.43;
+    double suns_verdict_chance            = 0.2;
+    double suns_verdict_coeff             = 1.15;
     double suns_verdict_scaling_threshold = 8;
 
     double golden_hour_brilliant_flash_amp = 1.6;
@@ -435,6 +385,7 @@ public:
   void create_cooldowns();
   void create_buffs() override;
   void create_options() override;
+  void parry_effects( action_state_t* s );
 
   void copy_from( player_t* source ) override;
   std::string create_profile( save_e stype ) override;
@@ -461,7 +412,7 @@ public:
   }
   stat_e convert_hybrid_stat( stat_e s ) const override;
 
-  double composite_parry() const override;
+  double composite_parry( action_state_t* s ) const override;
   double composite_attribute_multiplier( attribute_e attr ) const override;
   double composite_melee_auto_attack_speed() const override;
   double composite_melee_haste() const override;
@@ -532,15 +483,15 @@ namespace actions
 {  // namespace actions
 
 template <typename Base>
-class xavian_action_t : public Base
+class xavian_action_t : public fellowship::actions::fs_player_action_t<Base>
 {
 protected:
   /// typedef for xavian_action_t<action_base_t>
-  using base_t = xavian_action_t<Base>;
+  using base_t = xavian_action_t<fellowship::actions::fs_player_action_t<Base>>;
 
 private:
   /// typedef for the templated action type, eg. spell_t, attack_t, heal_t
-  using ab = Base;
+  using ab = fellowship::actions::fs_player_action_t<Base>;
 
 public:
   bool _procs_golden_hour;
@@ -549,7 +500,9 @@ public:
   // Init =====================================================================
 
   xavian_action_t( util::string_view n, xavian_t* p, util::string_view options = {} )
-    : ab( n, p, options ), _procs_golden_hour( false ), swift_reprieval_chance( 0.0 )
+    : ab( n, p, options ),
+      _procs_golden_hour( false ),
+      swift_reprieval_chance( 0.0 )
   {
     ab::parse_options( options );
     ab::may_crit = ab::tick_may_crit = true;
@@ -576,11 +529,6 @@ public:
   xavian_td_t* td( player_t* t ) const
   {
     return p()->get_target_data( t );
-  }
-
-  double parry_chance( double exp, player_t* target ) const override
-  {
-    return 0.0;
   }
 
 public:
@@ -633,8 +581,12 @@ public:
 // Rogue Attack Classes
 // ==========================================================================
 
-struct xavian_heal_t : public xavian_action_t<fellowship::actions::fs_player_action_t<heal_t>>
+struct xavian_heal_t : public xavian_action_t<heal_t>
 {
+protected:
+  using base_t = xavian_action_t<heal_t>;
+
+public:
   xavian_heal_t( util::string_view n, xavian_t* p, util::string_view o = {} ) : base_t( n, p, o )
   {
     harmful = false;
@@ -663,23 +615,37 @@ struct xavian_heal_t : public xavian_action_t<fellowship::actions::fs_player_act
   }
 };
 
-struct xavian_spell_t : public xavian_action_t<fellowship::actions::fs_player_action_t<spell_t>>
+struct xavian_spell_t : public xavian_action_t<spell_t>
 {
+protected:
+  using base_t = xavian_action_t<spell_t>;
+
+public:
   xavian_spell_t( util::string_view n, xavian_t* p, util::string_view o = {} ) : base_t( n, p, o )
   {
+    school = SCHOOL_MAGIC;
   }
 };
 
-struct xavian_attack_t : public xavian_action_t<fellowship::actions::fs_player_action_t<melee_attack_t>>
+struct xavian_attack_t : public xavian_action_t<melee_attack_t>
 {
+protected:
+  using base_t = xavian_action_t<melee_attack_t>;
+
+public:
   xavian_attack_t( util::string_view n, xavian_t* p, util::string_view o = {} ) : base_t( n, p, o )
   {
     special = true;
+    school  = SCHOOL_PHYSICAL;
   }
 };
 
-struct xavian_absorb_t : public xavian_action_t<fellowship::actions::fs_player_action_t<absorb_t>>
+struct xavian_absorb_t : public xavian_action_t<absorb_t>
 {
+protected:
+  using base_t = xavian_action_t<absorb_t>;
+
+public:
   xavian_absorb_t( util::string_view n, xavian_t* p, util::string_view o = {} ) : base_t( n, p, o )
   {
     may_crit      = false;
@@ -819,7 +785,6 @@ struct auto_melee_attack_t : public action_t
 
     id = 1;
 
-    school = SCHOOL_PHYSICAL;
 
     add_child( p->actions.melee_hit );
   }
@@ -857,6 +822,8 @@ struct sun_strike_t : public xavian_attack_t
     aoe                 = -1;
     reduced_aoe_targets = p->spell_const.sun_strike_scaling_thresold;
     full_amount_targets = 1;
+
+    ability_flags |= ability_type_e::ABILITY_BASIC;
   }
 
   double composite_da_multiplier( const action_state_t* s ) const override
@@ -916,6 +883,8 @@ struct blinding_slash_t : public xavian_attack_t
     cooldown->hasted   = true;
     cooldown->duration = p->spell_const.blinding_slash_cd;
     cooldown->charges  = 1;
+
+    ability_flags |= ability_type_e::ABILITY_BASIC;
   }
 
   void impact( action_state_t* s ) override
@@ -979,6 +948,8 @@ struct omnistrike_t : public xavian_attack_t
     energize_type     = action_energize::ON_CAST;
     energize_amount   = p->spell_const.omnistrike_spirit_gain;
     energize_resource = RESOURCE_SPIRIT;
+    
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   static const omnistrike_action_state_t* cast_state( const action_state_t* st )
@@ -1079,7 +1050,6 @@ struct solar_blades_t : public xavian_attack_t
     gcd_type    = gcd_haste_type::NONE;
     trigger_gcd = 0_s;
 
-    school                  = SCHOOL_MAGIC;
     attack_power_mod.direct = p->spell_const.solar_blades_coeff;
 
     name_str_reporting     = "Solar Blades";
@@ -1095,6 +1065,7 @@ struct solar_blades_t : public xavian_attack_t
 
     resource_current            = RESOURCE_MANA;
     base_costs[ RESOURCE_MANA ] = p->spell_const.solar_blades_mana_cost;
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   void impact( action_state_t* s ) override
@@ -1139,56 +1110,59 @@ struct solar_blades_t : public xavian_attack_t
   }
 };
 
-struct brilliant_flash_t : public xavian_attack_t
+struct brilliant_flash_action_state_t : public action_state_t
 {
-  struct brilliant_flash_action_state_t : public action_state_t
+public:
+  int omega_reprieval;
+
+  brilliant_flash_action_state_t( action_t* action, player_t* target )
+    : action_state_t( action, target ), omega_reprieval( 0 )
   {
-  public:
-    int omega_reprieval;
+  }
 
-    brilliant_flash_action_state_t( action_t* action, player_t* target )
-      : action_state_t( action, target ), omega_reprieval( 0 )
-    {
-    }
-
-    void initialize() override
-    {
-      action_state_t::initialize();
-      omega_reprieval = 0;
-    }
-
-    std::ostringstream& debug_str( std::ostringstream& s ) override
-    {
-      action_state_t::debug_str( s ) << " omega_reprieval=" << omega_reprieval;
-      return s;
-    }
-
-    void copy_state( const action_state_t* s )
-    {
-      action_state_t::copy_state( s );
-      const brilliant_flash_action_state_t* rs = debug_cast<const brilliant_flash_action_state_t*>( s );
-    }
-  };
-
-  brilliant_flash_t( util::string_view name, xavian_t* p, util::string_view options_str = {} )
-    : xavian_attack_t( name, p, options_str )
+  void initialize() override
   {
-    id = 7;
+    action_state_t::initialize();
+    omega_reprieval = 0;
+  }
 
-    _procs_golden_hour      = true;
-    school                  = SCHOOL_MAGIC;
-    attack_power_mod.direct = p->spell_const.omnistrike_coeff;
+  std::ostringstream& debug_str( std::ostringstream& s ) override
+  {
+    action_state_t::debug_str( s ) << " omega_reprieval=" << omega_reprieval;
+    return s;
+  }
 
-    name_str_reporting     = "Brilliant Flash";
+  void copy_state( const action_state_t* s )
+  {
+    action_state_t::copy_state( s );
+    const brilliant_flash_action_state_t* rs = debug_cast<const brilliant_flash_action_state_t*>( s );
+  }
+};
 
-    //aoe                 = -1;
-    reduced_aoe_targets = p->spell_const.omega_reprieval_falloff;
-    full_amount_targets = 1;
+template <typename Base>
+struct brilliant_flash_base_t : public xavian_action_t<Base>
+{
+  using ab = xavian_action_t<Base>;
+
+  brilliant_flash_base_t( util::string_view name, xavian_t* p, util::string_view options_str = {} )
+    : ab( name, p, options_str )
+  {
+    ab::id = 7;
+
+    ab::_procs_golden_hour = true;
+
+    ab::name_str_reporting = "Brilliant Flash";
+
+    // aoe                 = -1;
+    ab::reduced_aoe_targets = p->spell_const.omega_reprieval_falloff;
+    ab::full_amount_targets = 1;
 
     if ( p->talents_enabled( xavian_t::GOLDEN_HOUR ) )
     {
-      base_dd_multiplier *= p->talents.golden_hour_brilliant_flash_amp;
+      ab::base_dd_multiplier *= p->talents.golden_hour_brilliant_flash_amp;
     }
+
+    ab::ability_flags |= ability_type_e::ABILITY_POWER;
   }
 
   static const brilliant_flash_action_state_t* cast_state( const action_state_t* st )
@@ -1203,26 +1177,29 @@ struct brilliant_flash_t : public xavian_attack_t
 
   action_state_t* new_state() override
   {
-    return new brilliant_flash_action_state_t( this, target );
+    return new brilliant_flash_action_state_t( this, ab::target );
   }
 
   void snapshot_state( action_state_t* state, result_amount_type rt ) override
   {
     auto rs = cast_state( state );
 
-    rs->omega_reprieval = p()->buffs.omega_reprieval->check();
+    rs->omega_reprieval = ab::p()->buffs.omega_reprieval->check();
 
-    base_t::snapshot_state( state, rt );
+    ab::snapshot_state( state, rt );
   }
 
   void impact( action_state_t* s ) override
   {
-    xavian_attack_t::impact( s );
+    ab::impact( s );
   }
 
   int n_targets() const override
   {
-    if ( p()->buffs.omega_reprieval->check() )
+    if ( ab::background )
+      return 1;
+
+    if ( ab::p()->buffs.omega_reprieval->check() )
       return -1;
 
     return 1;
@@ -1230,70 +1207,111 @@ struct brilliant_flash_t : public xavian_attack_t
 
   double composite_da_multiplier( const action_state_t* s ) const override
   {
-    double m = xavian_attack_t::composite_da_multiplier( s );
+    double m = ab::composite_da_multiplier( s );
 
-    if ( cast_state( s )->omega_reprieval && s->chain_target == 0 )
-      m *= p()->spell_const.omega_reprieval_main_target_mul;
+    if ( !ab::background && cast_state( s )->omega_reprieval && s->chain_target == 0 && !ab::background )
+      m *= ab::p()->spell_const.omega_reprieval_main_target_mul;
 
     return m;
   }
 
   bool ready() override
-  {
-    if ( !p()->buffs.omega_reprieval->check() && !p()->buffs.swift_reprieval->check() )
+  { 
+    if ( !ab::p()->buffs.omega_reprieval->check() && !ab::p()->buffs.swift_reprieval->check() )
       return false;
 
-    return xavian_attack_t::ready();
+    return ab::ready();
   }
 
   void execute() override
   {
-    xavian_attack_t::execute();
+    ab::execute();
+    
+    if ( ab::background )
+      return;
 
-    if ( p()->buffs.omega_reprieval->check() )
+    if ( ab::p()->buffs.omega_reprieval->check() )
     {
-      p()->buffs.omega_reprieval->decrement();
-      p()->resource_gain( RESOURCE_MANA,
-                          p()->resources.max[ RESOURCE_MANA ] * p()->spell_const.omega_reprieval_mana_pct,
-                          p()->gains.omega_reprieval, this );
+      ab::p()->buffs.omega_reprieval->decrement();
+      ab::p()->resource_gain( RESOURCE_MANA,
+                              ab::p()->resources.max[ RESOURCE_MANA ] * ab::p()->spell_const.omega_reprieval_mana_pct,
+                              ab::p()->gains.omega_reprieval, this );
     }
     else
     {
-      p()->buffs.swift_reprieval->decrement();
+      ab::p()->buffs.swift_reprieval->decrement();
     }
 
-    if ( p()->talents_enabled( xavian_t::SUNS_VERDICT ) && p()->rng_objects.suns_verdict->trigger() )
+    if ( ab::p()->talents_enabled( xavian_t::SUNS_VERDICT ) && ab::p()->rng_objects.suns_verdict->trigger() )
     {
-      p()->buffs.suns_verdict->trigger();
+      ab::p()->buffs.suns_verdict->trigger();
     }
 
-    if ( p()->talents_enabled( xavian_t::CELESTIAL_FAVOR ) )
+    if ( ab::p()->talents_enabled( xavian_t::CELESTIAL_FAVOR ) )
     {
-      p()->cooldowns.omega_reprieval->adjust( -p()->talents.celestial_favor_cdr, false );
+      ab::p()->cooldowns.omega_reprieval->adjust( -ab::p()->talents.celestial_favor_cdr, false );
     }
   }
 };
 
+struct brilliant_flash_t : public brilliant_flash_base_t<spell_t>
+{
+private:
+  using ab = brilliant_flash_base_t<spell_t>;
+
+public:
+  brilliant_flash_t( util::string_view name, xavian_t* p, util::string_view options_str = {} )
+    : brilliant_flash_base_t<spell_t>( name, p, options_str )
+  {
+    attack_power_mod.direct = p->spell_const.brilliant_flash_dmg_coeff;
+  }
+
+  void execute() override
+  {
+    ab::execute();
+
+    p()->actions.brilliant_flash_heal->execute_on_target( p() );
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    double m = ab::composite_da_multiplier( s );
+
+    if ( s->target == p() )
+      m *= p()->spell_const.brilliant_flash_self_heal_mul;
+
+    return m;
+  }
+};
+
+struct brilliant_flash_heal_t : public brilliant_flash_base_t<heal_t>
+{
+  brilliant_flash_heal_t( util::string_view name, xavian_t* p, util::string_view options_str = {} )
+    : brilliant_flash_base_t<heal_t>( name, p, options_str )
+  {
+    attack_power_mod.direct = p->spell_const.brilliant_flash_heal_coeff;
+  }
+};
 
 struct omega_repreival_t : public xavian_spell_t
 {
   omega_repreival_t( util::string_view name, xavian_t* p, util::string_view options_str = {} )
     : xavian_spell_t( name, p, options_str )
   {
-    id                 = 8;
+    id = 9;
 
     use_off_gcd = true;
 
     gcd_type    = gcd_haste_type::NONE;
     trigger_gcd = 0_s;
 
-    school                  = SCHOOL_MAGIC;
-
-    name_str_reporting     = "Omega Reprieval";
+    name_str_reporting = "Omega Reprieval";
 
     cooldown->hasted   = false;
     cooldown->duration = p->spell_const.omega_reprieval_cd;
     cooldown->charges  = 1;
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
   void execute() override
@@ -1301,6 +1319,103 @@ struct omega_repreival_t : public xavian_spell_t
     xavian_spell_t::execute();
 
     p()->buffs.omega_reprieval->trigger( 2 );
+  }
+};
+
+struct vanguard_of_vengeance_t : public xavian_attack_t
+{
+  vanguard_of_vengeance_t( xavian_t* p ) : xavian_attack_t( "vanguard_of_vengeance", p )
+  {
+    id = 10;
+
+    background = true;
+    name_str_reporting = "Vanguard of Vengeance";
+
+    energize_resource = RESOURCE_MANA;
+    energize_amount   = p->resources.max[ RESOURCE_MANA ] * p->talents.vanguard_of_vengeance_mana_gain_pct;
+
+    attack_power_mod.direct = p->talents.vanguard_of_vengeance_coeff;
+  }
+
+  void execute() override
+  {
+    p()->buffs.vanguard_of_vengeance->trigger();
+    base_t::execute();
+  }
+};
+
+struct solaris_t : public xavian_spell_t
+{
+  solaris_t( xavian_t* p ) : xavian_spell_t( "solaris", p )
+  {
+    id                 = 11;
+    background         = true;
+    name_str_reporting = "Solaris";
+
+    may_crit = false;
+
+    aoe = -1;
+    reduced_aoe_targets = p->spell_const.solaris_target_scaling_threshold;
+  }
+
+  void init_finished()
+  {
+    snapshot_flags &= STATE_NO_MULTIPLIER;
+    snapshot_flags |= STATE_TARGET_NO_PET & ~STATE_TGT_CRIT;
+  }
+};
+
+struct decree_of_the_sun_t : public xavian_spell_t
+{
+  decree_of_the_sun_t( std::string_view name, xavian_t* p, std::string_view opt ) : xavian_spell_t( "decree_of_the_sun", p, opt )
+  {
+    id                 = 12;
+    name_str_reporting = "Decree of the Sun";
+
+    resource_current              = RESOURCE_SPIRIT;
+    base_costs[ RESOURCE_SPIRIT ] = 100;
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
+    
+    use_off_gcd = true;
+
+    gcd_type    = gcd_haste_type::NONE;
+    trigger_gcd = 0_s;
+  }
+
+  void execute() override
+  {
+    xavian_spell_t::execute();
+    p()->fs_buffs.spirit_of_heroism->trigger();
+    p()->buffs.decree_of_the_sun->trigger();
+    p()->buffs.decree_of_the_sun_invuln->trigger();
+    p()->used_ultimate();
+  }
+};
+
+struct decree_of_the_sun_dmg_t : public xavian_spell_t
+{
+  decree_of_the_sun_dmg_t( xavian_t* p ) : xavian_spell_t( "decree_of_the_sun_dmg", p )
+  {
+    id                      = 12;
+    background              = true;
+    name_str_reporting      = "Decree of the Sun Damage";
+    attack_power_mod.direct = p->spell_const.decree_of_the_sun_dmg_coeff;
+    aoe                     = -1;
+    reduced_aoe_targets     = p->spell_const.decree_of_the_sun_falloff;
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
+  }
+};
+
+struct decree_of_the_sun_heal_t : public xavian_heal_t
+{
+  decree_of_the_sun_heal_t( xavian_t* p ) : xavian_heal_t( "decree_of_the_sun_heal", p )
+  {
+    id                      = 12;
+    background              = true;
+    name_str_reporting      = "Decree of the Sun Heal";
+    attack_power_mod.direct = p->spell_const.decree_of_the_sun_heal_coeff;
+    aoe                     = -1;
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
   }
 };
 
@@ -1336,13 +1451,12 @@ xavian_td_t::xavian_td_t( player_t* target, xavian_t* source )
                           ->set_refresh_behavior( buff_refresh_behavior::DURATION );
 }
 
-// TODO: Completely redesign parry.
-double xavian_t::composite_parry() const
+double xavian_t::composite_parry( action_state_t* s ) const
 {
-  auto parry = 0.05 + buffs.aura_of_solace->check_value();
+  auto parry = fs_player_t::composite_parry( s );
 
-  if ( talents_enabled( VANGUARD_OF_VENGEANCE ) )
-    parry += talents.vanguard_of_vengeance_parry;
+  if ( s )
+    parry += get_target_data( s->action->player )->debuffs.blind->check_value();
 
   return parry;
 }
@@ -1514,8 +1628,12 @@ action_t* xavian_t::create_action( util::string_view name, util::string_view opt
     return new solar_blades_t( name, this, options_str );
   else if ( name == "brilliant_flash" )
     return new brilliant_flash_t( name, this, options_str );
+  else if ( name == "brilliant_flash_heal" )
+    return new brilliant_flash_heal_t( name, this, options_str );
   else if ( name == "omega_reprieval" )
     return new omega_repreival_t( name, this, options_str );
+  else if ( name == "decree_of_the_sun" )
+    return new decree_of_the_sun_t( name, this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -1593,7 +1711,14 @@ void xavian_t::init_base_stats()
   resources.base_regen_per_second[ RESOURCE_MANA ] = 0.005 * resources.base[ RESOURCE_MANA ];
 
   base_gcd = timespan_t::from_seconds( 1.5 );
-  min_gcd  = timespan_t::from_seconds( 0.75 );
+  min_gcd  = timespan_t::from_seconds( 0 );
+  //min_gcd  = timespan_t::from_seconds( 0.75 );
+
+  base.parry = 0.05;
+  base.dodge = 0.05;
+
+  if ( talents_enabled( VANGUARD_OF_VENGEANCE ) )
+    base.parry += talents.vanguard_of_vengeance_parry;
 }
 
 // xavian_t::init_spells =====================================================
@@ -1611,7 +1736,7 @@ void xavian_t::init_gains()
 {
   fs_player_t::init_gains();
 
-  gains.spirit_procs = get_gain( "Spirit Procs" );
+  gains.spirit_procs    = get_gain( "Spirit Procs" );
   gains.omega_reprieval = get_gain( "Omega Reprieval" );
 }
 
@@ -1652,12 +1777,54 @@ void xavian_t::create_buffs()
 {
   fs_player_t::create_buffs();
 
+  buffs.decree_of_the_sun =
+      make_buff<xavian_buff_t>( this, "decree_of_the_sun" )
+          ->set_duration( spell_const.decree_of_the_sun_dr_duration + spell_const.decree_of_the_sun_invuln_duration )
+          ->set_max_stack( 1 )
+          ->set_refresh_behavior( buff_refresh_behavior::DURATION )
+          ->set_period( spell_const.decree_of_the_sun_pulse_period )
+          ->set_tick_callback( [ this ]( buff_t*, int, timespan_t ) { actions.decree_of_the_sun_heal->execute(); } );
+
+  buffs.decree_of_the_sun_invuln = make_buff<xavian_buff_t>( this, "decree_of_the_sun_invuln" )
+                                       ->set_duration( spell_const.decree_of_the_sun_invuln_duration )
+                                       ->set_max_stack( 1 )
+                                       ->set_refresh_behavior( buff_refresh_behavior::DURATION )
+                                       ->add_stack_change_callback( [ this ]( buff_t* b, int old, int _new ) {
+                                         if ( !_new )
+                                         {
+                                           actions.decree_of_the_sun_dmg->execute();
+                                           buffs.decree_of_the_sun_dr->trigger();
+                                         }
+                                       } );
+
+  buffs.decree_of_the_sun_dr = make_buff<xavian_buff_t>( this, "decree_of_the_sun_dr" )
+                                   ->set_duration( spell_const.decree_of_the_sun_dr_duration )
+                                   ->set_max_stack( 1 )
+                                   ->set_refresh_behavior( buff_refresh_behavior::DURATION );
+
+  buffs.vanguard_of_vengeance = make_buff<xavian_buff_t>( this, "vanguard_of_vengeance" )
+                                    ->set_duration( talents.vanguard_of_vengeance_buff_duration )
+                                    ->set_max_stack( talents.vanguard_of_vengeance_max_stacks )
+                                    ->set_default_value( talents.vanguard_of_vengeance_spirit_per_stack )
+                                    ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
+
   buffs.swift_reprieval = make_buff<xavian_buff_t>( this, "swift_reprieval" )
                               ->set_max_stack( spell_const.swift_reprieval_max_stacks )
                               ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
-  buffs.aura_of_solace =
-      make_buff<xavian_buff_t>( this, "aura_of_solace" )->set_default_value( spell_const.aura_of_solace_parry );
+  buffs.aura_of_solace = make_buff<xavian_buff_t>( this, "aura_of_solace" )
+                             ->set_default_value( spell_const.aura_of_solace_parry )
+                             ->add_stack_change_callback( [ this ]( buff_t* b, int old, int _new ) {
+                               if ( _new > old )
+                               {
+                                 b->player->current.parry += b->current_value;
+                               }
+                               else
+                               {
+                                 b->player->current.parry -= b->current_value;
+                               }
+                             } )
+                             ->add_invalidate( CACHE_PARRY );
 
   buffs.suns_verdict = make_buff<xavian_buff_t>( this, "suns_verdict" )
                            ->set_max_stack( talents.suns_verdict_max_stacks )
@@ -1736,6 +1903,103 @@ void xavian_t::init_items()
 void xavian_t::init_special_effects()
 {
   fs_player_t::init_special_effects();
+
+  {
+    auto effect                   = new special_effect_t( this );
+    effect->spell_id              = 107;
+    effect->name_str              = "xavian_parry";
+    effect->proc_flags_           = PF_DAMAGE_TAKEN;
+    effect->proc_flags2_          = PF2_PARRY;
+    effect->rppm_scale_           = rppm_scale_e::RPPM_NONE;
+    effect->proc_chance_          = 1.0;
+    effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+    special_effects.push_back( effect );
+
+    struct parry_cb_t : dbc_proc_callback_t
+    {
+      parry_cb_t( xavian_t* p, const special_effect_t& e ) : dbc_proc_callback_t( p, e )
+      {
+      }
+
+      xavian_t* p() const
+      {
+        return static_cast<xavian_t*>( listener );
+      }
+
+      void execute( action_t*, action_state_t* s ) override
+      {
+        p()->parry_effects( s );
+      }
+    };
+
+    auto cb = new parry_cb_t( this, *effect );
+    cb->initialize();
+    cb->activate();
+  }
+
+  {
+    auto effect                   = new special_effect_t( this );
+    effect->spell_id              = 108;
+    effect->name_str              = "solaris";
+    effect->proc_flags_           = PF_ALL_HEAL_TAKEN;
+    effect->proc_flags2_          = PF2_ALL_HIT | PF2_PERIODIC_HEAL;
+    effect->set_can_proc_from_procs( true );
+    effect->rppm_scale_           = rppm_scale_e::RPPM_NONE;
+    effect->proc_chance_          = 1.0;
+    effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+    special_effects.push_back( effect );
+
+    struct solaris_cb_t : dbc_proc_callback_t
+    {
+      solaris_cb_t( xavian_t* p, const special_effect_t& e ) : dbc_proc_callback_t( p, e )
+      {
+      }
+
+      xavian_t* p() const
+      {
+        return static_cast<xavian_t*>( listener );
+      }
+
+      void execute( action_t*, action_state_t* s ) override
+      {
+        auto overheal = s->result_total - s->result_amount;
+
+        if ( overheal > 0 )
+        {
+          p()->actions.solaris->execute_on_target( p()->actions.solaris->target,
+                                                   overheal * p()->spell_const.solaris_overheal_scaler );
+        }
+      }
+    };
+
+    auto cb = new solaris_cb_t( this, *effect );
+    cb->initialize();
+    cb->activate();
+  }
+}
+
+// xavian_t::parry_effects ===================================================
+void xavian_t::parry_effects( action_state_t* s )
+{
+  if ( !s )
+    return;
+
+  player_t* source = s->action->player;
+  auto td          = get_target_data( source );
+
+  td->debuffs.blind->decrement();
+
+  if ( talents_enabled( VANGUARD_OF_VENGEANCE ) )
+  {
+    actions.vanguard_of_vengeance->execute_on_target( source );
+  }
+
+  if ( talents_enabled( HALLOWED_SHIELD ) )
+  {
+    buffs.hallowed_shield->trigger();
+  }
 }
 
 // xavian_t::init_finished ===================================================
@@ -1776,7 +2040,16 @@ void xavian_t::init_talents()
 void xavian_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
-  actions.suns_verdict = new actions::suns_verdict_t( this );
+
+  actions.suns_verdict                     = new actions::suns_verdict_t( this );
+
+  actions.brilliant_flash_heal             = new actions::brilliant_flash_heal_t( "brilliant_flash_heal", this, {} );
+  actions.brilliant_flash_heal->background = true;
+
+  actions.vanguard_of_vengeance  = new actions::vanguard_of_vengeance_t( this );
+  actions.solaris                = new actions::solaris_t( this );
+  actions.decree_of_the_sun_dmg  = new actions::decree_of_the_sun_dmg_t( this );
+  actions.decree_of_the_sun_heal = new actions::decree_of_the_sun_heal_t( this );
 }
 
 void xavian_t::init_rng()

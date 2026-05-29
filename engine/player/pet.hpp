@@ -148,7 +148,7 @@ public:
   double composite_dodge() const override
   { return owner -> cache.dodge(); }
 
-  double composite_parry() const override
+  double composite_parry( action_state_t* s ) const override
   { return owner -> cache.parry(); }
 
   // Influenced by coefficients [ 0, 1 ]

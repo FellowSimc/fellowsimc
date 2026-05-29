@@ -152,18 +152,16 @@ void snapshot_stats_t::execute()
       if (chance < 0)
         expertise_extra = -chance * p->current.rating.expertise;
     }
-    else if (p->position() == POSITION_FRONT)
+    else if ( p->position() == POSITION_FRONT )
     {
-      chance = proxy_attack->parry_chance(p->cache.attack_expertise(), sim->target);
-      if (chance < 0)
-        expertise_extra = -chance * p->current.rating.expertise;
+      chance = proxy_attack->parry_chance( nullptr );
     }
   }
 
-  if (p->scaling)
+  if ( p->scaling )
   {
-    p->scaling->over_cap[STAT_HIT_RATING] = std::max(spell_hit_extra, attack_hit_extra);
-    p->scaling->over_cap[STAT_EXPERTISE_RATING] = expertise_extra;
+    p->scaling->over_cap[ STAT_HIT_RATING ]       = std::max( spell_hit_extra, attack_hit_extra );
+    p->scaling->over_cap[ STAT_EXPERTISE_RATING ] = expertise_extra;
   }
 
   for ( auto* pet : p->pet_list )

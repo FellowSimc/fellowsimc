@@ -191,7 +191,7 @@ public:
     double incinerate_dot_amp_per_stack = 0.3;
 
     timespan_t apocalypse_cast_time = 3_s;
-    timespan_t apocalypse_cooldown  = 60_s;
+    timespan_t apocalypse_cooldown  = 45_s;
     double apocalypse_coeff         = 22.03;
     double apocalypse_falloff       = 1;
 
@@ -747,11 +747,6 @@ public:
     }
 
     return cp;
-  }
-
-  double parry_chance( double exp, player_t* target ) const override
-  {
-    return 0.0;
   }
 
 public:

@@ -1587,19 +1587,7 @@ void print_html_stats( report::sc_html_stream& os, const player_t& p )
                "<td>{:.0f}</td></tr>\n",
                100 * buffed_stats.damage_versatility,
                100 * p.composite_damage_versatility(),
-               p.composite_damage_versatility_rating() );
-    if ( p.primary_role() == ROLE_TANK )
-    {
-      os.format( R"(<tr class="right"><th class="left">Mitigation Versatility</th>)"
-                 "<td></td>"
-                 "<td></td>"
-                 "<td>{:.2f}%</td>"
-                 "<td>{:.2f}%</td>"
-                 "<td>{:.0f}</td></tr>\n",
-                 100 * buffed_stats.mitigation_versatility,
-                 100 * p.composite_mitigation_versatility(),
-                 p.composite_mitigation_versatility_rating() );
-    }
+               p.composite_damage_versatility_rating() ); 
     if ( buffed_stats.manareg_per_second > 0 )
     {
       os.format( R"(<tr class="right"><th class="left">Mana Regen</th>)"
@@ -1763,7 +1751,7 @@ void print_html_stats( report::sc_html_stream& os, const player_t& p )
                  "<td>{:.2f}%</td>"
                  "<td>{:.0f}</td></tr>\n",
                  100 * buffed_stats.parry,
-                 100 * ( p.composite_parry() ),
+                 100 * ( p.composite_parry( nullptr ) ),
                  p.composite_parry_rating() );
       os.format( R"(<tr class="right"><th class="left">Tank-Block</th>)"
                  "<td></td>"

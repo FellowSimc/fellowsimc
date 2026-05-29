@@ -837,11 +837,6 @@ public:
     return cp;
   }
 
-  double parry_chance( double exp, player_t* target ) const override
-  {
-    return 0.0;
-  }
-
 public:
   // Ability triggers
   void spend_resource_costs( const action_state_t* );

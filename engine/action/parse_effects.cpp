@@ -919,9 +919,9 @@ double parse_player_effects_t::composite_crit_avoidance() const
   return ca;
 }
 
-double parse_player_effects_t::composite_parry() const
+double parse_player_effects_t::composite_parry( action_state_t* s ) const
 {
-  auto parry = player_t::composite_parry();
+  auto parry = player_t::composite_parry( s );
 
   for ( const auto& i : parry_effects )
     parry += get_effect_value( i );

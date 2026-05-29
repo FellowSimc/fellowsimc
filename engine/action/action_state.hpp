@@ -131,6 +131,8 @@ struct action_state_t : private noncopyable
       return PROC2_HIT;
     else if ( result == RESULT_CRIT )
       return PROC2_CRIT;
+    else if ( result == RESULT_PARRY )
+      return PROC2_PARRY;
     else if ( result == RESULT_GLANCE )
       return PROC2_GLANCE;
 

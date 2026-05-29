@@ -1086,7 +1086,7 @@ public:
   virtual double composite_armor_multiplier() const; // Modify Armor%, affects everything
   virtual double composite_miss() const;
   virtual double composite_dodge() const;
-  virtual double composite_parry() const;
+  virtual double composite_parry( action_state_t* s ) const;
   virtual double composite_block() const;
   virtual double composite_block_reduction( action_state_t* s ) const;
   virtual double composite_crit_block() const;

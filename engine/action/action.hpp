@@ -886,7 +886,7 @@ public:
   virtual double dodge_chance( double /* expertise */, player_t* /* target */ ) const
   { return 0; }
 
-  virtual double parry_chance( double /* expertise */, player_t* /* target */ ) const
+  virtual double parry_chance( action_state_t* ) const
   { return 0; }
 
   virtual double glance_chance( int /* delta_level */ ) const

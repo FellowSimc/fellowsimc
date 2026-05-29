@@ -1,86 +1,133 @@
 report_details=1
 optimal_raid=0
-# max_time=420
-# max_time=50
-max_time=300
+# max_time=315
+# max_time=290
 target_error=0.1
 iterations=100000
 chart_show_relative_difference=1
 vary_combat_length=0
 single_actor_batch=1
-desired_targets=1
+count_overheal_as_heal=1
+max_time=720
+desired_targets=12
+# desired_targets=16
 
+scale_over=hps
 
 # apl/chuey_dungeon.simc
 
 # apl/dungeon.simc
+relative_difference_base="Base Xavian"
 
-# scale_only=crit,haste,mastery,vers
-# scale_intellect=100
-# scale_crit_rating=590
-# scale_haste_rating=590
-# scale_mastery_rating=590
-# scale_versatility_rating=590
-# positive_scale_delta=0
-# calculate_scale_factors=1
-# dps_plot_stat=haste,crit_rating,mastery,versatility
-# # dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
-# dps_plot_points=8
-# dps_plot_step=150
-# dps_plot_positive=0
-
-xavian="Xavian"
+xavian="Base Xavian"
 level=80
-
-# initial_resource=spirit=100
 
 apl/xavian/xavian_apl.simc
 
-gear_strength=1442
-gear_stamina=3695
+# head=hat,variant=big_secondary,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
+# legs=legs,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=315,main_secondary=haste,fixed_secondary=haste/expertise
+# finger2=ring2,ilevel=315,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=315,main_secondary=spirit,fixed_secondary=crit/expertise
+# trinket2=relic2,ilevel=315,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=expertise/crit,affixes=crit/expertise
 
-gear_haste_rating=2187
-gear_crit_rating=1386
-gear_versatility_rating=683
-gear_mastery_rating=254
+head=hat,variant=big_secondary,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/haste
+neck=neck,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=primary/primary
+shoulder=shoulder,variant=big_secondary,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary
+back=back,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/crit
+chest=chest,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary
+wrist=wrists,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/expertise
+hands=hands,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=primary/primary
+feet=feet,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste
+finger1=ring1,ilevel=315,main_secondary=haste,fixed_secondary=haste/expertise
+finger2=ring2,ilevel=315,main_secondary=haste,fixed_secondary=crit/expertise
+trinket1=relic1,ilevel=315,main_secondary=haste,fixed_secondary=crit/expertise
+trinket2=relic2,ilevel=315,main_secondary=haste,fixed_secondary=crit/expertise
+main_hand=weap,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit,affixes=crit/expertise
+#/finesse_h/finesse_h/finesse_h/finesse_h
+
+weapon=fated_strike
+
+weapon_trait.kindling=4
+weapon_trait.diamond_strike=4
+weapon_trait.emerald_judgement=4
+
+gems.emerald_power=600
+gems.amethyst_power=600
+gems.ruby_power=600
+gems.sapphire_power=600
+
+# gems.sapphire_power=2640
+
+# weapon=chronoshift
+# weapon=voidbringers_touch
+
+# 14 stats
+
+# gems.sapphire_power=600
+# gems.amethyst_power=1500
+# gems.ruby_power=100
+# gems.emerald_power=600
+# # 8 Attunements
+
+# weapon_trait.emerald_judgement=1
+# weapon_trait.martial_initiative=1
+# weapon_trait.visions_of_grandeur=4
+# weapon_trait.brave_machinations=1
+
+# # 7 Traits
+
+# sets.dark_prophecy=1
+# sets.deaths_grasp=1
+# sets.sin_warding=1
+# sets.drakheims_absolution=1
 
 
-# # gems.emerald_power=2670
-# gems.amethyst_power=2670
-# gems.ruby_power=1206
-# # gems.topaz_power=972
-# # gems.sapphire_power=240
-# gems.emerald_power=1206
+# # # gems.emerald_power=2670
+# # gems.amethyst_power=2670
+# # gems.ruby_power=1206
+# # # gems.topaz_power=972
+# # # gems.sapphire_power=240
+# # gems.emerald_power=1206
 
 
-# gems.amethyst_power=2664
-# gems.ruby_power=120
-# gems.diamond_power=2304
+# # gems.amethyst_power=2664
+# # gems.ruby_power=120
+# # gems.diamond_power=2304
 
 
 weapon_trait.ruby_storm=4
 
-# copy="Suns Touch","Xavian"
+# copy="Suns Touch","Base Xavian"
 # talents=suns_touch:1
-# copy="Grand Halo","Xavian"
+# copy="Grand Halo","Base Xavian"
 # talents=grand_halo:1
-# copy="Solar Burn","Xavian"
+# copy="Solar Burn","Base Xavian"
 # talents=solar_burn:1
-# copy="lights_oath","Xavian"
+# copy="lights_oath","Base Xavian"
 # talents=lights_oath:1
-copy="Rising Sun","Xavian"
+copy="Rising Sun","Base Xavian"
 talents=rising_sun:1
-copy="Celestial Favor","Xavian"
+copy="Celestial Favor","Base Xavian"
 talents=celestial_favor:1
-copy="Gleaming Strikes","Xavian"
+copy="Gleaming Strikes","Base Xavian"
 talents=gleaming_strikes:1
-copy="Suns Verdict","Xavian"
+copy="Suns Verdict","Base Xavian"
 talents=suns_verdict:1
-# copy="Hallowed Shield","Xavian"
+# copy="Hallowed Shield","Base Xavian"
 # talents=hallowed_shield:1
-# copy="Vanguard of Vengenace","Xavian"
-# talents=vanguard_of_vengeance:1
-# copy="Invictus","Xavian"
+copy="Vanguard of Vengenace","Base Xavian"
+talents=vanguard_of_vengeance:1
+# copy="Invictus","Base Xavian"
 # talents=invictus:1
-copy="Golden Hour","Xavian"
+copy="Golden Hour","Base Xavian"
 talents=golden_hour:1

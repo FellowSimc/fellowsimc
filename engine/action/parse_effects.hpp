@@ -803,7 +803,7 @@ struct parse_player_effects_t : public player_t, public parse_effects_t
   double composite_leech() const override;
   double composite_melee_expertise( const weapon_t* ) const override;
   double composite_crit_avoidance() const override;
-  double composite_parry() const override;
+  double composite_parry( action_state_t* s ) const override;
   double composite_base_armor_multiplier() const override;
   double composite_armor_multiplier() const override;
   double composite_melee_haste() const override;

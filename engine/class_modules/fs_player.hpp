@@ -1029,11 +1029,6 @@ public:
     }
   }
 
-  double parry_chance( double exp, player_t* target ) const override
-  {
-    return 0.0;
-  }
-
 public:
   double total_crit_bonus( const action_state_t* state ) const override
   {

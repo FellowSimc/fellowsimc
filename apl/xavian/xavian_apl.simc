@@ -1,9 +1,11 @@
 actions.precombat=snapshot_stats
 
 actions=solar_blades
+actions+=/decree_of_the_sun
 actions+=/omnistrike
 actions+=/brilliant_flash,if=buff.swift_reprieval.at_max_stacks|buff.omega_reprieval.at_max_stacks|buff.omega_reprieval.stack>1&cooldown.omega_reprieval.remains<=gcd.max+3*talent.celestial_favor
 actions+=/omega_reprieval
 actions+=/blinding_slash
+actions+=/fated_strike
 actions+=/brilliant_flash
 actions+=/sun_strike

@@ -83,7 +83,7 @@ struct melee_attack_t : public attack_t
 
   // Melee Attack Overrides
   void init() override;
-  double parry_chance( double /* expertise */, player_t* t ) const override;
+  double parry_chance( action_state_t* s ) const override;
   double glance_chance( int delta_level ) const override;
 
   proc_types proc_type() const override;

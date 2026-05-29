@@ -1460,77 +1460,22 @@ void player_t::init_base_stats()
 
   if ( !is_enemy() )
   {
-    base.stats.attribute[ STAT_STRENGTH ]  = dbc->race_base( race ).strength + dbc->attribute_base( type, level() ).strength;
-    base.stats.attribute[ STAT_AGILITY ]   = dbc->race_base( race ).agility + dbc->attribute_base( type, level() ).agility;
-    base.stats.attribute[ STAT_STAMINA ]   = dbc->race_base( race ).stamina + dbc->attribute_base( type, level() ).stamina;
-    base.stats.attribute[ STAT_INTELLECT ] = dbc->race_base( race ).intellect + dbc->attribute_base( type, level() ).intellect;
-    base.stats.attribute[ STAT_SPIRIT ]    = dbc->race_base( race ).spirit + dbc->attribute_base( type, level() ).spirit;
-
-    // heroic presence is treated like base stats, floored before adding in; tested 2014-07-20
-    base.stats.attribute[ STAT_STRENGTH ]  += util::floor( racials.heroic_presence->effectN( 1 ).average( this ) );
-    base.stats.attribute[ STAT_AGILITY ]   += util::floor( racials.heroic_presence->effectN( 2 ).average( this ) );
-    base.stats.attribute[ STAT_INTELLECT ] += util::floor( racials.heroic_presence->effectN( 3 ).average( this ) );
-    // Endurance seems to be using ceiling
-    base.stats.attribute[ STAT_STAMINA ]   += util::ceil( racials.endurance->effectN( 1 ).average( this ) );
-
-    base.spell_crit_chance        = dbc->spell_crit_base( type, level() ) +
-                                    racials.viciousness->effectN( 1 ).percent() +
-                                    racials.arcane_acuity->effectN( 1 ).percent();
-    base.attack_crit_chance       = dbc->melee_crit_base( type, level() ) +
-                                    racials.viciousness->effectN( 1 ).percent() +
-                                    racials.arcane_acuity->effectN( 1 ).percent();
-    if ( timeofday == DAY_TIME )
-    {
-      base.spell_crit_chance      += racials.touch_of_elune->effectN( 1 ).percent();
-      base.attack_crit_chance     += racials.touch_of_elune->effectN( 1 ).percent();
-    }
-    base.spell_crit_per_intellect = dbc->spell_crit_scaling( type, level() );
-    base.attack_crit_per_agility  = dbc->melee_crit_scaling( type, level() );
-    base.mastery                  = 8.0 + racials.awakened->effectN( 1 ).base_value();
-    base.versatility              = racials.mountaineer->effectN( 1 ).percent() +
-                                    racials.brush_it_off->effectN( 1 ).percent();
     base.leech                    = 0.0;
     base.avoidance                = 0.0;
-
-    base.base_armor_multiplier    *= ( 1.0 + racials.titanwrought_frame->effectN( 1 ).percent() );
-    base.crit_damage_multiplier   *= ( 1.0 + racials.brawn->effectN( 1 ).percent() ) *
-                                     ( 1.0 + racials.might_of_the_mountain->effectN( 1 ).percent() );
-    base.crit_healing_multiplier  *= ( 1.0 + racials.brawn->effectN( 3 ).percent() ) *
-                                     ( 1.0 + racials.might_of_the_mountain->effectN( 3 ).percent() );
 
     resources.base[ RESOURCE_HEALTH ] = dbc->health_base( type, level() );
     resources.base[ RESOURCE_MANA ]   = dbc->resource_base( type, level() );
 
     // 1% of base mana as mana regen per second for all classes.
     resources.base_regen_per_second[ RESOURCE_MANA ] = dbc->resource_base( type, level() ) * 0.01;
-
-    // Automatically parse mana regen and max mana modifiers from class passives.
-    for ( auto spell : dbc::class_passives( this ) )
-    {
-      for ( const spelleffect_data_t& effect : spell->effects() )
-      {
-        if ( effect.subtype() == A_MOD_MANA_REGEN_PCT )
-        {
-          resources.base_regen_per_second[ RESOURCE_MANA ] *= 1.0 + effect.percent();
-        }
-        if ( effect.subtype() == A_MOD_MAX_MANA_PCT || effect.subtype() == A_MOD_MANA_POOL_PCT )
-        {
-          resources.base_multiplier[ RESOURCE_MANA ] *= 1.0 + effect.percent();
-        }
-      }
-    }
-
-    base.health_per_stamina = dbc->health_per_stamina( level() );
-
-    // players have a base 7.5% hit/exp
-    base.hit       = 0.075;
-    base.expertise = 0.075;
+        
+    base.health_per_stamina = 56;
 
     if ( base.distance < 1 )
       base.distance = 5;
 
     // Armor Coefficient, based on level (1054 @ 50; 2500 @ 60-63)
-    base.armor_coeff = dbc->armor_mitigation_constant( level() );
+    base.armor_coeff = 1346;
     sim->print_debug( "{} base armor coefficient set to {}.", *this, base.armor_coeff );
   }
 
@@ -1543,81 +1488,9 @@ void player_t::init_base_stats()
         spell_data_t::find_spelleffect( *spec_spell, E_APPLY_AURA, A_OVERRIDE_SP_PER_AP ).percent();
   }
 
-  // only certain classes get Agi->Dodge conversions, dodge_per_agility defaults to 0.00
-  if ( type == MONK || type == DRUID || type == ROGUE || type == HUNTER || type == SHAMAN || type == DEMON_HUNTER )
-    base.dodge_per_agility =
-        dbc->avoid_per_str_agi_by_level( level() ) / 100.0;  // exact values given by Blizzard, only have L90-L100 data
-
-  // only certain classes get Str->Parry conversions, parry_per_strength defaults to 0.00
-  if ( type == PALADIN || type == WARRIOR || type == DEATH_KNIGHT )
-    base.parry_per_strength =
-        dbc->avoid_per_str_agi_by_level( level() ) / 100.0;  // exact values given by Blizzard, only have L90-L100 data
-
-  // All classes get 3% dodge and miss
-  base.dodge = 0.03;
-  base.miss = 0.03;
-
-  // Dodge from base agility isn't affected by diminishing returns and is added here
-  if (base.dodge_per_agility > 0)
-  {
-    base.dodge += (dbc->race_base(race).agility + dbc->attribute_base(type, level()).agility) * base.dodge_per_agility;
-  }
-
-  // Night Elf dodge is additive
-  base.dodge += racials.quickness->effectN(1).percent();
-
-  // Only Warriors and Paladins (and enemies) can block, defaults to 0
-  if ( type == WARRIOR || type == PALADIN || type == ENEMY || type == TANK_DUMMY )
-  {
-    // Base block chance is 3%, increased in warriors' and paladins' class aura and protection warrior's spec aura
-    // Further increased by mastery for both Protection specs
-    base.block = 0.03;
-
-    // Set block reduction to 0 for warrior/paladin because it's computed in composite_block_reduction()
-    switch ( type )
-    {
-    case WARRIOR:
-    case PALADIN:
-      base.block_reduction = 0;
-      break;
-    default:
-      base.block_reduction = 0.30;
-      break;
-    }
-  }
-
-  // Only certain classes can parry, and get 3% base parry, default is 0
-  // Parry from base strength isn't affected by diminishing returns and is added here
-  if ( type == WARRIOR || type == PALADIN || type == ROGUE || type == DEATH_KNIGHT || type == MONK ||
-       type == DEMON_HUNTER || specialization() == SHAMAN_ENHANCEMENT  )
-  {
-    base.parry = 0.03 + ( dbc->race_base( race ).strength + dbc->attribute_base( type, level() ).strength ) * base.parry_per_strength;
-  }
-  else if ( type == ENEMY || type == TANK_DUMMY )
-  {
-    base.parry = 0.03;
-  }
-
-  // Extract avoidance DR values from table in sc_extra_data.inc
-  def_dr.horizontal_shift       = dbc->horizontal_shift( type );
-  def_dr.block_vertical_stretch = dbc->block_vertical_stretch( type );
-  def_dr.vertical_stretch       = dbc->vertical_stretch( type );
-  def_dr.dodge_factor           = dbc->dodge_factor( type );
-  def_dr.parry_factor           = dbc->parry_factor( type );
-  def_dr.miss_factor            = dbc->miss_factor( type );
-  def_dr.block_factor           = dbc->block_factor( type );
-
-  if ( ( meta_gem == META_EMBER_PRIMAL ) || ( meta_gem == META_EMBER_SHADOWSPIRIT ) ||
-       ( meta_gem == META_EMBER_SKYFIRE ) || ( meta_gem == META_EMBER_SKYFLARE ) )
-  {
-    resources.base_multiplier[ RESOURCE_MANA ] *= 1.02;
-  }
-
-  // Expansive Mind
-  for ( auto& r : { RESOURCE_MANA, RESOURCE_RAGE, RESOURCE_ENERGY, RESOURCE_RUNIC_POWER, RESOURCE_FOCUS} )
-  {
-    resources.base_multiplier[ r ] *= 1.0 + racials.expansive_mind->effectN( 1 ).percent();
-  }
+  base.dodge = 0.00;
+  base.miss = 0.00;
+  base.parry = 0.0;
 
   if ( primary_role() == ROLE_TANK )
   {
@@ -4973,16 +4846,6 @@ double player_t::composite_miss() const
   // Start with sources not subject to DR - base miss (stored in current.miss)
   double total_miss = current.miss;
 
-  // bonus_miss is miss from rating or other sources subject to DR
-  double bonus_miss = 0.0;
-
-  // if we have any bonus_miss, apply diminishing returns and add it to total_miss
-  if ( bonus_miss > 0 )
-    total_miss +=
-        bonus_miss / ( def_dr.miss_factor * bonus_miss * 100 * def_dr.vertical_stretch + def_dr.horizontal_shift );
-
-  assert( total_miss >= 0.0 && total_miss <= 1.0 );
-
   return total_miss;
 }
 
@@ -5035,39 +4898,12 @@ double player_t::composite_dodge() const
   // Start with sources not subject to DR - base dodge + dodge from base agility (stored in current.dodge)
   double total_dodge = current.dodge;
 
-  // bonus_dodge is from crit (through dodge rating) and bonus Agility
-  double bonus_dodge = composite_dodge_rating() * current.rating.dodge;
-  if ( !is_enemy() )
-  {
-    bonus_dodge += ( cache.agility() - dbc->race_base( race ).agility -
-        dbc->attribute_base( type, level() ).agility ) * current.dodge_per_agility;
-  }
-
-  // if we have any bonus_dodge, apply diminishing returns and add it to total_dodge.
-  if ( bonus_dodge != 0 )
-    total_dodge +=
-        bonus_dodge / ( def_dr.dodge_factor * bonus_dodge * 100 * def_dr.vertical_stretch + def_dr.horizontal_shift );
-
   return total_dodge;
 }
 
-double player_t::composite_parry() const
-{
-  // Start with sources not subject to DR - base parry + parry from base strength (stored in current.parry).
+double player_t::composite_parry( action_state_t* s ) const
+{   
   double total_parry = current.parry;
-
-  // bonus_parry is from rating and bonus Strength
-  double bonus_parry = composite_parry_rating() * current.rating.parry;
-  if ( !is_enemy() )
-  {
-    bonus_parry += ( cache.strength() - dbc->race_base( race ).strength -
-        dbc->attribute_base( type, level() ).strength ) * current.parry_per_strength;
-  }
-
-  // if we have any bonus_parry, apply diminishing returns and add it to total_parry.
-  if ( bonus_parry != 0 )
-    total_parry +=
-    bonus_parry / ( def_dr.parry_factor * bonus_parry * 100 * def_dr.vertical_stretch + def_dr.horizontal_shift );
 
   return total_parry;
 }
@@ -5240,15 +5076,7 @@ double player_t::composite_heal_versatility() const
 
 double player_t::composite_mitigation_versatility() const
 {
-  double cmv = current.versatility / 2;
-
-  cmv += apply_combat_rating_dr( RATING_MITIGATION_VERSATILITY,
-           composite_mitigation_versatility_rating() * current.rating.mitigation_versatility );
-
-  for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_VERSATILITY ] )
-    cmv += b->check_stack_value() / 2;
-
-  return cmv;
+  return 0.0;
 }
 
 double player_t::composite_leech() const
@@ -7710,53 +7538,53 @@ namespace assess_dmg_helper_functions
 {
 void account_parry_haste( player_t& p, action_state_t* s )
 {
-  if ( !p.is_enemy() )
-  {
-    // Parry Haste accounting
-    if ( s->result == RESULT_PARRY )
-    {
-      if ( p.main_hand_attack && p.main_hand_attack->execute_event )
-      {
-        // Parry haste mechanics:  When parrying an attack, the game subtracts 40% of the player's base swing timer
-        // from the time remaining on the current swing timer.  However, this effect cannot reduce the current swing
-        // timer to less than 20% of the base value.  The game uses hasted values.  To illustrate that, two examples:
-        // base weapon speed: 2.6, 30% haste, thus base swing timer is 2.6/1.3=2.0 seconds
-        // 1) if we parry when the current swing timer has 1.8 seconds remaining, then it gets reduced by 40% of 2.0,
-        // or 0.8 seconds,
-        //    and the current swing timer becomes 1.0 seconds.
-        // 2) if we parry when the current swing timer has 1.0 second remaining the game tries to subtract 0.8
-        // seconds, but hits the
-        //    minimum value (20% of 2.0, or 0.4 seconds.  The current swing timer becomes 0.4 seconds.
-        // Thus, the result is that the current swing timer becomes
-        // max(current_swing_timer-0.4*base_swing_timer,0.2*base_swing_timer)
+  //if ( !p.is_enemy() )
+  //{
+  //  // Parry Haste accounting
+  //  if ( s->result == RESULT_PARRY )
+  //  {
+  //    if ( p.main_hand_attack && p.main_hand_attack->execute_event )
+  //    {
+  //      // Parry haste mechanics:  When parrying an attack, the game subtracts 40% of the player's base swing timer
+  //      // from the time remaining on the current swing timer.  However, this effect cannot reduce the current swing
+  //      // timer to less than 20% of the base value.  The game uses hasted values.  To illustrate that, two examples:
+  //      // base weapon speed: 2.6, 30% haste, thus base swing timer is 2.6/1.3=2.0 seconds
+  //      // 1) if we parry when the current swing timer has 1.8 seconds remaining, then it gets reduced by 40% of 2.0,
+  //      // or 0.8 seconds,
+  //      //    and the current swing timer becomes 1.0 seconds.
+  //      // 2) if we parry when the current swing timer has 1.0 second remaining the game tries to subtract 0.8
+  //      // seconds, but hits the
+  //      //    minimum value (20% of 2.0, or 0.4 seconds.  The current swing timer becomes 0.4 seconds.
+  //      // Thus, the result is that the current swing timer becomes
+  //      // max(current_swing_timer-0.4*base_swing_timer,0.2*base_swing_timer)
 
-        // the reschedule_execute(x) function we call to perform this tries to reschedule the effect such that it
-        // occurs at (sim->current_time() + x).  Thus we need to give it the difference between sim->current_time()
-        // and the new target of execute_event->occurs(). That value is simply the remaining time on the current swing
-        // timer.
+  //      // the reschedule_execute(x) function we call to perform this tries to reschedule the effect such that it
+  //      // occurs at (sim->current_time() + x).  Thus we need to give it the difference between sim->current_time()
+  //      // and the new target of execute_event->occurs(). That value is simply the remaining time on the current swing
+  //      // timer.
 
-        // first, we need the hasted base swing timer, swing_time
-        timespan_t swing_time = p.main_hand_attack->time_to_execute;
+  //      // first, we need the hasted base swing timer, swing_time
+  //      timespan_t swing_time = p.main_hand_attack->time_to_execute;
 
-        // and we also need the time remaining on the current swing timer
-        timespan_t current_swing_timer = p.main_hand_attack->execute_event->occurs() - p.sim->current_time();
+  //      // and we also need the time remaining on the current swing timer
+  //      timespan_t current_swing_timer = p.main_hand_attack->execute_event->occurs() - p.sim->current_time();
 
-        // next, check that the current swing timer is longer than 0.2*swing_time - if not we do nothing
-        if ( current_swing_timer > 0.20 * swing_time )
-        {
-          // now we apply parry-hasting.  Subtract 40% of base swing timer from current swing timer
-          current_swing_timer -= 0.40 * swing_time;
+  //      // next, check that the current swing timer is longer than 0.2*swing_time - if not we do nothing
+  //      if ( current_swing_timer > 0.20 * swing_time )
+  //      {
+  //        // now we apply parry-hasting.  Subtract 40% of base swing timer from current swing timer
+  //        current_swing_timer -= 0.40 * swing_time;
 
-          // enforce 20% base swing timer minimum
-          current_swing_timer = std::max( current_swing_timer, 0.20 * swing_time );
+  //        // enforce 20% base swing timer minimum
+  //        current_swing_timer = std::max( current_swing_timer, 0.20 * swing_time );
 
-          // now reschedule the event and log a parry haste
-          p.main_hand_attack->reschedule_execute( current_swing_timer );
-          p.procs.parry_haste->occur();
-        }
-      }
-    }
-  }
+  //        // now reschedule the event and log a parry haste
+  //        p.main_hand_attack->reschedule_execute( current_swing_timer );
+  //        p.procs.parry_haste->occur();
+  //      }
+  //    }
+  //  }
+  //}
 }
 
 void account_blessing_of_sacrifice( player_t& p, action_state_t* s )
@@ -8089,9 +7917,6 @@ void player_t::target_mitigation( school_e school, result_amount_type dmg_type, 
   if ( s->action->is_aoe() )
     s->result_amount *= 1.0 - cache.avoidance();
 
-  // TODO-WOD: Where should this be? Or does it matter?
-  s->result_amount *= 1.0 - cache.mitigation_versatility();
-
   if ( debuffs.invulnerable && debuffs.invulnerable->check() )
   {
     s->result_amount = 0;
@@ -8103,13 +7928,13 @@ void player_t::target_mitigation( school_e school, result_amount_type dmg_type, 
       sim->print_debug( "Damage to {} before armor mitigation is {}", s->target->name(), s->result_amount );
 
     // Maximum amount of damage reduced by armor
-    double armor_cap = 0.85;
+    double armor_cap = 0.95;
 
     // Armor
     if ( s->action && !s->action->ignores_armor )
     {
       double armor  = s -> target_armor;
-      double resist = armor / ( armor + s -> action -> player -> base.armor_coeff );
+      double resist = armor / ( 0.9232 * armor + s->action->player->base.armor_coeff );
       resist        = clamp( resist, 0.0, armor_cap );
       s -> result_amount *= 1.0 - resist;
     }

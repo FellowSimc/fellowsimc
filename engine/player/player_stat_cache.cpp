@@ -333,10 +333,10 @@ double player_stat_cache_t::parry() const
   if ( !active || !valid[ CACHE_PARRY ] )
   {
     valid[ CACHE_PARRY ] = true;
-    _parry               = player->composite_parry();
+    _parry               = player->composite_parry( nullptr );
   }
   else
-    assert( _parry == player->composite_parry() );
+    assert( _parry == player->composite_parry( nullptr ) );
   return _parry;
 }
 

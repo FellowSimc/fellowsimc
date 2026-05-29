@@ -36,7 +36,6 @@ struct enemy_t : public player_t
 
   int current_target;
   int apply_damage_taken_debuff;
-  double custom_armor_coeff;
 
   std::vector<buff_t*> buffs_health_decades;
 
@@ -51,8 +50,7 @@ struct enemy_t : public player_t
       health_recalculation_dampening_exponent( 1.0 ),
       waiting_time( timespan_t::from_seconds( 1.0 ) ),
       current_target( 0 ),
-      apply_damage_taken_debuff( 0 ),
-      custom_armor_coeff( 0 )
+      apply_damage_taken_debuff( 0 )
   {
     s->target_list.push_back( this );
     position_str = "front";
@@ -90,7 +88,6 @@ struct enemy_t : public player_t
   void combat_end() override;
   virtual void recalculate_health();
   void demise() override;
-  double armor_coefficient( int level, tank_dummy_e diff );
   std::unique_ptr<expr_t> create_expression( util::string_view expression_str ) override;
   timespan_t available() const override
   {
@@ -1205,13 +1202,6 @@ struct tank_dummy_enemy_t : public enemy_t
 
     // override race
     race = RACE_HUMANOID;
-
-    // Don't change the value if it's specified by the user - handled in enemy_t::init_base_stats()
-    if ( custom_armor_coeff <= 0 )
-    {
-      base.armor_coeff = armor_coefficient( sim->max_player_level, tank_dummy_enum );
-      sim->print_debug( "Enemy {} base armor coefficient set to {}.", *this, base.armor_coeff );
-    }
   }
 
   std::string generate_action_list() override
@@ -1307,9 +1297,6 @@ void enemy_t::init_base_stats()
   if ( !validate_custom_timeline() )
     custom_health_timeline.clear();
 
-  // Armor Coefficient, based on level (1054 @ 50; 2500 @ 60-63)
-  base.armor_coeff = custom_armor_coeff > 0 ? custom_armor_coeff : armor_coefficient( level(), tank_dummy_e::MYTHIC );
-  sim->print_debug( "{} base armor coefficient set to {}.", *this, base.armor_coeff );
 }
 
 bool enemy_t::validate_custom_timeline()
@@ -1371,12 +1358,12 @@ void enemy_t::init_defense()
   collected_data.health_changes_tmi.collect = false;
   collected_data.health_changes.collect     = false;
 
-  if ( ( total_gear.armor ) <= 0 )
-  {
-    double& a = initial.stats.armor;
+  //if ( ( total_gear.armor ) <= 0 )
+  //{
+  //  double& a = initial.stats.armor;
 
-    a = dbc->npc_armor_value( level() );
-  }
+  //  a = dbc->npc_armor_value( level() );
+  //}
 }
 
 // enemy_t::init_buffs ======================================================
@@ -1470,7 +1457,7 @@ std::string enemy_t::generate_tank_action_list( tank_dummy_e tank_dummy )
   // A Normal Dungeon estimate was then added below LFR. Prior to this update, it was approximately 3.9, but the rest of the
   // values were a bit lower, so this one was also lowered.
   constexpr std::array<double, numTankDummies> tank_dummy_index_scalar = { 0, 6.5, 4.0, 2.5, 1.6, 1 };
-  constexpr double aa_damage_base        = 14'000'000;
+  constexpr double aa_damage_base        = 12'000;
   constexpr double dummy_strike_base     = aa_damage_base * 2.0;
   constexpr double background_spell_base = aa_damage_base * 0.1;
 
@@ -1485,7 +1472,7 @@ std::string enemy_t::generate_tank_action_list( tank_dummy_e tank_dummy )
          ",range=" + util::to_string( floor( background_spell_base / tank_dummy_index_scalar[ tank_dummy_index ] * 0.02 ) ) +
          ",tick_time=2,cooldown=60,aoe_tanks=1,dot_duration=60,bleed=1";
   // pause periodically to mimic a tank swap
-  als += "/pause_action,duration=30,cooldown=30,if=time>=30";
+  // als += "/pause_action,duration=30,cooldown=30,if=time>=30";
   return als;
 }
 
@@ -1493,6 +1480,8 @@ std::string enemy_t::generate_tank_action_list( tank_dummy_e tank_dummy )
 
 void enemy_t::add_tank_heal_raid_event( tank_dummy_e tank_dummy )
 {
+  return;
+
   constexpr size_t numTankDummies = static_cast<size_t>( tank_dummy_e::MAX );
   //                                           NONE, WEAK, DUNGEON, RAID,  HEROIC, MYTHIC
   constexpr std::array<double, numTankDummies> tank_dummy_index_scalar = { 0, 6.5, 4.0, 2.5, 1.6, 1 };
@@ -1706,7 +1695,6 @@ void enemy_t::create_options()
   player_t::create_options();
 
   add_option( opt_int( "level", true_level, 0, MAX_LEVEL + 3 ) );
-  add_option( opt_float( "armor_coefficient", custom_armor_coeff ) );
 }
 
 // enemy_t::create_add ======================================================
@@ -2070,69 +2058,6 @@ void enemy_t::demise()
   }
 
   player_t::demise();
-}
-
-double enemy_t::armor_coefficient( int level, tank_dummy_e dungeon_content )
-{
-  // Armor coefficient (colloquially called "k-value")
-  // Max level enemies have different armor coefficient based on the difficulty setting and the area they are fought
-  // in. The default value stored in spelldata only works for outdoor and generally "easy" content. New values are
-  // added when new seasonal content (new raid, new M+ season) is released. ArmorConstantMod is pulled from the
-  // ExpectedStatMod table. Values are a combination of the base "K-values" for the intended level, multiplied by the
-  // ArmorConstantMod field.
-
-  // In order to get the ArmorConstMod ID you first get the ID from the map you are looking for.
-  // You then take the Map ID and search the ID within the MapDifficulty table. For raids, you will come back with
-  // four records, one for each difficulty. Each of these will have a ContentTuningID. You then take the
-  // ContentTuningID and search the ID in the ContentTuningXExpected table. Often you will come back with multiple
-  // results but the one that is correct will generally be the one that has the ArmorConstMod value being greater
-  // than 1.000.
-
-  /*
-    10.0 values here
-    Level 70 Base/open world: 11766.000 (Level 70 Armor mitigation constants (K-values))
-    Level 70 M0/M+: 12,824.94039274908 (ExpectedStatModID: 216; ArmorConstMod: 1.09000003338)
-    Vault of the Incarnates LFR: 13,083.79186539696 (ExpectedStatModID: 212; ArmorConstMod: 1.11199998856)
-    Vault of the Incarnates Normal: 14,025.07237027602 (ExpectedStatModID: 213; ArmorConstMod: 1.19200003147)
-    Vault of the Incarnates Heroic: 15,084.01136040024 (ExpectedStatModID: 214; ArmorConstMod: 1.28199994564)
-    Vault of the Incarnates Mythic: 16,284.14333792718 (ExpectedStatModID: 215; ArmorConstMod: 1.38399994373)
-    Level 70 Season 2 M0/M+: 14,742.79824685068 (ExpectedStatModID: 234; ArmorConstMod: 1.25300002098)
-    Aberrus, the Shadowed Crucible LFR: 15,084.01136040024 (ExpectedStatModID: 214; ArmorConstMod: 1.28199994564)
-    Aberrus, the Shadowed Crucible Normal: 16,284.14333792718 (ExpectedStatModID: 215; ArmorConstMod: 1.38399994373)
-    Aberrus, the Shadowed Crucible Heroic: 17,625.4683029745 (ExpectedStatModID: 227; ArmorConstMod: 1.49800002575)
-    Aberrus, the Shadowed Crucible Mythic: 19,155.04824685068 (ExpectedStatModID: 228; ArmorConstMod: 1.62800002098)
-    Level 70 Season 3 M0/M+: 18,672.64201458984 (ExpectedStatModID: 249; ArmorConstMod: 1.5870000124)
-    Amirdrassil, the Dream's Hope LFR: 19,155.04824685068 (ExpectedStatModID: 228; ArmorConstMod: 1.62800002098)
-    Amirdrassil, the Dream's Hope Normal: 20,872.88457229824 (ExpectedStatModID: 229; ArmorConstMod: 1.77400004864)
-    Amirdrassil, the Dream's Hope Heroic: 22,814.27412342534 (ExpectedStatModID: 230; ArmorConstMod: 1.93900001049)
-    Amirdrassil, the Dream's Hope Mythic: 25,014.51514720032 (ExpectedStatModID: 231; ArmorConstMod: 2.12599992752)
-    Level 70 Season 4 M0/M+: 27,485.37559607322 (ExpectedStatModID: 252; ArmorConstMod: 2.33599996567)
-    Awakened LFR: 24,308.55582045084 (ExpectedStatModID: 253; ArmorConstMod: 2.06599998474)
-    Awakened Normal: 27,485.37559607322 (ExpectedStatModID: 252; ArmorConstMod: 2.33599996567)
-    Awakened Heroic: 30,285.68260855284 (ExpectedStatModID: 251; ArmorConstMod: 2.57399988174)
-    Awakened Mythic: 33,438.97208977458 (ExpectedStatModID: 254; ArmorConstMod: 2.84200000763)
-  */
-  double k = dbc->armor_mitigation_constant( level );
-
-  switch ( dungeon_content )
-  {
-    case tank_dummy_e::DUNGEON:
-      return k * dbc->get_armor_constant_mod( difficulty_e::DUNGEON );  // M0/M+
-      break;
-    case tank_dummy_e::RAID:
-      return k * dbc->get_armor_constant_mod( difficulty_e::NORMAL );  // Normal Raid
-      break;
-    case tank_dummy_e::HEROIC:
-      return k * dbc->get_armor_constant_mod( difficulty_e::HEROIC );  // Heroic Raid
-      break;
-    case tank_dummy_e::MYTHIC:
-      return k * dbc->get_armor_constant_mod( difficulty_e::MYTHIC );  // Mythic Raid
-      break;
-    default:
-      break;  // tank_dummy_e::NONE
-  }
-
-  return k;
 }
 
 // ENEMY MODULE INTERFACE ===================================================

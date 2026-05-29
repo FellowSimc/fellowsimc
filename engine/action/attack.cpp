@@ -305,7 +305,7 @@ result_e attack_t::calculate_result( action_state_t* s ) const
   double miss = may_miss ? miss_chance( composite_hit(), s->target ) : 0;
   double dodge = may_dodge ? dodge_chance( composite_expertise(), s->target ) : 0;
   double parry =
-    may_parry && player->position() == POSITION_FRONT ? parry_chance( composite_expertise(), s->target ) : 0;
+    may_parry && player->position() == POSITION_FRONT ? parry_chance( s ) : 0;
   double crit = may_crit ? std::max( s->composite_crit_chance() + s->target->cache.crit_avoidance(), 0.0 ) : 0;
 
   // Specials are 2-roll calculations, so only pass crit chance to
@@ -422,27 +422,16 @@ void melee_attack_t::init()
     may_glance = true;
 }
 
-double melee_attack_t::parry_chance( double expertise, player_t* t ) const
+double melee_attack_t::parry_chance( action_state_t* s ) const
 {
-  if ( t->is_enemy() && sim->auto_attacks_always_land && !special )
+  if ( !s || s->target->is_enemy() && sim->auto_attacks_always_land && !special )
   {
     return 0.0;
   }
 
   // cache.parry() contains the target's parry chance (3.0 base, plus spec
   // bonuses and rating)
-  double parry = t->cache.parry();
-
-  // WoD mechanics are similar to MoP
-  // add or subtract 1.5% per level difference
-  parry += ( t->level() - player->level() ) * 0.015;
-
-  // 3% additional parry for attacking a level+3 or higher NPC
-  if ( t->is_enemy() && ( t->level() - player->level() ) > 2 )
-    parry += 0.03;
-
-  // subtract the player's expertise chance - no longer depends on dodge
-  parry -= expertise;
+  double parry = s->target->composite_parry( s );
 
   return parry;
 }

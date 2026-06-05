@@ -288,7 +288,7 @@ public:
     double solar_burn_dmg_mul                 = 1;
 
     int gleaming_strikes_extra_sunstruck_on_crit     = 1;
-    double gleaming_strikes_omnistrike_sunstruck_amp = 0.05;
+    double gleaming_strikes_omnistrike_sunstruck_amp = 0.25;
 
     double vanguard_of_vengeance_coeff             = 1.16;
     double vanguard_of_vengeance_mana_gain_pct     = 0.005;
@@ -844,7 +844,7 @@ struct sun_strike_t : public xavian_attack_t
     {
       int debuffs = 1;
 
-      if ( p()->talent_enabled( xavian_t::GLEAMING_STRIKES ) && s->result == RESULT_CRIT )
+      if ( p()->talent_enabled( xavian_t::GLEAMING_STRIKES )  )
         debuffs += p()->talents.gleaming_strikes_extra_sunstruck_on_crit;
 
       p()->get_target_data( s->target )->debuffs.sunstruck->trigger( debuffs );

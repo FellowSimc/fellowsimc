@@ -121,10 +121,11 @@ struct item_t
     std::vector<unsigned>                            azerite_ids;
     std::vector<int>                                 crafted_stat_mod;
     unsigned                                         titan_disc_driver_id;
+    std::vector<stat_pair_t>                         fellowship_stats;
 
     item_variant_e item_variant;
     item_rarity_e rarity;
-
+    int tempering_level;
 
     // Priority state tracking for item bonuses
     int base_level_priority;
@@ -146,6 +147,7 @@ struct item_t
   std::string option_item_variant_str;
   std::string option_main_secondary_str;
   std::string option_fixed_secondarys_str;
+  std::string option_tempering_str;
 
   std::string option_name_str;
   std::string option_stats_str;
@@ -220,14 +222,27 @@ struct item_t
   std::string encoded_enchant() const;
   std::string encoded_addon() const;
 
-  double get_stat_value( gear_affix_e stat, bool random_stat ) const;
+  enum weighting_pool_e
+  {
+    WEIGHTING_POOL_AUTO = 0,
+    WEIGHTING_POOL_STAMINA,
+    WEIGHTING_POOL_PRIMARY,
+    WEIGHTING_POOL_SECONDARY,
+    WEIGHTING_POOL_ROLLED
+  };
+
+  double get_stat_value( gear_affix_e stat, bool random_stat, weighting_pool_e pool = WEIGHTING_POOL_AUTO ) const;
 
   double slot_multiplier() const;
 
-  void add_gear_affix_stats( gear_affix_e affix, bool random_stat );
+  void add_gear_affix_stats( gear_affix_e affix, bool random_stat, weighting_pool_e pool = WEIGHTING_POOL_AUTO );
+  void add_gear_affix_stats( gear_affix_e affix, double amount );
+  inline void add_gear_affix_stats( gear_affix_e affix, int amount )
+  {
+    add_gear_affix_stats( affix, static_cast<double>( amount ) );
+  }
   void decode_item_variant();
   void decode_item_rarity();
-  void decode_main_secondary();
   void decode_fixed_secondarys();
   void decode_affix_list();
   void handle_base_stats();

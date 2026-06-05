@@ -1895,15 +1895,15 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_9 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
-    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
-    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplier[ STAT_STRENGTH ] += fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplier[ STAT_INTELLECT ] += fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplier[ STAT_AGILITY ] += fs_gems.diamond_main_stat_amp_major;
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_4 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
-    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
-    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplier[ STAT_STRENGTH ] += fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplier[ STAT_INTELLECT ] += fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplier[ STAT_AGILITY ] += fs_gems.diamond_main_stat_amp_minor;
   }
 
   // TODO: Implement as a health based check and buff that turns on & off.
@@ -1991,7 +1991,7 @@ void fs_player_t::init_special_effects()
 
   if ( fs_sets.torment_of_baelaurum )
   {
-    base.attribute_multiplier[ convert_hybrid_stat( STAT_STR_AGI_INT ) ] *= 1.0 + fs_sets.torment_of_baelaurum_amp;
+    base.attribute_multiplier[ convert_hybrid_stat( STAT_STR_AGI_INT ) ] += fs_sets.torment_of_baelaurum_amp;
   }
 
   if ( fs_sets.dark_prophecy )
@@ -2102,10 +2102,10 @@ void fs_player_t::init_special_effects()
   if ( overcap > 0.0 )
   {
     auto mul = overcap * fs_gems.gem_power_mult;
-    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + mul;
-    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + mul;
-    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + mul;
-    base.attribute_multiplier[ STAT_STAMINA ] *= 1.0 + mul;
+    base.attribute_multiplier[ STAT_STRENGTH ] += mul;
+    base.attribute_multiplier[ STAT_INTELLECT ] += mul;
+    base.attribute_multiplier[ STAT_AGILITY ] += mul;
+    base.attribute_multiplier[ STAT_STAMINA ] += mul;
   }
 
   if ( fs_weapons.willful_momentum > 0 )

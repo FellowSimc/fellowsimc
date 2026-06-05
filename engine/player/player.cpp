@@ -5249,9 +5249,6 @@ double player_t::composite_attribute_multiplier( attribute_e attr ) const
   if ( is_pet() || is_enemy() || type == HEALING_ENEMY )
     return m;
 
-  if ( ( true_level >= 27 ) && matching_gear )
-    m *= 1.0 + matching_gear_multiplier( attr );
-
   stat_pct_buff_type pct_type = STAT_PCT_BUFF_MAX;
   switch ( attr )
   {
@@ -5277,7 +5274,7 @@ double player_t::composite_attribute_multiplier( attribute_e attr ) const
   if ( pct_type != STAT_PCT_BUFF_MAX )
   {
     for ( auto b : buffs.stat_pct_buffs[ pct_type ] )
-      m *= 1.0 + b->check_stack_value();
+      m += b->check_stack_value();
   }
 
   return m;

@@ -89,6 +89,8 @@ item_t::parsed_input_t::parsed_input_t()
   range::fill( gem_color, SOCKET_COLOR_NONE );
   range::fill( gem_ilevel, 0 );
   range::fill( gem_actual_ilevel, 0 );
+  
+  tempering_level = -1;
 }
 
 item_t::parsed_input_t::~parsed_input_t() = default;
@@ -113,9 +115,8 @@ item_t::item_t( player_t* p, util::string_view o ) :
 
 bool item_t::has_stats() const
 {
-  for ( stat_e e = STAT_NONE; e < STAT_MAX; ++e )
-    if ( stats.get_stat( e ) > 0 )
-      return true;
+  if ( parsed.fellowship_stats.size() > 0 )
+    return true;
 
   return false;
 }
@@ -260,7 +261,7 @@ gear_stats_t item_t::total_stats() const
     range::for_each( parsed.addon_stats, [ stat, to, &total_stats ]( const stat_pair_t& s ) {
       if ( stat == s.stat ) total_stats.add_stat( to, s.value );
     });
-
+    
     range::for_each( parsed.temp_enchant_stats, [ stat, to, &total_stats ]( const stat_pair_t& s ) {
       if ( stat == s.stat ) total_stats.add_stat( to, s.value );
     });
@@ -279,13 +280,14 @@ std::string item_t::item_stats_str() const
   else if ( item_database::armor_value( *this ) )
     s << item_database::armor_value( *this ) << " Armor, ";
   
-  for ( stat_e e = STAT_NONE; e < STAT_MAX; ++e )
+  for ( const auto& stat_pair : parsed.fellowship_stats )
   {
-    if ( stats.get_stat( e ) > 0 )
+    if ( stat_pair.value > 0 )
     {
-      s << stats.get_stat( e ) << " " << util::stat_type_abbrev( e ) << ", ";
+      s << stat_pair.value << " " << util::stat_type_abbrev( stat_pair.stat ) << ", ";
     }
   }
+
   //for ( size_t i = 0; i < std::size( parsed.data.stat_type_e ); i++ )
   //{
   //  if ( parsed.data.stat_type_e[ i ] <= 0 )
@@ -402,7 +404,7 @@ std::string item_t::socket_bonus_stats_str() const
 
 void sc_format_to( const item_t& item, fmt::format_context::iterator out )
 {
-  fmt::format_to( out, "name={} id={}", item.name_str, item.parsed.data.id );
+  fmt::format_to( out, "name={} (+{}) id={}", item.name_str, item.parsed.tempering_level, item.parsed.data.id );
   if ( item.slot != SLOT_INVALID )
     fmt::format_to( out, " slot={}", item.slot_name() );
   fmt::format_to( out, " quality={}", util::item_quality_string( item.parsed.data.quality ) );
@@ -828,13 +830,14 @@ void item_t::parse_options()
     option_name_str = options_str.substr( 0, cut_pt );
   }
 
-  std::array<std::unique_ptr<option_t>, 39> options { {
+  std::array<std::unique_ptr<option_t>, 40> options { {
     opt_uint("id", parsed.data.id),
     opt_string( "variant", option_item_variant_str ),
     opt_string( "main_secondary", option_main_secondary_str ),
     opt_string( "fixed_secondary", option_fixed_secondarys_str ),
     opt_string( "affixes", option_affix_list_str ),
     opt_string( "rarity", option_rarity_str ),
+    opt_string( "tempering", option_tempering_str ),
     opt_string("stats", option_stats_str),
     opt_string("gems", option_gems_str),
     opt_string("enchant", option_enchant_str),
@@ -1098,7 +1101,10 @@ std::string item_t::encoded_item() const
 
   if ( !option_ilevel_str.empty() )
     s << ",ilevel=" << option_ilevel_str;
-    
+  if ( !option_tempering_str.empty() )
+    s << ",tempering=" << option_tempering_str;
+  if ( !option_rarity_str.empty() )
+    s << ",rarity=" << option_rarity_str;
   if ( !option_item_variant_str.empty() )
     s << ",variant=" << option_item_variant_str;
   if ( !option_main_secondary_str.empty() )
@@ -1107,8 +1113,6 @@ std::string item_t::encoded_item() const
     s << ",fixed_secondary=" << option_fixed_secondarys_str;
   if ( !option_affix_list_str.empty() )
     s << ",affixes=" << option_affix_list_str;
-  if ( !option_rarity_str.empty() )
-    s << ",rarity=" << option_rarity_str;
   
 
   if ( !option_azerite_level_str.empty() )
@@ -1544,7 +1548,6 @@ void item_t::init()
   decode_item_rarity();
 
   handle_base_stats();
-  decode_main_secondary();
   decode_fixed_secondarys();
   decode_affix_list();
 
@@ -1592,7 +1595,7 @@ void item_t::init()
 
 void item_t::decode_item_variant()
 {
-  if ( slot == SLOT_NECK || slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 )
+  /*if ( slot == SLOT_NECK || slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 )
   {
     parsed.item_variant = VARIANT_JEWELLERY;
     return;
@@ -1601,7 +1604,7 @@ void item_t::decode_item_variant()
   {
     parsed.item_variant = VARIANT_RELIC;
     return;
-  }
+  }*/
 
   if ( !option_item_variant_str.empty() )
   {
@@ -1670,7 +1673,7 @@ double item_t::slot_multiplier() const
   }
 }
 
-double item_t::get_stat_value( gear_affix_e stat_affix, bool random_stat ) const
+double item_t::get_stat_value( gear_affix_e stat_affix, bool random_stat, weighting_pool_e pool ) const
 {
   stat_e stat = stat_from_gear_affix( stat_affix );
 
@@ -1718,7 +1721,44 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool random_stat ) const
     }
   }
 
-  if ( random_stat )
+
+  if ( pool == weighting_pool_e::WEIGHTING_POOL_AUTO )
+  {
+    if ( random_stat )
+    {
+      pool = weighting_pool_e::WEIGHTING_POOL_ROLLED;
+    }
+    else if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
+    {
+      pool = weighting_pool_e::WEIGHTING_POOL_STAMINA;
+    }
+    else if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_PRIMARY )
+    {
+      pool = weighting_pool_e::WEIGHTING_POOL_PRIMARY;
+    }
+    else
+    {
+      pool = weighting_pool_e::WEIGHTING_POOL_SECONDARY;
+    }
+  }
+
+  switch ( pool )
+  {
+    case weighting_pool_e::WEIGHTING_POOL_PRIMARY:
+      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].primary_weight;
+      break;
+    case weighting_pool_e::WEIGHTING_POOL_STAMINA:
+      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].stamina_weight;
+      break;
+    case weighting_pool_e::WEIGHTING_POOL_SECONDARY:
+      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_weight;
+      break;
+    case weighting_pool_e::WEIGHTING_POOL_ROLLED:
+      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].rolled_weight;
+      break;
+  }
+
+  /*if ( random_stat )
   {
     amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].rolled_weight;
     sim->print_debug( "{} item {} decoded stat {}, variant: {}, rolled_weight: {}", *player, name(),
@@ -1748,10 +1788,10 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool random_stat ) const
                         gear_affix_lower( stat_affix ), item_variant_lower( parsed.item_variant ),
                         ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_weight );
     }
-  }
+  }*/
 
 
-  amount *= pow( slot_rarity_base, RARITY_DATA[ parsed.rarity - 1 ].stat_scale_factor );
+  amount /= pow( slot_rarity_base, RARITY_DATA[ parsed.rarity - 1 ].stat_scale_factor );
 
   amount *= slot_multiplier();
 
@@ -1762,41 +1802,96 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool random_stat ) const
 }
 
 // item_t::handle_base_stats ==================================================
-void item_t::add_gear_affix_stats( gear_affix_e affix_stat, bool random_stat )
+void item_t::add_gear_affix_stats( gear_affix_e affix_stat, bool random_stat,
+                                   weighting_pool_e pool )
 {
   stat_e stat = stat_from_gear_affix( affix_stat );
   if ( stat != STAT_NONE )
   {
-    auto value = get_stat_value( affix_stat, random_stat );
+    auto value = get_stat_value( affix_stat, random_stat, pool );
     sim->print_debug( "{} item {} decoded base stat {}, quantity: {}", *player, name(), stat, value );
     if ( value > 0 )
     {
-      base_stats.add_stat( stat, value );
-      stats.add_stat( stat, value );
+      add_gear_affix_stats( affix_stat, value );
     }
   }
 }
 
-
-// item_t::decode_main_secondary ==================================================
-
-void item_t::decode_main_secondary()
+void item_t::add_gear_affix_stats( gear_affix_e affix_stat, double value )
 {
-  if ( !option_main_secondary_str.empty() )
+  stat_e stat = stat_from_gear_affix( affix_stat );
+  if ( stat != STAT_NONE )
   {
-    gear_affix_e affix_stat = gear_affix_from_string( option_main_secondary_str );
-    add_gear_affix_stats( affix_stat, false );
+    sim->print_debug( "{} item {} adding base stat {}, quantity: {}", *player, name(), stat, value );
+    if ( value > 0 )
+    {
+      base_stats.add_stat( stat, value );
+      stats.add_stat( stat, value );
+      parsed.fellowship_stats.emplace_back( stat, static_cast<int>( value ) );
+    }
   }
 }
-
-
 
 // item_t::handle_base_stats ==================================================
 void item_t::handle_base_stats()
 {
-  for ( gear_affix_e affix_stat : { GEAR_AFFIX_STAT_PRIMARY, GEAR_AFFIX_STAT_STAMINA } )
+  bool has_primary = !( slot == SLOT_NECK || slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 );
+  bool has_stamina = !( slot == SLOT_TRINKET_1 || slot == SLOT_TRINKET_2 );
+
+  if ( !option_tempering_str.empty() )
   {
+    parsed.tempering_level = util::to_int( option_tempering_str );
+  }
+
+  auto max_temper = RARITY_DATA[ parsed.rarity - 1 ].max_temper;
+
+  if ( parsed.tempering_level < 0 || parsed.tempering_level > as<int>( max_temper ) )
+  {
+    parsed.tempering_level = max_temper;
+  }
+
+  std::vector<util::string_view> split;
+
+  if ( !option_main_secondary_str.empty() )
+  {
+    split = util::string_split<util::string_view>( option_main_secondary_str, "/" );
+  }
+
+  if ( has_stamina )
+  {
+    add_gear_affix_stats( GEAR_AFFIX_STAT_STAMINA, false );
+    add_gear_affix_stats( GEAR_AFFIX_STAT_STAMINA, parsed.tempering_level );
+  }
+  else
+  {
+    if ( split.size() > 1 )
+    {
+      gear_affix_e affix_stat = gear_affix_from_string( split[ 1 ] );
+      add_gear_affix_stats( affix_stat, false, WEIGHTING_POOL_STAMINA );
+      add_gear_affix_stats( affix_stat, parsed.tempering_level );
+    }
+  }
+
+  if ( has_primary )
+  {
+    add_gear_affix_stats( GEAR_AFFIX_STAT_PRIMARY, false );
+    add_gear_affix_stats( GEAR_AFFIX_STAT_PRIMARY, parsed.tempering_level );
+  }
+  else
+  {
+    if ( split.size() > 1 )
+    {
+      gear_affix_e affix_stat = gear_affix_from_string( split[ 1 ] );
+      add_gear_affix_stats( affix_stat, false, WEIGHTING_POOL_PRIMARY );
+      add_gear_affix_stats( affix_stat, parsed.tempering_level );
+    }
+  }
+
+  if ( split.size() > 0 )
+  {
+    gear_affix_e affix_stat = gear_affix_from_string( split[ 0 ] );
     add_gear_affix_stats( affix_stat, false );
+    add_gear_affix_stats( affix_stat, parsed.tempering_level );
   }
 }
 

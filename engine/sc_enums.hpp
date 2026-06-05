@@ -2125,9 +2125,7 @@ constexpr std::string_view gear_affix_pretty( gear_affix_e t )
 #define ITEM_VARIANT_LIST( X )                                              \
   X( EVENS, evens, "Evens", 0.28, 0.28, 0.28, 0.16 )                        \
   X( BIG_SECONDARY, big_secondary, "Big Secondary", 0.22, 0.22, 0.4, 0.16 ) \
-  X( BIG_STAMINA, big_stamina, "Big Stamina", 0.4, 0.17, 0.27, 0.16 )       \
-  X( RELIC, relic, "Relic", 0, 0.48, 0.36, 0.16 )                           \
-  X( JEWELLERY, jewellery, "Jewellery", 0.28, 0, 0.56, 0.16 )               
+  X( BIG_STAMINA, big_stamina, "Big Stamina", 0.4, 0.17, 0.27, 0.16 )       
 
 enum item_variant_e : unsigned
 {
@@ -2182,19 +2180,19 @@ constexpr item_variant_e item_variant_from_string( std::string_view trait )
   return item_variant_e::VARIANT_NONE;
 }
 
-#define ITEM_RARITY_DATA( X )                  \
-  X( UNCOMMON, uncommon, "Uncommon", 4, 1, 0 ) \
-  X( RARE, rare, "Rare", 3, 1, 1 )             \
-  X( EPIC, epic, "Epic", 2, 1, 2 )             \
-  X( CHAMPION, champion, "Champion", 1, 2, 2 ) \
-  X( HEROIC, heroic, "Heroic", 0, 2, 3 )       \
-  X( LEGENDARY, legendary, "Legendary", 0, 2, 3 )
+#define ITEM_RARITY_DATA( X )                     \
+  X( UNCOMMON, uncommon, "Uncommon", 4, 1, 0, 4 ) \
+  X( RARE, rare, "Rare", 3, 1, 1, 5 )             \
+  X( EPIC, epic, "Epic", 2, 1, 2, 6 )             \
+  X( HEROIC, heroic, "Heroic", 1, 2, 2, 7 )       \
+  X( REGAL, regal, "Regal", 0, 2, 3, 8 )          \
+  X( LEGENDARY, legendary, "Legendary", 0, 2, 3, 8 )
 
 enum item_rarity_e : unsigned
 {
   RARITY_NONE = 0,
 
-#define X( UPPER, lower, pretty, scale_factor, fixed_secondarys, free_traits ) RARITY_##UPPER,
+#define X( UPPER, lower, pretty, scale_factor, fixed_secondarys, free_traits, max_temper ) RARITY_##UPPER,
   ITEM_RARITY_DATA( X )
 #undef X
 
@@ -2209,11 +2207,12 @@ struct item_rarity_data_t
   double stat_scale_factor;
   int fixed_secondarys;
   int free_traits;
+  unsigned max_temper;
 };
 
 static constexpr item_rarity_data_t RARITY_DATA[] = {
-#define X( upper, lower, pretty, scale_factor, fixed_secondarys, free_traits ) \
-  { item_rarity_e::RARITY_##upper, #lower, pretty, scale_factor, fixed_secondarys, free_traits },
+#define X( upper, lower, pretty, scale_factor, fixed_secondarys, free_traits, max_temper ) \
+  { item_rarity_e::RARITY_##upper, #lower, pretty, scale_factor, fixed_secondarys, free_traits, max_temper },
     ITEM_RARITY_DATA( X )
 #undef X
 };

@@ -295,7 +295,7 @@ public:
     const timespan_t finesse_c_duration[ 5 ] = { 0_s, 1_s, 2_s, 3_s, 5_s };
     const timespan_t finesse_c_divisor       = 60_s;
 
-    const double finesse_d_chance[ 5 ]   = { 0, 0.05, 0.08, 0.13, 0.2 };
+    const double finesse_d_chance[ 5 ]   = { 0, 0.05, 0.08, 0.13, 0.2 }; // The Celestial
     const double finesse_d_spirit_points = 1.0;
 
     const double finesse_e_cc[ 5 ]   = { 0, 0.01, 0.02, 0.03, 0.04 }; // The Sinister
@@ -328,13 +328,13 @@ public:
     const double finesse_k_amp_multiplier   = 1.0;
     const timespan_t finesse_k_amp_duration = 5_s;
 
-    const double finesse_l_dmg[ 5 ]    = { 0, 0.95, 1.52, 2.43, 3.89 };
+    const double finesse_l_dmg[ 5 ]    = { 0, 0.95, 1.52, 2.43, 3.89 }; // The Usurper
     const double finesse_l_heal[ 5 ]   = { 0, 1.22, 1.95, 3.12, 5.00 };
     const int finesse_l_targets        = 4;
     const int finesse_l_max_stacks     = 1;
     const double finesse_l_both_chance = 0.2;
 
-    const double finesse_m_spirit[ 5 ] = { 0, 12.0, 20.0, 30.0, 50.0 };
+    const double finesse_m_spirit[ 5 ] = { 0, 12.0, 20.0, 30.0, 50.0 }; // The Herald
 
     const int finesse_n_casts[ 5 ] = { 0, 6, 5, 4, 3 }; // The Vehement
     const double finesse_n_max_crit = 0.5;

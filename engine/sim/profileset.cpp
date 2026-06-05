@@ -39,7 +39,8 @@ bool overridable_option( const option_tuple_t& tuple )
          tuple.name.rfind( "raid_events", 0 ) == std::string::npos &&
          tuple.name.rfind( "class_talents", 0 ) == std::string::npos &&
          tuple.name.rfind( "spec_talents", 0 ) == std::string::npos &&
-         tuple.name.rfind( "hero_talents", 0 ) == std::string::npos;
+         tuple.name.rfind( "hero_talents", 0 ) == std::string::npos &&
+         tuple.name.rfind( "talents", 0 ) == std::string::npos;
 }
 
 std::string format_time( double seconds, bool milliseconds = true )
@@ -179,11 +180,12 @@ void simulate_profileset( sim_t* parent, profileset::profile_set_t& set, sim_t*&
 // Figure out if the option defines new actor(s) with their own scope
 bool is_actor_scope( const option_tuple_t& opt )
 {
-  static constexpr std::array<util::string_view, 22> actor_scope_opts { {
-    "deathknight", "demonhunter", "druid", "evoker", "hunter", "mage", "monk",
-    "paladin", "priest", "rogue", "shaman", "warlock", "warrior", "player_simplified",
-    "enemy", "tank_dummy", "pet", "guardian", "copy", "armory", "local_json", "guild"
-  } };
+  static constexpr std::array<util::string_view, 33> actor_scope_opts{
+      { "deathknight", "demonhunter", "druid",  "evoker",   "hunter",  "mage",    "monk",
+        "paladin",     "priest",      "rogue",  "shaman",   "warlock", "warrior", "player_simplified",
+        "enemy",       "tank_dummy",  "pet",    "guardian", "copy",    "armory",  "local_json",
+        "guild",       "rime",        "xavian", "ardeos",   "meiko",   "elarion", "aeona",
+        "sylvie",      "helena",      "vigour", "mara",     "tariq" } };
 
   return range::any_of( actor_scope_opts, [ &opt ]( util::string_view name ) {
     return util::str_compare_ci( opt.name, name );

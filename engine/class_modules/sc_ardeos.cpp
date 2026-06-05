@@ -153,11 +153,11 @@ public:
     unsigned pyromania_targets    = 3;
 
     double searing_blaze_tick_coeff      = 0.681;
-    timespan_t searing_blaze_duration    = 24_s;
+    timespan_t searing_blaze_duration    = 30_s;
     timespan_t searing_blaze_period      = 2_s;
     double searing_blaze_embers_per_tick = 1.0;  // This is currently reduced by haste.
 
-    double engulfing_flames_tick_coeff      = 1.729;
+    double engulfing_flames_tick_coeff      = 1.729 * 1.15;
     timespan_t engulfing_flames_duration    = 9_s;
     timespan_t engulfing_flames_period      = 1.5_s;
     double engulfing_flames_embers_per_tick = 5.0;  // This is currently reduced by haste.
@@ -169,7 +169,7 @@ public:
     double detonate_hits                  = 3;      // Divides sample duration equally into these.
     timespan_t detonate_delay             = 0.5_s;  // Damage is sampled at cast time and snapshots.
     timespan_t detonate_between_hit_delay = 0.3_s;
-    timespan_t detonate_sample_duration   = 2.5_s;
+    timespan_t detonate_sample_duration   = 3_s;
 
     double fire_ball_coeff            = 6.156;
     timespan_t fire_ball_cooldown     = 30_s;

@@ -135,15 +135,15 @@ public:
   } rngs;
 
 #define RIME_TALENT_LIST( X )                                                  \
-  X( CHILLING_FINESSE, "chilling_finesse", "Chilling Finesse" )                \
-  X( HARROWING_ICE, "harrowing_ice", "Harrowing Ice" )                         \
-  X( GLACIAL_ASSAULT, "glacial_assault", "Glacial Assault" )                   \
-  X( BURSTBOLTER, "burstbolter", "Burstbolter" )                               \
-  X( ICY_FLOW, "icy_flow", "Icy Flow" )                                        \
-  X( NAVIRS_KEEPER, "navirs_keeper", "Navir's Keeper" )                        \
-  X( CASCADING_BLITZ, "cascading_blitz", "Cascading Blitz" )                   \
   X( AVALANCHE, "avalanche", "Avalanche" )                                     \
   X( COALESCING_FROST, "coalescing_frost", "Coalescing Frost" )                \
+  X( GLACIAL_ASSAULT, "glacial_assault", "Glacial Assault" )                   \
+  X( BURSTBOLTER, "burstbolter", "Burstbolter" )                               \
+  X( CHILLING_FINESSE, "chilling_finesse", "Chilling Finesse" )                \
+  X( NAVIRS_KEEPER, "navirs_keeper", "Navir's Keeper" )                        \
+  X( CASCADING_BLITZ, "cascading_blitz", "Cascading Blitz" )                   \
+  X( HARROWING_ICE, "harrowing_ice", "Harrowing Ice" )                         \
+  X( ICY_FLOW, "icy_flow", "Icy Flow" )                                        \
   X( BURSTING_SWALLOWS, "bursting_swallows", "Bursting Swallows" )             \
   X( GREATER_GLACIAL_BLAST, "greater_glacial_blast", "Greater Glacial Blast" ) \
   X( COLD_SHOWER, "cold_shower", "Cold Shower" )                               \
@@ -197,8 +197,8 @@ public:
 
   struct talents_t
   {
-    timespan_t chilling_finesse_bursting_ice_cdr_per_tick = 0.3_s;
-    timespan_t chilling_finesse_torrent_cdr_per_snap      = 3_s;
+    timespan_t chilling_finesse_bursting_ice_cdr_per_tick = 0.15_s;
+    timespan_t chilling_finesse_torrent_cdr_per_snap      = 1.5_s;
 
     double harrowing_ice_mul_per_stack = 0.02;
     int harrowing_ice_max_stacks       = 30;
@@ -264,19 +264,19 @@ public:
   {
     double spirit_refund_mul = 2.0;
 
-    double frost_bolt_coeff    = 2.34;
+    double frost_bolt_coeff    = 2.34 / 1.16;
     timespan_t frost_bolt_cast = 1.5_s;
     int frost_bolt_anima_gen   = 3;
 
     timespan_t flight_of_navir_cd = 60_s;
-    double bird_coeff             = 0.68;
+    double bird_coeff             = 0.68 / 1.16 * 0.8;
     double bird_spirit_multiplier = 1.5;
 
-    double ice_comet_coeff   = 4.735;
+    double ice_comet_coeff   = 4.735 / 1.16;
     double ice_comet_falloff = 12;
     int ice_comet_cost       = 2;
 
-    double glacial_blast_coeff    = 11.88;
+    double glacial_blast_coeff    = 11.88 / 1.16;
     timespan_t glacial_blast_cast = 2_s;
     int glacial_blast_cost        = 2;
 
@@ -285,16 +285,16 @@ public:
     double winters_blessing_heal_factor      = 0.3;
     timespan_t winters_embrace_heal_batching = 0.5_s;
 
-    double cold_snap_coeff  = 3.648;
+    double cold_snap_coeff  = 3.648 / 1.16;
     timespan_t cold_snap_cd = 12_s;
     int cold_snap_charges   = 2;
 
-    double freezing_torrent_tick_coeff   = 1.562;
+    double freezing_torrent_tick_coeff   = 1.562 / 1.16;
     timespan_t freezing_torrent_duration = 2_s;
     timespan_t freezing_torrent_period   = 0.4_s;
     timespan_t freezing_torrent_cooldown = 15_s;
 
-    double bursting_ice_coeff        = 0.578;
+    double bursting_ice_coeff        = 0.578 / 1.16;
     timespan_t bursting_ice_duration = 3_s;
     timespan_t bursting_ice_period   = 0.5_s;
     int bursting_ice_falloff         = 5;
@@ -305,7 +305,7 @@ public:
 
     timespan_t ice_blitz_cd                 = 120_s;
     double ice_blitz_mul                    = 0.2;
-    timespan_t ice_blitz_extension_per_bird = 0.2_s;
+    timespan_t ice_blitz_extension_per_bird = 0.1_s;
 
     timespan_t dash_cd = 25_s;
     int dash_charges   = 2;

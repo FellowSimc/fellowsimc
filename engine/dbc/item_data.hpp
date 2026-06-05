@@ -25,8 +25,8 @@ constexpr double fixed_slot_primary_weight     = 0.25;
 constexpr double fixed_slot_stamina_weight     = 0.5;
 constexpr double fixed_slot_secondary_weight   = 0.3;
 constexpr double fixed_slot_main_stat_mul      = 0.7;
-constexpr double fixed_slot_secondary_mul      = 0.6;
-constexpr double randomized_slot_secondary_mul = 1.5;
+constexpr double fixed_slot_secondary_mul      = 0.6; // Fixed Affix are 0.6. Random affix are 1.5.
+constexpr double randomized_slot_secondary_mul = 1.5; // Fixed Affix are 0.6. Random affix are 1.5.
 constexpr double slot_rarity_base              = 0.92;
 
 struct dbc_item_data_t {

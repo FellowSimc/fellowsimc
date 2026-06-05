@@ -262,7 +262,7 @@ public:
     int final_crescendo_max_stacks = 3;
     int final_crescendo_ricochets  = 8;
 
-    double skylit_grace_cdr = 1.0;
+    double skylit_grace_cdr = 1.2;
 
     int piercing_seekers_ricochet_targets = 1;
     double piercing_seekers_ricochet_mul  = 0.7;

@@ -1704,9 +1704,9 @@ void xavian_t::init_base_stats()
   base.stats.attribute[ STAT_STRENGTH ] = 100;
   resources.base[ RESOURCE_HEALTH ]     = 2556;
 
-  base.health_per_stamina = 90.303;
+  base.health_per_stamina = 81.303;
 
-  resources.base[ RESOURCE_MANA ] = 1000;
+  resources.base[ RESOURCE_MANA ] = 1440;
 
   resources.base_regen_per_second[ RESOURCE_MANA ] = 0.005 * resources.base[ RESOURCE_MANA ];
 

@@ -157,7 +157,7 @@ public:
     timespan_t searing_blaze_period      = 2_s;
     double searing_blaze_embers_per_tick = 1.0;  // This is currently reduced by haste.
 
-    double engulfing_flames_tick_coeff      = 1.729 * 1.15;
+    double engulfing_flames_tick_coeff      = 1.988;
     timespan_t engulfing_flames_duration    = 9_s;
     timespan_t engulfing_flames_period      = 1.5_s;
     double engulfing_flames_embers_per_tick = 5.0;  // This is currently reduced by haste.

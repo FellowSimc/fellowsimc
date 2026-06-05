@@ -277,7 +277,7 @@ public:
     const int harmonious_stacks_minor   = 4;
     const int harmonious_stacks_major   = 12;
 
-    const double gem_power_cap = 2640.0;
+    const double gem_power_cap = 1500.0;
     const double gem_power_mult = 0.00005;
   } fs_gems;
 

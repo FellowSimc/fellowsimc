@@ -197,12 +197,12 @@ public:
 
   struct talents_t
   {
-    timespan_t chilling_finesse_bursting_ice_cdr_per_tick = 0.15_s;
+    timespan_t chilling_finesse_bursting_ice_cdr_per_tick = 0.2_s;
     timespan_t chilling_finesse_torrent_cdr_per_snap      = 1.5_s;
 
     double harrowing_ice_mul_per_stack = 0.02;
     int harrowing_ice_max_stacks       = 30;
-    timespan_t harrowing_ice_duration  = 8_s;
+    timespan_t harrowing_ice_duration  = 12_s;
     timespan_t harrowing_ice_cdr       = 5_s;
 
     int glacial_assault_stacks      = 4;
@@ -264,19 +264,19 @@ public:
   {
     double spirit_refund_mul = 2.0;
 
-    double frost_bolt_coeff    = 2.34 / 1.16;
+    double frost_bolt_coeff    = 2.017;
     timespan_t frost_bolt_cast = 1.5_s;
     int frost_bolt_anima_gen   = 3;
 
     timespan_t flight_of_navir_cd = 60_s;
-    double bird_coeff             = 0.68 / 1.16 * 0.8;
+    double bird_coeff             = 0.469;
     double bird_spirit_multiplier = 1.5;
 
-    double ice_comet_coeff   = 4.735 / 1.16;
+    double ice_comet_coeff   = 4.082;
     double ice_comet_falloff = 12;
     int ice_comet_cost       = 2;
 
-    double glacial_blast_coeff    = 11.88 / 1.16;
+    double glacial_blast_coeff    = 10.24;
     timespan_t glacial_blast_cast = 2_s;
     int glacial_blast_cost        = 2;
 
@@ -285,16 +285,16 @@ public:
     double winters_blessing_heal_factor      = 0.3;
     timespan_t winters_embrace_heal_batching = 0.5_s;
 
-    double cold_snap_coeff  = 3.648 / 1.16;
+    double cold_snap_coeff  = 3.145;
     timespan_t cold_snap_cd = 12_s;
     int cold_snap_charges   = 2;
 
-    double freezing_torrent_tick_coeff   = 1.562 / 1.16;
+    double freezing_torrent_tick_coeff   = 1.346;
     timespan_t freezing_torrent_duration = 2_s;
     timespan_t freezing_torrent_period   = 0.4_s;
     timespan_t freezing_torrent_cooldown = 15_s;
 
-    double bursting_ice_coeff        = 0.578 / 1.16;
+    double bursting_ice_coeff        = 0.498;
     timespan_t bursting_ice_duration = 3_s;
     timespan_t bursting_ice_period   = 0.5_s;
     int bursting_ice_falloff         = 5;

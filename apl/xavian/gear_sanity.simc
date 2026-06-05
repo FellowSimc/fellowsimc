@@ -1,0 +1,134 @@
+report_details=1
+optimal_raid=0
+# max_time=315
+# max_time=290
+target_error=0.1
+iterations=10000
+chart_show_relative_difference=1
+vary_combat_length=0
+single_actor_batch=1
+count_overheal_as_heal=1
+max_time=720
+desired_targets=1
+# desired_targets=16
+
+scale_over=hps
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+relative_difference_base="Base Xavian"
+
+xavian="Base Xavian"
+level=80
+
+apl/xavian/xavian_apl.simc
+
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste
+
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste
+wrist=wrists,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary
+
+# chest=chest,rarity=uncommon,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste
+
+
+weapon=fated_strike
+
+talents+=/suns_touch:1/rising_sun:1/imposing_presence:1/celestial_favor:1/vanguard_of_vengeance:1/golden_hour:1
+
+
+# copy="Extra Blue Stat"
+
+#,affixes=primary
+
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/haste
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/crit
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/primary
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+wrist=wrists,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/haste
+
+talents+=/suns_touch:1/rising_sun:1/imposing_presence:1/celestial_favor:1/vanguard_of_vengeance:1/golden_hour:1
+
+# weapon_trait.emerald_judgement=2
+
+copy="10b","Base Xavian"
+gems.sapphire_power=1500
+copy="10e","Base Xavian"
+gems.emerald_power=1500
+copy="10a","Base Xavian"
+gems.amethyst_power=1500
+copy="10y","Base Xavian"
+gems.topaz_power=1500
+copy="10r","Base Xavian"
+gems.ruby_power=1500
+copy="10r nb","Base Xavian"
+gems.ruby_power=1500
+ruby_allow_boss_amp=0
+copy="10d","Base Xavian"
+gems.diamond_power=1500
+
+# copy="gleaming"
+# talents+=/gleaming_strikes:1
+
+# copy="Big Secon"
+# head=hat,rarity=rare,ilevel=315,variant=big_secondary,main_secondary=crit,fixed_secondary=expertise,affixes=primary
+# shoulder=shoulder,rarity=rare,variant=big_secondary,ilevel=240,main_secondary=spirit,fixed_secondary=stamina
+# # back=back,rarity=regal,variant=big_secondary,ilevel=315,main_secondary=crit,fixed_secondary=primary/crit
+# chest=chest,rarity=regal,variant=big_secondary,ilevel=315,main_secondary=haste,fixed_secondary=primary/stamina,affixes=haste
+# hands=hands,rarity=epic,variant=big_secondary,ilevel=315,main_secondary=haste,fixed_secondary=crit,affixes=primary
+# legs=legs,rarity=epic,variant=big_secondary,ilevel=300,main_secondary=haste,fixed_secondary=haste
+# feet=feet,rarity=epic,variant=big_secondary,ilevel=240,main_secondary=haste,fixed_secondary=spirit
+
+# neck=neck,rarity=heroic,variant=big_secondary,ilevel=240,main_secondary=haste/crit,fixed_secondary=haste/haste
+# wrist=wrists,rarity=regal,variant=big_secondary,ilevel=45,main_secondary=crit,fixed_secondary=primary/expertise
+# finger1=ring1,rarity=epic,variant=big_secondary,ilevel=45,main_secondary=spirit/crit,fixed_secondary=primary,affixes=crit
+# finger2=ring2,rarity=epic,variant=big_secondary,ilevel=255,main_secondary=haste/crit,fixed_secondary=crit
+# trinket1=relic1,rarity=epic,variant=big_secondary,ilevel=165,main_secondary=haste/crit,fixed_secondary=stamina
+# trinket2=relic2,rarity=epic,variant=big_secondary,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste,affixes=spirit
+# main_hand=weap,rarity=epic,variant=big_secondary,ilevel=315,main_secondary=expertise,fixed_secondary=primary
+
+# # chest=chest,rarity=uncommon,variant=big_secondary,ilevel=315,main_secondary=haste,fixed_secondary=haste
+
+# copy="Big Stam"
+# head=hat,rarity=rare,ilevel=315,variant=big_stamina,main_secondary=crit,fixed_secondary=expertise,affixes=primary
+# shoulder=shoulder,rarity=rare,variant=big_stamina,ilevel=240,main_secondary=spirit,fixed_secondary=stamina
+# # back=back,rarity=regal,variant=big_stamina,ilevel=315,main_secondary=crit,fixed_secondary=primary/crit
+# chest=chest,rarity=regal,variant=big_stamina,ilevel=315,main_secondary=haste,fixed_secondary=primary/stamina,affixes=haste
+# hands=hands,rarity=epic,variant=big_stamina,ilevel=315,main_secondary=haste,fixed_secondary=crit,affixes=primary
+# legs=legs,rarity=epic,variant=big_stamina,ilevel=300,main_secondary=haste,fixed_secondary=haste
+# feet=feet,rarity=epic,variant=big_stamina,ilevel=240,main_secondary=haste,fixed_secondary=spirit
+
+# neck=neck,rarity=heroic,variant=big_stamina,ilevel=240,main_secondary=haste/crit,fixed_secondary=haste/haste
+# wrist=wrists,rarity=regal,variant=big_stamina,ilevel=45,main_secondary=crit,fixed_secondary=primary/expertise
+# finger1=ring1,rarity=epic,variant=big_secondary,ilevel=45,main_secondary=spirit/crit,fixed_secondary=primary,affixes=crit
+# finger2=ring2,rarity=epic,variant=big_secondary,ilevel=255,main_secondary=haste/crit,fixed_secondary=crit
+# trinket1=relic1,rarity=epic,variant=big_secondary,ilevel=165,main_secondary=haste/crit,fixed_secondary=stamina
+# trinket2=relic2,rarity=epic,variant=big_secondary,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste,affixes=spirit
+# main_hand=weap,rarity=epic,variant=big_stamina,ilevel=315,main_secondary=expertise,fixed_secondary=primary
+
+# # chest=chest,rarity=uncommon,variant=big_stamina,ilevel=315,main_secondary=expertise,fixed_secondary=crit

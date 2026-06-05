@@ -166,7 +166,7 @@ public:
     timespan_t entropys_calm_cast_time      = 1.5_s;
     timespan_t entropys_calm_dot_duration   = 6_s;
     timespan_t entropys_calm_dot_period     = 1.5_s;
-    double entropys_calm_tick_sp_coeff      = 2.225;
+    double entropys_calm_tick_sp_coeff      = 2.5;
     timespan_t entropys_calm_cd             = 20_s;
     bool entropys_calm_cd_hasted            = false;
     double entropys_calm_tick_resource      = 4;
@@ -299,7 +299,7 @@ static constexpr std::string_view talent_name_formatted( aeona_talents_t t )
 
   struct talents_t
   {
-    double entropic_burst_tick_coeff         = 0.35;
+    double entropic_burst_tick_coeff         = 0.41;
     timespan_t entropic_burstc_duration      = 9_s;
     timespan_t entropic_burst_tick_period    = 1.5_s;
     int entropic_burst_target_falloff        = 5;

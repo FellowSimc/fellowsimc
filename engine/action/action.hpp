@@ -431,6 +431,8 @@ public:
   
   bool dot_allow_partial_tick;
 
+  timespan_t dot_minimum_partial_tick;
+
   /// Cost of using the ability.
   std::array<parsed_value_t<double>, RESOURCE_MAX> base_costs;
   
@@ -861,8 +863,10 @@ public:
     return std::max( 0.0, base_recharge_multiplier * dynamic_recharge_multiplier );
   }
 
-  virtual double recharge_rate_multiplier( const cooldown_t& ) const
-  { return base_recharge_rate_multiplier * dynamic_recharge_rate_multiplier; }
+  virtual double recharge_rate_multiplier( const cooldown_t& cd ) const
+  {
+    return base_recharge_rate_multiplier * dynamic_recharge_rate_multiplier;
+  }
 
   /** Cooldown base duration for action based cooldowns. */
   virtual timespan_t cooldown_base_duration( const cooldown_t& cd ) const;

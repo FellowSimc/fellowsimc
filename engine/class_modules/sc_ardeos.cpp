@@ -36,6 +36,7 @@ public:
     dot_t* fire_ball;
     dot_t* fire_frog;
     dot_t* crackling_inferno;
+    dot_t* apocalypse_dot;
   } dots;
 
   struct
@@ -49,7 +50,8 @@ public:
   int dot_count() const
   {
     return dots.incinerate->is_ticking() + dots.searing_blaze->is_ticking() + dots.engulfing_flames->current_stack() +
-           dots.fire_ball->is_ticking() + dots.fire_frog->is_ticking() + dots.crackling_inferno->is_ticking();
+           dots.fire_ball->is_ticking() + dots.fire_frog->is_ticking() + dots.crackling_inferno->is_ticking() +
+           dots.apocalypse_dot->is_ticking();
     // fs_dots.amethyst_splinters->is_ticking() + fs_dots.curse_of_anzhyr->is_ticking() +
     // fs_dots.kindling->is_ticking();
   }
@@ -57,7 +59,7 @@ public:
   int unique_dot_count() const
   {
     return dots.incinerate->is_ticking() + dots.searing_blaze->is_ticking() + dots.engulfing_flames->is_ticking() +
-           dots.fire_ball->is_ticking() + dots.fire_frog->is_ticking() + dots.crackling_inferno->is_ticking();
+           dots.fire_ball->is_ticking() + dots.fire_frog->is_ticking() + dots.crackling_inferno->is_ticking() + dots.apocalypse_dot->is_ticking();
   }
 };
 
@@ -342,9 +344,11 @@ public:
     double devouring_flame_amp = 0.08;
 
     bool explosivo                    = false;
+    int explosivo_extra_charges       = 1;
     double explosivo_boss_bonus       = 1.5;
     double explosivo_adds_bonus       = 0.5;
     timespan_t explosivo_cdr_per_ball = 8_s;
+    double explosivo_to_dot           = 0.5;
   } legendary;
 
   struct options_t
@@ -1180,6 +1184,7 @@ struct detonate_t : public ardeos_spell_t
       da += tick_damage_over_time( td->dots.fire_frog );
       da += tick_damage_over_time( td->dots.incinerate );
       da += tick_damage_over_time( td->dots.searing_blaze );
+      da += tick_damage_over_time( td->dots.apocalypse_dot );
 
       return da / p()->spell_const.detonate_hits;
     }
@@ -1792,8 +1797,62 @@ struct engulfing_flames_t : public ardeos_spell_t
 
 struct apocalypse_t : public ardeos_spell_t
 {
+  struct apocalypse_dot_t : public residual_action::residual_periodic_action_t<ardeos_spell_t>
+  {
+    apocalypse_dot_t( util::string_view name, ardeos_t* p ) : residual_action_t( fmt::format( "{}_dot", name ), p )
+    {
+      id = 13;
+
+      background = true;
+
+      name_str_reporting = "Apocalypse (DoT)";
+
+      tick_may_crit = p->talents_enabled( ardeos_t::FIRESTARTER );
+
+      dot_duration           = p->spell_const.fire_ball_dot_duration;
+      dot_behavior           = DOT_REFRESH_DURATION;
+      base_tick_time         = p->spell_const.fire_ball_dot_period;
+      hasted_ticks           = true;
+      dot_allow_partial_tick = true;
+
+      base_multiplier *= p->legendary.explosivo_to_dot;
+
+      base_crit = p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_frog_ball_crit_chance : 0.0;
+    }
+
+    void snapshot_state( action_state_t* state, result_amount_type rt ) override
+    {
+      spell_t::snapshot_state( state, rt );
+    }
+
+    double composite_ta_multiplier( const action_state_t* s ) const override
+    {
+      return fs_player_action_t::action_multiplier();
+    }
+
+    void init() override
+    {
+      base_t::init();
+      snapshot_flags &= STATE_NO_MULTIPLIER;
+      update_flags &= STATE_NO_MULTIPLIER;
+      snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
+      update_flags |= STATE_HASTE | STATE_MUL_TA;
+
+      if ( p()->talents_enabled( ardeos_t::FIRESTARTER ) )
+      {
+        snapshot_flags |= STATE_CRIT;
+      }
+    }
+
+    double composite_crit_chance() const override
+    {
+      return base_crit;
+    }
+  };
+
+  apocalypse_dot_t* dot_action;
   apocalypse_t( util::string_view name, ardeos_t* p, util::string_view options_str = {} )
-    : ardeos_spell_t( name, p, options_str )
+    : ardeos_spell_t( name, p, options_str ), dot_action( nullptr )
   {
     id                 = 13;
     name_str_reporting = "Apocalypse";
@@ -1809,6 +1868,18 @@ struct apocalypse_t : public ardeos_spell_t
     cooldown->hasted   = false;
     cooldown->charges  = 1;
 
+
+    if ( p->legendary.explosivo )
+    {
+      cooldown->charges += p->legendary.explosivo_extra_charges;
+
+      if ( p->legendary.explosivo_to_dot > 0 )
+      {
+        dot_action = new apocalypse_dot_t( name, p );
+        add_child( dot_action );
+      }
+    }
+
     if ( p->talents_enabled( ardeos_t::APOCALYPTIC_SURGE ) )
     {
       base_execute_time -= p->talents.apocalyptic_surge_cast_reduction;
@@ -1820,6 +1891,9 @@ struct apocalypse_t : public ardeos_spell_t
   {
     ardeos_spell_t::impact( s );
     p()->actions.searing_blaze->execute_on_target( s->target );
+    
+    if ( dot_action )
+      residual_action::trigger( dot_action, s->target, s->result_amount );
   }
 
   double composite_da_multiplier( const action_state_t* s ) const override
@@ -1907,9 +1981,7 @@ struct fire_ball_t : public ardeos_spell_t
       snapshot_flags &= STATE_NO_MULTIPLIER;
       update_flags &= STATE_NO_MULTIPLIER;
       snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
-      update_flags &= ~STATE_HASTE;
-      snapshot_flags &= ~STATE_TGT_CRIT;
-      update_flags &= ~STATE_TGT_CRIT;
+      update_flags |= STATE_HASTE | STATE_MUL_TA;
 
       if ( p()->talents_enabled( ardeos_t::FIRESTARTER ) )
       {
@@ -2267,6 +2339,7 @@ ardeos_td_t::ardeos_td_t( player_t* target, ardeos_t* source )
   dots.fire_frog         = target->get_dot( "fire_frog_dot", source );
   dots.incinerate        = target->get_dot( "incinerate_dot", source );
   dots.searing_blaze     = target->get_dot( "searing_blaze", source );
+  dots.apocalypse_dot    = target->get_dot( "apocalypse_dot", source );
 
   debuffs.agonizing_blaze_stacks = make_buff( *this, "agonizing_blaze_stacks" )
                                        ->set_max_stack( source->talents.agonizing_blaze_maximum_stacks )
@@ -2432,7 +2505,7 @@ void ardeos_t::extend_dots( player_t* target, timespan_t extension )
   extend_engulfing_flames( target, extension );
 
   auto dots = { tdata->dots.crackling_inferno, tdata->dots.fire_ball, tdata->dots.fire_frog, tdata->dots.incinerate,
-                tdata->dots.searing_blaze };
+                tdata->dots.searing_blaze, tdata->dots.apocalypse_dot };
 
   for ( dot_t* d : dots )
   {

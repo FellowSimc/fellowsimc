@@ -1240,18 +1240,6 @@ void fs_player_t::create_buffs()
                            ->set_default_value( finesse_trait_values.finesse_i_haste[ rank ] )
                            ->set_duration( finesse_trait_values.finesse_i_duration );
 
-  rank               = finesse_traits[ FINESSE_K ];
-  fs_buffs.finesse_k = make_buff<fs_player_buff_t>( this, "finesse_k" )
-                           ->set_duration( finesse_trait_values.finesse_k_amp_duration )
-                           ->set_default_value( finesse_trait_values.finesse_k_amp_multiplier )
-                           ->set_stack_change_callback( [ this ]( buff_t*, int, int ) {
-                             for ( auto action : action_list )
-                             {
-                               if ( action->cooldown )
-                                 action->cooldown->adjust_recharge_multiplier();
-                             }
-                           } );
-
   fs_buffs.spirit_of_heroism = make_buff<fs_player_buff_t>( this, "spirit_of_heroism" )
                                    ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
                                    ->set_default_value( 0.3 )
@@ -1895,15 +1883,15 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_9 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] += fs_gems.diamond_main_stat_amp_major;
-    base.attribute_multiplier[ STAT_INTELLECT ] += fs_gems.diamond_main_stat_amp_major;
-    base.attribute_multiplier[ STAT_AGILITY ] += fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_4 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] += fs_gems.diamond_main_stat_amp_minor;
-    base.attribute_multiplier[ STAT_INTELLECT ] += fs_gems.diamond_main_stat_amp_minor;
-    base.attribute_multiplier[ STAT_AGILITY ] += fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
   }
 
   // TODO: Implement as a health based check and buff that turns on & off.
@@ -1991,7 +1979,7 @@ void fs_player_t::init_special_effects()
 
   if ( fs_sets.torment_of_baelaurum )
   {
-    base.attribute_multiplier[ convert_hybrid_stat( STAT_STR_AGI_INT ) ] += fs_sets.torment_of_baelaurum_amp;
+    base.attribute_multiplier[ convert_hybrid_stat( STAT_STR_AGI_INT ) ] *= 1.0 + fs_sets.torment_of_baelaurum_amp;
   }
 
   if ( fs_sets.dark_prophecy )
@@ -2102,10 +2090,10 @@ void fs_player_t::init_special_effects()
   if ( overcap > 0.0 )
   {
     auto mul = overcap * fs_gems.gem_power_mult;
-    base.attribute_multiplier[ STAT_STRENGTH ] += mul;
-    base.attribute_multiplier[ STAT_INTELLECT ] += mul;
-    base.attribute_multiplier[ STAT_AGILITY ] += mul;
-    base.attribute_multiplier[ STAT_STAMINA ] += mul;
+    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + mul;
+    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + mul;
+    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + mul;
+    base.attribute_multiplier[ STAT_STAMINA ] *= 1.0 + mul;
   }
 
   if ( fs_weapons.willful_momentum > 0 )
@@ -2629,19 +2617,22 @@ void fs_player_t::init_finished()
       action->cooldown->adjust_recharge_multiplier();
     }
   }
+
+  if ( has_legendary )
+  {
+    for ( auto action : action_list )
+    {
+      action->base_recharge_rate_multiplier /= 1.1;
+      action->cooldown->adjust_recharge_multiplier();
+    }
+  }
 }
 
 void fs_player_t::spirit_refund()
 {
   if ( fs_weapons.willful_momentum )
     fs_buffs.willful_momentum->trigger();
-  //
-  //if ( finesse_traits[ FINESSE_L ] > 0 )
-  //  fs_buffs.finesse_l->trigger();
-
-  if ( finesse_traits[ FINESSE_K ] > 0 )
-    fs_buffs.finesse_k->trigger();
-
+  
   fs_buffs.rising_spirit->trigger();
 
   resource_gain( RESOURCE_SPIRIT, spirit_refund_mul, fs_gains.spirit_procs );

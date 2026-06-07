@@ -1167,6 +1167,7 @@ player_t::player_t( sim_t* s, player_e t, util::string_view n, race_e r )
     visited_apls_( 0 ),
     action_list_id_( 0 ),
     current_execute_type( execute_type::FOREGROUND ),
+    has_legendary( false ),
     has_active_resource_callbacks( false ),
     resource_threshold_trigger()
 {
@@ -5274,7 +5275,7 @@ double player_t::composite_attribute_multiplier( attribute_e attr ) const
   if ( pct_type != STAT_PCT_BUFF_MAX )
   {
     for ( auto b : buffs.stat_pct_buffs[ pct_type ] )
-      m += b->check_stack_value();
+      m *= 1.0 + b->check_stack_value();
   }
 
   return m;

@@ -423,6 +423,7 @@ action_t::action_t( action_e ty, util::string_view token, player_t* p, const spe
     dot_max_stack( 1 ),
     dot_ignore_stack(),
     dot_allow_partial_tick( true ),
+    dot_minimum_partial_tick( 0.0_s ),
     base_costs(),
     secondary_costs(),
     base_costs_per_tick(),
@@ -2007,43 +2008,42 @@ void action_t::tick( dot_t* d )
   // update the driver's state per tick (for example due to haste changes -> tick time).
   update_state( d->state, amount_type( d->state, true ) );
 
-  if ( tick_action )
+  auto factor = d->get_tick_factor();
+
+  if ( factor >= 1.0 || dot_allow_partial_tick && tick_time( d->state ) * factor >= dot_minimum_partial_tick )
   {
-    // 6/22/2018 -- Update logic to use the state of the tick_action rather than the base DoT
-    //              This ensures that composite calculations on the tick_action are not ignored
-    //              Re-use the execute_state so that STATE_MUL_PERSISTENT snapshots are maintained
-    action_state_t* tick_state = tick_action->get_state( tick_action->execute_state );
-    if ( tick_action->pre_execute_state )
+    if ( tick_action )
     {
-      tick_state->copy_state( tick_action->pre_execute_state );
-      action_state_t::release( tick_action->pre_execute_state );
+      // 6/22/2018 -- Update logic to use the state of the tick_action rather than the base DoT
+      //              This ensures that composite calculations on the tick_action are not ignored
+      //              Re-use the execute_state so that STATE_MUL_PERSISTENT snapshots are maintained
+      action_state_t* tick_state = tick_action->get_state( tick_action->execute_state );
+      if ( tick_action->pre_execute_state )
+      {
+        tick_state->copy_state( tick_action->pre_execute_state );
+        action_state_t::release( tick_action->pre_execute_state );
+      }
+
+      tick_state->target = d->target;
+      tick_action->set_target( d->target );
+
+      if ( dynamic_tick_action )
+      {
+        auto flags_ = tick_action->update_flags;
+
+        // ticks actions that are also rolling periodics need to force update composite_rolling_ta_multiplier on every
+        // tick_action execute
+        if ( tick_action->rolling_periodic )
+          flags_ |= STATE_ROLLING_TA;
+
+        tick_action->update_state( tick_state, flags_, amount_type( tick_state, tick_action->direct_tick ) );
+      }
+
+      tick_action->schedule_execute( tick_state );
+
+      sim->print_log( "{} {} ticks ({} of {}) {}", *player, *this, d->current_tick, d->num_ticks(), *d->target );
     }
-
-    tick_state->target = d->target;
-    tick_action->set_target( d->target );
-
-    if ( dynamic_tick_action )
-    {
-      auto flags_ = tick_action->update_flags;
-
-      // ticks actions that are also rolling periodics need to force update composite_rolling_ta_multiplier on every
-      // tick_action execute
-      if ( tick_action->rolling_periodic )
-        flags_ |= STATE_ROLLING_TA;
-
-      tick_action->update_state( tick_state, flags_, amount_type( tick_state, tick_action->direct_tick ) );
-    }
-
-    tick_action->schedule_execute( tick_state );
-
-    sim->print_log("{} {} ticks ({} of {}) {}",
-        *player, *this, d->current_tick, d->num_ticks(), *d->target );
-  }
-  else
-  {
-    auto factor      = d->get_tick_factor();
-
-    if ( factor >= 1.0 || dot_allow_partial_tick )
+    else
     {
       d->state->result = RESULT_HIT;
 
@@ -2059,15 +2059,14 @@ void action_t::tick( dot_t* d )
       if ( sim->debug )
         d->state->debug();
     }
-  }
 
-  if ( energize_type_() == action_energize::PER_TICK )
-  {
-    // Partial tick is not counted for resource gain
-    gain_energize_resource( energize_resource_(), composite_energize_amount( d->state ), gain );
-  }
+    if ( energize_type_() == action_energize::PER_TICK )
+    {
+      gain_energize_resource( energize_resource_(), composite_energize_amount( d->state ), gain );
+    }
 
-  stats->add_tick( d->time_to_tick(), d->state->target );
+    stats->add_tick( d->time_to_tick(), d->state->target );
+  }
 
   player->trigger_ready();
 }
@@ -2643,6 +2642,9 @@ void action_t::init()
 {
   if ( initialized )
     return;
+
+  if ( !channeled )
+    dot_minimum_partial_tick = 0.1_s;
 
   if ( !verify_actor_level() || !verify_actor_spec() || !verify_actor_weapon() )
   {

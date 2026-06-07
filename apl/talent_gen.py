@@ -1,18 +1,19 @@
-
+import json
+from collections import defaultdict
 
 
 rime = {
-    "chilling_finesse": 2,
-    "harrowing_ice": 2,
+    "avalanche": 2,
+    "coalescing_frost": 2,
     "glacial_assault": 2,
 
     "burstbolter": 1,
-    "icy_flow": 1,
+    "chilling_finesse": 1,
     "navirs_keeper": 1,
 
     "cascading_blitz": 2,
-    "avalanche": 2,
-    "coalescing_frost": 2,
+    "harrowing_ice": 2,
+    "icy_flow": 2,
 
     "bursting_swallows": 1,
     "greater_glacial_blast": 1,
@@ -209,7 +210,7 @@ def talent_combinations(
 def combos_to_file(prefix, talents, indicator_dict, target_points, file_path, profilesets=True,
     required_talents=None,
     excluded_talents=None,
-    forbidden_pairs=None ):
+    forbidden_pairs=None, name_filters=None):
     combos = talent_combinations(talents, target_points, required_talents=required_talents, excluded_talents=excluded_talents, forbidden_pairs=forbidden_pairs )
 
     with open(file_path, "w") as f:
@@ -230,10 +231,17 @@ def combos_to_file(prefix, talents, indicator_dict, target_points, file_path, pr
                 indicator += "_"
 
             header = ""
+            
+            profile_name = f"{prefix}{indicator}{index}"
+
+            if name_filters:
+                if not profile_name in name_filters:
+                    continue
+
             if profilesets:
-                header = f"profileset.\"{prefix}{indicator}{index}\"="
+                header = f"profileset.\"{profile_name}\"="
             else:
-                header = f"copy=\"{prefix}{indicator}{index}\",\"Base\"\n"
+                header = f"copy=\"{profile_name}\",\"Base\"\n"
             if len(combo) == 0:
                 continue
             line = "talents="+":1/".join(combo)+":1\n"
@@ -243,20 +251,64 @@ def combos_to_file(prefix, talents, indicator_dict, target_points, file_path, pr
         
 
 # required_talents=None, excluded_talents=None, forbidden_pairs=None
-combos_to_file("Rime", rime, rime_indicators, 11, "talent_output.simc", 
-               required_talents=[
-                #    "icy_talons",
-                #    "greater_glacial_blast",
-                #    "glacial_assault"
-               ],
-               excluded_talents=[
-                #  "frostweavers_wrath",
-                #  "cascading_blitz",
-                #  "avalanche"
-               ],
-               forbidden_pairs=[
-       ("icy_talons", "frostweavers_wrath")
-    ],)
+
+def top_sim_results(path_to_json, total_runs=100):
+    with open(path_to_json,"r") as file_handle:
+        js = json.load(file_handle)
+
+        results = sorted(js["sim"]["profilesets"]["results"], key=lambda x: x["mean"], reverse = True)
+
+        top_x = ([x['name'] for x in results[:total_runs]])
+
+        return top_x
+
+def dps_sim_results(paths_to_json, total_runs=100):
+    runs = defaultdict(list)
+    for json_path in paths_to_json:
+        with open(json_path, "r") as file_handle:
+            js = json.load(file_handle)
+            
+            results = sorted(js["sim"]["profilesets"]["results"], key=lambda x: x["mean"], reverse = True)
+
+            for elem in results[:total_runs]:
+                runs[elem['name']].append(elem['mean'])
+
+            # top_x = ([(x['name'], x['mean']) for x in results[:total_runs]])
+
+            # runs[].append(top_x)
+    
+    return {x: y for x,y in runs.items() if len(y)>1}
+
+    return runs
+
+def sorted_by_overall(build_dicts):
+    new_dict = {x: sum(y)/len(y) for x,y in build_dicts.items()}
+    return sorted(new_dict.items(), key=lambda x: x[1], reverse=True)
+    
+
+
+if __name__ == "__main__":
+    top_x = top_sim_results("output/rime_et27.json", 500)
+    # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
+    sim_results = dps_sim_results(["output/rime_et27.json", "output/rime_et29.json"])
+    overalls = sorted_by_overall(sim_results)
+    print(overalls)
+    # combos_to_file("Rime", rime, rime_indicators, 14, "rime/talent_output_filtered.simc", 
+    #             required_talents=[
+    #                 #    "icy_talons",
+    #                 #    "greater_glacial_blast",
+    #                 #    "glacial_assault"
+    #             ],
+    #             excluded_talents=[
+    #                 #  "frostweavers_wrath",
+    #                 #  "cascading_blitz",
+    #                 #  "avalanche"
+    #             ],
+    #             forbidden_pairs=[
+    #                    ("icy_talons", "frostweavers_wrath")
+    #             ],
+    #             name_filters=top_x
+    # )
 
 # for combo in combos:
 #     print(combo)

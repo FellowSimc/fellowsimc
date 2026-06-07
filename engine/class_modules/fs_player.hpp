@@ -130,7 +130,6 @@ public:
     buff_t* finesse_b;
     buff_t* finesse_g;
     buff_t* finesse_i;
-    buff_t* finesse_k;
     buff_t* hunters_focus;
     buff_t* patient_soul;
     buff_t* finesse_n;

@@ -1915,6 +1915,14 @@ void item_t::decode_fixed_secondarys()
 
 void item_t::decode_affix_list()
 {
+  if ( parsed.rarity == RARITY_LEGENDARY )
+  {
+    player->base.attribute_multiplier[ player->convert_hybrid_stat( STAT_STR_AGI_INT ) ] *= 1.1;
+    player->has_legendary = true;
+
+    return;
+  }
+
   if ( !option_affix_list_str.empty() )
   {
     auto split = util::string_split<util::string_view>( option_affix_list_str, "/" );

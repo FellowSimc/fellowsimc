@@ -1,0 +1,56 @@
+
+
+ardeos="Base Ardeos"
+level=80
+
+apl/ardeos/ardeos_apl.simc
+
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary,affixes=crit/haste
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=crit/haste
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=crit/haste
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
+
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
+wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=expertise/expertise
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary,affixes=crit/haste
+
+legendary.explosivo_adds_bonus=0
+legendary.explosivo_boss_bonus=0
+
+# talents+=/slow_burn:1/flare_up:1/crash_and_burn:1/undying_flame:1/crackling_inferno:1/apocalyptic_surge:1/rolling_flames:1/intensifying_inferno:1/cascading_inferno:1/spontaneous_combustion:1
+#14
+
+talents=great_balls_of_fire:1/crash_and_burn:1/firestarter:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1/undying_flame:1
+#2 3 5 6 9 12 14
+
+
+weapon_trait.visions_of_grandeur=1
+
+sets.deaths_grasp=1
+sets.dark_prophecy=1
+
+gems.emerald_power=1500
+gems.sapphire_power=1500
+
+weapon_trait.hunters_focus=4
+weapon_trait.seized_opportunity=4
+
+weapon=chronoshift
+
+copy="Explosivo","Base Ardeos"
+legendary.explosivo=1
+
+copy="Devouring","Base Ardeos"
+legendary.devouring_flame=1
+
+copy="Toad","Base Ardeos"
+legendary.fire_toad=1

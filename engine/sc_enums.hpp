@@ -2186,7 +2186,7 @@ constexpr item_variant_e item_variant_from_string( std::string_view trait )
   X( EPIC, epic, "Epic", 2, 1, 2, 6 )             \
   X( HEROIC, heroic, "Heroic", 1, 2, 2, 7 )       \
   X( REGAL, regal, "Regal", 0, 2, 3, 8 )          \
-  X( LEGENDARY, legendary, "Legendary", 0, 2, 3, 8 )
+  X( LEGENDARY, legendary, "Legendary", 0, 2, 0, 0 )
 
 enum item_rarity_e : unsigned
 {

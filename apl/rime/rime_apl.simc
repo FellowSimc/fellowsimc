@@ -7,7 +7,7 @@ actions=run_action_list,name=main
 actions.variables=variable,name=will_spend_orbs,value=active_enemies>=3|talent.icy_talons|(action.frost_bolt.execute_time<=1.16|!talent.cascading_blitz|talent.bursting_swallows&talent.burstbolter&action.frost_bolt.execute_time<=1.25|talent.icy_flow&talent.burstbolter&talent.bursting_swallows&!talent.greater_glacial_blast&action.frost_bolt.execute_time<=1.36|!buff.ice_blitz.up),op=set
 
 actions.main=flight_of_the_navir,target_if=max:target.health,if=(target.time_to_die>=18|fight_remains<=20)
-actions.main+=/ice_blitz,target_if=max:target.health,if=(!talent.cascading_blitz&target.time_to_die>=18|target.time_to_die>=25|fight_remains<=60)&!buff.ice_blitz.up|!buff.finesse_g.up&buff.winters_embrace.up
+actions.main+=/icicles_of_anzhyr,if=!raid_event.adds.exists|active_enemies%2>=raid_event.adds.count|raid_event.adds.in>=12
 actions.main+=/wrath_of_winter,target_if=max:target.health,if=(target.time_to_die>=28|fight_remains<=20|spirit.deficit<=10)&((!weapon.voidbringer|cooldown.voidbringers_touch.remains>45|spirit.deficit<=10)|!weapon_trait.visions_of_grandeur)
 actions.main+=/winters_blessing,target_if=max:target.health,if=(target.time_to_die>=20|fight_remains<=20)&(worb>=2&!talent.icy_talons|worb>=4&talent.icy_talons)
 actions.main+=/voidbringers_touch,if=!debuff.voidbringer_accumulator.up
@@ -17,6 +17,7 @@ actions.main+=/voidbringers_touch,if=!debuff.voidbringer_accumulator.up
 # actions.main+=/frost_bolt,if=cooldown.bursting_ice.up&talent.icy_talons&time<=10&worb<5&talent.burstbolter&talent.icy_talons
 # actions.main+=/freezing_torrent,target_if=max:target.health,if=(worb<5)&target.time_to_die>=4&talent.coalescing_frost&legendary.frostwyrms_spite&(cooldown.bursting_ice.remains<=duration+1.5|buff.ice_blitz.up&talent.cascading_blitz)
 actions.main+=/bursting_ice,target_if=max:target.health,if=refreshable
+actions.main+=/ice_blitz,target_if=max:target.health,if=(!talent.cascading_blitz&target.time_to_die>=18|target.time_to_die>=25|fight_remains<=60)&!buff.ice_blitz.up|!buff.finesse_g.up&buff.winters_embrace.up
 actions.main+=/cold_snap,target_if=max:target.health,if=buff.finesse_n.at_max_stacks&buff.winters_embrace.up&buff.frostwyrms_spite.up
 actions.main+=/cold_snap,target_if=max:target.health,if=full_recharge_time<=gcd.max*3&worb<5&(!buff.icy_flow.at_max_stacks|talent.icy_talons)&variable.will_spend_orbs
 actions.main+=/talon_strike,target_if=max:target.health,if=buff.winters_embrace.up&buff.glacial_assault.at_max_stacks
@@ -28,7 +29,6 @@ actions.main+=/freezing_torrent,target_if=max:target.health,if=(worb<5)&target.t
 actions.main+=/glacial_blast,target_if=max:target.health,if=active_enemies=1&(worb>=4&variable.will_spend_orbs|buff.undulating_spirit.react|buff.winters_embrace.up|buff.icy_flow.at_max_stacks|buff.icy_flow.up&(talent.supreme_torrent|talent.soulfrost_torrent))&(!talent.harrowing_ice|!talent.cascading_blitz|!talent.burstbolter|!buff.ice_blitz.up|action.frost_bolt.execute_time<=1.16|buff.wrath_of_winter.up|buff.icy_flow.up)
 actions.main+=/cold_snap,target_if=max:target.health,if=(buff.flight_of_the_navir.up|(cooldown.flight_of_the_navir.remains>=cooldown.cold_snap.duration*2)&(!buff.frostwyrms_spite.up|buff.winters_embrace.up)|target.time_to_die<=12)&(!buff.icy_flow.at_max_stacks|talent.icy_talons)&(!legendary.frostwyrms_spite|!blessing.finesse_n|buff.finesse_n.at_max_stacks|!buff.frostwyrms_spite.up)
 actions.main+=/chronoshift,if=!cooldown.flight_of_the_navir.up&!cooldown.winters_blessing.up&!cooldown.bursting_ice.up
-actions.main+=/icicles_of_anzhyr,if=!raid_event.adds.exists|active_enemies%2>=raid_event.adds.count|raid_event.adds.in>=12
 actions.main+=/natures_fury
 actions.main+=/cold_snap,target_if=max:target.health,if=buff.finesse_n.at_max_stacks
 actions.main+=/frost_bolt,target_if=max:target.health

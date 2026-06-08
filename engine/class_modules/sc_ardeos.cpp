@@ -312,14 +312,14 @@ public:
     bool double_detonate_cost_efficiency = false;
 
     timespan_t apocalyptic_surge_cast_reduction = 1.5_s;
-    int apocalyptic_surge_stacks                = 2;
+    int apocalyptic_surge_stacks                = 4;
 
     double burning_initiative_initial_spirit = 50;
     double burning_initiative_initial_embers = 2;
 
     int cascading_inferno_stacks_per_detonate     = 1;
     int cascading_inferno_max_stacks              = 20;
-    int cascading_inferno_consumed_stacks         = 10;
+    int cascading_inferno_consumed_stacks         = 8;
     double cascading_inferno_additive_crit_chance = 3.0;
   } talents;
 
@@ -345,8 +345,6 @@ public:
 
     bool explosivo                    = false;
     int explosivo_extra_charges       = 1;
-    double explosivo_boss_bonus       = 1.5;
-    double explosivo_adds_bonus       = 0.5;
     timespan_t explosivo_cdr_per_ball = 8_s;
     double explosivo_to_dot           = 0.5;
   } legendary;
@@ -1196,8 +1194,8 @@ struct detonate_t : public ardeos_spell_t
       snapshot_flags &= ~( STATE_VERSATILITY | STATE_MUL_PLAYER_DAM );
       update_flags &= ~( STATE_VERSATILITY | STATE_MUL_PLAYER_DAM );
 
-      snapshot_flags |= STATE_TGT_CRIT | STATE_TGT_MUL_DA;
-      update_flags |= STATE_TGT_CRIT | STATE_TGT_MUL_DA;
+      snapshot_flags |= STATE_TGT_CRIT | STATE_TGT_MUL_DA | STATE_MUL_PERSISTENT;
+      update_flags |= STATE_TGT_CRIT | STATE_TGT_MUL_DA | STATE_MUL_PERSISTENT;
     }
 
     void snapshot_internal( action_state_t* s, unsigned flags, result_amount_type rt ) override
@@ -1896,25 +1894,6 @@ struct apocalypse_t : public ardeos_spell_t
       residual_action::trigger( dot_action, s->target, s->result_amount );
   }
 
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = ardeos_spell_t::composite_da_multiplier( s );
-
-    if ( p()->legendary.explosivo )
-    {
-      if ( s->target->is_boss() )
-      {
-        m *= 1.0 + p()->legendary.explosivo_boss_bonus;
-      }
-      else
-      {
-        m *= 1.0 + p()->legendary.explosivo_adds_bonus;
-      }
-    }
-
-    return m;
-  }
-
   void execute() override
   {
     ardeos_spell_t::execute();
@@ -2333,6 +2312,8 @@ ardeos_td_t::ardeos_td_t( player_t* target, ardeos_t* source )
   : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
 {
   dots.engulfing_flames_individual = {};
+  dots.engulfing_flames_individual.reserve( 32 );
+
   dots.crackling_inferno = target->get_dot( "crackling_inferno", source );
   dots.engulfing_flames  = target->get_dot( "engulfing_flames", source );
   dots.fire_ball         = target->get_dot( "fire_ball_dot", source );
@@ -2843,8 +2824,6 @@ void ardeos_t::create_options()
   add_option( opt_bool( "legendary.untamed_flame", legendary.untamed_flame ) );
   add_option( opt_bool( "legendary.explosivo", legendary.explosivo ) );
   add_option( opt_timespan( "legendary.explosivo_cdr_per_ball", legendary.explosivo_cdr_per_ball ) );
-  add_option( opt_float( "legendary.explosivo_adds_bonus", legendary.explosivo_adds_bonus ) );
-  add_option( opt_float( "legendary.explosivo_boss_bonus", legendary.explosivo_boss_bonus ) );
 
   add_option( opt_bool( "legendary.devouring_flame", legendary.devouring_flame ) );
   add_option( opt_float( "legendary.devouring_flame_amp", legendary.devouring_flame_amp ) );

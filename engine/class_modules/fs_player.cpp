@@ -1042,6 +1042,8 @@ std::unique_ptr<expr_t> fs_player_t::create_expression( util::string_view name_s
         return make_ref_expr( name_str, fs_sets.torment_of_baelaurum );
       else if ( util::str_compare_ci( split[ 1 ], "tuzari_grace" ) )
         return make_ref_expr( name_str, fs_sets.tuzari_grace );
+      else if ( util::str_compare_ci( split[ 1 ], "seal_of_the_heskyr" ) )
+        return make_ref_expr( name_str, fs_sets.seal_of_the_heskyr );
     }
     else if ( util::str_compare_ci( split[ 0 ], "weapon_trait" ) )
     {
@@ -1108,6 +1110,14 @@ void fs_player_t::init_base_stats()
   if ( finesse_traits[ FINESSE_M ] )
   {
     resources.start_at[ RESOURCE_SPIRIT ] += finesse_trait_values.finesse_m_spirit[ finesse_traits[ FINESSE_M ] ];
+  }
+
+  if ( fs_sets.seal_of_the_heskyr )
+  {
+    for ( auto& gem_power : fs_gems.gem_powers )
+    {
+      gem_power *= 1.0 + fs_sets.seal_of_the_heskyr_gem_power;
+    }
   }
 
   // resources.base_regen_per_second[ RESOURCE_ENERGY ] = 10;
@@ -1661,6 +1671,8 @@ void fs_player_t::create_options()
   add_option( opt_bool( "sets.tuzari_grace", fs_sets.tuzari_grace ) );
   add_option( opt_float( "sets.tuzari_grace_haste", fs_sets.tuzari_grace_haste ) );
   add_option( opt_float( "sets.tuzari_grace_movement_speed", fs_sets.tuzari_grace_movement_speed ) );
+
+  add_option( opt_bool( "sets.seal_of_the_heskyr", fs_sets.seal_of_the_heskyr ) );
 
   add_option( opt_float( "gems.ruby_power", fs_gems.gem_powers[ GEM_RUBY ] ) );
   add_option( opt_float( "gems.amethyst_power", fs_gems.gem_powers[ GEM_AMETHYST ] ) );

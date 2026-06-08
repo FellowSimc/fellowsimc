@@ -176,39 +176,42 @@ public:
     double draconic_might_ppm          = 1.0;
     double draconic_might_amp          = 0.18;
     timespan_t draconic_might_duration = 14_s;
-    timespan_t draconic_might_cooldown  = 5_s;
+    timespan_t draconic_might_cooldown = 5_s;
 
     bool drakheims_absolution                = false;
     double drakheims_absolution_amp          = 0.20;
     timespan_t drakheims_absolution_duration = 20_s;
 
-    bool eldrin_deceit                       = false;
-    double eldrin_deceit_crit                = 0.03;
+    bool eldrin_deceit        = false;
+    double eldrin_deceit_crit = 0.03;
     // Threat Reduction
 
     bool eldrin_fury        = false;
     double eldrin_fury_crit = 0.03;
     // Threat Generation
 
-    bool haunting_lament                 = false;
-    double haunting_lament_spirit        = 0.03;
-    double haunting_lament_max_mana      = 0.15;
+    bool haunting_lament            = false;
+    double haunting_lament_spirit   = 0.03;
+    double haunting_lament_max_mana = 0.15;
 
     bool sin_warding             = false;
     double sin_warding_expertise = 0.03;
     double sin_warding_max_hp    = 0.05;
 
-    bool sintharas_veil                  = false;
-    double sintharas_veil_spirit         = 0.03;
-    double sintharas_veil_magic_dr       = 0.1;
+    bool sintharas_veil            = false;
+    double sintharas_veil_spirit   = 0.03;
+    double sintharas_veil_magic_dr = 0.1;
 
     bool torment_of_baelaurum            = false;
     double torment_of_baelaurum_amp      = 0.04;
     double torment_of_baelaurum_heal_pct = 0.35;
 
-    bool tuzari_grace                    = false;
-    double tuzari_grace_haste            = 0.03;
-    double tuzari_grace_movement_speed   = 0.2;
+    bool tuzari_grace                  = false;
+    double tuzari_grace_haste          = 0.03;
+    double tuzari_grace_movement_speed = 0.2;
+
+    bool seal_of_the_heskyr             = false;
+    double seal_of_the_heskyr_gem_power = 0.25;
   } fs_sets;
 
   struct fs_gems_t
@@ -788,13 +791,6 @@ public:
     {
       m *= 1.0 + fs_p()->fs_buffs.finesse_a->check_stack_value();
     }
-
-    return m;
-  }
-
-  double action_multiplier() const
-  {
-    auto m = ab::action_multiplier();
 
     if ( fs_p()->finesse_traits[ FINESSE_J ] && ab::ability_flags & ability_type_e::ABILITY_POWER )
     {

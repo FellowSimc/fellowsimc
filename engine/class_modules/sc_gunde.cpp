@@ -482,7 +482,6 @@ public:
   void create_cooldowns();
   void create_buffs() override;
   void create_options() override;
-  void parry_effects( action_state_t* s );
 
   void copy_from( player_t* source ) override;
   std::string create_profile( save_e stype ) override;
@@ -881,6 +880,31 @@ struct auto_melee_attack_t : public action_t
   }
 };
 
+struct rend_t : public residual_action::residual_periodic_action_t<gunde_attack_t>
+{
+  rend_t( gunde_t* p ) : residual_action_t( "rend", p )
+  {
+    id = 2;
+
+    name_str_reporting = "Rend";
+
+    tick_may_crit = false;
+
+    dot_duration           = p->spell_const.rend_duration;
+    dot_behavior           = DOT_REFRESH_DURATION;
+    base_tick_time         = p->spell_const.rend_period;
+    hasted_ticks           = false;
+    dot_allow_partial_tick = true;
+
+    name_str_reporting = "Rend";
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    attack_t::snapshot_state( state, rt );
+  }
+};
+
 struct double_strike_t : public gunde_attack_t
 {
   struct double_strike_hit_t : public gunde_attack_t
@@ -889,7 +913,7 @@ struct double_strike_t : public gunde_attack_t
       : gunde_attack_t( name, p )
     {
       background = dual       = true;
-      id                      = 2;
+      id                      = 4;
       _applies_rend           = true;
       school                  = SCHOOL_PHYSICAL;
       attack_power_mod.direct = p->spell_const.double_strike_coeff;
@@ -947,11 +971,6 @@ struct double_strike_t : public gunde_attack_t
       hit->schedule_execute( damage_state );
     }
   }
-
-  //void execute() override
-  //{
-  //  gunde_attack_t::execute();
-  //}
 };
 //
 //struct blinding_slash_t : public gunde_attack_t
@@ -2080,6 +2099,8 @@ void gunde_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
+  actions.rend = new actions::rend_t( this );
+
   //actions.suns_verdict                     = new actions::suns_verdict_t( this );
 
   //actions.brilliant_flash_heal             = new actions::brilliant_flash_heal_t( "brilliant_flash_heal", this, {} );
@@ -2205,8 +2226,10 @@ void actions::gunde_action_t<Base>::apply_rend( const action_state_t* state )
   if ( !_applies_rend )
     return;
 
-   auto td = p()->get_target_data( state->target );
+  //auto td = p()->get_target_data( state->target );
 
+  residual_action::trigger( p()->actions.rend, state->target,
+                            state->result_amount * 0.5 );
 }
 
 

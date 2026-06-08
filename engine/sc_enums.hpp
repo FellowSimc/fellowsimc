@@ -535,6 +535,7 @@ enum player_e
   RIME,
   ARDEOS,
   ELARION,
+  GUNDE,
   TARIQ,
   MEIKO,
   HELENA,

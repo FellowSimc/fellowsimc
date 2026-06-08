@@ -59,6 +59,8 @@ rgb class_color( player_e type )
       return color::COLOR_PALADIN;
     case ELARION:
       return color::COLOR_ELARION;
+    case GUNDE:
+      return color::COLOR_GUNDE;
     case PRIEST:
       return color::COLOR_PRIEST;
     case ROGUE:

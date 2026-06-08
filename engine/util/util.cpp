@@ -638,6 +638,7 @@ const char* util::player_type_string( player_e type )
     case RIME:                    return "rime";
     case ARDEOS:                  return "ardeos";
     case ELARION:                 return "elarion";
+    case GUNDE:                   return "gunde";
     case TARIQ:                   return "tariq";
     case MEIKO:                   return "meiko";
     case HELENA:                  return "helena";
@@ -695,6 +696,7 @@ const char* util::player_type_string_long( player_e type )
     case MEIKO:           return "Meiko";
     case HELENA:          return "Helena";
     case SYLVIE:          return "Sylvie";
+    case GUNDE:           return "Gunde";
     case VIGOUR:          return "Vigour";
     case AEONA:           return "Aeona";
     case XAVIAN:          return "Xavian";
@@ -1395,6 +1397,7 @@ item_subclass_armor util::matching_armor_type( player_e ptype )
     case HUNTER:
     case SHAMAN:
     case EVOKER:
+    case GUNDE:
     case ELARION:
     case TARIQ:
     case VIGOUR:

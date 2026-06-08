@@ -164,6 +164,7 @@ namespace color
   inline constexpr rgb COLOR_PLAYER_SIMPLIFIED( "FF69B4" );
 
   inline constexpr rgb COLOR_ELARION( "935DFF" );
+  inline constexpr rgb COLOR_GUNDE( "D53400" );
 
   inline constexpr rgb WHITE( "FFFFFF" );
   inline constexpr rgb GREY( "333333" );

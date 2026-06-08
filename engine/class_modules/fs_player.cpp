@@ -750,6 +750,9 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
   icicles_of_anzhyr_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
     : fs_weapon_action_t( n, p, options )
   {
+    base_execute_time = trigger_gcd = min_gcd = 0_s;
+    gcd_type                                  = gcd_haste_type::NONE;
+
     id                 = 1932;
     name_str_reporting = "Icicles of An'zhyr";
     cooldown->duration = 40_s;

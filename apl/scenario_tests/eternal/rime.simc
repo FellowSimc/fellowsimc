@@ -94,6 +94,8 @@ main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fi
 # weapon_trait.seized_opportunity=1
 
 legendary.skandis_decree=1
+# legendary.frostwyrms_spite=1
+# legendary.undulating_spirit=1
 weapon=chronoshift
 
 # # Talons Beam Okay
@@ -145,14 +147,19 @@ weapon_trait.amethyst_splinters=1
 # copy="Void","Base Rime"
 # weapon=voidbringers_touch
 
-copy="Legolass","Base Rime"
-legendary.skandis_decree=0
-copy="Frost","Base Rime"
-legendary.skandis_decree=0
-legendary.frostwyrms_spite=1
-copy="Undulating","Base Rime"
-legendary.skandis_decree=0
-legendary.undulating_spirit=1
+# copy="BM4 Grand3 IA4","Base Rime"
+# weapon_trait.brave_machinations=4
+# weapon_trait.visions_of_grandeur=3
+# weapon_trait.inspired_allegiance=4
+
+# copy="Legolass","Base Rime"
+# legendary.skandis_decree=0
+# copy="Frost","Base Rime"
+# legendary.skandis_decree=0
+# legendary.frostwyrms_spite=1
+# copy="Undulating","Base Rime"
+# legendary.skandis_decree=0
+# legendary.undulating_spirit=1
 
 
 

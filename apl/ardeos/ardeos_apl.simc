@@ -8,7 +8,7 @@ actions.main=apocalypse,target_if=max:target.health,if=(legendary.explosivo&targ
 actions.main+=/fire_ball,if=full_recharge_time<=(gcd.max*3)|(active_dot.fire_ball_dot=0)&(active_dot.engulfing_flames>0|cooldown.wildfire.remains<=gcd.max*3|!talent.slow_burn)|weapon.chronoshift&cooldown.chronoshift.up&!talent.slow_burn
 #,if=dot.searing_blaze.refreshable
 actions.main+=/fire_frogs,if=cooldown.wildfire.up&(legendary.fire_toad|active_enemies<12|talent.pyrophibian_frenzy)&cooldown.engulfing_flames.full_recharge_time>gcd.max
-actions.main+=/engulfing_flames,target_if=max:target.health,if=full_recharge_time<=(gcd.max*3+talent.rolling_flames&active_dot.searing_blaze*0.4)&(cooldown.wildfire.remains>=10|talent.rolling_flames)|cooldown.wildfire.remains<=gcd.max|buff.wildfire.up|cooldown.chronoshift.up&weapon.chronoshift
+actions.main+=/engulfing_flames,target_if=max:target.health,if=full_recharge_time<=(gcd.max*3+talent.rolling_flames&active_dot.searing_blaze*0.4)&(cooldown.wildfire.remains>=10|talent.rolling_flames)|cooldown.wildfire.remains<=gcd.max*2|buff.wildfire.up|cooldown.chronoshift.up&weapon.chronoshift
 actions.main+=/voidbringers_touch,target_if=max:target.health,if=buff.wildfire.up
 # actions.main+=/engulfing_flames
 #,if=!buff.wildfire.up&active_enemies>1|cooldown.wildfire.remains>=10|cooldown.wildfire.remains<=gcd.max*3|talent.rolling_flames

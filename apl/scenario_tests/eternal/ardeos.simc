@@ -1,4 +1,16 @@
-
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=250
+# max_time=60
+target_error=0.1
+iterations=15000
+chart_show_relative_difference=1
+vary_combat_length=0.1
+single_actor_batch=1
+max_time=720
+desired_targets=12
 
 ardeos="Base Ardeos"
 level=80
@@ -19,38 +31,53 @@ wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=cr
 finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
 finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
 trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
-trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k
 
 main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary,affixes=crit/haste
-
-legendary.explosivo_adds_bonus=0
-legendary.explosivo_boss_bonus=0
 
 # talents+=/slow_burn:1/flare_up:1/crash_and_burn:1/undying_flame:1/crackling_inferno:1/apocalyptic_surge:1/rolling_flames:1/intensifying_inferno:1/cascading_inferno:1/spontaneous_combustion:1
 #14
 
-talents=great_balls_of_fire:1/crash_and_burn:1/firestarter:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1/undying_flame:1
+# talents=great_balls_of_fire:1/crash_and_burn:1/firestarter:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1/undying_flame:1
 #2 3 5 6 9 12 14
 
 
-weapon_trait.visions_of_grandeur=1
+# talents=rolling_flames:1/undying_flame:1/slow_burn:1/
+# 3 5 7 
 
-sets.deaths_grasp=1
-sets.dark_prophecy=1
-
-gems.emerald_power=1500
-gems.sapphire_power=1500
-
-weapon_trait.hunters_focus=4
-weapon_trait.seized_opportunity=4
-
-weapon=chronoshift
-
-copy="Explosivo","Base Ardeos"
-legendary.explosivo=1
-
-copy="Devouring","Base Ardeos"
+# legendary.explosivo=1
 legendary.devouring_flame=1
+# legendary.fire_toad=1
 
-copy="Toad","Base Ardeos"
-legendary.fire_toad=1
+weapon_trait.visions_of_grandeur=1
+weapon_trait.martial_initiative=1
+weapon_trait.emerald_judgement=3
+# 23 mods -5
+# 4Trait
+sets.dark_prophecy=1
+sets.deaths_grasp=1
+# 19 mods -4
+# copy="visions1","Base Rime"
+# weapon_trait.visions_of_grandeur=1
+
+# 27 mods
+
+gems.amethyst_power=600
+gems.sapphire_power=600
+gems.emerald_power=600
+gems.ruby_power=600
+# 15 mods -4
+
+# 6 stat
+# 18 mods
+weapon_trait.hunters_focus=4
+# 11 mods -4
+
+# -1 mod, 10 mods (EJ3)
+# -4 mods, 6 left 
+sets.drakheims_absolution=1
+# -6 (draco, 4 spirit)
+
+# 1mod
+weapon_trait.amethyst_splinters=1
+weapon=chronoshift

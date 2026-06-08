@@ -877,7 +877,8 @@ public:
       fs_p()->fs_buffs.finesse_b->trigger();
     }
 
-    finesse_n_active = fs_p()->fs_buffs.finesse_n->at_max_stacks();
+    if ( !ab::background )
+      finesse_n_active = fs_p()->fs_buffs.finesse_n->at_max_stacks();
 
     ab::execute();
 

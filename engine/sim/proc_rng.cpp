@@ -33,7 +33,8 @@ real_ppm_t::real_ppm_t( std::string_view n, player_t* p, double f, double mod, u
     modifier( mod ),
     rppm( freq * mod ),
     scales_with( s ),
-    blp_state( b )
+    blp_state( b ),
+    has_triggered( false )
 {}
 
 real_ppm_t::real_ppm_t( std::string_view n, player_t* p, const spell_data_t* data, const item_t* item )
@@ -42,7 +43,8 @@ real_ppm_t::real_ppm_t( std::string_view n, player_t* p, const spell_data_t* dat
     modifier( p->dbc->real_ppm_modifier( data->id(), player, item ? item->item_level() : 0 ) ),
     rppm( freq * modifier ),
     scales_with( p->dbc->real_ppm_scale( data->id() ) ),
-    blp_state( BLP_ENABLED )
+    blp_state( BLP_ENABLED ),
+    has_triggered( false )
 {}
 
 double real_ppm_t::proc_chance()
@@ -88,21 +90,25 @@ double real_ppm_t::proc_chance()
       blp_state == BLP_ENABLED ? "enabled" : "disabled", rppm_chance * 100.0 );
   }
 
+  if ( !has_triggered )
+    return std::max( rppm / 9.0, rppm_chance );
+
   return rppm_chance;
 }
 
 void real_ppm_t::reset( reset_type_e /* reset_type */)
 {
   last_trigger_attempt = 0_ms;
-  accumulated_blp = 0_ms;
+  accumulated_blp      = 0_ms;
+  has_triggered        = false;
 }
 
 int real_ppm_t::trigger( action_state_t* )
 {
-  if ( freq <= 0 )
+  if ( freq <= 0 && has_triggered )
     return false;
 
-  if ( last_trigger_attempt == player->sim->current_time() )
+  if ( last_trigger_attempt == player->sim->current_time() && has_triggered )
     return false;
 
   // 2020-10-11: Instead of using the aboslute time to the last successful proc, it appears
@@ -114,7 +120,10 @@ int real_ppm_t::trigger( action_state_t* )
   last_trigger_attempt = player->sim->current_time();
 
   if ( success )
+  {
     accumulated_blp = 0_ms;
+    has_triggered   = true;
+  }
 
   return success;
 }

@@ -16,11 +16,11 @@ actions.main+=/voidbringers_touch,if=!debuff.voidbringer_accumulator.up
 # actions.main+=/cold_snap,if=cooldown.bursting_ice.up&talent.icy_talons&time<=10&worb<5
 # actions.main+=/frost_bolt,if=cooldown.bursting_ice.up&talent.icy_talons&time<=10&worb<5&talent.burstbolter&talent.icy_talons
 # actions.main+=/freezing_torrent,target_if=max:target.health,if=(worb<5)&target.time_to_die>=4&talent.coalescing_frost&legendary.frostwyrms_spite&(cooldown.bursting_ice.remains<=duration+1.5|buff.ice_blitz.up&talent.cascading_blitz)
-actions.main+=/bursting_ice,target_if=max:target.health,if=refreshable&(worb>=4|!talent.icy_talons)
+actions.main+=/bursting_ice,target_if=max:target.health,if=refreshable
 actions.main+=/cold_snap,target_if=max:target.health,if=buff.finesse_n.at_max_stacks&buff.winters_embrace.up&buff.frostwyrms_spite.up
 actions.main+=/cold_snap,target_if=max:target.health,if=full_recharge_time<=gcd.max*3&worb<5&(!buff.icy_flow.at_max_stacks|talent.icy_talons)&variable.will_spend_orbs
 actions.main+=/talon_strike,target_if=max:target.health,if=buff.winters_embrace.up&buff.glacial_assault.at_max_stacks
-actions.main+=/rising_talons,target_if=max:target.health,if=buff.winters_embrace.up&(worb>=5&(buff.winters_embrace.up|cooldown.bursting_ice.remains>=gcd.max*2)|worb>=4&buff.wrath_of_winter.up)&active_enemies>=(3+talent.greater_glacial_blast)
+actions.main+=/rising_talons,target_if=max:target.health,if=(buff.winters_embrace.up&worb>=5|worb>=4&buff.wrath_of_winter.up|worb>=5&cooldown.bursting_ice.remains>=gcd.max*2)&active_enemies>=(3+talent.greater_glacial_blast)
 actions.main+=/talon_strike,target_if=max:target.health,if=(buff.winters_embrace.up&worb>=5|worb>=4&buff.wrath_of_winter.up|worb>=5&!buff.glacial_assault.at_max_stacks&cooldown.bursting_ice.remains>=gcd.max*2)&active_enemies<(3+talent.greater_glacial_blast)
 actions.main+=/glacial_blast,target_if=max:target.health,if=buff.glacial_assault.at_max_stacks
 actions.main+=/ice_comet,if=active_enemies>=2&(worb>=5&!talent.cascading_blitz|buff.undulating_spirit.react|buff.winters_embrace.up)

@@ -1809,9 +1809,9 @@ struct apocalypse_t : public ardeos_spell_t
 
       tick_may_crit = p->talents_enabled( ardeos_t::FIRESTARTER );
 
-      dot_duration           = p->spell_const.fire_ball_dot_duration;
+      dot_duration           = 12_s;
       dot_behavior           = DOT_REFRESH_DURATION;
-      base_tick_time         = p->spell_const.fire_ball_dot_period;
+      base_tick_time         = 3_s;
       hasted_ticks           = true;
       dot_allow_partial_tick = true;
 

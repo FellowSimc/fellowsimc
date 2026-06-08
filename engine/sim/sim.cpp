@@ -3760,6 +3760,7 @@ void sim_t::create_options()
   add_option( opt_func( "player_simplified", parse_player ) );
   add_option( opt_func( "mara", parse_player ) );
   add_option( opt_func( "rime", parse_player ) );
+  add_option( opt_func( "gunde", parse_player ) );
   add_option( opt_func( "ardeos", parse_player ) );
   add_option( opt_func( "helena", parse_player ) );
   add_option( opt_func( "tariq", parse_player ) );

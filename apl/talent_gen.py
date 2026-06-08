@@ -35,6 +35,41 @@ rime_indicators = {
     "soulfrost_torrent": "SFT",
 }
 
+
+ardeos = {
+    "slow_burn": 2,
+    "frog_squad": 2,
+    "great_balls_of_fire": 2,
+
+    "backdraft": 1,
+    "flare_up": 1,
+    "crash_and_burn": 1,
+
+    "agonizing_flame": 2,
+    "flare_up": 2,
+    "undying_flame": 2,
+
+    "cascading_inferno": 1,
+    "crackling_inferno": 1,
+    "apocalyptic_surge": 1,
+
+    "rolling_flames": 3,
+    "pyrophibian_frenzy": 3,
+    "reign_of_fire": 3,
+
+    "intensifying_inferno": 1,
+    "burning_initiative": 1,
+    "spontaneous_combustion": 1,
+}
+
+ardeos_indicators = {
+    "rolling_flames": "Rolling",
+    "pyrophibian_frenzy": "Pyrophibian",
+    "reign_of_fire": "ROF",
+    "flare_up": "FU",
+    "undying_flame": "UF",
+}
+
 # def talent_combinations(
 #     talents,
 #     target_points,
@@ -288,11 +323,12 @@ def sorted_by_overall(build_dicts):
 
 
 if __name__ == "__main__":
-    top_x = top_sim_results("output/rime_et27.json", 500)
-    # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
-    sim_results = dps_sim_results(["output/rime_et27.json", "output/rime_et29.json"])
-    overalls = sorted_by_overall(sim_results)
-    print(overalls)
+    # top_x = top_sim_results("output/rime_et27.json", 500)
+    # # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
+    # sim_results = dps_sim_results(["output/rime_et27.json", "output/rime_et29.json"])
+    # overalls = sorted_by_overall(sim_results)
+    # print(overalls)
+
     # combos_to_file("Rime", rime, rime_indicators, 14, "rime/talent_output_filtered.simc", 
     #             required_talents=[
     #                 #    "icy_talons",
@@ -309,6 +345,30 @@ if __name__ == "__main__":
     #             ],
     #             name_filters=top_x
     # )
+
+    
+    top_x = top_sim_results("output/ardeos_et104.json", 500)
+    # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
+    sim_results = dps_sim_results(["output/ardeos_et104.json", "output/ardeos_et105.json"])
+    overalls = sorted_by_overall(sim_results)
+    print(overalls)
+
+
+    combos_to_file("Ardeos", ardeos, ardeos_indicators, 14, "ardeos/talent_output_filtered.simc", 
+                required_talents=[
+                        "rolling_flames",
+                        "undying_flame",
+                        "slow_burn"
+                ],
+                excluded_talents=[
+                    #  "frostweavers_wrath",
+                    #  "cascading_blitz",
+                    #  "avalanche"
+                ],
+                forbidden_pairs=[
+                ],
+                name_filters=top_x
+    )
 
 # for combo in combos:
 #     print(combo)

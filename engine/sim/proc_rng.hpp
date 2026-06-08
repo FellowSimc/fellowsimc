@@ -83,6 +83,7 @@ private:
   timespan_t accumulated_blp;
   unsigned scales_with;
   blp blp_state;
+  bool has_triggered;
 
   static constexpr timespan_t max_interval = 30_s;
   static constexpr timespan_t max_bad_luck_prot = 1000_s;

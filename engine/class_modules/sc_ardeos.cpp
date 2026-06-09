@@ -140,7 +140,7 @@ public:
     timespan_t wildfire_cooldown = 45_s;
 
     double infernal_wave_cinders = 40;
-    double infernal_wave_coeff   = 1.47;
+    double infernal_wave_coeff   = 1.47 * 1.15;
 
     double fire_frog_coeff             = 0.7315;
     double fire_frog_dot_conversion    = 1.0;
@@ -268,10 +268,11 @@ public:
     timespan_t slow_burn_extend = 0.5_s;
 
     unsigned frog_squad_extra_hits  = 1;
-    unsigned frog_squad_extra_frogs = 1;
-    double frog_squad_frog_amp      = 0.1;
+    unsigned frog_squad_extra_frogs = 2;
+    double frog_squad_frog_amp      = 0.2;
 
-    double great_balls_of_fire_amp = 0.6;
+    double great_balls_of_fire_amp = 0.5;
+    double great_balls_of_fire_convert_extra = 0.1;
 
     timespan_t backdraft_extension = 1.5_s;
 
@@ -284,9 +285,9 @@ public:
     unsigned agonizing_blaze_maximum_stacks = 10;
 
     double firestarter_crit_chance = 0.2;
-    double firestarter_frog_ball_crit_chance = 0.15;
+    double firestarter_frog_ball_crit_chance = 0.2;
 
-    timespan_t crash_and_burn_cdr = 0.1_s;
+    timespan_t crash_and_burn_cdr = 0.05_s;
 
     double crackling_inferno_crit_chance      = 0.2;
     double crackling_inferno_dot_fraction     = 0.6;
@@ -296,31 +297,35 @@ public:
     timespan_t rolling_flames_cdr               = 0.25_s;
     timespan_t rolling_flames_infernal_wave_cdr = 1000_ms;
 
-    double pyrophibian_frenzy_chance = 0.08;
+    double pyrophibian_frenzy_chance = 0.09;
 
     double reign_of_fire_ppm          = 1.5;
-    double reign_of_fire_crit_chance  = 1.0;
+    double reign_of_fire_crit_chance  = 2.0;
     timespan_t reign_of_fire_duration = 12_s;
 
     double intensifying_inferno_amp = 0.15;
 
-    double spontaneous_combustion_chance       = 0.04;
-    double spontaneous_combustion_extra_chance = 0.05;
+    double spontaneous_combustion_chance                  = 0.10;
+    double spontaneous_combustion_extra_chance_multiplier = 0.01;
+    double spontaneous_combustion_extra_chance_divisor    = 0.05;
 
     bool rolling_flames_instant = false;
 
     bool double_detonate_cost_efficiency = false;
 
     timespan_t apocalyptic_surge_cast_reduction = 1.5_s;
-    int apocalyptic_surge_stacks                = 4;
+    int apocalyptic_surge_stacks                = 2;
+    int apocalyptic_surge_max_stacks            = 4;
 
     double burning_initiative_initial_spirit = 50;
     double burning_initiative_initial_embers = 2;
 
     int cascading_inferno_stacks_per_detonate     = 1;
     int cascading_inferno_max_stacks              = 20;
-    int cascading_inferno_consumed_stacks         = 8;
-    double cascading_inferno_additive_crit_chance = 3.0;
+    int cascading_inferno_consumed_stacks         = 4;
+    double cascading_inferno_additive_crit_chance = 1.0;
+    double cascading_inferno_additional_cinders   = 40;
+    double cascading_inferno_cast_time_multiplier = 0.0;
   } talents;
 
   struct legendary_t
@@ -330,8 +335,8 @@ public:
     double untamed_flame_crit_chance = 0.3;
 
     bool fire_toad              = false;
-    double fire_toad_chance     = 0.15;
-    double fire_toad_mul        = 8;
+    double fire_toad_chance     = 0.10;
+    double fire_toad_mul        = 10;
     double fire_toad_falloff    = 1;
     bool fire_toad_full_primary = false;
     bool fire_toad_on_cast      = true;
@@ -341,7 +346,7 @@ public:
     timespan_t brimstone_cataclysm_cdr_cap     = 30_s;
 
     bool devouring_flame       = false;
-    double devouring_flame_amp = 0.08;
+    double devouring_flame_amp = 0.06;
 
     bool explosivo                    = false;
     int explosivo_extra_charges       = 1;
@@ -683,58 +688,6 @@ public:
     make_event<secondary_action_trigger_t<base_t>>( *ab::sim, s, delay );
   }
 
-  // Residual Trigger Functions ===============================================
-
-  virtual void trigger_residual_action( const action_state_t* s, double multiplier = 1.0, bool unmitigated = true,
-                                        bool reverse_target_da_multiplier = true, player_t* override_target = nullptr,
-                                        bool trigger_event = true )
-  {
-    // Depending on the ability, may use unmitigated or mitigated results
-    const double base_damage = unmitigated ? s->result_total : s->result_amount;
-    // Target multipliers may not replicate to secondary targets, which requires reversing them out
-    const double target_da_multiplier =
-        ( unmitigated && reverse_target_da_multiplier ) ? ( 1.0 / s->target_da_multiplier ) : 1.0;
-    const double amount = base_damage * multiplier * target_da_multiplier;
-
-    if ( amount <= 0 )
-      return;
-
-    player_t* primary_target = override_target ? override_target : s->target;
-
-    p()->sim->print_debug( "{} triggers residual {} for {:.2f} damage ({:.2f} * {} * {:.3f}) on {}", *p(), *this,
-                           amount, base_damage, multiplier, target_da_multiplier, *primary_target );
-
-    if ( !ab::callbacks || !trigger_event )
-    {
-      ab::execute_on_target( primary_target, amount );
-    }
-    else
-    {
-      // Trigger as an event so that this happens after the impact for proc/RPPM targeting purposes
-      make_event( *p()->sim, 0_ms,
-                  [ this, amount, primary_target ]() { ab::execute_on_target( primary_target, amount ); } );
-    }
-  }
-
-  virtual void trigger_residual_action( player_t* primary_target, double amount, bool trigger_event = true )
-  {
-    if ( amount <= 0 )
-      return;
-
-    p()->sim->print_debug( "{} triggers residual {} for {:.2f} damage on {}", *p(), *this, amount, *primary_target );
-
-    if ( !ab::callbacks || !trigger_event )
-    {
-      ab::execute_on_target( primary_target, amount );
-    }
-    else
-    {
-      // Trigger as an event so that this happens after the impact for proc/RPPM targeting purposes
-      make_event( *p()->sim, 0_ms,
-                  [ this, amount, primary_target ]() { ab::execute_on_target( primary_target, amount ); } );
-    }
-  }
-
   // Helper Functions =========================================================
 
   // Helper function for expressions. Returns the number of guaranteed generated combo points for
@@ -932,6 +885,12 @@ struct ardeos_spell_t : public ardeos_action_t<fellowship::actions::fs_player_ac
   ardeos_spell_t( util::string_view n, ardeos_t* p, util::string_view o = {} ) : base_t( n, p, o )
   {
   }
+
+  static void trigger_resdiual( ardeos_spell_t* dot_action, const action_state_t* s )
+  {
+    residual_action::trigger( dot_action, s->target,
+                              s->result_amount * ( 1.0 + dot_action->p()->buffs.wildfire->check_value() ) );
+  }
 };
 
 struct crackling_inferno_t : public residual_action::residual_periodic_action_t<ardeos_spell_t>
@@ -947,7 +906,7 @@ struct crackling_inferno_t : public residual_action::residual_periodic_action_t<
     dot_duration           = p->talents.crackling_inferno_dot_duration;
     dot_behavior           = DOT_REFRESH_DURATION;
     base_tick_time         = p->talents.crackling_inferno_dot_period;
-    hasted_ticks           = true;
+    hasted_ticks           = false;
     dot_allow_partial_tick = true;
 
     base_multiplier *= p->talents.crackling_inferno_dot_fraction;
@@ -1072,6 +1031,26 @@ struct infernal_wave_t : public ardeos_spell_t
     return da;
   }
 
+  timespan_t execute_time() const override
+  {
+    auto base_execute_time = base_t::execute_time();
+
+    if ( p()->talents_enabled( ardeos_t::CASCADING_INFERNO ) &&
+         p()->buffs.cascading_inferno->stack() >= p()->talents.cascading_inferno_consumed_stacks )
+      return base_execute_time * p()->talents.cascading_inferno_cast_time_multiplier;
+
+    return base_execute_time;
+  }
+
+  double composite_energize_amount( const action_state_t* ) const
+  {
+    if ( p()->talents_enabled( ardeos_t::CASCADING_INFERNO ) &&
+         p()->buffs.cascading_inferno->stack() >= p()->talents.cascading_inferno_consumed_stacks )
+      return energize_amount + p()->talents.cascading_inferno_additional_cinders;
+
+    return energize_amount;
+  }
+
   void execute() override
   {
     ardeos_spell_t::execute();
@@ -1110,7 +1089,7 @@ struct infernal_wave_t : public ardeos_spell_t
       if ( s->result == RESULT_CRIT && p()->talents_enabled( ardeos_t::CRACKLING_INFERNO ) )
 
       {
-        residual_action::trigger( p()->actions.crackling_inferno, s->target, s->result_amount );
+        trigger_resdiual( p()->actions.crackling_inferno, s );
       }
 
       if ( p()->talents_enabled( ardeos_t::FLARE_UP ) && result_is_hit( s->result ) )
@@ -1532,8 +1511,9 @@ struct searing_blaze_t : public ardeos_spell_t
 
   double spontaneous_chance() const
   {
-    return p()->talents.spontaneous_combustion_chance +
-           0.01 * p()->cache.spell_crit_chance() / p()->talents.spontaneous_combustion_extra_chance;
+    return p()->talents.spontaneous_combustion_chance + p()->talents.spontaneous_combustion_extra_chance_multiplier *
+                                                            p()->cache.spell_crit_chance() /
+                                                            p()->talents.spontaneous_combustion_extra_chance_divisor;
   }
 
   double composite_crit_chance() const override
@@ -1690,8 +1670,9 @@ struct engulfing_flames_t : public ardeos_spell_t
 
   double spontaneous_chance() const
   {
-    return p()->talents.spontaneous_combustion_chance +
-           0.01 * p()->cache.spell_crit_chance() / p()->talents.spontaneous_combustion_extra_chance;
+    return p()->talents.spontaneous_combustion_chance + p()->talents.spontaneous_combustion_extra_chance_multiplier *
+                                                            p()->cache.spell_crit_chance() /
+                                                            p()->talents.spontaneous_combustion_extra_chance_divisor;
   }
 
   double composite_crit_chance() const override
@@ -1810,7 +1791,7 @@ struct apocalypse_t : public ardeos_spell_t
       dot_duration           = 12_s;
       dot_behavior           = DOT_REFRESH_DURATION;
       base_tick_time         = 3_s;
-      hasted_ticks           = true;
+      hasted_ticks           = false;
       dot_allow_partial_tick = true;
 
       base_multiplier *= p->legendary.explosivo_to_dot;
@@ -1891,7 +1872,7 @@ struct apocalypse_t : public ardeos_spell_t
     p()->actions.searing_blaze->execute_on_target( s->target );
     
     if ( dot_action )
-      residual_action::trigger( dot_action, s->target, s->result_amount );
+      trigger_resdiual( dot_action, s );
   }
 
   void execute() override
@@ -1930,10 +1911,17 @@ struct fire_ball_t : public ardeos_spell_t
       dot_duration           = p->spell_const.fire_ball_dot_duration;
       dot_behavior           = DOT_REFRESH_DURATION;
       base_tick_time         = p->spell_const.fire_ball_dot_period;
-      hasted_ticks           = true;
+      hasted_ticks           = false;
       dot_allow_partial_tick = true;
 
-      base_multiplier *= p->spell_const.fire_ball_damage_to_dot;
+      auto mul = p->spell_const.fire_ball_damage_to_dot;
+
+      if ( p->talents_enabled( ardeos_t::GREAT_BALLS_OF_FIRE ) )
+      {
+        mul += p->talents.great_balls_of_fire_convert_extra;
+      }
+
+      base_multiplier *= mul;
 
       //energize_type     = action_energize::PER_TICK;
       // Manually handle it.
@@ -1984,7 +1972,7 @@ struct fire_ball_t : public ardeos_spell_t
 
       if ( p()->talents_enabled( ardeos_t::SLOW_BURN ) )
       {
-        auto corrected_extension = p()->talents.slow_burn_extend * d->state->haste;
+        auto corrected_extension = p()->talents.slow_burn_extend;
         p()->extend_engulfing_flames( d->target, corrected_extension );
         auto td = p()->get_target_data( d->target );
         p()->extend_dot( td->dots.searing_blaze, corrected_extension );
@@ -2035,7 +2023,7 @@ struct fire_ball_t : public ardeos_spell_t
   void impact( action_state_t* s ) override
   {
     ardeos_spell_t::impact( s );
-    residual_action::trigger( dot_action, s->target, s->result_amount );
+    trigger_resdiual( dot_action, s );
   }
 
   void execute() override
@@ -2113,7 +2101,7 @@ struct fire_frog_dot_t : public residual_action::residual_periodic_action_t<arde
     dot_duration           = player->spell_const.fire_frog_dot_duration;
     dot_behavior           = DOT_REFRESH_DURATION;
     base_tick_time         = player->spell_const.fire_frog_dot_period;
-    hasted_ticks           = true;
+    hasted_ticks           = false;
     dot_allow_partial_tick = true;
 
     base_multiplier *= player->spell_const.fire_frog_coeff;
@@ -2187,7 +2175,7 @@ struct fire_frog_hit_t : public ardeos_spell_t
   void impact( action_state_t* s ) override
   {
     ardeos_spell_t::impact( s );
-    residual_action::trigger( dot_action, s->target, s->result_amount );
+    trigger_resdiual( dot_action, s );
   }
 
   void execute() override
@@ -2629,7 +2617,7 @@ void ardeos_t::init_base_stats()
 
   base_gcd = timespan_t::from_seconds( 1.5 );
   // min_gcd  = timespan_t::from_seconds( 0.75 );
-  min_gcd  = timespan_t::from_seconds( 0.0 );
+  min_gcd  = timespan_t::from_seconds( 0.5 );
 
   if ( talents_enabled( ardeos_t::BURNING_INITIATIVE ) )
   {
@@ -2752,7 +2740,7 @@ void ardeos_t::create_buffs()
 
   buffs.apocalyptic_surge = make_buff<ardeos_buff_t>( this, "apocalyptic_surge" )
                                 ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
-                                ->set_max_stack( talents.apocalyptic_surge_stacks );
+                                ->set_max_stack( talents.apocalyptic_surge_max_stacks );
 
   buffs.cascading_inferno = make_buff<ardeos_buff_t>( this, "cascading_inferno" )
                                 ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )

@@ -46,7 +46,7 @@ main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fi
 # 24
 
 # legendary.explosivo=1
-legendary.devouring_flame=1
+# legendary.devouring_flame=1
 # legendary.fire_toad=1
 
 weapon_trait.visions_of_grandeur=4
@@ -86,232 +86,121 @@ weapon_trait.brave_machinations=1
 
 weapon=chronoshift
 
-talents=apocalyptic_surge:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
+# talents=apocalyptic_surge:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
+
+talents=undying_flame:1/apocalyptic_surge:1/slow_burn:1/rolling_flames:1
 
 
-# copy="sapph10","Base Ardeos"
-# gems.amethyst_power=0
-# gems.sapphire_power=1500
-# gems.emerald_power=600
-# gems.ruby_power=0
-# weapon_trait.brave_machinations=4
+#/great_balls_of_fire:1
+# 9 ^
 
-
-# copy="Sapphire10","Base Ardeos"
-# gems.sapphire_power=1500
-# copy="Sapphire10 Bm2","Base Ardeos"
-# gems.sapphire_power=1500
-# weapon_trait.brave_machinations=2
-# copy="Sapphire10 Bm3","Base Ardeos"
-# gems.sapphire_power=1500
-# weapon_trait.brave_machinations=3
-# copy="Sapphire10 Bm4","Base Ardeos"
-# gems.sapphire_power=1500
-# weapon_trait.brave_machinations=4
-# copy="Sapphire10 IA1","Base Ardeos"
-# gems.sapphire_power=1500
-# weapon_trait.inspired_allegiance=1
-# copy="Sapphire10 IA2","Base Ardeos"
-# gems.sapphire_power=1500
-# weapon_trait.inspired_allegiance=2
-# copy="Sapphire10 IA3","Base Ardeos"
-# gems.sapphire_power=1500
-# weapon_trait.inspired_allegiance=3
-# copy="Sapphire10 IA4","Base Ardeos"
-# gems.sapphire_power=1500
-# weapon_trait.inspired_allegiance=4
-# copy="Sapphire10 IA4BM4","Base Ardeos"
-# gems.sapphire_power=1500
-# weapon_trait.inspired_allegiance=4
-# weapon_trait.brave_machinations=4
-
-# copy="Shift Stats Prim to Haste","Base Ardeos"
-# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
-# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary,affixes=crit/haste
-# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
-# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=crit/haste
-# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary
-# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=crit/haste
-# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
-
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
-# wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=expertise/expertise
-
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
-# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k
-
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary,affixes=crit/haste
-
-
-# copy="Shift Stats Prim to Spirit","Base Ardeos"
-# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
-# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary,affixes=crit/haste
-# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
-# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=crit/haste
-# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary
-# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=crit/haste
-# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
-
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
-# wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=expertise/expertise
-
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
-# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k
-
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary,affixes=crit/haste
-# copy="Shift Stats Prim to Crit","Base Ardeos"
-# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
-# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary,affixes=crit/haste
-# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
-# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit,affixes=crit/haste
-# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary
-# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=crit/haste
-# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
-
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
-# wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=expertise/expertise
-
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
-# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k
-
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary,affixes=crit/haste
-# copy="Shift Stats Prim to Exp","Base Ardeos"
-# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
-# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary,affixes=crit/haste
-# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
-# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/expertise,affixes=crit/haste
-# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary
-# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=crit/haste
-# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
-
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
-# wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=expertise/expertise
-
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
-# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k
-
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary,affixes=crit/haste
-
-
-# copy="Brave0","Base Ardeos"
-# weapon_trait.brave_machinations=0
-# copy="Brave1","Base Ardeos"
-# weapon_trait.brave_machinations=1
-# copy="Brave2","Base Ardeos"
-# weapon_trait.brave_machinations=2
-# copy="Brave3","Base Ardeos"
-# weapon_trait.brave_machinations=3
-# copy="Brave4","Base Ardeos"
-# weapon_trait.brave_machinations=4
-# copy="IA1","Base Ardeos"
-# weapon_trait.inspired_allegiance=1
-# copy="IA2","Base Ardeos"
-# weapon_trait.inspired_allegiance=2
-# copy="IA3","Base Ardeos"
-# weapon_trait.inspired_allegiance=3
-# copy="IA4","Base Ardeos"
-# weapon_trait.inspired_allegiance=4
-# copy="IA4 BM4","Base Ardeos"
-# weapon_trait.inspired_allegiance=4
-# weapon_trait.brave_machinations=4
-
-
-# copy="Splinters0","Base Ardeos"
-# weapon_trait.amethyst_splinters=0
-# copy="Splinters1","Base Ardeos"
-# weapon_trait.amethyst_splinters=1
-# copy="Splinters2","Base Ardeos"
-# weapon_trait.amethyst_splinters=2
-# copy="Splinters3","Base Ardeos"
-# weapon_trait.amethyst_splinters=3
-# copy="Splinters4","Base Ardeos"
-# weapon_trait.amethyst_splinters=4
-
-# copy="visions2","Base Ardeos"
-# weapon_trait.visions_of_grandeur=2
-# copy="visions3","Base Ardeos"
-# weapon_trait.visions_of_grandeur=3
-# copy="visions4","Base Ardeos"
-# weapon_trait.visions_of_grandeur=4
-
-# weapon=icicles_of_anzhyr
-
-# copy="Stat Changes sp to 0","Base Ardeos"
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise
-# copy="Stat Changes exp to 0","Base Ardeos"
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=spirit
-# copy="Stat Changes 2x sp","Base Ardeos"
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=spirit/spirit
-# copy="Stat Changes 2x haste","Base Ardeos"
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
-# copy="Stat Changes 2x crit","Base Ardeos"
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
-# copy="Stat Changes 2x exp","Base Ardeos"
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/expertise
-# copy="Stat Changes 2x primary","Base Ardeos"
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/primary
-
-# copy="No Lego","Base Ardeos"
-# legendary.devouring_flame=0
-# legendary.explosivo=0
-
-# copy="Explosivo","Base Ardeos"
-# legendary.devouring_flame=0
+# copy="explosivo","Base Ardeos"
 # legendary.explosivo=1
+# copy="devouring_flame","Base Ardeos"
+# legendary.devouring_flame=1
+# copy="Fire Toad","Base Ardeos"
+# legendary.fire_toad=1
 
-# copy="Finesse_A4","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_a/finesse_a/finesse_a/finesse_a
-# copy="Finesse_B4","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_b/finesse_b/finesse_b/finesse_b
-# copy="Finesse_G4","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_g/finesse_g/finesse_g/finesse_g
-# copy="Finesse_J4","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_j/finesse_j/finesse_j/finesse_j
-# copy="Finesse_H4","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_h/finesse_h/finesse_h/finesse_h
-# copy="Finesse_F4","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_f/finesse_f/finesse_f/finesse_f
-# copy="Finesse_L4","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_l/finesse_l/finesse_l/finesse_l
-# copy="Finesse_N1","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_n
-# copy="Finesse_N4","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_n/finesse_n/finesse_n/finesse_n
-# copy="Finesse_I4","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_i/finesse_i/finesse_i/finesse_i
-# copy="Finesse_E4","Base Ardeos"
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit,affixes=finesse_e/finesse_e/finesse_e/finesse_e
-# # copy="Finesse_K1","Base Ardeos"
-# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k
-# copy="Finesse_K2","Base Ardeos"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k/finesse_k
-# copy="Finesse_K3","Base Ardeos"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k/finesse_k/finesse_k
-# copy="Finesse_K4","Base Ardeos"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+# # copy="Ardeos slow_burn","Base Ardeos"
+# # talents+=/slow_burn:1
+# copy="Ardeos frog_squad","Base Ardeos"
+# talents+=/frog_squad:1
+# copy="Ardeos great_balls_of_fire","Base Ardeos"
+# talents+=/great_balls_of_fire:1
+# copy="Ardeos backdraft","Base Ardeos"
+# talents+=/backdraft:1
+# copy="Ardeos flare_up","Base Ardeos"
+# talents+=/flare_up:1
+# copy="Ardeos crash_and_burn","Base Ardeos"
+# talents+=/crash_and_burn:1
+# copy="Ardeos GBOF crash_and_burn","Base Ardeos"
+# talents+=/crash_and_burn:1/great_balls_of_fire:1
+# copy="Ardeos GBOF crash_and_burn ROF","Base Ardeos"
+# talents+=/crash_and_burn:1/great_balls_of_fire:1/reign_of_fire:1
+# copy="Ardeos agonizing_blaze","Base Ardeos"
+# talents+=/agonizing_blaze:1
+# copy="Ardeos firestarter","Base Ardeos"
+# talents+=/firestarter:1
+# copy="Ardeos firestarter Pyro","Base Ardeos"
+# talents+=/firestarter:1/pyrophibian_frenzy:1
+# # copy="Ardeos undying_flame","Base Ardeos"
+# # talents+=/undying_flame:1
+# copy="Ardeos cascading_inferno","Base Ardeos"
+# talents+=/cascading_inferno:1
+# copy="Ardeos crackling_inferno","Base Ardeos"
+# talents+=/crackling_inferno:1
+# # copy="Ardeos apocalyptic_surge","Base Ardeos"
+# # talents+=/apocalyptic_surge:1
+# # copy="Ardeos rolling_flames","Base Ardeos"
+# # talents+=/rolling_flames:1
+# copy="Ardeos pyrophibian_frenzy","Base Ardeos"
+# talents+=/pyrophibian_frenzy:1
+# copy="Ardeos pyrophibian_frenzy frog_squad","Base Ardeos"
+# talents+=/pyrophibian_frenzy:1/frog_squad:1
+# copy="Ardeos pyrophibian_frenzy firestarter frog_squad","Base Ardeos"
+# talents+=/pyrophibian_frenzy:1/firestarter:1/frog_squad:1
+# copy="Ardeos reign_of_fire","Base Ardeos"
+# talents+=/reign_of_fire:1
+# copy="Ardeos great_balls_of_fire reign_of_fire","Base Ardeos"
+# talents+=/great_balls_of_fire:1/reign_of_fire:1
+# copy="Ardeos intensifying_inferno","Base Ardeos"
+# talents+=/intensifying_inferno:1
+# copy="Ardeos intensifying_inferno crackling_inferno","Base Ardeos"
+# talents+=/intensifying_inferno:1/crackling_inferno:1
+# copy="Ardeos intensifying_inferno crackling_inferno flare_up","Base Ardeos"
+# talents+=/intensifying_inferno:1/crackling_inferno:1/flare_up:1
+# copy="Ardeos crackling_inferno cascading_inferno","Base Ardeos"
+# talents+=/crackling_inferno:1/cascading_inferno:1
+# copy="Ardeos intensifying_inferno cascading_inferno intensifying_inferno","Base Ardeos"
+# talents+=/crackling_inferno:1/cascading_inferno:1/intensifying_inferno:1
+# copy="Ardeos intensifying_inferno cascading_inferno intensifying_inferno flare_up","Base Ardeos"
+# talents+=/crackling_inferno:1/cascading_inferno:1/intensifying_inferno:1/flare_up:1
+# copy="Ardeos intensifying_inferno cascading_inferno flare_up","Base Ardeos"
+# talents+=/crackling_inferno:1/cascading_inferno:1/flare_up:1
+# copy="Ardeos burning_initiative","Base Ardeos"
+# talents+=/burning_initiative:1
+# copy="Ardeos spontaneous_combustion","Base Ardeos"
+# talents+=/spontaneous_combustion:1
 
 
-copy="Ardeos_Rolling_UF_350","Base Ardeos"
-talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_UF_476","Base Ardeos"
-talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
-copy="Ardeos_Rolling_UF_474","Base Ardeos"
-talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_UF_463","Base Ardeos"
-talents=apocalyptic_surge:1/burning_initiative:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_Pyrophibian_UF_893","Base Ardeos"
-talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_UF_656","Base Ardeos"
-talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
-copy="Ardeos_Rolling_UF_475","Base Ardeos"
+copy="Ardeos GBOF crash_and_burn ROF","Base Ardeos"
+talents+=/crash_and_burn:1/great_balls_of_fire:1/reign_of_fire:1
+copy="Ardeos intensifying_inferno Crackler FU","Base Ardeos"
+talents+=/intensifying_inferno:1/crackling_inferno:1/flare_up:1
+copy="Ardeos pyrophibian_frenzy FiSt FroSqu","Base Ardeos"
+talents+=/pyrophibian_frenzy:1/firestarter:1/frog_squad:1
+
+
+copy="Ardeos GBOF crash_and_burn ROF Explosivo","Base Ardeos"
+talents+=/crash_and_burn:1/great_balls_of_fire:1/reign_of_fire:1
+legendary.explosivo=1
+copy="Ardeos intensifying_inferno Crackler FU Explosivo","Base Ardeos"
+talents+=/intensifying_inferno:1/crackling_inferno:1/flare_up:1
+legendary.explosivo=1
+copy="Ardeos pyrophibian_frenzy FiSt FroSqu Explosivo","Base Ardeos"
+talents+=/pyrophibian_frenzy:1/firestarter:1/frog_squad:1
+legendary.explosivo=1
+
+copy="Ardeos GBOF crash_and_burn ROF devouring_flame","Base Ardeos"
+talents+=/crash_and_burn:1/great_balls_of_fire:1/reign_of_fire:1
+legendary.devouring_flame=1
+copy="Ardeos intensifying_inferno Crackler FU devouring_flame","Base Ardeos"
+talents+=/intensifying_inferno:1/crackling_inferno:1/flare_up:1
+legendary.devouring_flame=1
+copy="Ardeos pyrophibian_frenzy FiSt FroSqu devouring_flame","Base Ardeos"
+talents+=/pyrophibian_frenzy:1/firestarter:1/frog_squad:1
+legendary.devouring_flame=1
+
+copy="Ardeos GBOF crash_and_burn ROF fire_toad","Base Ardeos"
+talents+=/crash_and_burn:1/great_balls_of_fire:1/reign_of_fire:1
+legendary.fire_toad=1
+copy="Ardeos intensifying_inferno Crackler FU fire_toad","Base Ardeos"
+talents+=/intensifying_inferno:1/crackling_inferno:1/flare_up:1
+legendary.fire_toad=1
+copy="Ardeos pyrophibian_frenzy FiSt FroSqu fire_toad","Base Ardeos"
+talents+=/pyrophibian_frenzy:1/firestarter:1/frog_squad:1
+legendary.fire_toad=1
+
+copy="Ardeos Full Devouring Build","Base Ardeos"
 talents=apocalyptic_surge:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
-copy="Ardeos_Rolling_UF_641","Base Ardeos"
-talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1 
+legendary.devouring_flame=1

@@ -1253,6 +1253,17 @@ void fs_player_t::create_buffs()
                            ->set_default_value( finesse_trait_values.finesse_i_haste[ rank ] )
                            ->set_duration( finesse_trait_values.finesse_i_duration );
 
+  fs_buffs.finesse_i_cd = make_buff( this, "finesse_i_cd" )
+                              ->set_duration( finesse_trait_values.finesse_i_interval )
+                              ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                              ->set_stack_change_callback( [ this ]( buff_t* b, int old_stack, int new_stack ) {
+                                if ( old_stack == 1 && !is_sleeping() )
+                                {
+                                  fs_buffs.finesse_i->trigger();
+                                  fs_buffs.finesse_i_cd->trigger();
+                                }
+                              } );
+
   fs_buffs.spirit_of_heroism = make_buff<fs_player_buff_t>( this, "spirit_of_heroism" )
                                    ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
                                    ->set_default_value( 0.3 )
@@ -2716,7 +2727,6 @@ void fs_player_t::reset()
 
   active_voidbringer_buffs.clear();
   brave_machinations_available = false;
-  finesse_i_event              = nullptr;
   patient_soul_moved           = nullptr;
   patient_soul_stopped         = nullptr;
 }
@@ -2736,7 +2746,7 @@ void fs_player_t::arise()
 
   if ( finesse_traits[ FINESSE_I ] )
   {
-    finesse_i_event = make_event( sim, finesse_trait_values.finesse_i_interval, [ this ]() { finesse_i_event_fn(); } );
+    fs_buffs.finesse_i_cd->trigger();
   }
 
   if ( fs_weapons.patient_soul )
@@ -2745,36 +2755,9 @@ void fs_player_t::arise()
   }
 }
 
-void fs_player_t::finesse_i_event_fn()
-{
-  finesse_i_event = nullptr;
-  if ( is_sleeping() )
-    return;
-
-  fs_buffs.finesse_i->trigger();
-  finesse_i_event = make_event( sim, finesse_trait_values.finesse_i_interval, [ this ]() { finesse_i_event_fn(); } );
-}
-
 void fs_player_t::finesse_i_cdr( timespan_t cdr )
 {
-  if ( !finesse_i_event )
-    return;
-
-  
-  // sim->print_debug( "{} reduces cooldown of Finesse I by {}", *this, cdr );
-
-  if ( finesse_i_event->remains() < cdr )
-  {
-    event_t::cancel( finesse_i_event );
-    finesse_i_event_fn();
-    // sim->print_debug( "{} Finesse I is less than CDR away. Immediately triggering.", *this );
-  }
-  else
-  {
-    auto when = finesse_i_event->remains() - cdr;
-    finesse_i_event->reschedule( when );
-    // sim->print_debug( "{} Finesse I rescheduling event for {} ", *this, when + sim->current_time() );
-  }
+  fs_buffs.finesse_i_cd->extend_duration( this, -cdr );
 }
 
 

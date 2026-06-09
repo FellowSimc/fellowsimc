@@ -89,7 +89,10 @@ public:
     }
 
     // Add new amount to residual pool
-    current_amount += s->result_amount;
+    if ( ab::hasted_ticks )
+      current_amount += s->result_amount / s->haste;
+    else
+      current_amount += s->result_amount;
 
     // Trigger the dot, refreshing it's duration or starting it
     this->trigger_dot( s );

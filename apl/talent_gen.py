@@ -45,8 +45,8 @@ ardeos = {
     "flare_up": 1,
     "crash_and_burn": 1,
 
-    "agonizing_flame": 2,
-    "flare_up": 2,
+    "agonizing_blaze": 2,
+    "firestarter": 2,
     "undying_flame": 2,
 
     "cascading_inferno": 1,
@@ -276,7 +276,7 @@ def combos_to_file(prefix, talents, indicator_dict, target_points, file_path, pr
             if profilesets:
                 header = f"profileset.\"{profile_name}\"="
             else:
-                header = f"copy=\"{profile_name}\",\"Base\"\n"
+                header = f"copy=\"{profile_name}\",\"Base {prefix}\"\n"
             if len(combo) == 0:
                 continue
             line = "talents="+":1/".join(combo)+":1\n"
@@ -286,6 +286,18 @@ def combos_to_file(prefix, talents, indicator_dict, target_points, file_path, pr
         
 
 # required_talents=None, excluded_talents=None, forbidden_pairs=None
+
+def all_points_to_File(prefix, talents, file_path):
+    with open(file_path, "w") as f:
+            for talent in talents.keys():
+                profile_name = f"{prefix} {talent}"
+                header = f"copy=\"{profile_name}\",\"Base {prefix}\"\n"
+                line = f"talents+=/{talent}:1\n"
+                f.write(header)
+                f.write(line)
+                
+
+
 
 def top_sim_results(path_to_json, total_runs=100):
     with open(path_to_json,"r") as file_handle:
@@ -354,11 +366,12 @@ if __name__ == "__main__":
     print(overalls)
 
 
-    combos_to_file("Ardeos", ardeos, ardeos_indicators, 14, "ardeos/talent_output_filtered.simc", 
+    combos_to_file("Ardeos", ardeos, ardeos_indicators, 3, "ardeos/talent_output_1.simc", 
+                profilesets=False,
                 required_talents=[
-                        "rolling_flames",
-                        "undying_flame",
-                        "slow_burn"
+                        # "rolling_flames",
+                        # "undying_flame",
+                        # "slow_burn"
                 ],
                 excluded_talents=[
                     #  "frostweavers_wrath",
@@ -367,8 +380,10 @@ if __name__ == "__main__":
                 ],
                 forbidden_pairs=[
                 ],
-                name_filters=top_x
+                # name_filters=top_x
     )
+
+    all_points_to_File("Ardeos", ardeos, "ardeos/single_talents.simc")
 
 # for combo in combos:
 #     print(combo)

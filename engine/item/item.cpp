@@ -1673,7 +1673,7 @@ double item_t::slot_multiplier() const
   }
 }
 
-double item_t::get_stat_value( gear_affix_e stat_affix, bool random_stat, weighting_pool_e pool ) const
+double item_t::get_stat_value( gear_affix_e stat_affix, bool is_dynamic, weighting_pool_e pool ) const
 {
   stat_e stat = stat_from_gear_affix( stat_affix );
 
@@ -1688,19 +1688,22 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool random_stat, weight
   if ( parsed.item_variant == VARIANT_NONE || parsed.rarity == RARITY_NONE )
     return 0.0;
 
+  item_calculation_settings_t settings = is_dynamic ? dynamic_slot_settings : fixed_slot_settings;
+
+
   if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_PRIMARY || stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
   {
-    amount = pow( primary_power_base, parsed.item_level / primary_divisor ) * pow( parsed.item_level, 0.5 ) *
-        primary_pool_multiplier * fixed_slot_main_stat_mul / fixed_slot_base_weight;
+    amount = pow( primary_power_base, parsed.item_level / primary_divisible ) * pow( parsed.item_level, 0.5 ) *
+             primary_and_stamina_multiplier * settings.primary_multiplier / settings.weight_multiplier;
 
     
     if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
     {
-      amount *= fixed_slot_stamina_weight;
+      amount *= settings.stamina_weight;
     }
     else
     {
-      amount *= fixed_slot_primary_weight;
+      amount *= settings.primary_weight;
     }
 
     sim->print_debug( "{} item {} decoded stat {}, main_stat_amount: {}", *player, name(),
@@ -1708,25 +1711,15 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool random_stat, weight
   }
   else
   {
-    amount = pow( parsed.item_level * secondary_pool_multiplier, 0.5 ) * secondary_mul * fixed_slot_secondary_weight
-             / fixed_slot_base_weight;
-
-    if ( random_stat )
-    {
-      amount *= randomized_slot_secondary_mul;
-    }
-    else
-    {
-      amount *= fixed_slot_secondary_mul;
-    }
+    amount = pow( parsed.item_level * secondary_base_multiplier, 0.5 ) * secondary_multiplier *
+             settings.secondary_weight * settings.secondary_multiplier / settings.weight_multiplier;
   }
-
 
   if ( pool == weighting_pool_e::WEIGHTING_POOL_AUTO )
   {
-    if ( random_stat )
+    if ( is_dynamic )
     {
-      pool = weighting_pool_e::WEIGHTING_POOL_ROLLED;
+      pool = weighting_pool_e::WEIGHTING_POOL_DYNAMIC;
     }
     else if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
     {
@@ -1753,62 +1746,28 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool random_stat, weight
     case weighting_pool_e::WEIGHTING_POOL_SECONDARY:
       amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_weight;
       break;
-    case weighting_pool_e::WEIGHTING_POOL_ROLLED:
+    case weighting_pool_e::WEIGHTING_POOL_DYNAMIC:
       amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].rolled_weight;
       break;
   }
-
-  /*if ( random_stat )
-  {
-    amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].rolled_weight;
-    sim->print_debug( "{} item {} decoded stat {}, variant: {}, rolled_weight: {}", *player, name(),
-                      gear_affix_lower( stat_affix ), item_variant_lower( parsed.item_variant ),
-                      ITEM_VARIANTS[ parsed.item_variant - 1 ].rolled_weight );
-  }
-  else
-  {
-    if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
-    {
-      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].stamina_weight;
-      sim->print_debug( "{} item {} decoded stat {}, variant: {}, stamina_weight: {}", *player, name(),
-                        gear_affix_lower( stat_affix ), item_variant_lower( parsed.item_variant ),
-                        ITEM_VARIANTS[ parsed.item_variant - 1 ].stamina_weight );
-    }
-    else if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_PRIMARY )
-    {
-      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].primary_weight;
-      sim->print_debug( "{} item {} decoded stat {}, variant: {}, primary_weight: {}", *player, name(),
-                        gear_affix_lower( stat_affix ), item_variant_lower( parsed.item_variant ),
-                        ITEM_VARIANTS[ parsed.item_variant - 1 ].primary_weight );
-    }
-    else
-    {
-      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_weight;
-      sim->print_debug( "{} item {} decoded stat {}, variant: {}, secondary_weight: {}", *player, name(),
-                        gear_affix_lower( stat_affix ), item_variant_lower( parsed.item_variant ),
-                        ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_weight );
-    }
-  }*/
-
 
   amount /= pow( slot_rarity_base, RARITY_DATA[ parsed.rarity - 1 ].stat_scale_factor );
 
   amount *= slot_multiplier();
 
-  sim->print_debug( "{} item {} decoded stat {}, slot_multiplier: {}, random: {}", *player, name(), gear_affix_lower( stat_affix ),
-                    slot_multiplier(), random_stat );
+  sim->print_debug( "{} item {} decoded stat {}, slot_multiplier: {}, random: {}", *player, name(), gear_affix_lower( stat_affix ), slot_multiplier(), is_dynamic );
 
   return round( amount );
 }
 
 // item_t::handle_base_stats ==================================================
-void item_t::add_gear_affix_stats( gear_affix_e affix_stat, bool random_stat,
+void item_t::add_gear_affix_stats( gear_affix_e affix_stat, bool is_dynamic,
                                    weighting_pool_e pool )
 {
   stat_e stat = stat_from_gear_affix( affix_stat );
   if ( stat != STAT_NONE )
   {
-    auto value = get_stat_value( affix_stat, random_stat, pool );
+    auto value = get_stat_value( affix_stat, is_dynamic, pool );
     sim->print_debug( "{} item {} decoded base stat {}, quantity: {}", *player, name(), stat, value );
     if ( value > 0 )
     {

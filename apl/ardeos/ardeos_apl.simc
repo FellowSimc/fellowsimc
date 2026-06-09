@@ -20,7 +20,7 @@ actions.main+=/chronoshift,if=!cooldown.wildfire.up|fight_remains<=30
 actions.main+=/incinerate,target_if=min:dot.engulfing_flames.remains-100*dot.engulfing_flames.ticking-100*target.time_to_die>=12,if=(active_dot.engulfing_flames>=2&action.engulfing_flames.shortest_active_engulf<=5|dot.apocalypse_dot.remains<=3&dot.apocalypse_dot.ticking|!talent.undying_flame&(active_dot.engulfing_flames>0&action.engulfing_flames.shortest_active_engulf<=5))|(time-action.chronoshift.last_used)<=10
 #,if=active_dot.engulfing_flames>=2&action.engulfing_flames.shortest_active_engulf>execute_time&(action.engulfing_flames.shortest_active_engulf<=2|action.engulfing_flames.shortest_active_engulf<=5&active_enemies>=8)&(!weapon_trait.visions_of_grandeur|!weapon.chronoshift|cooldown.chronoshift.remains>=10)
 #(!buff.wildfire.up|active_enemies=1)&(spirit.time_to_max<=5|active_dot.engulfing_flames>=4&active_enemies=1|active_dot.engulfing_flames>=10|!weapon_trait.visions_of_grandeur|!weapon.chronoshift|cooldown.chronoshift.remains>=90|fight_remains<=30|!talent.undying_flame&!talent.rolling_flames&!talent.slow_burn&active_enemies=1)
-actions.main+=/infernal_wave,target_if=max:dot.engulfing_flames.stack,if=buff.cascading_inferno.stack>=18
+actions.main+=/infernal_wave,target_if=max:dot.engulfing_flames.stack,if=buff.cascading_inferno.stack>=18&(talent.flare_up|buff.finesse_n.at_max_stacks)
 actions.main+=/detonate,if=(active_dot.engulfing_flames>=1)&cinders>=300|buff.wildfire.up
 #actions.main+=/searing_blaze,target_if=refreshable&target.time_to_die>=12,if=cooldown.apocalypse.remains>=10|raid_event.adds.in<=30|(active_enemies-active_dot.searing_blaze)<4|active_enemies<=4
 actions.main+=/detonate,if=active_dot.searing_blaze>=6&active_dot.engulfing_flames>1

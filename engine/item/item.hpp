@@ -228,14 +228,14 @@ struct item_t
     WEIGHTING_POOL_STAMINA,
     WEIGHTING_POOL_PRIMARY,
     WEIGHTING_POOL_SECONDARY,
-    WEIGHTING_POOL_ROLLED
+    WEIGHTING_POOL_DYNAMIC
   };
 
-  double get_stat_value( gear_affix_e stat, bool random_stat, weighting_pool_e pool = WEIGHTING_POOL_AUTO ) const;
+  double get_stat_value( gear_affix_e stat, bool is_dynamic, weighting_pool_e pool = WEIGHTING_POOL_AUTO ) const;
 
   double slot_multiplier() const;
 
-  void add_gear_affix_stats( gear_affix_e affix, bool random_stat, weighting_pool_e pool = WEIGHTING_POOL_AUTO );
+  void add_gear_affix_stats( gear_affix_e affix, bool is_dynamic, weighting_pool_e pool = WEIGHTING_POOL_AUTO );
   void add_gear_affix_stats( gear_affix_e affix, double amount );
   inline void add_gear_affix_stats( gear_affix_e affix, int amount )
   {

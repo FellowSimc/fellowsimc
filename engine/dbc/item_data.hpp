@@ -15,19 +15,44 @@
 #define MAX_ITEM_SOCKET_SLOT 3
 
 
-constexpr double primary_divisor               = 15;
-constexpr double primary_power_base            = 1.03;
-constexpr double primary_pool_multiplier       = 10;
-constexpr double secondary_pool_multiplier     = 72;
-constexpr double secondary_mul                 = 2.4;
-constexpr double fixed_slot_base_weight        = 0.15;
-constexpr double fixed_slot_primary_weight     = 0.25;
-constexpr double fixed_slot_stamina_weight     = 0.5;
-constexpr double fixed_slot_secondary_weight   = 0.3;
-constexpr double fixed_slot_main_stat_mul      = 0.7;
-constexpr double fixed_slot_secondary_mul      = 0.6; // Fixed Affix are 0.6. Random affix are 1.5.
-constexpr double randomized_slot_secondary_mul = 1.5; // Fixed Affix are 0.6. Random affix are 1.5.
-constexpr double slot_rarity_base              = 0.92;
+constexpr double primary_divisible              = 15;
+constexpr double primary_power_base             = 1.03;
+constexpr double primary_and_stamina_multiplier = 10;
+constexpr double secondary_multiplier           = 2.4;
+constexpr double secondary_base_multiplier      = 72;
+constexpr double slot_rarity_base               = 0.92;
+
+struct item_calculation_settings_t
+{
+  double primary_weight;
+  double secondary_weight;
+  double stamina_weight;
+  double primary_multiplier;
+  double secondary_multiplier;
+  double weight_multiplier;
+};
+
+constexpr double fixed_slot_primary_weight       = 0.25;
+constexpr double fixed_slot_secondary_weight     = 0.3;
+constexpr double fixed_slot_stamina_weight       = 0.5;
+constexpr double fixed_slot_primary_multiplier   = 0.7;
+constexpr double fixed_slot_secondary_multiplier = 0.6;  // Fixed Affix are 0.6. Random affix are 1.5.
+constexpr double fixed_slot_weight_multiplier    = 0.15;
+
+constexpr item_calculation_settings_t fixed_slot_settings = {
+    fixed_slot_primary_weight,     fixed_slot_secondary_weight,     fixed_slot_stamina_weight,
+    fixed_slot_primary_multiplier, fixed_slot_secondary_multiplier, fixed_slot_weight_multiplier };
+
+constexpr double dynamic_slot_primary_weight       = 0.25;
+constexpr double dynamic_slot_secondary_weight     = 0.3;
+constexpr double dynamic_slot_stamina_weight       = 0.5;
+constexpr double dynamic_slot_primary_multiplier   = 0.7;
+constexpr double dynamic_slot_secondary_multiplier = 1.5;  // Fixed Affix are 0.6. Random affix are 1.5.
+constexpr double dynamic_slot_weight_multiplier    = 0.15;
+
+constexpr item_calculation_settings_t dynamic_slot_settings = {
+    dynamic_slot_primary_weight,     dynamic_slot_secondary_weight,     dynamic_slot_stamina_weight,
+    dynamic_slot_primary_multiplier, dynamic_slot_secondary_multiplier, dynamic_slot_weight_multiplier };
 
 struct dbc_item_data_t {
   struct stats_t {

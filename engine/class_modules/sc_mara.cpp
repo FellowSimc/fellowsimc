@@ -1680,7 +1680,9 @@ struct seething_burst_t : public mara_poison_t
 
 struct caustic_poison_t : public mara_poison_t
 {
-  caustic_poison_t( util::string_view name, mara_t* p ) : mara_poison_t( name, p )
+  bool is_caustic_wounds;
+  caustic_poison_t( util::string_view name, mara_t* p, bool caustic_wounds = false )
+    : mara_poison_t( name, p ), is_caustic_wounds( caustic_wounds )
   {
     id = 8;
 
@@ -1696,7 +1698,8 @@ struct caustic_poison_t : public mara_poison_t
   {
     mara_poison_t::execute();
 
-    trigger_combo_point_gain( 4, gain );
+    if ( !is_caustic_wounds )
+      trigger_combo_point_gain( 4, gain );
   }
 };
 
@@ -3184,10 +3187,10 @@ void mara_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
-  actions.seething_burst = new actions::seething_burst_t( "seething_burst", this );
-  actions.seething_poison = new actions::seething_poison_t( "seething_poison", this );
-  actions.caustic_poison  = new actions::caustic_poison_t( "caustic_poison", this );
-  actions.caustic_wounds_poison  = new actions::caustic_poison_t( "caustic_wounds_poison", this );
+  actions.seething_burst        = new actions::seething_burst_t( "seething_burst", this );
+  actions.seething_poison       = new actions::seething_poison_t( "seething_poison", this );
+  actions.caustic_poison        = new actions::caustic_poison_t( "caustic_poison", this );
+  actions.caustic_wounds_poison = new actions::caustic_poison_t( "caustic_wounds_poison", this, true );
 
   actions.maiden_of_death = new actions::maiden_of_death_t( "maiden_of_death", this );
 

@@ -130,6 +130,7 @@ public:
     buff_t* finesse_b;
     buff_t* finesse_g;
     buff_t* finesse_i;
+    buff_t* finesse_i_cd;
     buff_t* hunters_focus;
     buff_t* patient_soul;
     buff_t* finesse_n;
@@ -464,8 +465,6 @@ public:
   event_t* patient_soul_moved;
   event_t* patient_soul_stopped;
 
-  event_t* finesse_i_event;
-
   virtual const fs_player_td_t* find_target_data( const player_t* target ) const override
   {
     return target_data[ target ];
@@ -530,7 +529,6 @@ public:
   void arise() override;
   void combat_begin() override;
 
-  void finesse_i_event_fn();
   void finesse_i_cdr( timespan_t cdr );
 
   action_t* create_action( util::string_view name, util::string_view options ) override;

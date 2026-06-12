@@ -170,8 +170,8 @@ public:
     timespan_t dark_prophecy_cooldown = 5_s;
 
     bool deaths_grasp              = false;
-    double deaths_grasp_spirit     = 0.03;
-    double death_grasp_execute_amp = 0.15;
+    double deaths_grasp_spirit     = 0.04;
+    double death_grasp_execute_amp = 0.10;
 
     bool draconic_might                = false;
     double draconic_might_ppm          = 1.0;
@@ -184,23 +184,23 @@ public:
     timespan_t drakheims_absolution_duration = 20_s;
 
     bool eldrin_deceit        = false;
-    double eldrin_deceit_crit = 0.03;
+    double eldrin_deceit_crit = 0.04;
     // Threat Reduction
 
     bool eldrin_fury        = false;
-    double eldrin_fury_crit = 0.03;
+    double eldrin_fury_crit = 0.04;
     // Threat Generation
 
     bool haunting_lament            = false;
-    double haunting_lament_spirit   = 0.03;
+    double haunting_lament_spirit   = 0.04;
     double haunting_lament_max_mana = 0.15;
 
     bool sin_warding             = false;
-    double sin_warding_expertise = 0.03;
+    double sin_warding_expertise = 0.04;
     double sin_warding_max_hp    = 0.05;
 
     bool sintharas_veil            = false;
-    double sintharas_veil_spirit   = 0.03;
+    double sintharas_veil_spirit   = 0.04;
     double sintharas_veil_magic_dr = 0.1;
 
     bool torment_of_baelaurum            = false;
@@ -208,7 +208,7 @@ public:
     double torment_of_baelaurum_heal_pct = 0.35;
 
     bool tuzari_grace                  = false;
-    double tuzari_grace_haste          = 0.03;
+    double tuzari_grace_haste          = 0.04;
     double tuzari_grace_movement_speed = 0.2;
 
     bool seal_of_the_heskyr             = false;
@@ -293,10 +293,12 @@ public:
 
     const timespan_t finesse_b_duration = 4_s;
     const int finesse_b_max_stacks      = 1;
-    const double finesse_b_crit[ 5 ]    = { 0, 0.02, 0.03, 0.05, 0.08 }; // The Trickster
+    const double finesse_b_crit[ 5 ]    = { 0, 0.025, 0.04, 0.064, 0.10 }; // The Trickster
 
-    const timespan_t finesse_c_duration[ 5 ] = { 0_s, 1_s, 2_s, 3_s, 5_s };
+    const timespan_t finesse_c_duration[ 5 ] = { 0_s, 1_s, 2_s, 3_s, 4_s };
     const timespan_t finesse_c_divisor       = 60_s;
+    const double finesse_c_execute[ 5 ]      = { 0, 0.05, 0.1, 0.15, 0.2 };
+    const double finesse_c_execute_threshold = 0.3; 
 
     const double finesse_d_chance[ 5 ]   = { 0, 0.05, 0.08, 0.13, 0.2 }; // The Celestial
     const double finesse_d_spirit_points = 1.0;
@@ -304,7 +306,7 @@ public:
     const double finesse_e_cc[ 5 ]   = { 0, 0.01, 0.02, 0.03, 0.04 }; // The Sinister
     const double finesse_e_cdmg[ 5 ] = { 0, 0.05, 0.10, 0.15, 0.20 };
 
-    const double finesse_f_drain[ 5 ]   = { 0, 3.25, 5.2, 8.32, 13.31 };
+    const double finesse_f_drain[ 5 ]   = { 0, 3.25, 5.2, 8.32, 13.31 }; // The Heretic
     const double finesse_f_drain_chance = 0.2;
 
     const double finesse_g_spirit_to_stats[ 5 ] = { 0.0, 0.2 / 4.0, 0.2 / 2.5, 0.2 / 1.6, 0.2 / 1.0 };  // The Philospher
@@ -313,7 +315,7 @@ public:
 
     const double finesse_h_added[ 5 ] = { 0, 0.25, 0.40, 0.65, 1.0 }; // The Vainglorious
 
-    const double finesse_i_haste[ 5 ]      = { 0, 0.03, 0.05, 0.08, 0.12 }; // The Wayfarer
+    const double finesse_i_haste[ 5 ]      = { 0, 0.06, 0.10, 0.16, 0.25 }; // The Wayfarer
     const timespan_t finesse_i_interval    = 60_s;
     const timespan_t finesse_i_duration    = 14_s;
     const timespan_t finesse_i_cdr         = 4_s;
@@ -331,7 +333,7 @@ public:
     const double finesse_k_amp_multiplier   = 1.0;
     const timespan_t finesse_k_amp_duration = 5_s;
 
-    const double finesse_l_dmg[ 5 ]    = { 0, 0.95, 1.52, 2.43, 3.89 }; // The Usurper
+    const double finesse_l_dmg[ 5 ]    = { 0, 1.43, 2.28, 3.65, 5.84 }; // The Usurper
     const double finesse_l_heal[ 5 ]   = { 0, 1.22, 1.95, 3.12, 5.00 };
     const int finesse_l_targets        = 4;
     const int finesse_l_max_stacks     = 1;

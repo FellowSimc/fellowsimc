@@ -883,7 +883,7 @@ struct finesse_f_dmg_t : fs_proc_spell_t
   {
     id = 2589871;
 
-    name_str_reporting = "Finesse F";
+    name_str_reporting = "The Heretic";
     school             = SCHOOL_MAGIC;
     background         = true;
 
@@ -898,7 +898,7 @@ struct finesse_l_dmg_t : fs_proc_spell_t
   {
     id = 2589872;
 
-    name_str_reporting = "Finesse L";
+    name_str_reporting = "The Usurper";
     school             = SCHOOL_MAGIC;
     background         = true;
     aoe                = p->finesse_trait_values.finesse_l_targets;

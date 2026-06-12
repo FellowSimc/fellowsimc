@@ -20,7 +20,7 @@ constexpr double primary_power_base             = 1.03;
 constexpr double primary_and_stamina_multiplier = 10;
 constexpr double secondary_multiplier           = 2.4;
 constexpr double secondary_base_multiplier      = 72;
-constexpr double slot_rarity_base               = 0.92;
+constexpr double slot_rarity_base               = 1.0;
 
 struct item_calculation_settings_t
 {
@@ -46,8 +46,8 @@ constexpr item_calculation_settings_t fixed_slot_settings = {
 constexpr double dynamic_slot_primary_weight       = 0.25;
 constexpr double dynamic_slot_secondary_weight     = 0.3;
 constexpr double dynamic_slot_stamina_weight       = 0.5;
-constexpr double dynamic_slot_primary_multiplier   = 0.7;
-constexpr double dynamic_slot_secondary_multiplier = 1.5;  // Fixed Affix are 0.6. Random affix are 1.5.
+constexpr double dynamic_slot_primary_multiplier   = 0.7 * 0.75;
+constexpr double dynamic_slot_secondary_multiplier = 1.5 * 0.75;  // Fixed Affix are 0.6. Random affix are 1.5.
 constexpr double dynamic_slot_weight_multiplier    = 0.15;
 
 constexpr item_calculation_settings_t dynamic_slot_settings = {

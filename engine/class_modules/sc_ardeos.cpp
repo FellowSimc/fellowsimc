@@ -140,7 +140,7 @@ public:
     timespan_t wildfire_cooldown = 45_s;
 
     double infernal_wave_cinders = 40;
-    double infernal_wave_coeff   = 1.47 * 1.15;
+    double infernal_wave_coeff   = 1.7;
 
     double fire_frog_coeff             = 0.7315;
     double fire_frog_dot_conversion    = 1.0;
@@ -1486,7 +1486,7 @@ struct searing_blaze_t : public ardeos_spell_t
 
     base_crit += p->talents_enabled( ardeos_t::FIRESTARTER ) ? p->talents.firestarter_crit_chance : 0.0;
 
-    ability_flags |= ability_type_e::ABILITY_BASIC;
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   void execute() override
@@ -2005,7 +2005,7 @@ struct fire_ball_t : public ardeos_spell_t
     {
       base_multiplier *= 1.0 + p->talents.great_balls_of_fire_amp;
     }
-    ability_flags |= ability_type_e::ABILITY_POWER;
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   double composite_crit_chance() const override
@@ -2259,7 +2259,7 @@ struct fire_frogs_t : public ardeos_spell_t
     if ( !p->actions.fire_frog->stats->parent )
       add_child( p->actions.fire_frog );
 
-    ability_flags |= ability_type_e::ABILITY_POWER;
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   void execute() override

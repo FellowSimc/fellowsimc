@@ -200,7 +200,7 @@ public:
     timespan_t chilling_finesse_bursting_ice_cdr_per_tick = 0.2_s;
     timespan_t chilling_finesse_torrent_cdr_per_snap      = 1.5_s;
 
-    double harrowing_ice_mul_per_stack = 0.02;
+    double harrowing_ice_mul_per_stack = 0.03;
     int harrowing_ice_max_stacks       = 30;
     timespan_t harrowing_ice_duration  = 12_s;
     timespan_t harrowing_ice_cdr       = 5_s;
@@ -289,7 +289,7 @@ public:
     timespan_t cold_snap_cd = 12_s;
     int cold_snap_charges   = 2;
 
-    double freezing_torrent_tick_coeff   = 1.346;
+    double freezing_torrent_tick_coeff   = 1.4806;
     timespan_t freezing_torrent_duration = 2_s;
     timespan_t freezing_torrent_period   = 0.4_s;
     timespan_t freezing_torrent_cooldown = 15_s;

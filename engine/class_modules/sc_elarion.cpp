@@ -135,7 +135,7 @@ public:
 
     timespan_t heartseeker_barrage_period   = 0.2_s;
     timespan_t heartseeker_barrage_duration = 2.0_s;
-    double heartseeker_barrage_ap_coeff     = 1.249;
+    double heartseeker_barrage_ap_coeff     = 1.374; // 1.249;
     timespan_t heartseeker_barrage_cooldown = 20_s;
     double heartseeker_barrage_focus_cost   = 30;
 
@@ -250,7 +250,7 @@ public:
   struct talents_t
   {
     double focused_expanse_chance       = 0.2;
-    double focused_expanse_amp          = 0.25;
+    double focused_expanse_amp          = 0.2;
     double focused_expanse_focus_mul    = 0.5;
     timespan_t focused_expanse_duration = 15_s;
     int focused_expanse_max_stacks      = 2;
@@ -283,7 +283,7 @@ public:
     timespan_t fervent_supremacy_duration         = 15_s;
     timespan_t fervent_supremacy_reduced_cooldown = 10_s;
     int fervent_supremacy_stacks                  = 4;
-    double fervent_supremacy_mod                  = 0.35;
+    double fervent_supremacy_mod                  = 0.5;
 
     double impending_heartseeker_mul_per_arrow = 0.1;
     timespan_t impending_heartseeker_duration  = 15_s;
@@ -1140,7 +1140,7 @@ struct multishot_t : public elarion_attack_t
       auto empowered_amp = 1.0 + p()->buffs.skystriders_supremacy->check_value();
 
       if ( p()->talents_enabled( elarion_t::FOCUSED_EXPANSE ) )
-        empowered_amp += p()->talents.focused_expanse_amp;
+        empowered_amp *= 1.0 + p()->talents.focused_expanse_amp;
 
       m *= empowered_amp;
     }

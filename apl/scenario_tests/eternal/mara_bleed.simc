@@ -1,0 +1,813 @@
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=150
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=12
+# relative_difference_base="Mara Bleed FTS"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers,agility
+# scale_agility=10
+# scale_crit_rating=210
+# scale_haste_rating=210
+# scale_mastery_rating=210
+# scale_versatility_rating=210
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating
+# #,mastery,versatility
+# # dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=6
+# dps_plot_step=41
+# dps_plot_positive=0
+
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":800000:Humanoid
+# # raid_events+=/pull,pull=02,delay=315,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":300000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+
+mara="Mara Bleed FTS"
+level=80
+
+apl/mara/mara.simc
+
+
+
+# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/haste
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/crit
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
+# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/primary
+# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+# wrist=wrists,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/haste
+
+# # More normal haste
+
+# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit
+# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
+# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
+# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
+
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit
+# wrist=wrists,rarity=legendary,variant=evens,ilevel=360,main_secondary=crit,fixed_secondary=expertise/primary
+
+# # finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/expertise,affixes=finesse_b/finesse_b
+# # finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/primary,affixes=finesse_b/finesse_b
+# # trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/expertise
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/primary
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_b/finesse_b/finesse_b/finesse_b
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=spirit/spirit
+
+
+
+
+# Big time haste
+
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/crit
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/crit
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/expertise
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/haste
+wrist=wrists,rarity=legendary,variant=evens,ilevel=360,main_secondary=crit,fixed_secondary=expertise/primary
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/expertise,affixes=finesse_b/finesse_b
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/primary,affixes=finesse_b/finesse_b
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/expertise
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_b/finesse_b/finesse_b/finesse_b
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/haste,affixes=haste/haste
+
+
+
+# weapon=voidbringers_touch
+
+# weapon_trait.hunters_focus=1
+# weapon_trait.vengeful_soul=1
+# weapon_trait.seized_opportunity=1
+
+# legendary.vexiras_venom=1
+# legendary.from_the_shadows=1
+
+# legendary.skandis_decree=1
+# legendary.frostwyrms_spite=1
+# legendary.undulating_spirit=1
+weapon=fated_strike
+
+# # Talons Beam Okay
+# talents=burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/cold_shower:1/glacial_assault:1/greater_glacial_blast:1/icy_talons:1/navirs_keeper:1/wisdom_of_the_north:1
+# Talons Beam Overall Best
+# talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/cold_shower:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1
+
+# # Beam
+# talents=biting_cold:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/icy_flow:1/soulfrost_torrent:1/supreme_torrent:1/wisdom_of_the_north:1
+
+# 35 Mods
+
+# 29 mods -6stat
+# 28 mods -fink
+
+# weapon_trait.visions_of_grandeur=1
+# weapon_trait.martial_initiative=1
+# weapon_trait.emerald_judgement=3
+# 23 mods -5
+# 4Trait
+# sets.torment_of_baelaurum=1
+# sets.deaths_grasp=1
+# 19 mods -4
+# copy="visions1","Mara Bleed FTS"
+# weapon_trait.visions_of_grandeur=1
+
+# 27 mods
+
+# gems.amethyst_power=600
+# gems.sapphire_power=600
+# gems.emerald_power=600
+# gems.ruby_power=600
+# 15 mods -4
+
+# 6 stat
+# 18 mods
+# 11 mods -4
+
+# -1 mod, 10 mods (EJ3)
+# -4 mods, 6 left 
+# sets.draconic_might=1
+# -6 (draco, 4 spirit)
+
+# 1mod
+# weapon_trait.amethyst_splinters=1
+# 0mod
+
+sets.draconic_might=1
+
+gems.ruby_power=500
+gems.amethyst_power=500
+gems.emerald_power=500
+gems.sapphire_power=500
+
+sets.seal_of_the_heskyr=1
+
+# 4  in sets
+
+# 8 in blessings
+
+# 23 mods left
+
+weapon_trait.emerald_judgement=2
+
+# 21 mods left
+
+weapon_trait.amethyst_splinters=4
+
+# 17 mods left
+
+sets.deaths_grasp=1
+
+# 15 mods left
+
+weapon_trait.visions_of_grandeur=1
+
+# 14 mods left
+
+sets.drakheims_absolution=1
+
+# 12 mods left
+
+weapon_trait.hunters_focus=2
+
+# 10 mods left
+
+weapon_trait.martial_initiative=1
+
+# 9 mods left
+
+gems.sapphire_power=1200
+
+# 2 mods left
+
+
+# copy="Finisher Max ST","Mara Bleed FTS"
+legendary.from_the_shadows=1
+legendary.drenched_in_blood=0
+legendary.vexiras_venom=0
+# talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/malevolence:1/puncture:1/sinners_pride:1/venomous_delight:1
+talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/sinners_pride:1
+
+copy="Bleed FTS Seething Poison","Mara Bleed FTS"
+talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/seething_burst:1/sinners_pride:1
+
+copy="Bleed FTS Seething Poison DS=>RL","Mara Bleed FTS"
+talents=assassins_guile:1/bloodrush:1/red_ledger:1/gushing_blood:1/hemotoxin:1/seething_burst:1/sinners_pride:1
+
+# copy="Mara_HT_Sinners_GB_MS_1","Mara Bleed FTS"
+# talents=bloodrush:1/corrosive_spill:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MD_2","Mara Bleed FTS"
+# talents=bloodrush:1/corrosive_spill:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/red_ledger:1/sinners_pride:1
+copy="Mara_HT_Sinners_GB_3","Mara Bleed FTS"
+talents=bloodrush:1/corrosive_spill:1/gushing_blood:1/hemotoxin:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_4","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/corrosive_spill:1/gushing_blood:1/hemotoxin:1/red_ledger:1/sinners_pride:1
+copy="Mara_HT_Sinners_GB_5","Mara Bleed FTS"
+talents=bloodrush:1/caustic_wounds:1/corrosive_spill:1/gushing_blood:1/hemotoxin:1/red_ledger:1/sinners_pride:1
+copy="Mara_HT_Sinners_GB_6","Mara Bleed FTS"
+talents=bloodrush:1/corrosive_spill:1/gushing_blood:1/hemotoxin:1/puncture:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_AG_MS_7","Mara Bleed FTS"
+# talents=assassins_guile:1/bloodrush:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_AG_MD_8","Mara Bleed FTS"
+# talents=assassins_guile:1/bloodrush:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_AG_9","Mara Bleed FTS"
+# talents=assassins_guile:1/bloodrush:1/gushing_blood:1/hemotoxin:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_AG_10","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/assassins_guile:1/bloodrush:1/gushing_blood:1/hemotoxin:1/red_ledger:1/sinners_pride:1
+copy="Mara_HT_Sinners_GB_AG_11","Mara Bleed FTS"
+talents=assassins_guile:1/bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_AG_12","Mara Bleed FTS"
+# talents=assassins_guile:1/bloodrush:1/gushing_blood:1/hemotoxin:1/puncture:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_DS_GB_MS_13","Mara Bleed FTS"
+# talents=bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_DS_GB_MD_14","Mara Bleed FTS"
+# talents=bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_DS_GB_15","Mara Bleed FTS"
+# talents=bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_DS_GB_16","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_DS_GB_17","Mara Bleed FTS"
+# talents=bloodrush:1/caustic_wounds:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_DS_GB_18","Mara Bleed FTS"
+# talents=bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MS_MD_19","Mara Bleed FTS"
+# talents=bloodrush:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/maidens_doom:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MS_MD_20","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/maidens_doom:1/red_ledger:1/sinners_pride:1
+copy="Mara_HT_Sinners_GB_MS_MD_21","Mara Bleed FTS"
+talents=bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/maidens_doom:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MS_MD_22","Mara Bleed FTS"
+# talents=bloodrush:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/maidens_doom:1/puncture:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MS_23","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/red_ledger:1/seething_burst:1/sinners_pride:1
+copy="Mara_HT_Sinners_GB_MS_24","Mara Bleed FTS"
+talents=bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MS_25","Mara Bleed FTS"
+# talents=bloodrush:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/puncture:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MS_26","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MS_27","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/puncture:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MS_28","Mara Bleed FTS"
+# talents=bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/macabre_stratagem:1/puncture:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MD_29","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MD_30","Mara Bleed FTS"
+# talents=bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MD_31","Mara Bleed FTS"
+# talents=bloodrush:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/puncture:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MD_32","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MD_33","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/puncture:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_MD_34","Mara Bleed FTS"
+# talents=bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/puncture:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_35","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_36","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/gushing_blood:1/hemotoxin:1/puncture:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_37","Mara Bleed FTS"
+# talents=bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/puncture:1/red_ledger:1/seething_burst:1/sinners_pride:1
+# copy="Mara_HT_Sinners_MV_GB_38","Mara Bleed FTS"
+# talents=bloodrush:1/gushing_blood:1/hemotoxin:1/malevolence:1/red_ledger:1/sinners_pride:1
+# copy="Mara_HT_Sinners_GB_39","Mara Bleed FTS"
+# talents=arachnid_onslaught:1/bloodrush:1/caustic_wounds:1/gushing_blood:1/hemotoxin:1/puncture:1/red_ledger:1/sinners_pride:1
+
+
+
+
+# copy="Bleed FTS Seething Poison DS RL","Mara Bleed FTS"
+# talents=red_ledger:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/seething_burst:1/sinners_pride:1
+
+# copy="Hemo 1.5x Crit Sample"
+# talent.hemotoxin_sample_multiplier_crits=1.5
+
+# copy="Mara Bleed Max ST Vex","Mara Bleed FTS"
+# legendary.from_the_shadows=0
+# legendary.drenched_in_blood=0
+# legendary.vexiras_venom=1
+
+# copy="Big Time Haste","Mara Bleed FTS"
+# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/crit
+# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/crit
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/expertise
+# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/haste
+# wrist=wrists,rarity=legendary,variant=evens,ilevel=360,main_secondary=crit,fixed_secondary=expertise/primary
+
+# # finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/expertise,affixes=finesse_b/finesse_b
+# # finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/primary,affixes=finesse_b/finesse_b
+# # trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/expertise
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_b/finesse_b/finesse_b/finesse_b
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/haste,affixes=haste/haste
+
+
+# copy="Almost All Haste","Mara Bleed FTS"
+# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
+# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/expertise
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/expertise
+# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/expertise
+
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/expertise
+# wrist=wrists,rarity=legendary,variant=evens,ilevel=360,main_secondary=haste,fixed_secondary=haste/expertise
+
+# # finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/expertise,affixes=finesse_b/finesse_b
+# # finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/primary,affixes=finesse_b/finesse_b
+# # trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_b/finesse_b/finesse_b/finesse_b
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=haste/haste
+
+
+# copy="Big Time Haste Vex","Big Time Haste"
+# legendary.from_the_shadows=0
+# legendary.drenched_in_blood=0
+# legendary.vexiras_venom=1
+
+# # copy="Bleed Max ST FTS","Mara Bleed FTS"
+# # legendary.from_the_shadows=1
+# # legendary.drenched_in_blood=0
+# # legendary.vexiras_venom=0
+# # talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/sinners_pride:1
+# # copy="Bleed Max ST Vex","Mara Bleed FTS"
+# # legendary.from_the_shadows=0
+# # legendary.drenched_in_blood=0
+# # legendary.vexiras_venom=1
+# # talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/sinners_pride:1
+
+# copy="HF0","Mara Bleed FTS"
+# weapon_trait.hunters_focus=0
+
+# copy="HF0 Add Spirit","Mara Bleed FTS"
+# weapon_trait.hunters_focus=0
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=spirit/spirit
+
+# copy="HF0 Add Haste","Mara Bleed FTS"
+# weapon_trait.hunters_focus=0
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=haste/haste
+
+
+# copy="HF0 Add Spirit convert mods to haste","Mara Bleed FTS"
+# weapon_trait.hunters_focus=0
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=spirit/spirit
+
+
+# copy="Wep 2x Sp","Mara Bleed FTS"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=spirit/spirit
+
+# copy="Em10 -Am6","Mara Bleed FTS"
+# gems.emerald_power=1200
+# gems.amethyst_power=0
+
+# # copy="Bleed Max ST FTS","Mara Bleed FTS"
+# # legendary.from_the_shadows=1
+# # legendary.drenched_in_blood=0
+# # legendary.vexiras_venom=0
+# # talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/sinners_pride:1
+# # copy="Bleed Max ST Vex","Mara Bleed FTS"
+# # legendary.from_the_shadows=0
+# # legendary.drenched_in_blood=0
+# # legendary.vexiras_venom=1
+# # talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/sinners_pride:1
+# # copy="Mara_ruby_100","Mara Bleed FTS"
+# # gems.ruby_power=100
+# # copy="Mara_ruby_300","Mara Bleed FTS"
+# # gems.ruby_power=300
+# # copy="Mara_ruby_600","Mara Bleed FTS"
+# # gems.ruby_power=600
+# copy="Mara_ruby_800","Mara Bleed FTS"
+# gems.ruby_power=800
+# copy="Mara_ruby_1500","Mara Bleed FTS"
+# gems.ruby_power=1500
+# # copy="Mara_amethyst_100","Mara Bleed FTS"
+# # gems.amethyst_power=100
+# # copy="Mara_amethyst_300","Mara Bleed FTS"
+# # gems.amethyst_power=300
+# # copy="Mara_amethyst_600","Mara Bleed FTS"
+# # gems.amethyst_power=600
+# copy="Mara_amethyst_800","Mara Bleed FTS"
+# gems.amethyst_power=800
+# copy="Mara_amethyst_1500","Mara Bleed FTS"
+# gems.amethyst_power=1500
+# copy="Mara_topaz_100","Mara Bleed FTS"
+# gems.topaz_power=100
+# copy="Mara_topaz_300","Mara Bleed FTS"
+# gems.topaz_power=300
+# copy="Mara_topaz_600","Mara Bleed FTS"
+# gems.topaz_power=600
+# copy="Mara_topaz_800","Mara Bleed FTS"
+# gems.topaz_power=800
+# copy="Mara_topaz_1500","Mara Bleed FTS"
+# gems.topaz_power=1500
+# # copy="Mara_emerald_100","Mara Bleed FTS"
+# # gems.emerald_power=100
+# # copy="Mara_emerald_300","Mara Bleed FTS"
+# # gems.emerald_power=300
+# # copy="Mara_emerald_600","Mara Bleed FTS"
+# # gems.emerald_power=600
+# copy="Mara_emerald_800","Mara Bleed FTS"
+# gems.emerald_power=800
+# copy="Mara_emerald_1500","Mara Bleed FTS"
+# gems.emerald_power=1500
+# # copy="Mara_sapphire_100","Mara Bleed FTS"
+# # gems.sapphire_power=100
+# # copy="Mara_sapphire_300","Mara Bleed FTS"
+# # gems.sapphire_power=300
+# # copy="Mara_sapphire_600","Mara Bleed FTS"
+# # gems.sapphire_power=600
+# # copy="Mara_sapphire_800","Mara Bleed FTS"
+# # gems.sapphire_power=800
+# # copy="Mara_sapphire_1500","Mara Bleed FTS"
+# # gems.sapphire_power=1500
+# copy="Mara_diamond_100","Mara Bleed FTS"
+# gems.diamond_power=100
+# copy="Mara_diamond_300","Mara Bleed FTS"
+# gems.diamond_power=300
+# copy="Mara_diamond_600","Mara Bleed FTS"
+# gems.diamond_power=600
+# copy="Mara_diamond_800","Mara Bleed FTS"
+# gems.diamond_power=800
+# copy="Mara_diamond_1500","Mara Bleed FTS"
+# gems.diamond_power=1500
+# # copy="Mara_emerald_judgement_1","Mara Bleed FTS"
+# # weapon_trait.emerald_judgement=1
+# # copy="Mara_emerald_judgement_2","Mara Bleed FTS"
+# # weapon_trait.emerald_judgement=2
+# copy="Mara_emerald_judgement_3","Mara Bleed FTS"
+# weapon_trait.emerald_judgement=3
+# copy="Mara_emerald_judgement_4","Mara Bleed FTS"
+# weapon_trait.emerald_judgement=4
+# # copy="Mara_amethyst_splinters_1","Mara Bleed FTS"
+# # weapon_trait.amethyst_splinters=1
+# # copy="Mara_amethyst_splinters_2","Mara Bleed FTS"
+# # weapon_trait.amethyst_splinters=2
+# # copy="Mara_amethyst_splinters_3","Mara Bleed FTS"
+# # weapon_trait.amethyst_splinters=3
+# # copy="Mara_amethyst_splinters_4","Mara Bleed FTS"
+# # weapon_trait.amethyst_splinters=4
+# copy="Mara_brave_machinations_1","Mara Bleed FTS"
+# weapon_trait.brave_machinations=1
+# copy="Mara_brave_machinations_2","Mara Bleed FTS"
+# weapon_trait.brave_machinations=2
+# copy="Mara_brave_machinations_3","Mara Bleed FTS"
+# weapon_trait.brave_machinations=3
+# copy="Mara_brave_machinations_4","Mara Bleed FTS"
+# weapon_trait.brave_machinations=4
+# copy="Mara_diamond_strike_1","Mara Bleed FTS"
+# weapon_trait.diamond_strike=1
+# copy="Mara_diamond_strike_2","Mara Bleed FTS"
+# weapon_trait.diamond_strike=2
+# copy="Mara_diamond_strike_3","Mara Bleed FTS"
+# weapon_trait.diamond_strike=3
+# copy="Mara_diamond_strike_4","Mara Bleed FTS"
+# weapon_trait.diamond_strike=4
+# copy="Mara_heroic_brand_1","Mara Bleed FTS"
+# weapon_trait.heroic_brand=1
+# copy="Mara_heroic_brand_2","Mara Bleed FTS"
+# weapon_trait.heroic_brand=2
+# copy="Mara_heroic_brand_3","Mara Bleed FTS"
+# weapon_trait.heroic_brand=3
+# copy="Mara_heroic_brand_4","Mara Bleed FTS"
+# weapon_trait.heroic_brand=4
+# # copy="Mara_martial_initiative_1","Mara Bleed FTS"
+# # weapon_trait.martial_initiative=1
+# copy="Mara_martial_initiative_2","Mara Bleed FTS"
+# weapon_trait.martial_initiative=2
+# copy="Mara_martial_initiative_3","Mara Bleed FTS"
+# weapon_trait.martial_initiative=3
+# copy="Mara_martial_initiative_4","Mara Bleed FTS"
+# weapon_trait.martial_initiative=4
+# copy="Mara_sapphire_aurastone_1","Mara Bleed FTS"
+# weapon_trait.sapphire_aurastone=1
+# copy="Mara_sapphire_aurastone_2","Mara Bleed FTS"
+# weapon_trait.sapphire_aurastone=2
+# copy="Mara_sapphire_aurastone_3","Mara Bleed FTS"
+# weapon_trait.sapphire_aurastone=3
+# copy="Mara_sapphire_aurastone_4","Mara Bleed FTS"
+# weapon_trait.sapphire_aurastone=4
+# # copy="Mara_visions_of_grandeur_1","Mara Bleed FTS"
+# # weapon_trait.visions_of_grandeur=1
+# copy="Mara_visions_of_grandeur_2","Mara Bleed FTS"
+# weapon_trait.visions_of_grandeur=2
+# copy="Mara_visions_of_grandeur_3","Mara Bleed FTS"
+# weapon_trait.visions_of_grandeur=3
+# copy="Mara_visions_of_grandeur_4","Mara Bleed FTS"
+# weapon_trait.visions_of_grandeur=4
+# copy="Mara_kindling_1","Mara Bleed FTS"
+# weapon_trait.kindling=1
+# copy="Mara_kindling_2","Mara Bleed FTS"
+# weapon_trait.kindling=2
+# copy="Mara_kindling_3","Mara Bleed FTS"
+# weapon_trait.kindling=3
+# copy="Mara_kindling_4","Mara Bleed FTS"
+# weapon_trait.kindling=4
+# copy="Mara_seized_opportunity_1","Mara Bleed FTS"
+# weapon_trait.seized_opportunity=1
+# copy="Mara_seized_opportunity_2","Mara Bleed FTS"
+# weapon_trait.seized_opportunity=2
+# copy="Mara_seized_opportunity_3","Mara Bleed FTS"
+# weapon_trait.seized_opportunity=3
+# copy="Mara_seized_opportunity_4","Mara Bleed FTS"
+# weapon_trait.seized_opportunity=4
+# copy="Mara_hidden_power_1","Mara Bleed FTS"
+# weapon_trait.hidden_power=1
+# copy="Mara_hidden_power_2","Mara Bleed FTS"
+# weapon_trait.hidden_power=2
+# copy="Mara_hidden_power_3","Mara Bleed FTS"
+# weapon_trait.hidden_power=3
+# copy="Mara_hidden_power_4","Mara Bleed FTS"
+# weapon_trait.hidden_power=4
+# # copy="Mara_hunters_focus_1","Mara Bleed FTS"
+# # weapon_trait.hunters_focus=1
+# # copy="Mara_hunters_focus_2","Mara Bleed FTS"
+# # weapon_trait.hunters_focus=2
+# copy="Mara_hunters_focus_3","Mara Bleed FTS"
+# weapon_trait.hunters_focus=3
+# copy="Mara_hunters_focus_4","Mara Bleed FTS"
+# weapon_trait.hunters_focus=4
+# copy="Mara_inspired_allegiance_1","Mara Bleed FTS"
+# weapon_trait.inspired_allegiance=1
+# copy="Mara_inspired_allegiance_2","Mara Bleed FTS"
+# weapon_trait.inspired_allegiance=2
+# copy="Mara_inspired_allegiance_3","Mara Bleed FTS"
+# weapon_trait.inspired_allegiance=3
+# copy="Mara_inspired_allegiance_4","Mara Bleed FTS"
+# weapon_trait.inspired_allegiance=4
+# copy="Mara_navigators_intuition_1","Mara Bleed FTS"
+# weapon_trait.navigators_intuition=1
+# copy="Mara_navigators_intuition_2","Mara Bleed FTS"
+# weapon_trait.navigators_intuition=2
+# copy="Mara_navigators_intuition_3","Mara Bleed FTS"
+# weapon_trait.navigators_intuition=3
+# copy="Mara_navigators_intuition_4","Mara Bleed FTS"
+# weapon_trait.navigators_intuition=4
+# copy="Mara_patient_soul_1","Mara Bleed FTS"
+# weapon_trait.patient_soul=1
+# copy="Mara_patient_soul_2","Mara Bleed FTS"
+# weapon_trait.patient_soul=2
+# copy="Mara_patient_soul_3","Mara Bleed FTS"
+# weapon_trait.patient_soul=3
+# copy="Mara_patient_soul_4","Mara Bleed FTS"
+# weapon_trait.patient_soul=4
+# copy="Mara_vengeful_soul_1","Mara Bleed FTS"
+# weapon_trait.vengeful_soul=1
+# copy="Mara_vengeful_soul_2","Mara Bleed FTS"
+# weapon_trait.vengeful_soul=2
+# copy="Mara_vengeful_soul_3","Mara Bleed FTS"
+# weapon_trait.vengeful_soul=3
+# copy="Mara_vengeful_soul_4","Mara Bleed FTS"
+# weapon_trait.vengeful_soul=4
+# copy="Mara_willful_momentum_1","Mara Bleed FTS"
+# weapon_trait.willful_momentum=1
+# copy="Mara_willful_momentum_2","Mara Bleed FTS"
+# weapon_trait.willful_momentum=2
+# copy="Mara_willful_momentum_3","Mara Bleed FTS"
+# weapon_trait.willful_momentum=3
+# copy="Mara_willful_momentum_4","Mara Bleed FTS"
+# weapon_trait.willful_momentum=4
+# # copy="Mara_seal_of_the_heskyr","Mara Bleed FTS"
+# # sets.seal_of_the_heskyr=1
+# # copy="Mara_tuzari_grace","Mara Bleed FTS"
+# # sets.tuzari_grace=1
+# # copy="Mara_torment_of_baelaurum","Mara Bleed FTS"
+# # sets.torment_of_baelaurum=1
+# # copy="Mara_sin_warding","Mara Bleed FTS"
+# # sets.sin_warding=1
+# # copy="Mara_eldrin_fury","Mara Bleed FTS"
+# # sets.eldrin_fury=1
+# # copy="Mara_draconic_might","Mara Bleed FTS"
+# # sets.draconic_might=1
+# # copy="Mara_deaths_grasp","Mara Bleed FTS"
+# # sets.deaths_grasp=1
+# # copy="Mara_dark_prophecy","Mara Bleed FTS"
+# # sets.dark_prophecy=1
+# # copy="Mara_drakheims_absolution","Mara Bleed FTS"
+# # sets.drakheims_absolution=1
+# # copy="Mara_finesse_a1","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_a
+# # copy="Mara_finesse_a2","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_a/finesse_a
+# # copy="Mara_finesse_a3","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_a/finesse_a/finesse_a
+# # copy="Mara_finesse_a4","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+# # copy="Mara_finesse_b1","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_b
+# # copy="Mara_finesse_b2","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_b/finesse_b
+# # copy="Mara_finesse_b3","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_b/finesse_b/finesse_b
+# # copy="Mara_finesse_b4","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+# # copy="Mara_finesse_c1","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_c
+# # copy="Mara_finesse_c2","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c
+# # copy="Mara_finesse_c3","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c
+# # # copy="Mara_finesse_c4","Mara Bleed FTS"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# copy="Mara_finesse_d1","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_d
+# copy="Mara_finesse_d2","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_d/finesse_d
+# copy="Mara_finesse_d3","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_d/finesse_d/finesse_d
+# copy="Mara_finesse_d4","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+# copy="Mara_finesse_e1","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_e
+# copy="Mara_finesse_e2","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_e/finesse_e
+# copy="Mara_finesse_e3","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_e/finesse_e/finesse_e
+# copy="Mara_finesse_e4","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_e/finesse_e/finesse_e/finesse_e
+# copy="Mara_finesse_f1","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_f
+# copy="Mara_finesse_f2","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_f/finesse_f
+# copy="Mara_finesse_f3","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_f/finesse_f/finesse_f
+# copy="Mara_finesse_f4","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+# copy="Mara_finesse_g1","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_g
+# copy="Mara_finesse_g2","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_g/finesse_g
+# copy="Mara_finesse_g3","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_g/finesse_g/finesse_g
+# copy="Mara_finesse_g4","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+# copy="Mara_finesse_h1","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_h
+# copy="Mara_finesse_h2","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_h/finesse_h
+# copy="Mara_finesse_h3","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_h/finesse_h/finesse_h
+# copy="Mara_finesse_h4","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+# copy="Mara_finesse_i1","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_i
+# copy="Mara_finesse_i2","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_i/finesse_i
+# copy="Mara_finesse_i3","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_i/finesse_i/finesse_i
+# copy="Mara_finesse_i4","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+# copy="Mara_finesse_j1","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_j
+# copy="Mara_finesse_j2","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_j/finesse_j
+# copy="Mara_finesse_j3","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_j/finesse_j/finesse_j
+# copy="Mara_finesse_j4","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+# copy="Mara_finesse_k1","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k
+# copy="Mara_finesse_k2","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_k
+# copy="Mara_finesse_k3","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_k/finesse_k
+# copy="Mara_finesse_k4","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+# copy="Mara_finesse_l1","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_l
+# copy="Mara_finesse_l2","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_l/finesse_l
+# copy="Mara_finesse_l3","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_l/finesse_l/finesse_l
+# copy="Mara_finesse_l4","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+# copy="Mara_finesse_n1","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_n
+# copy="Mara_finesse_n2","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_n/finesse_n
+# copy="Mara_finesse_n3","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_n/finesse_n/finesse_n
+# copy="Mara_finesse_n4","Mara Bleed FTS"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_n/finesse_n/finesse_n/finesse_n
+
+
+# copy="haste chest","Mara Bleed FTS"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=haste
+# copy="crit chest","Mara Bleed FTS"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=crit
+# copy="expertise chest","Mara Bleed FTS"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=expertise
+# copy="spirit chest","Mara Bleed FTS"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=spirit
+# copy="primary chest","Mara Bleed FTS"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
+
+# copy="wep haste","Mara Bleed FTS"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=haste
+# copy="wep crit","Mara Bleed FTS"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=crit
+# copy="wep expertise","Mara Bleed FTS"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=expertise
+# copy="wep spirit","Mara Bleed FTS"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=spirit
+# copy="wep primary","Mara Bleed FTS"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=primary
+
+
+# copy="haste legs","Mara Bleed FTS"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=haste
+# copy="crit legs","Mara Bleed FTS"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=crit
+# copy="expertise legs","Mara Bleed FTS"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=expertise
+# copy="spirit legs","Mara Bleed FTS"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=spirit
+# copy="primary legs","Mara Bleed FTS"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary
+
+# copy="haste shoulder","Mara Bleed FTS"
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit,affixes=haste
+# copy="crit shoulder","Mara Bleed FTS"
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit,affixes=crit
+# copy="expertise shoulder","Mara Bleed FTS"
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit,affixes=expertise
+# copy="spirit shoulder","Mara Bleed FTS"
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit,affixes=spirit
+# copy="primary shoulder","Mara Bleed FTS"
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit,affixes=primary
+
+
+
+# copy="haste neck","Mara Bleed FTS"
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit,affixes=haste
+# copy="crit neck","Mara Bleed FTS"
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit,affixes=crit
+# copy="expertise neck","Mara Bleed FTS"
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit,affixes=expertise
+# copy="spirit neck","Mara Bleed FTS"
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit,affixes=spirit
+# copy="primary neck","Mara Bleed FTS"
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit,affixes=primary
+
+
+

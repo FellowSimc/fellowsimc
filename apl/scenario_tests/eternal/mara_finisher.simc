@@ -1,0 +1,647 @@
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=15000
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=12
+# relative_difference_base="Base Mara"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers,agility
+# scale_agility=10
+# scale_crit_rating=210
+# scale_haste_rating=210
+# scale_mastery_rating=210
+# scale_versatility_rating=210
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# # dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=6
+# dps_plot_step=41
+# dps_plot_positive=0
+
+# scale_only=crit,haste,mastery,vers,agility
+# scale_agility=10
+# scale_crit_rating=210
+# scale_haste_rating=210
+# scale_mastery_rating=210
+# scale_versatility_rating=210
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating
+# #,mastery,versatility
+# # dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=6
+# dps_plot_step=41
+# dps_plot_positive=0
+
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":800000:Humanoid
+# # raid_events+=/pull,pull=02,delay=315,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":300000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+
+mara="Mara Finisher Full ST"
+level=80
+
+apl/mara/mara.simc
+
+
+
+# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/haste
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/crit
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
+# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/primary
+# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+# wrist=wrists,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/haste
+
+
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
+
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit
+wrist=wrists,rarity=legendary,variant=evens,ilevel=360,main_secondary=crit,fixed_secondary=expertise/primary
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/expertise,affixes=finesse_b/finesse_b
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/primary,affixes=finesse_b/finesse_b
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/expertise
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/primary
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_b/finesse_b/finesse_b/finesse_b
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=spirit/spirit
+# weapon=voidbringers_touch
+
+# weapon_trait.hunters_focus=1
+# weapon_trait.vengeful_soul=1
+# weapon_trait.seized_opportunity=1
+
+# legendary.vexiras_venom=1
+# legendary.from_the_shadows=1
+
+# legendary.skandis_decree=1
+# legendary.frostwyrms_spite=1
+# legendary.undulating_spirit=1
+weapon=fated_strike
+
+# # Talons Beam Okay
+# talents=burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/cold_shower:1/glacial_assault:1/greater_glacial_blast:1/icy_talons:1/navirs_keeper:1/wisdom_of_the_north:1
+# Talons Beam Overall Best
+# talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/cold_shower:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1
+
+# # Beam
+# talents=biting_cold:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/icy_flow:1/soulfrost_torrent:1/supreme_torrent:1/wisdom_of_the_north:1
+
+# 35 Mods
+
+# 29 mods -6stat
+# 28 mods -fink
+
+# weapon_trait.visions_of_grandeur=1
+# weapon_trait.martial_initiative=1
+# weapon_trait.emerald_judgement=3
+# 23 mods -5
+# 4Trait
+# sets.torment_of_baelaurum=1
+# sets.deaths_grasp=1
+# 19 mods -4
+# copy="visions1","Base Mara"
+# weapon_trait.visions_of_grandeur=1
+
+# 27 mods
+
+# gems.amethyst_power=600
+# gems.sapphire_power=600
+# gems.emerald_power=600
+# gems.ruby_power=600
+# 15 mods -4
+
+# 6 stat
+# 18 mods
+# 11 mods -4
+
+# -1 mod, 10 mods (EJ3)
+# -4 mods, 6 left 
+# sets.draconic_might=1
+# -6 (draco, 4 spirit)
+
+# 1mod
+# weapon_trait.amethyst_splinters=1
+# 0mod
+
+sets.draconic_might=1
+
+gems.ruby_power=500
+gems.amethyst_power=500
+gems.emerald_power=500
+gems.sapphire_power=500
+
+sets.seal_of_the_heskyr=1
+
+# 4  in sets
+
+# 8 in blessings
+
+# 23 mods left
+
+weapon_trait.emerald_judgement=2
+
+# 21 mods left
+
+weapon_trait.amethyst_splinters=4
+
+# 17 mods left
+
+sets.deaths_grasp=1
+
+# 15 mods left
+
+weapon_trait.visions_of_grandeur=1
+
+# 14 mods left
+
+sets.drakheims_absolution=1
+
+# 12 mods left
+
+weapon_trait.hunters_focus=2
+
+# 10 mods left
+
+weapon_trait.martial_initiative=1
+
+# 9 mods left
+
+gems.sapphire_power=1200
+
+# 2 mods left
+
+
+# copy="Finisher Max ST Vex","Base Mara"
+legendary.from_the_shadows=0
+legendary.drenched_in_blood=0
+legendary.vexiras_venom=1
+talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/malevolence:1/sinners_pride:1/puncture:1/caustic_wounds:1
+
+copy="Finisher FTQ","Mara Finisher Full ST"
+talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/malevolence:1/sinners_pride:1/feed_the_queen:1
+copy="Finisher Punc Burst","Mara Finisher Full ST"
+talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/malevolence:1/sinners_pride:1/puncture:1/seething_burst:1
+copy="Finisher Caustic Burst","Mara Finisher Full ST"
+talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/malevolence:1/sinners_pride:1/caustic_wounds:1/seething_burst:1
+copy="Finisher Spill","Mara Finisher Full ST"
+talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/malevolence:1/sinners_pride:1/corrosive_spill:1
+copy="Finisher Spill Burst -MD","Mara Finisher Full ST"
+talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/seething_burst:1/malevolence:1/sinners_pride:1/corrosive_spill:1
+
+
+# copy="HF0","Base Mara"
+# weapon_trait.hunters_focus=0
+
+# copy="HF0 Add Spirit","Base Mara"
+# weapon_trait.hunters_focus=0
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=spirit/spirit
+
+# copy="HF0 Add Haste","Base Mara"
+# weapon_trait.hunters_focus=0
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=haste/haste
+
+
+# copy="HF0 Add Spirit convert mods to haste","Base Mara"
+# weapon_trait.hunters_focus=0
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=spirit/spirit
+
+
+# copy="Wep 2x Sp","Base Mara"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=spirit/spirit
+
+# copy="Em10 -Am6","Base Mara"
+# gems.emerald_power=1200
+# gems.amethyst_power=0
+
+# # copy="Bleed Max ST FTS","Base Mara"
+# # legendary.from_the_shadows=1
+# # legendary.drenched_in_blood=0
+# # legendary.vexiras_venom=0
+# # talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/sinners_pride:1
+# # copy="Bleed Max ST Vex","Base Mara"
+# # legendary.from_the_shadows=0
+# # legendary.drenched_in_blood=0
+# # legendary.vexiras_venom=1
+# # talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/sinners_pride:1
+# # copy="Mara_ruby_100","Base Mara"
+# # gems.ruby_power=100
+# # copy="Mara_ruby_300","Base Mara"
+# # gems.ruby_power=300
+# # copy="Mara_ruby_600","Base Mara"
+# # gems.ruby_power=600
+# copy="Mara_ruby_800","Base Mara"
+# gems.ruby_power=800
+# copy="Mara_ruby_1500","Base Mara"
+# gems.ruby_power=1500
+# # copy="Mara_amethyst_100","Base Mara"
+# # gems.amethyst_power=100
+# # copy="Mara_amethyst_300","Base Mara"
+# # gems.amethyst_power=300
+# # copy="Mara_amethyst_600","Base Mara"
+# # gems.amethyst_power=600
+# copy="Mara_amethyst_800","Base Mara"
+# gems.amethyst_power=800
+# copy="Mara_amethyst_1500","Base Mara"
+# gems.amethyst_power=1500
+# copy="Mara_topaz_100","Base Mara"
+# gems.topaz_power=100
+# copy="Mara_topaz_300","Base Mara"
+# gems.topaz_power=300
+# copy="Mara_topaz_600","Base Mara"
+# gems.topaz_power=600
+# copy="Mara_topaz_800","Base Mara"
+# gems.topaz_power=800
+# copy="Mara_topaz_1500","Base Mara"
+# gems.topaz_power=1500
+# # copy="Mara_emerald_100","Base Mara"
+# # gems.emerald_power=100
+# # copy="Mara_emerald_300","Base Mara"
+# # gems.emerald_power=300
+# # copy="Mara_emerald_600","Base Mara"
+# # gems.emerald_power=600
+# copy="Mara_emerald_800","Base Mara"
+# gems.emerald_power=800
+# copy="Mara_emerald_1500","Base Mara"
+# gems.emerald_power=1500
+# # copy="Mara_sapphire_100","Base Mara"
+# # gems.sapphire_power=100
+# # copy="Mara_sapphire_300","Base Mara"
+# # gems.sapphire_power=300
+# # copy="Mara_sapphire_600","Base Mara"
+# # gems.sapphire_power=600
+# # copy="Mara_sapphire_800","Base Mara"
+# # gems.sapphire_power=800
+# # copy="Mara_sapphire_1500","Base Mara"
+# # gems.sapphire_power=1500
+# copy="Mara_diamond_100","Base Mara"
+# gems.diamond_power=100
+# copy="Mara_diamond_300","Base Mara"
+# gems.diamond_power=300
+# copy="Mara_diamond_600","Base Mara"
+# gems.diamond_power=600
+# copy="Mara_diamond_800","Base Mara"
+# gems.diamond_power=800
+# copy="Mara_diamond_1500","Base Mara"
+# gems.diamond_power=1500
+# # copy="Mara_emerald_judgement_1","Base Mara"
+# # weapon_trait.emerald_judgement=1
+# # copy="Mara_emerald_judgement_2","Base Mara"
+# # weapon_trait.emerald_judgement=2
+# copy="Mara_emerald_judgement_3","Base Mara"
+# weapon_trait.emerald_judgement=3
+# copy="Mara_emerald_judgement_4","Base Mara"
+# weapon_trait.emerald_judgement=4
+# # copy="Mara_amethyst_splinters_1","Base Mara"
+# # weapon_trait.amethyst_splinters=1
+# # copy="Mara_amethyst_splinters_2","Base Mara"
+# # weapon_trait.amethyst_splinters=2
+# # copy="Mara_amethyst_splinters_3","Base Mara"
+# # weapon_trait.amethyst_splinters=3
+# # copy="Mara_amethyst_splinters_4","Base Mara"
+# # weapon_trait.amethyst_splinters=4
+# copy="Mara_brave_machinations_1","Base Mara"
+# weapon_trait.brave_machinations=1
+# copy="Mara_brave_machinations_2","Base Mara"
+# weapon_trait.brave_machinations=2
+# copy="Mara_brave_machinations_3","Base Mara"
+# weapon_trait.brave_machinations=3
+# copy="Mara_brave_machinations_4","Base Mara"
+# weapon_trait.brave_machinations=4
+# copy="Mara_diamond_strike_1","Base Mara"
+# weapon_trait.diamond_strike=1
+# copy="Mara_diamond_strike_2","Base Mara"
+# weapon_trait.diamond_strike=2
+# copy="Mara_diamond_strike_3","Base Mara"
+# weapon_trait.diamond_strike=3
+# copy="Mara_diamond_strike_4","Base Mara"
+# weapon_trait.diamond_strike=4
+# copy="Mara_heroic_brand_1","Base Mara"
+# weapon_trait.heroic_brand=1
+# copy="Mara_heroic_brand_2","Base Mara"
+# weapon_trait.heroic_brand=2
+# copy="Mara_heroic_brand_3","Base Mara"
+# weapon_trait.heroic_brand=3
+# copy="Mara_heroic_brand_4","Base Mara"
+# weapon_trait.heroic_brand=4
+# # copy="Mara_martial_initiative_1","Base Mara"
+# # weapon_trait.martial_initiative=1
+# copy="Mara_martial_initiative_2","Base Mara"
+# weapon_trait.martial_initiative=2
+# copy="Mara_martial_initiative_3","Base Mara"
+# weapon_trait.martial_initiative=3
+# copy="Mara_martial_initiative_4","Base Mara"
+# weapon_trait.martial_initiative=4
+# copy="Mara_sapphire_aurastone_1","Base Mara"
+# weapon_trait.sapphire_aurastone=1
+# copy="Mara_sapphire_aurastone_2","Base Mara"
+# weapon_trait.sapphire_aurastone=2
+# copy="Mara_sapphire_aurastone_3","Base Mara"
+# weapon_trait.sapphire_aurastone=3
+# copy="Mara_sapphire_aurastone_4","Base Mara"
+# weapon_trait.sapphire_aurastone=4
+# # copy="Mara_visions_of_grandeur_1","Base Mara"
+# # weapon_trait.visions_of_grandeur=1
+# copy="Mara_visions_of_grandeur_2","Base Mara"
+# weapon_trait.visions_of_grandeur=2
+# copy="Mara_visions_of_grandeur_3","Base Mara"
+# weapon_trait.visions_of_grandeur=3
+# copy="Mara_visions_of_grandeur_4","Base Mara"
+# weapon_trait.visions_of_grandeur=4
+# copy="Mara_kindling_1","Base Mara"
+# weapon_trait.kindling=1
+# copy="Mara_kindling_2","Base Mara"
+# weapon_trait.kindling=2
+# copy="Mara_kindling_3","Base Mara"
+# weapon_trait.kindling=3
+# copy="Mara_kindling_4","Base Mara"
+# weapon_trait.kindling=4
+# copy="Mara_seized_opportunity_1","Base Mara"
+# weapon_trait.seized_opportunity=1
+# copy="Mara_seized_opportunity_2","Base Mara"
+# weapon_trait.seized_opportunity=2
+# copy="Mara_seized_opportunity_3","Base Mara"
+# weapon_trait.seized_opportunity=3
+# copy="Mara_seized_opportunity_4","Base Mara"
+# weapon_trait.seized_opportunity=4
+# copy="Mara_hidden_power_1","Base Mara"
+# weapon_trait.hidden_power=1
+# copy="Mara_hidden_power_2","Base Mara"
+# weapon_trait.hidden_power=2
+# copy="Mara_hidden_power_3","Base Mara"
+# weapon_trait.hidden_power=3
+# copy="Mara_hidden_power_4","Base Mara"
+# weapon_trait.hidden_power=4
+# # copy="Mara_hunters_focus_1","Base Mara"
+# # weapon_trait.hunters_focus=1
+# # copy="Mara_hunters_focus_2","Base Mara"
+# # weapon_trait.hunters_focus=2
+# copy="Mara_hunters_focus_3","Base Mara"
+# weapon_trait.hunters_focus=3
+# copy="Mara_hunters_focus_4","Base Mara"
+# weapon_trait.hunters_focus=4
+# copy="Mara_inspired_allegiance_1","Base Mara"
+# weapon_trait.inspired_allegiance=1
+# copy="Mara_inspired_allegiance_2","Base Mara"
+# weapon_trait.inspired_allegiance=2
+# copy="Mara_inspired_allegiance_3","Base Mara"
+# weapon_trait.inspired_allegiance=3
+# copy="Mara_inspired_allegiance_4","Base Mara"
+# weapon_trait.inspired_allegiance=4
+# copy="Mara_navigators_intuition_1","Base Mara"
+# weapon_trait.navigators_intuition=1
+# copy="Mara_navigators_intuition_2","Base Mara"
+# weapon_trait.navigators_intuition=2
+# copy="Mara_navigators_intuition_3","Base Mara"
+# weapon_trait.navigators_intuition=3
+# copy="Mara_navigators_intuition_4","Base Mara"
+# weapon_trait.navigators_intuition=4
+# copy="Mara_patient_soul_1","Base Mara"
+# weapon_trait.patient_soul=1
+# copy="Mara_patient_soul_2","Base Mara"
+# weapon_trait.patient_soul=2
+# copy="Mara_patient_soul_3","Base Mara"
+# weapon_trait.patient_soul=3
+# copy="Mara_patient_soul_4","Base Mara"
+# weapon_trait.patient_soul=4
+# copy="Mara_vengeful_soul_1","Base Mara"
+# weapon_trait.vengeful_soul=1
+# copy="Mara_vengeful_soul_2","Base Mara"
+# weapon_trait.vengeful_soul=2
+# copy="Mara_vengeful_soul_3","Base Mara"
+# weapon_trait.vengeful_soul=3
+# copy="Mara_vengeful_soul_4","Base Mara"
+# weapon_trait.vengeful_soul=4
+# copy="Mara_willful_momentum_1","Base Mara"
+# weapon_trait.willful_momentum=1
+# copy="Mara_willful_momentum_2","Base Mara"
+# weapon_trait.willful_momentum=2
+# copy="Mara_willful_momentum_3","Base Mara"
+# weapon_trait.willful_momentum=3
+# copy="Mara_willful_momentum_4","Base Mara"
+# weapon_trait.willful_momentum=4
+# # copy="Mara_seal_of_the_heskyr","Base Mara"
+# # sets.seal_of_the_heskyr=1
+# # copy="Mara_tuzari_grace","Base Mara"
+# # sets.tuzari_grace=1
+# # copy="Mara_torment_of_baelaurum","Base Mara"
+# # sets.torment_of_baelaurum=1
+# # copy="Mara_sin_warding","Base Mara"
+# # sets.sin_warding=1
+# # copy="Mara_eldrin_fury","Base Mara"
+# # sets.eldrin_fury=1
+# # copy="Mara_draconic_might","Base Mara"
+# # sets.draconic_might=1
+# # copy="Mara_deaths_grasp","Base Mara"
+# # sets.deaths_grasp=1
+# # copy="Mara_dark_prophecy","Base Mara"
+# # sets.dark_prophecy=1
+# # copy="Mara_drakheims_absolution","Base Mara"
+# # sets.drakheims_absolution=1
+# # copy="Mara_finesse_a1","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_a
+# # copy="Mara_finesse_a2","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_a/finesse_a
+# # copy="Mara_finesse_a3","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_a/finesse_a/finesse_a
+# # copy="Mara_finesse_a4","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+# # copy="Mara_finesse_b1","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_b
+# # copy="Mara_finesse_b2","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_b/finesse_b
+# # copy="Mara_finesse_b3","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_b/finesse_b/finesse_b
+# # copy="Mara_finesse_b4","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+# # copy="Mara_finesse_c1","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_c
+# # copy="Mara_finesse_c2","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c
+# # copy="Mara_finesse_c3","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c
+# # # copy="Mara_finesse_c4","Base Mara"
+# # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# copy="Mara_finesse_d1","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_d
+# copy="Mara_finesse_d2","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_d/finesse_d
+# copy="Mara_finesse_d3","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_d/finesse_d/finesse_d
+# copy="Mara_finesse_d4","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+# copy="Mara_finesse_e1","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_e
+# copy="Mara_finesse_e2","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_e/finesse_e
+# copy="Mara_finesse_e3","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_e/finesse_e/finesse_e
+# copy="Mara_finesse_e4","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_e/finesse_e/finesse_e/finesse_e
+# copy="Mara_finesse_f1","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_f
+# copy="Mara_finesse_f2","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_f/finesse_f
+# copy="Mara_finesse_f3","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_f/finesse_f/finesse_f
+# copy="Mara_finesse_f4","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+# copy="Mara_finesse_g1","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_g
+# copy="Mara_finesse_g2","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_g/finesse_g
+# copy="Mara_finesse_g3","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_g/finesse_g/finesse_g
+# copy="Mara_finesse_g4","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+# copy="Mara_finesse_h1","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_h
+# copy="Mara_finesse_h2","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_h/finesse_h
+# copy="Mara_finesse_h3","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_h/finesse_h/finesse_h
+# copy="Mara_finesse_h4","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+# copy="Mara_finesse_i1","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_i
+# copy="Mara_finesse_i2","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_i/finesse_i
+# copy="Mara_finesse_i3","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_i/finesse_i/finesse_i
+# copy="Mara_finesse_i4","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+# copy="Mara_finesse_j1","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_j
+# copy="Mara_finesse_j2","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_j/finesse_j
+# copy="Mara_finesse_j3","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_j/finesse_j/finesse_j
+# copy="Mara_finesse_j4","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+# copy="Mara_finesse_k1","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k
+# copy="Mara_finesse_k2","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_k
+# copy="Mara_finesse_k3","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_k/finesse_k
+# copy="Mara_finesse_k4","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+# copy="Mara_finesse_l1","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_l
+# copy="Mara_finesse_l2","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_l/finesse_l
+# copy="Mara_finesse_l3","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_l/finesse_l/finesse_l
+# copy="Mara_finesse_l4","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+# copy="Mara_finesse_n1","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_n
+# copy="Mara_finesse_n2","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_n/finesse_n
+# copy="Mara_finesse_n3","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_n/finesse_n/finesse_n
+# copy="Mara_finesse_n4","Base Mara"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_n/finesse_n/finesse_n/finesse_n
+
+
+# copy="haste chest","Base Mara"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=haste
+# copy="crit chest","Base Mara"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=crit
+# copy="expertise chest","Base Mara"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=expertise
+# copy="spirit chest","Base Mara"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=spirit
+# copy="primary chest","Base Mara"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary
+
+# copy="wep haste","Base Mara"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=haste
+# copy="wep crit","Base Mara"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=crit
+# copy="wep expertise","Base Mara"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=expertise
+# copy="wep spirit","Base Mara"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=spirit
+# copy="wep primary","Base Mara"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=primary
+
+
+# copy="haste legs","Base Mara"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=haste
+# copy="crit legs","Base Mara"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=crit
+# copy="expertise legs","Base Mara"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=expertise
+# copy="spirit legs","Base Mara"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=spirit
+# copy="primary legs","Base Mara"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary
+
+# copy="haste shoulder","Base Mara"
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit,affixes=haste
+# copy="crit shoulder","Base Mara"
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit,affixes=crit
+# copy="expertise shoulder","Base Mara"
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit,affixes=expertise
+# copy="spirit shoulder","Base Mara"
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit,affixes=spirit
+# copy="primary shoulder","Base Mara"
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit,affixes=primary
+
+
+
+# copy="haste neck","Base Mara"
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit,affixes=haste
+# copy="crit neck","Base Mara"
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit,affixes=crit
+# copy="expertise neck","Base Mara"
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit,affixes=expertise
+# copy="spirit neck","Base Mara"
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit,affixes=spirit
+# copy="primary neck","Base Mara"
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=expertise/spirit,affixes=primary
+
+
+

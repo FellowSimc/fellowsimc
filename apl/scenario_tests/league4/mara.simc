@@ -1,0 +1,154 @@
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=15000
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=1
+relative_difference_base="Base Mara"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":800000:Humanoid
+# # raid_events+=/pull,pull=02,delay=240,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":300000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+
+mara="Base Mara"
+level=80
+
+apl/mara/mara.simc
+
+
+
+# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/haste
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/crit
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
+# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/primary
+# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+# wrist=wrists,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/haste
+
+
+head=hat,rarity=rare,variant=evens,ilevel=240,tempering=4,main_secondary=crit,fixed_secondary=expertise,affixes=ruby
+shoulder=shoulder,rarity=rare,variant=evens,ilevel=240,tempering=4,main_secondary=haste,fixed_secondary=expertise,affixes=stamina
+back=back,rarity=rare,variant=evens,ilevel=240,tempering=4,main_secondary=expertise,fixed_secondary=expertise
+chest=chest,rarity=rare,variant=evens,ilevel=240,tempering=4,main_secondary=haste,fixed_secondary=primary,affixes=finesse_h
+hands=hands,rarity=uncommon,variant=evens,ilevel=90,tempering=8,main_secondary=haste,fixed_secondary=stamina
+legs=legs,rarity=epic,variant=evens,ilevel=240,tempering=4,main_secondary=haste,fixed_secondary=expertise,affixes=amethyst/spirit
+feet=feet,rarity=epic,variant=evens,ilevel=240,tempering=4,main_secondary=crit,fixed_secondary=primary,affixes=finesse_b
+
+neck=neck,rarity=epic,variant=evens,ilevel=240,tempering=4,main_secondary=crit/crit,fixed_secondary=expertise/spirit,affixes=sapphire
+wrist=wrists,rarity=rare,variant=evens,ilevel=90,tempering=8,main_secondary=crit,fixed_secondary=expertise
+
+finger1=ring1,rarity=heroic,variant=evens,ilevel=90,tempering=8,main_secondary=haste/crit,fixed_secondary=primary/expertise,affixes=diamond/diamond
+#finger2=ring2,rarity=rare,variant=evens,ilevel=90,tempering=5,main_secondary=haste/crit,fixed_secondary=primary/expertise,affixes=ruby
+trinket1=relic1,rarity=rare,variant=evens,ilevel=240,tempering=4,main_secondary=crit/crit,fixed_secondary=crit
+trinket2=relic2,rarity=epic,variant=evens,ilevel=90,tempering=8,main_secondary=spirit/crit,fixed_secondary=expertise,affixes=finesse_e
+
+main_hand=weap,rarity=rare,variant=evens,ilevel=240,tempering=4,main_secondary=expertise,fixed_secondary=stamina
+weapon=voidbringers_touch
+
+weapon_trait.navigators_intuition=1
+weapon_trait.vengeful_soul=1
+weapon_trait.seized_opportunity=1
+
+
+# Full abilities, 8pts, 6 rows, 10x 90 ilvl tuz items, 3x 45 ilvl cont 1 items Full temper 90 ilvl. (Gear for Drak)
+# Full abilities, 9pts, 6 rows, 10x 90 ilvl tuz items, 3x 45 ilvl cont 1 items, 2x Drakheim items. Full temper 90 ilvl. (Gear for Wraithtide)
+# Full abilities, 10pts, 6 rows, 10x ilvl 240 Wraithtide Items. Couple high quality tuz items left. Full temper 90 ilvl. 3-4 wraithtide. (Wraithtide Farm)
+# Same gear, 11 pts, one extra temper per item. (Pre Cithrel) (2 Para 1, 1 Champ 3 ran)
+# -> Eternal (13pts)
+
+copy="Mara red_ledger","Base Mara"
+talents+=/red_ledger:1
+copy="Mara corrosive_spill","Base Mara"
+talents+=/corrosive_spill:1
+copy="Mara assassins_guile","Base Mara"
+talents+=/assassins_guile:1
+copy="Mara bloodrush","Base Mara"
+talents+=/bloodrush:1
+copy="Mara venomous_delight","Base Mara"
+talents+=/venomous_delight:1
+copy="Mara efficient_killer","Base Mara"
+talents+=/efficient_killer:1
+copy="Mara gushing_blood","Base Mara"
+talents+=/gushing_blood:1
+copy="Mara gushing_blood bloodrush","Base Mara"
+talents+=/gushing_blood:1/bloodrush:1
+copy="Mara feed_the_queen","Base Mara"
+talents+=/feed_the_queen:1
+copy="Mara deadly_scheme","Base Mara"
+talents+=/deadly_scheme:1
+copy="Mara assassins_guile deadly_scheme","Base Mara"
+talents+=/assassins_guile:1/deadly_scheme:1
+copy="Mara macabre_stratagem","Base Mara"
+talents+=/macabre_stratagem:1
+copy="Mara maidens_doom","Base Mara"
+talents+=/maidens_doom:1
+copy="Mara seething_burst","Base Mara"
+talents+=/seething_burst:1
+copy="Mara hemotoxin","Base Mara"
+talents+=/hemotoxin:1
+copy="Mara hemotoxin bloodrush","Base Mara"
+talents+=/hemotoxin:1/bloodrush:1
+copy="Mara hemotoxin gushing_blood","Base Mara"
+talents+=/hemotoxin:1/gushing_blood:1
+copy="Mara hemotoxin gushing_blood bloodrush","Base Mara"
+talents+=/hemotoxin:1/gushing_blood:1/bloodrush:1
+copy="Mara sinners_pride","Base Mara"
+talents+=/sinners_pride:1
+copy="Mara malevolence","Base Mara"
+talents+=/malevolence:1
+copy="Mara malevolence assassins_guile","Base Mara"
+talents+=/malevolence:1/assassins_guile:1
+copy="Mara malevolence deadly_scheme","Base Mara"
+talents+=/malevolence:1/deadly_scheme:1
+copy="Mara malevolence assassins_guile deadly_scheme","Base Mara"
+talents+=/malevolence:1/deadly_scheme:1/assassins_guile:1
+copy="Mara arachnid_onslaught","Base Mara"
+talents+=/arachnid_onslaught:1
+copy="Mara caustic_wounds","Base Mara"
+talents+=/caustic_wounds:1
+copy="Mara puncture","Base Mara"
+talents+=/puncture:1

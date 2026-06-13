@@ -70,6 +70,173 @@ ardeos_indicators = {
     "undying_flame": "UF",
 }
 
+
+mara = {
+    "red_ledger": 2,
+    "corrosive_spill": 2,
+    "assassins_guile": 2,
+
+    "bloodrush": 1,
+    "venomous_delight": 1,
+    "efficient_killer": 1,
+
+    "gushing_blood": 2,
+    "feed_the_queen": 2,
+    "deadly_scheme": 2,
+
+    "macabre_stratagem": 1,
+    "maidens_doom": 1,
+    "seething_burst": 1,
+
+    "hemotoxin": 3,
+    "sinners_pride": 3,
+    "malevolence": 3,
+
+    "arachnid_onslaught": 1,
+    "caustic_wounds": 1,
+    "puncture": 1,
+}
+
+mara_indicators = {
+    "hemotoxin": "HT",
+    "sinners_pride": "Sinners",
+    "malevolence": "MV",
+    "deadly_scheme": "DS",
+    "gushing_blood": "GB",
+    "feed_the_queen": "FTQ",
+    "assassins_guile": "AG",
+    "venomous_delight": "VD",
+    "efficient_killer": "EK",
+    "macabre_stratagem": "MS",
+    "maidens_doom": "MD",
+}
+
+gems = [
+    "ruby", "amethyst", "topaz", "emerald", "sapphire", "diamond"
+]
+
+gem_power_values = [100, 300, 600, 800, 1500]
+
+traits = [
+    "emerald_judgement",
+    # "ruby_storm",
+    "amethyst_splinters",
+    "brave_machinations",
+    "diamond_strike",
+    "heroic_brand",
+    "martial_initiative",
+    "sapphire_aurastone",
+    "visions_of_grandeur",
+
+
+    "kindling",
+    "seized_opportunity",
+    "hidden_power",
+    "hunters_focus",
+    "inspired_allegiance",
+    "navigators_intuition",
+    "patient_soul",
+    "vengeful_soul",
+    "willful_momentum",
+
+    # "iron_spikes",
+    # "king_of_the_hill",
+    # "divine_mediation",
+    # "first_man_standing",
+    # "grounded_spirit",
+    # "heart_of_stone",
+    # "latent_resurgence",
+    # "stalwart_readiness",
+    # "treasure_hunters_delight",
+]
+
+
+trait_ranks = [1,2,3,4]
+
+
+sets = [
+    "seal_of_the_heskyr",
+    "tuzari_grace",
+    "torment_of_baelaurum",
+    "sin_warding",
+    "eldrin_fury",
+    "draconic_might",
+    "deaths_grasp",
+    "dark_prophecy",
+    "drakheims_absolution"
+]
+
+
+finesses = [
+    "finesse_a",
+    "finesse_b",
+    "finesse_c",
+    "finesse_d",
+    "finesse_e",
+    "finesse_f",
+    "finesse_g",
+    "finesse_h",
+    "finesse_i",
+    "finesse_j",
+    "finesse_k",
+    "finesse_l",
+    "finesse_n",
+]
+
+finesse_ranks = [1,2,3,4]
+
+
+def make_sim_entry(prefix, profile_name, changes, profilesets = False):
+
+    entry = ""
+
+    if not profilesets:
+        entry = f"copy=\"{profile_name}\",\"Base {prefix}\"\n"
+
+    for change in changes:
+        if profilesets:
+            entry += f"profileset.\"{profile_name}\"="
+        entry += change + "\n"
+    
+    return entry
+
+
+
+
+
+
+def generate_item_checks(prefix, fodder_slot, file_path, profilesets = False):
+    with open(file_path, "w") as f:
+        header = ""
+
+        for gem_color in gems:
+            for gem_power in gem_power_values:
+                profile_name = f"{prefix}_{gem_color}_{gem_power}"
+                line = make_sim_entry(prefix, profile_name, [f"gems.{gem_color}_power={gem_power}"], profilesets=profilesets)
+                f.write(line)
+
+        for trait in traits:
+            for rank in trait_ranks:
+                profile_name = f"{prefix}_{trait}_{rank}"
+                line = make_sim_entry(prefix, profile_name, [f"weapon_trait.{trait}={rank}"], profilesets=profilesets)
+                f.write(line)
+                
+        for set_bonus in sets:
+            profile_name = f"{prefix}_{set_bonus}"
+            line = make_sim_entry(prefix, profile_name, [f"sets.{set_bonus}=1"], profilesets=profilesets)
+            f.write(line)
+
+        for finesse in finesses:
+            for rank in finesse_ranks:
+                profile_name = f"{prefix}_{finesse}{rank}"
+                extra = "affixes=" + "/".join([finesse]*rank)
+                line = make_sim_entry(prefix, profile_name, [f"{fodder_slot},{extra}"], profilesets=profilesets)
+                f.write(line)
+
+    
+  #trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+
 # def talent_combinations(
 #     talents,
 #     target_points,
@@ -334,6 +501,8 @@ def sorted_by_overall(build_dicts):
     
 
 
+
+
 if __name__ == "__main__":
     # top_x = top_sim_results("output/rime_et27.json", 500)
     # # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
@@ -359,31 +528,74 @@ if __name__ == "__main__":
     # )
 
     
-    top_x = top_sim_results("output/ardeos_et104.json", 500)
-    # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
-    sim_results = dps_sim_results(["output/ardeos_et104.json", "output/ardeos_et105.json"])
-    overalls = sorted_by_overall(sim_results)
-    print(overalls)
+    # top_x = top_sim_results("output/ardeos_et104.json", 500)
+    # # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
+    # sim_results = dps_sim_results(["output/ardeos_et104.json", "output/ardeos_et105.json"])
+    # overalls = sorted_by_overall(sim_results)
+    # print(overalls)
 
 
-    combos_to_file("Ardeos", ardeos, ardeos_indicators, 3, "ardeos/talent_output_1.simc", 
+    # combos_to_file("Ardeos", ardeos, ardeos_indicators, 3, "ardeos/talent_output_1.simc", 
+    #             profilesets=False,
+    #             required_talents=[
+    #                     # "rolling_flames",
+    #                     # "undying_flame",
+    #                     # "slow_burn"
+    #             ],
+    #             excluded_talents=[
+    #                 #  "frostweavers_wrath",
+    #                 #  "cascading_blitz",
+    #                 #  "avalanche"
+    #             ],
+    #             forbidden_pairs=[
+    #             ],
+    #             # name_filters=top_x
+    # )
+
+    # all_points_to_File("Ardeos", ardeos, "ardeos/single_talents.simc")
+
+
+        # top_x = top_sim_results("output/ardeos_et104.json", 500)
+    # # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
+    # sim_results = dps_sim_results(["output/ardeos_et104.json", "output/ardeos_et105.json"])
+    # overalls = sorted_by_overall(sim_results)
+    # print(overalls)
+
+
+    combos_to_file("Mara", mara, mara_indicators, 14, "generated/mara_talents14b2.simc", 
                 profilesets=False,
                 required_talents=[
-                        # "rolling_flames",
-                        # "undying_flame",
-                        # "slow_burn"
+                    "gushing_blood",
+                    "bloodrush",
+                    "hemotoxin",
+                    "sinners_pride",
+                    "red_ledger"
+                        # "deadly_scheme",
+                        # "venomous_delight",
+                        # "malevolence",
+                        # "assassins_guile"
                 ],
                 excluded_talents=[
-                    #  "frostweavers_wrath",
-                    #  "cascading_blitz",
-                    #  "avalanche"
+                    "efficient_killer",
+                    # "arachnid_onslaught",
+                    # "caustic_wounds",
+                    "feed_the_queen",
+                    # "puncture",
+                    "venomous_delight"
+                    # "gushing_blood"
                 ],
                 forbidden_pairs=[
+                    # ("hemotoxin", "malevolence"),
+                    # ("gushing_blood", "malevolence"),
+                    # ("arachnid_onslaught", "malevolence"),
                 ],
                 # name_filters=top_x
     )
 
-    all_points_to_File("Ardeos", ardeos, "ardeos/single_talents.simc")
+    all_points_to_File("Mara", mara, "generated/mara_talents.simc")
+    
+    generate_item_checks("Mara", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste", "generated/all_gear_options.simc")
+
 
 # for combo in combos:
 #     print(combo)

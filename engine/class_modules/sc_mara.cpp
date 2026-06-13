@@ -159,14 +159,6 @@ public:
     gain_t* efficient_killer;
   } gains;
 
-  struct spell_const_t
-  {
-    double hemorrhaging_strike_energy_gen = 5.0;
-    double hemorrhaging_strike_damage     = 2.73;
-    double hemorrhaging_stike_tick_dmg    = 1.076;
-    timespan_t hemorrhaging_strike_period = 3_s;
-  } spell_const;
-
 #define MARA_TALENT_LIST( X )                                         \
   X( RED_LEDGER, "red_ledger", "Red Ledger" )                         \
   X( CORROSIVE_SPILL, "corrosive_spill", "Corrosive Spill" )          \
@@ -231,9 +223,9 @@ public:
 
   struct talents_t
   {
-    double red_ledger_base      = 0.08;
-    double red_ledger_per_stack = 0.02;
-    int red_ledger_max          = 4;
+    double red_ledger_base      = 0.05;
+    double red_ledger_per_stack = 0.01;
+    int red_ledger_max          = 5;
 
     double malevolence_amplifier    = 1;
     int malevolence_max_stacks      = 2;
@@ -246,7 +238,7 @@ public:
     double bloodrush_damage   = 1.5;
 
     double venomous_delight_chance = 0.1;
-    double venomous_delight_energy = 10;
+    double venomous_delight_energy = 5;
 
     double vile_venoms_poison_multiplier = 1.15;
 
@@ -255,16 +247,17 @@ public:
     double efficient_killer_energy_per_cp        = 1.0;
 
     int gushing_blood_hemorrhaging_additional_targets = 4;
-    bool gushing_blood_always_works = true;
+    bool gushing_blood_always_works = false;
 
     double corrosive_spill_chance_per_cp                      = 0.03;
     timespan_t corrosive_spill_duration                       = 3_s;
-    double corrosive_spill_damage                             = 0.9;
+    double corrosive_spill_damage                             = 1.58;
     timespan_t corrosive_spill_ticktime                       = 1.5_s;
-    double corrosive_spill_cumulative_chance_per_tick_of_miss = 0.25;
+    double corrosive_spill_cumulative_chance_per_tick_of_miss = 0.1;
 
     int feed_the_queen_max_stacks         = 6;
     double feed_the_queen_bonus_per_stack = 0.1;
+    timespan_t feed_the_queen_duration    = 12_s;
 
     double nightstalker_damage_taken = 0.1;
     timespan_t nightstalker_duration = 10_s;
@@ -285,9 +278,11 @@ public:
     bool hemotoxin_old_double_dip_stats       = false;
     bool hemotoxin_old_double_dip_multipliers = false;
 
-    timespan_t hemotoxin_sample_per_cp = 0.5_s;
+    timespan_t hemotoxin_sample_per_cp_qf    = 0.6_s;
+    timespan_t hemotoxin_sample_per_cp_aa    = 0.3_s;
+    double hemotoxin_sample_multiplier_crits = 1.0;
 
-    double maidens_doom_execute_threshold = 30.0;
+    double maidens_doom_execute_threshold = 35.0;
     double maidens_doom_execute_amp       = 0.2;
 
     double puncture_cc                = 1.0;
@@ -295,20 +290,36 @@ public:
     double puncture_buff_tickrate     = 0.3;
     timespan_t puncture_buff_duration = 9_s;
 
-
     double arachnid_onslaught_multiplier = 1.2;
 
     double assassins_guile_finisher_boost     = 0.4;
     timespan_t assassins_guile_buff_duration = 4.99_s;
 
     double seething_burst_chance = 0.2;
-    double seething_burst_damage = 2.2;
-    int seething_burst_max_targets = 20;
+    double seething_burst_damage = 0.6 * 2.5; // 2.2
+    int seething_burst_max_targets = 10;
 
-    double caustic_wounds_chance = 0.1;
+    double caustic_wounds_chance = 0.3;
 
     timespan_t macabre_stratagem_duration = 10_s;
   } talents;
+  
+  struct spell_const_t
+  {
+    double hemorrhaging_strike_energy_gen = 2.0;
+    double hemorrhaging_strike_damage     = 2.73;
+    double hemorrhaging_stike_tick_dmg    = 1.076 * 0.67;
+    timespan_t hemorrhaging_strike_period = 3_s;
+
+    double queens_fang_coeff     = 2.5212 * 1.12;
+    double caustic_poison_coeff  = 4.476 * 1.07;
+    double seething_poison_coeff = 1.116 * 1.1;
+
+    double arachnid_assault_coeff = 0.858;
+
+    double volatile_poison_explode_coeff = 1.248;
+    double volatile_poison_tick_coeff = 0.312;
+  } spell_const;
 
   struct legendary_t
   {
@@ -322,10 +333,11 @@ public:
     double drenched_in_blood_exp         = 0.24;
     timespan_t drenched_in_blood_duration = 8_s;
 
-    bool from_the_shadows              = false;
-    double from_the_shadows_chance     = 0.15;
-    int from_the_shadows_combo_points  = 6;
-    double from_the_shadows_bleed_rate = 0.15;
+    bool from_the_shadows                           = false;
+    double from_the_shadows_chance                  = 0.15;
+    int from_the_shadows_combo_points               = 6;
+    double from_the_shadows_qf_mul                  = 0.5;
+    double from_the_shadows_bleed_period_multiplier = 0.87;
 
     bool spirit_procs_clones                = false;
     bool spirit_procs_clones_proc_on_next   = true;
@@ -804,7 +816,7 @@ public:
   void roll_for_hemotoxin_old( const action_state_t* );
   void handle_vexiras_venom( const action_state_t* );
   void trigger_combo_point_gain( int, gain_t* gain = nullptr );
-  void handle_hemotoxin( const action_state_t*, action_t* );
+  void handle_hemotoxin( const action_state_t*, action_t*, timespan_t );
 
   // General Methods ==========================================================
 
@@ -831,20 +843,6 @@ public:
       return 1.0 + cast_state( s )->get_combo_points() * combo_point_multiplier;
 
     return 1.0;
-  }
-
-  double composite_da_multiplier( const action_state_t* state ) const override
-  {
-    double m = ab::composite_da_multiplier( state );
-
-    return m;
-  }
-
-  double composite_ta_multiplier( const action_state_t* state ) const override
-  {
-    double m = ab::composite_ta_multiplier( state );
-
-    return m;
   }
 
   double composite_target_multiplier( player_t* target ) const override
@@ -890,13 +888,6 @@ public:
     double crit_bonus = ab::total_crit_bonus( state );
 
     return crit_bonus;
-  }
-
-  timespan_t tick_time( const action_state_t* state ) const override
-  {
-    timespan_t tt = ab::tick_time( state );
-
-    return tt;
   }
 
   double cost_pct_multiplier() const override
@@ -1032,6 +1023,24 @@ struct mara_poison_t : public mara_attack_t
     trigger_gcd = timespan_t::zero();
   }
 
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    double m = mara_attack_t::composite_ta_multiplier( s );
+
+    m /= s->haste;
+
+    return m;
+  }
+
+  double composite_ta_multiplier( const action_state_t* s ) const override
+  {
+    double m = mara_attack_t::composite_ta_multiplier( s );
+
+    m /= s->haste;
+
+    return m;
+  }
+
   timespan_t execute_time() const override
   {
     return timespan_t::zero();
@@ -1049,6 +1058,12 @@ struct mara_poison_t : public mara_attack_t
         p()->resource_gain( RESOURCE_ENERGY, p()->talents.venomous_delight_energy, p()->gains.venomous_delight, this );
       }
     }
+  }
+
+  void init_finished() override
+  {
+    mara_attack_t::init_finished();
+    snapshot_flags |= STATE_HASTE;
   }
 };
 
@@ -1284,7 +1299,7 @@ struct queens_fang_t : public mara_attack_t
     }
 
     school                             = SCHOOL_PHYSICAL;
-    attack_power_mod.direct            = 2.292 * 1.1;
+    attack_power_mod.direct            = p->spell_const.queens_fang_coeff;
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 40;
@@ -1303,6 +1318,11 @@ struct queens_fang_t : public mara_attack_t
     if ( st == secondary_trigger::ULTIMATE_CLONE )
     {
       base_dd_multiplier *= 0.5;
+    }
+
+    if ( st == secondary_trigger::TALENT_CLONE )
+    {
+      base_dd_multiplier *= p->legendary.from_the_shadows_qf_mul;
     }
   }
 
@@ -1376,7 +1396,7 @@ struct queens_fang_t : public mara_attack_t
 
     handle_vexiras_venom( state );
 
-    handle_hemotoxin( state, hemotoxin );
+    handle_hemotoxin( state, hemotoxin, p()->talents.hemotoxin_sample_per_cp_qf );
   }
 };
 
@@ -1474,7 +1494,7 @@ struct hemorrhaging_strike_t : public mara_attack_t
 
     if ( p()->legendary.from_the_shadows )
     {
-      tt /= 1.0 + p()->legendary.from_the_shadows_bleed_rate;
+      tt *= p()->legendary.from_the_shadows_bleed_period_multiplier;
     }
 
     return tt;
@@ -1482,9 +1502,11 @@ struct hemorrhaging_strike_t : public mara_attack_t
 
   double composite_ta_multiplier( const action_state_t* s ) const override
   {
-    double tam = mara_attack_t::composite_ta_multiplier( s );
+    double m = mara_attack_t::composite_ta_multiplier( s );
 
-    return tam;
+    m /= s->haste;
+
+    return m;
   }
 
   double composite_da_multiplier( const action_state_t* s ) const override
@@ -1607,7 +1629,7 @@ struct seething_poison_t : public mara_poison_t
 
     name_str_reporting = "Seething Poison";
 
-    attack_power_mod.tick = 1.116;
+    attack_power_mod.tick = p->spell_const.seething_poison_coeff;
 
     if ( p->talents_enabled( mara_t::SEETHING_BURST ) && p->actions.seething_burst && !p->actions.seething_burst->stats->parent )
     {
@@ -1660,22 +1682,6 @@ struct seething_burst_t : public mara_poison_t
     
     ability_flags |= ability_type_e::ABILITY_CORE;
   }
-
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = mara_poison_t::composite_da_multiplier( s );
-   
-    // Already includes 1
-    m *= s->haste;
-
-    return m;
-  }
-
-  void init_finished() override
-  {
-    mara_poison_t::init_finished();
-    snapshot_flags |= STATE_HASTE;
-  }
 };
 
 struct caustic_poison_t : public mara_poison_t
@@ -1688,10 +1694,11 @@ struct caustic_poison_t : public mara_poison_t
 
     name_str_reporting = "Caustic Poison";
 
-    attack_power_mod.direct = 4.476;
+    attack_power_mod.direct = p->spell_const.caustic_poison_coeff;
 
     base_crit += 1.0;
-    ability_flags |= ability_type_e::ABILITY_CORE;
+    if ( !caustic_wounds )
+      ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   void execute() override
@@ -1834,7 +1841,7 @@ struct brooding_shadows_t : public mara_spell_t
 
   void init_finished() override
   {
-      mara_spell_t::init_finished();
+    mara_spell_t::init_finished();
     snapshot_flags |= STATE_MUL_PERSISTENT;
   }
 
@@ -2123,11 +2130,15 @@ struct vexiras_venom_t : public residual_action::residual_periodic_action_t<mara
     attack_t::snapshot_state( state, rt );
   }
 
+ 
   void init() override
   {
     base_t::init();
+
+    snapshot_flags &= STATE_NO_MULTIPLIER;
     snapshot_flags |= STATE_HASTE;
-    update_flags &= ~STATE_HASTE;
+    update_flags &= STATE_NO_MULTIPLIER;
+    update_flags |= STATE_HASTE;
   }
 };
 
@@ -2203,7 +2214,7 @@ struct arachnid_assault_t : public mara_attack_t
     reduced_aoe_targets = 8;
 
     school                             = SCHOOL_PHYSICAL;
-    attack_power_mod.direct            = 0.858;
+    attack_power_mod.direct            = p->spell_const.arachnid_assault_coeff;
     resource_current                   = RESOURCE_ENERGY;
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 45;
@@ -2296,37 +2307,8 @@ struct arachnid_assault_t : public mara_attack_t
     mara_attack_t::impact( state );
 
     handle_vexiras_venom( state );
-    handle_hemotoxin( state, hemotoxin );
+    handle_hemotoxin( state, hemotoxin, p()->talents.hemotoxin_sample_per_cp_aa );
   }
-};
-
-struct volatile_poison_state_t : public mara_action_state_t
-{
-
-  timespan_t dot_duration;
-  timespan_t tick_time;
-  volatile_poison_state_t( action_t* action, player_t* target )
-    : mara_action_state_t( action, target ), dot_duration( 0_s ), tick_time( 0_s )
-  {
-  }
-
-  void initialize() override
-  {
-    mara_action_state_t::initialize();
-
-    dot_duration = 0_s;
-    tick_time    = 0_s;
-  }
-
-  void copy_state( const action_state_t* s )
-  {
-    mara_action_state_t::copy_state( s );
-    const volatile_poison_state_t* rs = debug_cast<const volatile_poison_state_t*>( s );
-
-    dot_duration = rs->dot_duration;
-    tick_time    = rs->tick_time;
-  }
-
 };
 
 struct volatile_poison_dot_t : public mara_poison_t
@@ -2339,11 +2321,14 @@ struct volatile_poison_dot_t : public mara_poison_t
     dot_behavior   = DOT_REFRESH_DURATION;
     base_tick_time = 1_s;
 
+    hasted_ticks = true;
+    dot_allow_partial_tick = false;
+
     id = 18;
 
     name_str_reporting = "Volatile Poison";
 
-    attack_power_mod.tick = 0.312;
+    attack_power_mod.tick = p->spell_const.volatile_poison_tick_coeff;
     ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
@@ -2362,60 +2347,10 @@ struct volatile_poison_dot_t : public mara_poison_t
     return p()->get_target_data( t );
   }
 
-  // Action State =============================================================
-  // Type Wrappers ============================================================
-
-  static const volatile_poison_state_t* cast_state( const action_state_t* st )
+  timespan_t composite_dot_duration( const action_state_t* s ) const override
   {
-    return debug_cast<const volatile_poison_state_t*>( st );
-  }
-
-  static volatile_poison_state_t* cast_state( action_state_t* st )
-  {
-    return debug_cast<volatile_poison_state_t*>( st );
-  }
-
-  action_state_t* new_state() override
-  {
-    return new volatile_poison_state_t( this, target );
-  }
-
-  void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
-  {
-    mara_poison_t::update_state( state, flags, rt );
-  }
-
-  void snapshot_state( action_state_t* state, result_amount_type rt ) override
-  {
-    auto rs = cast_state( state );
-    // rs->
-
-    rs->dot_duration = composite_dot_duration( state );
-    rs->tick_time    = tick_time( state );
-
-    mara_poison_t::snapshot_state( state, rt );
-  }
-
-  /*timespan_t composite_dot_duration( const action_state_t* s ) const override
-  {
-    if ( cast_state( s )->dot_duration > 0_s )
-      return cast_state( s )->dot_duration;
-
     return rng().range( 6_s, 8_s );
   }
-
-  timespan_t tick_time( const action_state_t* s ) const override
-  {
-    if ( cast_state( s )->tick_time > 0_s )
-      return cast_state( s )->tick_time;
-
-    if ( cast_state( s )->dot_duration > 0_s )
-    {
-      return cast_state( s )->dot_duration / 6;
-    }
-
-    return 1_s;
-  }*/
 
   void last_tick( dot_t* d ) override
   {
@@ -2432,12 +2367,9 @@ struct volatile_poison_aoe_t : public mara_poison_t
     background = true;
     id         = 19;
 
-    attack_power_mod.direct = 0.624;
+    attack_power_mod.direct = p->spell_const.volatile_poison_explode_coeff;
 
-    name_str_reporting = "Volatile Poison (AoE)";
-
-    aoe                 = -1;
-    reduced_aoe_targets = 3;
+    name_str_reporting = "Volatile Poison (Pop)";
 
     ability_flags |= ability_type_e::ABILITY_CORE;
   }
@@ -2872,7 +2804,7 @@ void mara_t::init_base_stats()
   /*if ( talents.efficient_killer )
     resources.base[ RESOURCE_ENERGY ] *= talents.efficient_killer_max_energy_boost;*/
 
-  resources.base_regen_per_second[ RESOURCE_ENERGY ] = 10;
+  resources.base_regen_per_second[ RESOURCE_ENERGY ] = 15;
 
   base_gcd = timespan_t::from_seconds( 1.0 );
   min_gcd  = timespan_t::from_seconds( 1.0 );
@@ -3000,7 +2932,7 @@ void mara_t::create_buffs()
 
   
   buffs.feed_the_queen = make_buff<mara_buff_t>( this, "feed_the_queen" );
-  buffs.feed_the_queen->set_duration( 0_s )
+  buffs.feed_the_queen->set_duration( talents.feed_the_queen_duration )
       ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
       ->set_default_value( talents.feed_the_queen_bonus_per_stack )
       ->set_max_stack( talents.feed_the_queen_max_stacks );
@@ -3021,7 +2953,7 @@ void mara_t::create_buffs()
   buffs.predators_rush = make_buff<mara_buff_t>( this, "predators_rush" );
   buffs.predators_rush->set_duration( 0_s )
       ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
-      ->set_default_value( 0.4 );
+      ->set_default_value( 0.2 );
 
   buffs.maiden_of_death = make_buff<mara_buff_t>( this, "maiden_of_death" );
   buffs.maiden_of_death->set_duration( 10_s )
@@ -3108,7 +3040,7 @@ void mara_t::create_options()
 
   add_option( opt_bool( "legendary.from_the_shadows", legendary.from_the_shadows ) );
   add_option( opt_float( "legendary.from_the_shadows_chance", legendary.from_the_shadows_chance, 0.0, 1.0 ) );
-  add_option( opt_float( "legendary.from_the_shadows_bleed_rate", legendary.from_the_shadows_bleed_rate, 0.0, 100.0 ) );
+  add_option( opt_float( "legendary.from_the_shadows_bleed_period_multiplier", legendary.from_the_shadows_bleed_period_multiplier, 0.0, 100.0 ) );
 
   add_option( opt_bool( "legendary.spirit_procs_clones", legendary.spirit_procs_clones ) );
   add_option( opt_bool( "legendary.spirit_procs_clones_proc_on_next", legendary.spirit_procs_clones_proc_on_next ) );
@@ -3120,6 +3052,9 @@ void mara_t::create_options()
   add_option( opt_float( "talent.caustic_wounds_chance", talents.caustic_wounds_chance, 0, 100 ) );
   add_option( opt_timespan( "talent.macabre_stratagem_duration", talents.macabre_stratagem_duration ) );
 
+  add_option(
+      opt_float( "talent.hemotoxin_sample_multiplier_crits", talents.hemotoxin_sample_multiplier_crits, 1.0, 100 ) );
+  
 
   /*add_option( opt_bool( "ready_trigger", options.mara_ready_trigger ) );
 
@@ -3508,7 +3443,7 @@ inline double dot_tick_over_time( timespan_t sample_duration, const dot_t* dot )
 }
 
 template <typename Base>
-inline void actions::mara_action_t<Base>::handle_hemotoxin( const action_state_t* state, action_t* hemo_action )
+inline void actions::mara_action_t<Base>::handle_hemotoxin( const action_state_t* state, action_t* hemo_action, timespan_t base_sample )
 {
   if ( !hemo_action || !p()->talents_enabled( mara_t::HEMOTOXIN ) || ab::result_is_miss( state->result ) )
     return;
@@ -3519,7 +3454,10 @@ inline void actions::mara_action_t<Base>::handle_hemotoxin( const action_state_t
     return;
 
   auto rs = cast_state( state );
-  timespan_t sample_duration = p()->talents.hemotoxin_sample_per_cp * rs->get_combo_points();
+  timespan_t sample_duration = base_sample * rs->get_combo_points();
+
+  if ( state->result == RESULT_CRIT )
+    sample_duration *= p()->talents.hemotoxin_sample_multiplier_crits;
 
   auto damage = dot_tick_over_time( sample_duration, tdata->dots.hemorrhaging_strike );
 

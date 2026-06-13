@@ -296,6 +296,12 @@ double fs_player_t::composite_player_target_multiplier( player_t* target, school
     m *= 1.0 + fs_sets.death_grasp_execute_amp;
   }
 
+  if ( finesse_traits[ FINESSE_C ] > 0 &&
+       target->health_percentage() <= finesse_trait_values.finesse_c_execute_threshold )
+  {
+    m *= 1.0 + finesse_trait_values.finesse_c_execute_amp[ finesse_traits[ FINESSE_C ] ];
+  }
+
   return m;
 }
 
@@ -1192,7 +1198,7 @@ void fs_player_t::create_buffs()
   player_t::create_buffs();
 
   fs_buffs.rising_spirit = make_buff<fs_player_buff_t>( this, "rising_spirit" )
-                               ->set_max_stack( 99 )
+                               ->set_max_stack( 10 )
                                ->set_default_value( 0.05 )
                                ->set_refresh_duration_callback( [ this ]( const buff_t* b, timespan_t ) {
                                  if ( b->check() <= 5 )

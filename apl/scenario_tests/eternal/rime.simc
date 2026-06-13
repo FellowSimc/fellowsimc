@@ -1,17 +1,17 @@
-report_details=1
-optimal_raid=0
-# max_time=420
-# max_time=50
-max_time=250
-# max_time=60
-target_error=0.1
-iterations=15000
-chart_show_relative_difference=1
-vary_combat_length=0.1
-single_actor_batch=1
-max_time=720
-desired_targets=1
-relative_difference_base="Base Rime"
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=15000
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=1
+# relative_difference_base="Base Rime"
 
 # apl/chuey_dungeon.simc
 
@@ -70,12 +70,12 @@ apl/rime/rime_apl.simc
 # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/haste
 
 
-head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/crit,affixes=spirit/spirit
-shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/crit,affixes=spirit/spirit
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/crit
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/crit
 back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
-chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste
 hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
-legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/expertise,affixes=primary/haste
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/expertise
 feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
 
 neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
@@ -142,7 +142,22 @@ sets.draconic_might=1
 
 # 1mod
 weapon_trait.amethyst_splinters=1
+
+sets.seal_of_the_heskyr=1
+gems.amethyst_power=500
+gems.sapphire_power=500
+gems.emerald_power=500
+gems.ruby_power=500
+
 # 0mod
+
+# +7mod
+
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# 3 mod
+
+weapon_trait.amethyst_splinters=4
+# 0 mod
 
 # copy="Void","Base Rime"
 # weapon=voidbringers_touch

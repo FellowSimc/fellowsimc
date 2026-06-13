@@ -1730,8 +1730,8 @@ const char* util::stat_pct_buff_type_string( stat_pct_buff_type stat )
   {
     case STAT_PCT_BUFF_CRIT: return "crit";
     case STAT_PCT_BUFF_HASTE: return "haste";
-    case STAT_PCT_BUFF_VERSATILITY: return "versatility";
-    case STAT_PCT_BUFF_MASTERY: return "mastery";
+    case STAT_PCT_BUFF_VERSATILITY: return "Expertis";
+    case STAT_PCT_BUFF_MASTERY: return "spiri";
     case STAT_PCT_BUFF_STRENGTH: return "strength";
     case STAT_PCT_BUFF_AGILITY: return "agility";
     case STAT_PCT_BUFF_STAMINA: return "stamina";
@@ -1795,11 +1795,11 @@ const char* util::stat_type_abbrev( stat_e stat )
 
     case STAT_BLOCK_RATING: return "BlockR";
 
-    case STAT_MASTERY_RATING: return "Mastery";
+    case STAT_MASTERY_RATING: return "Spiri";
 
     case STAT_PVP_POWER: return "PvPP";
 
-    case STAT_VERSATILITY_RATING: return "Vers";
+    case STAT_VERSATILITY_RATING: return "Expertis";
 
     case STAT_LEECH_RATING: return "Leech";
     case STAT_SPEED_RATING: return "RunSpeed";

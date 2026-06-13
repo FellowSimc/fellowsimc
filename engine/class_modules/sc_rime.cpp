@@ -226,7 +226,7 @@ public:
     double avalanche_triple = 0.07;
 
     timespan_t coalescing_frost_duration      = 3_s;
-    double coalescing_frost_sp_mul            = 0.333;
+    double coalescing_frost_sp_mul            = 0.333 * 1.2;
     double coalescing_frost_crit_extra_chance = 0.5;
     int coalescing_frost_crit_stacks          = 2;
     int coalescing_frost_max_stacks           = 30;
@@ -272,7 +272,7 @@ public:
     double bird_coeff             = 0.469;
     double bird_spirit_multiplier = 1.5;
 
-    double ice_comet_coeff   = 4.082;
+    double ice_comet_coeff   = 4.082 * 1.2;
     double ice_comet_falloff = 12;
     int ice_comet_cost       = 2;
 
@@ -322,7 +322,7 @@ public:
     timespan_t skandis_decree_duration_bonus = 2_s;
 
     bool undulating_spirit                         = false;
-    double undulating_spirit_additional_spirit     = 0.0;
+    double undulating_spirit_additional_spirit     = 50.0;
     double undulating_spirit_chance                = 0.05;
     double undulating_spirit_spirit_value          = 2.0;
     bool undulating_spirit_alternative_check       = false;
@@ -939,7 +939,7 @@ struct rime_spell_t : public rime_action_t<fellowship::actions::fs_player_action
   {
   }
 
-  double composite_persistent_multiplier( const action_state_t* state ) const override
+  /*double composite_persistent_multiplier( const action_state_t* state ) const override
   {
     double m = base_t::composite_persistent_multiplier( state );
 
@@ -949,7 +949,7 @@ struct rime_spell_t : public rime_action_t<fellowship::actions::fs_player_action
     }
 
     return m;
-  }
+  }*/
 };
 
 struct frost_bolt_t : public rime_spell_t

@@ -1,3 +1,7 @@
+# apl/scenario_tests/league4/rime.simc
+apl/scenario_tests/league4/mara.simc
+
+
 report_details=1
 optimal_raid=0
 # max_time=420
@@ -10,6 +14,4 @@ chart_show_relative_difference=1
 vary_combat_length=0.1
 single_actor_batch=1
 max_time=720
-desired_targets=12
-
-apl/scenario_tests/league4/rime.simc
+desired_targets=1

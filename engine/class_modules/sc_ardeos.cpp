@@ -164,7 +164,7 @@ public:
     timespan_t engulfing_flames_period      = 1.5_s;
     double engulfing_flames_embers_per_tick = 5.0;  // This is currently reduced by haste.
     timespan_t engufling_flames_cooldown    = 20_s;
-    int engulfing_flames_charges            = 1;
+    int engulfing_flames_charges            = 2;
 
     timespan_t detonate_cast_time         = 1.0_s;  // Data has 1.5s but it is clearly faster than GCD still.
     double detonate_embers_cost           = 100;
@@ -1945,9 +1945,10 @@ struct fire_ball_t : public ardeos_spell_t
     void init() override
     {
       base_t::init();
+
       snapshot_flags &= STATE_NO_MULTIPLIER;
-      update_flags &= STATE_NO_MULTIPLIER;
       snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
+      update_flags &= STATE_NO_MULTIPLIER;
       update_flags |= STATE_HASTE | STATE_MUL_TA;
 
       if ( p()->talents_enabled( ardeos_t::FIRESTARTER ) )

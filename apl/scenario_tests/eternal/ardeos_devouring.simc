@@ -1,19 +1,19 @@
-report_details=1
-optimal_raid=0
-# max_time=420
-# max_time=50
-max_time=250
-# max_time=60
-target_error=0.1
-iterations=15000
-chart_show_relative_difference=1
-vary_combat_length=0.1
-single_actor_batch=1
-max_time=720
-desired_targets=1
-relative_difference_base="Base Ardeos"
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=15000
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=1
+# relative_difference_base="Base Ardeos"
 
-ardeos="Base Ardeos"
+ardeos="Ardeos Devouring"
 level=80
 
 apl/ardeos/ardeos_apl.simc

@@ -3109,6 +3109,9 @@ void print_html_player_plots( report::sc_html_stream& os, const player_t& p, con
       size_t count = plot_data.size();
       size_t rows = as<size_t>( std::ceil( count / 6 ) );
 
+      if ( count == 0 )
+        continue;
+
       os.format(
         R"(<table class="sc"><tr class="details"><td class="details"><h4>{}</h4></td></tr><tr class="details">)",
         util::inverse_tokenize( util::stat_type_string( i ) ) );

@@ -46,8 +46,8 @@ constexpr item_calculation_settings_t fixed_slot_settings = {
 constexpr double dynamic_slot_primary_weight       = 0.25;
 constexpr double dynamic_slot_secondary_weight     = 0.3;
 constexpr double dynamic_slot_stamina_weight       = 0.5;
-constexpr double dynamic_slot_primary_multiplier   = 0.7 * 0.75;
-constexpr double dynamic_slot_secondary_multiplier = 1.5 * 0.75;  // Fixed Affix are 0.6. Random affix are 1.5.
+constexpr double dynamic_slot_primary_multiplier   = 0.525;
+constexpr double dynamic_slot_secondary_multiplier = 1.125;  // Fixed Affix are 0.6. Random affix are 1.5.
 constexpr double dynamic_slot_weight_multiplier    = 0.15;
 
 constexpr item_calculation_settings_t dynamic_slot_settings = {

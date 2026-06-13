@@ -4561,7 +4561,7 @@ double player_t::resource_regen_per_second( resource_e r ) const
   {
     if ( reg )
     {
-      reg *= ( 1.0 / cache.attack_haste() );
+      reg /= cache.attack_haste();
     }
   }
 

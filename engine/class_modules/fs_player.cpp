@@ -2274,8 +2274,8 @@ void fs_player_t::init_special_effects()
     auto effect                   = new special_effect_t( this );
     effect->spell_id              = 15123;
     effect->name_str              = "navigators_intuition";
-    effect->proc_flags_           = PF_ALL_DAMAGE;
-    effect->proc_flags2_          = PF2_ALL_HIT;
+    effect->proc_flags_           = PF_ALL_DAMAGE | PF_ALL_HEAL;
+    effect->proc_flags2_          = PF2_ALL_CAST;
     effect->has_use_buff_override = true;
     effect->cooldown_             = fs_weapon_trait_values.navigators_intuition_cd[ fs_weapons.navigators_intuition ];
     effect->proc_chance_ = fs_weapon_trait_values.navigators_intuition_chance[ fs_weapons.navigators_intuition ];
@@ -2411,8 +2411,8 @@ void fs_player_t::init_special_effects()
     auto fs_effect                   = new special_effect_t( this );
     fs_effect->spell_id              = 1341;
     fs_effect->name_str              = "hidden_power";
-    fs_effect->proc_flags_           = PF_ALL_DAMAGE;
-    fs_effect->proc_flags2_          = PF2_ALL_HIT;
+    fs_effect->proc_flags_           = PF_ALL_DAMAGE | PF_ALL_HEAL;
+    fs_effect->proc_flags2_          = PF2_ALL_CAST;
     fs_effect->ppm_                  = -2.6;
     fs_effect->rppm_scale_           = rppm_scale_e::RPPM_HASTE;
     fs_effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
@@ -2450,7 +2450,7 @@ void fs_player_t::init_special_effects()
     auto effect                   = new special_effect_t( this );
     effect->spell_id              = 1343;
     effect->name_str              = "vengeful_soul";
-    effect->proc_flags_           = PF_ALL_DAMAGE;
+    effect->proc_flags_           = PF_ALL_DAMAGE | PF_PERIODIC;
     effect->proc_flags2_          = PF2_CRIT;
     effect->cooldown_             = 0_s;
     effect->has_use_buff_override = true;
@@ -2475,7 +2475,7 @@ void fs_player_t::init_special_effects()
     effect->spell_id              = 1347;
     effect->name_str              = "hunters_focus";
     effect->proc_flags_           = PF_ALL_DAMAGE;
-    effect->proc_flags2_          = PF2_HIT;
+    effect->proc_flags2_          = PF2_CAST_DAMAGE;
     effect->proc_chance_          = 1.0;
     effect->has_use_buff_override = true;
     effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;

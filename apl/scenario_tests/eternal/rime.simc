@@ -17,11 +17,12 @@
 
 # apl/dungeon.simc
 
-# scale_only=crit,haste,mastery,vers
-# scale_crit_rating=5315
-# scale_haste_rating=5315
-# scale_mastery_rating=5315
-# scale_versatility_rating=5315
+# scale_only=crit,haste,spiri,expertis,int
+# scale_intellect=10
+# scale_crit_rating=210
+# scale_haste_rating=210
+# scale_mastery_rating=210
+# scale_versatility_rating=210
 # positive_scale_delta=1
 # calculate_scale_factors=1
 # dps_plot_stat=haste,crit_rating,mastery,versatility
@@ -70,23 +71,23 @@ apl/rime/rime_apl.simc
 # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/haste
 
 
-head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/crit
-shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/crit
-back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit
 chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste
 hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
-legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/expertise
-feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit,affixes=finesse_c/finesse_c/finesse_c/finesse_c
 
-neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
-wrist=wrists,rarity=legendary,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/primary
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=crit/crit
 
-finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/haste,affixes=finesse_g/finesse_g
-finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/haste,affixes=finesse_g/finesse_g
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_g/finesse_g
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_g/finesse_g
 trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=finesse_k/finesse_n
 trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste
 
-main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=primary/haste
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
 # weapon=voidbringers_touch
 
 # weapon_trait.hunters_focus=1
@@ -153,7 +154,6 @@ gems.ruby_power=500
 
 # +7mod
 
-feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=finesse_c/finesse_c/finesse_c/finesse_c
 # 3 mod
 
 weapon_trait.amethyst_splinters=4

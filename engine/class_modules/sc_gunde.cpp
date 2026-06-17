@@ -34,6 +34,12 @@ public:
     dot_t* slaughter;
   } dots;
 
+  struct rend_tracker_t
+  {
+    uint8_t current_tick = 0;
+    std::array<double, 10> tick_buckets = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  } rend_tracker, slaughter_tracker;
+
   struct
   {
     buff_t* open_wounds;
@@ -257,15 +263,21 @@ public:
     //Gunde.HeavyMeleeDotBoost.Talent.OrbDropper.MaxRadius, 300.0
     //Gunde.HeavyMeleeDotBoost.Talent.ReducedCooldownPerOrb.ReductionInSeconds, 0.2
 
-    //Gunde.TargetedAoeProjectile.ProjectileSpawnDelay, 0.14                        ; GRIM CARVE
-    //Gunde.TargetedAoeProjectile.DamageStrengthCoefficientPerHit, 1.635            ; WAS 2.0
-    //Gunde.TargetedAoeProjectile.DamageScalingTargetCountThreshold, 12.0
+    // Gunde.TargetedAoeProjectile.DamageStrengthCoefficientPerHit, 1.635            ; WAS 2.0
+    double grim_carve_coeff = 1.635;
+    // Gunde.TargetedAoeProjectile.DamageScalingTargetCountThreshold, 12.0
+    double grim_carve_falloff = 12;
+    // Gunde.TargetedAoeProjectile.Aoe.Duration, 1.15
+    timespan_t grim_carve_duration = 1.15_s;
+    // Gunde.TargetedAoeProjectile.Aoe.Period, 0.5
+    timespan_t grim_carve_period   = 0.5_s;
+    // Gunde.TargetedAoeProjectile.ProjectileSpawnDelay, 0.14                        ; GRIM CARVE
+    timespan_t grim_carve_initial_delay = 0.14_s;
     //Gunde.TargetedAoeProjectile.Speed, 5000.0
     //Gunde.TargetedAoeProjectile.Cooldown, 15.0
+    timespan_t grim_carve_cooldown = 15_s;
     //Gunde.TargetedAoeProjectile.MaxRange, 3000.0
     //Gunde.TargetedAoeProjectile.Aoe.Radius, 700.0
-    //Gunde.TargetedAoeProjectile.Aoe.Duration, 1.15
-    //Gunde.TargetedAoeProjectile.Aoe.Period, 0.5
     //Gunde.TargetedAoeProjectile.Talent.Empowered.ProcChance, 0.16
     //Gunde.TargetedAoeProjectile.Talent.Empowered.DamageMultiplier, 1.40                                          ;WAS 2.0
     //Gunde.TargetedAoeProjectile.Talent.Empowered.Duration, 8.0  
@@ -531,6 +543,12 @@ public:
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
 
   void cancel_auto_attacks() override;
+
+  double get_current_rend( player_t* t ) const;
+  double get_current_target_rend() const
+  {
+    return get_current_rend( target );
+  }
 
   std::string default_flask() const override
   {
@@ -880,9 +898,10 @@ struct auto_melee_attack_t : public action_t
   }
 };
 
-struct rend_t : public residual_action::residual_periodic_action_t<gunde_attack_t>
+struct rend_t : public gunde_attack_t
 {
-  rend_t( gunde_t* p ) : residual_action_t( "rend", p )
+  double to_tick_multiplier;
+  rend_t( gunde_t* p ) : gunde_attack_t( "rend", p ), to_tick_multiplier( 0 )
   {
     id = 2;
 
@@ -897,11 +916,139 @@ struct rend_t : public residual_action::residual_periodic_action_t<gunde_attack_
     dot_allow_partial_tick = true;
 
     name_str_reporting = "Rend";
+
+    to_tick_multiplier = base_tick_time / dot_duration;
   }
 
-  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  void init_finished() override
   {
-    attack_t::snapshot_state( state, rt );
+    base_t::init_finished();
+    snapshot_flags = 0;
+    update_flags   = 0;
+  }
+
+  double base_ta( const action_state_t* s ) const override
+  {
+    auto& rend_obj = p()->get_target_data( s->target )->rend_tracker;
+
+    return rend_obj.tick_buckets[ rend_obj.current_tick ];
+  }
+
+  double last_tick_factor( const dot_t* d, timespan_t time_to_tick, timespan_t duration ) const override
+  {
+    return 1.0;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    dot_t* dot = get_dot( s->target );
+
+    auto& rend_obj = p()->get_target_data( s->target )->rend_tracker;
+
+    if ( !dot->is_ticking() )
+    {
+      rend_obj.current_tick = 0;
+      range::fill( rend_obj.tick_buckets, 0 );
+    }
+
+    if ( s->result_amount > 0 )
+    {
+      auto add_amount = std::round( s->result_amount * to_tick_multiplier );
+      for ( auto& bucket : rend_obj.tick_buckets )
+        bucket += add_amount;
+    }
+
+    trigger_dot( s );
+
+    if ( !dual )
+      stats->add_execute( timespan_t::zero(), s->target );
+  }
+
+  void tick( dot_t* d ) override
+  {
+    base_t::tick( d );
+        
+    auto& rend_obj = p()->get_target_data( d->state->target )->rend_tracker;
+    rend_obj.tick_buckets[ rend_obj.current_tick++ ] = 0;
+    if ( rend_obj.current_tick >= 10 )
+      rend_obj.current_tick = 0;
+  }
+};
+
+struct slaughter_dot_t : public gunde_attack_t
+{
+  double to_tick_multiplier;
+  slaughter_dot_t( gunde_t* p ) : gunde_attack_t( "slaughter", p ), to_tick_multiplier( 0 )
+  {
+    id = 3;
+
+    name_str_reporting = "Slaughter (DoT)";
+
+    tick_may_crit = false;
+
+    dot_duration           = p->spell_const.slaughter_duration;
+    dot_behavior           = DOT_REFRESH_DURATION;
+    base_tick_time         = p->spell_const.slaughter_period;
+    hasted_ticks           = false;
+    dot_allow_partial_tick = true;
+
+    name_str_reporting = "Rend";
+
+    to_tick_multiplier = base_tick_time / dot_duration;
+  }
+
+  void init_finished() override
+  {
+    base_t::init_finished();
+    snapshot_flags = 0;
+    update_flags   = 0;
+  }
+
+  double base_ta( const action_state_t* s ) const override
+  {
+    auto& rend_obj = p()->get_target_data( s->target )->slaughter_tracker;
+
+    return rend_obj.tick_buckets[ rend_obj.current_tick ];
+  }
+
+  double last_tick_factor( const dot_t* d, timespan_t time_to_tick, timespan_t duration ) const override
+  {
+    return 1.0;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    dot_t* dot = get_dot( s->target );
+
+    auto& rend_obj = p()->get_target_data( s->target )->slaughter_tracker;
+
+    if ( !dot->is_ticking() )
+    {
+      rend_obj.current_tick = 0;
+      range::fill( rend_obj.tick_buckets, 0 );
+    }
+
+    if ( s->result_amount > 0 )
+    {
+      auto add_amount = std::round( s->result_amount * to_tick_multiplier );
+      for ( auto& bucket : rend_obj.tick_buckets )
+        bucket += add_amount;
+    }
+
+    trigger_dot( s );
+
+    if ( !dual )
+      stats->add_execute( timespan_t::zero(), s->target );
+  }
+
+  void tick( dot_t* d ) override
+  {
+    base_t::tick( d );
+
+    auto& rend_obj                                   = p()->get_target_data( d->state->target )->slaughter_tracker;
+    rend_obj.tick_buckets[ rend_obj.current_tick++ ] = 0;
+    if ( rend_obj.current_tick >= 10 )
+      rend_obj.current_tick = 0;
   }
 };
 
@@ -972,6 +1119,70 @@ struct double_strike_t : public gunde_attack_t
     }
   }
 };
+
+struct grim_carve_t : public gunde_attack_t
+{
+  struct grim_carve_hit_t : public gunde_attack_t
+  {
+    grim_carve_hit_t( util::string_view name, gunde_t* p ) : gunde_attack_t( name, p )
+    {
+      background = dual = true;
+      id                = 5;
+      school            = SCHOOL_PHYSICAL;
+
+      attack_power_mod.direct = p->spell_const.grim_carve_coeff;
+
+      aoe                 = -1;
+      reduced_aoe_targets = p->spell_const.grim_carve_falloff;
+
+      name_str_reporting = "Grim Carve Hit";
+
+      ability_flags |= ability_type_e::ABILITY_POWER;
+    }
+  };
+
+  grim_carve_hit_t* hit;
+
+  grim_carve_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
+    : gunde_attack_t( name, p, options_str )
+  {
+    id                 = 5;
+    school             = SCHOOL_PHYSICAL;
+    name_str_reporting = "Grim Carve";
+
+    ability_flags |= ability_type_e::ABILITY_POWER;
+
+    cooldown->duration = p->spell_const.grim_carve_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    hit = new grim_carve_hit_t( "grim_carve_hit", p );
+    add_child( hit );
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    gunde_attack_t::impact( s );
+
+    const double haste = composite_haste();
+
+    const timespan_t tick_period = p()->spell_const.grim_carve_period / haste;
+
+    const int num_hits =
+        static_cast<int>( std::floor( p()->spell_const.grim_carve_duration / p()->spell_const.grim_carve_period ) );
+
+    for ( int i = 0; i <= num_hits; ++i )
+    {
+      auto* damage_state = hit->get_state( s );
+
+      hit->set_target( s->target );
+
+      make_event( *sim, tick_period * i + p()->spell_const.grim_carve_initial_delay,
+                  [ this, damage_state ]() { hit->schedule_execute( damage_state ); } );
+    }
+  }
+};
+
 //
 //struct blinding_slash_t : public gunde_attack_t
 //{
@@ -1536,7 +1747,8 @@ gunde_td_t::gunde_td_t( player_t* target, gunde_t* source )
 {
   dots.rend      = target->get_dot( "rend", source );
   dots.slaughter = target->get_dot( "slaughter", source );
-  //dots.sunburn    = target->get_dot( "sunburn", source );
+
+  // dots.sunburn    = target->get_dot( "sunburn", source );
   //dots.suns_touch = target->get_dot( "suns_touch", source );
 
   //debuffs.blind = make_buff( *this, "blind" )
@@ -1722,6 +1934,8 @@ action_t* gunde_t::create_action( util::string_view name, util::string_view opti
 
   if ( name == "double_strike" )
     return new double_strike_t( name, this, options_str );
+  if ( name == "grim_carve" )
+    return new grim_carve_t( name, this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -1769,6 +1983,10 @@ std::unique_ptr<expr_t> gunde_t::create_expression( util::string_view name_str )
         }
       }
     }
+  }
+  else if ( util::str_compare_ci( split[ 0 ], "rend_on_target" ) )
+  {
+    return make_fn_expr( name_str, std::bind( std::mem_fn( &gunde_t::get_current_target_rend ), this ) );
   }
   // Split expressions
 
@@ -2099,7 +2317,8 @@ void gunde_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
-  actions.rend = new actions::rend_t( this );
+  actions.rend      = new actions::rend_t( this );
+  actions.slaughter = new actions::slaughter_dot_t( this );
 
   //actions.suns_verdict                     = new actions::suns_verdict_t( this );
 
@@ -2128,6 +2347,23 @@ void gunde_t::init_rng()
 void gunde_t::reset()
 {
   fs_player_t::reset();
+  for ( gunde_td_t* td : target_data.get_entries() )
+  {
+    if ( !td )
+      continue;
+
+    td->slaughter_tracker.current_tick = 0;
+    td->rend_tracker.current_tick      = 0;
+
+    for ( auto& bucket : td->slaughter_tracker.tick_buckets )
+    {
+      bucket = 0;
+    }
+    for ( auto& bucket : td->rend_tracker.tick_buckets )
+    {
+      bucket = 0;
+    }
+  }
 }
 
 // gunde_t::activate ========================================================
@@ -2148,6 +2384,12 @@ void gunde_t::cancel_auto_attacks()
   }
 
   fs_player_t::cancel_auto_attacks();
+}
+
+double gunde_t::get_current_rend( player_t* t ) const
+{
+  auto& rend_obj = get_target_data( t )->rend_tracker;
+  return std::accumulate( rend_obj.tick_buckets.begin(), rend_obj.tick_buckets.end(), 0.0 );
 }
 
 // gunde_t::arise ===========================================================
@@ -2223,14 +2465,25 @@ void actions::gunde_action_t<Base>::trigger_spirit_refund( const action_state_t*
 template <typename Base>
 void actions::gunde_action_t<Base>::apply_rend( const action_state_t* state )
 {
-  if ( !_applies_rend )
+  if ( !_applies_rend || state->result_amount <= 0 )
     return;
-
+  
   //auto td = p()->get_target_data( state->target );
 
-  residual_action::trigger( p()->actions.rend, state->target,
-                            state->result_amount * 0.5 );
+  // residual_action::trigger( p()->actions.rend, state->target,
+  //                           state->result_amount * 0.5 );
+
+  auto action       = p()->actions.rend;
+  action_state_t* s = action->get_state( );
+  // change to multiply by rend multiplier
+  s->result_amount = state->result_amount * 0.5;
+  s->target = state->target;
+  s->result = RESULT_HIT;
+  action->snapshot_state( s, result_amount_type::DMG_OVER_TIME );
+  action->schedule_travel( s );
 }
+
+
 
 
 // gunde_t::convert_hybrid_stat ==============================================
@@ -2262,7 +2515,7 @@ void gunde_t::create_cooldowns()
   //cooldowns.solar_blades    = get_cooldown( "solar_blades" );
   //cooldowns.solar_shield    = get_cooldown( "solar_shield" );
 
-    cooldowns.blood_arc      = get_cooldown( "blood_arc" );
+  cooldowns.blood_arc      = get_cooldown( "blood_arc" );
   cooldowns.grim_carve     = get_cooldown( "grim_carve" );
   cooldowns.heart_splitter = get_cooldown( "heart_splitter" );
   cooldowns.reavers_edge   = get_cooldown( "reavers_edge" );

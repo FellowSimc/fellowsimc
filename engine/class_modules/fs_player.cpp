@@ -296,8 +296,7 @@ double fs_player_t::composite_player_target_multiplier( player_t* target, school
     m *= 1.0 + fs_sets.death_grasp_execute_amp;
   }
 
-  if ( finesse_traits[ FINESSE_C ] > 0 &&
-       target->health_percentage() <= finesse_trait_values.finesse_c_execute_threshold )
+  if ( finesse_traits[ FINESSE_C ] > 0 && target->health_percentage() <= low_health_threshold )
   {
     m *= 1.0 + finesse_trait_values.finesse_c_execute_amp[ finesse_traits[ FINESSE_C ] ];
   }

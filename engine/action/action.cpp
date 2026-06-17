@@ -2268,8 +2268,8 @@ void action_t::schedule_execute( action_state_t* state )
       } );
     }
 
-    // While an ability is casting, the auto_attack is paused
-    // So we simply reschedule the auto_attack by the ability's cast time
+    // While an ability is casting, the auto_attack_hit is paused
+    // So we simply reschedule the auto_attack_hit by the ability's cast time
     if ( special && time_to_execute > timespan_t::zero() && !proc && ( interrupt_auto_attack || reset_auto_attack ) )
     {
       if( reset_auto_attack )
@@ -3096,7 +3096,7 @@ void action_t::interrupt_action()
     // and starting a new cast seems to be twice the current latency.
     player->gcd_ready = std::min( player->gcd_ready, sim->current_time() + 2 * rng().gauss( player->world_lag ) );
 
-    // While an ability is casting, the auto_attack is paused during schedule_execute
+    // While an ability is casting, the auto_attack_hit is paused during schedule_execute
     // If we interrupt the cast, we need to unpause this early by the remaining delay time
     if ( special && !proc && ( interrupt_auto_attack || reset_auto_attack ) )
     {

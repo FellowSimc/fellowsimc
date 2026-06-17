@@ -3,11 +3,12 @@ actions.precombat=snapshot_stats
 actions.precombat+=/focused_shot
 
 actions=run_action_list,name=hail,if=legendary.astronomers_hail
-actions=run_action_list,name=deadly_focus,if=talent.deadly_focus
+actions=run_action_list,name=deadly_focus,if=talent.deadly_focus&blessing.finesse_n=4&blessing.finesse_h=4
 actions+=/run_action_list,name=main
 
-actions.main=event_horizon,target_if=target.time_to_die>=16|fight_remains<=20,if=!weapon_trait.visions_of_grandeur|weapon.chronoshift&cooldown.chronoshift.remains>=20|weapon.voidbringer&cooldown.voidbringers_touch.remains>=20|!weapon.voidbringers_touch&!weapon.chronoshift
+actions.main=event_horizon,target_if=target.time_to_die>=16|fight_remains<=20,if=!weapon_trait.visions_of_grandeur|weapon.chronoshift&cooldown.chronoshift.remains>=5*weapon_trait.visions_of_grandeur|weapon.voidbringer&cooldown.voidbringers_touch.remains>=5*weapon_trait.visions_of_grandeur|!weapon.voidbringers_touch&!weapon.chronoshift
 #,if=(cooldown.chronoshift.remains>0|!weapon.chronoshift)&(cooldown.voidbringer.remains>0|!weapon.voidbringer)|!weapon_trait.visions_of_grandeur
+actions.main+=/icicles_of_anzhyr
 actions.main+=/skystriders_grace,if=(buff.event_horizon.up&target.time_to_die>=10|(target.time_to_die>=16|fight_remains<=20))&!buff.skystriders_grace.up
 actions.main+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up&talent.fervent_supremacy
 actions.main+=/lunarlight_mark,if=!buff.resurgent_winds.at_max_stacks|!talent.resurgent_winds
@@ -34,8 +35,9 @@ actions.main+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stac
 actions.main+=/focused_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value)
 
 
-actions.hail=event_horizon,target_if=target.time_to_die>=16|fight_remains<=20,if=!weapon_trait.visions_of_grandeur|weapon.chronoshift&cooldown.chronoshift.remains>=20|weapon.voidbringer&cooldown.voidbringers_touch.remains>=20|!weapon.voidbringers_touch&!weapon.chronoshift
+actions.hail=event_horizon,target_if=target.time_to_die>=16|fight_remains<=20,if=!weapon_trait.visions_of_grandeur|weapon.chronoshift&cooldown.chronoshift.remains>=5*weapon_trait.visions_of_grandeur|weapon.voidbringer&cooldown.voidbringers_touch.remains>=5*weapon_trait.visions_of_grandeur|!weapon.voidbringers_touch&!weapon.chronoshift
 #,if=(cooldown.chronoshift.remains>0|!weapon.chronoshift)&(cooldown.voidbringer.remains>0|!weapon.voidbringer)|!weapon_trait.visions_of_grandeur
+actions.hail+=/icicles_of_anzhyr
 actions.hail+=/skystriders_grace,if=(buff.event_horizon.up&target.time_to_die>=10|(target.time_to_die>=16|fight_remains<=20))&!buff.skystriders_grace.up
 actions.hail+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up&talent.fervent_supremacy
 actions.hail+=/lunarlight_mark,if=!buff.resurgent_winds.at_max_stacks|!talent.resurgent_winds
@@ -55,7 +57,8 @@ actions.hail+=/highwind_arrow,if=(!buff.multishot.up&active_enemies>2|active_ene
 actions.hail+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=focus>=40&active_enemies=1
 actions.hail+=/focused_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value)
 
-actions.deadly_focus=event_horizon,target_if=target.time_to_die>=16|fight_remains<=20,if=!weapon_trait.visions_of_grandeur|weapon.chronoshift&cooldown.chronoshift.remains>=20|weapon.voidbringer&cooldown.voidbringers_touch.remains>=20|!weapon.voidbringers_touch&!weapon.chronoshift
+actions.deadly_focus=event_horizon,target_if=target.time_to_die>=16|fight_remains<=20,if=!weapon_trait.visions_of_grandeur|weapon.chronoshift&cooldown.chronoshift.remains>=5*weapon_trait.visions_of_grandeur|weapon.voidbringer&cooldown.voidbringers_touch.remains>=5*weapon_trait.visions_of_grandeur|!weapon.voidbringers_touch&!weapon.chronoshift
+actions.deadly_focus+=/icicles_of_anzhyr
 #,if=(cooldown.chronoshift.remains>0|!weapon.chronoshift)&(cooldown.voidbringer.remains>0|!weapon.voidbringer)|!weapon_trait.visions_of_grandeur
 actions.deadly_focus+=/skystriders_grace,if=(buff.event_horizon.up&target.time_to_die>=10|(target.time_to_die>=16|fight_remains<=20))&!buff.skystriders_grace.up
 actions.deadly_focus+=/skystriders_supremacy,if=!buff.finesse_g.up

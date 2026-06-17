@@ -20,12 +20,12 @@ apl/ardeos/ardeos_apl.simc
 
 
 head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
-shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary,affixes=crit/haste
-back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/haste,affixes=crit/haste
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit
 chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=crit/haste
-hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/haste
 legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=crit/haste
-feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
 
 neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
 wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=expertise/expertise
@@ -85,6 +85,7 @@ weapon_trait.amethyst_splinters=1
 
 weapon_trait.brave_machinations=1
 
+# weapon=icicles_of_anzhyr
 weapon=chronoshift
 
 legendary.explosivo=1
@@ -143,7 +144,36 @@ weapon_trait.amethyst_splinters=3
 
 # talents=undying_flame:1/apocalyptic_surge:1/slow_burn:1/rolling_flames:1/reign_of_fire:1/great_balls_of_fire:1/crash_and_burn:1
 
-talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/crash_and_burn:1/undying_flame:1/crackling_inferno:1/apocalyptic_surge:1/reign_of_fire:1/intensifying_inferno:1
+talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/undying_flame:1/crackling_inferno:1/apocalyptic_surge:1/reign_of_fire:1/intensifying_inferno:1/cascading_inferno:1
+# 2 4 5 7 8 9 12 13 14
+
+copy="Frogxplosivo","Base Ardeos"
+talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/undying_flame:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1
+copy="Frogxplosivo Crackled","Base Ardeos"
+talents=slow_burn:1/great_balls_of_fire:1/crackling_inferno:1/undying_flame:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1
+copy="Frogxplosivo IW Package","Base Ardeos"
+talents=slow_burn:1/great_balls_of_fire:1/crackling_inferno:1/cascading_inferno:1/intensifying_inferno:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1
+#2 4 5 7 8 11 14
+
+copy="Frogxplosivo FrogSquad Crackle","Base Ardeos"
+talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/undying_flame:1/apocalyptic_surge:1/frog_squad:1/pyrophibian_frenzy:1/crackling_inferno:1
+
+copy="Frogxplosivo FrogSquad Crackle Casc","Base Ardeos"
+talents=slow_burn:1/great_balls_of_fire:1/cascading_inferno:1/undying_flame:1/apocalyptic_surge:1/frog_squad:1/pyrophibian_frenzy:1/crackling_inferno:1
+
+copy="Frogxplosivo FrogSquad","Base Ardeos"
+talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/frog_squad:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1
+
+# copy="Frogxplosivo FroggerSquadderv2","Base Ardeos"
+# talents=great_balls_of_fire:1/crash_and_burn:1/undying_flame:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1/frog_squad:1
+
+# copy="Frogxplosivo FroggerSquadderv3 IW","Base Ardeos"
+# talents=great_balls_of_fire:1/crash_and_burn:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1/frog_squad:1/cascading_inferno:1/crackling_inferno:1
+
+# copy="Frogxplosivo FroggerSquadderv4 IW FU","Base Ardeos"
+# talents=great_balls_of_fire:1/flare_up:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1/frog_squad:1/cascading_inferno:1/crackling_inferno:1
+# copy="-Undying","Base Ardeos"
+# talents+=/undying_flame:0
 
 #2 4 5 6 8 9 10 13 14
 
@@ -434,57 +464,69 @@ talents=slow_burn:1/great_balls_of_fire:1/backdraft:1/crash_and_burn:1/undying_f
 # weapon_trait.willful_momentum=4
 
 
-copy="Ardeos_Rolling_UF_350 Explo","Base Ardeos"
-talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_UF_476 Explo","Base Ardeos"
-talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
-copy="Ardeos_Rolling_UF_474 Explo","Base Ardeos"
-talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_UF_463 Explo","Base Ardeos"
-talents=apocalyptic_surge:1/burning_initiative:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_Pyrophibian_UF_893 Explo","Base Ardeos"
-talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_UF_656 Explo","Base Ardeos"
-talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
-copy="Ardeos_Rolling_UF_475 Explo","Base Ardeos"
-talents=apocalyptic_surge:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
-copy="Ardeos_Rolling_UF_641 Explo","Base Ardeos"
-talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1 
+# copy="Ardeos_Rolling_UF_350 Explo","Base Ardeos"
+# talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_476 Explo","Base Ardeos"
+# talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_474 Explo","Base Ardeos"
+# talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_463 Explo","Base Ardeos"
+# talents=apocalyptic_surge:1/burning_initiative:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/undying_flame:1
+# copy="Ardeos_Rolling_Pyrophibian_UF_893 Explo","Base Ardeos"
+# talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:1/rolling_flames:1/slow_burn:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_656 Explo","Base Ardeos"
+# talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_475 Explo","Base Ardeos"
+# talents=apocalyptic_surge:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_641 Explo","Base Ardeos"
+# talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1 
 
 
 
-copy="Ardeos_Rolling_UF_350 Devour","Base Ardeos"
+# copy="Ardeos_Rolling_UF_350 Devour","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=1
+# talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_476 Devour","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=1
+# talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_474 Devour","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=1
+# talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_463 Devour","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=1
+# talents=apocalyptic_surge:1/burning_initiative:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/undying_flame:1
+# copy="Ardeos_Rolling_Pyrophibian_UF_893 Devour","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=1
+# talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:1/rolling_flames:1/slow_burn:1/undying_flame:1
+copy="Ardeos_Rolling_Pyrophibian_UF Devour","Base Ardeos"
 legendary.explosivo=0
 legendary.devouring_flame=1
-talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_UF_476 Devour","Base Ardeos"
+talents=apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:1/rolling_flames:1/slow_burn:1/undying_flame:1
+copy="Ardeos_Rolling_Pyrophibian_UF w/o pyro Devour","Base Ardeos"
 legendary.explosivo=0
 legendary.devouring_flame=1
-talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
-copy="Ardeos_Rolling_UF_474 Devour","Base Ardeos"
+talents=apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:0/rolling_flames:1/slow_burn:1/undying_flame:1
+copy="Ardeos_Rolling_ROF_UF Devour","Base Ardeos"
 legendary.explosivo=0
 legendary.devouring_flame=1
-talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_UF_463 Devour","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=1
-talents=apocalyptic_surge:1/burning_initiative:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_Pyrophibian_UF_893 Devour","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=1
-talents=apocalyptic_surge:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_UF_656 Devour","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=1
-talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
-copy="Ardeos_Rolling_UF_475 Devour","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=1
-talents=apocalyptic_surge:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
-copy="Ardeos_Rolling_UF_641 Devour","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=1
-talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1 
+talents=apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:0/rolling_flames:1/slow_burn:1/undying_flame:1/reign_of_fire:1
+# copy="Ardeos_Rolling_UF_656 Devour","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=1
+# talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/crackling_inferno:1/crash_and_burn:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_475 Devour","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=1
+# talents=apocalyptic_surge:1/crackling_inferno:1/crash_and_burn:1/great_balls_of_fire:1/intensifying_inferno:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1
+# copy="Ardeos_Rolling_UF_641 Devour","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=1
+# talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/slow_burn:1/spontaneous_combustion:1/undying_flame:1 
 
 
 # copy="Frogs Toad Rolling","Base Ardeos"
@@ -495,11 +537,42 @@ talents=apocalyptic_surge:1/backdraft:1/burning_initiative:1/cascading_inferno:1
 
 # talents=pyrophibian_frenzy:1/frog_squad:1/firestarter:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/rolling_flames:1
 
-# copy="Frogs Toad IW","Base Ardeos"
-# legendary.explosivo=0
-# legendary.devouring_flame=0
-# legendary.fire_toad=1
-# # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+copy="Frogs Toad IW","Base Ardeos"
+legendary.explosivo=0
+legendary.devouring_flame=0
+legendary.fire_toad=1
+# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
 
-# talents=pyrophibian_frenzy:1/frog_squad:1/firestarter:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/cascading_inferno:1/crackling_inferno:1/intensifying_inferno:1
-# #7/8/9/11
+talents=pyrophibian_frenzy:1/frog_squad:1/firestarter:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/cascading_inferno:1/crackling_inferno:1/intensifying_inferno:1
+#7/8/9/11
+
+
+copy="Frogs Toad IW Full","Base Ardeos"
+legendary.explosivo=0
+legendary.devouring_flame=0
+legendary.fire_toad=1
+# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+
+talents=pyrophibian_frenzy:1/frog_squad:1/firestarter:1/apocalyptic_surge:1/backdraft:1/spontaneous_combustion:1/cascading_inferno:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1
+#7/8/9/11
+
+
+copy="Frogs Toad ST Specialised","Base Ardeos"
+legendary.explosivo=0
+legendary.devouring_flame=0
+legendary.fire_toad=1
+# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+
+talents=pyrophibian_frenzy:1/frog_squad:1/apocalyptic_surge:1/slow_burn:1/cascading_inferno:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1/undying_flame:1
+# 3 5 6 8 9 10 11 12 14
+
+copy="Frogs Toad Super AoE Specialised","Base Ardeos"
+legendary.explosivo=0
+legendary.devouring_flame=0
+legendary.fire_toad=1
+# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+
+talents=pyrophibian_frenzy:1/frog_squad:1/apocalyptic_surge:1/cascading_inferno:1/great_balls_of_fire:1/slow_burn:1/reign_of_fire:1
+
+
+# 3 5 6 8 9

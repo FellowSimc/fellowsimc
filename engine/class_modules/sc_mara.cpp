@@ -1169,7 +1169,7 @@ struct melee_t : public mara_attack_t
 
 struct auto_melee_attack_t : public action_t
 {
-  auto_melee_attack_t( mara_t* p, util::string_view options_str ) : action_t( ACTION_OTHER, "auto_attack", p )
+  auto_melee_attack_t( mara_t* p, util::string_view options_str ) : action_t( ACTION_OTHER, "auto_attack_hit", p )
   {
     trigger_gcd        = timespan_t::zero();
     name_str_reporting = "Auto Attack";

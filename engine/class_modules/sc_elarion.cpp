@@ -16,7 +16,7 @@ namespace actions
 struct elarion_heal_t;
 struct elarion_spell_t;
 
-struct melee_t;
+struct ranged_shot_t;
 }  // namespace actions
 
 class elarion_td_t : public fs_player_td_t
@@ -57,6 +57,8 @@ class elarion_t : public fellowship::fs_player_t
 public:
   struct actions_t
   {
+    attack_t* auto_attack_hit;
+    action_t* auto_attack;
     action_t* lunarlight_salvo;
     action_t* lunarlight_salvo_aoe;
     action_t* starfall_volley;
@@ -101,10 +103,11 @@ public:
   {
   } procs;
 
-  struct rppms_t
+  struct rng_objects_t
   {
     real_ppm_t* celestial_impetus;
-  } rppm;
+    accumulated_rng_t* resurgent_winds;
+  } rngs;
 
   dbc_proc_callback_t* lunarlight_mark_external;
 
@@ -135,11 +138,11 @@ public:
 
     timespan_t heartseeker_barrage_period   = 0.2_s;
     timespan_t heartseeker_barrage_duration = 2.0_s;
-    double heartseeker_barrage_ap_coeff     = 1.374; // 1.249;
+    double heartseeker_barrage_ap_coeff     = 1.249;
     timespan_t heartseeker_barrage_cooldown = 20_s;
     double heartseeker_barrage_focus_cost   = 30;
 
-    double highwind_arrow_ap_coeff                    = 9.3;
+    double highwind_arrow_ap_coeff                    = 10.23;
     timespan_t highwind_arrow_cast_time               = 2.0_s;
     double highwind_arrow_focus_cost                  = 30;
     int highwind_arrow_charges                        = 3;
@@ -148,7 +151,7 @@ public:
     double highwind_arrow_cleave_mul                  = 0.7;
     unsigned int highwind_arrow_targets_for_multishot = 3;
 
-    timespan_t lunarlight_mark_cooldown = 30_s;
+    timespan_t lunarlight_mark_cooldown = 40_s;
     int lunarlight_mark_max_targets     = 12;
     int lunarlight_mark_stacks_applied  = 3;
     timespan_t lunarlight_mark_duration = 15_s;
@@ -176,10 +179,10 @@ public:
     double event_horizon_dmg_mul                  = 0.2;
     double event_horizon_resource_mul             = 0.5;
     timespan_t event_horizon_barrage_cdr_highwind = 0.5_s;
-    timespan_t event_horizon_volley_cdr_barrage   = 1_s;
+    timespan_t event_horizon_volley_cdr_barrage   = 1.5_s;
 
-    int spirit_refund_marks_applied       = 5;
-    int spirit_refund_marks_cleave        = 2;
+    int spirit_refund_marks_applied       = 3;
+    int spirit_refund_marks_cleave        = 1;
     int spirit_refund_marks_extra_targets = 2;
   } spell_const;
 
@@ -259,7 +262,7 @@ public:
     double fusillade_crit         = 0.2;
 
     double final_crescendo_dmg_mul = 1.0;
-    int final_crescendo_max_stacks = 3;
+    int final_crescendo_max_stacks = 2;
     int final_crescendo_ricochets  = 8;
 
     double skylit_grace_cdr = 1.2;
@@ -292,9 +295,9 @@ public:
     double resurgent_winds_mul           = 0.5;
     int resurgent_winds_maximum_stacks   = 2;
     double resurgent_winds_cast_time_mul = 0.0;
+    double resurgent_winds_chance        = 0.05;
 
     double last_lights_cc    = 0.2;
-    double last_light_hp_pct = 30;
 
     timespan_t rising_moon_cdr = 2_s;
 
@@ -780,6 +783,10 @@ public:
     // elarion_t sets base and min GCD to 1.5_s hasted
     ab::gcd_type = gcd_haste_type::ATTACK_HASTE;
 
+    
+    ab::interrupt_auto_attack = false;
+    ab::reset_auto_attack = false;
+
     if ( p->legendary.new_spirit_legendary )
     {
       lunarlight_salvo_chance_hit += p->legendary.new_spirit_legendary_chance_to_consume_mark;
@@ -841,6 +848,7 @@ public:
   // Ability triggers
   void spend_resource_costs( const action_state_t* );
   void trigger_spirit_refund( const action_state_t*, double );
+  void trigger_auto_attack( const action_state_t* );
 
   // General Methods ==========================================================
 
@@ -915,6 +923,23 @@ public:
 
     return ab::create_expression( name );
   }
+
+  void execute() override
+  {
+    ab::execute();
+
+    if ( ab::hit_any_target && !ab::background && ab::trigger_gcd > timespan_t::zero() )
+    {
+      if ( p()->talents_enabled( elarion_t::RESURGENT_WINDS ) )
+      {
+        if ( p()->rngs.resurgent_winds->trigger() )
+        {
+          p()->buffs.resurgent_winds->trigger();
+        }
+      }
+      trigger_auto_attack( ab::execute_state );
+    }
+  }
 };
 
 struct elarion_heal_t : public elarion_action_t<fellowship::actions::fs_player_action_t<heal_t>>
@@ -940,6 +965,120 @@ struct elarion_attack_t : public elarion_action_t<fellowship::actions::fs_player
   {
   }
 };
+
+
+struct ranged_shot_t : public elarion_attack_t
+{
+  bool first;
+  bool canceled;
+  timespan_t prev_scheduled_time;
+
+  ranged_shot_t( const char* name, const char* reporting_name, elarion_t* p )
+    : elarion_attack_t( name, p ), first( true ), canceled( false ), prev_scheduled_time( timespan_t::zero() )
+  {
+    background = repeating = may_glance = may_crit = true;
+    may_miss                                       = true;
+    allow_class_ability_procs = not_a_proc = true;
+    special                                = false;
+
+    school             = SCHOOL_PHYSICAL;
+    trigger_gcd        = timespan_t::zero();
+    name_str_reporting = reporting_name;
+
+    attack_power_mod.direct = p->spell_const.auto_attack_ap_coeff;
+  }
+
+  double miss_chance( double /* hit */, player_t* /* target */ ) const
+  {
+    return 1 - 0.95 * 0.95;
+  }
+
+  void reset() override
+  {
+    elarion_attack_t::reset();
+    first               = true;
+    canceled            = false;
+    prev_scheduled_time = timespan_t::zero();
+  }
+
+  timespan_t execute_time() const override
+  {
+    timespan_t t = elarion_attack_t::execute_time();
+
+    if ( first )
+    {
+      return timespan_t::zero();
+    }
+
+    // If we cancel the swing timer mid-fight, use the previous swing timer
+    if ( canceled )
+    {
+      return std::min( t, std::max( prev_scheduled_time - p()->sim->current_time(), timespan_t::zero() ) );
+    }
+
+    return t;
+  }
+
+
+  void schedule_execute( action_state_t* state ) override
+  {
+    elarion_attack_t::schedule_execute( state );
+
+    if ( first )
+    {
+      first = false;
+      p()->sim->print_log( "{} schedules AA start {} with {} swing timer", *p(), *this, time_to_execute );
+    }
+
+    if ( canceled )
+    {
+      canceled            = false;
+      prev_scheduled_time = timespan_t::zero();
+      p()->sim->print_log( "{} schedules AA restart {} with {} swing timer remaining", *p(), *this, time_to_execute );
+    }
+  }
+};
+
+struct ranged_shot_attack_t : public action_t
+{
+  ranged_shot_attack_t( elarion_t* p, util::string_view options_str ) : action_t( ACTION_OTHER, "auto_attack_hit", p )
+  {
+    trigger_gcd        = timespan_t::zero();
+    name_str_reporting = "Auto Attack";
+
+    background = true;
+
+    p->actions.auto_attack_hit = debug_cast<ranged_shot_t*>( p->find_action( "auto_attack_damage" ) );
+    if ( !p->actions.auto_attack_hit )
+      p->actions.auto_attack_hit = new ranged_shot_t( "auto_attack_damage", "Auto Attack", p );
+
+    p->main_hand_attack                    = p->actions.auto_attack_hit;
+    p->main_hand_attack->base_execute_time = p->spell_const.auto_attack_time;
+    p->main_hand_attack->id                = 1;
+
+    id = 1;
+
+    school = SCHOOL_PHYSICAL;
+
+    add_child( p->actions.auto_attack_hit );
+  }
+
+  void execute() override
+  {
+    // stats->add_execute( 0_ms, target );  // log AA timer resets
+
+    player->main_hand_attack->schedule_execute();
+  }
+
+  bool ready() override
+  {
+    if ( player->is_moving() && !usable_moving() )
+      return false;
+
+    return ( player->main_hand_attack->execute_event == nullptr );  // not swinging
+  }
+};
+
 
 struct focused_shot_t : public elarion_attack_t
 {
@@ -978,7 +1117,7 @@ struct focused_shot_t : public elarion_attack_t
   {
     base_t::execute();
 
-    if ( p()->rppm.celestial_impetus->trigger() )
+    if ( p()->rngs.celestial_impetus->trigger() )
     {
       p()->buffs.celestial_impetus->trigger();
     }
@@ -1304,9 +1443,14 @@ struct highwind_arrow_t : public elarion_attack_t
     return base_t::execute_time();
   }
 
-  int n_targets() const override
+  int bounce_targets() const
   {
     return p()->buffs.final_crescendo->at_max_stacks() ? p()->talents.final_crescendo_ricochets : base_t::n_targets();
+  }
+
+  int n_targets() const override
+  {
+    return bounce_targets();
   }
 
   void impact( action_state_t* s ) override
@@ -1348,7 +1492,7 @@ struct highwind_arrow_t : public elarion_attack_t
 
   double composite_da_multiplier( const action_state_t* s ) const override
   {
-    double m = base_t::composite_da_multiplier( s );
+   double m = base_t::composite_da_multiplier( s );
 
     if ( s->chain_target > 0 )
     {
@@ -1360,7 +1504,7 @@ struct highwind_arrow_t : public elarion_attack_t
       m *= 1.0 + p()->talents.final_crescendo_dmg_mul;
     }
 
-    if ( p()->buffs.resurgent_winds->check() && p()->get_target_data( s->target )->debuffs.lunarlight_mark->check() )
+    if ( p()->buffs.resurgent_winds->check() )
     {
       m *= 1.0 + p()->talents.resurgent_winds_mul;
     }
@@ -1404,15 +1548,14 @@ struct highwind_arrow_t : public elarion_attack_t
   void execute() override
   {
     auto& tl = target_list();
-
-    if ( tl.size() > 2 )
+    if ( tl.size() > bounce_targets() )
     {
       std::sort( tl.begin() + 1, tl.end(), [ this ]( player_t* a, player_t* b ) {
         return p()->get_target_data( a )->debuffs.lunarlight_mark->check() >
                p()->get_target_data( b )->debuffs.lunarlight_mark->check();
       } );
     }
-
+     
     base_t::execute();
 
     if ( !is_precision_strike && p()->talents_enabled( elarion_t::PRECISION_STRIKE ) && execute_state &&
@@ -2021,7 +2164,7 @@ double elarion_t::composite_player_target_crit_chance( player_t* target ) const
 
   if ( talents_enabled( LAST_LIGHTS ) )
   {
-    if ( target->health_percentage() <= talents.last_light_hp_pct )
+    if ( target->health_percentage() <= low_health_threshold )
       c += talents.last_lights_cc;
   }
 
@@ -2176,7 +2319,7 @@ void elarion_t::init_spells()
 {
   fs_player_t::init_spells();
 
-  // actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
+  actions.auto_attack = new actions::ranged_shot_attack_t( this, "" );
 }
 
 // elarion_t::init_talents ====================================================
@@ -2223,7 +2366,9 @@ void elarion_t::init_rng()
 {
   fs_player_t::init_rng();
 
-  rppm.celestial_impetus = get_rppm( "celestial_impetus", spell_const.celestial_impetus_ppm, 1.0, RPPM_HASTE );
+  rngs.celestial_impetus = get_rppm( "celestial_impetus", spell_const.celestial_impetus_ppm, 1.0, RPPM_HASTE );
+
+  rngs.resurgent_winds =  get_accumulated_rng( "resurgent_winds", rng::CfromP( talents.resurgent_winds_chance ) );
 }
 
 // elarion_t::init_scaling ====================================================
@@ -2562,6 +2707,15 @@ void actions::elarion_action_t<Base>::trigger_spirit_refund( const action_state_
       p()->cooldowns.heartseeker_barrage->reset( true, 1 );
     } );
   }
+}
+
+template <typename Base>
+void actions::elarion_action_t<Base>::trigger_auto_attack( const action_state_t* /* state */ )
+{
+  if ( !p()->main_hand_attack || p()->main_hand_attack->execute_event )
+    return;
+
+  p()->actions.auto_attack->schedule_execute();
 }
 
 template <typename Base>

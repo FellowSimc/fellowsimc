@@ -142,7 +142,7 @@ public:
     double infernal_wave_cinders = 40;
     double infernal_wave_coeff   = 1.7;
 
-    double fire_frog_coeff             = 0.7315;
+    double fire_frog_coeff             = 0.7315 * 1.35;
     double fire_frog_dot_conversion    = 1.0;
     timespan_t fire_frog_dot_duration  = 12_s;
     timespan_t fire_frog_dot_period    = 3_s;
@@ -279,7 +279,7 @@ public:
     double flare_up_multiplier = 0.5;
 
     timespan_t undying_flame_extension = 3_s;
-    int undying_flame_extra_charges    = 1;
+    int undying_flame_extra_charges    = 0;
 
     double agonizing_blaze_amp_per_stack    = 0.04;
     unsigned agonizing_blaze_maximum_stacks = 10;
@@ -297,7 +297,10 @@ public:
     timespan_t rolling_flames_cdr               = 0.25_s;
     timespan_t rolling_flames_infernal_wave_cdr = 1000_ms;
 
-    double pyrophibian_frenzy_chance = 0.09;
+    double pyrophibian_frenzy_chance          = 0.09;
+    bool pyrophibian_frenzy_use_old           = false;
+    double pyrophibian_frenzy_new_chance      = 0.03;
+    double pyrophibian_frenzy_crit_chance_mul = 2;
 
     double reign_of_fire_ppm          = 1.5;
     double reign_of_fire_crit_chance  = 2.0;
@@ -336,10 +339,11 @@ public:
 
     bool fire_toad              = false;
     double fire_toad_chance     = 0.10;
-    double fire_toad_mul        = 10;
+    double fire_toad_mul        = 10.0;
     double fire_toad_falloff    = 1;
     bool fire_toad_full_primary = false;
     bool fire_toad_on_cast      = true;
+    int fire_toad_convert       = 0;
 
     bool brimstone_cataclysm                   = false;
     timespan_t brimstone_cataclysm_cdr_per_hit = 2_s;
@@ -710,6 +714,7 @@ public:
   void gain_cinders( int );
   void gain_anima( int );
   void trigger_spirit_refund( const action_state_t*, double );
+  void tick( dot_t* d ) override;
 
   // General Methods ==========================================================
 
@@ -2269,7 +2274,8 @@ struct fire_frogs_t : public ardeos_spell_t
 
     for ( int i = 0; i < frogs; i++ )
     {
-      auto act = p()->actions.fire_frog;
+      auto replace_with_toad = p()->legendary.fire_toad && i < p()->legendary.fire_toad_convert;
+      auto act               = replace_with_toad ? p()->actions.fire_toads_hit : p()->actions.fire_frog;
       act->set_target( target );
       auto state    = act->get_state();
       state->target = target;
@@ -2633,7 +2639,7 @@ void ardeos_t::init_spells()
 {
   fs_player_t::init_spells();
 
-  // actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
+  // actions.auto_attack_hit = new actions::auto_melee_attack_t( this, "" );
 }
 
 // ardeos_t::init_talents ====================================================
@@ -2866,7 +2872,7 @@ void ardeos_t::init_special_effects()
 {
   fs_player_t::init_special_effects();
 
-  if ( talents_enabled( PYROPHIBIAN_FRENZY ) )
+  if ( talents_enabled( PYROPHIBIAN_FRENZY ) && talents.pyrophibian_frenzy_use_old )
   {
     auto effect          = new special_effect_t( this );
     effect->spell_id     = 9120102;
@@ -3004,6 +3010,29 @@ void actions::ardeos_action_t<Base>::gain_cinders( int gain )
 template <typename Base>
 void actions::ardeos_action_t<Base>::gain_anima( int gain )
 {
+}
+
+
+template <typename Base>
+void actions::ardeos_action_t<Base>::tick( dot_t* d )
+{
+  ab::tick( d );
+
+  if ( p()->talents_enabled( ardeos_t::PYROPHIBIAN_FRENZY ) && !p()->talents.pyrophibian_frenzy_use_old )
+  {
+    if ( d->state->result > 0 && d->target->is_enemy() )
+    {
+      auto pyro_chance = p()->talents.pyrophibian_frenzy_new_chance;
+
+      if ( d->state->result == RESULT_CRIT )
+        pyro_chance *= p()->talents.pyrophibian_frenzy_crit_chance_mul;
+
+      if ( p()->rng().roll( pyro_chance ) )
+      {
+        p()->actions.fire_frog->execute();
+      }
+    }
+  }
 }
 
 // ardeos_t::convert_hybrid_stat ==============================================

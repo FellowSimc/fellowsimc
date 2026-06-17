@@ -721,7 +721,7 @@ bool dot_t::channel_interrupt()
           current_action->interrupt_immediate_occurred = true;
         }
 
-        // While an ability is channeling, the auto_attack is paused during execute
+        // While an ability is channeling, the auto_attack_hit is paused during execute
         // If we interrupt the channel, we need to unpause this early by the remaining delay time
         if ( !current_action->background && current_action->special && current_action->reset_auto_attack )
         {

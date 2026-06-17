@@ -291,7 +291,7 @@ double fs_player_t::composite_player_target_multiplier( player_t* target, school
 {
   double m = player_t::composite_player_target_multiplier( target, school );
 
-  if ( fs_sets.deaths_grasp && target->health_percentage() <= 35.0 )
+  if ( fs_sets.deaths_grasp && target->health_percentage() <= low_health_threshold )
   {
     m *= 1.0 + fs_sets.death_grasp_execute_amp;
   }
@@ -391,9 +391,9 @@ struct amethyst_splinters_t : public residual_action::residual_periodic_action_t
   {
     base_t::init();
     snapshot_flags &= STATE_NO_MULTIPLIER;
-    update_flags &= STATE_NO_MULTIPLIER;
     snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
-    update_flags &= ~STATE_HASTE;
+    update_flags &= STATE_NO_MULTIPLIER;
+    update_flags |= STATE_HASTE;
   }
 };
 

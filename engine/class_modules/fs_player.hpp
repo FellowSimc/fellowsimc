@@ -17,6 +17,9 @@ const double GEM_TIER_8  = 1000.0;
 const double GEM_TIER_9  = 1250.0;
 const double GEM_TIER_10 = 1500.0;
 
+const double healthy_threshold    = 80.0;
+const double low_health_threshold = 30.0;
+
 // Forward Declarations
 class fs_player_t;
 
@@ -298,7 +301,6 @@ public:
     const timespan_t finesse_c_duration[ 5 ] = { 0_s, 1_s, 2_s, 3_s, 4_s };
     const timespan_t finesse_c_divisor       = 60_s;
     const double finesse_c_execute_amp[ 5 ]      = { 0, 0.05, 0.1, 0.15, 0.2 };
-    const double finesse_c_execute_threshold = 35; 
 
     const double finesse_d_chance[ 5 ]   = { 0, 0.05, 0.08, 0.13, 0.2 }; // The Celestial
     const double finesse_d_spirit_points = 1.0;

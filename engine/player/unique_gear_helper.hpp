@@ -741,7 +741,7 @@ public:
 
   action_t* create_action( std::string_view name, std::string_view options_str ) override
   {
-    if ( name == "auto_attack" )
+    if ( name == "auto_attack_hit" )
       return new auto_attack_t( this );
 
     return pet_t::create_action( name, options_str );
@@ -751,7 +751,7 @@ public:
   {
     action_priority_list_t* def = get_action_priority_list( "default" );
     if ( use_auto_attack )
-      def->add_action( "auto_attack" );
+      def->add_action( "auto_attack_hit" );
 
     pet_t::init_action_list();
   }

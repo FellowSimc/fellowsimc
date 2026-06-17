@@ -2000,7 +2000,7 @@ void aeona_t::init_spells()
 {
   fs_player_t::init_spells();
 
-  // actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
+  // actions.auto_attack_hit = new actions::auto_melee_attack_t( this, "" );
 }
 
 // aeona_t::init_talents ====================================================

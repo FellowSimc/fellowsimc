@@ -460,7 +460,7 @@ struct auto_attack_t : public enemy_action_t<attack_t>
   std::vector<melee_t*> mh_list;
 
   // default constructor
-  auto_attack_t( player_t* p, util::string_view options_str ) : base_t( "auto_attack", p ), mh_list( 0 )
+  auto_attack_t( player_t* p, util::string_view options_str ) : base_t( "auto_attack_hit", p ), mh_list( 0 )
   {
     parse_options( options_str );
 
@@ -1000,7 +1000,7 @@ action_t* enemy_create_action( player_t* p, util::string_view name, util::string
 {
   using namespace actions;
 
-  if ( name == "auto_attack" )
+  if ( name == "auto_attack_hit" )
     return new auto_attack_t( p, options_str );
   if ( name == "auto_attack_off_hand" )
     return new auto_attack_off_hand_t( p, options_str );
@@ -1462,7 +1462,7 @@ std::string enemy_t::generate_tank_action_list( tank_dummy_e tank_dummy )
   constexpr double background_spell_base = aa_damage_base * 0.1;
 
   size_t tank_dummy_index = static_cast<size_t>( tank_dummy );
-  als += "/auto_attack,damage=" + util::to_string( floor( aa_damage_base / tank_dummy_index_scalar[ tank_dummy_index ] ) ) +
+  als += "/auto_attack_hit,damage=" + util::to_string( floor( aa_damage_base / tank_dummy_index_scalar[ tank_dummy_index ] ) ) +
          ",range=" + util::to_string( aa_damage_base / tank_dummy_index_scalar[ tank_dummy_index ] * 0.02 ) +
          ",attack_speed=2,aoe_tanks=1";
   als += "/melee_nuke,damage=" + util::to_string( floor( dummy_strike_base / tank_dummy_index_scalar[ tank_dummy_index ] ) ) +
@@ -1547,7 +1547,7 @@ void enemy_t::init_action_list()
         double hps_per_healer = 90000;
         double swing_speed    = 2.0;
         action_list_str +=
-            "/auto_attack,damage=" + util::to_string( hps_per_healer * healers * swing_speed * level() / 100.0 ) +
+            "/auto_attack_hit,damage=" + util::to_string( hps_per_healer * healers * swing_speed * level() / 100.0 ) +
             ",attack_speed=" + util::to_string( swing_speed ) + ",target=" + sim->heal_target->name_str;
       }
       // Otherwise... do nothing?
@@ -1627,7 +1627,7 @@ void enemy_t::init_stats()
       continue;
     if ( action->name_str == "snapshot_stats" )
       continue;
-    if ( action->name_str.find( "auto_attack" ) != std::string::npos )
+    if ( action->name_str.find( "auto_attack_hit" ) != std::string::npos )
       continue;
     waiting_time = timespan_t::from_seconds( 1.0 );
     break;

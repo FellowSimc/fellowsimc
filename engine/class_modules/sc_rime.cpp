@@ -126,7 +126,7 @@ public:
     proc_t* coal_no_targets;
   } procs;
 
-  struct rppms_t
+  struct rng_objects_t
   {
     real_ppm_t* soulfrost_torrent;
     accumulated_rng_t* frostweavers_wrath;
@@ -2480,7 +2480,7 @@ void rime_t::init_spells()
 {
   fs_player_t::init_spells();
 
-  // actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
+  // actions.auto_attack_hit = new actions::auto_melee_attack_t( this, "" );
 }
 
 // rime_t::init_talents ====================================================

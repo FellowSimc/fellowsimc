@@ -5097,7 +5097,7 @@ void mirror_of_fractured_tomorrows( special_effect_t& e )
   {
     action_t* action;
     future_self_auto_attack_t( pet_t* p, const special_effect_t& e, action_t* a, util::string_view options_str )
-      : spell_t( "auto_attack", p, p->find_spell( 419591 ) ), action( a )
+      : spell_t( "auto_attack_hit", p, p->find_spell( 419591 ) ), action( a )
     {
       parse_options( options_str );
       base_dd_min = base_dd_max = e.driver()->effectN( 10 ).average( e.item );
@@ -5285,7 +5285,7 @@ void mirror_of_fractured_tomorrows( special_effect_t& e )
 
     action_t* create_action( util::string_view name, util::string_view opt_str ) override
     {
-      if ( name == "auto_attack" )
+      if ( name == "auto_attack_hit" )
       {
         return new future_self_auto_attack_t( this, effect, action, opt_str );
       }
@@ -5342,7 +5342,7 @@ void mirror_of_fractured_tomorrows( special_effect_t& e )
         case DRUID_GUARDIAN:
         case DEMON_HUNTER_VENGEANCE:
           def->add_action( "sand_shield" );
-          def->add_action( "auto_attack" );
+          def->add_action( "auto_attack_hit" );
           break;
         case PALADIN_HOLY:
         case PRIEST_DISCIPLINE:
@@ -5370,7 +5370,7 @@ void mirror_of_fractured_tomorrows( special_effect_t& e )
         case DEMON_HUNTER_HAVOC:
         default:
           def->add_action( "sand_cleave" );
-          def->add_action( "auto_attack" );
+          def->add_action( "auto_attack_hit" );
           break;
       }
     }

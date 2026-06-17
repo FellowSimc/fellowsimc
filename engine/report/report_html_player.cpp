@@ -3371,7 +3371,7 @@ void print_html_player_buff( report::sc_html_stream& os, const buff_t& b, int re
         os.format( R"(<h4>Damage Modifiers</h4><ul class="label">)"
                    "<li><span>direct:</span>{:.2f} + {:.2f}/stack</li>"
                    "<li><span>periodic:</span>{:.2f} + {:.2f}/stack</li>"
-                   "<li><span>auto_attack:</span>{:.2f} + {:.2f}/stack</li>"
+                   "<li><span>auto_attack_hit:</span>{:.2f} + {:.2f}/stack</li>"
                    "<li><span>crit_chance:</span>{:.2f}</li>"
                    "<li><span>is_stacking:</span>true</li></ul>\n",
                    damage_buff->direct_mod.initial_multiplier, damage_buff->direct_mod.multiplier - 1.0,
@@ -3384,7 +3384,7 @@ void print_html_player_buff( report::sc_html_stream& os, const buff_t& b, int re
         os.format( R"(<h4>Damage Modifiers</h4><ul class="label">)"
                    "<li><span>direct:</span>{:.2f}</li>"
                    "<li><span>periodic:</span>{:.2f}</li>"
-                   "<li><span>auto_attack:</span>{:.2f}</li>"
+                   "<li><span>auto_attack_hit:</span>{:.2f}</li>"
                    "<li><span>crit_chance:</span>{:.2f}</li>"
                    "<li><span>is_stacking:</span>false</li></ul>\n",
                    damage_buff->direct_mod.multiplier,

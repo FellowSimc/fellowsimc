@@ -111,6 +111,39 @@ mara_indicators = {
     "maidens_doom": "MD",
 }
 
+elarion = {
+    "focused_expanse": 2,
+    "piercing_seekers": 2,
+    "final_crescendo": 2,
+
+    "skylit_grace":1,
+    "fusillade": 1,
+    "skyward_munitions": 1,
+
+    "repeating_stars": 2,
+    "lunar_fury": 2,
+    "lethal_shots": 2,
+
+    "rising_moon": 1,
+    "lunarlight_affinity": 1,
+    "strikers_aim": 1,
+
+    "fervent_supremacy": 3,
+    "impending_heartseeker": 3,
+    "resurgent_winds": 3,
+
+    "last_lights": 1,
+    "swift_reload": 1,
+    "deadly_focus": 1,
+}
+
+elarion_indicators = {
+    "fervent_supremacy": "FS",
+    "impending_heartseeker": "IH",
+    "resurgent_winds": "RW",
+    "skyward_munitions": "SM",
+}
+
 gems = [
     "ruby", "amethyst", "topaz", "emerald", "sapphire", "diamond"
 ]
@@ -151,7 +184,7 @@ traits = [
 ]
 
 
-trait_ranks = [1,2,3,4]
+trait_ranks = [1,4]
 
 
 sets = [
@@ -183,7 +216,7 @@ finesses = [
     "finesse_n",
 ]
 
-finesse_ranks = [1,2,3,4]
+finesse_ranks = [1,4]
 
 
 def make_sim_entry(prefix, profile_name, changes, profilesets = False):
@@ -476,7 +509,7 @@ def top_sim_results(path_to_json, total_runs=100):
 
         return top_x
 
-def dps_sim_results(paths_to_json, total_runs=100):
+def dps_sim_results(paths_to_json, total_runs=-1):
     runs = defaultdict(list)
     for json_path in paths_to_json:
         with open(json_path, "r") as file_handle:
@@ -562,27 +595,52 @@ if __name__ == "__main__":
     # print(overalls)
 
 
-    combos_to_file("Mara", mara, mara_indicators, 14, "generated/mara_talents14b2.simc", 
-                profilesets=False,
+    # combos_to_file("Mara", mara, mara_indicators, 14, "generated/mara_talents14b2.simc", 
+    #             profilesets=False,
+    #             required_talents=[
+    #                 "gushing_blood",
+    #                 "bloodrush",
+    #                 "hemotoxin",
+    #                 "sinners_pride",
+    #                 "red_ledger"
+    #                     # "deadly_scheme",
+    #                     # "venomous_delight",
+    #                     # "malevolence",
+    #                     # "assassins_guile"
+    #             ],
+    #             excluded_talents=[
+    #                 "efficient_killer",
+    #                 # "arachnid_onslaught",
+    #                 # "caustic_wounds",
+    #                 "feed_the_queen",
+    #                 # "puncture",
+    #                 "venomous_delight"
+    #                 # "gushing_blood"
+    #             ],
+    #             forbidden_pairs=[
+    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("gushing_blood", "malevolence"),
+    #                 # ("arachnid_onslaught", "malevolence"),
+    #             ],
+    #             # name_filters=top_x
+    # )
+
+    # all_points_to_File("Mara", mara, "generated/mara_talents.simc")
+    
+    generate_item_checks("Elarion", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste", "generated/all_gear_options.simc")
+
+
+    
+    combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents14b4.simc", 
+                profilesets=True,
                 required_talents=[
-                    "gushing_blood",
-                    "bloodrush",
-                    "hemotoxin",
-                    "sinners_pride",
-                    "red_ledger"
-                        # "deadly_scheme",
-                        # "venomous_delight",
-                        # "malevolence",
-                        # "assassins_guile"
+                    # "resurgent_winds",
+                    # "last_lights",
+                    # "skyward_munitions"
                 ],
                 excluded_talents=[
-                    "efficient_killer",
-                    # "arachnid_onslaught",
-                    # "caustic_wounds",
-                    "feed_the_queen",
-                    # "puncture",
-                    "venomous_delight"
-                    # "gushing_blood"
+                    "deadly_focus",
+                    "swift_reload"
                 ],
                 forbidden_pairs=[
                     # ("hemotoxin", "malevolence"),
@@ -592,10 +650,13 @@ if __name__ == "__main__":
                 # name_filters=top_x
     )
 
-    all_points_to_File("Mara", mara, "generated/mara_talents.simc")
-    
-    generate_item_checks("Mara", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste", "generated/all_gear_options.simc")
+    all_points_to_File("Elarion", elarion, "generated/elarion_talents.simc")
 
+
+    sim_results = dps_sim_results(["output/scenario_et_145.json", "output/scenario_et_146.json"])
+    # print(sim_results)
+    overalls = sorted_by_overall(sim_results)
+    print(overalls[:100])
 
 # for combo in combos:
 #     print(combo)

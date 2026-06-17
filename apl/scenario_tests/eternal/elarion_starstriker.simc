@@ -1,0 +1,245 @@
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=15000
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=12
+# relative_difference_base="Base Elarion"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,spiri,expertis,agi
+# scale_agility=10
+# scale_crit_rating=210
+# scale_haste_rating=210
+# scale_mastery_rating=210
+# scale_versatility_rating=210
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,spiri,expertis
+# # dps_plot_stat=haste:0,spiri:0,crit:0,expertis:0
+# dps_plot_points=6
+# dps_plot_step=210
+# dps_plot_positive=0
+
+
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":800000:Humanoid
+# # raid_events+=/pull,pull=02,delay=315,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":300000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+
+elarion="Starstriker Elarion"
+level=80
+
+apl/elarion/elarion_apl.simc
+
+
+
+# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/haste
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/crit
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
+# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/primary
+# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+# wrist=wrists,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/haste
+
+
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/spirit
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit
+wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=crit/crit
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_g/finesse_g/finesse_g/finesse_g/finesse_k
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_j/finesse_j/finesse_j/finesse_j/finesse_g/finesse_g/finesse_g/finesse_g/finesse_k
+#  finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_j/finesse_j/finesse_j/finesse_j/finesse_c/finesse_c/finesse_c/finesse_c/finesse_k
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=haste
+# weapon=voidbringers_touch
+
+# weapon_trait.hunters_focus=1
+# weapon_trait.vengeful_soul=1
+# weapon_trait.seized_opportunity=1
+
+legendary.starstrikers_ascent=1
+# legendary.astronomers_hail=1
+# legendary.shimmer=1
+
+# weapon=chronoshift
+
+
+# 35 mods
+# -8 bless
+
+weapon=icicles_of_anzhyr
+
+weapon_trait.hunters_focus=4
+
+# -4 fin
+# 23
+
+gems.sapphire_power=1200
+gems.emerald_power=500
+gems.ruby_power=500
+gems.amethyst_power=500
+
+# -7 attunement 16 left
+
+sets.seal_of_the_heskyr=1
+
+# -2 for set, 14 left
+
+weapon_trait.emerald_judgement=2
+# 12 left
+
+sets.deaths_grasp=1
+sets.dark_prophecy=1
+
+# 8 left
+
+weapon_trait.amethyst_splinters=4
+
+# 3 left (fink)
+
+weapon_trait.visions_of_grandeur=1
+weapon_trait.martial_initiative=1
+weapon_trait.patient_soul=1
+
+
+# weapon_trait.visions_of_grandeur=1
+# weapon_trait.martial_initiative=1
+# weapon_trait.emerald_judgement=3
+# sets.dark_prophecy=1
+# sets.deaths_grasp=1
+# weapon_trait.hunters_focus=4
+# sets.draconic_might=1
+# weapon_trait.amethyst_splinters=4
+
+# sets.seal_of_the_heskyr=1
+
+# gems.amethyst_power=500
+# gems.sapphire_power=500
+# gems.emerald_power=500
+# gems.ruby_power=500
+
+talents=fusillade:1/strikers_aim:1/last_lights:1/lunarlight_affinity:1/impending_heartseeker:1/piercing_seekers:1/lunar_fury:1/skylit_grace:1/repeating_stars:1/
+
+# 14
+
+# copy="Elarion focused_expanse","Base Elarion"
+# talents+=/focused_expanse:1
+# # copy="Elarion piercing_seekers","Base Elarion"
+# # talents+=/piercing_seekers:1
+# copy="Elarion final_crescendo","Base Elarion"
+# talents+=/final_crescendo:1
+# # copy="Elarion skylit_grace","Base Elarion"
+# # talents+=/skylit_grace:1
+# # copy="Elarion fusillade","Base Elarion"
+# # talents+=/fusillade:1
+# # copy="Elarion skyward_munitions","Base Elarion"
+# # talents+=/skyward_munitions:1
+# copy="Elarion repeating_stars","Base Elarion"
+# talents+=/repeating_stars:1
+# # copy="Elarion lunar_fury","Base Elarion"
+# # talents+=/lunar_fury:1
+# copy="Elarion lethal_shots","Base Elarion"
+# talents+=/lethal_shots:1
+# # copy="Elarion rising_moon","Base Elarion"
+# # talents+=/rising_moon:1
+# # copy="Elarion lunarlight_affinity","Base Elarion"
+# # talents+=/lunarlight_affinity:1
+# # copy="Elarion strikers_aim","Base Elarion"
+# # talents+=/strikers_aim:1
+# copy="Elarion fervent_supremacy","Base Elarion"
+# talents+=/fervent_supremacy:1
+# # copy="Elarion impending_heartseeker","Base Elarion"
+# # talents+=/impending_heartseeker:1
+# copy="Elarion resurgent_winds","Base Elarion"
+# talents+=/resurgent_winds:1
+# # copy="Elarion last_lights","Base Elarion"
+# # talents+=/last_lights:1
+# copy="Elarion swift_reload","Base Elarion"
+# talents+=/swift_reload:1
+# copy="Elarion deadly_focus","Base Elarion"
+# talents+=/deadly_focus:1
+
+# copy="Chronoshift","Base Elarion"
+# weapon=chronoshift
+
+# # copy="Icicles","Base Elarion"
+# # weapon=icicles_of_anzhyr
+# copy="NF","Base Elarion"
+# weapon=natures_fury
+# copy="Void","Base Elarion"
+# weapon=voidbringers_touch
+
+# copy="Wep Haste","Base Elarion"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=haste/haste
+# copy="Wep Prim","Base Elarion"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=primary/haste
+# copy="Wep Spirit","Base Elarion"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=spirit/haste
+# copy="Wep Crit","Base Elarion"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+# copy="Wep Exp","Base Elarion"
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=expertise/haste
+
+
+# copy="Chest Haste","Base Elarion"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=haste
+# copy="Chest Prim","Base Elarion"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=primary
+# copy="Chest Spirit","Base Elarion"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=spirit
+# copy="Chest Crit","Base Elarion"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=crit
+# copy="Chest Exp","Base Elarion"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=expertise
+
+# copy="Legs Haste","Base Elarion"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=haste
+# copy="Legs Prim","Base Elarion"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=primary
+# copy="Legs Spirit","Base Elarion"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=spirit
+# copy="Legs Crit","Base Elarion"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=crit
+# copy="Legs Exp","Base Elarion"
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=expertise
+

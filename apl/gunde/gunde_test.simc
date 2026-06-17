@@ -61,9 +61,12 @@ feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secon
 neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
 wrist=wrists,rarity=legendary,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/primary
 
-finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/haste,affixes=finesse_g/finesse_g
-finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/haste,affixes=finesse_g/finesse_g
-trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=finesse_k/finesse_n
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/haste
+#,affixes=finesse_g/finesse_g
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/haste
+#,affixes=finesse_g/finesse_g
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=finesse_k
+#finesse_n
 trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste
 
 main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=primary/haste

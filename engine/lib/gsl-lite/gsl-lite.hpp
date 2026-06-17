@@ -1077,14 +1077,23 @@ namespace __cxxabiv1 { struct __cxa_eh_globals; extern "C" __cxa_eh_globals * __
 
 // MSVC warning suppression macros:
 
+#if defined( __clang__ )
+#define GSL_SUPPRESS( x ) [[gsl::suppress( #x )]]
+#elif defined( _MSC_VER ) && _MSC_VER >= 1950
+// Visual Studio versions after 2022 (_MSC_VER > 1944) support the justification message.
+#define GSL_SUPPRESS( x ) [[gsl::suppress( #x )]]
+#elif defined( _MSC_VER ) && !defined( __INTEL_COMPILER ) && !defined( __NVCC__ )
+#define GSL_SUPPRESS( x ) [[gsl::suppress( #x )]]
+#else
+#define GSL_SUPPRESS( x )
+#endif  // defined(__clang__)
+
 #if gsl_COMPILER_MSVC_VERSION >= 140 && ! gsl_COMPILER_NVCC_VERSION
-# define gsl_SUPPRESS_MSGSL_WARNING(expr)        [[gsl::suppress(expr)]]
 # define gsl_SUPPRESS_MSVC_WARNING(code, descr)  __pragma(warning(suppress: code) )
 # define gsl_DISABLE_MSVC_WARNINGS(codes)        __pragma(warning(push))  __pragma(warning(disable: codes))
 # define gsl_RESTORE_MSVC_WARNINGS()             __pragma(warning(pop ))
 #else
 // TODO: define for Clang
-# define gsl_SUPPRESS_MSGSL_WARNING(expr)
 # define gsl_SUPPRESS_MSVC_WARNING(code, descr)
 # define gsl_DISABLE_MSVC_WARNINGS(codes)
 # define gsl_RESTORE_MSVC_WARNINGS()
@@ -1847,7 +1856,7 @@ public:
         other.invoke_ = false;
     }
 
-    gsl_SUPPRESS_MSGSL_WARNING(f.6)
+    GSL_SUPPRESS(f.6)
     virtual ~final_action() gsl_noexcept
     {
         if ( invoke_ )
@@ -3882,7 +3891,7 @@ span( Container const & ) -> span<const typename Container::value_type>;
 # if gsl_CONFIG( ALLOWS_NONSTRICT_SPAN_COMPARISON )
 
 template< class T, class U >
-gsl_SUPPRESS_MSGSL_WARNING(stl.1)
+GSL_SUPPRESS(stl.1)
 gsl_NODISCARD inline gsl_constexpr bool operator==( span<T> const & l, span<U> const & r )
 {
     return  l.size()  == r.size()
@@ -3890,7 +3899,7 @@ gsl_NODISCARD inline gsl_constexpr bool operator==( span<T> const & l, span<U> c
 }
 
 template< class T, class U >
-gsl_SUPPRESS_MSGSL_WARNING(stl.1)
+GSL_SUPPRESS(stl.1)
 gsl_NODISCARD inline gsl_constexpr bool operator< ( span<T> const & l, span<U> const & r )
 {
     return std98::lexicographical_compare( l.begin(), l.end(), r.begin(), r.end() );
@@ -3899,7 +3908,7 @@ gsl_NODISCARD inline gsl_constexpr bool operator< ( span<T> const & l, span<U> c
 # else // a.k.a. !gsl_CONFIG( ALLOWS_NONSTRICT_SPAN_COMPARISON )
 
 template< class T >
-gsl_SUPPRESS_MSGSL_WARNING(stl.1)
+GSL_SUPPRESS(stl.1)
 gsl_NODISCARD inline gsl_constexpr bool operator==( span<T> const & l, span<T> const & r )
 {
     return  l.size()  == r.size()
@@ -3907,7 +3916,7 @@ gsl_NODISCARD inline gsl_constexpr bool operator==( span<T> const & l, span<T> c
 }
 
 template< class T >
-gsl_SUPPRESS_MSGSL_WARNING(stl.1)
+GSL_SUPPRESS(stl.1)
 gsl_NODISCARD inline gsl_constexpr bool operator< ( span<T> const & l, span<T> const & r )
 {
     return std98::lexicographical_compare( l.begin(), l.end(), r.begin(), r.end() );
@@ -4521,7 +4530,7 @@ private:
 #if gsl_CONFIG( ALLOWS_NONSTRICT_SPAN_COMPARISON )
 
 template< class T, class U >
-gsl_SUPPRESS_MSGSL_WARNING(stl.1)
+GSL_SUPPRESS(stl.1)
 gsl_NODISCARD inline gsl_constexpr14 bool
 operator==( basic_string_span<T> const & l, U const & u ) gsl_noexcept
 {
@@ -4532,7 +4541,7 @@ operator==( basic_string_span<T> const & l, U const & u ) gsl_noexcept
 }
 
 template< class T, class U >
-gsl_SUPPRESS_MSGSL_WARNING(stl.1)
+GSL_SUPPRESS(stl.1)
 gsl_NODISCARD inline gsl_constexpr14 bool
 operator<( basic_string_span<T> const & l, U const & u ) gsl_noexcept
 {
@@ -4546,7 +4555,7 @@ operator<( basic_string_span<T> const & l, U const & u ) gsl_noexcept
 template< class T, class U
     gsl_ENABLE_IF_(( !detail::is_basic_string_span<U>::value ))
 >
-gsl_SUPPRESS_MSGSL_WARNING(stl.1)
+GSL_SUPPRESS(stl.1)
 gsl_NODISCARD inline gsl_constexpr14 bool
 operator==( U const & u, basic_string_span<T> const & r ) gsl_noexcept
 {
@@ -4559,7 +4568,7 @@ operator==( U const & u, basic_string_span<T> const & r ) gsl_noexcept
 template< class T, class U
     gsl_ENABLE_IF_(( !detail::is_basic_string_span<U>::value ))
 >
-gsl_SUPPRESS_MSGSL_WARNING(stl.1)
+GSL_SUPPRESS(stl.1)
 gsl_NODISCARD inline gsl_constexpr14 bool
 operator<( U const & u, basic_string_span<T> const & r ) gsl_noexcept
 {
@@ -4572,7 +4581,7 @@ operator<( U const & u, basic_string_span<T> const & r ) gsl_noexcept
 #else //gsl_CONFIG( ALLOWS_NONSTRICT_SPAN_COMPARISON )
 
 template< class T >
-gsl_SUPPRESS_MSGSL_WARNING(stl.1)
+GSL_SUPPRESS(stl.1)
 gsl_NODISCARD inline gsl_constexpr14 bool
 operator==( basic_string_span<T> const & l, basic_string_span<T> const & r ) gsl_noexcept
 {
@@ -4581,7 +4590,7 @@ operator==( basic_string_span<T> const & l, basic_string_span<T> const & r ) gsl
 }
 
 template< class T >
-gsl_SUPPRESS_MSGSL_WARNING(stl.1)
+GSL_SUPPRESS(stl.1)
 gsl_NODISCARD inline gsl_constexpr14 bool
 operator<( basic_string_span<T> const & l, basic_string_span<T> const & r ) gsl_noexcept
 {

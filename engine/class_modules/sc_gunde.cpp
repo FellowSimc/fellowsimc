@@ -278,12 +278,6 @@ public:
     timespan_t grim_carve_cooldown = 15_s;
     //Gunde.TargetedAoeProjectile.MaxRange, 3000.0
     //Gunde.TargetedAoeProjectile.Aoe.Radius, 700.0
-    //Gunde.TargetedAoeProjectile.Talent.Empowered.ProcChance, 0.16
-    //Gunde.TargetedAoeProjectile.Talent.Empowered.DamageMultiplier, 1.40                                          ;WAS 2.0
-    //Gunde.TargetedAoeProjectile.Talent.Empowered.Duration, 8.0  
-    //Gunde.TargetedAoeProjectile.Talent.DamageCooldownReduction.DamageMultiplier, 1.25
-    //Gunde.TargetedAoeProjectile.Talent.DamageCooldownReduction.CooldownReductionInSecondsPerHit, 1.0
-    //Gunde.TargetedAoeProjectile.Talent.AdditionalTicks.Amount, 2.0
 
     //Gunde.DamageReductionSelfBuff.IncomingDamageMultiplier, 0.6                 ; RECKLESS ABANDON
     //Gunde.DamageReductionSelfBuff.Duration, 4.0
@@ -304,24 +298,15 @@ public:
     //Gunde.ExtraDotDamageBuff.VisualDelay, 0.2
     //Gunde.ExtraDotDamageBuff.Talent.Haste.AdditionalHaste, 0.25
 
-    //Gunde.HeavyMeleeDotBased.Cooldown, 12.0                                     ; RECKONING
-    timespan_t reckoning_cooldown = 12.0_s;
+    //Gunde.HeavyMeleeDotBased.Cooldown, 12.0                                     ; RECKONING / heart splitter
+    timespan_t heart_splitter_cooldown = 12.0_s;
     //Gunde.HeavyMeleeDotBased.Damage.StrengthCoefficient, 3.70                   ; WAS 3.4
-    double reckoning_coeff = 3.70;
+    double heart_splitter_coeff = 3.70;
     //Gunde.HeavyMeleeDotBased.Damage.DotCoefficient, 0.50						; WAS 0.10
-    double reckoning_exsanguinate_coeff = 0.5;
+    double heart_splitter_exsanguinate_coeff = 0.3;
     //Gunde.HeavyMeleeDotBased.VisualDelay, 0.35
-    timespan_t reckoning_visual_delay = 0.35_s;
-    //Gunde.HeavyMeleeDotBased.Talent.IncreasedCritChance.AdditionalCritChance, 0.3         ;WAS 0.4
-    //Gunde.HeavyMeleeDotBased.Talent.CritToAoe.Radius, 500.0
-    //Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AdditionalTargets, 4.0	; OLD
-    //Gunde.HeavyMeleeDotBased.Talent.CritToAoe.TargetThresholdScaling, 3.0
-    //Gunde.HeavyMeleeDotBased.Talent.LowHealthTarget.AddedCriticalStrikeChance, 1.00
-    //Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.AdditionalCooldownRecovery, 0.5
-    //Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.Duration, 3.0
-    //Gunde.HeavyMeleeDotBased.Talent.Charges.NumOfCharges, 2.0
-    //Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.Chance, 0.2
-    //Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.DelayBetweenStrikes, 0.4
+    timespan_t heart_splitter_visual_delay = 0.35_s;
+    double heart_splitter_additional_rend  = 0.5;
 
     //Gunde.InstantAoeDot.Aoe.Radius, 1000.0                                      ; SLAUGHTER
     //Gunde.InstantAoeDot.Aoe.Height, 500.0
@@ -404,10 +389,12 @@ public:
     //Gunde.InstantAoeWithBuff.ConePieMinRadius, 0.0
     //Gunde.InstantAoeWithBuff.ConePieAngleWidth, 120.0
 
-    //Gunde.InstantAoeWithBuff.DamageStrengthCoefficient, 1.212                    ; WAS 2.0
-    //Gunde.InstantAoeWithBuff.DamageScalingTargetCountThreshold, 5.0
-    //Gunde.InstantAoeWithBuff.Cooldown, 9.0
-    //Gunde.InstantAoeWithBuff.Talent.AdditionalStack.MaxStacks, 2.0
+    // Gunde.InstantAoeWithBuff.DamageStrengthCoefficient, 1.212                    ; WAS 2.0
+    double blood_arc_coeff = 1.212;
+    // Gunde.InstantAoeWithBuff.DamageScalingTargetCountThreshold, 5.0
+    double blood_arc_target_threshold = 5.0;
+    // Gunde.InstantAoeWithBuff.Cooldown, 9.0
+    timespan_t blood_arc_cooldown = 9_s;
     //Gunde.InstantAoeWithBuff.Talent.ChanceCooldownReset.Chance, 0.25            ; WAS 0.15
     //Gunde.InstantAoeWithBuff.Talent.Empowered.AddedCriticalStrikeChance, 1.00
     //Gunde.InstantAoeWithBuff.Talent.Empowered.Duration, 12.0
@@ -445,13 +432,50 @@ public:
     double deep_rend_proc_chance_st = 0.1;
     // Gunde.PerTargetAccumulatedBleed.Talent.IncreasedDropAmount.NewAmount
     int deep_rend_proc_feathers = 3;
+
+    // Gunde.TargetedAoeProjectile.Talent.Empowered.ProcChance, 0.16
+    double grim_harvest_chance = 0.16;
+    // Gunde.TargetedAoeProjectile.Talent.Empowered.DamageMultiplier, 1.40 ;WAS 2.0
+    double grim_harvest_multiplier = 1.4;
+    // Gunde.TargetedAoeProjectile.Talent.Empowered.Duration, 8.0
+    timespan_t grim_harvest_buff_duration = 8_s;
+    // Gunde.TargetedAoeProjectile.Talent.DamageCooldownReduction.DamageMultiplier, 1.25
+    double carnage_damage_multiplier = 1.25;
+    // Gunde.TargetedAoeProjectile.Talent.DamageCooldownReduction.CooldownReductionInSecondsPerHit, 1.0
+    timespan_t carnage_cdr_per_hit = 1_s;
+
+    // Gunde.InstantAoeWithBuff.Talent.AdditionalStack.MaxStacks, 2.0
+    int superior_serration_blood_arcs = 2;
+
+    // Gunde.HeavyMeleeDotBased.Talent.IncreasedCritChance.AdditionalCritChance, 0.3         ;WAS 0.4
+    double oathshatter_additional_crit = 0.3;
+    // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.Radius, 500.0
+    // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AdditionalTargets, 4.0	; OLD
+    // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.TargetThresholdScaling, 3.0
+    double oathshatter_target_threshold = 3.0;
+    // Gunde.HeavyMeleeDotBased.Talent.LowHealthTarget.AddedCriticalStrikeChance, 1.00
+    double darkening_hearts_execute_cc = 1.0;
+    // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.AdditionalCooldownRecovery, 0.5
+    double bloodbath_cooldown_recovery = 0.5;
+    // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.Duration, 3.0
+    timespan_t bloodbath_duration = 3_s;
+    // Currently doesn't exist
+    double oathshatter_aoe_multiplier = 1.0;
   } talents;
 
   struct legendary_t
   {
     bool lego_1 = false;
+    // Gunde.TargetedAoeProjectile.Talent.AdditionalTicks.Amount, 2.0
+    int lego_1_additional_grim_carve_hits = 2;
 
-    bool lego_2 = false;
+    bool lego_2                           = false;
+    // Gunde.HeavyMeleeDotBased.Talent.Charges.NumOfCharges, 2.0
+    double lego_2_charges = 2.0;
+    // Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.Chance, 0.2
+    double lego_2_hit_chance = 0.2;
+    // Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.DelayBetweenStrikes, 0.4
+    timespan_t lego_2_delay = 0.4_s;
 
     bool lego_3 = false;
   } legendary;
@@ -596,6 +620,49 @@ public:
 namespace actions
 {  // namespace actions
 
+
+
+struct gunde_action_state_t : public action_state_t
+{
+private:
+  double rend_coefficient;
+
+public:
+  gunde_action_state_t( action_t* action, player_t* target )
+    : action_state_t( action, target ), rend_coefficient( 0 )
+  {
+  }
+
+  void initialize() override
+  {
+    action_state_t::initialize();
+    rend_coefficient = 0;
+  }
+
+  std::ostringstream& debug_str( std::ostringstream& s ) override
+  {
+    action_state_t::debug_str( s ) << " rend_coefficient=" << rend_coefficient;
+    return s;
+  }
+
+  void copy_state( const action_state_t* s )
+  {
+    action_state_t::copy_state( s );
+    const gunde_action_state_t* rs = debug_cast<const gunde_action_state_t*>( s );
+    rend_coefficient               = rs->rend_coefficient;
+  }
+
+  double get_rend_coefficient() const
+  {
+    return rend_coefficient;
+  }
+
+  void set_rend_coefficient( double rend_coeff )
+  {
+    rend_coefficient = rend_coeff;
+  }
+};
+
 template <typename Base>
 class gunde_action_t : public fellowship::actions::fs_player_action_t<Base>
 {
@@ -608,13 +675,12 @@ private:
   using ab = fellowship::actions::fs_player_action_t<Base>;
 
 public:
-  bool _applies_rend;
+  double base_rend_applied;
 
   // Init =====================================================================
 
   gunde_action_t( util::string_view n, gunde_t* p, util::string_view options = {} )
-    : ab( n, p, options ),
-      _applies_rend( false )
+    : ab( n, p, options ), base_rend_applied( p->spell_const.rend_accumulation )
   {
     ab::parse_options( options );
     ab::may_crit = ab::tick_may_crit = true;
@@ -627,6 +693,35 @@ public:
   {
     ab::init();
   }
+
+  static const gunde_action_state_t* cast_state( const action_state_t* st )
+  {
+    return debug_cast<const gunde_action_state_t*>( st );
+  }
+
+  static gunde_action_state_t* cast_state( action_state_t* st )
+  {
+    return debug_cast<gunde_action_state_t*>( st );
+  }
+
+  action_state_t* new_state() override
+  {
+    return new gunde_action_state_t( this, ab::target );
+  }
+
+  void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
+  {
+    ab::update_state( state, flags, rt );
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    auto rs = cast_state( state );
+    rs->set_rend_coefficient( rend_coefficient() );
+
+    ab::snapshot_state( state, rt );
+  }
+
 
   gunde_t* p()
   {
@@ -649,6 +744,14 @@ public:
   void trigger_spirit_refund( const action_state_t* );
   void apply_rend( const action_state_t* );
 
+  double rend_coefficient()
+  {
+    if ( base_rend_applied <= 0 )
+      return 0.0;
+
+    return base_rend_applied + p()->buffs.serrated_edge->check_value();
+  }
+
   void execute() override
   {
     ab::execute();
@@ -656,6 +759,10 @@ public:
     if ( ab::hit_any_target && !ab::background )
     {
       trigger_auto_attack( ab::execute_state );
+      if ( rend_coefficient() > 0 )
+      {
+        p()->buffs.serrated_edge->decrement();
+      }
     }
   }
 };
@@ -788,14 +895,14 @@ public:
  }*/
 };
 
-struct melee_t : public gunde_attack_t
+struct melee_t : public attack_t
 {
   bool first;
   bool canceled;
   timespan_t prev_scheduled_time;
 
   melee_t( const char* name, const char* reporting_name, gunde_t* p )
-    : gunde_attack_t( name, p ), first( true ), canceled( false ), prev_scheduled_time( timespan_t::zero() )
+    : attack_t( name, p ), first( true ), canceled( false ), prev_scheduled_time( timespan_t::zero() )
   {
     background = repeating = may_glance = may_crit = true;
     may_miss                                       = true;
@@ -816,7 +923,7 @@ struct melee_t : public gunde_attack_t
 
   void reset() override
   {
-    gunde_attack_t::reset();
+    attack_t::reset();
     first               = true;
     canceled            = false;
     prev_scheduled_time = timespan_t::zero();
@@ -824,7 +931,7 @@ struct melee_t : public gunde_attack_t
 
   timespan_t execute_time() const override
   {
-    timespan_t t = gunde_attack_t::execute_time();
+    timespan_t t = attack_t::execute_time();
 
     if ( first )
     {
@@ -834,7 +941,7 @@ struct melee_t : public gunde_attack_t
     // If we cancel the swing timer mid-fight, use the previous swing timer
     if ( canceled )
     {
-      return std::min( t, std::max( prev_scheduled_time - p()->sim->current_time(), timespan_t::zero() ) );
+      return std::min( t, std::max( prev_scheduled_time - player->sim->current_time(), timespan_t::zero() ) );
     }
 
     return t;
@@ -842,19 +949,20 @@ struct melee_t : public gunde_attack_t
 
   void schedule_execute( action_state_t* state ) override
   {
-    gunde_attack_t::schedule_execute( state );
+    attack_t::schedule_execute( state );
 
     if ( first )
     {
       first = false;
-      p()->sim->print_log( "{} schedules AA start {} with {} swing timer", *p(), *this, time_to_execute );
+      player->sim->print_log( "{} schedules AA start {} with {} swing timer", *player, *this, time_to_execute );
     }
 
     if ( canceled )
     {
       canceled            = false;
       prev_scheduled_time = timespan_t::zero();
-      p()->sim->print_log( "{} schedules AA restart {} with {} swing timer remaining", *p(), *this, time_to_execute );
+      player->sim->print_log( "{} schedules AA restart {} with {} swing timer remaining", *player, *this,
+                              time_to_execute );
     }
   }
 };
@@ -877,7 +985,6 @@ struct auto_melee_attack_t : public action_t
     p->main_hand_attack->id                = 1;
 
     id = 1;
-
 
     add_child( p->actions.melee_hit );
   }
@@ -1061,7 +1168,6 @@ struct double_strike_t : public gunde_attack_t
     {
       background = dual       = true;
       id                      = 4;
-      _applies_rend           = true;
       school                  = SCHOOL_PHYSICAL;
       attack_power_mod.direct = p->spell_const.double_strike_coeff;
       name_str_reporting      = "Double Strike Hit";
@@ -1075,8 +1181,7 @@ struct double_strike_t : public gunde_attack_t
   double_strike_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
     : gunde_attack_t( name, p, options_str ), hits()
   {
-    id = 2;
-    _applies_rend = true;
+    id = 4;
 
     school                  = SCHOOL_PHYSICAL;
 
@@ -1095,24 +1200,24 @@ struct double_strike_t : public gunde_attack_t
     }
   }
 
-  void impact( action_state_t* s ) override
+  void execute() override
   {
-    gunde_attack_t::impact( s );
+    // Manual Finesse N (Vehement) handling due to dual child.
+    auto was_finesse_n_active = fs_p()->fs_buffs.finesse_n->at_max_stacks();
 
+    base_t::execute();
+    
     for ( auto& hit : hits )
     {
-      hit->set_target( s->target );
-      action_state_t* damage_state = hit->get_state( s );
+      hit->set_target( target );
+      action_state_t* damage_state = hit->get_state( execute_state );
 
-      // dmg_action->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
-      // damage_state->persistent_multiplier = execute_state->persistent_multiplier;
+      hit->finesse_n_active = was_finesse_n_active;
 
-      hit->finesse_n_active = finesse_n_active;
-
-      if ( finesse_n_active )
+      if ( was_finesse_n_active )
       {
         fs_p()->fs_buffs.finesse_n->expire();
-        finesse_n_active = false;
+        was_finesse_n_active = false;
       }
 
       hit->schedule_execute( damage_state );
@@ -1128,7 +1233,6 @@ struct grim_carve_t : public gunde_attack_t
     {
       background = dual = true;
       id                = 5;
-      school            = SCHOOL_PHYSICAL;
 
       attack_power_mod.direct = p->spell_const.grim_carve_coeff;
 
@@ -1147,7 +1251,6 @@ struct grim_carve_t : public gunde_attack_t
     : gunde_attack_t( name, p, options_str )
   {
     id                 = 5;
-    school             = SCHOOL_PHYSICAL;
     name_str_reporting = "Grim Carve";
 
     ability_flags |= ability_type_e::ABILITY_POWER;
@@ -1160,25 +1263,172 @@ struct grim_carve_t : public gunde_attack_t
     add_child( hit );
   }
 
-  void impact( action_state_t* s ) override
+  void execute() override
   {
-    gunde_attack_t::impact( s );
+    gunde_attack_t::execute();
 
-    const double haste = composite_haste();
-
-    const timespan_t tick_period = p()->spell_const.grim_carve_period / haste;
+    const timespan_t tick_period = p()->spell_const.grim_carve_period;
 
     const int num_hits =
         static_cast<int>( std::floor( p()->spell_const.grim_carve_duration / p()->spell_const.grim_carve_period ) );
 
     for ( int i = 0; i <= num_hits; ++i )
     {
-      auto* damage_state = hit->get_state( s );
+      auto* damage_state = hit->get_state( execute_state );
 
-      hit->set_target( s->target );
+      hit->set_target( target );
 
-      make_event( *sim, tick_period * i + p()->spell_const.grim_carve_initial_delay,
+      make_event( *sim, tick_period * i * p()->cache.attack_haste() + p()->spell_const.grim_carve_initial_delay,
                   [ this, damage_state ]() { hit->schedule_execute( damage_state ); } );
+    }
+  }
+};
+
+struct reavers_edge_t : public gunde_attack_t
+{
+  reavers_edge_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
+    : gunde_attack_t( name, p, options_str )
+  {
+    id                 = 6;
+    name_str_reporting = "Reavers Edge";
+
+    ability_flags |= ability_type_e::ABILITY_BASIC;
+
+    cooldown->duration = p->spell_const.reavers_edge_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    attack_power_mod.direct = p->spell_const.reavers_edge_coeff;
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->spell_const.reavers_edge_target_threshold;
+  }
+};
+
+struct blood_arc_t : public gunde_attack_t
+{
+  blood_arc_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
+    : gunde_attack_t( name, p, options_str )
+  {
+    id                 = 7;
+    name_str_reporting = "Blood Arc";
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
+
+    cooldown->duration = p->spell_const.blood_arc_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    attack_power_mod.direct = p->spell_const.blood_arc_coeff;
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->spell_const.blood_arc_target_threshold;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    p()->buffs.serrated_edge->trigger();
+  }
+};
+
+struct rupture_t : public gunde_attack_t
+{
+  rupture_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
+    : gunde_attack_t( name, p, options_str )
+  {
+    id                 = 8;
+    name_str_reporting = "Rupture";
+
+    ability_flags |= ability_type_e::ABILITY_POWER;
+
+    cooldown->duration = p->spell_const.rupture_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    attack_power_mod.direct = p->spell_const.rupture_coeff;
+  }
+};
+
+
+struct heart_splitter_t : public gunde_attack_t
+{
+  struct heart_splitter_exsanguinate_t : public gunde_attack_t
+  {
+    heart_splitter_exsanguinate_t( gunde_t* p, bool oathshatter = false ) : gunde_attack_t( "heart_splitter_exsanguinate", p )
+    {
+      id                 = 9;
+      name_str_reporting = "Heart Splitter Exsanguinate";
+      base_rend_applied  = 0;
+      background         = true;
+
+      base_multiplier = p->spell_const.heart_splitter_exsanguinate_coeff;
+
+      if ( oathshatter )
+      {
+        aoe                 = -1;
+        reduced_aoe_targets = p->talents.oathshatter_target_threshold;
+        base_aoe_multiplier = p->talents.oathshatter_aoe_multiplier;
+      }
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      return base_multiplier;
+    }
+
+    void init_finished() override
+    {
+      base_t::init_finished();
+
+      snapshot_flags &= STATE_NO_MULTIPLIER;
+      snapshot_flags |= STATE_MUL_DA;
+      update_flags &= STATE_NO_MULTIPLIER;
+    }
+  };
+
+  action_t* exsanguinate;
+  action_t* exsanguinate_oathshatter;
+  heart_splitter_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
+    : gunde_attack_t( name, p, options_str )
+  {
+    id                 = 9;
+    name_str_reporting = "Heart Splitter";
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
+
+    cooldown->duration = p->spell_const.heart_splitter_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    attack_power_mod.direct = p->spell_const.heart_splitter_coeff;
+
+    base_rend_applied += p->spell_const.heart_splitter_additional_rend;
+
+    exsanguinate             = new heart_splitter_exsanguinate_t( p, false );
+    add_child( exsanguinate );
+
+    if ( p->talents_enabled( gunde_t::OATHSHATTER ) )
+    {
+      exsanguinate_oathshatter = new heart_splitter_exsanguinate_t( p, true );
+      add_child( exsanguinate_oathshatter );
+      base_crit += p->talents.oathshatter_additional_crit;
+    }
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    if ( s->result_amount > 0 )
+    {
+      auto exsang_action =
+          s->result == RESULT_CRIT && exsanguinate_oathshatter ? exsanguinate_oathshatter : exsanguinate;
+      auto current_rend = p()->get_current_rend( s->target );
+
+      if ( current_rend > 0 )
+        exsang_action->execute_on_target( s->target, current_rend );
     }
   }
 };
@@ -1936,6 +2186,14 @@ action_t* gunde_t::create_action( util::string_view name, util::string_view opti
     return new double_strike_t( name, this, options_str );
   if ( name == "grim_carve" )
     return new grim_carve_t( name, this, options_str );
+  if ( name == "reavers_edge" )
+    return new reavers_edge_t( name, this, options_str );
+  if ( name == "blood_arc" )
+    return new blood_arc_t( name, this, options_str );
+  if ( name == "rupture" )
+    return new rupture_t( name, this, options_str );
+  if ( name == "heart_splitter" )
+    return new heart_splitter_t( name, this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -2074,6 +2332,18 @@ void gunde_t::init_resources( bool force )
 void gunde_t::create_buffs()
 {
   fs_player_t::create_buffs();
+
+  buffs.serrated_edge = make_buff<gunde_buff_t>( this, "serrated_edge" )
+                            ->set_duration( spell_const.blood_arc_buff_duration )
+                            ->set_max_stack( spell_const.blood_arc_buff_max_stacks )
+                            ->set_default_value( spell_const.blood_arc_buff_additional_rend );
+
+  if ( talents_enabled( gunde_t::SUPERIOR_SERRATION ) )
+  {
+    buffs.serrated_edge->set_max_stack( talents.superior_serration_blood_arcs );
+  }
+
+  buffs.serrated_edge->set_initial_stack( buffs.serrated_edge->max_stack() );
 
   //buffs.decree_of_the_sun =
   //    make_buff<gunde_buff_t>( this, "decree_of_the_sun" )
@@ -2465,7 +2735,9 @@ void actions::gunde_action_t<Base>::trigger_spirit_refund( const action_state_t*
 template <typename Base>
 void actions::gunde_action_t<Base>::apply_rend( const action_state_t* state )
 {
-  if ( !_applies_rend || state->result_amount <= 0 )
+  // todo get from state.
+  auto rs = cast_state( state );
+  if ( rs->get_rend_coefficient() <= 0 || state->result_amount <= 0 )
     return;
   
   //auto td = p()->get_target_data( state->target );

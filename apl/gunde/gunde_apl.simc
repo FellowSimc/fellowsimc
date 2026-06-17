@@ -1,3 +1,8 @@
 actions.precombat=snapshot_stats
 
-actions=double_strike
+actions=grim_carve
+actions+=/rupture
+actions+=/heart_splitter
+actions+=/reavers_edge
+actions+=/blood_arc
+actions+=/double_strike

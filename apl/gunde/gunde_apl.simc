@@ -1,8 +1,14 @@
 actions.precombat=snapshot_stats
 
-actions=grim_carve
-actions+=/rupture
+actions=bloodbound_spirit
+actions+=/reign_in_blood
+actions+=/owed_in_blood,target_if=debuff.open_wounds.up,if=!buff.bloodcraze.up
+actions+=/rupture,if=buff.serrated_edge.up&active_enemies<=2
+actions+=/grim_carve
+actions+=/rupture,if=active_enemies>2
 actions+=/heart_splitter
 actions+=/reavers_edge
 actions+=/blood_arc
+# actions+=/slaughter,target_if=debuff.open_wounds.up
+# actions+=/slaughter
 actions+=/double_strike

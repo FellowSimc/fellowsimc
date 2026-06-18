@@ -72,20 +72,8 @@ public:
   {
     action_t* auto_attack;
     actions::melee_t* melee_hit;
-    //action_t* double_strike;
-    //action_t* reavers_edge;
     action_t* rend;
     action_t* slaughter;
-    //action_t* heart_splitter;
-    action_t* heart_splitter_exsanguinate;
-    //action_t* rupture;
-    //action_t* blood_arc;
-    //action_t* grim_carve;
-    //action_t* owed_in_blood;
-    //action_t* reign_in_blood;
-    //action_t* slaughter;
-    //action_t* bloodbound_spirit;
-    action_t* bloodbound_spirit_bird;
     action_t* ravens_precision;
     action_t* bloodcraze;
   } actions;
@@ -103,6 +91,7 @@ public:
     buff_t* bloodcraze;
     buff_t* ancestral_insight;
     buff_t* bloodbath;
+    buff_t* bloodbound_spirit;
   } buffs;
 
   struct cooldowns_t
@@ -199,232 +188,231 @@ public:
     timespan_t melee_hit_visual_delay = 0.51_s;
 
     // Gunde.SpiritProc.SpiritPointsGain
-    double spirit_refund_mul = 1.0; 
-    
+    double spirit_refund_mul = 1.0;
+
     // Gunde.SpiritProc.AmountOfOrbs
     int spirit_proc_orbs = 5;
 
-    // Feathers Gunde.SpiritProc.SpawnMinRadius, 150.0 Gunde.SpiritProc.SpawnMaxRadius, 300.0; 
+    // Feathers Gunde.SpiritProc.SpawnMinRadius, 150.0 Gunde.SpiritProc.SpawnMaxRadius, 300.0;
 
     // Gunde.PerTargetAccumulatedBleed.DamageToDotScaler
     double rend_accumulation = 0.5;
     // Gunde.PerTargetAccumulatedBleed.Dot.Duration
     timespan_t rend_duration = 30_s;
     // Gunde.PerTargetAccumulatedBleed.Dot.Period
-    timespan_t rend_period   = 3_s;
-    
+    timespan_t rend_period = 3_s;
+
     // Gunde.PerTargetAccumulatedBleed.TotalDamageToStackCountScaler, 0.0025 ; So 1/100 damage
-        
+
     // Gunde.BoostedDotDamage.Debuff.BleedDamageScaler, 1.20
     double open_wounds_modifier = 1.2;
     // Gunde.BoostedDotDamage.Debuff.Duration, 18.0
     timespan_t open_wounds_duration = 18_s;
-    
+
     // Gunde.ExtraDotDamageGain.BonusAmount, 0.2		;Blood Arc buff
     double blood_arc_buff_additional_rend = 0.2;
     // Gunde.ExtraDotDamageGain.MaxStacks, 1.0
-    int blood_arc_buff_max_stacks      = 1;
+    int blood_arc_buff_max_stacks = 1;
     // Gunde.ExtraDotDamageGain.Duration, 8.0
-    timespan_t blood_arc_buff_duration = 8_s;;
+    timespan_t blood_arc_buff_duration = 8_s;
 
-    //Gunde.BasicSingleTargetAttack.DamageStrengthCoefficientPerHit, 0.55         ; DOUBLE STRIKE WAS 1.0
-    double double_strike_coeff = 0.55;
+    // Gunde.BasicSingleTargetAttack.DamageStrengthCoefficientPerHit, 0.825         ; DOUBLE STRIKE WAS 1.0
+    double double_strike_coeff = 0.825;
     // Gunde.BasicSingleTargetAttack.FirstVisualHitDelay, 0.1
     timespan_t double_strike_first_hit_delay = 0.1_s;
     // Gunde.BasicSingleTargetAttack.SecondVisualHitDelay, 0.45
-    timespan_t double_trike_second_hit_delay = 0.45_s;   
-    //Gunde.BasicSingleTargetAttack.MaxRange, 3000.0
+    timespan_t double_trike_second_hit_delay = 0.45_s;
+    // Gunde.BasicSingleTargetAttack.MaxRange, 3000.0
 
-    // Gunde.InstantWhirlwindAoe.VisualHitDelay, 0.45                               ; REAVER'S EDGE 
+    // Gunde.InstantWhirlwindAoe.VisualHitDelay, 0.45                               ; REAVER'S EDGE
     timespan_t reavers_edge_delay = 0.45_s;
-    //Gunde.InstantWhirlwindAoe.AoeRadius, 700.0
-    //Gunde.InstantWhirlwindAoe.DamageStrengthCoefficient, 2.20                   ; WAS 1.616
-    double reavers_edge_coeff = 2.20;
-    //Gunde.InstantWhirlwindAoe.DamageScalingTargetCountThreshold, 8.0			 ; WAS 3.0
+    // Gunde.InstantWhirlwindAoe.AoeRadius, 700.0
+    // Gunde.InstantWhirlwindAoe.DamageStrengthCoefficient, 2.20                   ; WAS 1.616
+    double reavers_edge_coeff = 1.847;
+    // Gunde.InstantWhirlwindAoe.DamageScalingTargetCountThreshold, 8.0			 ; WAS 3.0
     double reavers_edge_target_threshold = 8.0;
-    //Gunde.InstantWhirlwindAoe.Cooldown, 5.0
+    // Gunde.InstantWhirlwindAoe.Cooldown, 5.0
     timespan_t reavers_edge_cooldown = 5_s;
-    //Gunde.InstantWhirlwindAoe.Talent.GatherOrbs.MaxRange, 700.0
+    // Gunde.InstantWhirlwindAoe.Talent.GatherOrbs.MaxRange, 700.0
 
-
-    //Gunde.HeavyMeleeDotBoost.VisualHitDelay, 0.3                                 ; RUPTURE
+    // Gunde.HeavyMeleeDotBoost.VisualHitDelay, 0.3       ; Rupture
     timespan_t rupture_visual_delay = 0.3_s;
-    //Gunde.HeavyMeleeDotBoost.DamageStrengthCoefficient, 11.16                      ; WAS 8.4
-    double rupture_coeff = 11.16;
-    //Gunde.HeavyMeleeDotBoost.Cooldown, 60.0
+    // Gunde.HeavyMeleeDotBoost.DamageStrengthCoefficient, 21.26                      ; WAS 8.4 then 11.16
+    double rupture_coeff = 21.26;
+    // Gunde.HeavyMeleeDotBoost.Cooldown, 60.0
     timespan_t rupture_cooldown = 60_s;
-    //Gunde.HeavyMeleeDotBoost.Talent.IncreasedDotDamage.Duration, 10.0
-    //Gunde.HeavyMeleeDotBoost.Talent.IncreasedDotDamage.DamageMultiplier, 1.12
-    //Gunde.HeavyMeleeDotBoost.Talent.IncreasedCritAndNoneCritDamage.CritDamageMultiplier, 1.5
-    //Gunde.HeavyMeleeDotBoost.Talent.IncreasedCritAndNoneCritDamage.NoneCritDamageMultiplier, 1.1
-    //Gunde.HeavyMeleeDotBoost.Talent.ReducedCooldown.ReductionInSeconds, 1.0
-    //Gunde.HeavyMeleeDotBoost.Talent.OrbDropper.NumOfOrbs, 8.0
-    //Gunde.HeavyMeleeDotBoost.Talent.OrbDropper.MinRadius, 150.0
-    //Gunde.HeavyMeleeDotBoost.Talent.OrbDropper.MaxRadius, 300.0
-    //Gunde.HeavyMeleeDotBoost.Talent.ReducedCooldownPerOrb.ReductionInSeconds, 0.2
 
-    // Gunde.TargetedAoeProjectile.DamageStrengthCoefficientPerHit, 1.635            ; WAS 2.0
-    double grim_carve_coeff = 1.635;
-    // Gunde.TargetedAoeProjectile.DamageScalingTargetCountThreshold, 12.0
-    double grim_carve_falloff = 12;
+    // Gunde.TargetedAoeProjectile.DamageStrengthCoefficientPerHit, 2.076           ; WAS 1.635
+    double grim_carve_coeff = 2.076;
+    // Gunde.TargetedAoeProjectile.DamageScalingTargetCountThreshold, 5.0			; was 12.0
+    double grim_carve_falloff = 5;
     // Gunde.TargetedAoeProjectile.Aoe.Duration, 1.15
     timespan_t grim_carve_duration = 1.15_s;
     // Gunde.TargetedAoeProjectile.Aoe.Period, 0.5
-    timespan_t grim_carve_period   = 0.5_s;
+    timespan_t grim_carve_period = 0.5_s;
     // Gunde.TargetedAoeProjectile.ProjectileSpawnDelay, 0.14                        ; GRIM CARVE
     timespan_t grim_carve_initial_delay = 0.14_s;
-    //Gunde.TargetedAoeProjectile.Speed, 5000.0
-    //Gunde.TargetedAoeProjectile.Cooldown, 15.0
+    // Gunde.TargetedAoeProjectile.Speed, 5000.0
+    // Gunde.TargetedAoeProjectile.Cooldown, 15.0
     timespan_t grim_carve_cooldown = 15_s;
-    //Gunde.TargetedAoeProjectile.MaxRange, 3000.0
-    //Gunde.TargetedAoeProjectile.Aoe.Radius, 700.0
+    // Gunde.TargetedAoeProjectile.MaxRange, 3000.0
+    // Gunde.TargetedAoeProjectile.Aoe.Radius, 700.0
 
-    //Gunde.DamageReductionSelfBuff.IncomingDamageMultiplier, 0.6                 ; RECKLESS ABANDON
-    //Gunde.DamageReductionSelfBuff.Duration, 4.0
-    //Gunde.DamageReductionSelfBuff.Cooldown, 30.0
-    //Gunde.DamageReductionSelfBuff.VisualDelay, 0.24
+    // Gunde.DamageReductionSelfBuff.IncomingDamageMultiplier, 0.6                 ; RECKLESS ABANDON
+    // Gunde.DamageReductionSelfBuff.Duration, 4.0
+    // Gunde.DamageReductionSelfBuff.Cooldown, 30.0
+    // Gunde.DamageReductionSelfBuff.VisualDelay, 0.24
 
-    //Gunde.SingleTargetInterrupt.MaxRange, 500.0                                 ; HEADSPLITTER
-    //Gunde.SingleTargetInterrupt.Duration, 4.0
-    //Gunde.SingleTargetInterrupt.Cooldown, 16.0
-    //Gunde.SingleTargetInterrupt.VisualDelay, 0.2
+    // Gunde.SingleTargetInterrupt.MaxRange, 500.0                                 ; HEADSPLITTER
+    // Gunde.SingleTargetInterrupt.Duration, 4.0
+    // Gunde.SingleTargetInterrupt.Cooldown, 16.0
+    // Gunde.SingleTargetInterrupt.VisualDelay, 0.2
 
-    //Gunde.ExtraDotDamageBuff.BonusDotDamage, 0.5                                ; REIGN IN BLOOD
+    // Gunde.ExtraDotDamageBuff.BonusDotDamage, 0.5                                ; REIGN IN BLOOD
     double reign_in_blood_additional_rend = 0.5;
-    //Gunde.ExtraDotDamageBuff.Duration, 12.0
+    // Gunde.ExtraDotDamageBuff.Duration, 12.0
     timespan_t reign_in_blood_duration = 12.0_s;
-    //Gunde.ExtraDotDamageBuff.Cooldown, 90.0
+    // Gunde.ExtraDotDamageBuff.Cooldown, 90.0
     timespan_t reign_in_blood_cooldown = 90.0_s;
-    //Gunde.ExtraDotDamageBuff.VisualDelay, 0.2
-    //Gunde.ExtraDotDamageBuff.Talent.Haste.AdditionalHaste, 0.25
+    // Gunde.ExtraDotDamageBuff.VisualDelay, 0.2
 
-    //Gunde.HeavyMeleeDotBased.Cooldown, 12.0                                     ; RECKONING / heart splitter
+    // Gunde.HeavyMeleeDotBased.Cooldown, 12.0                                     ; RECKONING / heart splitter
     timespan_t heart_splitter_cooldown = 12.0_s;
-    //Gunde.HeavyMeleeDotBased.Damage.StrengthCoefficient, 3.70                   ; WAS 3.4
-    double heart_splitter_coeff = 3.70;
-    //Gunde.HeavyMeleeDotBased.Damage.DotCoefficient, 0.50						; WAS 0.10
+    // Gunde.HeavyMeleeDotBased.Damage.StrengthCoefficient, 3.70                   ; WAS 3.4
+    double heart_splitter_coeff = 9.4;
+    // Gunde.HeavyMeleeDotBased.Damage.DotCoefficient, 0.50						; WAS 0.10
     double heart_splitter_exsanguinate_coeff = 0.3;
-    //Gunde.HeavyMeleeDotBased.VisualDelay, 0.35
+    // Gunde.HeavyMeleeDotBased.VisualDelay, 0.35
     timespan_t heart_splitter_visual_delay = 0.35_s;
     double heart_splitter_additional_rend  = 0.5;
 
-    //Gunde.InstantAoeDot.Aoe.Radius, 1000.0                                      ; SLAUGHTER
-    //Gunde.InstantAoeDot.Aoe.Height, 500.0
-    //Gunde.InstantAoeDot.Dot.AccDotToNewDotScaler, 1.60                           ;WAS 1.30
+    // Gunde.InstantAoeDot.Aoe.Radius, 1000.0                                      ; SLAUGHTER
+    // Gunde.InstantAoeDot.Aoe.Height, 500.0
+    // Gunde.InstantAoeDot.Dot.AccDotToNewDotScaler, 1.60                           ;WAS 1.30
     double slaughter_rend_multiplier = 1.60;
-    //Gunde.InstantAoeDot.Dot.Duration, 3.0
+    // Gunde.InstantAoeDot.Dot.Duration, 3.0
     timespan_t slaughter_duration = 3.0_s;
-    //Gunde.InstantAoeDot.Dot.Period, 0.3
+    // Gunde.InstantAoeDot.Dot.Period, 0.3
     timespan_t slaughter_period = 0.3_s;
-    //Gunde.InstantAoeDot.VisualDelay, 0.5
-    //Gunde.InstantAoeDot.Cooldown, 30.0											;WAS 18.0	
+    // Gunde.InstantAoeDot.VisualDelay, 0.5
+    // Gunde.InstantAoeDot.Cooldown, 30.0
+    // ;WAS 18.0
     timespan_t slaughter_cooldown = 30.0_s;
-    //Gunde.InstantAoeDot.Talent.IncreasedCritChance.AdditionalCritChance, 0.1
-    //Gunde.InstantAoeDot.Talent.StacksToHaste.Duration, 8.0
-    //Gunde.InstantAoeDot.Talent.StacksToHaste.AdditionalHastePerStack, 0.0025
-    //Gunde.InstantAoeDot.Talent.StacksToHaste.MaxStacks, 100.0
+    // Gunde.InstantAoeDot.Talent.IncreasedCritChance.AdditionalCritChance, 0.1
+    // Gunde.InstantAoeDot.Talent.StacksToHaste.Duration, 8.0
+    // Gunde.InstantAoeDot.Talent.StacksToHaste.AdditionalHastePerStack, 0.0025
+    // Gunde.InstantAoeDot.Talent.StacksToHaste.MaxStacks, 100.0
 
-    //Gunde.DotTransfer.MaxRange, 2000.0                                          ; OWED IN BLOOD
-    //Gunde.DotTransfer.SelfBuff.Duration, 30.0
-    //Gunde.DotTransfer.VisualDelay, 0.25
-    //Gunde.DotTransfer.Target.Cooldown, 3.0
-    //Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.DamageScalePerStack, 0.0025
-    //Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.MaxStacks, 30.0
-    //Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.Duration, 10.0
-    //Gunde.DotTransfer.Talent.Aoe.Cooldown, 20.0
-    //Gunde.DotTransfer.Talent.Aoe.Radius, 1000.0
-    //Gunde.DotTransfer.Talent.Aoe.MaxStacks, 80.0
-    //Gunde.DotTransfer.Talent.Aoe.StackDuration, 10.0
-    //Gunde.DotTransfer.Talent.ExplosionOnPickup.StrengthCoefficient, 0.34
-    //Gunde.DotTransfer.Talent.ExplosionOnPickup.Radius, 700.0
-    //Gunde.DotTransfer.Talent.ExplosionOnPickup.TargetThresholdScaling, 8.0
-    //Gunde.DotTransfer.Talent.AoeBasedOnStacks.Radius, 700.0
-    //Gunde.DotTransfer.Talent.AoeBasedOnStacks.BaseStrengthCoefficient, 0.20
-    //Gunde.DotTransfer.Talent.AoeBasedOnStacks.DamageIncreasePerStack, 1.20
-    //Gunde.DotTransfer.Talent.AoeBasedOnStacks.TargetThresholdScaling, 5.0
-    //Gunde.DotTransfer.Talent.AoeBasedOnStacks.Period, 3.0
-    //Gunde.DotTransfer.Talent.AoeBasedOnStacks.Duration, 6.0
+    // Gunde.DotTransfer.MaxRange, 2000.0                                          ; OWED IN BLOOD
+    // Gunde.DotTransfer.SelfBuff.Duration, 45.0			;was 30
+    timespan_t owed_in_blood_duration;
+    // Gunde.DotTransfer.VisualDelay, 0.25
+    // Gunde.DotTransfer.Target.Cooldown, 3.0
+    timespan_t owed_in_blood_cooldown = 3_s;
 
-    //Gunde.DotTransfer.Orb.Lifespan, 30.0                                        ;OWED IN BLOOD NEW FUNCTION
-    //Gunde.DotTransfer.Orb.MaxActiveOrbPickups, 20.0
-    //Gunde.DotTransfer.Orb.ActivationDelay, 0.5  								; Mainly to allow the pickups to spawn and linger for a while when the player is already in the trigger
-    //Gunde.DotTransfer.Orb.Scale, 1.5                                            ;WAS 1.0
-    //Gunde.DotTransfer.Orb.PickUpRadius, 360.0                                   ;WAS 150.0
-    //Gunde.DotTransfer.Orb.NumOfStacksPerOrb, 1.0                                ;WAS 2.0
-    //Gunde.DotTransfer.Orb.RelevantDropRadius, 5000.0	                        ; How far away an enemy can die and still drop an orb
-    //Gunde.DotTransfer.Orb.SpawnChanceAtDeath, 0.25
-    //Gunde.DotTransfer.Orb.SpawnChanceAtTick.A, 1.0
-    //Gunde.DotTransfer.Orb.SpawnChanceAtTick.B, 0.50
-    //Gunde.DotTransfer.Orb.SpawnChanceAtTick.C, 0.33
-    //Gunde.DotTransfer.Orb.SpawnChanceAtTick.D, 0.25
-    //Gunde.DotTransfer.Orb.SpawnChanceAtTick.E, 0.20
-    //Gunde.DotTransfer.Orb.SpawnChanceAtTick.F, 0.1667
-    //Gunde.DotTransfer.Orb.SpawnChanceAtTick.G, 0.15
-    //Gunde.DotTransfer.Orb.SpawnInnerRadius, 100.0
-    //Gunde.DotTransfer.Orb.SpawnOuterRadius, 300.0
-    //Gunde.DotTransfer.MaxStacks, 150.0
+    // Gunde.DotTransfer.Orb.Lifespan, 30.0                                        ;OWED IN BLOOD NEW FUNCTION
+    timespan_t feather_duration = 30_s;
+    // Gunde.DotTransfer.Orb.MaxActiveOrbPickups, 20.0
+    int feathers_max_on_ground = 20;
+    // Gunde.DotTransfer.Orb.ActivationDelay, 0.5  								; Mainly
+    // to allow the pickups to spawn and linger for a while when the player is already in the trigger
+    // Gunde.DotTransfer.Orb.Scale, 1.5                                            ;WAS 1.0
+    // Gunde.DotTransfer.Orb.PickUpRadius, 360.0                                   ;WAS 150.0
+    // Gunde.DotTransfer.Orb.NumOfStacksPerOrb, 1.0                                ;WAS 2.0
+    int feathers_per_orb = 1;
+    // Gunde.DotTransfer.Orb.RelevantDropRadius, 5000.0	                        ; How far away an enemy can die and
+    // still drop an orb Gunde.DotTransfer.Orb.SpawnChanceAtDeath, 0.25
+    double feather_chance_on_kill = 0.25;
+    // Gunde.DotTransfer.Orb.SpawnChanceAtTick.A, 1.0
+    // Gunde.DotTransfer.Orb.SpawnChanceAtTick.B, 0.50
+    // Gunde.DotTransfer.Orb.SpawnChanceAtTick.C, 0.33
+    // Gunde.DotTransfer.Orb.SpawnChanceAtTick.D, 0.25
+    // Gunde.DotTransfer.Orb.SpawnChanceAtTick.E, 0.20
+    // Gunde.DotTransfer.Orb.SpawnChanceAtTick.F, 0.1667
+    // Gunde.DotTransfer.Orb.SpawnChanceAtTick.G, 0.15
+    std::array<double, 8> feather_chance_per_rends = {
+        1.0,  1.0, 0.5,    0.33,
+        0.25, 0.2, 0.1667, 0.15 };  // Pad it by an extra 1.0 so can index by active_targets clamped to max array size.
+    // Gunde.DotTransfer.Orb.SpawnInnerRadius, 100.0
+    // Gunde.DotTransfer.Orb.SpawnOuterRadius, 300.0
+    // Gunde.DotTransfer.MaxStacks, 150.0
+    int owed_in_blood_max_stacks = 150;
 
-    //Gunde.SingleTargetPull.Cooldown, 30.0                                       ; BUTCHER'S HOOK
-    //Gunde.SingleTargetPull.MaxRange, 3000.0
-    //Gunde.SingleTargetPull.MaxPullHeight, 1000.0                                ; How high in the air gunde can be while pulling an enemy towards a spot on the ground below him. (enemies never get pulled up into the air.)
-    //Gunde.SingleTargetPull.PullDelay, 0.25
-    //Gunde.SingleTargetPull.PullDuration, 0.2
-    //Gunde.SingleTargetPull.StopDistance, 150.0                                  ; How far from gunde the enemy will end up at.
-    //Gunde.SingleTargetPull.Damage.StrengthCoefficient, 0.37                     ;WAS 0.69
-    //Gunde.SingleTargetPull.Talent.MultiTargets.Radius, 800.0
-    //Gunde.SingleTargetPull.Talent.MultiTargets.AdditionalTargets, 3.0
-    //Gunde.SingleTargetPull.Talent.MultiTargets.AdditionalCooldown, 15.0
+    // Gunde.SingleTargetPull.Cooldown, 30.0                                       ; BUTCHER'S HOOK
+    // Gunde.SingleTargetPull.MaxRange, 3000.0
+    // Gunde.SingleTargetPull.MaxPullHeight, 1000.0                                ; How high in the air gunde can be
+    // while pulling an enemy towards a spot on the ground below him. (enemies never get pulled up into the air.)
+    // Gunde.SingleTargetPull.PullDelay, 0.25
+    // Gunde.SingleTargetPull.PullDuration, 0.2
+    // Gunde.SingleTargetPull.StopDistance, 150.0                                  ; How far from gunde the enemy will
+    // end up at. Gunde.SingleTargetPull.Damage.StrengthCoefficient, 0.37                     ;WAS 0.69
+    // Gunde.SingleTargetPull.Talent.MultiTargets.Radius, 800.0
+    // Gunde.SingleTargetPull.Talent.MultiTargets.AdditionalTargets, 3.0
+    // Gunde.SingleTargetPull.Talent.MultiTargets.AdditionalCooldown, 15.0
 
-    //Gunde.JumpToLocation.Cooldown, 20.0                                         ; WARBOUND
-    //Gunde.JumpToLocation.NumCharges, 2.0
-    //Gunde.JumpToLocation.MaxRangeHorizontal, 2000.0
-    //Gunde.JumpToLocation.MaxRangeUp, 1000.0
-    //Gunde.JumpToLocation.MaxRangeDown, 5000.0
-    //Gunde.JumpToLocation.TargetingRadius, 50.0 ; purly visual right now
-    //Gunde.JumpToLocation.JumpDuration, 0.3
+    // Gunde.JumpToLocation.Cooldown, 20.0                                         ; WARBOUND
+    // Gunde.JumpToLocation.NumCharges, 2.0
+    // Gunde.JumpToLocation.MaxRangeHorizontal, 2000.0
+    // Gunde.JumpToLocation.MaxRangeUp, 1000.0
+    // Gunde.JumpToLocation.MaxRangeDown, 5000.0
+    // Gunde.JumpToLocation.TargetingRadius, 50.0 ; purly visual right now
+    // Gunde.JumpToLocation.JumpDuration, 0.3
 
-    //Gunde.InstantAoeWithBuff.VisualHitDelay, 0.2                               ; BLOOD ARC
-    //Gunde.InstantAoeWithBuff.AoeRadius, 700.0
-    //Gunde.InstantAoeWithBuff.ConePieHeight, 500.0                               ;WAS 200
-    //Gunde.InstantAoeWithBuff.ConePieMinRadius, 0.0
-    //Gunde.InstantAoeWithBuff.ConePieAngleWidth, 120.0
+    // Gunde.InstantAoeWithBuff.VisualHitDelay, 0.2                               ; BLOOD ARC
+    // Gunde.InstantAoeWithBuff.AoeRadius, 700.0
+    // Gunde.InstantAoeWithBuff.ConePieHeight, 500.0                               ;WAS 200
+    // Gunde.InstantAoeWithBuff.ConePieMinRadius, 0.0
+    // Gunde.InstantAoeWithBuff.ConePieAngleWidth, 120.0
 
     // Gunde.InstantAoeWithBuff.DamageStrengthCoefficient, 1.212                    ; WAS 2.0
-    double blood_arc_coeff = 1.212;
+    double blood_arc_coeff = 2.4629;
     // Gunde.InstantAoeWithBuff.DamageScalingTargetCountThreshold, 5.0
-    double blood_arc_target_threshold = 5.0;
+    double blood_arc_target_threshold = 8.0;
     // Gunde.InstantAoeWithBuff.Cooldown, 9.0
     timespan_t blood_arc_cooldown = 9_s;
-    //Gunde.InstantAoeWithBuff.Talent.ChanceCooldownReset.Chance, 0.25            ; WAS 0.15
-    //Gunde.InstantAoeWithBuff.Talent.Empowered.AddedCriticalStrikeChance, 1.00
-    //Gunde.InstantAoeWithBuff.Talent.Empowered.Duration, 12.0
 
-    //Gunde.DurationalAoeDotAndBuff.Radius, 1000.0								; BLOODBOUND SPIRIT
-    //Gunde.DurationalAoeDotAndBuff.Duration, 6.15
-    //Gunde.DurationalAoeDotAndBuff.Period, 1.5
-    //Gunde.DurationalAoeDotAndBuff.StrengthCoefficient, 4.95                      ; WAS 3.5
-    //Gunde.DurationalAoeDotAndBuff.DamageScalingTargetCountThreshold, 8.0
-    //Gunde.DurationalAoeDotAndBuff.CastTime, 1.0
-    //Gunde.DurationalAoeDotAndBuff.SelfBuff.Duration, 20.0
-    //Gunde.DurationalAoeDotAndBuff.SelfBuff.DamageMultiplier, 1.10               ; WAS 1.25
+    // Gunde.DurationalAoeDotAndBuff.Radius, 1000.0								;
+    // BLOODBOUND SPIRIT Gunde.DurationalAoeDotAndBuff.Duration, 6.15 ;was 6.15
+    timespan_t bloodbound_spirit_duration = 6.15_s;
+    // Gunde.DurationalAoeDotAndBuff.Period, 1.5
+    timespan_t bloodbound_spirit_period = 1.5_s;
+    // Gunde.DurationalAoeDotAndBuff.StrengthCoefficient, 4.653                      ; WAS 4.95
+    double bloodbound_spirit_coeff = 4.653;
+    // Gunde.DurationalAoeDotAndBuff.DamageScalingTargetCountThreshold, 3.0		;was 8.0
+    double bloodbound_spirit_fallofff = 3.0;
+    // Gunde.DurationalAoeDotAndBuff.CastTime, 1.0
+    timespan_t bloodbound_spirit_cast_time = 1_s;
+    // Gunde.DurationalAoeDotAndBuff.SelfBuff.Duration, 20.0
+    timespan_t bloodbound_spirit_buff_duration = 20_s;
+    // Gunde.DurationalAoeDotAndBuff.SelfBuff.DamageMultiplier, 1.15               ; WAS 1.25
+    double bloodbound_spirit_buff_amp = 1.15;
 
-    //Gunde.DashAttack.StrengthCoefficient, 0.2									; WARBOUND NEW WAS 0.5
-    //Gunde.DashAttack.DamageRadius, 250.0
-    //Gunde.DashAttack.MaxCharges, 2.0
-    //Gunde.DashAttack.MaxDistance, 1000.0
-    //Gunde.DashAttack.InAirExitSpeed, 1000.0
-    //Gunde.DashAttack.Speed, 2500
-    //Gunde.DashAttack.CooldownDuration, 8.0
-    //Gunde.DashAttack.Talent.DamageMultiplier, 1.15
+    // Gunde.DashAttack.StrengthCoefficient, 0.2
+    // ; WARBOUND NEW WAS 0.5 Gunde.DashAttack.DamageRadius, 250.0 Gunde.DashAttack.MaxCharges, 2.0
+    // Gunde.DashAttack.MaxDistance, 1000.0
+    // Gunde.DashAttack.InAirExitSpeed, 1000.0
+    // Gunde.DashAttack.Speed, 2500
+    // Gunde.DashAttack.CooldownDuration, 8.0
+    // Gunde.DashAttack.Talent.DamageMultiplier, 1.15
 
-    //Gunde.Talent.AbilityToBuffChance.ProcChance, 0.4
-    //Gunde.Talent.AbilityToBuffChance.StrengthMultiplier, 1.06
-    //Gunde.Talent.AbilityToBuffChance.Duration, 6.0
+    // Gunde.Talent.AbilityToBuffChance.ProcChance, 0.4
+    // Gunde.Talent.AbilityToBuffChance.StrengthMultiplier, 1.06
+    // Gunde.Talent.AbilityToBuffChance.Duration, 6.0
 
   } spell_const;
 
   struct talents_t
   {
+    // Gunde.HeavyMeleeDotBoost.Talent.IncreasedDotDamage.Duration, 10.0
+    // Gunde.HeavyMeleeDotBoost.Talent.IncreasedDotDamage.DamageMultiplier, 1.12
+    // Gunde.HeavyMeleeDotBoost.Talent.IncreasedCritAndNoneCritDamage.CritDamageMultiplier, 1.5
+    // Gunde.HeavyMeleeDotBoost.Talent.IncreasedCritAndNoneCritDamage.NoneCritDamageMultiplier, 1.1
+    // Gunde.HeavyMeleeDotBoost.Talent.ReducedCooldown.ReductionInSeconds, 1.0
+    // Gunde.HeavyMeleeDotBoost.Talent.OrbDropper.NumOfOrbs, 8.0
+    int murder_of_crows_feathers = 8;
+    // Gunde.HeavyMeleeDotBoost.Talent.ReducedCooldownPerOrb.ReductionInSeconds, 0.2
+    timespan_t slayers_grin_cdr = 0.2_s;
+
     // Talent Deep Rend
     // Gunde.PerTargetAccumulatedBleed.Talent.ReducedTickSpeed.PeriodFrequencyIncrease
     double deep_rend_tick_speed_increase = 1.2;
@@ -451,16 +439,74 @@ public:
     double oathshatter_additional_crit = 0.3;
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.Radius, 500.0
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AdditionalTargets, 4.0	; OLD
-    // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.TargetThresholdScaling, 3.0
-    double oathshatter_target_threshold = 3.0;
+    // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.TargetThresholdScaling, 8.0
+    double oathshatter_target_threshold = 8.0;
+    // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AoeDamageScaler, 0.25
+    double oathshatter_aoe_multiplier = 0.25;
     // Gunde.HeavyMeleeDotBased.Talent.LowHealthTarget.AddedCriticalStrikeChance, 1.00
     double darkening_hearts_execute_cc = 1.0;
     // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.AdditionalCooldownRecovery, 0.5
     double bloodbath_cooldown_recovery = 0.5;
     // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.Duration, 3.0
     timespan_t bloodbath_duration = 3_s;
-    // Currently doesn't exist
-    double oathshatter_aoe_multiplier = 1.0;
+
+    double crimson_strikes_inc = 0.2;
+
+    
+    // Gunde.ExtraDotDamageBuff.Talent.Haste.AdditionalHaste, 0.25	;old
+    // Gunde.ExtraDotDamageBuff.Talent.AddedBonus.AddedTransfer, 0.25
+    double frenzied_reign_extra_transfer = 0.25;
+
+    
+    // Gunde.InstantAoeWithBuff.Talent.ChanceCooldownReset.Chance, 0.25            ; WAS 0.15
+    double deaths_arc_chance = 0.25;
+    // Gunde.InstantAoeWithBuff.Talent.Empowered.AddedCriticalStrikeChance, 1.00
+    double deaths_arc_added_cc = 1.0;
+    // Gunde.InstantAoeWithBuff.Talent.Empowered.Duration, 12.0
+    timespan_t deaths_arc_duration = 12_s;
+
+    // Gunde.Talent.AbilityToBuffChance.ProcChance, 0.4
+    double ancestral_insight_chance = 0.4;
+    // Gunde.Talent.AbilityToBuffChance.StrengthMultiplier, 1.06
+    double ancestral_insight_multiplier = 1.06;
+    // Gunde.Talent.AbilityToBuffChance.Duration, 6.0
+    timespan_t ancestral_insight_duration = 6_s;
+
+    // Gunde.InstantAoeDot.Talent.StacksToHaste.Duration, 8.0
+    timespan_t massacre_duration = 8_s;
+    // Gunde.InstantAoeDot.Talent.StacksToHaste.AdditionalHastePerStack, 0.0025
+    double massacre_per_stack = 0.0025;
+    // Gunde.InstantAoeDot.Talent.StacksToHaste.MaxStacks, 100.0
+    int massacre_max_stacks = 100;
+
+    // Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.DamageScalePerStack, 0.0025
+    double harvesters_toll_amp_per_stack = 0.0025;
+    // Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.MaxStacks, 30.0
+    int harvesters_toll_max_stacks = 30;
+    // Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.Duration, 10.0
+    timespan_t harvesters_toll_duration = 10_s;
+
+    // Gunde.DotTransfer.Talent.Aoe.Cooldown, 20.0
+    // Gunde.DotTransfer.Talent.Aoe.Radius, 1000.0
+    // Gunde.DotTransfer.Talent.Aoe.MaxStacks, 80.0
+    // Gunde.DotTransfer.Talent.Aoe.StackDuration, 10.0
+ 
+    // Gunde.DotTransfer.Talent.ExplosionOnPickup.StrengthCoefficient, 0.34
+    double ravens_precision_coeff = 0.34;
+    // Gunde.DotTransfer.Talent.ExplosionOnPickup.Radius, 700.0
+    // Gunde.DotTransfer.Talent.ExplosionOnPickup.TargetThresholdScaling, 8.0
+    double ravens_precision_falloff = 8;
+    // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Radius, 700.0
+    // Gunde.DotTransfer.Talent.AoeBasedOnStacks.BaseStrengthCoefficient, 0.20
+    double bloodcraze_coeff = 0.2;
+    // Gunde.DotTransfer.Talent.AoeBasedOnStacks.DamageIncreasePerStack, 0.90
+    double bloodcraze_amp_per_stack = 0.9;
+    // Gunde.DotTransfer.Talent.AoeBasedOnStacks.TargetThresholdScaling, 5.0
+    double bloodcraze_falloff = 5.0;
+    // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Period, 3.0
+    timespan_t bloodcraze_period = 3_s;
+    // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Duration, 6.15
+    timespan_t bloodcraze_duration = 6.15_s;
   } talents;
 
   struct legendary_t
@@ -574,6 +620,8 @@ public:
     return get_current_rend( target );
   }
 
+  void spawn_feathers( int quantity = 1 );
+
   std::string default_flask() const override
   {
     return "disabled";
@@ -676,11 +724,14 @@ private:
 
 public:
   double base_rend_applied;
+  bool _affected_by_serrated_edge;
 
   // Init =====================================================================
 
   gunde_action_t( util::string_view n, gunde_t* p, util::string_view options = {} )
-    : ab( n, p, options ), base_rend_applied( p->spell_const.rend_accumulation )
+    : ab( n, p, options ),
+      base_rend_applied( p->spell_const.rend_accumulation ),
+      _affected_by_serrated_edge( true )
   {
     ab::parse_options( options );
     ab::may_crit = ab::tick_may_crit = true;
@@ -738,6 +789,15 @@ public:
     return p()->get_target_data( t );
   }
 
+  double composite_da_multiplier(const action_state_t* s) const
+  {
+    auto mul = ab::composite_da_multiplier( s );
+
+    mul *= 1.0 + p()->buffs.crimson_strikes->check_value();
+
+    return mul;
+  }
+
 public:
   // Ability triggers
   void trigger_auto_attack( const action_state_t* );
@@ -746,10 +806,15 @@ public:
 
   double rend_coefficient()
   {
-    if ( base_rend_applied <= 0 )
+    if ( base_rend_applied <= 0.0 )
       return 0.0;
 
-    return base_rend_applied + p()->buffs.serrated_edge->check_value();
+    auto rend_coeff = base_rend_applied + p()->buffs.reign_in_blood->check_value();
+
+    if ( _affected_by_serrated_edge )
+      rend_coeff += p()->buffs.serrated_edge->check_value();
+
+    return rend_coeff;
   }
 
   void execute() override
@@ -759,9 +824,19 @@ public:
     if ( ab::hit_any_target && !ab::background )
     {
       trigger_auto_attack( ab::execute_state );
+
       if ( rend_coefficient() > 0 )
       {
-        p()->buffs.serrated_edge->decrement();
+        if ( p()->rng().roll( p()->cache.mastery_value() ) )
+        {
+          trigger_spirit_refund( ab::execute_state );
+        }
+
+        if ( _affected_by_serrated_edge )
+        {
+          p()->buffs.serrated_edge->decrement();
+          p()->buffs.crimson_strikes->decrement();
+        }
       }
     }
   }
@@ -774,10 +849,13 @@ public:
 struct gunde_heal_t : public gunde_action_t<heal_t>
 {
 protected:
-  using base_t = gunde_action_t<heal_t>;
+  using base_t = gunde_heal_t;
+
+private:
+  using ab = gunde_action_t<heal_t>;
 
 public:
-  gunde_heal_t( util::string_view n, gunde_t* p, util::string_view o = {} ) : base_t( n, p, o )
+  gunde_heal_t( util::string_view n, gunde_t* p, util::string_view o = {} ) : ab( n, p, o )
   {
     harmful = false;
     set_target( p );
@@ -808,10 +886,13 @@ public:
 struct gunde_spell_t : public gunde_action_t<spell_t>
 {
 protected:
-  using base_t = gunde_action_t<spell_t>;
+  using base_t = gunde_spell_t;
+
+private:
+  using ab = gunde_action_t<spell_t>;
 
 public:
-  gunde_spell_t( util::string_view n, gunde_t* p, util::string_view o = {} ) : base_t( n, p, o )
+  gunde_spell_t( util::string_view n, gunde_t* p, util::string_view o = {} ) : ab( n, p, o )
   {
     school = SCHOOL_MAGIC;
   }
@@ -820,10 +901,13 @@ public:
 struct gunde_attack_t : public gunde_action_t<melee_attack_t>
 {
 protected:
-  using base_t = gunde_action_t<melee_attack_t>;
+  using base_t = gunde_attack_t;
+
+private:
+    using ab = gunde_action_t<melee_attack_t>;
 
 public:
-  gunde_attack_t( util::string_view n, gunde_t* p, util::string_view o = {} ) : base_t( n, p, o )
+    gunde_attack_t( util::string_view n, gunde_t* p, util::string_view o = {} ) : ab( n, p, o )
   {
     special = true;
     school  = SCHOOL_PHYSICAL;
@@ -831,7 +915,7 @@ public:
 
   void impact( action_state_t* s ) override
   {
-    base_t::impact( s );
+    ab::impact( s );
 
     if ( result_is_hit( s->result ) )
     {
@@ -843,10 +927,13 @@ public:
 struct gunde_absorb_t : public gunde_action_t<absorb_t>
 {
 protected:
-  using base_t = gunde_action_t<absorb_t>;
+  using base_t = gunde_absorb_t;
+
+private:
+    using ab = gunde_action_t<absorb_t>;
 
 public:
-  gunde_absorb_t( util::string_view n, gunde_t* p, util::string_view o = {} ) : base_t( n, p, o )
+    gunde_absorb_t( util::string_view n, gunde_t* p, util::string_view o = {} ) : ab( n, p, o )
   {
     may_crit      = false;
     tick_may_crit = false;
@@ -1015,6 +1102,7 @@ struct rend_t : public gunde_attack_t
     name_str_reporting = "Rend";
 
     tick_may_crit = false;
+    may_crit      = false;
 
     dot_duration           = p->spell_const.rend_duration;
     dot_behavior           = DOT_REFRESH_DURATION;
@@ -1022,14 +1110,12 @@ struct rend_t : public gunde_attack_t
     hasted_ticks           = false;
     dot_allow_partial_tick = true;
 
-    name_str_reporting = "Rend";
-
     to_tick_multiplier = base_tick_time / dot_duration;
   }
 
   void init_finished() override
   {
-    base_t::init_finished();
+    gunde_attack_t::init_finished();
     snapshot_flags = 0;
     update_flags   = 0;
   }
@@ -1073,12 +1159,21 @@ struct rend_t : public gunde_attack_t
 
   void tick( dot_t* d ) override
   {
-    base_t::tick( d );
+    gunde_attack_t::tick( d );
         
     auto& rend_obj = p()->get_target_data( d->state->target )->rend_tracker;
     rend_obj.tick_buckets[ rend_obj.current_tick++ ] = 0;
     if ( rend_obj.current_tick >= 10 )
       rend_obj.current_tick = 0;
+
+    auto active_dots =
+        std::max<size_t>( p()->get_active_dots( d ), p()->spell_const.feather_chance_per_rends.size() - 1 ); 
+    auto proc_chance = p()->spell_const.feather_chance_per_rends[ active_dots ];
+
+    if ( p()->rng().roll( proc_chance ) )
+    {
+      p()->spawn_feathers( 1 );
+    }
   }
 };
 
@@ -1092,6 +1187,7 @@ struct slaughter_dot_t : public gunde_attack_t
     name_str_reporting = "Slaughter (DoT)";
 
     tick_may_crit = false;
+    may_crit      = false;
 
     dot_duration           = p->spell_const.slaughter_duration;
     dot_behavior           = DOT_REFRESH_DURATION;
@@ -1099,14 +1195,12 @@ struct slaughter_dot_t : public gunde_attack_t
     hasted_ticks           = false;
     dot_allow_partial_tick = true;
 
-    name_str_reporting = "Rend";
-
     to_tick_multiplier = base_tick_time / dot_duration;
   }
 
   void init_finished() override
   {
-    base_t::init_finished();
+    gunde_attack_t::init_finished();
     snapshot_flags = 0;
     update_flags   = 0;
   }
@@ -1150,7 +1244,7 @@ struct slaughter_dot_t : public gunde_attack_t
 
   void tick( dot_t* d ) override
   {
-    base_t::tick( d );
+    gunde_attack_t::tick( d );
 
     auto& rend_obj                                   = p()->get_target_data( d->state->target )->slaughter_tracker;
     rend_obj.tick_buckets[ rend_obj.current_tick++ ] = 0;
@@ -1205,7 +1299,7 @@ struct double_strike_t : public gunde_attack_t
     // Manual Finesse N (Vehement) handling due to dual child.
     auto was_finesse_n_active = fs_p()->fs_buffs.finesse_n->at_max_stacks();
 
-    base_t::execute();
+    gunde_attack_t::execute();
     
     for ( auto& hit : hits )
     {
@@ -1327,9 +1421,23 @@ struct blood_arc_t : public gunde_attack_t
 
   void execute() override
   {
-    base_t::execute();
+    gunde_attack_t::execute();
 
     p()->buffs.serrated_edge->trigger();
+
+    if ( p()->talents_enabled( gunde_t::CRIMSON_STRIKES ) )
+    {
+      p()->buffs.crimson_strikes->trigger();
+    }
+
+    if ( p()->talents_enabled( gunde_t::DEATHS_ARC ) )
+    {
+      if ( p()->rng_objects.deaths_arc->trigger() )
+      {
+        cooldown->reset( true, 1 );
+        p()->buffs.deaths_arc->trigger();
+      }
+    }
   }
 };
 
@@ -1345,9 +1453,16 @@ struct rupture_t : public gunde_attack_t
 
     cooldown->duration = p->spell_const.rupture_cooldown;
     cooldown->charges  = 1;
-    cooldown->hasted   = true;
+    cooldown->hasted   = false;
 
     attack_power_mod.direct = p->spell_const.rupture_coeff;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    p()->get_target_data( s->target )->debuffs.open_wounds->trigger();
   }
 };
 
@@ -1360,7 +1475,7 @@ struct heart_splitter_t : public gunde_attack_t
     {
       id                 = 9;
       name_str_reporting = "Heart Splitter Exsanguinate";
-      base_rend_applied  = 0;
+      base_rend_applied  = 0.0;
       background         = true;
 
       base_multiplier = p->spell_const.heart_splitter_exsanguinate_coeff;
@@ -1371,6 +1486,8 @@ struct heart_splitter_t : public gunde_attack_t
         reduced_aoe_targets = p->talents.oathshatter_target_threshold;
         base_aoe_multiplier = p->talents.oathshatter_aoe_multiplier;
       }
+
+      may_crit = false;
     }
 
     double composite_da_multiplier( const action_state_t* s ) const override
@@ -1380,18 +1497,16 @@ struct heart_splitter_t : public gunde_attack_t
 
     void init_finished() override
     {
-      base_t::init_finished();
+      gunde_attack_t::init_finished();
 
-      snapshot_flags &= STATE_NO_MULTIPLIER;
-      snapshot_flags |= STATE_MUL_DA;
-      update_flags &= STATE_NO_MULTIPLIER;
+      snapshot_flags = STATE_MUL_DA;
     }
   };
 
   action_t* exsanguinate;
   action_t* exsanguinate_oathshatter;
   heart_splitter_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
-    : gunde_attack_t( name, p, options_str )
+    : gunde_attack_t( name, p, options_str ), exsanguinate( nullptr ), exsanguinate_oathshatter( nullptr )
   {
     id                 = 9;
     name_str_reporting = "Heart Splitter";
@@ -1419,7 +1534,7 @@ struct heart_splitter_t : public gunde_attack_t
 
   void impact( action_state_t* s ) override
   {
-    base_t::impact( s );
+    gunde_attack_t::impact( s );
 
     if ( s->result_amount > 0 )
     {
@@ -1430,6 +1545,236 @@ struct heart_splitter_t : public gunde_attack_t
       if ( current_rend > 0 )
         exsang_action->execute_on_target( s->target, current_rend );
     }
+  }
+};
+
+struct reign_in_blood_t : public gunde_spell_t
+{
+  reign_in_blood_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
+    : gunde_spell_t( name, p, options_str )
+  {
+    id                = 10;
+    base_rend_applied = 0.0;
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = p->spell_const.reign_in_blood_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+    p()->buffs.reign_in_blood->trigger();
+  }
+};
+
+struct slaughter_t : public gunde_spell_t
+{
+  slaughter_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
+    : gunde_spell_t( name, p, options_str )
+  {
+    id                = 11;
+    base_rend_applied = 0.0;
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = p->spell_const.slaughter_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    aoe = -1;
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    auto td = p()->get_target_data( s->target );
+
+    auto current_rend = p()->get_current_rend( s->target );
+    auto open_wounds  = td->debuffs.open_wounds->check_value();
+    td->debuffs.open_wounds->decrement();
+
+    int rend_stacks = static_cast<int>( ( current_rend / p()->cache.strength() ) );
+
+    if ( p()->talent_enabled( gunde_t::MASSACRE ) )
+    {
+      p()->buffs.massacre->trigger( rend_stacks );
+    }
+
+    current_rend *= 1.0 + open_wounds;
+    current_rend *= p()->spell_const.slaughter_rend_multiplier;
+
+    for ( auto& bucket : td->rend_tracker.tick_buckets )
+    {
+      bucket = 0;
+    }
+
+    td->rend_tracker.current_tick = 0;
+    td->dots.rend->cancel();
+
+    auto action                     = p()->actions.slaughter;
+    action_state_t* slaughter_state = action->get_state();
+    slaughter_state->result_amount  = current_rend;
+    slaughter_state->target         = s->target;
+    slaughter_state->result         = RESULT_HIT;
+    action->snapshot_state( slaughter_state, result_amount_type::DMG_OVER_TIME );
+    action->schedule_travel( slaughter_state );
+  }
+};
+
+struct owed_in_blood_t : public gunde_spell_t
+{
+  owed_in_blood_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
+    : gunde_spell_t( name, p, options_str )
+  {
+    id                = 12;
+    base_rend_applied = 0.0;
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = p->spell_const.owed_in_blood_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    aoe = -1;
+
+    
+    name_str_reporting = "Owed in Blood";
+  }
+  
+  void execute() override
+  {
+    base_t::execute();
+
+    auto stacks   = p()->buffs.owed_in_blood->check();
+    auto new_rend = stacks * p()->cache.strength();
+
+    auto action                = p()->actions.rend;
+    action_state_t* rend_state = action->get_state();
+    rend_state->result_amount  = new_rend;
+    rend_state->target         = target;
+    rend_state->result         = RESULT_HIT;
+    action->snapshot_state( rend_state, result_amount_type::DMG_OVER_TIME );
+    action->schedule_travel( rend_state );
+
+    p()->buffs.owed_in_blood->expire();
+
+    if ( p()->talents_enabled( gunde_t::HARVESTERS_TOLL ) )
+    {
+      p()->buffs.harvesters_toll->trigger( stacks );
+    }
+
+    if ( p()->talents_enabled( gunde_t::BLOODCRAZE ) )
+    {
+      p()->buffs.bloodcraze->expire();
+      p()->buffs.bloodcraze->trigger( stacks );
+    }
+  }
+};
+
+struct bloodcraze_t : public gunde_spell_t
+{
+  bloodcraze_t( gunde_t* p ) : gunde_spell_t( "bloodcraze", p )
+  {
+    id                 = 13;
+    name_str_reporting = "Bloodcraze";
+    base_rend_applied  = 0.0;
+
+    background = true;
+
+    attack_power_mod.direct = p->talents.bloodcraze_coeff;
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->talents.bloodcraze_coeff;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto m = base_t::composite_da_multiplier( s );
+
+    m *= ( 1 + p()->buffs.bloodcraze->check_stack_value() );
+
+    return m;
+  }
+};
+
+struct ravens_precision_t : public gunde_attack_t
+{
+  ravens_precision_t( gunde_t* p ) : gunde_attack_t( "ravens_precision", p )
+  {
+    id                 = 14;
+    name_str_reporting = "Ravens Precision";
+    base_rend_applied  = 0.0;
+
+    background = true;
+
+    attack_power_mod.direct = p->talents.ravens_precision_coeff;
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->talents.ravens_precision_falloff;
+    name_str_reporting  = "Ravens Precision";
+  }
+};
+
+struct bloodbound_spirit_t : public gunde_attack_t
+{
+  struct bloodbound_spirit_hit_t : public gunde_attack_t
+  {
+    bloodbound_spirit_hit_t( util::string_view name, gunde_t* p ) : gunde_attack_t( name, p )
+    {
+      id = 15;
+
+      _affected_by_serrated_edge = false;
+      background = dual = true;
+
+      ability_flags |= ability_type_e::ABILITY_SPIRIT;
+      attack_power_mod.direct = p->spell_const.bloodbound_spirit_coeff;
+      aoe                     = -1;
+      reduced_aoe_targets     = p->spell_const.bloodbound_spirit_fallofff;
+
+      name_str_reporting = "Bloodbound Spirit (Hit)";
+    }
+  };
+
+  action_t* damage;
+  bloodbound_spirit_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
+    : gunde_attack_t( name, p, options_str ), damage( new bloodbound_spirit_hit_t( "bloodbound_spirit_hit", p ) )
+  {
+    id                = 15;
+
+    _affected_by_serrated_edge = false;
+
+    base_execute_time = p->spell_const.bloodbound_spirit_cast_time;
+
+    resource_current              = RESOURCE_SPIRIT;
+    base_costs[ RESOURCE_SPIRIT ] = 100;
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
+    
+    name_str_reporting = "Bloodbound Spirit";
+
+    add_child( damage );
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    p()->fs_buffs.spirit_of_heroism->trigger();
+    p()->buffs.bloodbound_spirit->trigger();
+    p()->used_ultimate();
+
+    make_event<ground_aoe_event_t>( *sim, p(),
+                                    ground_aoe_params_t()
+                                        .target( execute_state->target )
+                                        .pulse_time( p()->spell_const.bloodbound_spirit_period )
+                                        .duration( p()->spell_const.bloodbound_spirit_duration )
+                                        .action( damage ),
+                                    true );
   }
 };
 
@@ -1998,6 +2343,10 @@ gunde_td_t::gunde_td_t( player_t* target, gunde_t* source )
   dots.rend      = target->get_dot( "rend", source );
   dots.slaughter = target->get_dot( "slaughter", source );
 
+  debuffs.open_wounds = make_buff( *this, "open_wounds" )
+                            ->set_duration( source->spell_const.open_wounds_duration )
+                            ->set_default_value( source->spell_const.open_wounds_modifier - 1 );
+
   // dots.sunburn    = target->get_dot( "sunburn", source );
   //dots.suns_touch = target->get_dot( "suns_touch", source );
 
@@ -2194,6 +2543,14 @@ action_t* gunde_t::create_action( util::string_view name, util::string_view opti
     return new rupture_t( name, this, options_str );
   if ( name == "heart_splitter" )
     return new heart_splitter_t( name, this, options_str );
+  if ( name == "reign_in_blood" )
+    return new reign_in_blood_t( name, this, options_str );
+  if ( name == "slaughter" )
+    return new slaughter_t( name, this, options_str );
+  if ( name == "owed_in_blood" )
+    return new owed_in_blood_t( name, this, options_str );
+  if ( name == "bloodbound_spirit" )
+    return new bloodbound_spirit_t( name, this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -2333,6 +2690,65 @@ void gunde_t::create_buffs()
 {
   fs_player_t::create_buffs();
 
+  buffs.bloodbound_spirit = make_buff<gunde_buff_t>( this, "bloodbound_spirit" )
+                                ->set_duration( spell_const.bloodbound_spirit_buff_duration )
+                                ->set_default_value( spell_const.bloodbound_spirit_buff_amp - 1 );
+
+  buffs.bloodcraze = make_buff<gunde_buff_t>( this, "bloodcraze" )
+                         ->set_duration( talents.bloodcraze_duration )
+                         ->set_default_value( talents.bloodcraze_amp_per_stack )
+                         ->set_period( talents.bloodcraze_period )
+                         ->set_tick_zero( true )
+                         ->set_freeze_stacks( true )
+                         ->set_max_stack( spell_const.owed_in_blood_max_stacks )
+                         ->set_tick_callback( [ this ]( buff_t* buff, int current_tick, timespan_t tick_time ) {
+                           actions.bloodcraze->execute();
+                         } );
+
+  buffs.bloodbath = make_buff<gunde_buff_t>( this, "bloodbath" )
+                        ->set_duration( talents.bloodbath_duration )
+                        ->set_default_value( talents.bloodbath_cooldown_recovery )
+                        ->add_stack_change_callback(
+                            [ this ]( auto, auto, auto ) { cooldowns.heart_splitter->adjust_recharge_multiplier(); } );
+
+  buffs.harvesters_toll = make_buff<gunde_buff_t>( this, "harvesters_toll" )
+                              ->set_default_value( talents.harvesters_toll_amp_per_stack )
+                              ->set_max_stack( talents.harvesters_toll_max_stacks )
+                              ->set_duration( talents.harvesters_toll_duration );
+
+  buffs.owed_in_blood = make_buff<gunde_buff_t>( this, "owed_in_blood" )
+                            ->set_duration( spell_const.owed_in_blood_duration )
+                            ->set_max_stack( spell_const.owed_in_blood_max_stacks )
+                            ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+
+  buffs.massacre = make_buff<gunde_buff_t>( this, "massacre" )
+                       ->set_duration( talents.massacre_duration )
+                       ->set_default_value( talents.massacre_per_stack )
+                       ->set_max_stack(talents.massacre_max_stacks )
+                       ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
+
+  buffs.grim_harvest = make_buff<gunde_buff_t>( this, "grim_harvest" )
+                           ->set_duration( talents.grim_harvest_buff_duration )
+                           ->set_default_value( talents.grim_harvest_multiplier );
+
+  buffs.ancestral_insight = make_buff<gunde_buff_t>( this, "ancestral_inisght" )
+                                ->set_duration( talents.ancestral_insight_duration )
+                                ->set_default_value( talents.ancestral_insight_multiplier - 1 )
+                                ->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+
+  buffs.deaths_arc = make_buff<gunde_buff_t>( this, "deaths_arc" )
+                         ->set_duration( talents.deaths_arc_duration )
+                         ->set_default_value( talents.deaths_arc_added_cc );
+
+  buffs.reign_in_blood = make_buff<gunde_buff_t>( this, "reign_in_blood" )
+                             ->set_default_value( spell_const.reign_in_blood_additional_rend )
+                             ->set_duration( spell_const.reign_in_blood_duration );
+
+  if ( talents_enabled( gunde_t::FRENZIED_REGEN ) )
+  {
+    buffs.reign_in_blood->default_value += talents.frenzied_reign_extra_transfer;
+  }
+
   buffs.serrated_edge = make_buff<gunde_buff_t>( this, "serrated_edge" )
                             ->set_duration( spell_const.blood_arc_buff_duration )
                             ->set_max_stack( spell_const.blood_arc_buff_max_stacks )
@@ -2345,67 +2761,10 @@ void gunde_t::create_buffs()
 
   buffs.serrated_edge->set_initial_stack( buffs.serrated_edge->max_stack() );
 
-  //buffs.decree_of_the_sun =
-  //    make_buff<gunde_buff_t>( this, "decree_of_the_sun" )
-  //        ->set_duration( spell_const.decree_of_the_sun_dr_duration + spell_const.decree_of_the_sun_invuln_duration )
-  //        ->set_max_stack( 1 )
-  //        ->set_refresh_behavior( buff_refresh_behavior::DURATION )
-  //        ->set_period( spell_const.decree_of_the_sun_pulse_period )
-  //        ->set_tick_callback( [ this ]( buff_t*, int, timespan_t ) { actions.decree_of_the_sun_heal->execute(); } );
-
-  //buffs.decree_of_the_sun_invuln = make_buff<gunde_buff_t>( this, "decree_of_the_sun_invuln" )
-  //                                     ->set_duration( spell_const.decree_of_the_sun_invuln_duration )
-  //                                     ->set_max_stack( 1 )
-  //                                     ->set_refresh_behavior( buff_refresh_behavior::DURATION )
-  //                                     ->add_stack_change_callback( [ this ]( buff_t* b, int old, int _new ) {
-  //                                       if ( !_new )
-  //                                       {
-  //                                         actions.decree_of_the_sun_dmg->execute();
-  //                                         buffs.decree_of_the_sun_dr->trigger();
-  //                                       }
-  //                                     } );
-
-  //buffs.decree_of_the_sun_dr = make_buff<gunde_buff_t>( this, "decree_of_the_sun_dr" )
-  //                                 ->set_duration( spell_const.decree_of_the_sun_dr_duration )
-  //                                 ->set_max_stack( 1 )
-  //                                 ->set_refresh_behavior( buff_refresh_behavior::DURATION );
-
-  //buffs.vanguard_of_vengeance = make_buff<gunde_buff_t>( this, "vanguard_of_vengeance" )
-  //                                  ->set_duration( talents.vanguard_of_vengeance_buff_duration )
-  //                                  ->set_max_stack( talents.vanguard_of_vengeance_max_stacks )
-  //                                  ->set_default_value( talents.vanguard_of_vengeance_spirit_per_stack )
-  //                                  ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
-
-  //buffs.swift_reprieval = make_buff<gunde_buff_t>( this, "swift_reprieval" )
-  //                            ->set_max_stack( spell_const.swift_reprieval_max_stacks )
-  //                            ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
-
-  //buffs.aura_of_solace = make_buff<gunde_buff_t>( this, "aura_of_solace" )
-  //                           ->set_default_value( spell_const.aura_of_solace_parry )
-  //                           ->add_stack_change_callback( [ this ]( buff_t* b, int old, int _new ) {
-  //                             if ( _new > old )
-  //                             {
-  //                               b->player->current.parry += b->current_value;
-  //                             }
-  //                             else
-  //                             {
-  //                               b->player->current.parry -= b->current_value;
-  //                             }
-  //                           } )
-  //                           ->add_invalidate( CACHE_PARRY );
-
-  //buffs.suns_verdict = make_buff<gunde_buff_t>( this, "suns_verdict" )
-  //                         ->set_max_stack( talents.suns_verdict_max_stacks )
-  //                         ->set_duration( talents.suns_verdict_duration );
-
-  //buffs.golden_hour = make_buff<gunde_buff_t>( this, "golden_hour" )
-  //                        ->set_duration( talents.golden_hour_buff_duration )
-  //                        ->set_max_stack( 1 )
-  //                        ->set_refresh_behavior( buff_refresh_behavior::DURATION );
-
-  //buffs.omega_reprieval = make_buff<gunde_buff_t>( this, "omega_reprieval" )
-  //                            ->set_max_stack( spell_const.omega_reprieval_max_stacks )
-  //                            ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+  buffs.crimson_strikes = make_buff<gunde_buff_t>( this, "crimson_strikes" )
+                              ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                              ->set_default_value( talents.crimson_strikes_inc )
+                              ->set_max_stack( 1 );
 }
 
 // gunde_t::invalidate_cache =========================================
@@ -2587,8 +2946,11 @@ void gunde_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
-  actions.rend      = new actions::rend_t( this );
-  actions.slaughter = new actions::slaughter_dot_t( this );
+  actions.rend             = new actions::rend_t( this );
+  actions.slaughter        = new actions::slaughter_dot_t( this );
+  actions.bloodcraze       = new actions::bloodcraze_t( this );
+  actions.ravens_precision = new actions::ravens_precision_t( this );
+
 
   //actions.suns_verdict                     = new actions::suns_verdict_t( this );
 
@@ -2604,6 +2966,10 @@ void gunde_t::init_background_actions()
 void gunde_t::init_rng()
 {
   fs_player_t::init_rng();
+
+  rng_objects.deaths_arc = get_accumulated_rng( "deaths_arc", rng::CfromP( talents.deaths_arc_chance ) );
+  rng_objects.grim_harvest = get_accumulated_rng( "grim_harvset", rng::CfromP( talents.grim_harvest_chance ) );
+  rng_objects.ancestral_insight = get_accumulated_rng( "ancestral_insight", rng::CfromP( talents.ancestral_insight_chance ) );
 
   //rng_objects.golden_hour = get_accumulated_rng( "golden_hour", rng::CfromP( talents.golden_hour_proc_chance ) );
 
@@ -2660,6 +3026,17 @@ double gunde_t::get_current_rend( player_t* t ) const
 {
   auto& rend_obj = get_target_data( t )->rend_tracker;
   return std::accumulate( rend_obj.tick_buckets.begin(), rend_obj.tick_buckets.end(), 0.0 );
+}
+
+void gunde_t::spawn_feathers( int quantity )
+{
+  buffs.owed_in_blood->trigger( quantity );
+
+  if ( talents_enabled( gunde_t::RAVENS_PRECISION ) )
+  {
+    for ( int i = 0; i < quantity; i++ )
+      actions.ravens_precision->execute();
+  }
 }
 
 // gunde_t::arise ===========================================================
@@ -2730,6 +3107,7 @@ template <typename Base>
 void actions::gunde_action_t<Base>::trigger_spirit_refund( const action_state_t* state )
 {
   p()->spirit_refund();
+  p()->spawn_feathers( p()->spell_const.spirit_proc_orbs );
 }
 
 template <typename Base>
@@ -2746,9 +3124,9 @@ void actions::gunde_action_t<Base>::apply_rend( const action_state_t* state )
   //                           state->result_amount * 0.5 );
 
   auto action       = p()->actions.rend;
-  action_state_t* s = action->get_state( );
+  action_state_t* s = action->get_state();
   // change to multiply by rend multiplier
-  s->result_amount = state->result_amount * 0.5;
+  s->result_amount = state->result_amount * rs->get_rend_coefficient();
   s->target = state->target;
   s->result = RESULT_HIT;
   action->snapshot_state( s, result_amount_type::DMG_OVER_TIME );

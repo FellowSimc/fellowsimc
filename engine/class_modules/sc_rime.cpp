@@ -1701,7 +1701,7 @@ struct wrath_of_winter_t : public rime_spell_t
 
     resource_current              = RESOURCE_SPIRIT;
     base_costs[ RESOURCE_SPIRIT ] = 100;
-    ability_flags |= ability_type_e::ABILITY_MAJOR;
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
   }
 
   void execute() override

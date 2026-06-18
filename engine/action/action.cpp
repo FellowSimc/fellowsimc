@@ -378,9 +378,9 @@ action_t::action_t( action_e ty, util::string_view token, player_t* p, const spe
     is_precombat(),
     initialized(),
     may_hit( true ),
-    may_miss( true ),
+    may_miss( false ),
     may_dodge(),
-    may_parry(),
+    may_parry( false ),
     may_glance(),
     may_block(),
     may_crit(),
@@ -1452,27 +1452,9 @@ double action_t::calculate_direct_amount( action_state_t* state ) const
     return 0;
 
   double base_direct_amount = amount;
-  double weapon_amount      = 0;
-
-  if ( weapon_multiplier > 0 )
-  {
-    // x% weapon damage + Y
-    // e.g. Obliterate, Shred, Backstab
-    amount += calculate_weapon_damage( state->attack_power );
-    amount *= weapon_multiplier;
-    weapon_amount = amount;
-  }
+  
   amount += spell_direct_power_coefficient( state ) * ( state->composite_spell_power() );
   amount += attack_direct_power_coefficient( state ) * ( state->composite_attack_power() );
-
-  // OH penalty, this applies to any OH attack even if is not based on weapon damage
-  double weapon_slot_modifier = 1.0;
-  if ( weapon && weapon->slot == SLOT_OFF_HAND )
-  {
-    weapon_slot_modifier = 0.5;
-    amount *= weapon_slot_modifier;
-    weapon_amount *= weapon_slot_modifier;
-  }
 
   amount += bonus_da( state );
 
@@ -1525,37 +1507,6 @@ double action_t::calculate_direct_amount( action_state_t* state ) const
   // Record initial amount to state
   state->result_raw = amount;
 
-  if ( state->result == RESULT_GLANCE )
-  {
-    double delta_skill = ( state->target->level() - player->level() ) * 5.0;
-
-    if ( delta_skill < 0.0 )
-      delta_skill = 0.0;
-
-    double max_glance = 1.3 - 0.03 * delta_skill;
-
-    if ( max_glance > 0.99 )
-      max_glance = 0.99;
-    else if ( max_glance < 0.2 )
-      max_glance = 0.20;
-
-    double min_glance = 1.4 - 0.05 * delta_skill;
-
-    if ( min_glance > 0.91 )
-      min_glance = 0.91;
-    else if ( min_glance < 0.01 )
-      min_glance = 0.01;
-
-    if ( min_glance > max_glance )
-    {
-      double temp = min_glance;
-      min_glance  = max_glance;
-      max_glance  = temp;
-    }
-
-    amount *= sim->averaged_range( min_glance, max_glance );  // 0.75 against +3 targets.
-  }
-
   if ( !sim->average_range )
     amount = floor( amount + rng().real() );
 
@@ -1567,12 +1518,12 @@ double action_t::calculate_direct_amount( action_state_t* state ) const
   if ( sim->debug )
   {
     sim->print_debug(
-        "{} direct amount for {}: amount={} initial_amount={} weapon={} base={} s_mod={} s_power={} "
-        "a_mod={} a_power={} mult={} w_mult={} w_slot_mod={} bonus_da={}",
-        *player, *this, amount, state->result_raw, weapon_amount, base_direct_amount,
+        "{} direct amount for {}: amount={} initial_amount={} base={} s_mod={} s_power={} "
+        "a_mod={} a_power={} mult={} w_mult={} bonus_da={}",
+        *player, *this, amount, state->result_raw, base_direct_amount,
         spell_direct_power_coefficient( state ), state->composite_spell_power(),
         attack_direct_power_coefficient( state ), state->composite_attack_power(), state->composite_da_multiplier(),
-        weapon_multiplier, weapon_slot_modifier, bonus_da( state ) );
+        weapon_multiplier, bonus_da( state ) );
   }
 
   // Record total amount to state

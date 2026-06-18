@@ -27,7 +27,7 @@ struct spell_base_t : public action_t
 
   double composite_haste() const override;
 
-  double recharge_multiplier( const cooldown_t& cd ) const override;
+  double recharge_rate_multiplier( const cooldown_t& cd ) const override;
 
   proc_types proc_type() const override;
 };

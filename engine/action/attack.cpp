@@ -346,9 +346,9 @@ result_e attack_t::calculate_result( action_state_t* s ) const
   return result;
 }
 
-double attack_t::recharge_multiplier( const cooldown_t& cd ) const
+double attack_t::recharge_rate_multiplier( const cooldown_t& cd ) const
 {
-  double m = action_t::recharge_multiplier( cd );
+  double m = action_t::recharge_rate_multiplier( cd );
 
   if ( cd.hasted )
   {

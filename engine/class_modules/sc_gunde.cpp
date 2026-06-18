@@ -37,6 +37,7 @@ public:
   struct rend_tracker_t
   {
     uint8_t current_tick = 0;
+    // Hardcoded to have enough buckets currently for Deep Rend.
     std::array<double, 10> tick_buckets = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
   } rend_tracker, slaughter_tracker;
 
@@ -76,6 +77,7 @@ public:
     action_t* slaughter;
     action_t* ravens_precision;
     action_t* bloodcraze;
+    action_t* heart_splitter;
   } actions;
 
   struct buffs_t
@@ -89,7 +91,7 @@ public:
     buff_t* crimson_strikes;
     buff_t* massacre;
     buff_t* bloodcraze;
-    buff_t* ancestral_insight;
+    buff_t* ancestral_instinct;
     buff_t* bloodbath;
     buff_t* bloodbound_spirit;
   } buffs;
@@ -114,7 +116,9 @@ public:
   {
     accumulated_rng_t* grim_harvest;
     accumulated_rng_t* deaths_arc;
-    accumulated_rng_t* ancestral_insight;
+    accumulated_rng_t* ancestral_instinct;
+    accumulated_rng_t* deep_rend;
+    accumulated_rng_t* heart_splitter_twice;
   } rng_objects;
 
 #define GUNDE_TALENT_LIST( X )                                         \
@@ -128,7 +132,7 @@ public:
   X( MURDER_OF_CROWS, "murder_of_crows", "Murder of Crows" )           \
   X( MASSACRE, "massacre", "Massacre" )                                \
   X( SLAYERS_GRIN, "slayers_grin", "Slayers Grin" )                    \
-  X( FRENZIED_REGEN, "frenzied_regen", "Frenzied Regen" )              \
+  X( FRENZIED_REIGN, "frenzied_reign", "Frenzied Reign" )              \
   X( DEEP_REND, "deep_rend", "Deep Rend" )                             \
   X( BLOODCRAZE, "bloodcraze", "Bloodcraze" )                          \
   X( OATHSHATTER, "oathshatter", "Oathshatter" )                       \
@@ -191,7 +195,7 @@ public:
     double spirit_refund_mul = 1.0;
 
     // Gunde.SpiritProc.AmountOfOrbs
-    int spirit_proc_orbs = 5;
+    int spirit_proc_orbs = 3;
 
     // Feathers Gunde.SpiritProc.SpawnMinRadius, 150.0 Gunde.SpiritProc.SpawnMaxRadius, 300.0;
 
@@ -269,7 +273,7 @@ public:
     // Gunde.SingleTargetInterrupt.VisualDelay, 0.2
 
     // Gunde.ExtraDotDamageBuff.BonusDotDamage, 0.5                                ; REIGN IN BLOOD
-    double reign_in_blood_additional_rend = 0.5;
+    double reign_in_blood_additional_rend = 0.3;
     // Gunde.ExtraDotDamageBuff.Duration, 12.0
     timespan_t reign_in_blood_duration = 12.0_s;
     // Gunde.ExtraDotDamageBuff.Cooldown, 90.0
@@ -280,7 +284,7 @@ public:
     timespan_t heart_splitter_cooldown = 12.0_s;
     // Gunde.HeavyMeleeDotBased.Damage.StrengthCoefficient, 3.70                   ; WAS 3.4
     double heart_splitter_coeff = 9.4;
-    // Gunde.HeavyMeleeDotBased.Damage.DotCoefficient, 0.50						; WAS 0.10
+    // Gunde.HeavyMeleeDotBased.Damage.DotCoefficient, 0.30						; WAS 0.10
     double heart_splitter_exsanguinate_coeff = 0.3;
     // Gunde.HeavyMeleeDotBased.VisualDelay, 0.35
     timespan_t heart_splitter_visual_delay = 0.35_s;
@@ -379,7 +383,7 @@ public:
     // Gunde.DurationalAoeDotAndBuff.StrengthCoefficient, 4.653                      ; WAS 4.95
     double bloodbound_spirit_coeff = 4.653;
     // Gunde.DurationalAoeDotAndBuff.DamageScalingTargetCountThreshold, 3.0		;was 8.0
-    double bloodbound_spirit_fallofff = 3.0;
+    double bloodbound_spirit_falloff = 1.0;
     // Gunde.DurationalAoeDotAndBuff.CastTime, 1.0
     timespan_t bloodbound_spirit_cast_time = 1_s;
     // Gunde.DurationalAoeDotAndBuff.SelfBuff.Duration, 20.0
@@ -433,7 +437,9 @@ public:
     timespan_t carnage_cdr_per_hit = 1_s;
 
     // Gunde.InstantAoeWithBuff.Talent.AdditionalStack.MaxStacks, 2.0
-    int superior_serration_blood_arcs = 2;
+    //int superior_serration_blood_arcs = 2
+    // Gunde.InstantAoeWithBuff.Talent.AddedTransfer.DotTransferBonus, 0.10	
+    double superior_serration_rend_bonus = 0.1;
 
     // Gunde.HeavyMeleeDotBased.Talent.IncreasedCritChance.AdditionalCritChance, 0.3         ;WAS 0.4
     double oathshatter_additional_crit = 0.3;
@@ -455,7 +461,7 @@ public:
     
     // Gunde.ExtraDotDamageBuff.Talent.Haste.AdditionalHaste, 0.25	;old
     // Gunde.ExtraDotDamageBuff.Talent.AddedBonus.AddedTransfer, 0.25
-    double frenzied_reign_extra_transfer = 0.25;
+    double frenzied_reign_extra_transfer = 0.20;
 
     
     // Gunde.InstantAoeWithBuff.Talent.ChanceCooldownReset.Chance, 0.25            ; WAS 0.15
@@ -466,11 +472,11 @@ public:
     timespan_t deaths_arc_duration = 12_s;
 
     // Gunde.Talent.AbilityToBuffChance.ProcChance, 0.4
-    double ancestral_insight_chance = 0.4;
+    double ancestral_instinct_chance = 0.4;
     // Gunde.Talent.AbilityToBuffChance.StrengthMultiplier, 1.06
-    double ancestral_insight_multiplier = 1.06;
+    double ancestral_instinct_multiplier = 1.06;
     // Gunde.Talent.AbilityToBuffChance.Duration, 6.0
-    timespan_t ancestral_insight_duration = 6_s;
+    timespan_t ancestral_instinct_duration = 6_s;
 
     // Gunde.InstantAoeDot.Talent.StacksToHaste.Duration, 8.0
     timespan_t massacre_duration = 8_s;
@@ -502,7 +508,7 @@ public:
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.DamageIncreasePerStack, 0.90
     double bloodcraze_amp_per_stack = 0.9;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.TargetThresholdScaling, 5.0
-    double bloodcraze_falloff = 5.0;
+    double bloodcraze_falloff = 3.0;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Period, 3.0
     timespan_t bloodcraze_period = 3_s;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Duration, 6.15
@@ -515,9 +521,9 @@ public:
     // Gunde.TargetedAoeProjectile.Talent.AdditionalTicks.Amount, 2.0
     int lego_1_additional_grim_carve_hits = 2;
 
-    bool lego_2                           = false;
+    bool lego_2 = false;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.NumOfCharges, 2.0
-    double lego_2_charges = 2.0;
+    int lego_2_charges = 2;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.Chance, 0.2
     double lego_2_hit_chance = 0.2;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.DelayBetweenStrikes, 0.4
@@ -1095,7 +1101,8 @@ struct auto_melee_attack_t : public action_t
 struct rend_t : public gunde_attack_t
 {
   double to_tick_multiplier;
-  rend_t( gunde_t* p ) : gunde_attack_t( "rend", p ), to_tick_multiplier( 0 )
+  size_t rend_ticks;
+  rend_t( gunde_t* p ) : gunde_attack_t( "rend", p ), to_tick_multiplier( 0 ), rend_ticks( 10 )
   {
     id = 2;
 
@@ -1111,6 +1118,14 @@ struct rend_t : public gunde_attack_t
     dot_allow_partial_tick = true;
 
     to_tick_multiplier = base_tick_time / dot_duration;
+
+    //if ( p->talents_enabled( gunde_t::DEEP_REND ) )
+    //{
+    //  base_tick_time /= p->talents.deep_rend_tick_speed_increase;
+    //  dot_duration /= p->talents.deep_rend_tick_speed_increase;
+    //}
+
+    rend_ticks = as<size_t>( dot_duration / base_tick_time );
   }
 
   void init_finished() override
@@ -1147,8 +1162,9 @@ struct rend_t : public gunde_attack_t
     if ( s->result_amount > 0 )
     {
       auto add_amount = std::round( s->result_amount * to_tick_multiplier );
-      for ( auto& bucket : rend_obj.tick_buckets )
-        bucket += add_amount;
+
+      for ( size_t i = 0; i < rend_ticks; i++ )
+        rend_obj.tick_buckets[ i ] += add_amount;
     }
 
     trigger_dot( s );
@@ -1160,19 +1176,29 @@ struct rend_t : public gunde_attack_t
   void tick( dot_t* d ) override
   {
     gunde_attack_t::tick( d );
-        
+
     auto& rend_obj = p()->get_target_data( d->state->target )->rend_tracker;
+
     rend_obj.tick_buckets[ rend_obj.current_tick++ ] = 0;
-    if ( rend_obj.current_tick >= 10 )
+    if ( rend_obj.current_tick >= rend_ticks )
       rend_obj.current_tick = 0;
 
     auto active_dots =
-        std::max<size_t>( p()->get_active_dots( d ), p()->spell_const.feather_chance_per_rends.size() - 1 ); 
+        std::min<size_t>( p()->get_active_dots( d ), p()->spell_const.feather_chance_per_rends.size() - 1 );
     auto proc_chance = p()->spell_const.feather_chance_per_rends[ active_dots ];
+
+    sim->print_debug( "{} has {} active rends. {} rend cap, this results in {} for variable. Chance to proc {}. ", *p(),
+                      p()->get_active_dots( d ), p()->spell_const.feather_chance_per_rends.size(), active_dots,
+                      proc_chance );
 
     if ( p()->rng().roll( proc_chance ) )
     {
       p()->spawn_feathers( 1 );
+    }
+
+    if ( p()->talents_enabled( gunde_t::DEEP_REND ) && active_dots == 1 && p()->rng_objects.deep_rend->trigger() )
+    {
+      p()->spawn_feathers( p()->talents.deep_rend_proc_feathers - 1 );
     }
   }
 };
@@ -1180,7 +1206,8 @@ struct rend_t : public gunde_attack_t
 struct slaughter_dot_t : public gunde_attack_t
 {
   double to_tick_multiplier;
-  slaughter_dot_t( gunde_t* p ) : gunde_attack_t( "slaughter", p ), to_tick_multiplier( 0 )
+  size_t ticks;
+  slaughter_dot_t( gunde_t* p ) : gunde_attack_t( "slaughter", p ), to_tick_multiplier( 0 ), ticks( 10 )
   {
     id = 3;
 
@@ -1196,6 +1223,7 @@ struct slaughter_dot_t : public gunde_attack_t
     dot_allow_partial_tick = true;
 
     to_tick_multiplier = base_tick_time / dot_duration;
+    ticks              = as<size_t>( dot_duration / base_tick_time );
   }
 
   void init_finished() override
@@ -1232,8 +1260,9 @@ struct slaughter_dot_t : public gunde_attack_t
     if ( s->result_amount > 0 )
     {
       auto add_amount = std::round( s->result_amount * to_tick_multiplier );
-      for ( auto& bucket : rend_obj.tick_buckets )
-        bucket += add_amount;
+
+      for ( size_t i = 0; i < ticks; i++ )
+        rend_obj.tick_buckets[ i ] += add_amount;
     }
 
     trigger_dot( s );
@@ -1248,7 +1277,7 @@ struct slaughter_dot_t : public gunde_attack_t
 
     auto& rend_obj                                   = p()->get_target_data( d->state->target )->slaughter_tracker;
     rend_obj.tick_buckets[ rend_obj.current_tick++ ] = 0;
-    if ( rend_obj.current_tick >= 10 )
+    if ( rend_obj.current_tick >= ticks )
       rend_obj.current_tick = 0;
   }
 };
@@ -1257,10 +1286,9 @@ struct double_strike_t : public gunde_attack_t
 {
   struct double_strike_hit_t : public gunde_attack_t
   {
-    double_strike_hit_t( util::string_view name, gunde_t* p )
-      : gunde_attack_t( name, p )
+    double_strike_hit_t( util::string_view name, gunde_t* p ) : gunde_attack_t( name, p )
     {
-      background = dual       = true;
+      background              = true;
       id                      = 4;
       school                  = SCHOOL_PHYSICAL;
       attack_power_mod.direct = p->spell_const.double_strike_coeff;
@@ -1325,7 +1353,7 @@ struct grim_carve_t : public gunde_attack_t
   {
     grim_carve_hit_t( util::string_view name, gunde_t* p ) : gunde_attack_t( name, p )
     {
-      background = dual = true;
+      background = true;
       id                = 5;
 
       attack_power_mod.direct = p->spell_const.grim_carve_coeff;
@@ -1336,13 +1364,41 @@ struct grim_carve_t : public gunde_attack_t
       name_str_reporting = "Grim Carve Hit";
 
       ability_flags |= ability_type_e::ABILITY_POWER;
+
+      if ( p->talents_enabled( gunde_t::CARNAGE ) )
+      {
+        attack_power_mod.direct *= p->talents.carnage_damage_multiplier;
+      }
+    }
+
+    void execute() override
+    {
+      base_t::execute();
+
+      if ( p()->talents_enabled( gunde_t::CARNAGE ) )
+      {
+        auto cooldowns = { p()->cooldowns.reavers_edge, p()->cooldowns.blood_arc, p()->cooldowns.heart_splitter,
+                           p()->cooldowns.rupture };
+
+        for ( auto& cd : cooldowns )
+        {
+          cd->adjust( -p()->talents.carnage_cdr_per_hit, false );
+        }
+      }
     }
   };
 
   grim_carve_hit_t* hit;
+  int num_hits;
+  double period_multiplier;
+  timespan_t period;
 
   grim_carve_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
-    : gunde_attack_t( name, p, options_str )
+    : gunde_attack_t( name, p, options_str ),
+      num_hits(
+          static_cast<int>( std::floor( p->spell_const.grim_carve_duration / p->spell_const.grim_carve_period ) ) ),
+      period_multiplier( 1.0 ),
+      period( p->spell_const.grim_carve_period )
   {
     id                 = 5;
     name_str_reporting = "Grim Carve";
@@ -1355,16 +1411,38 @@ struct grim_carve_t : public gunde_attack_t
 
     hit = new grim_carve_hit_t( "grim_carve_hit", p );
     add_child( hit );
+
+    if ( p->legendary.lego_1 )
+    {
+      auto old_hits = num_hits;
+      num_hits += p->legendary.lego_1_additional_grim_carve_hits;
+
+      period_multiplier *= as<double>( old_hits ) / num_hits;
+    }
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto m = base_t::composite_da_multiplier( s );
+
+    m *= 1.0 + p()->buffs.grim_harvest->check_value();
+
+    return m;
   }
 
   void execute() override
   {
     gunde_attack_t::execute();
 
-    const timespan_t tick_period = p()->spell_const.grim_carve_period;
+    if ( p()->talents_enabled( gunde_t::ANCESTRAL_INSTINCT ) )
+    {
+      if ( p()->rng_objects.ancestral_instinct->trigger() )
+      {
+        p()->buffs.ancestral_instinct->trigger();
+      }
+    }
 
-    const int num_hits =
-        static_cast<int>( std::floor( p()->spell_const.grim_carve_duration / p()->spell_const.grim_carve_period ) );
+    const timespan_t tick_period = p()->spell_const.grim_carve_period;
 
     for ( int i = 0; i <= num_hits; ++i )
     {
@@ -1372,9 +1450,13 @@ struct grim_carve_t : public gunde_attack_t
 
       hit->set_target( target );
 
-      make_event( *sim, tick_period * i * p()->cache.attack_haste() + p()->spell_const.grim_carve_initial_delay,
-                  [ this, damage_state ]() { hit->schedule_execute( damage_state ); } );
+      make_event(
+          *sim,
+          tick_period * i * p()->cache.attack_haste() * period_multiplier + p()->spell_const.grim_carve_initial_delay,
+          [ this, damage_state ]() { hit->schedule_execute( damage_state ); } );
     }
+
+    p()->buffs.grim_harvest->expire();
   }
 };
 
@@ -1396,6 +1478,37 @@ struct reavers_edge_t : public gunde_attack_t
 
     aoe                 = -1;
     reduced_aoe_targets = p->spell_const.reavers_edge_target_threshold;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto dam = base_t::composite_da_multiplier( s );
+
+    dam *= 1.0 + p()->buffs.bloodbound_spirit->check_value();
+
+    return dam;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    if ( p()->talents_enabled( gunde_t::GRIM_HARVEST ) )
+    {
+      if ( p()->rng_objects.grim_harvest->trigger() )
+      {
+        p()->cooldowns.grim_carve->reset( true, 1 );
+        p()->buffs.grim_harvest->trigger();
+      }
+    }
+
+    if ( p()->talents_enabled( gunde_t::ANCESTRAL_INSTINCT ) )
+    {
+      if ( p()->rng_objects.ancestral_instinct->trigger() )
+      {
+        p()->buffs.ancestral_instinct->trigger();
+      }
+    }
   }
 };
 
@@ -1419,6 +1532,15 @@ struct blood_arc_t : public gunde_attack_t
     reduced_aoe_targets = p->spell_const.blood_arc_target_threshold;
   }
 
+  double composite_crit_chance() const override
+  {
+    auto cc = base_t::composite_crit_chance();
+
+    cc += p()->buffs.deaths_arc->check_value();
+
+    return cc;
+  }
+
   void execute() override
   {
     gunde_attack_t::execute();
@@ -1429,6 +1551,8 @@ struct blood_arc_t : public gunde_attack_t
     {
       p()->buffs.crimson_strikes->trigger();
     }
+
+    p()->buffs.deaths_arc->decrement();
 
     if ( p()->talents_enabled( gunde_t::DEATHS_ARC ) )
     {
@@ -1464,6 +1588,16 @@ struct rupture_t : public gunde_attack_t
 
     p()->get_target_data( s->target )->debuffs.open_wounds->trigger();
   }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    if ( p()->talents_enabled( gunde_t::MURDER_OF_CROWS ) )
+    {
+      p()->spawn_feathers( p()->talents.murder_of_crows_feathers );
+    }
+  }
 };
 
 
@@ -1471,7 +1605,8 @@ struct heart_splitter_t : public gunde_attack_t
 {
   struct heart_splitter_exsanguinate_t : public gunde_attack_t
   {
-    heart_splitter_exsanguinate_t( gunde_t* p, bool oathshatter = false ) : gunde_attack_t( "heart_splitter_exsanguinate", p )
+    heart_splitter_exsanguinate_t( gunde_t* p, std::string_view parent_name, bool oathshatter = false )
+      : gunde_attack_t( std::format( "{}_exsanguinate", parent_name ), p )
     {
       id                 = 9;
       name_str_reporting = "Heart Splitter Exsanguinate";
@@ -1506,7 +1641,9 @@ struct heart_splitter_t : public gunde_attack_t
   action_t* exsanguinate;
   action_t* exsanguinate_oathshatter;
   heart_splitter_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
-    : gunde_attack_t( name, p, options_str ), exsanguinate( nullptr ), exsanguinate_oathshatter( nullptr )
+    : gunde_attack_t( name, p, options_str ),
+      exsanguinate( nullptr ),
+      exsanguinate_oathshatter( nullptr )
   {
     id                 = 9;
     name_str_reporting = "Heart Splitter";
@@ -1521,14 +1658,73 @@ struct heart_splitter_t : public gunde_attack_t
 
     base_rend_applied += p->spell_const.heart_splitter_additional_rend;
 
-    exsanguinate             = new heart_splitter_exsanguinate_t( p, false );
+    exsanguinate = new heart_splitter_exsanguinate_t( p, name, false );
     add_child( exsanguinate );
+
+    if ( p->legendary.lego_2 )
+    {
+      cooldown->charges = p->legendary.lego_2_charges;
+    }
 
     if ( p->talents_enabled( gunde_t::OATHSHATTER ) )
     {
-      exsanguinate_oathshatter = new heart_splitter_exsanguinate_t( p, true );
+      exsanguinate_oathshatter = new heart_splitter_exsanguinate_t( p, name, true );
       add_child( exsanguinate_oathshatter );
       base_crit += p->talents.oathshatter_additional_crit;
+    }
+  }
+
+  void init_finished() override
+  {
+    base_t::init_finished();
+
+    if ( !background )
+    {
+      add_child( p()->actions.heart_splitter );
+    }
+  }
+
+  double composite_target_crit_chance( player_t* t ) const override
+  {
+    auto tcc = base_t::composite_target_crit_chance( t );
+
+    if ( p()->talents_enabled( gunde_t::DARKENING_HEARTS ) )
+    {
+      if ( t->health_percentage() <= low_health_threshold )
+      {
+        tcc += p()->talents.darkening_hearts_execute_cc;
+      }
+    }
+
+    return tcc;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto dam = base_t::composite_da_multiplier( s );
+
+    dam *= 1.0 + p()->buffs.bloodbound_spirit->check_value();
+
+    return dam;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    if ( p()->legendary.lego_2 && p()->rng_objects.heart_splitter_twice->trigger() && !background )
+    {
+      auto action = p()->actions.heart_splitter;
+
+      action->set_target( target );
+      action_state_t* damage_state = action->get_state( execute_state );
+      damage_state->target         = action->target;
+
+      action->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+      damage_state->persistent_multiplier = execute_state->persistent_multiplier;
+      cast_state( damage_state )->set_rend_coefficient( cast_state( execute_state )->get_rend_coefficient() );
+
+      action->schedule_execute( damage_state );
     }
   }
 
@@ -1555,6 +1751,8 @@ struct reign_in_blood_t : public gunde_spell_t
   {
     id                = 10;
     base_rend_applied = 0.0;
+
+    name_str_reporting = "Reign in Blood";
 
     trigger_gcd = timespan_t::zero();
 
@@ -1590,6 +1788,20 @@ struct slaughter_t : public gunde_spell_t
 
     ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
+
+  double recharge_rate_multiplier( const cooldown_t& cd ) const override
+  {
+    auto rrm = base_t::recharge_rate_multiplier( cd );
+
+    rrm = 1.0 / rrm;
+
+    rrm += p()->buffs.bloodbath->check_value();
+
+    rrm = 1.0 / rrm;
+
+    return rrm;
+  }
+
 
   void impact( action_state_t* s ) override
   {
@@ -1646,6 +1858,14 @@ struct owed_in_blood_t : public gunde_spell_t
     
     name_str_reporting = "Owed in Blood";
   }
+
+  bool ready() override
+  {
+    if ( !p()->buffs.owed_in_blood->check() )
+      return false;
+
+    return base_t::ready();
+  }
   
   void execute() override
   {
@@ -1666,6 +1886,7 @@ struct owed_in_blood_t : public gunde_spell_t
 
     if ( p()->talents_enabled( gunde_t::HARVESTERS_TOLL ) )
     {
+      p()->buffs.harvesters_toll->expire();
       p()->buffs.harvesters_toll->trigger( stacks );
     }
 
@@ -1690,7 +1911,7 @@ struct bloodcraze_t : public gunde_spell_t
     attack_power_mod.direct = p->talents.bloodcraze_coeff;
 
     aoe                 = -1;
-    reduced_aoe_targets = p->talents.bloodcraze_coeff;
+    reduced_aoe_targets = p->talents.bloodcraze_falloff;
   }
 
   double composite_da_multiplier( const action_state_t* s ) const override
@@ -1700,6 +1921,16 @@ struct bloodcraze_t : public gunde_spell_t
     m *= ( 1 + p()->buffs.bloodcraze->check_stack_value() );
 
     return m;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    sim->print_debug(
+        "{} impacts enemy with bloodcraze. current str: {}, current da mul: {}, result amount: {}. Expected: {}", *p(),
+        s->attack_power, s->da_multiplier, s->result_amount,
+        s->attack_power * attack_power_mod.direct * s->da_multiplier * s->versatility );
   }
 };
 
@@ -1730,12 +1961,12 @@ struct bloodbound_spirit_t : public gunde_attack_t
       id = 15;
 
       _affected_by_serrated_edge = false;
-      background = dual = true;
+      background = true;
 
       ability_flags |= ability_type_e::ABILITY_SPIRIT;
       attack_power_mod.direct = p->spell_const.bloodbound_spirit_coeff;
       aoe                     = -1;
-      reduced_aoe_targets     = p->spell_const.bloodbound_spirit_fallofff;
+      reduced_aoe_targets     = p->spell_const.bloodbound_spirit_falloff;
 
       name_str_reporting = "Bloodbound Spirit (Hit)";
     }
@@ -1777,564 +2008,6 @@ struct bloodbound_spirit_t : public gunde_attack_t
                                     true );
   }
 };
-
-//
-//struct blinding_slash_t : public gunde_attack_t
-//{
-//  blinding_slash_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
-//    : gunde_attack_t( name, p, options_str )
-//  {
-//    id = 3;
-//    _procs_golden_hour      = true;
-//
-//    school                  = SCHOOL_PHYSICAL;
-//    attack_power_mod.direct = p->spell_const.blinding_slash_coeff;
-//
-//    name_str_reporting     = "Blinding Slash";
-//    swift_reprieval_chance = p->spell_const.blinding_slash_resource_proc_chance;
-//
-//    aoe                 = -1;
-//    reduced_aoe_targets = p->spell_const.blinding_slash_scaling_threshold;
-//
-//    cooldown->hasted   = true;
-//    cooldown->duration = p->spell_const.blinding_slash_cd;
-//    cooldown->charges  = 1;
-//
-//    ability_flags |= ability_type_e::ABILITY_BASIC;
-//  }
-//
-//  void impact( action_state_t* s ) override
-//  {
-//    gunde_attack_t::impact( s );
-//
-//    p()->get_target_data( s->target )->debuffs.blind->trigger();
-//  }
-//};
-//
-//struct omnistrike_t : public gunde_attack_t
-//{
-//  struct omnistrike_action_state_t : public action_state_t
-//  {
-//  public:
-//    int sunstruck_stacks;
-//    omnistrike_action_state_t( action_t* action, player_t* target )
-//      : action_state_t( action, target ), sunstruck_stacks( 0 )
-//    {
-//    }
-//
-//    void initialize() override
-//    {
-//      action_state_t::initialize();
-//      sunstruck_stacks = 0;
-//    }
-//
-//    std::ostringstream& debug_str( std::ostringstream& s ) override
-//    {
-//      action_state_t::debug_str( s ) << " sunstruck_stacks=" << sunstruck_stacks;
-//      return s;
-//    }
-//
-//    void copy_state( const action_state_t* s )
-//    {
-//      action_state_t::copy_state( s );
-//      const omnistrike_action_state_t* rs = debug_cast<const omnistrike_action_state_t*>( s );
-//      sunstruck_stacks                    = rs->sunstruck_stacks;
-//    }
-//  };
-//
-//  omnistrike_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
-//    : gunde_attack_t( name, p, options_str )
-//  {
-//    id = 4;
-//    _procs_golden_hour      = true;
-//
-//    school                  = SCHOOL_PHYSICAL;
-//    attack_power_mod.direct = p->spell_const.omnistrike_coeff;
-//
-//    name_str_reporting     = "Omnistrike";
-//    swift_reprieval_chance = p->spell_const.omnistrike_resource_proc_chance;
-//
-//    aoe                 = -1;
-//    reduced_aoe_targets = p->spell_const.omnistrike_scaling_threshold;
-//
-//    cooldown->hasted   = true;
-//    cooldown->duration = p->spell_const.omnistrike_cooldown;
-//    cooldown->charges  = 1;
-//
-//    energize_type     = action_energize::ON_CAST;
-//    energize_amount   = p->spell_const.omnistrike_spirit_gain;
-//    energize_resource = RESOURCE_SPIRIT;
-//    
-//    ability_flags |= ability_type_e::ABILITY_CORE;
-//  }
-//
-//  static const omnistrike_action_state_t* cast_state( const action_state_t* st )
-//  {
-//    return debug_cast<const omnistrike_action_state_t*>( st );
-//  }
-//
-//  static omnistrike_action_state_t* cast_state( action_state_t* st )
-//  {
-//    return debug_cast<omnistrike_action_state_t*>( st );
-//  }
-//
-//  action_state_t* new_state() override
-//  {
-//    return new omnistrike_action_state_t( this, target );
-//  }
-//
-//  void impact( action_state_t* s ) override
-//  {
-//    gunde_attack_t::impact( s );
-//
-//    p()->get_target_data( s->target )->debuffs.blind->trigger();
-//  }
-//
-//  double composite_da_multiplier( const action_state_t* s ) const override
-//  {
-//    double m = gunde_attack_t::composite_da_multiplier( s );
-//    if ( p()->talents_enabled( gunde_t::GLEAMING_STRIKES ) && cast_state( s )->sunstruck_stacks > 0 )
-//      m *= 1 + p()->talents.gleaming_strikes_omnistrike_sunstruck_amp * cast_state( s )->sunstruck_stacks;
-//    return m;
-//  }
-//
-//  void execute() override
-//  {
-//    int debuffs = 0;
-//    for ( auto t : target_list() )
-//    {
-//      debuffs += p()->get_target_data( t )->debuffs.sunstruck->check();
-//
-//      p()->get_target_data( t )->debuffs.sunstruck->expire();
-//    }
-//
-//    pre_execute_state                                 = get_state( pre_execute_state );
-//    cast_state( pre_execute_state )->sunstruck_stacks = debuffs;
-//    snapshot_state( pre_execute_state, amount_type( pre_execute_state ) );
-//
-//    gunde_attack_t::execute();
-//
-//    if ( debuffs > 0 )
-//    {
-//      auto mana_gained = p()->spell_const.sunstruck_mana_refund_base +
-//                         ( debuffs - 1 ) * p()->spell_const.sunstruck_mana_refund_per_stack;
-//      p()->resource_gain( RESOURCE_MANA, mana_gained, gain, this );
-//    }
-//
-//    if ( p()->talents_enabled( gunde_t::RISING_SUN ) && p()->rng_objects.rising_sun->trigger() )
-//    {
-//      p()->cooldowns.solar_blades->reset( false, 1 );
-//    }
-//
-//    if ( p()->buffs.golden_hour->check() )
-//    {
-//      p()->buffs.omega_reprieval->trigger();
-//      p()->buffs.golden_hour->expire();
-//    }
-//  }
-//};
-//
-//struct suns_verdict_t : public gunde_attack_t
-//{
-//  suns_verdict_t( gunde_t* p ) : gunde_attack_t( "suns_verdict", p )
-//  {
-//    id = 5;
-//
-//    background = true;
-//
-//    school                  = SCHOOL_MAGIC;
-//    attack_power_mod.direct = p->talents.suns_verdict_coeff;
-//
-//    name_str_reporting = "Suns Verdict";
-//
-//    aoe                 = -1;
-//    reduced_aoe_targets = p->talents.suns_verdict_scaling_threshold;
-//    full_amount_targets = 1;
-//  }
-//};
-//
-//struct solar_blades_t : public gunde_attack_t
-//{
-//  solar_blades_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
-//    : gunde_attack_t( name, p, options_str )
-//  {
-//    id = 6;
-//    _procs_golden_hour = true;
-//
-//    use_off_gcd = true;
-//
-//    gcd_type    = gcd_haste_type::NONE;
-//    trigger_gcd = 0_s;
-//
-//    attack_power_mod.direct = p->spell_const.solar_blades_coeff;
-//
-//    name_str_reporting     = "Solar Blades";
-//    swift_reprieval_chance = p->spell_const.solar_blades_resource_chance;
-//
-//    aoe                 = -1;
-//    reduced_aoe_targets = p->spell_const.solar_blades_scaling_threshold;
-//    full_amount_targets = 1;
-//
-//    cooldown->hasted   = true;
-//    cooldown->duration = p->spell_const.solar_blades_cd;
-//    cooldown->charges  = 1;
-//
-//    resource_current            = RESOURCE_MANA;
-//    base_costs[ RESOURCE_MANA ] = p->spell_const.solar_blades_mana_cost;
-//    ability_flags |= ability_type_e::ABILITY_CORE;
-//  }
-//
-//  void impact( action_state_t* s ) override
-//  {
-//    gunde_attack_t::impact( s );
-//
-//    if ( p()->legendary.lego_2 )
-//    {
-//      p()->get_target_data( s->target )->debuffs.lego_2->trigger();
-//    }
-//
-//    if ( s->chain_target == 0 && p()->talents_enabled( gunde_t::SOLAR_BURN ) )
-//    {
-//      p()->get_target_data( s->target )->debuffs.sunburn->trigger();
-//      // Also do the residual dot.
-//    }
-//  }
-//
-//  double composite_crit_chance() const override
-//  {
-//    double crit = gunde_attack_t::composite_crit_chance();
-//
-//    if ( p()->legendary.lego_2 && p()->rng().roll( p()->legendary.lego_2_dmg_chance ) )
-//      crit += p()->legendary.lego_2_proc_added_cc;
-//
-//    return crit;
-//  }
-//
-//  double composite_da_multiplier( const action_state_t* s ) const override
-//  {
-//    double m = gunde_attack_t::composite_da_multiplier( s );
-//
-//    if ( s->chain_target == 0 )
-//      m *= p()->spell_const.solar_blades_main_target_mul;
-//
-//    return m;
-//  }
-//
-//  void execute() override
-//  {
-//    gunde_attack_t::execute();
-//  }
-//};
-//
-//struct brilliant_flash_action_state_t : public action_state_t
-//{
-//public:
-//  int omega_reprieval;
-//
-//  brilliant_flash_action_state_t( action_t* action, player_t* target )
-//    : action_state_t( action, target ), omega_reprieval( 0 )
-//  {
-//  }
-//
-//  void initialize() override
-//  {
-//    action_state_t::initialize();
-//    omega_reprieval = 0;
-//  }
-//
-//  std::ostringstream& debug_str( std::ostringstream& s ) override
-//  {
-//    action_state_t::debug_str( s ) << " omega_reprieval=" << omega_reprieval;
-//    return s;
-//  }
-//
-//  void copy_state( const action_state_t* s )
-//  {
-//    action_state_t::copy_state( s );
-//    const brilliant_flash_action_state_t* rs = debug_cast<const brilliant_flash_action_state_t*>( s );
-//  }
-//};
-//
-//template <typename Base>
-//struct brilliant_flash_base_t : public gunde_action_t<Base>
-//{
-//  using ab = gunde_action_t<Base>;
-//
-//  brilliant_flash_base_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
-//    : ab( name, p, options_str )
-//  {
-//    ab::id = 7;
-//
-//    ab::_procs_golden_hour = true;
-//
-//    ab::name_str_reporting = "Brilliant Flash";
-//
-//    // aoe                 = -1;
-//    ab::reduced_aoe_targets = p->spell_const.omega_reprieval_falloff;
-//    ab::full_amount_targets = 1;
-//
-//    if ( p->talents_enabled( gunde_t::GOLDEN_HOUR ) )
-//    {
-//      ab::base_dd_multiplier *= p->talents.golden_hour_brilliant_flash_amp;
-//    }
-//
-//    ab::ability_flags |= ability_type_e::ABILITY_POWER;
-//  }
-//
-//  static const brilliant_flash_action_state_t* cast_state( const action_state_t* st )
-//  {
-//    return debug_cast<const brilliant_flash_action_state_t*>( st );
-//  }
-//
-//  static brilliant_flash_action_state_t* cast_state( action_state_t* st )
-//  {
-//    return debug_cast<brilliant_flash_action_state_t*>( st );
-//  }
-//
-//  action_state_t* new_state() override
-//  {
-//    return new brilliant_flash_action_state_t( this, ab::target );
-//  }
-//
-//  void snapshot_state( action_state_t* state, result_amount_type rt ) override
-//  {
-//    auto rs = cast_state( state );
-//
-//    rs->omega_reprieval = ab::p()->buffs.omega_reprieval->check();
-//
-//    ab::snapshot_state( state, rt );
-//  }
-//
-//  void impact( action_state_t* s ) override
-//  {
-//    ab::impact( s );
-//  }
-//
-//  int n_targets() const override
-//  {
-//    if ( ab::background )
-//      return 1;
-//
-//    if ( ab::p()->buffs.omega_reprieval->check() )
-//      return -1;
-//
-//    return 1;
-//  }
-//
-//  double composite_da_multiplier( const action_state_t* s ) const override
-//  {
-//    double m = ab::composite_da_multiplier( s );
-//
-//    if ( !ab::background && cast_state( s )->omega_reprieval && s->chain_target == 0 && !ab::background )
-//      m *= ab::p()->spell_const.omega_reprieval_main_target_mul;
-//
-//    return m;
-//  }
-//
-//  bool ready() override
-//  { 
-//    if ( !ab::p()->buffs.omega_reprieval->check() && !ab::p()->buffs.swift_reprieval->check() )
-//      return false;
-//
-//    return ab::ready();
-//  }
-//
-//  void execute() override
-//  {
-//    ab::execute();
-//    
-//    if ( ab::background )
-//      return;
-//
-//    if ( ab::p()->buffs.omega_reprieval->check() )
-//    {
-//      ab::p()->buffs.omega_reprieval->decrement();
-//      ab::p()->resource_gain( RESOURCE_MANA,
-//                              ab::p()->resources.max[ RESOURCE_MANA ] * ab::p()->spell_const.omega_reprieval_mana_pct,
-//                              ab::p()->gains.omega_reprieval, this );
-//    }
-//    else
-//    {
-//      ab::p()->buffs.swift_reprieval->decrement();
-//    }
-//
-//    if ( ab::p()->talents_enabled( gunde_t::SUNS_VERDICT ) && ab::p()->rng_objects.suns_verdict->trigger() )
-//    {
-//      ab::p()->buffs.suns_verdict->trigger();
-//    }
-//
-//    if ( ab::p()->talents_enabled( gunde_t::CELESTIAL_FAVOR ) )
-//    {
-//      ab::p()->cooldowns.omega_reprieval->adjust( -ab::p()->talents.celestial_favor_cdr, false );
-//    }
-//  }
-//};
-//
-//struct brilliant_flash_t : public brilliant_flash_base_t<spell_t>
-//{
-//private:
-//  using ab = brilliant_flash_base_t<spell_t>;
-//
-//public:
-//  brilliant_flash_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
-//    : brilliant_flash_base_t<spell_t>( name, p, options_str )
-//  {
-//    attack_power_mod.direct = p->spell_const.brilliant_flash_dmg_coeff;
-//  }
-//
-//  void execute() override
-//  {
-//    ab::execute();
-//
-//    p()->actions.brilliant_flash_heal->execute_on_target( p() );
-//  }
-//
-//  double composite_da_multiplier( const action_state_t* s ) const override
-//  {
-//    double m = ab::composite_da_multiplier( s );
-//
-//    if ( s->target == p() )
-//      m *= p()->spell_const.brilliant_flash_self_heal_mul;
-//
-//    return m;
-//  }
-//};
-//
-//struct brilliant_flash_heal_t : public brilliant_flash_base_t<heal_t>
-//{
-//  brilliant_flash_heal_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
-//    : brilliant_flash_base_t<heal_t>( name, p, options_str )
-//  {
-//    attack_power_mod.direct = p->spell_const.brilliant_flash_heal_coeff;
-//  }
-//};
-//
-//struct omega_repreival_t : public gunde_spell_t
-//{
-//  omega_repreival_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
-//    : gunde_spell_t( name, p, options_str )
-//  {
-//    id = 9;
-//
-//    use_off_gcd = true;
-//
-//    gcd_type    = gcd_haste_type::NONE;
-//    trigger_gcd = 0_s;
-//
-//    name_str_reporting = "Omega Reprieval";
-//
-//    cooldown->hasted   = false;
-//    cooldown->duration = p->spell_const.omega_reprieval_cd;
-//    cooldown->charges  = 1;
-//
-//    ability_flags |= ability_type_e::ABILITY_MAJOR;
-//  }
-//
-//  void execute() override
-//  {
-//    gunde_spell_t::execute();
-//
-//    p()->buffs.omega_reprieval->trigger( 2 );
-//  }
-//};
-//
-//struct vanguard_of_vengeance_t : public gunde_attack_t
-//{
-//  vanguard_of_vengeance_t( gunde_t* p ) : gunde_attack_t( "vanguard_of_vengeance", p )
-//  {
-//    id = 10;
-//
-//    background = true;
-//    name_str_reporting = "Vanguard of Vengeance";
-//
-//    energize_resource = RESOURCE_MANA;
-//    energize_amount   = p->resources.max[ RESOURCE_MANA ] * p->talents.vanguard_of_vengeance_mana_gain_pct;
-//
-//    attack_power_mod.direct = p->talents.vanguard_of_vengeance_coeff;
-//  }
-//
-//  void execute() override
-//  {
-//    p()->buffs.vanguard_of_vengeance->trigger();
-//    base_t::execute();
-//  }
-//};
-//
-//struct solaris_t : public gunde_spell_t
-//{
-//  solaris_t( gunde_t* p ) : gunde_spell_t( "solaris", p )
-//  {
-//    id                 = 11;
-//    background         = true;
-//    name_str_reporting = "Solaris";
-//
-//    may_crit = false;
-//
-//    aoe = -1;
-//    reduced_aoe_targets = p->spell_const.solaris_target_scaling_threshold;
-//  }
-//
-//  void init_finished()
-//  {
-//    snapshot_flags &= STATE_NO_MULTIPLIER;
-//    snapshot_flags |= STATE_TARGET_NO_PET & ~STATE_TGT_CRIT;
-//  }
-//};
-//
-//struct decree_of_the_sun_t : public gunde_spell_t
-//{
-//  decree_of_the_sun_t( std::string_view name, gunde_t* p, std::string_view opt ) : gunde_spell_t( "decree_of_the_sun", p, opt )
-//  {
-//    id                 = 12;
-//    name_str_reporting = "Decree of the Sun";
-//
-//    resource_current              = RESOURCE_SPIRIT;
-//    base_costs[ RESOURCE_SPIRIT ] = 100;
-//    ability_flags |= ability_type_e::ABILITY_SPIRIT;
-//    
-//    use_off_gcd = true;
-//
-//    gcd_type    = gcd_haste_type::NONE;
-//    trigger_gcd = 0_s;
-//  }
-//
-//  void execute() override
-//  {
-//    gunde_spell_t::execute();
-//    p()->fs_buffs.spirit_of_heroism->trigger();
-//    p()->buffs.decree_of_the_sun->trigger();
-//    p()->buffs.decree_of_the_sun_invuln->trigger();
-//    p()->used_ultimate();
-//  }
-//};
-//
-//struct decree_of_the_sun_dmg_t : public gunde_spell_t
-//{
-//  decree_of_the_sun_dmg_t( gunde_t* p ) : gunde_spell_t( "decree_of_the_sun_dmg", p )
-//  {
-//    id                      = 12;
-//    background              = true;
-//    name_str_reporting      = "Decree of the Sun Damage";
-//    attack_power_mod.direct = p->spell_const.decree_of_the_sun_dmg_coeff;
-//    aoe                     = -1;
-//    reduced_aoe_targets     = p->spell_const.decree_of_the_sun_falloff;
-//    ability_flags |= ability_type_e::ABILITY_SPIRIT;
-//  }
-//};
-//
-//struct decree_of_the_sun_heal_t : public gunde_heal_t
-//{
-//  decree_of_the_sun_heal_t( gunde_t* p ) : gunde_heal_t( "decree_of_the_sun_heal", p )
-//  {
-//    id                      = 12;
-//    background              = true;
-//    name_str_reporting      = "Decree of the Sun Heal";
-//    attack_power_mod.direct = p->spell_const.decree_of_the_sun_heal_coeff;
-//    aoe                     = -1;
-//    ability_flags |= ability_type_e::ABILITY_SPIRIT;
-//  }
-//};
-
 }  // namespace actions
 
 gunde_td_t::gunde_td_t( player_t* target, gunde_t* source )
@@ -2346,32 +2019,6 @@ gunde_td_t::gunde_td_t( player_t* target, gunde_t* source )
   debuffs.open_wounds = make_buff( *this, "open_wounds" )
                             ->set_duration( source->spell_const.open_wounds_duration )
                             ->set_default_value( source->spell_const.open_wounds_modifier - 1 );
-
-  // dots.sunburn    = target->get_dot( "sunburn", source );
-  //dots.suns_touch = target->get_dot( "suns_touch", source );
-
-  //debuffs.blind = make_buff( *this, "blind" )
-  //                    ->set_duration( source->spell_const.blinding_slash_blind_duration )
-  //                    ->set_max_stack( source->spell_const.blinding_slash_max_stacks )
-  //                    ->set_default_value( source->spell_const.blinding_slash_parry_chance )
-  //                    ->set_refresh_behavior( buff_refresh_behavior::DURATION );
-
-  //debuffs.lego_2 = make_buff( *this, "lego_2" )
-  //                          ->set_duration( source->legendary.lego_2_duration )
-  //                          ->set_max_stack( 1 )
-  //                          ->set_default_value( source->legendary.lego_2_dmg_taken_mul )
-  //                          ->set_refresh_behavior( buff_refresh_behavior::DURATION );
-
-  //debuffs.sunburn = make_buff( *this, "sunburn" )
-  //                      ->set_duration( source->talents.solar_burn_duration )
-  //                      ->set_period( source->talents.solar_burn_period )
-  //                      ->set_default_value( source->talents.solar_burn_dmg_received_multiplier )
-  //                      ->set_refresh_behavior( buff_refresh_behavior::DURATION );
-
-  //debuffs.sunstruck = make_buff( *this, "sunstruck" )
-  //                        ->set_duration( source->spell_const.sunstruck_duration )
-  //                        ->set_max_stack( source->spell_const.suntruck_max_stacks )
-  //                        ->set_refresh_behavior( buff_refresh_behavior::DURATION );
 }
 
 // gunde_t::composite_attribute_multiplier ==================================
@@ -2467,6 +2114,8 @@ double gunde_t::matching_gear_multiplier( attribute_e attr ) const
 double gunde_t::composite_player_multiplier( school_e school ) const
 {
   double m = fs_player_t::composite_player_multiplier( school );
+
+  m *= 1.0 + buffs.harvesters_toll->check_stack_value();
 
   return m;
 }
@@ -2714,7 +2363,8 @@ void gunde_t::create_buffs()
   buffs.harvesters_toll = make_buff<gunde_buff_t>( this, "harvesters_toll" )
                               ->set_default_value( talents.harvesters_toll_amp_per_stack )
                               ->set_max_stack( talents.harvesters_toll_max_stacks )
-                              ->set_duration( talents.harvesters_toll_duration );
+                              ->set_duration( talents.harvesters_toll_duration )
+                              ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
 
   buffs.owed_in_blood = make_buff<gunde_buff_t>( this, "owed_in_blood" )
                             ->set_duration( spell_const.owed_in_blood_duration )
@@ -2729,11 +2379,11 @@ void gunde_t::create_buffs()
 
   buffs.grim_harvest = make_buff<gunde_buff_t>( this, "grim_harvest" )
                            ->set_duration( talents.grim_harvest_buff_duration )
-                           ->set_default_value( talents.grim_harvest_multiplier );
+                           ->set_default_value( talents.grim_harvest_multiplier - 1);
 
-  buffs.ancestral_insight = make_buff<gunde_buff_t>( this, "ancestral_inisght" )
-                                ->set_duration( talents.ancestral_insight_duration )
-                                ->set_default_value( talents.ancestral_insight_multiplier - 1 )
+  buffs.ancestral_instinct = make_buff<gunde_buff_t>( this, "ancestral_instinct" )
+                                ->set_duration( talents.ancestral_instinct_duration )
+                                ->set_default_value( talents.ancestral_instinct_multiplier - 1 )
                                 ->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
 
   buffs.deaths_arc = make_buff<gunde_buff_t>( this, "deaths_arc" )
@@ -2744,7 +2394,7 @@ void gunde_t::create_buffs()
                              ->set_default_value( spell_const.reign_in_blood_additional_rend )
                              ->set_duration( spell_const.reign_in_blood_duration );
 
-  if ( talents_enabled( gunde_t::FRENZIED_REGEN ) )
+  if ( talents_enabled( gunde_t::FRENZIED_REIGN ) )
   {
     buffs.reign_in_blood->default_value += talents.frenzied_reign_extra_transfer;
   }
@@ -2756,7 +2406,8 @@ void gunde_t::create_buffs()
 
   if ( talents_enabled( gunde_t::SUPERIOR_SERRATION ) )
   {
-    buffs.serrated_edge->set_max_stack( talents.superior_serration_blood_arcs );
+    //buffs.serrated_edge->set_max_stack( talents.superior_serration_blood_arcs );
+    buffs.serrated_edge->default_value += talents.superior_serration_rend_bonus;
   }
 
   buffs.serrated_edge->set_initial_stack( buffs.serrated_edge->max_stack() );
@@ -2786,6 +2437,10 @@ void gunde_t::invalidate_cache( cache_e c )
 void gunde_t::create_options()
 {
   fs_player_t::create_options();
+
+  add_option( opt_bool( "legendary.lego_1", legendary.lego_1 ) );
+  add_option( opt_bool( "legendary.lego_2", legendary.lego_2 ) );
+  add_option( opt_bool( "legendary.lego_3", legendary.lego_3 ) );
 }
 
 // gunde_t::copy_from =======================================================
@@ -2946,36 +2601,27 @@ void gunde_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
-  actions.rend             = new actions::rend_t( this );
-  actions.slaughter        = new actions::slaughter_dot_t( this );
-  actions.bloodcraze       = new actions::bloodcraze_t( this );
-  actions.ravens_precision = new actions::ravens_precision_t( this );
-
-
-  //actions.suns_verdict                     = new actions::suns_verdict_t( this );
-
-  //actions.brilliant_flash_heal             = new actions::brilliant_flash_heal_t( "brilliant_flash_heal", this, {} );
-  //actions.brilliant_flash_heal->background = true;
-
-  //actions.vanguard_of_vengeance  = new actions::vanguard_of_vengeance_t( this );
-  //actions.solaris                = new actions::solaris_t( this );
-  //actions.decree_of_the_sun_dmg  = new actions::decree_of_the_sun_dmg_t( this );
-  //actions.decree_of_the_sun_heal = new actions::decree_of_the_sun_heal_t( this );
+  actions.rend                               = new actions::rend_t( this );
+  actions.slaughter                          = new actions::slaughter_dot_t( this );
+  actions.bloodcraze                         = new actions::bloodcraze_t( this );
+  actions.ravens_precision                   = new actions::ravens_precision_t( this );
+  actions.heart_splitter                     = new actions::heart_splitter_t( "heart_splitter_repeat", this );
+  actions.heart_splitter->name_str_reporting = "Heart Splitter (Legendary)";
+  actions.heart_splitter->background         = true;
+  actions.heart_splitter->cooldown->duration = 0_s;
 }
 
 void gunde_t::init_rng()
 {
   fs_player_t::init_rng();
 
-  rng_objects.deaths_arc = get_accumulated_rng( "deaths_arc", rng::CfromP( talents.deaths_arc_chance ) );
+  rng_objects.deaths_arc   = get_accumulated_rng( "deaths_arc", rng::CfromP( talents.deaths_arc_chance ) );
   rng_objects.grim_harvest = get_accumulated_rng( "grim_harvset", rng::CfromP( talents.grim_harvest_chance ) );
-  rng_objects.ancestral_insight = get_accumulated_rng( "ancestral_insight", rng::CfromP( talents.ancestral_insight_chance ) );
-
-  //rng_objects.golden_hour = get_accumulated_rng( "golden_hour", rng::CfromP( talents.golden_hour_proc_chance ) );
-
-  //rng_objects.rising_sun = get_accumulated_rng( "rising_sun", rng::CfromP( talents.rising_sun_chance ) );
-
-  //rng_objects.suns_verdict = get_accumulated_rng( "suns_verdict", rng::CfromP( talents.suns_verdict_chance ) );
+  rng_objects.ancestral_instinct =
+      get_accumulated_rng( "ancestral_instinct", rng::CfromP( talents.ancestral_instinct_chance ) );
+  rng_objects.deep_rend = get_accumulated_rng( "deep_rend", rng::CfromP( talents.deep_rend_proc_chance_st ) );
+  rng_objects.heart_splitter_twice =
+      get_accumulated_rng( "heart_splitter_twice", rng::CfromP( legendary.lego_2_hit_chance ) );
 }
 
 // gunde_t::reset ===========================================================
@@ -3031,6 +2677,13 @@ double gunde_t::get_current_rend( player_t* t ) const
 void gunde_t::spawn_feathers( int quantity )
 {
   buffs.owed_in_blood->trigger( quantity );
+
+  
+  if ( talents_enabled( gunde_t::SLAYERS_GRIN ) )
+  {
+    for ( int i = 0; i < quantity; i++ )
+      cooldowns.rupture->adjust( -talents.slayers_grin_cdr );
+  }
 
   if ( talents_enabled( gunde_t::RAVENS_PRECISION ) )
   {
@@ -3117,15 +2770,9 @@ void actions::gunde_action_t<Base>::apply_rend( const action_state_t* state )
   auto rs = cast_state( state );
   if ( rs->get_rend_coefficient() <= 0 || state->result_amount <= 0 )
     return;
-  
-  //auto td = p()->get_target_data( state->target );
-
-  // residual_action::trigger( p()->actions.rend, state->target,
-  //                           state->result_amount * 0.5 );
 
   auto action       = p()->actions.rend;
   action_state_t* s = action->get_state();
-  // change to multiply by rend multiplier
   s->result_amount = state->result_amount * rs->get_rend_coefficient();
   s->target = state->target;
   s->result = RESULT_HIT;
@@ -3159,12 +2806,6 @@ stat_e gunde_t::convert_hybrid_stat( stat_e s ) const
 
 void gunde_t::create_cooldowns()
 {
-  //cooldowns.blinding_slash  = get_cooldown( "blinding_slash" );
-  //cooldowns.omega_reprieval = get_cooldown( "omega_reprieval" );
-  //cooldowns.omnistrike      = get_cooldown( "omnistrike" );
-  //cooldowns.solar_blades    = get_cooldown( "solar_blades" );
-  //cooldowns.solar_shield    = get_cooldown( "solar_shield" );
-
   cooldowns.blood_arc      = get_cooldown( "blood_arc" );
   cooldowns.grim_carve     = get_cooldown( "grim_carve" );
   cooldowns.heart_splitter = get_cooldown( "heart_splitter" );

@@ -1131,8 +1131,11 @@ public:
     }
   }
 
-  double recharge_rate_multiplier( const cooldown_t& ) const override
+  double recharge_rate_multiplier( const cooldown_t& cd ) const override
   {
+    if ( cd.hasted )
+      return ab::player->cache.attack_haste();
+
     return 1.0;
   }
     

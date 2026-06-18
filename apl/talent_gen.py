@@ -144,6 +144,39 @@ elarion_indicators = {
     "skyward_munitions": "SM",
 }
 
+gunde = {
+    "deaths_arc": 2,
+    "ravens_precision": 2,
+    "grim_harvest": 2,
+
+    "harvesters_toll":1,
+    "crimson_strikes": 1,
+    "darkening_hearts": 1,
+
+    "superior_serration": 2,
+    "murder_of_crows": 2,
+    "massacre": 2,
+
+    "slayers_grin": 1,
+    "frenzied_reign": 1,
+    "deep_rend": 1,
+
+    "bloodcraze": 3,
+    "oathshatter": 3,
+    "carnage": 3,
+
+    "sundered_flesh": 1,
+    "ancestral_instinct": 1,
+    "bloodbath": 1,
+}
+
+gunde_indicators = {
+    "grim_harvest": "GH",
+    "bloodcraze": "BC",
+    "oathshatter": "OATH",
+    "carnage": "CRN",
+}
+
 gems = [
     "ruby", "amethyst", "topaz", "emerald", "sapphire", "diamond"
 ]
@@ -627,36 +660,40 @@ if __name__ == "__main__":
 
     # all_points_to_File("Mara", mara, "generated/mara_talents.simc")
     
-    generate_item_checks("Elarion", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste", "generated/all_gear_options.simc")
+    # generate_item_checks("Elarion", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste", "generated/all_gear_options.simc")
 
 
     
-    combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents14b4.simc", 
-                profilesets=True,
-                required_talents=[
-                    # "resurgent_winds",
-                    # "last_lights",
-                    # "skyward_munitions"
-                ],
-                excluded_talents=[
-                    "deadly_focus",
-                    "swift_reload"
-                ],
-                forbidden_pairs=[
-                    # ("hemotoxin", "malevolence"),
-                    # ("gushing_blood", "malevolence"),
-                    # ("arachnid_onslaught", "malevolence"),
-                ],
-                # name_filters=top_x
-    )
+    # combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents14b4.simc", 
+    #             profilesets=True,
+    #             required_talents=[
+    #                 # "resurgent_winds",
+    #                 # "last_lights",
+    #                 # "skyward_munitions"
+    #             ],
+    #             excluded_talents=[
+    #                 "deadly_focus",
+    #                 "swift_reload"
+    #             ],
+    #             forbidden_pairs=[
+    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("gushing_blood", "malevolence"),
+    #                 # ("arachnid_onslaught", "malevolence"),
+    #             ],
+    #             # name_filters=top_x
+    # )
 
-    all_points_to_File("Elarion", elarion, "generated/elarion_talents.simc")
+    # all_points_to_File("Elarion", elarion, "generated/elarion_talents.simc")
 
 
-    sim_results = dps_sim_results(["output/scenario_et_145.json", "output/scenario_et_146.json"])
-    # print(sim_results)
-    overalls = sorted_by_overall(sim_results)
-    print(overalls[:100])
+    # sim_results = dps_sim_results(["output/scenario_et_145.json", "output/scenario_et_146.json"])
+    # # print(sim_results)
+    # overalls = sorted_by_overall(sim_results)
+    # print(overalls[:100])
+
+    all_points_to_File("Gunde", gunde, "generated/gunde_talents.simc")
+
+    generate_item_checks("Gunde", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste", "generated/all_gear_options_gunde.simc")
 
 # for combo in combos:
 #     print(combo)

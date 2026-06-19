@@ -5,7 +5,6 @@
 
 #include "io.hpp"
 #include "utf8-cpp/utf8.h"
-#include "gsl-lite/gsl-lite.hpp"
 #include <cassert>
 #include <cstring>
 #include <cstdarg>
@@ -19,7 +18,7 @@ namespace io { // ===========================================================
 
 namespace { // anonymous namespace ==========================================
 
-std::wstring _widen( gsl::cstring_span s )
+std::wstring _widen( std::string_view s )
 {
   std::wstring result;
   result.reserve( s.size() / 2 + 1);
@@ -35,7 +34,7 @@ std::wstring _widen( gsl::cstring_span s )
   return result;
 }
 
-std::string _narrow( gsl::cwstring_span s )
+std::string _narrow( std::wstring_view s )
 {
   std::string result;
   result.reserve(s.size() * 2 );

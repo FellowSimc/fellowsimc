@@ -9,7 +9,6 @@
 #include "class_modules/class_module.hpp"
 #include "dbc/dbc.hpp"
 #include "dbc/spell_query/spell_data_expr.hpp"
-#include "gsl-lite/gsl-lite.hpp"
 #include "interfaces/bcp_api.hpp"
 #include "interfaces/sc_http.hpp"
 #include "player/pet.hpp"
@@ -3291,12 +3290,27 @@ void sim_t::partition()
 
 bool sim_t::execute()
 {
+  struct finally_t
+  {
+    std::function<void()> fn;
+
+    finally_t( std::function<void()> fn ) : fn( std::move( fn ) )
+    {
+    }
+
+    ~finally_t()
+    {
+      fn();
+    }
+  };
+
   const auto start_cpu_time  = chrono::cpu_clock::now();
   const auto start_wall_time = chrono::wall_clock::now();
 
   bool success = false;
   {
-    auto merge_final_action = gsl::finally([&](){ merge(); }); // Always merge, even in cases of unsuccessful simulation!
+    auto merge_final_action =
+        finally_t( [ & ]() { merge(); } );  // Always merge, even in cases of unsuccessful simulation!
     partition();
     success = iterate();
   }

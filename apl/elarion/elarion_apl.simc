@@ -66,10 +66,10 @@ actions.deadly_focus+=/lunarlight_mark,if=!buff.resurgent_winds.at_max_stacks|!t
 #,if=!talent.final_crescendo|!talent.resurgent_winds|buff.final_crescendo.at_max_stacks
 actions.deadly_focus+=/voidbringer,target_if=(target.time_to_die>=12|fight_remains<=20)&!debuff.voidbringer_accumulator.up
 actions.deadly_focus+=/natures_fury
-actions.deadly_focus+=/highwind_arrow,if=active_enemies<3&talent.strikers_aim&(!buff.strikers_aim.at_max_stacks|buff.strikers_aim.remains<=4)
+actions.deadly_focus+=/highwind_arrow,if=active_enemies<3&talent.strikers_aim&(!buff.strikers_aim.at_max_stacks|buff.strikers_aim.remains<=4)|debuff.shimmer.remains<=gcd.max*3&legendary.shimmer|buff.resurgent_winds.up|full_recharge_time<=gcd.max
 actions.deadly_focus+=/starfall_volley
 actions.deadly_focus+=/chronoshift,if=cooldown.starfall_volley.remains>10
-actions.deadly_focus+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,cancel_if=debuff.lunarlight_mark.stack=0&gcd.remains<=0&active_enemies>2,if=buff.impending_heartseeker.up|debuff.lunarlight_mark.stack>2&active_enemies>1
+actions.deadly_focus+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,cancel_if=debuff.lunarlight_mark.stack=0&gcd.remains<=0&active_enemies>2,if=buff.impending_heartseeker.up|debuff.lunarlight_mark.stack>2&active_enemies>1|active_enemies=1&debuff.lunarlight_mark.stack>8
 actions.deadly_focus+=/celestial_shot,if=buff.finesse_n.at_max_stacks
 # This should not happen just checking if it does
 actions.deadly_focus+=/focused_shot,if=buff.finesse_n.at_max_stacks

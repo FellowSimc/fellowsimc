@@ -11,7 +11,7 @@
 # single_actor_batch=1
 # max_time=720
 # desired_targets=12
-relative_difference_base="Base Elarion"
+# relative_difference_base="Elarion HWA"
 
 # apl/chuey_dungeon.simc
 
@@ -46,7 +46,7 @@ relative_difference_base="Base Elarion"
 
 
 
-elarion="Base Elarion"
+elarion="Elarion HWA"
 level=80
 
 apl/elarion/elarion_apl.simc
@@ -103,60 +103,42 @@ legendary.shimmer=1
 
 # weapon=chronoshift
 
-
+# 10
 # 35 mods
 # -8 bless
 
 weapon=icicles_of_anzhyr
 
 weapon_trait.hunters_focus=4
-
-# -4 fin
-# 23
+# 14
 
 gems.sapphire_power=1200
 gems.emerald_power=500
 gems.ruby_power=500
 gems.amethyst_power=500
 
-# -7 attunement 16 left
+# 21 
 
 sets.seal_of_the_heskyr=1
-
-# -2 for set, 14 left
-
-weapon_trait.emerald_judgement=2
-# 12 left
-
 sets.deaths_grasp=1
 sets.dark_prophecy=1
-
-# 8 left
+# 27
 
 weapon_trait.amethyst_splinters=4
-
-# 3 left (fink)
-
+#31 
+weapon_trait.emerald_judgement=2
+#33
 weapon_trait.visions_of_grandeur=1
+#34 
 weapon_trait.martial_initiative=1
+#35
 weapon_trait.patient_soul=1
+#36
+sets.draconic_might=1
+#38
 
 
-# weapon_trait.visions_of_grandeur=1
-# weapon_trait.martial_initiative=1
-# weapon_trait.emerald_judgement=3
-# sets.dark_prophecy=1
-# sets.deaths_grasp=1
-# weapon_trait.hunters_focus=4
-# sets.draconic_might=1
-# weapon_trait.amethyst_splinters=4
 
-# sets.seal_of_the_heskyr=1
-
-# gems.amethyst_power=500
-# gems.sapphire_power=500
-# gems.emerald_power=500
-# gems.ruby_power=500
 
 # talents=fusillade:1/strikers_aim:1/last_lights:1/lunarlight_affinity:1/impending_heartseeker:1/piercing_seekers:1/lunar_fury:1/skylit_grace:1/skyward_munitions:1/rising_moon:1
 
@@ -165,130 +147,178 @@ weapon_trait.patient_soul=1
 talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
 # 14
 
+copy="Shimmer HWA DF","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/deadly_focus:1/skylit_grace:1
+
+copy="Shimmer HWA DF Fus","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/fusillade:1/deadly_focus:1/skylit_grace:1
+
+copy="Shimmer HWA DF SR","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/fusillade:1/swift_reload:1/skylit_grace:1
 
 
-# copy="Shimmer Hybrid","Base Elarion"
-# talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
+copy="Shimmer HWA DF Basics","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/deadly_focus:1/skylit_grace:1
+sets.draconic_might=0
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
+copy="Shimmer HWA DF Fus Basics","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/fusillade:1/deadly_focus:1/skylit_grace:1
+sets.draconic_might=0
+sets.draconic_might=0
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
-# copy="Shimmer Hybrid AoE","Base Elarion"
-# talents=last_lights:1/lethal_shots:1/piercing_seekers:1/final_crescendo:1/skyward_munitions:1//impending_heartseeker:1/fusillade:1/resurgent_winds:1
+copy="Shimmer HWA DF Basics Trick","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/deadly_focus:1/skylit_grace:1
+sets.draconic_might=0
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_b/finesse_b/finesse_b/finesse_b/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
-# copy="Shimmer Hybrid more AoE","Base Elarion"
-# talents=last_lights:1/piercing_seekers:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
+copy="Shimmer HWA DF Fus Basics Trick","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/fusillade:1/deadly_focus:1/skylit_grace:1
+sets.draconic_might=0
+sets.draconic_might=0
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_b/finesse_b/finesse_b/finesse_b/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
-# copy="Shimmer Hybrid more more AoE","Base Elarion"
-# talents=last_lights:1/piercing_seekers:1/strikers_aim:1/rising_moon:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
+copy="Shimmer HWA DF SR Basics","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/swift_reload:1/deadly_focus:1/skylit_grace:1
+sets.draconic_might=0
+sets.draconic_might=0
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
-# copy="Shimmer Hybrid alternate","Base Elarion"
-# talents=last_lights:1/lethal_shots:1/rising_moon:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
+copy="Shimmer HWA DF SR Basics Trick","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/swift_reload:1/deadly_focus:1/skylit_grace:1
+sets.draconic_might=0
+sets.draconic_might=0
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_b/finesse_b/finesse_b/finesse_b/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
-# copy="Shimmer ST Focused without RW","Base Elarion"
-# talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1
 
-# copy="Shimmer ST Focused without RW FC","Base Elarion"
-# talents=last_lights:1/lethal_shots:1/strikers_aim:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1/lunar_fury:1
+copy="Shimmer Hybrid","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
 
-# copy="Shimmer AoE Pad","Base Elarion"
-# talents=last_lights:1/lethal_shots:1/strikers_aim:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1/repeating_stars:1
+copy="Shimmer Hybrid AoE","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/piercing_seekers:1/final_crescendo:1/skyward_munitions:1//impending_heartseeker:1/fusillade:1/resurgent_winds:1
 
-# copy="Elarion focused_expanse","Base Elarion"
+copy="Shimmer Hybrid more AoE","Elarion HWA"
+talents=last_lights:1/piercing_seekers:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
+
+copy="Shimmer Hybrid more more AoE","Elarion HWA"
+talents=last_lights:1/piercing_seekers:1/strikers_aim:1/rising_moon:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
+
+copy="Shimmer Hybrid alternate","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/rising_moon:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
+
+copy="Shimmer ST Focused without RW","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1
+
+copy="Shimmer ST Focused without RW FC","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1/lunar_fury:1
+
+copy="Shimmer AoE Pad","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1/repeating_stars:1
+
+# copy="Elarion focused_expanse","Elarion HWA"
 # talents+=/focused_expanse:1
-# copy="Elarion resurgent_winds0","Base Elarion"
+# copy="Elarion resurgent_winds0","Elarion HWA"
 # talents+=/resurgent_winds:0
 
-# copy="Elarion Lethal Shots0","Base Elarion"
+# copy="Elarion Lethal Shots0","Elarion HWA"
 # talents=last_lights:1/lethal_shots:0/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
 
-# copy="Elarion Final Crescendo0","Base Elarion"
+# copy="Elarion Final Crescendo0","Elarion HWA"
 # talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:0/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
-# copy="Elarion piercing_seekers","Base Elarion"
+# copy="Elarion piercing_seekers","Elarion HWA"
 # talents+=/piercing_seekers:1
-# copy="Elarion final_crescendo","Base Elarion"
+# copy="Elarion final_crescendo","Elarion HWA"
 # talents+=/final_crescendo:1
-# copy="Elarion skylit_grace","Base Elarion"
+# copy="Elarion skylit_grace","Elarion HWA"
 # talents+=/skylit_grace:1
-# copy="Elarion fusillade","Base Elarion"
+# copy="Elarion fusillade","Elarion HWA"
 # talents+=/fusillade:1
-# copy="Elarion skyward_munitions","Base Elarion"
+# copy="Elarion skyward_munitions","Elarion HWA"
 # talents+=/skyward_munitions:1
-# copy="Elarion repeating_stars","Base Elarion"
+# copy="Elarion repeating_stars","Elarion HWA"
 # talents+=/repeating_stars:1
-# copy="Elarion repeating_stars rising_moon","Base Elarion"
+# copy="Elarion repeating_stars rising_moon","Elarion HWA"
 # talents+=/repeating_stars:1/rising_moon:1
-# copy="Elarion lunar_fury","Base Elarion"
+# copy="Elarion lunar_fury","Elarion HWA"
 # talents+=/lunar_fury:1
-# copy="Elarion lethal_shots","Base Elarion"
+# copy="Elarion lethal_shots","Elarion HWA"
 # talents+=/lethal_shots:1
-# copy="Elarion rising_moon","Base Elarion"
+# copy="Elarion rising_moon","Elarion HWA"
 # talents+=/rising_moon:1
-# copy="Elarion lunarlight_affinity","Base Elarion"
+# copy="Elarion lunarlight_affinity","Elarion HWA"
 # talents+=/lunarlight_affinity:1
-# copy="Elarion lunarlight_affinity lunar_fury","Base Elarion"
+# copy="Elarion lunarlight_affinity lunar_fury","Elarion HWA"
 # talents+=/lunarlight_affinity:1/lunar_fury:1
-# copy="Elarion strikers_aim","Base Elarion"
+# copy="Elarion strikers_aim","Elarion HWA"
 # talents+=/strikers_aim:1
-# copy="Elarion fervent_supremacy","Base Elarion"
+# copy="Elarion fervent_supremacy","Elarion HWA"
 # talents+=/fervent_supremacy:1
-# copy="Elarion impending_heartseeker","Base Elarion"
+# copy="Elarion impending_heartseeker","Elarion HWA"
 # talents+=/impending_heartseeker:1
-# copy="Elarion impending_heartseeker fusillade","Base Elarion"
+# copy="Elarion impending_heartseeker fusillade","Elarion HWA"
 # talents+=/impending_heartseeker:1/fusillade:1
-# copy="Elarion impending_heartseeker piercing_seekers","Base Elarion"
+# copy="Elarion impending_heartseeker piercing_seekers","Elarion HWA"
 # talents+=/impending_heartseeker:1/piercing_seekers:1
-# copy="Elarion impending_heartseeker piercing_seekers fusillade","Base Elarion"
+# copy="Elarion impending_heartseeker piercing_seekers fusillade","Elarion HWA"
 # talents+=/impending_heartseeker:1/piercing_seekers:1/fusillade:1
-# copy="Elarion resurgent_winds","Base Elarion"
+# copy="Elarion resurgent_winds","Elarion HWA"
 # talents+=/resurgent_winds:1
-# copy="Elarion resurgent_winds rising_moon","Base Elarion"
+# copy="Elarion resurgent_winds rising_moon","Elarion HWA"
 # talents+=/resurgent_winds:1/rising_moon:1
-# copy="Elarion last_lights","Base Elarion"
+# copy="Elarion last_lights","Elarion HWA"
 # talents+=/last_lights:1
-# copy="Elarion swift_reload","Base Elarion"
+# copy="Elarion swift_reload","Elarion HWA"
 # talents+=/swift_reload:1
-# copy="Elarion deadly_focus","Base Elarion"
+# copy="Elarion deadly_focus","Elarion HWA"
 # talents+=/deadly_focus:1
 
-# # copy="Chronoshift","Base Elarion"
+# # copy="Chronoshift","Elarion HWA"
 # # weapon=chronoshift
 
-# # # copy="Icicles","Base Elarion"
+# # # copy="Icicles","Elarion HWA"
 # # # weapon=icicles_of_anzhyr
-# # copy="NF","Base Elarion"
+# # copy="NF","Elarion HWA"
 # # weapon=natures_fury
-# # copy="Void","Base Elarion"
+# # copy="Void","Elarion HWA"
 # # weapon=voidbringers_touch
 
-# # copy="Wep Haste","Base Elarion"
+# # copy="Wep Haste","Elarion HWA"
 # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=haste/haste
-# # copy="Wep Prim","Base Elarion"
+# # copy="Wep Prim","Elarion HWA"
 # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=primary/haste
-# # copy="Wep Spirit","Base Elarion"
+# # copy="Wep Spirit","Elarion HWA"
 # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=spirit/haste
-# # copy="Wep Crit","Base Elarion"
+# # copy="Wep Crit","Elarion HWA"
 # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
-# # copy="Wep Exp","Base Elarion"
+# # copy="Wep Exp","Elarion HWA"
 # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=expertise/haste
 
 
-# # copy="Chest Haste","Base Elarion"
+# # copy="Chest Haste","Elarion HWA"
 # # chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=haste
-# # copy="Chest Prim","Base Elarion"
+# # copy="Chest Prim","Elarion HWA"
 # # chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=primary
-# # copy="Chest Spirit","Base Elarion"
+# # copy="Chest Spirit","Elarion HWA"
 # # chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=spirit
-# # copy="Chest Crit","Base Elarion"
+# # copy="Chest Crit","Elarion HWA"
 # # chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=crit
-# # copy="Chest Exp","Base Elarion"
+# # copy="Chest Exp","Elarion HWA"
 # # chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=expertise
 
-# # copy="Legs Haste","Base Elarion"
+# # copy="Legs Haste","Elarion HWA"
 # # legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=haste
-# # copy="Legs Prim","Base Elarion"
+# # copy="Legs Prim","Elarion HWA"
 # # legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=primary
-# # copy="Legs Spirit","Base Elarion"
+# # copy="Legs Spirit","Elarion HWA"
 # # legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=spirit
-# # copy="Legs Crit","Base Elarion"
+# # copy="Legs Crit","Elarion HWA"
 # # legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=crit
-# # copy="Legs Exp","Base Elarion"
+# # copy="Legs Exp","Elarion HWA"
 # # legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=expertise
 

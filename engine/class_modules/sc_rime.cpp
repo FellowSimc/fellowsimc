@@ -226,7 +226,7 @@ public:
     double avalanche_triple = 0.07;
 
     timespan_t coalescing_frost_duration      = 3_s;
-    double coalescing_frost_sp_mul            = 0.333 * 1.2;
+    double coalescing_frost_sp_mul            = 0.333 * 1.07;  // *1.2;
     double coalescing_frost_crit_extra_chance = 0.5;
     int coalescing_frost_crit_stacks          = 2;
     int coalescing_frost_max_stacks           = 30;
@@ -272,7 +272,7 @@ public:
     double bird_coeff             = 0.469;
     double bird_spirit_multiplier = 1.5;
 
-    double ice_comet_coeff   = 4.082 * 1.2;
+    double ice_comet_coeff = 4.082 * 1.07; //*1.2;
     double ice_comet_falloff = 12;
     int ice_comet_cost       = 2;
 
@@ -2873,17 +2873,17 @@ void actions::rime_action_t<Base>::spend_winter_orbs( const action_state_t* s )
   if ( orbs_spent <= 0 )
     return;
 
-  if ( p()->legendary.undulating_spirit && p()->buffs.undulating_spirit->check() )
-  {
-    p()->buffs.undulating_spirit->decrement();
-    p()->sim->print_debug( "{} proc'd Undulating Spirit Refund", *p() );
-    trigger_spirit_refund( s, orbs_spent );
-  }
-  else if ( p()->rng().roll( p()->cache.mastery_value() ) )
+  if ( p()->rng().roll( p()->cache.mastery_value() ) )
   {
     p()->sim->print_debug( "{} proc'd Spirit Orb Refund (Chance: {:.2f}%, Sprit: {:.2f}%)", *p(),
                            p()->cache.mastery_value() * 100.0, p()->cache.mastery() * 100.0 );
 
+    trigger_spirit_refund( s, orbs_spent );
+  }
+  else if ( p()->legendary.undulating_spirit && p()->buffs.undulating_spirit->check() )
+  {
+    p()->buffs.undulating_spirit->decrement();
+    p()->sim->print_debug( "{} proc'd Undulating Spirit Refund", *p() );
     trigger_spirit_refund( s, orbs_spent );
   }
 

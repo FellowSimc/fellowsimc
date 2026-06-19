@@ -1688,7 +1688,7 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool is_dynamic, weighti
   if ( parsed.item_variant == VARIANT_NONE || parsed.rarity == RARITY_NONE )
     return 0.0;
 
-  item_calculation_settings_t settings = is_dynamic ? dynamic_slot_settings : fixed_slot_settings;
+  item_calculation_settings_t settings = is_dynamic ? dynamic_slot_settings : base_settings;
 
 
   if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_PRIMARY || stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )

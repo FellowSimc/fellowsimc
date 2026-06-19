@@ -457,8 +457,9 @@ public:
     double oathshatter_aoe_multiplier = 0.25;
     // Gunde.HeavyMeleeDotBased.Talent.LowHealthTarget.AddedCriticalStrikeChance, 1.00
     double darkening_hearts_execute_cc = 1.0;
+    double darkening_hearts_damage_mul = 1.1;
     // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.AdditionalCooldownRecovery, 0.5
-    double bloodbath_cooldown_recovery = 0.5;
+    double bloodbath_cooldown_recovery = 2.0;
     // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.Duration, 3.0
     timespan_t bloodbath_duration = 3_s;
 
@@ -471,7 +472,7 @@ public:
 
     
     // Gunde.InstantAoeWithBuff.Talent.ChanceCooldownReset.Chance, 0.25            ; WAS 0.15
-    double deaths_arc_chance = 0.25;
+    double deaths_arc_chance = 0.3;
     // Gunde.InstantAoeWithBuff.Talent.Empowered.AddedCriticalStrikeChance, 1.00
     double deaths_arc_added_cc = 1.0;
     // Gunde.InstantAoeWithBuff.Talent.Empowered.Duration, 12.0
@@ -513,7 +514,7 @@ public:
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.DamageIncreasePerStack, 0.90
     double bloodcraze_amp_per_stack = 0.9;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.TargetThresholdScaling, 5.0
-    double bloodcraze_falloff = 3.0;
+    double bloodcraze_falloff = 5.0;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Period, 3.0
     timespan_t bloodcraze_period = 3_s;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Duration, 6.15
@@ -524,7 +525,7 @@ public:
   {
     bool lego_1 = false;
     // Gunde.TargetedAoeProjectile.Talent.AdditionalTicks.Amount, 2.0
-    int lego_1_additional_grim_carve_hits = 2;
+    int lego_1_additional_grim_carve_hits = 1;
 
     bool lego_2 = false;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.NumOfCharges, 2.0
@@ -1493,6 +1494,11 @@ struct grim_carve_t : public gunde_attack_t
       }
     }
 
+    if ( p()->talents_enabled( gunde_t::BLOODBATH ) )
+    {
+      p()->buffs.bloodbath->trigger();
+    }
+
     const timespan_t tick_period = p()->spell_const.grim_carve_period;
 
     for ( int i = 0; i <= num_hits; ++i )
@@ -1702,6 +1708,10 @@ struct heart_splitter_t : public gunde_attack_t
 
     attack_power_mod.direct = p->spell_const.heart_splitter_coeff;
 
+    if ( p->talents_enabled( gunde_t::DARKENING_HEARTS ) )
+      attack_power_mod.direct *= p->talents.darkening_hearts_damage_mul;
+
+
     base_rend_applied += p->spell_const.heart_splitter_additional_rend;
 
     exsanguinate = new heart_splitter_exsanguinate_t( p, name, false );
@@ -1813,6 +1823,19 @@ struct reign_in_blood_t : public gunde_spell_t
 
     ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
+    
+  double recharge_rate_multiplier( const cooldown_t& cd ) const override
+  {
+    auto rrm = base_t::recharge_rate_multiplier( cd );
+
+    rrm = 1.0 / rrm;
+
+    rrm += p()->buffs.bloodbath->check_value();
+
+    rrm = 1.0 / rrm;
+
+    return rrm;
+  }
 
   void execute() override
   {
@@ -1839,20 +1862,6 @@ struct slaughter_t : public gunde_spell_t
 
     ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
-
-  double recharge_rate_multiplier( const cooldown_t& cd ) const override
-  {
-    auto rrm = base_t::recharge_rate_multiplier( cd );
-
-    rrm = 1.0 / rrm;
-
-    rrm += p()->buffs.bloodbath->check_value();
-
-    rrm = 1.0 / rrm;
-
-    return rrm;
-  }
-
 
   void impact( action_state_t* s ) override
   {
@@ -2406,7 +2415,7 @@ void gunde_t::create_buffs()
                         ->set_duration( talents.bloodbath_duration )
                         ->set_default_value( talents.bloodbath_cooldown_recovery )
                         ->add_stack_change_callback(
-                            [ this ]( auto, auto, auto ) { cooldowns.heart_splitter->adjust_recharge_multiplier(); } );
+                            [ this ]( auto, auto, auto ) { cooldowns.reign_in_blood->adjust_recharge_multiplier(); } );
 
   buffs.harvesters_toll = make_buff<gunde_buff_t>( this, "harvesters_toll" )
                               ->set_default_value( talents.harvesters_toll_amp )

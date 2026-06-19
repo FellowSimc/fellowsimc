@@ -111,6 +111,71 @@ public:
 
   dbc_proc_callback_t* lunarlight_mark_external;
 
+
+#define ELARION_TALENT_LIST(X) \
+  X( FOCUSED_EXPANSE,        "focused_expanse",        "Focused Expanse" ) \
+  X( PIERCING_SEEKERS,       "piercing_seekers",       "Piercing Seekers" ) \
+  X( FINAL_CRESCENDO,        "final_crescendo",        "Final Crescendo" ) \
+  X( SKYLIT_GRACE,           "skylit_grace",           "Skylit Grace" ) \
+  X( FUSILLADE,              "fusillade",              "Fusillade" ) \
+  X( SKYWARD_MUNITIONS,      "skyward_munitions",      "Skyward Munitions" ) \
+  X( REPEATING_STARS,        "repeating_stars",        "Repeating Stars" ) \
+  X( LUNARLIGHT_AFFINITY,    "lunarlight_affinity",    "Lunarlight Affinity" ) \
+  X( LETHAL_SHOTS,           "lethal_shots",           "Lethal Shots" ) \
+  X( PRECISION_STRIKE,       "precision_strike",       "Precision Strike" ) \
+  X( LUNAR_FURY,             "lunar_fury",             "Lunar Fury" ) \
+  X( STARS_ALIGNED,          "stars_aligned",          "Stars Aligned" ) \
+  X( FERVENT_SUPREMACY,      "fervent_supremacy",      "Fervent Supremacy" ) \
+  X( IMPENDING_HEARTSEEKER,  "impending_heartseeker",  "Impending Heartseeker" ) \
+  X( RESURGENT_WINDS,        "resurgent_winds",        "Resurgent Winds" ) \
+  X( LAST_LIGHTS,            "last_lights",            "Last Lights" ) \
+  X( RISING_MOON,            "rising_moon",            "Rising Moon" ) \
+  X( STRIKERS_AIM,           "strikers_aim",           "Striker's Aim" ) \
+  X( SWIFT_RELOAD, "swift_reload", "Swift Reload" ) \
+  X( DEADLY_FOCUS, "deadly_focus", "Deadly Focus" ) \
+  X( HIGH_IMPACT,            "high_impact",            "High Impact" )
+
+  enum elarion_talent_index_t
+  {
+#define X( name, id, pretty ) name##_INDEX,
+    ELARION_TALENT_LIST( X )
+#undef X
+        ELARION_TALENT_MAX
+  };
+
+  enum elarion_talents_t : unsigned long long
+  {
+    NONE = 0,
+#define X( name, id, pretty ) name = 1ULL << name##_INDEX,
+    ELARION_TALENT_LIST( X )
+#undef X
+        MAX = 1ULL << ELARION_TALENT_MAX
+  };
+
+  static constexpr talent_info ELARION_TALENTS[] = {
+#define X( name, id, pretty ) { elarion_talents_t::name, id, pretty },
+      ELARION_TALENT_LIST( X )
+#undef X
+  };
+
+  constexpr std::string_view talent_name( long long t ) override
+  {
+    for ( const auto& talent : ELARION_TALENTS )
+      if ( talent.flag == t )
+        return talent.id;
+
+    return "unknown_talent";
+  }
+
+  constexpr std::string_view talent_name_formatted( long long t ) override
+  {
+    for ( const auto& talent : ELARION_TALENTS )
+      if ( talent.flag == t )
+        return talent.pretty;
+
+    return "Unknown Talent";
+  }
+
   struct spell_const_t
   {
     timespan_t auto_attack_time = 2.4_s;
@@ -186,70 +251,6 @@ public:
     int spirit_refund_marks_extra_targets = 2;
   } spell_const;
 
-#define ELARION_TALENT_LIST(X) \
-  X( FOCUSED_EXPANSE,        "focused_expanse",        "Focused Expanse" ) \
-  X( PIERCING_SEEKERS,       "piercing_seekers",       "Piercing Seekers" ) \
-  X( FINAL_CRESCENDO,        "final_crescendo",        "Final Crescendo" ) \
-  X( SKYLIT_GRACE,           "skylit_grace",           "Skylit Grace" ) \
-  X( FUSILLADE,              "fusillade",              "Fusillade" ) \
-  X( SKYWARD_MUNITIONS,      "skyward_munitions",      "Skyward Munitions" ) \
-  X( REPEATING_STARS,        "repeating_stars",        "Repeating Stars" ) \
-  X( LUNARLIGHT_AFFINITY,    "lunarlight_affinity",    "Lunarlight Affinity" ) \
-  X( LETHAL_SHOTS,           "lethal_shots",           "Lethal Shots" ) \
-  X( PRECISION_STRIKE,       "precision_strike",       "Precision Strike" ) \
-  X( LUNAR_FURY,             "lunar_fury",             "Lunar Fury" ) \
-  X( STARS_ALIGNED,          "stars_aligned",          "Stars Aligned" ) \
-  X( FERVENT_SUPREMACY,      "fervent_supremacy",      "Fervent Supremacy" ) \
-  X( IMPENDING_HEARTSEEKER,  "impending_heartseeker",  "Impending Heartseeker" ) \
-  X( RESURGENT_WINDS,        "resurgent_winds",        "Resurgent Winds" ) \
-  X( LAST_LIGHTS,            "last_lights",            "Last Lights" ) \
-  X( RISING_MOON,            "rising_moon",            "Rising Moon" ) \
-  X( STRIKERS_AIM,           "strikers_aim",           "Striker's Aim" ) \
-  X( SWIFT_RELOAD, "swift_reload", "Swift Reload" ) \
-  X( DEADLY_FOCUS, "deadly_focus", "Deadly Focus" ) \
-  X( HIGH_IMPACT,            "high_impact",            "High Impact" )
-
-  enum elarion_talent_index_t
-  {
-#define X( name, id, pretty ) name##_INDEX,
-    ELARION_TALENT_LIST( X )
-#undef X
-        ELARION_TALENT_MAX
-  };
-
-  enum elarion_talents_t : unsigned long long
-  {
-    NONE = 0,
-#define X( name, id, pretty ) name = 1ULL << name##_INDEX,
-    ELARION_TALENT_LIST( X )
-#undef X
-        MAX = 1ULL << ELARION_TALENT_MAX
-  };
-
-  static constexpr talent_info ELARION_TALENTS[] = {
-#define X( name, id, pretty ) { elarion_talents_t::name, id, pretty },
-      ELARION_TALENT_LIST( X )
-#undef X
-  };
-
-  constexpr std::string_view talent_name( long long t ) override
-  {
-    for ( const auto& talent : ELARION_TALENTS )
-      if ( talent.flag == t )
-        return talent.id;
-
-    return "unknown_talent";
-  }
-
-  constexpr std::string_view talent_name_formatted( long long t ) override
-  {
-    for ( const auto& talent : ELARION_TALENTS )
-      if ( talent.flag == t )
-        return talent.pretty;
-
-    return "Unknown Talent";
-  }
-
   struct talents_t
   {
     double focused_expanse_chance       = 0.2;
@@ -263,7 +264,7 @@ public:
 
     double final_crescendo_dmg_mul = 1.0;
     int final_crescendo_max_stacks = 2;
-    int final_crescendo_ricochets  = 8;
+    int final_crescendo_ricochets  = 10;
 
     double skylit_grace_cdr = 1.2;
 

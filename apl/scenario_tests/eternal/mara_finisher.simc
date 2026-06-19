@@ -89,7 +89,7 @@ apl/mara/mara.simc
 head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit
 shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit
 back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary
-chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=crit
 hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit
 legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
 feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
@@ -120,97 +120,34 @@ main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fi
 # legendary.undulating_spirit=1
 weapon=fated_strike
 
-# # Talons Beam Okay
-# talents=burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/cold_shower:1/glacial_assault:1/greater_glacial_blast:1/icy_talons:1/navirs_keeper:1/wisdom_of_the_north:1
-# Talons Beam Overall Best
-# talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/cold_shower:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1
-
-# # Beam
-# talents=biting_cold:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/icy_flow:1/soulfrost_torrent:1/supreme_torrent:1/wisdom_of_the_north:1
-
-# 35 Mods
-
-# 29 mods -6stat
-# 28 mods -fink
-
-# weapon_trait.visions_of_grandeur=1
-# weapon_trait.martial_initiative=1
-# weapon_trait.emerald_judgement=3
-# 23 mods -5
-# 4Trait
-# sets.torment_of_baelaurum=1
-# sets.deaths_grasp=1
-# 19 mods -4
-# copy="visions1","Base Mara"
-# weapon_trait.visions_of_grandeur=1
-
-# 27 mods
-
-# gems.amethyst_power=600
-# gems.sapphire_power=600
-# gems.emerald_power=600
-# gems.ruby_power=600
-# 15 mods -4
-
-# 6 stat
-# 18 mods
-# 11 mods -4
-
-# -1 mod, 10 mods (EJ3)
-# -4 mods, 6 left 
-# sets.draconic_might=1
-# -6 (draco, 4 spirit)
-
-# 1mod
-# weapon_trait.amethyst_splinters=1
-# 0mod
+# 10 mods +1 chest mod
 
 sets.draconic_might=1
+sets.deaths_grasp=1
+sets.drakheims_absolution=1
+sets.seal_of_the_heskyr=1
+
+# 18 mods
 
 gems.ruby_power=500
 gems.amethyst_power=500
 gems.emerald_power=500
-gems.sapphire_power=500
-
-sets.seal_of_the_heskyr=1
-
-# 4  in sets
-
-# 8 in blessings
-
-# 23 mods left
-
-weapon_trait.emerald_judgement=2
-
-# 21 mods left
-
-weapon_trait.amethyst_splinters=4
-
-# 17 mods left
-
-sets.deaths_grasp=1
-
-# 15 mods left
-
-weapon_trait.visions_of_grandeur=1
-
-# 14 mods left
-
-sets.drakheims_absolution=1
-
-# 12 mods left
-
-weapon_trait.hunters_focus=2
-
-# 10 mods left
-
-weapon_trait.martial_initiative=1
-
-# 9 mods left
-
 gems.sapphire_power=1200
 
-# 2 mods left
+# 25 mods
+
+weapon_trait.amethyst_splinters=4
+# 29
+weapon_trait.emerald_judgement=2
+#31 
+weapon_trait.hunters_focus=2
+#3 3
+weapon_trait.martial_initiative=1
+#34
+weapon_trait.visions_of_grandeur=1
+#35
+# +3
+weapon_trait.hunters_focus=4
 
 
 # copy="Finisher Max ST Vex","Base Mara"

@@ -19,12 +19,12 @@ level=80
 apl/ardeos/ardeos_apl.simc
 
 
-head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
-shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/haste,affixes=crit/haste
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/haste,affixes=finesse_c/finesse_c
 back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit
 chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=crit/haste
 hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/haste
-legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=crit/haste
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c
 feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
 
 neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
@@ -33,18 +33,11 @@ wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=cr
 finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
 finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
 trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
-trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=finesse_k/finesse_b/finesse_b/finesse_b/finesse_b
 
 main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary,affixes=crit/haste
 
-# 13 * 3 - 4
-
-# 35
-
-# 10 stats
-# 1 finesse
-
-# 24
+# 11 mods
 
 legendary.explosivo=1
 # legendary.devouring_flame=1
@@ -54,41 +47,13 @@ weapon_trait.visions_of_grandeur=4
 weapon_trait.martial_initiative=1
 weapon_trait.emerald_judgement=3
 
-# 19 
+# 19 mods
+
 
 sets.dark_prophecy=1
 sets.deaths_grasp=1
 
-# 15
-
-
-gems.amethyst_power=600
-gems.sapphire_power=600
-gems.emerald_power=600
-gems.ruby_power=600
-
-# 11 
-
-weapon_trait.hunters_focus=4
-
-# 7
-
-sets.drakheims_absolution=1
-
-# 5
-
-weapon_trait.amethyst_splinters=1
-
-# 4
-
-# weapon_trait.seized_opportunity=4 
-
-weapon_trait.brave_machinations=1
-
-# weapon=icicles_of_anzhyr
-weapon=chronoshift
-
-legendary.explosivo=1
+# 23 mods
 
 
 gems.amethyst_power=500
@@ -97,8 +62,32 @@ gems.emerald_power=500
 gems.ruby_power=500
 
 sets.seal_of_the_heskyr=1
+# 25 mods
 
-weapon_trait.amethyst_splinters=3
+
+weapon_trait.hunters_focus=4
+# 29 mods
+
+sets.drakheims_absolution=1
+# 31 mods
+
+weapon_trait.amethyst_splinters=4
+
+# 34 mods
+
+# weapon_trait.seized_opportunity=4 
+
+weapon_trait.brave_machinations=1
+# 35 mods
+
+# weapon=icicles_of_anzhyr
+weapon=chronoshift
+
+legendary.explosivo=1
+
+
+
+
 
 # legendary.devouring_flame=1
 # legendary.fire_toad=1

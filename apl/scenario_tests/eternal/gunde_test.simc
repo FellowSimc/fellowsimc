@@ -1,17 +1,17 @@
-report_details=1
-optimal_raid=0
-# max_time=420
-# max_time=50
-max_time=250
-# max_time=60
-target_error=0.1
-iterations=15000
-chart_show_relative_difference=1
-vary_combat_length=0.1
-single_actor_batch=1
-max_time=720
-desired_targets=1
-relative_difference_base="Base Gunde"
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=15000
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=1
+# relative_difference_base="Base Gunde"
 
 # apl/chuey_dungeon.simc
 
@@ -44,7 +44,7 @@ relative_difference_base="Base Gunde"
 
 
 
-gunde="Base Gunde"
+gunde="Base Gunde Old"
 level=80
 
 apl/gunde/gunde_apl.simc
@@ -131,8 +131,8 @@ weapon_trait.patient_soul=1
 # 2 affixes left (Martial and one rank of hf)
 # 2 stats of haste
 
-copy="No Slaughter","Base Gunde"
-apl/gunde/gunde_apl_no_slaughter.simc
+# copy="No Slaughter","Base Gunde"
+# apl/gunde/gunde_apl_no_slaughter.simc
 
 # copy="Fated","Base Gunde"
 # weapon=fated_strike

@@ -234,11 +234,10 @@ public:
     double deadly_scheme_added_crit      = 1.0;
     double deadly_scheme_required_energy = 200;
 
-    double bloodrush_tickrate = 1.3;
-    double bloodrush_damage   = 1.5;
+    double bloodrush_tickrate = 1.2;
 
     double venomous_delight_chance = 0.1;
-    double venomous_delight_energy = 5;
+    double venomous_delight_energy = 10;
 
     double vile_venoms_poison_multiplier = 1.15;
 
@@ -247,7 +246,8 @@ public:
     double efficient_killer_energy_per_cp        = 1.0;
 
     int gushing_blood_hemorrhaging_additional_targets = 4;
-    bool gushing_blood_always_works = false;
+    bool gushing_blood_always_works                   = false;
+    double gushing_blood_seething_poison_bleed_amp    = 1.5;
 
     double corrosive_spill_chance_per_cp                      = 0.03;
     timespan_t corrosive_spill_duration                       = 3_s;
@@ -311,11 +311,11 @@ public:
     double hemorrhaging_stike_tick_dmg    = 1.076 * 0.67;
     timespan_t hemorrhaging_strike_period = 3_s;
 
-    double queens_fang_coeff     = 2.5212 * 1.12;
+    double queens_fang_coeff     = 2.5212 * 1.12 * 1.1;
     double caustic_poison_coeff  = 4.476 * 1.07;
     double seething_poison_coeff = 1.116 * 1.1;
 
-    double arachnid_assault_coeff = 0.858;
+    double arachnid_assault_coeff = 0.858 * 1.1;
 
     double volatile_poison_explode_coeff = 1.248;
     double volatile_poison_tick_coeff = 0.312;
@@ -1505,6 +1505,10 @@ struct hemorrhaging_strike_t : public mara_attack_t
     double m = mara_attack_t::composite_ta_multiplier( s );
 
     m /= s->haste;
+
+    if ( p()->talents_enabled( mara_t::GUSHING_BLOOD ) &&
+         p()->get_target_data( s->target )->dots.seething_poison->is_ticking() )
+      m *= p()->talents.gushing_blood_seething_poison_bleed_amp;
 
     return m;
   }

@@ -133,71 +133,7 @@ public:
     real_ppm_t* reign_of_fire;
   } rppm;
 
-  struct spell_const_t
-  {
-    timespan_t wildfire_duration = 9_s;
-    double wildfire_tickrate     = 0.2;
-    timespan_t wildfire_cooldown = 45_s;
-
-    double infernal_wave_cinders = 40;
-    double infernal_wave_coeff   = 1.7;
-
-    double fire_frog_coeff             = 0.7315 * 1.35;
-    double fire_frog_dot_conversion    = 1.0;
-    timespan_t fire_frog_dot_duration  = 12_s;
-    timespan_t fire_frog_dot_period    = 3_s;
-    timespan_t fire_frog_jump_duration = 0.3_s;
-    unsigned fire_frog_max_jumps       = 3;
-    unsigned fire_frog_frogs           = 5;
-    timespan_t fire_frogs_cooldown     = 45_s;
-
-    timespan_t pyromania_cooldown = 90_s;
-    unsigned pyromania_targets    = 3;
-
-    double searing_blaze_tick_coeff      = 0.681;
-    timespan_t searing_blaze_duration    = 30_s;
-    timespan_t searing_blaze_period      = 2_s;
-    double searing_blaze_embers_per_tick = 1.0;  // This is currently reduced by haste.
-
-    double engulfing_flames_tick_coeff      = 1.988;
-    timespan_t engulfing_flames_duration    = 9_s;
-    timespan_t engulfing_flames_period      = 1.5_s;
-    double engulfing_flames_embers_per_tick = 5.0;  // This is currently reduced by haste.
-    timespan_t engufling_flames_cooldown    = 20_s;
-    int engulfing_flames_charges            = 2;
-
-    timespan_t detonate_cast_time         = 1.0_s;  // Data has 1.5s but it is clearly faster than GCD still.
-    double detonate_embers_cost           = 100;
-    double detonate_hits                  = 3;      // Divides sample duration equally into these.
-    timespan_t detonate_delay             = 0.5_s;  // Damage is sampled at cast time and snapshots.
-    timespan_t detonate_between_hit_delay = 0.3_s;
-    timespan_t detonate_sample_duration   = 3_s;
-
-    double fire_ball_coeff            = 6.156;
-    timespan_t fire_ball_cooldown     = 30_s;
-    double fire_ball_falloff          = 5;
-    double fire_ball_damage_to_dot    = 0.2;
-    timespan_t fire_ball_dot_duration = 12_s;
-    timespan_t fire_ball_dot_period   = 2_s;
-    double fire_ball_embers_per_tick  = 2.0;  // This is **NOT** currently reduced by haste.
-    double fire_ball_embers_chance    = 1.0;
-
-    double incinerate_coeff             = 3.37;
-    double incinerate_falloff           = 8;
-    timespan_t incinerate_dot_extend    = 1.5_s;
-    timespan_t incinerate_duration      = 2.5_s;
-    timespan_t incinerate_period        = 0.5_s;
-    timespan_t incinerate_dot_period    = 3_s;
-    timespan_t incinerate_dot_duration  = 12_s;
-    double incinerate_dot_coeff         = 0.41;
-    double incinerate_dot_amp_per_stack = 0.3;
-
-    timespan_t apocalypse_cast_time = 3_s;
-    timespan_t apocalypse_cooldown  = 45_s;
-    double apocalypse_coeff         = 22.03;
-    double apocalypse_falloff       = 1;
-
-  } spell_const;
+ 
 
   #define ARDEOS_TALENT_LIST( X )                                             \
     X( SLOW_BURN, "slow_burn", "Slow Burn" )                                  \
@@ -263,6 +199,71 @@ public:
     return "Unknown Talent";
   }
 
+  struct spell_const_t
+  {
+    timespan_t wildfire_duration = 9_s;
+    double wildfire_tickrate     = 0.2;
+    timespan_t wildfire_cooldown = 45_s;
+
+    double infernal_wave_cinders = 40;
+    double infernal_wave_coeff   = 1.7;
+
+    double fire_frog_coeff             = 0.9381;
+    double fire_frog_dot_conversion    = 1.0;
+    timespan_t fire_frog_dot_duration  = 12_s;
+    timespan_t fire_frog_dot_period    = 3_s;
+    timespan_t fire_frog_jump_duration = 0.3_s;
+    unsigned fire_frog_max_jumps       = 3;
+    unsigned fire_frog_frogs           = 5;
+    timespan_t fire_frogs_cooldown     = 45_s;
+
+    timespan_t pyromania_cooldown = 90_s;
+    unsigned pyromania_targets    = 3;
+
+    double searing_blaze_tick_coeff      = 0.6498;
+    timespan_t searing_blaze_duration    = 30_s;
+    timespan_t searing_blaze_period      = 2_s;
+    double searing_blaze_embers_per_tick = 1.0;  // This is currently reduced by haste.
+
+    double engulfing_flames_tick_coeff      = 1.8886;
+    timespan_t engulfing_flames_duration    = 9_s;
+    timespan_t engulfing_flames_period      = 1.5_s;
+    double engulfing_flames_embers_per_tick = 5.0;  // This is currently reduced by haste.
+    timespan_t engufling_flames_cooldown    = 20_s;
+    int engulfing_flames_charges            = 2;
+
+    timespan_t detonate_cast_time         = 1.0_s;  // Data has 1.5s but it is clearly faster than GCD still.
+    double detonate_embers_cost           = 100;
+    double detonate_hits                  = 3;      // Divides sample duration equally into these.
+    timespan_t detonate_delay             = 0.5_s;  // Damage is sampled at cast time and snapshots.
+    timespan_t detonate_between_hit_delay = 0.3_s;
+    timespan_t detonate_sample_duration   = 3_s;
+
+    double fire_ball_coeff            = 5.8482;
+    timespan_t fire_ball_cooldown     = 30_s;
+    double fire_ball_falloff          = 5;
+    double fire_ball_damage_to_dot    = 0.2;
+    timespan_t fire_ball_dot_duration = 12_s;
+    timespan_t fire_ball_dot_period   = 2_s;
+    double fire_ball_embers_per_tick  = 2.0;  // This is **NOT** currently reduced by haste.
+    double fire_ball_embers_chance    = 1.0;
+
+    double incinerate_coeff             = 3.2015;
+    double incinerate_falloff           = 8;
+    timespan_t incinerate_dot_extend    = 1.5_s;
+    timespan_t incinerate_duration      = 2.5_s;
+    timespan_t incinerate_period        = 0.5_s;
+    timespan_t incinerate_dot_period    = 3_s;
+    timespan_t incinerate_dot_duration  = 12_s;
+    double incinerate_dot_coeff         = 0.3895;
+    double incinerate_dot_amp_per_stack = 0.3;
+
+    timespan_t apocalypse_cast_time = 3_s;
+    timespan_t apocalypse_cooldown  = 45_s;
+    double apocalypse_coeff         = 20.9285;
+    double apocalypse_falloff       = 1;
+  } spell_const;
+
   struct talents_t
   {
     timespan_t slow_burn_extend = 0.5_s;
@@ -297,10 +298,8 @@ public:
     timespan_t rolling_flames_cdr               = 0.25_s;
     timespan_t rolling_flames_infernal_wave_cdr = 1000_ms;
 
-    double pyrophibian_frenzy_chance          = 0.09;
-    bool pyrophibian_frenzy_use_old           = false;
-    double pyrophibian_frenzy_new_chance      = 0.03;
-    double pyrophibian_frenzy_crit_chance_mul = 2;
+    double pyrophibian_frenzy_chance      = 0.025;
+    double pyrophibian_frenzy_chance_crit = 0.05;
 
     double reign_of_fire_ppm          = 1.5;
     double reign_of_fire_crit_chance  = 2.0;
@@ -2871,26 +2870,6 @@ void ardeos_t::init_items()
 void ardeos_t::init_special_effects()
 {
   fs_player_t::init_special_effects();
-
-  if ( talents_enabled( PYROPHIBIAN_FRENZY ) && talents.pyrophibian_frenzy_use_old )
-  {
-    auto effect          = new special_effect_t( this );
-    effect->spell_id     = 9120102;
-    effect->name_str     = "pyrophibian_frenzy";
-    effect->proc_flags_  = PF_PERIODIC;
-    effect->proc_flags2_ = PF2_CRIT;
-    effect->proc_chance_ = talents.pyrophibian_frenzy_chance;
-    effect->set_can_proc_from_procs( true );
-
-    special_effects.push_back( effect );
-
-    effect->execute_action = actions.fire_frog;
-
-    auto dbc = new dbc_proc_callback_t( this, *effect );
-
-    dbc->initialize();
-    dbc->activate();
-  }
 }
 
 // ardeos_t::init_finished ===================================================
@@ -3018,15 +2997,12 @@ void actions::ardeos_action_t<Base>::tick( dot_t* d )
 {
   ab::tick( d );
 
-  if ( p()->talents_enabled( ardeos_t::PYROPHIBIAN_FRENZY ) && !p()->talents.pyrophibian_frenzy_use_old )
+  if ( p()->talents_enabled( ardeos_t::PYROPHIBIAN_FRENZY ) )
   {
     if ( d->state->result > 0 && d->target->is_enemy() )
     {
-      auto pyro_chance = p()->talents.pyrophibian_frenzy_new_chance;
-
-      if ( d->state->result == RESULT_CRIT )
-        pyro_chance *= p()->talents.pyrophibian_frenzy_crit_chance_mul;
-
+      auto pyro_chance = d->state->result == RESULT_CRIT ? p()->talents.pyrophibian_frenzy_chance_crit
+                                                         : p()->talents.pyrophibian_frenzy_chance;
       if ( p()->rng().roll( pyro_chance ) )
       {
         p()->actions.fire_frog->execute();

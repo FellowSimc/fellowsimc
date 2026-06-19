@@ -74,7 +74,7 @@ apl/rime/rime_apl.simc
 head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
 shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
 back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit
-chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/finesse_b/finesse_b/finesse_b/finesse_b
 hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
 legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
 feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit,affixes=finesse_c/finesse_c/finesse_c/finesse_c
@@ -112,37 +112,24 @@ talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilli
 # 29 mods -6stat
 # 28 mods -fink
 
+# 10 
+
 weapon_trait.visions_of_grandeur=1
 weapon_trait.martial_initiative=1
-weapon_trait.emerald_judgement=3
+weapon_trait.emerald_judgement=2
+
+# 15
+
 # 23 mods -5
 # 4Trait
 sets.dark_prophecy=1
 sets.deaths_grasp=1
+
+# 19
 # 19 mods -4
 # copy="visions1","Base Rime"
 # weapon_trait.visions_of_grandeur=1
 
-# 27 mods
-
-gems.amethyst_power=600
-gems.sapphire_power=600
-gems.emerald_power=600
-gems.ruby_power=600
-# 15 mods -4
-
-# 6 stat
-# 18 mods
-weapon_trait.hunters_focus=4
-# 11 mods -4
-
-# -1 mod, 10 mods (EJ3)
-# -4 mods, 6 left 
-sets.draconic_might=1
-# -6 (draco, 4 spirit)
-
-# 1mod
-weapon_trait.amethyst_splinters=1
 
 sets.seal_of_the_heskyr=1
 gems.amethyst_power=500
@@ -150,15 +137,25 @@ gems.sapphire_power=500
 gems.emerald_power=500
 gems.ruby_power=500
 
-# 0mod
+# 21
 
-# +7mod
+weapon_trait.hunters_focus=4
 
-# 3 mod
+# 25
+sets.draconic_might=1
+# 27
 
 weapon_trait.amethyst_splinters=4
-# 0 mod
+# 31
+# 4 stats
+# 35
+# add 3 ranks of ?
 
+# copy="FinesseA","Base Rime"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/finesse_a/finesse_a/finesse_a/finesse_a
+
+# copy="FinesseB","Base Rime"
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/finesse_b/finesse_b/finesse_b/finesse_b
 # copy="Void","Base Rime"
 # weapon=voidbringers_touch
 

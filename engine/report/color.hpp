@@ -164,7 +164,13 @@ namespace color
   inline constexpr rgb COLOR_PLAYER_SIMPLIFIED( "FF69B4" );
 
   inline constexpr rgb COLOR_ELARION( "935DFF" );
-  inline constexpr rgb COLOR_GUNDE( "D53400" );
+  inline constexpr rgb COLOR_GUNDE( "872F30" );
+  inline constexpr rgb COLOR_ARDEOS( "EB6328" );
+  inline constexpr rgb COLOR_TARIQ( "163EB9" );
+  inline constexpr rgb COLOR_MARA( "6F2EF1" );
+  inline constexpr rgb COLOR_RIME( "1EA3EE" );
+  
+  
 
   inline constexpr rgb WHITE( "FFFFFF" );
   inline constexpr rgb GREY( "333333" );

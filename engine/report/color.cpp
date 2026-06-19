@@ -40,8 +40,6 @@ rgb class_color( player_e type )
       return color::GREY;
     case DEATH_KNIGHT:
       return color::COLOR_DEATH_KNIGHT;
-    case ARDEOS:
-      return color::FIRE;
     case DEMON_HUNTER:
       return color::COLOR_DEMON_HUNTER;
     case DRUID:
@@ -51,14 +49,17 @@ rgb class_color( player_e type )
     case HUNTER:
       return color::COLOR_HUNTER;
     case MAGE:
-    case RIME:
       return color::COLOR_MAGE;
+    case RIME:
+      return color::COLOR_RIME;
     case MONK:
       return color::COLOR_MONK;
     case PALADIN:
       return color::COLOR_PALADIN;
     case ELARION:
       return color::COLOR_ELARION;
+    case ARDEOS:
+      return color::COLOR_ARDEOS;
     case GUNDE:
       return color::COLOR_GUNDE;
     case PRIEST:
@@ -72,7 +73,7 @@ rgb class_color( player_e type )
     case WARRIOR:
       return color::COLOR_WARRIOR;
     case MARA:
-      return color::COLOR_DEMON_HUNTER;
+      return color::COLOR_MARA;
     case PLAYER_SIMPLIFIED:
       return color::COLOR_PLAYER_SIMPLIFIED;
     case ENEMY:

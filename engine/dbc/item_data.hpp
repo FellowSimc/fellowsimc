@@ -32,11 +32,22 @@ struct item_calculation_settings_t
   double weight_multiplier;
 };
 
+constexpr double base_primary_weight       = 0.25;
+constexpr double base_secondary_weight     = 0.3;
+constexpr double base_stamina_weight       = 0.5;
+constexpr double base_primary_multiplier   = 0.7;
+constexpr double base_secondary_multiplier = 0.6;
+constexpr double base_weight_multiplier    = 0.15;
+
+constexpr item_calculation_settings_t base_settings = { base_primary_weight,       base_secondary_weight,
+                                                        base_stamina_weight,       base_primary_multiplier,
+                                                        base_secondary_multiplier, base_weight_multiplier };
+
 constexpr double fixed_slot_primary_weight       = 0.25;
 constexpr double fixed_slot_secondary_weight     = 0.3;
 constexpr double fixed_slot_stamina_weight       = 0.5;
-constexpr double fixed_slot_primary_multiplier   = 0.7;
-constexpr double fixed_slot_secondary_multiplier = 0.6;  // Fixed Affix are 0.6. Random affix are 1.5.
+constexpr double fixed_slot_primary_multiplier   = 0.525;
+constexpr double fixed_slot_secondary_multiplier = 1.125;
 constexpr double fixed_slot_weight_multiplier    = 0.15;
 
 constexpr item_calculation_settings_t fixed_slot_settings = {
@@ -47,7 +58,7 @@ constexpr double dynamic_slot_primary_weight       = 0.25;
 constexpr double dynamic_slot_secondary_weight     = 0.3;
 constexpr double dynamic_slot_stamina_weight       = 0.5;
 constexpr double dynamic_slot_primary_multiplier   = 0.525;
-constexpr double dynamic_slot_secondary_multiplier = 1.125;  // Fixed Affix are 0.6. Random affix are 1.5.
+constexpr double dynamic_slot_secondary_multiplier = 1.125;
 constexpr double dynamic_slot_weight_multiplier    = 0.15;
 
 constexpr item_calculation_settings_t dynamic_slot_settings = {

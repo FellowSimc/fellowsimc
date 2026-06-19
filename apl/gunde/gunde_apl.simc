@@ -5,19 +5,20 @@ actions+=/reign_in_blood
 actions+=/owed_in_blood,target_if=debuff.open_wounds.up,if=!buff.bloodcraze.up&buff.owed_in_blood.stack>=30
 actions+=/sahrils_wrath
 actions+=/voidbringers_touch
-# actions+=/slaughter,target_if=debuff.open_wounds.up,if=(debuff.open_wounds.remains<=gcd.max*3)&(active_enemies=1|!talent.oathshatter)
+#actions+=/slaughter,target_if=debuff.open_wounds.up,if=(debuff.open_wounds.remains<=gcd.max*3)&(active_enemies=1|!talent.oathshatter)
 # actions+=/slaughter,if=talent.massacre&debuff.open_wounds.remains<=gcd.max&!buff.finesse_g.up&blessing.finesse_g
 actions+=/slaughter,if=fight_remains<=10
 actions+=/rupture,if=buff.serrated_edge.up&active_enemies<=2|active_enemies>2
 actions+=/heart_splitter,if=(active_enemies<=3|talent.oathshatter)&(full_recharge_time<=gcd.max*3|buff.serrated_edge.up)
 actions+=/grim_carve,if=buff.grim_harvest.up
-actions+=/grim_carve,if=active_enemies>3
+# actions+=/blood_arc,if=legendary.lego_2&talent.oathshattery
+actions+=/grim_carve,if=active_enemies>3&!talent.carnage
 # actions+=/heart_splitter
 actions+=/earthbreaker
 # actions+=/slaughter,if=(!talent.oathshatter|active_enemies=1)&!talent.carnage
 actions+=/blood_arc
 actions+=/grim_carve
-actions+=/slaughter,if=active_enemies>1|1
+actions+=/slaughter,if=talent.massacre|!talent.oathshatter
 actions+=/fated_strike
 actions+=/reavers_edge
 actions+=/heart_splitter,if=active_enemies>3

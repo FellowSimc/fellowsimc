@@ -80,7 +80,7 @@ hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_sec
 legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
 feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
 
-neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c
 wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=crit/crit
 
 # finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_g/finesse_g/finesse_g/finesse_g/finesse_k
@@ -109,37 +109,35 @@ legendary.starstrikers_ascent=1
 
 weapon=icicles_of_anzhyr
 
-weapon_trait.hunters_focus=4
 
-# -4 fin
-# 23
+# 9 mods
+weapon_trait.hunters_focus=4
+# 13 mods
 
 gems.sapphire_power=1200
 gems.emerald_power=500
 gems.ruby_power=500
 gems.amethyst_power=500
-
-# -7 attunement 16 left
+# 20 mods
 
 sets.seal_of_the_heskyr=1
-
-# -2 for set, 14 left
+# 22 mods
 
 weapon_trait.emerald_judgement=2
-# 12 left
+# 24
 
 sets.deaths_grasp=1
 sets.dark_prophecy=1
-
-# 8 left
+# 28 mods
 
 weapon_trait.amethyst_splinters=4
-
-# 3 left (fink)
+# 32 mods
 
 weapon_trait.visions_of_grandeur=1
 weapon_trait.martial_initiative=1
 weapon_trait.patient_soul=1
+# 35 mods
+
 
 
 # weapon_trait.visions_of_grandeur=1

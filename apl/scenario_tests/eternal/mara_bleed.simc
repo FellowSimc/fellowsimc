@@ -10,7 +10,7 @@
 # vary_combat_length=0.1
 # single_actor_batch=1
 # max_time=720
-# desired_targets=12
+# desired_targets=1
 # relative_difference_base="Mara Bleed FTS"
 
 # apl/chuey_dungeon.simc
@@ -102,7 +102,7 @@ apl/mara/mara.simc
 head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit
 shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/crit
 back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/primary
-chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste
 hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/crit
 legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/expertise
 feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
@@ -186,7 +186,6 @@ sets.draconic_might=1
 gems.ruby_power=500
 gems.amethyst_power=500
 gems.emerald_power=500
-gems.sapphire_power=500
 
 sets.seal_of_the_heskyr=1
 
@@ -216,7 +215,7 @@ sets.drakheims_absolution=1
 
 # 12 mods left
 
-weapon_trait.hunters_focus=2
+weapon_trait.hunters_focus=4
 
 # 10 mods left
 
@@ -235,6 +234,15 @@ legendary.drenched_in_blood=0
 legendary.vexiras_venom=0
 # talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/malevolence:1/puncture:1/sinners_pride:1/venomous_delight:1
 talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/sinners_pride:1
+
+# copy="wayf4","Mara Bleed FTS"
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+
+# copy="wayf4 over sub","Mara Bleed FTS"
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i/finesse_b/finesse_b/finesse_b/finesse_b
+
+# copy="wayf4 over triuck","Mara Bleed FTS"
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_i/finesse_i/finesse_i/finesse_i
 
 copy="Bleed FTS Seething Poison","Mara Bleed FTS"
 talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/seething_burst:1/sinners_pride:1

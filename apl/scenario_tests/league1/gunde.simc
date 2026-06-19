@@ -1,0 +1,128 @@
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=15000
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=1
+# relative_difference_base="Base Gunde"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_crit_rating=590
+# scale_haste_rating=590
+# scale_mastery_rating=590
+# scale_versatility_rating=590
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":800000:Humanoid
+# # raid_events+=/pull,pull=02,delay=240,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":300000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+
+gunde="Base Gunde"
+level=80
+
+# initial_resource=spirit=100
+
+apl/gunde/gunde_apl.simc
+
+
+
+# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/haste
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/crit
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
+# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/primary
+# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+# wrist=wrists,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/haste
+
+
+back=back,rarity=rare,variant=evens,ilevel=45,tempering=4,main_secondary=expertise,fixed_secondary=expertise
+legs=legs,rarity=regal,variant=evens,ilevel=45,tempering=3,main_secondary=haste,fixed_secondary=haste/stamina,affixes=amethyst/spirit/finesse_e
+feet=feet,rarity=epic,variant=evens,ilevel=45,tempering=3,main_secondary=haste,fixed_secondary=primary,affixes=finesse_b
+
+chest=chest,rarity=uncommon,variant=evens,ilevel=90,tempering=3,main_secondary=haste,fixed_secondary=primary
+trinket1=relic1,rarity=rare,variant=evens,ilevel=90,tempering=4,main_secondary=haste/crit,fixed_secondary=crit
+
+weapon_trait.hunters_focus=1
+weapon_trait.vengeful_soul=1
+
+# Full abilities, 6pts, 3 rows, 2x 90 ilvl tuz items, 3x 45 ilvl cont 1 items, full 3-4 tempers max.
+
+
+# talents=cold_shower:1/icy_flow:1/supreme_torrent:1/greater_glacial_blast:1/soulfrost_torrent:0/icy_talons:1/cascading_blitz:1/wisdom_of_the_north:1/bursting_swallows:1/burstbolter:1
+
+talents=deaths_arc:1/ravens_precision:1/darkening_hearts:1/crimson_strikes:1
+
+
+# copy="Gunde deaths_arc","Base Gunde"
+# talents+=/deaths_arc:1
+# copy="Gunde ravens_precision","Base Gunde"
+# talents+=/ravens_precision:1
+# copy="Gunde grim_harvest","Base Gunde"
+# talents+=/grim_harvest:1
+# copy="Gunde harvesters_toll","Base Gunde"
+# talents+=/harvesters_toll:1
+# copy="Gunde crimson_strikes","Base Gunde"
+# talents+=/crimson_strikes:1
+# copy="Gunde darkening_hearts","Base Gunde"
+# talents+=/darkening_hearts:1
+# copy="Gunde superior_serration","Base Gunde"
+# talents+=/superior_serration:1
+# copy="Gunde murder_of_crows","Base Gunde"
+# talents+=/murder_of_crows:1
+# copy="Gunde massacre","Base Gunde"
+# talents+=/massacre:1
+# copy="Gunde slayers_grin","Base Gunde"
+# talents+=/slayers_grin:1
+# copy="Gunde frenzied_reign","Base Gunde"
+# talents+=/frenzied_reign:1
+# copy="Gunde deep_rend","Base Gunde"
+# talents+=/deep_rend:1
+# copy="Gunde bloodcraze","Base Gunde"
+# talents+=/bloodcraze:1
+# copy="Gunde oathshatter","Base Gunde"
+# talents+=/oathshatter:1
+# copy="Gunde carnage","Base Gunde"
+# talents+=/carnage:1
+# copy="Gunde sundered_flesh","Base Gunde"
+# talents+=/sundered_flesh:1
+# copy="Gunde ancestral_instinct","Base Gunde"
+# talents+=/ancestral_instinct:1
+# copy="Gunde bloodbath","Base Gunde"
+# talents+=/bloodbath:1

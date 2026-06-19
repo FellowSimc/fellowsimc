@@ -17,18 +17,18 @@ proc_t::proc_t( sim_t& s, util::string_view n, unsigned flags )
 {
 }
 
-void proc_t::occur()
+void proc_t::occur( unsigned quantity )
 {
-  iteration_count++;
+  iteration_count += quantity;
   if ( last_proc >= timespan_t::zero() && last_proc < sim.current_time() )
   {
     interval_sum.add( ( sim.current_time() - last_proc ).total_seconds() );
     reset();
   }
   if ( sim.debug )
-    sim.out_debug.printf( "[PROC] %s: iteration_count=%u count.sum=%u last_proc=%f", name(),
+    sim.out_debug.printf( "[PROC] %s: iteration_count=%u count.sum=%u last_proc=%f quantity=%u", name(),
                           static_cast<unsigned>( iteration_count ), static_cast<unsigned>( count.sum() ),
-                          last_proc.total_seconds() );
+                          last_proc.total_seconds(), quantity );
 
   last_proc = sim.current_time();
 }

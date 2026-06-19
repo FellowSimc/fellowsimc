@@ -71,7 +71,11 @@ public:
     return this;
   }
 
-  void occur();
+  void occur( unsigned quantity );
+  void occur()
+  {
+    occur( 1 );
+  }
 
   void reset();
 

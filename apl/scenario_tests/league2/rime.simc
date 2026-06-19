@@ -94,6 +94,7 @@ weapon_trait.hunters_focus=1
 weapon_trait.vengeful_soul=1
 weapon_trait.seized_opportunity=1
 
+sets.deaths_grasp=1
 
 # Full abilities, 8pts, 6 rows, 10x 90 ilvl tuz items, 3x 45 ilvl cont 1 items Full temper 90 ilvl. (Gear for Drak)
 # Full abilities, 9pts, 6 rows, 10x 90 ilvl tuz items, 3x 45 ilvl cont 1 items, 2x Drakheim items. Full temper 90 ilvl. (Gear for Wraithtide)

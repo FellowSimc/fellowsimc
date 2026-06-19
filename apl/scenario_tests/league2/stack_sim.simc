@@ -10,6 +10,7 @@ chart_show_relative_difference=1
 vary_combat_length=0.1
 single_actor_batch=1
 max_time=720
-desired_targets=12
+desired_targets=1
 
 apl/scenario_tests/league2/rime.simc
+apl/scenario_tests/league2/gunde.simc

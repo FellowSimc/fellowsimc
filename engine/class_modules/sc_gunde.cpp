@@ -38,7 +38,7 @@ public:
   {
     uint8_t current_tick = 0;
     // Hardcoded to have enough buckets currently for Deep Rend.
-    std::array<double, 10> tick_buckets = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    std::array<double, 11> tick_buckets = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
   } rend_tracker, slaughter_tracker;
 
   struct
@@ -94,6 +94,7 @@ public:
     buff_t* ancestral_instinct;
     buff_t* bloodbath;
     buff_t* bloodbound_spirit;
+    buff_t* murder_of_crows;
   } buffs;
 
   struct cooldowns_t
@@ -111,6 +112,11 @@ public:
   {
     gain_t* spirit_procs;
   } gains;
+
+  struct procs_t
+  {
+    proc_t* feathers;
+  } procs;
 
   struct rng_objects_t
   {
@@ -195,7 +201,7 @@ public:
     double spirit_refund_mul = 1.0;
 
     // Gunde.SpiritProc.AmountOfOrbs
-    int spirit_proc_orbs = 3;
+    int spirit_proc_orbs = 5;
 
     // Feathers Gunde.SpiritProc.SpawnMinRadius, 150.0 Gunde.SpiritProc.SpawnMaxRadius, 300.0;
 
@@ -283,7 +289,7 @@ public:
     // Gunde.HeavyMeleeDotBased.Cooldown, 12.0                                     ; RECKONING / heart splitter
     timespan_t heart_splitter_cooldown = 12.0_s;
     // Gunde.HeavyMeleeDotBased.Damage.StrengthCoefficient, 3.70                   ; WAS 3.4
-    double heart_splitter_coeff = 9.4;
+    double heart_splitter_coeff = 9.4 * 0.5;
     // Gunde.HeavyMeleeDotBased.Damage.DotCoefficient, 0.30						; WAS 0.10
     double heart_splitter_exsanguinate_coeff = 0.3;
     // Gunde.HeavyMeleeDotBased.VisualDelay, 0.35
@@ -413,22 +419,22 @@ public:
     // Gunde.HeavyMeleeDotBoost.Talent.IncreasedCritAndNoneCritDamage.NoneCritDamageMultiplier, 1.1
     // Gunde.HeavyMeleeDotBoost.Talent.ReducedCooldown.ReductionInSeconds, 1.0
     // Gunde.HeavyMeleeDotBoost.Talent.OrbDropper.NumOfOrbs, 8.0
-    int murder_of_crows_feathers = 8;
+    int murder_of_crows_feathers = 12;
     // Gunde.HeavyMeleeDotBoost.Talent.ReducedCooldownPerOrb.ReductionInSeconds, 0.2
-    timespan_t slayers_grin_cdr = 0.2_s;
+    timespan_t slayers_grin_cdr = 0.4_s;
 
     // Talent Deep Rend
     // Gunde.PerTargetAccumulatedBleed.Talent.ReducedTickSpeed.PeriodFrequencyIncrease
-    double deep_rend_tick_speed_increase = 1.2;
+    double deep_rend_tick_speed_increase = 1.1;
     // Gunde.PerTargetAccumulatedBleed.Talent.IncreasedDropAmount.DropChance
-    double deep_rend_proc_chance_st = 0.1;
+    double deep_rend_proc_chance_st = 0.2;
     // Gunde.PerTargetAccumulatedBleed.Talent.IncreasedDropAmount.NewAmount
-    int deep_rend_proc_feathers = 3;
+    int deep_rend_proc_feathers = 2;
 
-    // Gunde.TargetedAoeProjectile.Talent.Empowered.ProcChance, 0.16
-    double grim_harvest_chance = 0.16;
+    // Gunde.TargetedAoeProjectile.Talent.Empowered.ProcChance, 0.05
+    double grim_harvest_chance = 0.06;
     // Gunde.TargetedAoeProjectile.Talent.Empowered.DamageMultiplier, 1.40 ;WAS 2.0
-    double grim_harvest_multiplier = 1.4;
+    double grim_harvest_cc = 1.0;
     // Gunde.TargetedAoeProjectile.Talent.Empowered.Duration, 8.0
     timespan_t grim_harvest_buff_duration = 8_s;
     // Gunde.TargetedAoeProjectile.Talent.DamageCooldownReduction.DamageMultiplier, 1.25
@@ -456,12 +462,12 @@ public:
     // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.Duration, 3.0
     timespan_t bloodbath_duration = 3_s;
 
-    double crimson_strikes_inc = 0.2;
+    double crimson_strikes_inc = 0.15;
 
     
     // Gunde.ExtraDotDamageBuff.Talent.Haste.AdditionalHaste, 0.25	;old
     // Gunde.ExtraDotDamageBuff.Talent.AddedBonus.AddedTransfer, 0.25
-    double frenzied_reign_extra_transfer = 0.20;
+    double frenzied_reign_extra_transfer = 0.25;
 
     
     // Gunde.InstantAoeWithBuff.Talent.ChanceCooldownReset.Chance, 0.25            ; WAS 0.15
@@ -486,9 +492,8 @@ public:
     int massacre_max_stacks = 100;
 
     // Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.DamageScalePerStack, 0.0025
-    double harvesters_toll_amp_per_stack = 0.0025;
+    double harvesters_toll_amp = 0.075;
     // Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.MaxStacks, 30.0
-    int harvesters_toll_max_stacks = 30;
     // Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.Duration, 10.0
     timespan_t harvesters_toll_duration = 10_s;
 
@@ -823,6 +828,18 @@ public:
     return rend_coeff;
   }
 
+  void roll_grim_harvest()
+  {
+    if ( p()->talents_enabled( gunde_t::GRIM_HARVEST ) )
+    {
+      if ( p()->rng_objects.grim_harvest->trigger() )
+      {
+        p()->cooldowns.grim_carve->reset( true, 1 );
+        p()->buffs.grim_harvest->trigger();
+      }
+    }
+  }
+
   void execute() override
   {
     ab::execute();
@@ -833,7 +850,15 @@ public:
 
       if ( rend_coefficient() > 0 )
       {
-        if ( p()->rng().roll( p()->cache.mastery_value() ) )
+        auto spirit_refund = p()->rng().roll( p()->cache.mastery_value() );
+
+        if ( !spirit_refund && p()->buffs.murder_of_crows->check() )
+        {
+          spirit_refund = true;
+          p()->buffs.murder_of_crows->decrement();
+        }
+
+        if ( spirit_refund )
         {
           trigger_spirit_refund( ab::execute_state );
         }
@@ -1119,11 +1144,11 @@ struct rend_t : public gunde_attack_t
 
     to_tick_multiplier = base_tick_time / dot_duration;
 
-    //if ( p->talents_enabled( gunde_t::DEEP_REND ) )
-    //{
-    //  base_tick_time /= p->talents.deep_rend_tick_speed_increase;
-    //  dot_duration /= p->talents.deep_rend_tick_speed_increase;
-    //}
+    if ( p->talents_enabled( gunde_t::DEEP_REND ) )
+    {
+      base_tick_time /= p->talents.deep_rend_tick_speed_increase;
+      // dot_duration /= p->talents.deep_rend_tick_speed_increase;
+    }
 
     rend_ticks = as<size_t>( dot_duration / base_tick_time );
   }
@@ -1194,12 +1219,17 @@ struct rend_t : public gunde_attack_t
     if ( p()->rng().roll( proc_chance ) )
     {
       p()->spawn_feathers( 1 );
+
+      //if ( p()->talents_enabled( gunde_t::DEEP_REND ) && p()->rng_objects.deep_rend->trigger() )
+      //{
+      //  p()->spawn_feathers( p()->talents.deep_rend_proc_feathers );
+      //}
     }
 
-    if ( p()->talents_enabled( gunde_t::DEEP_REND ) && active_dots == 1 && p()->rng_objects.deep_rend->trigger() )
-    {
-      p()->spawn_feathers( p()->talents.deep_rend_proc_feathers - 1 );
-    }
+    //if ( p()->talents_enabled( gunde_t::DEEP_REND ) && active_dots == 1 && p()->rng_objects.deep_rend->trigger() )
+    //{
+    //  p()->spawn_feathers( p()->talents.deep_rend_proc_feathers - 1 );
+    //}
   }
 };
 
@@ -1322,6 +1352,12 @@ struct double_strike_t : public gunde_attack_t
     }
   }
 
+  void init() override
+  {
+    snapshot_flags |= STATE_MUL_DA | STATE_TGT_MUL_DA | STATE_MUL_PERSISTENT | STATE_VERSATILITY | STATE_AP;
+    base_t::init();
+  }
+
   void execute() override
   {
     // Manual Finesse N (Vehement) handling due to dual child.
@@ -1421,11 +1457,26 @@ struct grim_carve_t : public gunde_attack_t
     }
   }
 
+  void init() override
+  {
+    snapshot_flags |= STATE_MUL_DA | STATE_TGT_MUL_DA | STATE_MUL_PERSISTENT | STATE_VERSATILITY | STATE_AP;
+    base_t::init();
+  }
+
+  double composite_crit_chance() const override
+  {
+    auto cc = base_t::composite_crit_chance();
+
+    cc += p()->buffs.grim_harvest->check_value();
+
+    return cc;
+  }
+
   double composite_da_multiplier( const action_state_t* s ) const override
   {
     auto m = base_t::composite_da_multiplier( s );
 
-    m *= 1.0 + p()->buffs.grim_harvest->check_value();
+    m *= 1.0 + p()->buffs.bloodbound_spirit->check_value();
 
     return m;
   }
@@ -1480,27 +1531,11 @@ struct reavers_edge_t : public gunde_attack_t
     reduced_aoe_targets = p->spell_const.reavers_edge_target_threshold;
   }
 
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    auto dam = base_t::composite_da_multiplier( s );
-
-    dam *= 1.0 + p()->buffs.bloodbound_spirit->check_value();
-
-    return dam;
-  }
-
   void execute() override
   {
     base_t::execute();
 
-    if ( p()->talents_enabled( gunde_t::GRIM_HARVEST ) )
-    {
-      if ( p()->rng_objects.grim_harvest->trigger() )
-      {
-        p()->cooldowns.grim_carve->reset( true, 1 );
-        p()->buffs.grim_harvest->trigger();
-      }
-    }
+    roll_grim_harvest();
 
     if ( p()->talents_enabled( gunde_t::ANCESTRAL_INSTINCT ) )
     {
@@ -1544,6 +1579,8 @@ struct blood_arc_t : public gunde_attack_t
   void execute() override
   {
     gunde_attack_t::execute();
+
+    roll_grim_harvest();
 
     p()->buffs.serrated_edge->trigger();
 
@@ -1591,11 +1628,19 @@ struct rupture_t : public gunde_attack_t
 
   void execute() override
   {
+    if ( p()->talents_enabled( gunde_t::HARVESTERS_TOLL ) )
+    {
+      p()->buffs.harvesters_toll->trigger();
+    }
+
     base_t::execute();
+
+    roll_grim_harvest();
 
     if ( p()->talents_enabled( gunde_t::MURDER_OF_CROWS ) )
     {
-      p()->spawn_feathers( p()->talents.murder_of_crows_feathers );
+      //p()->spawn_feathers( p()->talents.murder_of_crows_feathers );
+      p()->buffs.murder_of_crows->trigger( 2 );
     }
   }
 };
@@ -1620,6 +1665,7 @@ struct heart_splitter_t : public gunde_attack_t
         aoe                 = -1;
         reduced_aoe_targets = p->talents.oathshatter_target_threshold;
         base_aoe_multiplier = p->talents.oathshatter_aoe_multiplier;
+        full_amount_targets = 1;
       }
 
       may_crit = false;
@@ -1711,6 +1757,11 @@ struct heart_splitter_t : public gunde_attack_t
   void execute() override
   {
     base_t::execute();
+
+    if ( !background )
+    {
+      roll_grim_harvest();
+    }
 
     if ( p()->legendary.lego_2 && p()->rng_objects.heart_splitter_twice->trigger() && !background )
     {
@@ -1883,12 +1934,6 @@ struct owed_in_blood_t : public gunde_spell_t
     action->schedule_travel( rend_state );
 
     p()->buffs.owed_in_blood->expire();
-
-    if ( p()->talents_enabled( gunde_t::HARVESTERS_TOLL ) )
-    {
-      p()->buffs.harvesters_toll->expire();
-      p()->buffs.harvesters_toll->trigger( stacks );
-    }
 
     if ( p()->talents_enabled( gunde_t::BLOODCRAZE ) )
     {
@@ -2299,7 +2344,7 @@ void gunde_t::init_gains()
 {
   fs_player_t::init_gains();
 
-  gains.spirit_procs    = get_gain( "Spirit Procs" );
+  gains.spirit_procs = get_gain( "Spirit Procs" );
 }
 
 // gunde_t::init_procs ======================================================
@@ -2307,6 +2352,7 @@ void gunde_t::init_gains()
 void gunde_t::init_procs()
 {
   fs_player_t::init_procs();
+  procs.feathers = get_proc( "Feathers" );
 }
 
 // gunde_t::init_scaling ====================================================
@@ -2339,6 +2385,8 @@ void gunde_t::create_buffs()
 {
   fs_player_t::create_buffs();
 
+  buffs.murder_of_crows = make_buff<gunde_buff_t>( this, "murder_of_crows" )->set_max_stack( 4 )->set_duration( 12_s );
+
   buffs.bloodbound_spirit = make_buff<gunde_buff_t>( this, "bloodbound_spirit" )
                                 ->set_duration( spell_const.bloodbound_spirit_buff_duration )
                                 ->set_default_value( spell_const.bloodbound_spirit_buff_amp - 1 );
@@ -2361,8 +2409,7 @@ void gunde_t::create_buffs()
                             [ this ]( auto, auto, auto ) { cooldowns.heart_splitter->adjust_recharge_multiplier(); } );
 
   buffs.harvesters_toll = make_buff<gunde_buff_t>( this, "harvesters_toll" )
-                              ->set_default_value( talents.harvesters_toll_amp_per_stack )
-                              ->set_max_stack( talents.harvesters_toll_max_stacks )
+                              ->set_default_value( talents.harvesters_toll_amp )
                               ->set_duration( talents.harvesters_toll_duration )
                               ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
 
@@ -2379,7 +2426,7 @@ void gunde_t::create_buffs()
 
   buffs.grim_harvest = make_buff<gunde_buff_t>( this, "grim_harvest" )
                            ->set_duration( talents.grim_harvest_buff_duration )
-                           ->set_default_value( talents.grim_harvest_multiplier - 1);
+                           ->set_default_value( talents.grim_harvest_cc );
 
   buffs.ancestral_instinct = make_buff<gunde_buff_t>( this, "ancestral_instinct" )
                                 ->set_duration( talents.ancestral_instinct_duration )
@@ -2616,7 +2663,7 @@ void gunde_t::init_rng()
   fs_player_t::init_rng();
 
   rng_objects.deaths_arc   = get_accumulated_rng( "deaths_arc", rng::CfromP( talents.deaths_arc_chance ) );
-  rng_objects.grim_harvest = get_accumulated_rng( "grim_harvset", rng::CfromP( talents.grim_harvest_chance ) );
+  rng_objects.grim_harvest = get_accumulated_rng( "grim_harvest", rng::CfromP( talents.grim_harvest_chance ) );
   rng_objects.ancestral_instinct =
       get_accumulated_rng( "ancestral_instinct", rng::CfromP( talents.ancestral_instinct_chance ) );
   rng_objects.deep_rend = get_accumulated_rng( "deep_rend", rng::CfromP( talents.deep_rend_proc_chance_st ) );
@@ -2677,7 +2724,7 @@ double gunde_t::get_current_rend( player_t* t ) const
 void gunde_t::spawn_feathers( int quantity )
 {
   buffs.owed_in_blood->trigger( quantity );
-
+  procs.feathers->occur( quantity );
   
   if ( talents_enabled( gunde_t::SLAYERS_GRIN ) )
   {

@@ -92,11 +92,12 @@ main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_
 # copy="+50 expertise","Base Gunde"
 # set_custom_buff=str,stat_value=50_expertis
 
-talents=darkening_hearts:1/oathshatter:1/crimson_strikes:1/frenzied_reign:1/ancestral_instinct:1/harvesters_toll:1/deaths_arc:1/carnage:1/superior_serration:1
+# talents=darkening_hearts:1/oathshatter:1/crimson_strikes:1/frenzied_reign:1/ancestral_instinct:1/harvesters_toll:1/deaths_arc:1/carnage:1/superior_serration:1
+#/ravens_precision:1/bloodcraze:1
 # 4 5 6 7 8 10
 
 # legendary.lego_1=1
-legendary.lego_2=1
+# legendary.lego_2=1
 
 weapon=fated_strike
 
@@ -151,6 +152,74 @@ weapon_trait.patient_soul=1
 
 # copy="HS Lego","Base Gunde"
 # legendary.lego_2=1
+talents=carnage:1
+
+
+# copy="Gunde deaths_arc","Base Gunde"
+# talents+=/deaths_arc:1
+copy="Gunde ravens_precision","Base Gunde"
+talents+=/ravens_precision:1
+# copy="Gunde grim_harvest","Base Gunde"
+# talents+=/grim_harvest:1
+copy="Gunde harvesters_toll","Base Gunde"
+talents+=/harvesters_toll:1
+copy="Gunde crimson_strikes","Base Gunde"
+talents+=/crimson_strikes:1
+# copy="Gunde darkening_hearts","Base Gunde"
+# talents+=/darkening_hearts:1
+copy="Gunde superior_serration","Base Gunde"
+talents+=/superior_serration:1
+copy="Gunde murder_of_crows","Base Gunde"
+talents+=/murder_of_crows:1
+copy="Gunde massacre","Base Gunde"
+talents+=/massacre:1
+copy="Gunde slayers_grin","Base Gunde"
+talents+=/slayers_grin:1
+copy="Gunde slayers_grin murder_of_crows","Base Gunde"
+talents+=/slayers_grin:1/murder_of_crows:1
+copy="Gunde slayers_grin harvesters_toll","Base Gunde"
+talents+=/slayers_grin:1/harvesters_toll:1
+copy="Gunde slayers_grin harvesters_toll murder_of_crows","Base Gunde"
+talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1
+copy="Gunde slayers_grin harvesters_toll murder_of_crows bloodcraze","Base Gunde"
+talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/bloodcraze:1
+copy="Gunde slayers_grin harvesters_toll murder_of_crows ravens_precision","Base Gunde"
+talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ravens_precision:1
+copy="Gunde slayers_grin harvesters_toll murder_of_crows ravens_precision bloodcraze","Base Gunde"
+talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ravens_precision:1/bloodcraze:1
+
+# copy="Gunde frenzied_reign","Base Gunde"
+# talents+=/frenzied_reign:1
+
+copy="Gunde deep_rend","Base Gunde"
+talents+=/deep_rend:1
+
+# copy="Gunde deep_rend ravens_precision","Base Gunde"
+# talents+=/deep_rend:1/ravens_precision:1
+# copy="Gunde bloodcraze","Base Gunde"
+# talents+=/bloodcraze:1
+# copy="Gunde deep_rend bloodcraze","Base Gunde"
+# talents+=/deep_rend:1/bloodcraze:1
+# copy="Gunde deep_rend bloodcraze ravens_precision","Base Gunde"
+# talents+=/deep_rend:1/bloodcraze:1/ravens_precision:1
+
+# copy="Gunde oathshatter","Base Gunde"
+# talents+=/oathshatter:1
+# copy="Gunde oathshatter darkening_hearts","Base Gunde"
+# talents+=/oathshatter:1/darkening_hearts:1
+# copy="Gunde carnage","Base Gunde"
+# talents+=/carnage:1
+# copy="Gunde carnage grim_harvest","Base Gunde"
+# talents+=/carnage:1/grim_harvest:1
+copy="Gunde ancestral_instinct","Base Gunde"
+talents+=/ancestral_instinct:1
+# copy="Gunde bloodbath","Base Gunde"
+# talents+=/bloodbath:1
+
+
+
+# copy="Gunde sundered_flesh","Base Gunde"
+# talents+=/sundered_flesh:1
 
 # # copy="Gunde deaths_arc","Base Gunde"
 # # talents+=/deaths_arc:1
@@ -231,15 +300,15 @@ weapon_trait.patient_soul=1
 # # talents+=/bloodbath:1
 
 
-# copy="Wep Prim","Base Gunde"
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=primary
-# copy="Wep haste","Base Gunde"
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=haste
-# copy="Wep crit","Base Gunde"
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=crit
-# copy="Wep spirit","Base Gunde"
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=spirit
-# copy="Wep expertise","Base Gunde"
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=expertise
+# # copy="Wep Prim","Base Gunde"
+# # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=primary
+# # copy="Wep haste","Base Gunde"
+# # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=haste
+# # copy="Wep crit","Base Gunde"
+# # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=crit
+# # copy="Wep spirit","Base Gunde"
+# # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=spirit
+# # copy="Wep expertise","Base Gunde"
+# # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=expertise
 
-# apl/generated/all_gear_options_gunde.simc
+# # apl/generated/all_gear_options_gunde.simc

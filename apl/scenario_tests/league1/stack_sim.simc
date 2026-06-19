@@ -13,3 +13,4 @@ max_time=720
 desired_targets=1
 
 apl/scenario_tests/league1/rime.simc
+apl/scenario_tests/league1/gunde.simc

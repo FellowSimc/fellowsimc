@@ -1,0 +1,2922 @@
+#include "fs_player.hpp"
+#include "util/util.hpp"
+
+#include "simulationcraft.hpp"
+
+namespace fellowship
+{
+namespace tariq
+{
+
+// Forward Declarations
+class tariq_t;
+
+enum class secondary_trigger
+{
+  NONE = 0U
+};
+
+namespace actions
+{
+struct tariq_attack_t;
+struct tariq_heal_t;
+struct tariq_spell_t;
+
+struct melee_t;
+}  // namespace actions
+
+class tariq_td_t : public fs_player_td_t
+{
+public:
+  struct dots_t
+  {
+    dot_t* rend;
+    dot_t* slaughter;
+  } dots;
+
+  struct rend_tracker_t
+  {
+    uint8_t current_tick = 0;
+    // Hardcoded to have enough buckets currently for Deep Rend.
+    std::array<double, 11> tick_buckets = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  } rend_tracker, slaughter_tracker;
+
+  struct
+  {
+    buff_t* open_wounds;
+  } debuffs;
+
+  tariq_td_t( player_t* target, tariq_t* source );
+};
+
+struct tariq_buff_t : public fs_player_buff_t
+{
+  tariq_buff_t( player_t* p, util::string_view name ) : fs_player_buff_t( p, name )
+  {
+  }
+
+  tariq_t* p()
+  {
+    return debug_cast<tariq_t*>( player );
+  }
+
+  const tariq_t* p() const
+  {
+    return debug_cast<const tariq_t*>( player );
+  }
+};
+
+class tariq_t : public fellowship::fs_player_t
+{
+public:
+  struct actions_t
+  {
+    action_t* auto_attack;
+    actions::melee_t* melee_hit;
+    action_t* rend;
+    action_t* slaughter;
+    action_t* ravens_precision;
+    action_t* bloodcraze;
+    action_t* heart_splitter;
+  } actions;
+
+  struct buffs_t
+  {
+    buff_t* serrated_edge;
+    buff_t* reign_in_blood;
+    buff_t* owed_in_blood;
+    buff_t* deaths_arc;
+    buff_t* grim_harvest;
+    buff_t* harvesters_toll;
+    buff_t* crimson_strikes;
+    buff_t* massacre;
+    buff_t* bloodcraze;
+    buff_t* ancestral_instinct;
+    buff_t* bloodbath;
+    buff_t* bloodbound_spirit;
+    buff_t* murder_of_crows;
+  } buffs;
+
+  struct cooldowns_t
+  {
+    cooldown_t* reavers_edge;
+    cooldown_t* heart_splitter;
+    cooldown_t* rupture;
+    cooldown_t* slaughter;
+    cooldown_t* grim_carve;
+    cooldown_t* blood_arc;
+    cooldown_t* reign_in_blood;
+  } cooldowns;
+
+  struct gains_t
+  {
+    gain_t* spirit_procs;
+  } gains;
+
+  struct procs_t
+  {
+    proc_t* feathers;
+  } procs;
+
+  struct rng_objects_t
+  {
+    accumulated_rng_t* grim_harvest;
+    accumulated_rng_t* deaths_arc;
+    accumulated_rng_t* ancestral_instinct;
+    accumulated_rng_t* deep_rend;
+    accumulated_rng_t* heart_splitter_twice;
+  } rng_objects;
+
+#define tariq_TALENT_LIST( X )                                         \
+  X( DEATHS_ARC, "deaths_arc", "Deaths Arc" )                          \
+  X( RAVENS_PRECISION, "ravens_precision", "Ravens Precision" )        \
+  X( GRIM_HARVEST, "grim_harvest", "Grim Harvest" )                    \
+  X( HARVESTERS_TOLL, "harvesters_toll", "Harvesters Toll" )           \
+  X( CRIMSON_STRIKES, "crimson_strikes", "Crimson Strikes" )           \
+  X( DARKENING_HEARTS, "darkening_hearts", "Darkening Hearts" )        \
+  X( SUPERIOR_SERRATION, "superior_serration", "Superior Serration" )  \
+  X( MURDER_OF_CROWS, "murder_of_crows", "Murder of Crows" )           \
+  X( MASSACRE, "massacre", "Massacre" )                                \
+  X( SLAYERS_GRIN, "slayers_grin", "Slayers Grin" )                    \
+  X( FRENZIED_REIGN, "frenzied_reign", "Frenzied Reign" )              \
+  X( DEEP_REND, "deep_rend", "Deep Rend" )                             \
+  X( BLOODCRAZE, "bloodcraze", "Bloodcraze" )                          \
+  X( OATHSHATTER, "oathshatter", "Oathshatter" )                       \
+  X( CARNAGE, "carnage", "Carnage" )                                   \
+  X( SUNDERED_FLESH, "sundered_flesh", "Sundered Flesh" )              \
+  X( ANCESTRAL_INSTINCT, "ancestral_instinct", "Ancestral Instinct" )  \
+  X( BLOODBATH, "bloodbath", "Bloodbath" )
+
+  enum tariq_talent_index_t
+  {
+#define X( name, id, pretty ) name##_INDEX,
+    tariq_TALENT_LIST( X )
+#undef X
+        tariq_TALENT_MAX
+  };
+
+  enum tariq_talents_t : unsigned long long
+  {
+    NONE = 0,
+#define X( name, id, pretty ) name = 1ULL << name##_INDEX,
+    tariq_TALENT_LIST( X )
+#undef X
+        MAX = 1ULL << tariq_TALENT_MAX
+  };
+
+  static constexpr talent_info tariq_TALENTS[] = {
+#define X( name, id, pretty ) { tariq_talents_t::name, id, pretty },
+      tariq_TALENT_LIST( X )
+#undef X
+  };
+
+  constexpr std::string_view talent_name( long long t ) override
+  {
+    for ( const auto& talent : tariq_TALENTS )
+      if ( talent.flag == t )
+        return talent.id;
+
+    return "unknown_talent";
+  }
+
+  constexpr std::string_view talent_name_formatted( long long t ) override
+  {
+    for ( const auto& talent : tariq_TALENTS )
+      if ( talent.flag == t )
+        return talent.pretty;
+
+    return "Unknown Talent";
+  }
+
+  struct spell_const_t
+  {
+    // tariq.AutoAttack.SwingTimer, 1.5
+    timespan_t auto_attack_time = 1.5_s;
+    // tariq.MeleeAutoAttack.StrengthCoefficient, 0.30
+    double auto_attack_coeff = 0.3;
+    // tariq.MeleeAutoAttack.HitVisualDelay, 0.51
+    timespan_t melee_hit_visual_delay = 0.51_s;
+
+    // tariq.SpiritProc.SpiritPointsGain
+    double spirit_refund_mul = 1.0;
+
+    // tariq.SpiritProc.AmountOfOrbs
+    int spirit_proc_orbs = 5;
+
+    // Feathers tariq.SpiritProc.SpawnMinRadius, 150.0 tariq.SpiritProc.SpawnMaxRadius, 300.0;
+
+    // tariq.PerTargetAccumulatedBleed.DamageToDotScaler
+    double rend_accumulation = 0.5;
+    // tariq.PerTargetAccumulatedBleed.Dot.Duration
+    timespan_t rend_duration = 30_s;
+    // tariq.PerTargetAccumulatedBleed.Dot.Period
+    timespan_t rend_period = 3_s;
+
+    // tariq.PerTargetAccumulatedBleed.TotalDamageToStackCountScaler, 0.0025 ; So 1/100 damage
+
+    // tariq.BoostedDotDamage.Debuff.BleedDamageScaler, 1.20
+    double open_wounds_modifier = 1.2;
+    // tariq.BoostedDotDamage.Debuff.Duration, 18.0
+    timespan_t open_wounds_duration = 18_s;
+
+    // tariq.ExtraDotDamageGain.BonusAmount, 0.2		;Blood Arc buff
+    double blood_arc_buff_additional_rend = 0.2;
+    // tariq.ExtraDotDamageGain.MaxStacks, 1.0
+    int blood_arc_buff_max_stacks = 1;
+    // tariq.ExtraDotDamageGain.Duration, 8.0
+    timespan_t blood_arc_buff_duration = 8_s;
+
+    // tariq.BasicSingleTargetAttack.DamageStrengthCoefficientPerHit, 0.825         ; DOUBLE STRIKE WAS 1.0
+    double double_strike_coeff = 0.825;
+    // tariq.BasicSingleTargetAttack.FirstVisualHitDelay, 0.1
+    timespan_t double_strike_first_hit_delay = 0.1_s;
+    // tariq.BasicSingleTargetAttack.SecondVisualHitDelay, 0.45
+    timespan_t double_trike_second_hit_delay = 0.45_s;
+    // tariq.BasicSingleTargetAttack.MaxRange, 3000.0
+
+    // tariq.InstantWhirlwindAoe.VisualHitDelay, 0.45                               ; REAVER'S EDGE
+    timespan_t reavers_edge_delay = 0.45_s;
+    // tariq.InstantWhirlwindAoe.AoeRadius, 700.0
+    // tariq.InstantWhirlwindAoe.DamageStrengthCoefficient, 2.20                   ; WAS 1.616
+    double reavers_edge_coeff = 1.847;
+    // tariq.InstantWhirlwindAoe.DamageScalingTargetCountThreshold, 8.0			 ; WAS 3.0
+    double reavers_edge_target_threshold = 8.0;
+    // tariq.InstantWhirlwindAoe.Cooldown, 5.0
+    timespan_t reavers_edge_cooldown = 5_s;
+    // tariq.InstantWhirlwindAoe.Talent.GatherOrbs.MaxRange, 700.0
+
+    // tariq.HeavyMeleeDotBoost.VisualHitDelay, 0.3       ; Rupture
+    timespan_t rupture_visual_delay = 0.3_s;
+    // tariq.HeavyMeleeDotBoost.DamageStrengthCoefficient, 21.26                      ; WAS 8.4 then 11.16
+    double rupture_coeff = 21.26;
+    // tariq.HeavyMeleeDotBoost.Cooldown, 60.0
+    timespan_t rupture_cooldown = 60_s;
+
+    // tariq.TargetedAoeProjectile.DamageStrengthCoefficientPerHit, 2.076           ; WAS 1.635
+    double grim_carve_coeff = 2.076;
+    // tariq.TargetedAoeProjectile.DamageScalingTargetCountThreshold, 5.0			; was 12.0
+    double grim_carve_falloff = 5;
+    // tariq.TargetedAoeProjectile.Aoe.Duration, 1.15
+    timespan_t grim_carve_duration = 1.15_s;
+    // tariq.TargetedAoeProjectile.Aoe.Period, 0.5
+    timespan_t grim_carve_period = 0.5_s;
+    // tariq.TargetedAoeProjectile.ProjectileSpawnDelay, 0.14                        ; GRIM CARVE
+    timespan_t grim_carve_initial_delay = 0.14_s;
+    // tariq.TargetedAoeProjectile.Speed, 5000.0
+    // tariq.TargetedAoeProjectile.Cooldown, 15.0
+    timespan_t grim_carve_cooldown = 15_s;
+    // tariq.TargetedAoeProjectile.MaxRange, 3000.0
+    // tariq.TargetedAoeProjectile.Aoe.Radius, 700.0
+
+    // tariq.DamageReductionSelfBuff.IncomingDamageMultiplier, 0.6                 ; RECKLESS ABANDON
+    // tariq.DamageReductionSelfBuff.Duration, 4.0
+    // tariq.DamageReductionSelfBuff.Cooldown, 30.0
+    // tariq.DamageReductionSelfBuff.VisualDelay, 0.24
+
+    // tariq.SingleTargetInterrupt.MaxRange, 500.0                                 ; HEADSPLITTER
+    // tariq.SingleTargetInterrupt.Duration, 4.0
+    // tariq.SingleTargetInterrupt.Cooldown, 16.0
+    // tariq.SingleTargetInterrupt.VisualDelay, 0.2
+
+    // tariq.ExtraDotDamageBuff.BonusDotDamage, 0.5                                ; REIGN IN BLOOD
+    double reign_in_blood_additional_rend = 0.3;
+    // tariq.ExtraDotDamageBuff.Duration, 12.0
+    timespan_t reign_in_blood_duration = 12.0_s;
+    // tariq.ExtraDotDamageBuff.Cooldown, 90.0
+    timespan_t reign_in_blood_cooldown = 90.0_s;
+    // tariq.ExtraDotDamageBuff.VisualDelay, 0.2
+
+    // tariq.HeavyMeleeDotBased.Cooldown, 12.0                                     ; RECKONING / heart splitter
+    timespan_t heart_splitter_cooldown = 12.0_s;
+    // tariq.HeavyMeleeDotBased.Damage.StrengthCoefficient, 3.70                   ; WAS 3.4
+    double heart_splitter_coeff = 9.4 * 0.5;
+    // tariq.HeavyMeleeDotBased.Damage.DotCoefficient, 0.30						; WAS 0.10
+    double heart_splitter_exsanguinate_coeff = 0.3;
+    // tariq.HeavyMeleeDotBased.VisualDelay, 0.35
+    timespan_t heart_splitter_visual_delay = 0.35_s;
+    double heart_splitter_additional_rend  = 0.5;
+
+    // tariq.InstantAoeDot.Aoe.Radius, 1000.0                                      ; SLAUGHTER
+    // tariq.InstantAoeDot.Aoe.Height, 500.0
+    // tariq.InstantAoeDot.Dot.AccDotToNewDotScaler, 1.60                           ;WAS 1.30
+    double slaughter_rend_multiplier = 1.60;
+    // tariq.InstantAoeDot.Dot.Duration, 3.0
+    timespan_t slaughter_duration = 3.0_s;
+    // tariq.InstantAoeDot.Dot.Period, 0.3
+    timespan_t slaughter_period = 0.3_s;
+    // tariq.InstantAoeDot.VisualDelay, 0.5
+    // tariq.InstantAoeDot.Cooldown, 30.0
+    // ;WAS 18.0
+    timespan_t slaughter_cooldown = 30.0_s;
+    // tariq.InstantAoeDot.Talent.IncreasedCritChance.AdditionalCritChance, 0.1
+    // tariq.InstantAoeDot.Talent.StacksToHaste.Duration, 8.0
+    // tariq.InstantAoeDot.Talent.StacksToHaste.AdditionalHastePerStack, 0.0025
+    // tariq.InstantAoeDot.Talent.StacksToHaste.MaxStacks, 100.0
+
+    // tariq.DotTransfer.MaxRange, 2000.0                                          ; OWED IN BLOOD
+    // tariq.DotTransfer.SelfBuff.Duration, 45.0			;was 30
+    timespan_t owed_in_blood_duration;
+    // tariq.DotTransfer.VisualDelay, 0.25
+    // tariq.DotTransfer.Target.Cooldown, 3.0
+    timespan_t owed_in_blood_cooldown = 3_s;
+
+    // tariq.DotTransfer.Orb.Lifespan, 30.0                                        ;OWED IN BLOOD NEW FUNCTION
+    timespan_t feather_duration = 30_s;
+    // tariq.DotTransfer.Orb.MaxActiveOrbPickups, 20.0
+    int feathers_max_on_ground = 20;
+    // tariq.DotTransfer.Orb.ActivationDelay, 0.5  								; Mainly
+    // to allow the pickups to spawn and linger for a while when the player is already in the trigger
+    // tariq.DotTransfer.Orb.Scale, 1.5                                            ;WAS 1.0
+    // tariq.DotTransfer.Orb.PickUpRadius, 360.0                                   ;WAS 150.0
+    // tariq.DotTransfer.Orb.NumOfStacksPerOrb, 1.0                                ;WAS 2.0
+    int feathers_per_orb = 1;
+    // tariq.DotTransfer.Orb.RelevantDropRadius, 5000.0	                        ; How far away an enemy can die and
+    // still drop an orb tariq.DotTransfer.Orb.SpawnChanceAtDeath, 0.25
+    double feather_chance_on_kill = 0.25;
+    // tariq.DotTransfer.Orb.SpawnChanceAtTick.A, 1.0
+    // tariq.DotTransfer.Orb.SpawnChanceAtTick.B, 0.50
+    // tariq.DotTransfer.Orb.SpawnChanceAtTick.C, 0.33
+    // tariq.DotTransfer.Orb.SpawnChanceAtTick.D, 0.25
+    // tariq.DotTransfer.Orb.SpawnChanceAtTick.E, 0.20
+    // tariq.DotTransfer.Orb.SpawnChanceAtTick.F, 0.1667
+    // tariq.DotTransfer.Orb.SpawnChanceAtTick.G, 0.15
+    std::array<double, 8> feather_chance_per_rends = {
+        1.0,  1.0, 0.5,    0.33,
+        0.25, 0.2, 0.1667, 0.15 };  // Pad it by an extra 1.0 so can index by active_targets clamped to max array size.
+    // tariq.DotTransfer.Orb.SpawnInnerRadius, 100.0
+    // tariq.DotTransfer.Orb.SpawnOuterRadius, 300.0
+    // tariq.DotTransfer.MaxStacks, 150.0
+    int owed_in_blood_max_stacks = 150;
+
+    // tariq.SingleTargetPull.Cooldown, 30.0                                       ; BUTCHER'S HOOK
+    // tariq.SingleTargetPull.MaxRange, 3000.0
+    // tariq.SingleTargetPull.MaxPullHeight, 1000.0                                ; How high in the air tariq can be
+    // while pulling an enemy towards a spot on the ground below him. (enemies never get pulled up into the air.)
+    // tariq.SingleTargetPull.PullDelay, 0.25
+    // tariq.SingleTargetPull.PullDuration, 0.2
+    // tariq.SingleTargetPull.StopDistance, 150.0                                  ; How far from tariq the enemy will
+    // end up at. tariq.SingleTargetPull.Damage.StrengthCoefficient, 0.37                     ;WAS 0.69
+    // tariq.SingleTargetPull.Talent.MultiTargets.Radius, 800.0
+    // tariq.SingleTargetPull.Talent.MultiTargets.AdditionalTargets, 3.0
+    // tariq.SingleTargetPull.Talent.MultiTargets.AdditionalCooldown, 15.0
+
+    // tariq.JumpToLocation.Cooldown, 20.0                                         ; WARBOUND
+    // tariq.JumpToLocation.NumCharges, 2.0
+    // tariq.JumpToLocation.MaxRangeHorizontal, 2000.0
+    // tariq.JumpToLocation.MaxRangeUp, 1000.0
+    // tariq.JumpToLocation.MaxRangeDown, 5000.0
+    // tariq.JumpToLocation.TargetingRadius, 50.0 ; purly visual right now
+    // tariq.JumpToLocation.JumpDuration, 0.3
+
+    // tariq.InstantAoeWithBuff.VisualHitDelay, 0.2                               ; BLOOD ARC
+    // tariq.InstantAoeWithBuff.AoeRadius, 700.0
+    // tariq.InstantAoeWithBuff.ConePieHeight, 500.0                               ;WAS 200
+    // tariq.InstantAoeWithBuff.ConePieMinRadius, 0.0
+    // tariq.InstantAoeWithBuff.ConePieAngleWidth, 120.0
+
+    // tariq.InstantAoeWithBuff.DamageStrengthCoefficient, 1.212                    ; WAS 2.0
+    double blood_arc_coeff = 2.4629;
+    // tariq.InstantAoeWithBuff.DamageScalingTargetCountThreshold, 5.0
+    double blood_arc_target_threshold = 8.0;
+    // tariq.InstantAoeWithBuff.Cooldown, 9.0
+    timespan_t blood_arc_cooldown = 9_s;
+
+    // tariq.DurationalAoeDotAndBuff.Radius, 1000.0								;
+    // BLOODBOUND SPIRIT tariq.DurationalAoeDotAndBuff.Duration, 6.15 ;was 6.15
+    timespan_t bloodbound_spirit_duration = 6.15_s;
+    // tariq.DurationalAoeDotAndBuff.Period, 1.5
+    timespan_t bloodbound_spirit_period = 1.5_s;
+    // tariq.DurationalAoeDotAndBuff.StrengthCoefficient, 4.653                      ; WAS 4.95
+    double bloodbound_spirit_coeff = 4.653;
+    // tariq.DurationalAoeDotAndBuff.DamageScalingTargetCountThreshold, 3.0		;was 8.0
+    double bloodbound_spirit_falloff = 1.0;
+    // tariq.DurationalAoeDotAndBuff.CastTime, 1.0
+    timespan_t bloodbound_spirit_cast_time = 1_s;
+    // tariq.DurationalAoeDotAndBuff.SelfBuff.Duration, 20.0
+    timespan_t bloodbound_spirit_buff_duration = 20_s;
+    // tariq.DurationalAoeDotAndBuff.SelfBuff.DamageMultiplier, 1.15               ; WAS 1.25
+    double bloodbound_spirit_buff_amp = 1.15;
+
+    // tariq.DashAttack.StrengthCoefficient, 0.2
+    // ; WARBOUND NEW WAS 0.5 tariq.DashAttack.DamageRadius, 250.0 tariq.DashAttack.MaxCharges, 2.0
+    // tariq.DashAttack.MaxDistance, 1000.0
+    // tariq.DashAttack.InAirExitSpeed, 1000.0
+    // tariq.DashAttack.Speed, 2500
+    // tariq.DashAttack.CooldownDuration, 8.0
+    // tariq.DashAttack.Talent.DamageMultiplier, 1.15
+
+    // tariq.Talent.AbilityToBuffChance.ProcChance, 0.4
+    // tariq.Talent.AbilityToBuffChance.StrengthMultiplier, 1.06
+    // tariq.Talent.AbilityToBuffChance.Duration, 6.0
+
+  } spell_const;
+
+  struct talents_t
+  {
+    // tariq.HeavyMeleeDotBoost.Talent.IncreasedDotDamage.Duration, 10.0
+    // tariq.HeavyMeleeDotBoost.Talent.IncreasedDotDamage.DamageMultiplier, 1.12
+    // tariq.HeavyMeleeDotBoost.Talent.IncreasedCritAndNoneCritDamage.CritDamageMultiplier, 1.5
+    // tariq.HeavyMeleeDotBoost.Talent.IncreasedCritAndNoneCritDamage.NoneCritDamageMultiplier, 1.1
+    // tariq.HeavyMeleeDotBoost.Talent.ReducedCooldown.ReductionInSeconds, 1.0
+    // tariq.HeavyMeleeDotBoost.Talent.OrbDropper.NumOfOrbs, 8.0
+    int murder_of_crows_feathers = 12;
+    // tariq.HeavyMeleeDotBoost.Talent.ReducedCooldownPerOrb.ReductionInSeconds, 0.2
+    timespan_t slayers_grin_cdr = 0.4_s;
+
+    // Talent Deep Rend
+    // tariq.PerTargetAccumulatedBleed.Talent.ReducedTickSpeed.PeriodFrequencyIncrease
+    double deep_rend_tick_speed_increase = 1.1;
+    // tariq.PerTargetAccumulatedBleed.Talent.IncreasedDropAmount.DropChance
+    double deep_rend_proc_chance_st = 0.2;
+    // tariq.PerTargetAccumulatedBleed.Talent.IncreasedDropAmount.NewAmount
+    int deep_rend_proc_feathers = 2;
+
+    // tariq.TargetedAoeProjectile.Talent.Empowered.ProcChance, 0.05
+    double grim_harvest_chance = 0.06;
+    // tariq.TargetedAoeProjectile.Talent.Empowered.DamageMultiplier, 1.40 ;WAS 2.0
+    double grim_harvest_cc = 1.0;
+    // tariq.TargetedAoeProjectile.Talent.Empowered.Duration, 8.0
+    timespan_t grim_harvest_buff_duration = 8_s;
+    // tariq.TargetedAoeProjectile.Talent.DamageCooldownReduction.DamageMultiplier, 1.25
+    double carnage_damage_multiplier = 1.25;
+    // tariq.TargetedAoeProjectile.Talent.DamageCooldownReduction.CooldownReductionInSecondsPerHit, 1.0
+    timespan_t carnage_cdr_per_hit = 1_s;
+
+    // tariq.InstantAoeWithBuff.Talent.AdditionalStack.MaxStacks, 2.0
+    //int superior_serration_blood_arcs = 2
+    // tariq.InstantAoeWithBuff.Talent.AddedTransfer.DotTransferBonus, 0.10	
+    double superior_serration_rend_bonus = 0.1;
+
+    // tariq.HeavyMeleeDotBased.Talent.IncreasedCritChance.AdditionalCritChance, 0.3         ;WAS 0.4
+    double oathshatter_additional_crit = 0.3;
+    // tariq.HeavyMeleeDotBased.Talent.CritToAoe.Radius, 500.0
+    // tariq.HeavyMeleeDotBased.Talent.CritToAoe.AdditionalTargets, 4.0	; OLD
+    // tariq.HeavyMeleeDotBased.Talent.CritToAoe.TargetThresholdScaling, 8.0
+    double oathshatter_target_threshold = 8.0;
+    // tariq.HeavyMeleeDotBased.Talent.CritToAoe.AoeDamageScaler, 0.25
+    double oathshatter_aoe_multiplier = 0.25;
+    // tariq.HeavyMeleeDotBased.Talent.LowHealthTarget.AddedCriticalStrikeChance, 1.00
+    double darkening_hearts_execute_cc = 1.0;
+    double darkening_hearts_damage_mul = 1.1;
+    // tariq.HeavyMeleeDotBased.Talent.CooldownAcceleration.AdditionalCooldownRecovery, 0.5
+    double bloodbath_cooldown_recovery = 2.0;
+    // tariq.HeavyMeleeDotBased.Talent.CooldownAcceleration.Duration, 3.0
+    timespan_t bloodbath_duration = 3_s;
+
+    double crimson_strikes_inc = 0.15;
+
+    
+    // tariq.ExtraDotDamageBuff.Talent.Haste.AdditionalHaste, 0.25	;old
+    // tariq.ExtraDotDamageBuff.Talent.AddedBonus.AddedTransfer, 0.25
+    double frenzied_reign_extra_transfer = 0.25;
+
+    
+    // tariq.InstantAoeWithBuff.Talent.ChanceCooldownReset.Chance, 0.25            ; WAS 0.15
+    double deaths_arc_chance = 0.3;
+    // tariq.InstantAoeWithBuff.Talent.Empowered.AddedCriticalStrikeChance, 1.00
+    double deaths_arc_added_cc = 1.0;
+    // tariq.InstantAoeWithBuff.Talent.Empowered.Duration, 12.0
+    timespan_t deaths_arc_duration = 12_s;
+
+    // tariq.Talent.AbilityToBuffChance.ProcChance, 0.4
+    double ancestral_instinct_chance = 0.4;
+    // tariq.Talent.AbilityToBuffChance.StrengthMultiplier, 1.06
+    double ancestral_instinct_multiplier = 1.06;
+    // tariq.Talent.AbilityToBuffChance.Duration, 6.0
+    timespan_t ancestral_instinct_duration = 6_s;
+
+    // tariq.InstantAoeDot.Talent.StacksToHaste.Duration, 8.0
+    timespan_t massacre_duration = 8_s;
+    // tariq.InstantAoeDot.Talent.StacksToHaste.AdditionalHastePerStack, 0.0025
+    double massacre_per_stack = 0.0025;
+    // tariq.InstantAoeDot.Talent.StacksToHaste.MaxStacks, 100.0
+    int massacre_max_stacks = 100;
+
+    // tariq.DotTransfer.Talent.IncreasedDamageOnSelf.DamageScalePerStack, 0.0025
+    double harvesters_toll_amp = 0.075;
+    // tariq.DotTransfer.Talent.IncreasedDamageOnSelf.MaxStacks, 30.0
+    // tariq.DotTransfer.Talent.IncreasedDamageOnSelf.Duration, 10.0
+    timespan_t harvesters_toll_duration = 10_s;
+
+    // tariq.DotTransfer.Talent.Aoe.Cooldown, 20.0
+    // tariq.DotTransfer.Talent.Aoe.Radius, 1000.0
+    // tariq.DotTransfer.Talent.Aoe.MaxStacks, 80.0
+    // tariq.DotTransfer.Talent.Aoe.StackDuration, 10.0
+ 
+    // tariq.DotTransfer.Talent.ExplosionOnPickup.StrengthCoefficient, 0.34
+    double ravens_precision_coeff = 0.34;
+    // tariq.DotTransfer.Talent.ExplosionOnPickup.Radius, 700.0
+    // tariq.DotTransfer.Talent.ExplosionOnPickup.TargetThresholdScaling, 8.0
+    double ravens_precision_falloff = 8;
+    // tariq.DotTransfer.Talent.AoeBasedOnStacks.Radius, 700.0
+    // tariq.DotTransfer.Talent.AoeBasedOnStacks.BaseStrengthCoefficient, 0.20
+    double bloodcraze_coeff = 0.2;
+    // tariq.DotTransfer.Talent.AoeBasedOnStacks.DamageIncreasePerStack, 0.90
+    double bloodcraze_amp_per_stack = 0.9;
+    // tariq.DotTransfer.Talent.AoeBasedOnStacks.TargetThresholdScaling, 5.0
+    double bloodcraze_falloff = 5.0;
+    // tariq.DotTransfer.Talent.AoeBasedOnStacks.Period, 3.0
+    timespan_t bloodcraze_period = 3_s;
+    // tariq.DotTransfer.Talent.AoeBasedOnStacks.Duration, 6.15
+    timespan_t bloodcraze_duration = 6.15_s;
+  } talents;
+
+  struct legendary_t
+  {
+    bool lego_1 = false;
+    // tariq.TargetedAoeProjectile.Talent.AdditionalTicks.Amount, 2.0
+    int lego_1_additional_grim_carve_hits = 1;
+
+    bool lego_2 = false;
+    // tariq.HeavyMeleeDotBased.Talent.Charges.NumOfCharges, 2.0
+    int lego_2_charges = 2;
+    // tariq.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.Chance, 0.2
+    double lego_2_hit_chance = 0.2;
+    // tariq.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.DelayBetweenStrikes, 0.4
+    timespan_t lego_2_delay = 0.4_s;
+
+    bool lego_3 = false;
+  } legendary;
+
+  struct options_t
+  {
+  } options;
+
+  target_specific_t<tariq_td_t> target_data;
+
+  const tariq_td_t* find_target_data( const player_t* target ) const override
+  {
+    return target_data[ target ];
+  }
+
+  tariq_td_t* get_target_data( player_t* target ) const override
+  {
+    tariq_td_t*& td = target_data[ target ];
+    if ( !td )
+    {
+      td = new tariq_td_t( target, const_cast<tariq_t*>( this ) );
+    }
+    return td;
+  }
+
+  // Character Definition
+  void init_spells() override;
+  void init_base_stats() override;
+  void init_talents() override;
+  void init_gains() override;
+  void init_procs() override;
+  void init_scaling() override;
+  void init_resources( bool force ) override;
+  void init_items() override;
+  void init_special_effects() override;
+  void init_finished() override;
+  void init_background_actions() override;
+  void init_rng() override;
+
+  void create_cooldowns();
+  void create_buffs() override;
+  void create_options() override;
+
+  void copy_from( player_t* source ) override;
+  std::string create_profile( save_e stype ) override;
+  void init_action_list() override;
+
+  void reset() override;
+  void activate() override;
+  void arise() override;
+  void combat_begin() override;
+  action_t* create_action( util::string_view name, util::string_view options ) override;
+
+  std::unique_ptr<expr_t> create_action_expression( action_t& action, std::string_view name_str ) override;
+  std::unique_ptr<expr_t> create_expression( util::string_view name_str ) override;
+  std::unique_ptr<expr_t> create_resource_expression( util::string_view name ) override;
+
+  void regen( timespan_t periodicity ) override;
+  resource_e primary_resource() const override
+  {
+    return RESOURCE_SPIRIT;
+  }
+  role_e primary_role() const override
+  {
+    return ROLE_ATTACK;
+  }
+  stat_e convert_hybrid_stat( stat_e s ) const override;
+
+  double composite_attribute_multiplier( attribute_e attr ) const override;
+  double composite_melee_auto_attack_speed() const override;
+  double composite_melee_haste() const override;
+  double composite_melee_crit_chance() const override;
+  double composite_spell_crit_chance() const override;
+  double composite_spell_haste() const override;
+  double composite_damage_versatility() const override;
+  double composite_heal_versatility() const override;
+  double composite_leech() const override;
+  double matching_gear_multiplier( attribute_e attr ) const override;
+  double composite_player_multiplier( school_e school ) const override;
+  double composite_player_pet_damage_multiplier( const action_state_t*, bool ) const override;
+  double composite_player_target_multiplier( player_t* target, school_e school ) const override;
+  double composite_player_target_crit_chance( player_t* target ) const override;
+  double composite_player_target_armor( player_t* target ) const override;
+  double resource_regen_per_second( resource_e ) const override;
+  double non_stacking_movement_modifier() const override;
+  double stacking_movement_modifier() const override;
+  void invalidate_cache( cache_e ) override;
+
+  double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
+
+  void cancel_auto_attacks() override;
+
+  double get_current_rend( player_t* t ) const;
+  double get_current_target_rend() const
+  {
+    return get_current_rend( target );
+  }
+
+  void spawn_feathers( int quantity = 1 );
+
+  std::string default_flask() const override
+  {
+    return "disabled";
+  }
+
+  // rogue_t::default_potion ==================================================
+
+  std::string default_potion() const override
+  {
+    return "disabled";
+  }
+
+  // rogue_t::default_food ====================================================
+
+  std::string default_food() const override
+  {
+    return "disabled";
+  }
+
+  // rogue_t::default_rune ====================================================
+
+  std::string default_rune() const override
+  {
+    return "disabled";
+  }
+
+  // rogue_t::default_temporary_enchant =======================================
+
+  std::string default_temporary_enchant() const override
+  {
+    return "disabled";
+  }
+
+  tariq_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
+    : fs_player_t( sim, name, r, tariq ), target_data()
+  {
+    resource_regeneration = regen_type::DYNAMIC;
+
+
+    create_cooldowns();
+    spirit_refund_mul = spell_const.spirit_refund_mul;
+  }
+};
+
+namespace actions
+{  // namespace actions
+
+
+
+struct tariq_action_state_t : public action_state_t
+{
+private:
+  double rend_coefficient;
+
+public:
+  tariq_action_state_t( action_t* action, player_t* target )
+    : action_state_t( action, target ), rend_coefficient( 0 )
+  {
+  }
+
+  void initialize() override
+  {
+    action_state_t::initialize();
+    rend_coefficient = 0;
+  }
+
+  std::ostringstream& debug_str( std::ostringstream& s ) override
+  {
+    action_state_t::debug_str( s ) << " rend_coefficient=" << rend_coefficient;
+    return s;
+  }
+
+  void copy_state( const action_state_t* s )
+  {
+    action_state_t::copy_state( s );
+    const tariq_action_state_t* rs = debug_cast<const tariq_action_state_t*>( s );
+    rend_coefficient               = rs->rend_coefficient;
+  }
+
+  double get_rend_coefficient() const
+  {
+    return rend_coefficient;
+  }
+
+  void set_rend_coefficient( double rend_coeff )
+  {
+    rend_coefficient = rend_coeff;
+  }
+};
+
+template <typename Base>
+class tariq_action_t : public fellowship::actions::fs_player_action_t<Base>
+{
+protected:
+  /// typedef for tariq_action_t<action_base_t>
+  using base_t = tariq_action_t<fellowship::actions::fs_player_action_t<Base>>;
+
+private:
+  /// typedef for the templated action type, eg. spell_t, attack_t, heal_t
+  using ab = fellowship::actions::fs_player_action_t<Base>;
+
+public:
+  double base_rend_applied;
+  bool _affected_by_serrated_edge;
+
+  // Init =====================================================================
+
+  tariq_action_t( util::string_view n, tariq_t* p, util::string_view options = {} )
+    : ab( n, p, options ),
+      base_rend_applied( p->spell_const.rend_accumulation ),
+      _affected_by_serrated_edge( true )
+  {
+    ab::parse_options( options );
+    ab::may_crit = ab::tick_may_crit = true;
+    ab::school                       = SCHOOL_PHYSICAL;
+
+    ab::gcd_type = gcd_haste_type::ATTACK_HASTE;
+  }
+
+  void init() override
+  {
+    ab::init();
+  }
+
+  static const tariq_action_state_t* cast_state( const action_state_t* st )
+  {
+    return debug_cast<const tariq_action_state_t*>( st );
+  }
+
+  static tariq_action_state_t* cast_state( action_state_t* st )
+  {
+    return debug_cast<tariq_action_state_t*>( st );
+  }
+
+  action_state_t* new_state() override
+  {
+    return new tariq_action_state_t( this, ab::target );
+  }
+
+  void update_state( action_state_t* state, unsigned flags, result_amount_type rt ) override
+  {
+    ab::update_state( state, flags, rt );
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    auto rs = cast_state( state );
+    rs->set_rend_coefficient( rend_coefficient() );
+
+    ab::snapshot_state( state, rt );
+  }
+
+
+  tariq_t* p()
+  {
+    return debug_cast<tariq_t*>( ab::player );
+  }
+
+  const tariq_t* p() const
+  {
+    return debug_cast<const tariq_t*>( ab::player );
+  }
+
+  tariq_td_t* td( player_t* t ) const
+  {
+    return p()->get_target_data( t );
+  }
+
+  double composite_da_multiplier(const action_state_t* s) const
+  {
+    auto mul = ab::composite_da_multiplier( s );
+
+    mul *= 1.0 + p()->buffs.crimson_strikes->check_value();
+
+    return mul;
+  }
+
+public:
+  // Ability triggers
+  void trigger_auto_attack( const action_state_t* );
+  void trigger_spirit_refund( const action_state_t* );
+  void apply_rend( const action_state_t* );
+
+  double rend_coefficient()
+  {
+    if ( base_rend_applied <= 0.0 )
+      return 0.0;
+
+    auto rend_coeff = base_rend_applied + p()->buffs.reign_in_blood->check_value();
+
+    if ( _affected_by_serrated_edge )
+      rend_coeff += p()->buffs.serrated_edge->check_value();
+
+    return rend_coeff;
+  }
+
+  void roll_grim_harvest()
+  {
+    if ( p()->talents_enabled( tariq_t::GRIM_HARVEST ) )
+    {
+      if ( p()->rng_objects.grim_harvest->trigger() )
+      {
+        p()->cooldowns.grim_carve->reset( true, 1 );
+        p()->buffs.grim_harvest->trigger();
+      }
+    }
+  }
+
+  void execute() override
+  {
+    ab::execute();
+
+    if ( ab::hit_any_target && !ab::background )
+    {
+      trigger_auto_attack( ab::execute_state );
+
+      if ( rend_coefficient() > 0 )
+      {
+        auto spirit_refund = p()->rng().roll( p()->cache.mastery_value() );
+
+        if ( !spirit_refund && p()->buffs.murder_of_crows->check() )
+        {
+          spirit_refund = true;
+          p()->buffs.murder_of_crows->decrement();
+        }
+
+        if ( spirit_refund )
+        {
+          trigger_spirit_refund( ab::execute_state );
+        }
+
+        if ( _affected_by_serrated_edge )
+        {
+          p()->buffs.serrated_edge->decrement();
+          p()->buffs.crimson_strikes->decrement();
+        }
+      }
+    }
+  }
+};
+
+// ==========================================================================
+// Rogue Attack Classes
+// ==========================================================================
+
+struct tariq_heal_t : public tariq_action_t<heal_t>
+{
+protected:
+  using base_t = tariq_heal_t;
+
+private:
+  using ab = tariq_action_t<heal_t>;
+
+public:
+  tariq_heal_t( util::string_view n, tariq_t* p, util::string_view o = {} ) : ab( n, p, o )
+  {
+    harmful = false;
+    set_target( p );
+  }
+
+  size_t available_targets( std::vector<player_t*>& target_list ) const override
+  {
+    target_list.clear();
+    target_list.push_back( target );
+
+    for ( const auto& t : sim->healing_no_pet_list )
+    {
+      if ( t != target && ( t->is_active() || ( t->type == HEALING_ENEMY && !t->is_sleeping() ) ) )
+        target_list.push_back( t );
+    }
+
+    // Remove non Healing Enemy pets from valid target list
+    for ( const auto& t : sim->healing_pet_list )
+    {
+      if ( t != target && ( ( t->type == HEALING_ENEMY && !t->is_sleeping() ) ) )
+        target_list.push_back( t );
+    }
+
+    return target_list.size();
+  }
+};
+
+struct tariq_spell_t : public tariq_action_t<spell_t>
+{
+protected:
+  using base_t = tariq_spell_t;
+
+private:
+  using ab = tariq_action_t<spell_t>;
+
+public:
+  tariq_spell_t( util::string_view n, tariq_t* p, util::string_view o = {} ) : ab( n, p, o )
+  {
+    school = SCHOOL_MAGIC;
+  }
+};
+
+struct tariq_attack_t : public tariq_action_t<melee_attack_t>
+{
+protected:
+  using base_t = tariq_attack_t;
+
+private:
+    using ab = tariq_action_t<melee_attack_t>;
+
+public:
+    tariq_attack_t( util::string_view n, tariq_t* p, util::string_view o = {} ) : ab( n, p, o )
+  {
+    special = true;
+    school  = SCHOOL_PHYSICAL;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    ab::impact( s );
+
+    if ( result_is_hit( s->result ) )
+    {
+      apply_rend( s );
+    }
+  }
+};
+
+struct tariq_absorb_t : public tariq_action_t<absorb_t>
+{
+protected:
+  using base_t = tariq_absorb_t;
+
+private:
+    using ab = tariq_action_t<absorb_t>;
+
+public:
+    tariq_absorb_t( util::string_view n, tariq_t* p, util::string_view o = {} ) : ab( n, p, o )
+  {
+    may_crit      = false;
+    tick_may_crit = false;
+    may_miss      = false;
+    target        = p;
+  }
+
+  size_t available_targets( std::vector<player_t*>& target_list ) const override
+  {
+    target_list.clear();
+    target_list.push_back( target );
+
+    for ( const auto& t : sim->healing_no_pet_list )
+    {
+      if ( t != target && ( t->is_active() || ( t->type == HEALING_ENEMY && !t->is_sleeping() ) ) )
+        target_list.push_back( t );
+    }
+
+    // Remove non Healing Enemy pets from valid target list
+    for ( const auto& t : sim->healing_pet_list )
+    {
+      if ( t != target && ( ( t->type == HEALING_ENEMY && !t->is_sleeping() ) ) )
+        target_list.push_back( t );
+    }
+
+    return target_list.size();
+  }
+
+  /* absorb_buff_t* create_buff( const action_state_t* s ) override
+ {
+   if ( s->target == player )
+   {
+     if ( priest().buffs.power_word_shield->absorb_source != stats )
+       priest().buffs.power_word_shield->set_absorb_source( stats );
+     return priest().buffs.power_word_shield;
+   }
+
+   buff_t* b = buff_t::find( s->target, name_str, player );
+   if ( b )
+     return debug_cast<absorb_buff_t*>( b );
+
+   auto buff = make_buff<buffs::power_word_shield_buff_t>( &priest(), s->target );
+   buff->set_absorb_source( stats );
+
+   return buff;
+ }*/
+};
+
+struct melee_t : public attack_t
+{
+  bool first;
+  bool canceled;
+  timespan_t prev_scheduled_time;
+
+  melee_t( const char* name, const char* reporting_name, tariq_t* p )
+    : attack_t( name, p ), first( true ), canceled( false ), prev_scheduled_time( timespan_t::zero() )
+  {
+    background = repeating = may_glance = may_crit = true;
+    may_miss                                       = true;
+    allow_class_ability_procs = not_a_proc = true;
+    special                                = false;
+
+    school             = SCHOOL_PHYSICAL;
+    trigger_gcd        = timespan_t::zero();
+    name_str_reporting = reporting_name;
+
+    attack_power_mod.direct = p->spell_const.auto_attack_coeff;
+  }
+
+  double miss_chance( double /* hit */, player_t* /* target */ ) const
+  {
+    return 1 - 0.95 * 0.95;
+  }
+
+  void reset() override
+  {
+    attack_t::reset();
+    first               = true;
+    canceled            = false;
+    prev_scheduled_time = timespan_t::zero();
+  }
+
+  timespan_t execute_time() const override
+  {
+    timespan_t t = attack_t::execute_time();
+
+    if ( first )
+    {
+      return timespan_t::zero();
+    }
+
+    // If we cancel the swing timer mid-fight, use the previous swing timer
+    if ( canceled )
+    {
+      return std::min( t, std::max( prev_scheduled_time - player->sim->current_time(), timespan_t::zero() ) );
+    }
+
+    return t;
+  }
+
+  void schedule_execute( action_state_t* state ) override
+  {
+    attack_t::schedule_execute( state );
+
+    if ( first )
+    {
+      first = false;
+      player->sim->print_log( "{} schedules AA start {} with {} swing timer", *player, *this, time_to_execute );
+    }
+
+    if ( canceled )
+    {
+      canceled            = false;
+      prev_scheduled_time = timespan_t::zero();
+      player->sim->print_log( "{} schedules AA restart {} with {} swing timer remaining", *player, *this,
+                              time_to_execute );
+    }
+  }
+};
+
+struct auto_melee_attack_t : public action_t
+{
+  auto_melee_attack_t( tariq_t* p, util::string_view options_str ) : action_t( ACTION_OTHER, "auto_attack_hit", p )
+  {
+    trigger_gcd        = timespan_t::zero();
+    name_str_reporting = "Auto Attack";
+
+    background = true;
+
+    p->actions.melee_hit = debug_cast<melee_t*>( p->find_action( "auto_attack_damage" ) );
+    if ( !p->actions.melee_hit )
+      p->actions.melee_hit = new melee_t( "auto_attack_damage", "Auto Attack", p );
+
+    p->main_hand_attack                    = p->actions.melee_hit;
+    p->main_hand_attack->base_execute_time = p->spell_const.auto_attack_time;
+    p->main_hand_attack->id                = 1;
+
+    id = 1;
+
+    add_child( p->actions.melee_hit );
+  }
+
+  void execute() override
+  {
+    stats->add_execute( 0_ms, target );  // log AA timer resets
+
+    player->main_hand_attack->schedule_execute();
+  }
+
+  bool ready() override
+  {
+    if ( player->is_moving() )
+      return false;
+
+    return ( player->main_hand_attack->execute_event == nullptr );  // not swinging
+  }
+};
+
+struct rend_t : public tariq_attack_t
+{
+  double to_tick_multiplier;
+  size_t rend_ticks;
+  rend_t( tariq_t* p ) : tariq_attack_t( "rend", p ), to_tick_multiplier( 0 ), rend_ticks( 10 )
+  {
+    id = 2;
+
+    name_str_reporting = "Rend";
+
+    tick_may_crit = false;
+    may_crit      = false;
+
+    dot_duration           = p->spell_const.rend_duration;
+    dot_behavior           = DOT_REFRESH_DURATION;
+    base_tick_time         = p->spell_const.rend_period;
+    hasted_ticks           = false;
+    dot_allow_partial_tick = true;
+
+    to_tick_multiplier = base_tick_time / dot_duration;
+
+    if ( p->talents_enabled( tariq_t::DEEP_REND ) )
+    {
+      base_tick_time /= p->talents.deep_rend_tick_speed_increase;
+      // dot_duration /= p->talents.deep_rend_tick_speed_increase;
+    }
+
+    rend_ticks = as<size_t>( dot_duration / base_tick_time );
+  }
+
+  void init_finished() override
+  {
+    tariq_attack_t::init_finished();
+    snapshot_flags = 0;
+    update_flags   = 0;
+  }
+
+  double base_ta( const action_state_t* s ) const override
+  {
+    auto& rend_obj = p()->get_target_data( s->target )->rend_tracker;
+
+    return rend_obj.tick_buckets[ rend_obj.current_tick ];
+  }
+
+  double last_tick_factor( const dot_t* d, timespan_t time_to_tick, timespan_t duration ) const override
+  {
+    return 1.0;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    dot_t* dot = get_dot( s->target );
+
+    auto& rend_obj = p()->get_target_data( s->target )->rend_tracker;
+
+    if ( !dot->is_ticking() )
+    {
+      rend_obj.current_tick = 0;
+      range::fill( rend_obj.tick_buckets, 0 );
+    }
+
+    if ( s->result_amount > 0 )
+    {
+      auto add_amount = std::round( s->result_amount * to_tick_multiplier );
+
+      for ( size_t i = 0; i < rend_ticks; i++ )
+        rend_obj.tick_buckets[ i ] += add_amount;
+    }
+
+    trigger_dot( s );
+
+    if ( !dual )
+      stats->add_execute( timespan_t::zero(), s->target );
+  }
+
+  void tick( dot_t* d ) override
+  {
+    tariq_attack_t::tick( d );
+
+    auto& rend_obj = p()->get_target_data( d->state->target )->rend_tracker;
+
+    rend_obj.tick_buckets[ rend_obj.current_tick++ ] = 0;
+    if ( rend_obj.current_tick >= rend_ticks )
+      rend_obj.current_tick = 0;
+
+    auto active_dots =
+        std::min<size_t>( p()->get_active_dots( d ), p()->spell_const.feather_chance_per_rends.size() - 1 );
+    auto proc_chance = p()->spell_const.feather_chance_per_rends[ active_dots ];
+
+    sim->print_debug( "{} has {} active rends. {} rend cap, this results in {} for variable. Chance to proc {}. ", *p(),
+                      p()->get_active_dots( d ), p()->spell_const.feather_chance_per_rends.size(), active_dots,
+                      proc_chance );
+
+    if ( p()->rng().roll( proc_chance ) )
+    {
+      p()->spawn_feathers( 1 );
+
+      //if ( p()->talents_enabled( tariq_t::DEEP_REND ) && p()->rng_objects.deep_rend->trigger() )
+      //{
+      //  p()->spawn_feathers( p()->talents.deep_rend_proc_feathers );
+      //}
+    }
+
+    //if ( p()->talents_enabled( tariq_t::DEEP_REND ) && active_dots == 1 && p()->rng_objects.deep_rend->trigger() )
+    //{
+    //  p()->spawn_feathers( p()->talents.deep_rend_proc_feathers - 1 );
+    //}
+  }
+};
+
+struct slaughter_dot_t : public tariq_attack_t
+{
+  double to_tick_multiplier;
+  size_t ticks;
+  slaughter_dot_t( tariq_t* p ) : tariq_attack_t( "slaughter", p ), to_tick_multiplier( 0 ), ticks( 10 )
+  {
+    id = 3;
+
+    name_str_reporting = "Slaughter (DoT)";
+
+    tick_may_crit = false;
+    may_crit      = false;
+
+    dot_duration           = p->spell_const.slaughter_duration;
+    dot_behavior           = DOT_REFRESH_DURATION;
+    base_tick_time         = p->spell_const.slaughter_period;
+    hasted_ticks           = false;
+    dot_allow_partial_tick = true;
+
+    to_tick_multiplier = base_tick_time / dot_duration;
+    ticks              = as<size_t>( dot_duration / base_tick_time );
+  }
+
+  void init_finished() override
+  {
+    tariq_attack_t::init_finished();
+    snapshot_flags = 0;
+    update_flags   = 0;
+  }
+
+  double base_ta( const action_state_t* s ) const override
+  {
+    auto& rend_obj = p()->get_target_data( s->target )->slaughter_tracker;
+
+    return rend_obj.tick_buckets[ rend_obj.current_tick ];
+  }
+
+  double last_tick_factor( const dot_t* d, timespan_t time_to_tick, timespan_t duration ) const override
+  {
+    return 1.0;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    dot_t* dot = get_dot( s->target );
+
+    auto& rend_obj = p()->get_target_data( s->target )->slaughter_tracker;
+
+    if ( !dot->is_ticking() )
+    {
+      rend_obj.current_tick = 0;
+      range::fill( rend_obj.tick_buckets, 0 );
+    }
+
+    if ( s->result_amount > 0 )
+    {
+      auto add_amount = std::round( s->result_amount * to_tick_multiplier );
+
+      for ( size_t i = 0; i < ticks; i++ )
+        rend_obj.tick_buckets[ i ] += add_amount;
+    }
+
+    trigger_dot( s );
+
+    if ( !dual )
+      stats->add_execute( timespan_t::zero(), s->target );
+  }
+
+  void tick( dot_t* d ) override
+  {
+    tariq_attack_t::tick( d );
+
+    auto& rend_obj                                   = p()->get_target_data( d->state->target )->slaughter_tracker;
+    rend_obj.tick_buckets[ rend_obj.current_tick++ ] = 0;
+    if ( rend_obj.current_tick >= ticks )
+      rend_obj.current_tick = 0;
+  }
+};
+
+struct double_strike_t : public tariq_attack_t
+{
+  struct double_strike_hit_t : public tariq_attack_t
+  {
+    double_strike_hit_t( util::string_view name, tariq_t* p ) : tariq_attack_t( name, p )
+    {
+      background              = true;
+      id                      = 4;
+      school                  = SCHOOL_PHYSICAL;
+      attack_power_mod.direct = p->spell_const.double_strike_coeff;
+      name_str_reporting      = "Double Strike Hit";
+
+      ability_flags |= ability_type_e::ABILITY_BASIC;
+    }
+  };
+
+  std::array<double_strike_hit_t*, 2> hits;
+
+  double_strike_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str ), hits()
+  {
+    id = 4;
+
+    school                  = SCHOOL_PHYSICAL;
+
+    name_str_reporting     = "Double Strike";
+
+    ability_flags |= ability_type_e::ABILITY_BASIC;
+
+    hits[ 0 ]               = new double_strike_hit_t( "double_strike_hit_1", p );
+    hits[ 0 ]->travel_delay = p->spell_const.double_strike_first_hit_delay.total_seconds();
+    hits[ 1 ]               = new double_strike_hit_t( "double_strike_hit_2", p );
+    hits[ 1 ]->travel_delay = p->spell_const.double_trike_second_hit_delay.total_seconds();
+
+    for ( auto& hit : hits )
+    {
+      add_child( hit );
+    }
+  }
+
+  void init() override
+  {
+    snapshot_flags |= STATE_MUL_DA | STATE_TGT_MUL_DA | STATE_MUL_PERSISTENT | STATE_VERSATILITY | STATE_AP;
+    base_t::init();
+  }
+
+  void execute() override
+  {
+    // Manual Finesse N (Vehement) handling due to dual child.
+    auto was_finesse_n_active = fs_p()->fs_buffs.finesse_n->at_max_stacks();
+
+    tariq_attack_t::execute();
+    
+    for ( auto& hit : hits )
+    {
+      hit->set_target( target );
+      action_state_t* damage_state = hit->get_state( execute_state );
+
+      hit->finesse_n_active = was_finesse_n_active;
+
+      if ( was_finesse_n_active )
+      {
+        fs_p()->fs_buffs.finesse_n->expire();
+        was_finesse_n_active = false;
+      }
+
+      hit->schedule_execute( damage_state );
+    }
+  }
+};
+
+struct grim_carve_t : public tariq_attack_t
+{
+  struct grim_carve_hit_t : public tariq_attack_t
+  {
+    grim_carve_hit_t( util::string_view name, tariq_t* p ) : tariq_attack_t( name, p )
+    {
+      background = true;
+      id                = 5;
+
+      attack_power_mod.direct = p->spell_const.grim_carve_coeff;
+
+      aoe                 = -1;
+      reduced_aoe_targets = p->spell_const.grim_carve_falloff;
+
+      name_str_reporting = "Grim Carve Hit";
+
+      ability_flags |= ability_type_e::ABILITY_POWER;
+
+      if ( p->talents_enabled( tariq_t::CARNAGE ) )
+      {
+        attack_power_mod.direct *= p->talents.carnage_damage_multiplier;
+      }
+    }
+
+    void execute() override
+    {
+      base_t::execute();
+
+      if ( p()->talents_enabled( tariq_t::CARNAGE ) )
+      {
+        auto cooldowns = { p()->cooldowns.reavers_edge, p()->cooldowns.blood_arc, p()->cooldowns.heart_splitter,
+                           p()->cooldowns.rupture };
+
+        for ( auto& cd : cooldowns )
+        {
+          cd->adjust( -p()->talents.carnage_cdr_per_hit, false );
+        }
+      }
+    }
+  };
+
+  grim_carve_hit_t* hit;
+  int num_hits;
+  double period_multiplier;
+  timespan_t period;
+
+  grim_carve_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str ),
+      num_hits(
+          static_cast<int>( std::floor( p->spell_const.grim_carve_duration / p->spell_const.grim_carve_period ) ) ),
+      period_multiplier( 1.0 ),
+      period( p->spell_const.grim_carve_period )
+  {
+    id                 = 5;
+    name_str_reporting = "Grim Carve";
+
+    ability_flags |= ability_type_e::ABILITY_POWER;
+
+    cooldown->duration = p->spell_const.grim_carve_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    hit = new grim_carve_hit_t( "grim_carve_hit", p );
+    add_child( hit );
+
+    if ( p->legendary.lego_1 )
+    {
+      auto old_hits = num_hits;
+      num_hits += p->legendary.lego_1_additional_grim_carve_hits;
+
+      period_multiplier *= as<double>( old_hits ) / num_hits;
+    }
+  }
+
+  void init() override
+  {
+    snapshot_flags |= STATE_MUL_DA | STATE_TGT_MUL_DA | STATE_MUL_PERSISTENT | STATE_VERSATILITY | STATE_AP;
+    base_t::init();
+  }
+
+  double composite_crit_chance() const override
+  {
+    auto cc = base_t::composite_crit_chance();
+
+    cc += p()->buffs.grim_harvest->check_value();
+
+    return cc;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto m = base_t::composite_da_multiplier( s );
+
+    m *= 1.0 + p()->buffs.bloodbound_spirit->check_value();
+
+    return m;
+  }
+
+  void execute() override
+  {
+    tariq_attack_t::execute();
+
+    if ( p()->talents_enabled( tariq_t::ANCESTRAL_INSTINCT ) )
+    {
+      if ( p()->rng_objects.ancestral_instinct->trigger() )
+      {
+        p()->buffs.ancestral_instinct->trigger();
+      }
+    }
+
+    if ( p()->talents_enabled( tariq_t::BLOODBATH ) )
+    {
+      p()->buffs.bloodbath->trigger();
+    }
+
+    const timespan_t tick_period = p()->spell_const.grim_carve_period;
+
+    for ( int i = 0; i <= num_hits; ++i )
+    {
+      auto* damage_state = hit->get_state( execute_state );
+
+      hit->set_target( target );
+
+      make_event(
+          *sim,
+          tick_period * i * p()->cache.attack_haste() * period_multiplier + p()->spell_const.grim_carve_initial_delay,
+          [ this, damage_state ]() { hit->schedule_execute( damage_state ); } );
+    }
+
+    p()->buffs.grim_harvest->expire();
+  }
+};
+
+struct reavers_edge_t : public tariq_attack_t
+{
+  reavers_edge_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str )
+  {
+    id                 = 6;
+    name_str_reporting = "Reavers Edge";
+
+    ability_flags |= ability_type_e::ABILITY_BASIC;
+
+    cooldown->duration = p->spell_const.reavers_edge_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    attack_power_mod.direct = p->spell_const.reavers_edge_coeff;
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->spell_const.reavers_edge_target_threshold;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    roll_grim_harvest();
+
+    if ( p()->talents_enabled( tariq_t::ANCESTRAL_INSTINCT ) )
+    {
+      if ( p()->rng_objects.ancestral_instinct->trigger() )
+      {
+        p()->buffs.ancestral_instinct->trigger();
+      }
+    }
+  }
+};
+
+struct blood_arc_t : public tariq_attack_t
+{
+  blood_arc_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str )
+  {
+    id                 = 7;
+    name_str_reporting = "Blood Arc";
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
+
+    cooldown->duration = p->spell_const.blood_arc_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    attack_power_mod.direct = p->spell_const.blood_arc_coeff;
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->spell_const.blood_arc_target_threshold;
+  }
+
+  double composite_crit_chance() const override
+  {
+    auto cc = base_t::composite_crit_chance();
+
+    cc += p()->buffs.deaths_arc->check_value();
+
+    return cc;
+  }
+
+  void execute() override
+  {
+    tariq_attack_t::execute();
+
+    roll_grim_harvest();
+
+    p()->buffs.serrated_edge->trigger();
+
+    if ( p()->talents_enabled( tariq_t::CRIMSON_STRIKES ) )
+    {
+      p()->buffs.crimson_strikes->trigger();
+    }
+
+    p()->buffs.deaths_arc->decrement();
+
+    if ( p()->talents_enabled( tariq_t::DEATHS_ARC ) )
+    {
+      if ( p()->rng_objects.deaths_arc->trigger() )
+      {
+        cooldown->reset( true, 1 );
+        p()->buffs.deaths_arc->trigger();
+      }
+    }
+  }
+};
+
+struct rupture_t : public tariq_attack_t
+{
+  rupture_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str )
+  {
+    id                 = 8;
+    name_str_reporting = "Rupture";
+
+    ability_flags |= ability_type_e::ABILITY_POWER;
+
+    cooldown->duration = p->spell_const.rupture_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = false;
+
+    attack_power_mod.direct = p->spell_const.rupture_coeff;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    p()->get_target_data( s->target )->debuffs.open_wounds->trigger();
+  }
+
+  void execute() override
+  {
+    if ( p()->talents_enabled( tariq_t::HARVESTERS_TOLL ) )
+    {
+      p()->buffs.harvesters_toll->trigger();
+    }
+
+    base_t::execute();
+
+    roll_grim_harvest();
+
+    if ( p()->talents_enabled( tariq_t::MURDER_OF_CROWS ) )
+    {
+      //p()->spawn_feathers( p()->talents.murder_of_crows_feathers );
+      p()->buffs.murder_of_crows->trigger( 2 );
+    }
+  }
+};
+
+
+struct heart_splitter_t : public tariq_attack_t
+{
+  struct heart_splitter_exsanguinate_t : public tariq_attack_t
+  {
+    heart_splitter_exsanguinate_t( tariq_t* p, std::string_view parent_name, bool oathshatter = false )
+      : tariq_attack_t( std::format( "{}_exsanguinate", parent_name ), p )
+    {
+      id                 = 9;
+      name_str_reporting = "Heart Splitter Exsanguinate";
+      base_rend_applied  = 0.0;
+      background         = true;
+
+      base_multiplier = p->spell_const.heart_splitter_exsanguinate_coeff;
+
+      if ( oathshatter )
+      {
+        aoe                 = -1;
+        reduced_aoe_targets = p->talents.oathshatter_target_threshold;
+        base_aoe_multiplier = p->talents.oathshatter_aoe_multiplier;
+        full_amount_targets = 1;
+      }
+
+      may_crit = false;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      return base_multiplier;
+    }
+
+    void init_finished() override
+    {
+      tariq_attack_t::init_finished();
+
+      snapshot_flags = STATE_MUL_DA;
+    }
+  };
+
+  action_t* exsanguinate;
+  action_t* exsanguinate_oathshatter;
+  heart_splitter_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str ),
+      exsanguinate( nullptr ),
+      exsanguinate_oathshatter( nullptr )
+  {
+    id                 = 9;
+    name_str_reporting = "Heart Splitter";
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
+
+    cooldown->duration = p->spell_const.heart_splitter_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    attack_power_mod.direct = p->spell_const.heart_splitter_coeff;
+
+    if ( p->talents_enabled( tariq_t::DARKENING_HEARTS ) )
+      attack_power_mod.direct *= p->talents.darkening_hearts_damage_mul;
+
+
+    base_rend_applied += p->spell_const.heart_splitter_additional_rend;
+
+    exsanguinate = new heart_splitter_exsanguinate_t( p, name, false );
+    add_child( exsanguinate );
+
+    if ( p->legendary.lego_2 )
+    {
+      cooldown->charges = p->legendary.lego_2_charges;
+    }
+
+    if ( p->talents_enabled( tariq_t::OATHSHATTER ) )
+    {
+      exsanguinate_oathshatter = new heart_splitter_exsanguinate_t( p, name, true );
+      add_child( exsanguinate_oathshatter );
+      base_crit += p->talents.oathshatter_additional_crit;
+    }
+  }
+
+  void init_finished() override
+  {
+    base_t::init_finished();
+
+    if ( !background )
+    {
+      add_child( p()->actions.heart_splitter );
+    }
+  }
+
+  double composite_target_crit_chance( player_t* t ) const override
+  {
+    auto tcc = base_t::composite_target_crit_chance( t );
+
+    if ( p()->talents_enabled( tariq_t::DARKENING_HEARTS ) )
+    {
+      if ( t->health_percentage() <= low_health_threshold )
+      {
+        tcc += p()->talents.darkening_hearts_execute_cc;
+      }
+    }
+
+    return tcc;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto dam = base_t::composite_da_multiplier( s );
+
+    dam *= 1.0 + p()->buffs.bloodbound_spirit->check_value();
+
+    return dam;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    if ( !background )
+    {
+      roll_grim_harvest();
+    }
+
+    if ( p()->legendary.lego_2 && p()->rng_objects.heart_splitter_twice->trigger() && !background )
+    {
+      auto action = p()->actions.heart_splitter;
+
+      action->set_target( target );
+      action_state_t* damage_state = action->get_state( execute_state );
+      damage_state->target         = action->target;
+
+      action->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+      damage_state->persistent_multiplier = execute_state->persistent_multiplier;
+      cast_state( damage_state )->set_rend_coefficient( cast_state( execute_state )->get_rend_coefficient() );
+
+      action->schedule_execute( damage_state );
+    }
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    tariq_attack_t::impact( s );
+
+    if ( s->result_amount > 0 )
+    {
+      auto exsang_action =
+          s->result == RESULT_CRIT && exsanguinate_oathshatter ? exsanguinate_oathshatter : exsanguinate;
+      auto current_rend = p()->get_current_rend( s->target );
+
+      if ( current_rend > 0 )
+        exsang_action->execute_on_target( s->target, current_rend );
+    }
+  }
+};
+
+struct reign_in_blood_t : public tariq_spell_t
+{
+  reign_in_blood_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_spell_t( name, p, options_str )
+  {
+    id                = 10;
+    base_rend_applied = 0.0;
+
+    name_str_reporting = "Reign in Blood";
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = p->spell_const.reign_in_blood_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
+  }
+    
+  double recharge_rate_multiplier( const cooldown_t& cd ) const override
+  {
+    auto rrm = base_t::recharge_rate_multiplier( cd );
+
+    rrm = 1.0 / rrm;
+
+    rrm += p()->buffs.bloodbath->check_value();
+
+    rrm = 1.0 / rrm;
+
+    return rrm;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+    p()->buffs.reign_in_blood->trigger();
+  }
+};
+
+struct slaughter_t : public tariq_spell_t
+{
+  slaughter_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_spell_t( name, p, options_str )
+  {
+    id                = 11;
+    base_rend_applied = 0.0;
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = p->spell_const.slaughter_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    aoe = -1;
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    auto td = p()->get_target_data( s->target );
+
+    auto current_rend = p()->get_current_rend( s->target );
+    auto open_wounds  = td->debuffs.open_wounds->check_value();
+    td->debuffs.open_wounds->decrement();
+
+    int rend_stacks = static_cast<int>( ( current_rend / p()->cache.strength() ) );
+
+    if ( p()->talent_enabled( tariq_t::MASSACRE ) )
+    {
+      p()->buffs.massacre->trigger( rend_stacks );
+    }
+
+    current_rend *= 1.0 + open_wounds;
+    current_rend *= p()->spell_const.slaughter_rend_multiplier;
+
+    for ( auto& bucket : td->rend_tracker.tick_buckets )
+    {
+      bucket = 0;
+    }
+
+    td->rend_tracker.current_tick = 0;
+    td->dots.rend->cancel();
+
+    auto action                     = p()->actions.slaughter;
+    action_state_t* slaughter_state = action->get_state();
+    slaughter_state->result_amount  = current_rend;
+    slaughter_state->target         = s->target;
+    slaughter_state->result         = RESULT_HIT;
+    action->snapshot_state( slaughter_state, result_amount_type::DMG_OVER_TIME );
+    action->schedule_travel( slaughter_state );
+  }
+};
+
+struct owed_in_blood_t : public tariq_spell_t
+{
+  owed_in_blood_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_spell_t( name, p, options_str )
+  {
+    id                = 12;
+    base_rend_applied = 0.0;
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = p->spell_const.owed_in_blood_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    aoe = -1;
+
+    
+    name_str_reporting = "Owed in Blood";
+  }
+
+  bool ready() override
+  {
+    if ( !p()->buffs.owed_in_blood->check() )
+      return false;
+
+    return base_t::ready();
+  }
+  
+  void execute() override
+  {
+    base_t::execute();
+
+    auto stacks   = p()->buffs.owed_in_blood->check();
+    auto new_rend = stacks * p()->cache.strength();
+
+    auto action                = p()->actions.rend;
+    action_state_t* rend_state = action->get_state();
+    rend_state->result_amount  = new_rend;
+    rend_state->target         = target;
+    rend_state->result         = RESULT_HIT;
+    action->snapshot_state( rend_state, result_amount_type::DMG_OVER_TIME );
+    action->schedule_travel( rend_state );
+
+    p()->buffs.owed_in_blood->expire();
+
+    if ( p()->talents_enabled( tariq_t::BLOODCRAZE ) )
+    {
+      p()->buffs.bloodcraze->expire();
+      p()->buffs.bloodcraze->trigger( stacks );
+    }
+  }
+};
+
+struct bloodcraze_t : public tariq_spell_t
+{
+  bloodcraze_t( tariq_t* p ) : tariq_spell_t( "bloodcraze", p )
+  {
+    id                 = 13;
+    name_str_reporting = "Bloodcraze";
+    base_rend_applied  = 0.0;
+
+    background = true;
+
+    attack_power_mod.direct = p->talents.bloodcraze_coeff;
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->talents.bloodcraze_falloff;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto m = base_t::composite_da_multiplier( s );
+
+    m *= ( 1 + p()->buffs.bloodcraze->check_stack_value() );
+
+    return m;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    sim->print_debug(
+        "{} impacts enemy with bloodcraze. current str: {}, current da mul: {}, result amount: {}. Expected: {}", *p(),
+        s->attack_power, s->da_multiplier, s->result_amount,
+        s->attack_power * attack_power_mod.direct * s->da_multiplier * s->versatility );
+  }
+};
+
+struct ravens_precision_t : public tariq_attack_t
+{
+  ravens_precision_t( tariq_t* p ) : tariq_attack_t( "ravens_precision", p )
+  {
+    id                 = 14;
+    name_str_reporting = "Ravens Precision";
+    base_rend_applied  = 0.0;
+
+    background = true;
+
+    attack_power_mod.direct = p->talents.ravens_precision_coeff;
+
+    aoe                 = -1;
+    reduced_aoe_targets = p->talents.ravens_precision_falloff;
+    name_str_reporting  = "Ravens Precision";
+  }
+};
+
+struct bloodbound_spirit_t : public tariq_attack_t
+{
+  struct bloodbound_spirit_hit_t : public tariq_attack_t
+  {
+    bloodbound_spirit_hit_t( util::string_view name, tariq_t* p ) : tariq_attack_t( name, p )
+    {
+      id = 15;
+
+      _affected_by_serrated_edge = false;
+      background = true;
+
+      ability_flags |= ability_type_e::ABILITY_SPIRIT;
+      attack_power_mod.direct = p->spell_const.bloodbound_spirit_coeff;
+      aoe                     = -1;
+      reduced_aoe_targets     = p->spell_const.bloodbound_spirit_falloff;
+
+      name_str_reporting = "Bloodbound Spirit (Hit)";
+    }
+  };
+
+  action_t* damage;
+  bloodbound_spirit_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str ), damage( new bloodbound_spirit_hit_t( "bloodbound_spirit_hit", p ) )
+  {
+    id                = 15;
+
+    _affected_by_serrated_edge = false;
+
+    base_execute_time = p->spell_const.bloodbound_spirit_cast_time;
+
+    resource_current              = RESOURCE_SPIRIT;
+    base_costs[ RESOURCE_SPIRIT ] = 100;
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
+    
+    name_str_reporting = "Bloodbound Spirit";
+
+    add_child( damage );
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    p()->fs_buffs.spirit_of_heroism->trigger();
+    p()->buffs.bloodbound_spirit->trigger();
+    p()->used_ultimate();
+
+    make_event<ground_aoe_event_t>( *sim, p(),
+                                    ground_aoe_params_t()
+                                        .target( execute_state->target )
+                                        .pulse_time( p()->spell_const.bloodbound_spirit_period )
+                                        .duration( p()->spell_const.bloodbound_spirit_duration )
+                                        .action( damage ),
+                                    true );
+  }
+};
+}  // namespace actions
+
+tariq_td_t::tariq_td_t( player_t* target, tariq_t* source )
+  : fellowship::fs_player_td_t( target, source ), dots(), debuffs()
+{
+  dots.rend      = target->get_dot( "rend", source );
+  dots.slaughter = target->get_dot( "slaughter", source );
+
+  debuffs.open_wounds = make_buff( *this, "open_wounds" )
+                            ->set_duration( source->spell_const.open_wounds_duration )
+                            ->set_default_value( source->spell_const.open_wounds_modifier - 1 );
+}
+
+// tariq_t::composite_attribute_multiplier ==================================
+
+double tariq_t::composite_attribute_multiplier( attribute_e a ) const
+{
+  double am = fs_player_t::composite_attribute_multiplier( a );
+
+  return am;
+}
+
+// tariq_t::composite_melee_auto_attack_speed ===============================
+
+double tariq_t::composite_melee_auto_attack_speed() const
+{
+  double h = fs_player_t::composite_melee_auto_attack_speed();
+
+  return h;
+}
+
+// tariq_t::composite_melee_haste ==========================================
+
+double tariq_t::composite_melee_haste() const
+{
+  double h = fs_player_t::composite_melee_haste();
+
+  return h;
+}
+
+// tariq_t::composite_spell_haste ==========================================
+
+double tariq_t::composite_spell_haste() const
+{
+  double h = fs_player_t::composite_spell_haste();
+
+  return h;
+}
+
+// tariq_t::composite_melee_crit_chance =========================================
+
+double tariq_t::composite_melee_crit_chance() const
+{
+  double crit = fs_player_t::composite_melee_crit_chance();
+
+  return crit;
+}
+
+// tariq_t::composite_spell_crit_chance =========================================
+
+double tariq_t::composite_spell_crit_chance() const
+{
+  double crit = fs_player_t::composite_spell_crit_chance();
+
+  return crit;
+}
+
+// tariq_t::composite_damage_versatility ===================================
+
+double tariq_t::composite_damage_versatility() const
+{
+  double cdv = fs_player_t::composite_damage_versatility();
+
+  return cdv;
+}
+
+// tariq_t::composite_heal_versatility =====================================
+
+double tariq_t::composite_heal_versatility() const
+{
+  double chv = fs_player_t::composite_heal_versatility();
+
+  return chv;
+}
+
+// tariq_t::composite_leech ===============================================
+
+double tariq_t::composite_leech() const
+{
+  double l = fs_player_t::composite_leech();
+
+  return l;
+}
+
+// tariq_t::matching_gear_multiplier ========================================
+
+double tariq_t::matching_gear_multiplier( attribute_e attr ) const
+{
+  return 0.0;
+}
+
+// tariq_t::composite_player_multiplier =====================================
+
+double tariq_t::composite_player_multiplier( school_e school ) const
+{
+  double m = fs_player_t::composite_player_multiplier( school );
+
+  m *= 1.0 + buffs.harvesters_toll->check_stack_value();
+
+  return m;
+}
+
+// tariq_t::composite_player_pet_damage_multiplier ==========================
+
+double tariq_t::composite_player_pet_damage_multiplier( const action_state_t* s, bool guardian ) const
+{
+  double m = fs_player_t::composite_player_pet_damage_multiplier( s, guardian );
+
+  return m;
+}
+
+// tariq_t::composite_player_target_multiplier ==============================
+
+double tariq_t::composite_player_target_multiplier( player_t* target, school_e school ) const
+{
+  double m = fs_player_t::composite_player_target_multiplier( target, school );
+
+  return m;
+}
+
+// tariq_t::composite_player_target_crit_chance =============================
+
+double tariq_t::composite_player_target_crit_chance( player_t* target ) const
+{
+  double c = fs_player_t::composite_player_target_crit_chance( target );
+
+  return c;
+}
+
+// tariq_t::composite_player_target_armor ===================================
+
+double tariq_t::composite_player_target_armor( player_t* target ) const
+{
+  return 0.0;
+
+  double a = fs_player_t::composite_player_target_armor( target );
+
+  return a;
+}
+// tariq_t::init_actions ====================================================
+
+void tariq_t::init_action_list()
+{
+  if ( !action_list_str.empty() )
+  {
+    fs_player_t::init_action_list();
+    return;
+  }
+
+  clear_action_priority_lists();
+
+  use_default_action_list = true;
+
+  fs_player_t::init_action_list();
+}
+
+// tariq_t::create_action  ==================================================
+
+action_t* tariq_t::create_action( util::string_view name, util::string_view options_str )
+{
+  using namespace actions;
+
+  if ( name == "double_strike" )
+    return new double_strike_t( name, this, options_str );
+  if ( name == "grim_carve" )
+    return new grim_carve_t( name, this, options_str );
+  if ( name == "reavers_edge" )
+    return new reavers_edge_t( name, this, options_str );
+  if ( name == "blood_arc" )
+    return new blood_arc_t( name, this, options_str );
+  if ( name == "rupture" )
+    return new rupture_t( name, this, options_str );
+  if ( name == "heart_splitter" )
+    return new heart_splitter_t( name, this, options_str );
+  if ( name == "reign_in_blood" )
+    return new reign_in_blood_t( name, this, options_str );
+  if ( name == "slaughter" )
+    return new slaughter_t( name, this, options_str );
+  if ( name == "owed_in_blood" )
+    return new owed_in_blood_t( name, this, options_str );
+  if ( name == "bloodbound_spirit" )
+    return new bloodbound_spirit_t( name, this, options_str );
+
+  return fs_player_t::create_action( name, options_str );
+}
+
+// tariq_t::create_expression ===============================================
+
+std::unique_ptr<expr_t> tariq_t::create_action_expression( action_t& action, std::string_view name_str )
+{
+  auto split = util::string_split<util::string_view>( name_str, "." );
+
+  return fs_player_t::create_action_expression( action, name_str );
+}
+
+std::unique_ptr<expr_t> tariq_t::create_expression( util::string_view name_str )
+{
+  auto split = util::string_split<util::string_view>( name_str, "." );
+
+  if ( util::str_compare_ci( split[ 0 ], "legendary" ) )
+  {
+    if ( split.size() == 2 )
+    {
+      if ( util::str_compare_ci( split[ 1 ], "lego_2" ) )
+      {
+        return make_ref_expr( name_str, legendary.lego_2 );
+      }
+      else if ( util::str_compare_ci( split[ 1 ], "lego_3" ) )
+      {
+        return make_ref_expr( name_str, legendary.lego_3 );
+      }
+      else if ( util::str_compare_ci( split[ 1 ], "lego_1" ) )
+      {
+        return make_ref_expr( name_str, legendary.lego_1 );
+      }
+    }
+  }
+  else if ( util::str_compare_ci( split[ 0 ], "talent" ) )
+  {
+    if ( split.size() == 2 )
+    {
+      for ( tariq_talents_t t = static_cast<tariq_talents_t>( 1U ); t < tariq_talents_t::MAX; t++ )
+      {
+        if ( util::str_compare_ci( split[ 1 ], talent_name( t ) ) )
+        {
+          return make_fn_expr( name_str, std::bind( std::mem_fn( &tariq_t::talents_enabled ), this, t ) );
+        }
+      }
+    }
+  }
+  else if ( util::str_compare_ci( split[ 0 ], "rend_on_target" ) )
+  {
+    return make_fn_expr( name_str, std::bind( std::mem_fn( &tariq_t::get_current_target_rend ), this ) );
+  }
+  // Split expressions
+
+  return fs_player_t::create_expression( name_str );
+}
+
+std::unique_ptr<expr_t> tariq_t::create_resource_expression( util::string_view name_str )
+{
+  return fs_player_t::create_resource_expression( name_str );
+}
+
+// tariq_t::init_base =======================================================
+
+void tariq_t::init_base_stats()
+{
+  if ( base.distance < 1 )
+    base.distance = 5;
+
+  fs_player_t::init_base_stats();
+
+  base.stats.attribute[ STAT_STRENGTH ] = 100;
+  resources.base[ RESOURCE_HEALTH ]     = 1811;
+
+  base.health_per_stamina = 53.332;
+
+  base_gcd = timespan_t::from_seconds( 1.5 );
+  min_gcd  = timespan_t::from_seconds( 0 );
+  //min_gcd  = timespan_t::from_seconds( 0.75 );
+
+  base.parry = 0.05;
+  base.dodge = 0.05;
+}
+
+// tariq_t::init_spells =====================================================
+
+void tariq_t::init_spells()
+{
+  fs_player_t::init_spells();
+
+  actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
+}
+
+// tariq_t::init_gains ======================================================
+
+void tariq_t::init_gains()
+{
+  fs_player_t::init_gains();
+
+  gains.spirit_procs = get_gain( "Spirit Procs" );
+}
+
+// tariq_t::init_procs ======================================================
+
+void tariq_t::init_procs()
+{
+  fs_player_t::init_procs();
+  procs.feathers = get_proc( "Feathers" );
+}
+
+// tariq_t::init_scaling ====================================================
+
+void tariq_t::init_scaling()
+{
+  fs_player_t::init_scaling();
+
+  scaling->disable( STAT_AGILITY );
+  scaling->disable( STAT_INTELLECT );
+
+  // Break out early if scaling is disabled on this player, or there's no
+  // scaling stat
+  if ( !scale_player || sim->scaling->scale_stat == STAT_NONE )
+  {
+    return;
+  }
+}
+
+// tariq_t::init_resources =================================================
+
+void tariq_t::init_resources( bool force )
+{
+  fs_player_t::init_resources( force );
+}
+
+// tariq_t::init_buffs ======================================================
+
+void tariq_t::create_buffs()
+{
+  fs_player_t::create_buffs();
+
+  buffs.murder_of_crows = make_buff<tariq_buff_t>( this, "murder_of_crows" )->set_max_stack( 4 )->set_duration( 12_s );
+
+  buffs.bloodbound_spirit = make_buff<tariq_buff_t>( this, "bloodbound_spirit" )
+                                ->set_duration( spell_const.bloodbound_spirit_buff_duration )
+                                ->set_default_value( spell_const.bloodbound_spirit_buff_amp - 1 );
+
+  buffs.bloodcraze = make_buff<tariq_buff_t>( this, "bloodcraze" )
+                         ->set_duration( talents.bloodcraze_duration )
+                         ->set_default_value( talents.bloodcraze_amp_per_stack )
+                         ->set_period( talents.bloodcraze_period )
+                         ->set_tick_zero( true )
+                         ->set_freeze_stacks( true )
+                         ->set_max_stack( spell_const.owed_in_blood_max_stacks )
+                         ->set_tick_callback( [ this ]( buff_t* buff, int current_tick, timespan_t tick_time ) {
+                           actions.bloodcraze->execute();
+                         } );
+
+  buffs.bloodbath = make_buff<tariq_buff_t>( this, "bloodbath" )
+                        ->set_duration( talents.bloodbath_duration )
+                        ->set_default_value( talents.bloodbath_cooldown_recovery )
+                        ->add_stack_change_callback(
+                            [ this ]( auto, auto, auto ) { cooldowns.reign_in_blood->adjust_recharge_multiplier(); } );
+
+  buffs.harvesters_toll = make_buff<tariq_buff_t>( this, "harvesters_toll" )
+                              ->set_default_value( talents.harvesters_toll_amp )
+                              ->set_duration( talents.harvesters_toll_duration )
+                              ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
+
+  buffs.owed_in_blood = make_buff<tariq_buff_t>( this, "owed_in_blood" )
+                            ->set_duration( spell_const.owed_in_blood_duration )
+                            ->set_max_stack( spell_const.owed_in_blood_max_stacks )
+                            ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+
+  buffs.massacre = make_buff<tariq_buff_t>( this, "massacre" )
+                       ->set_duration( talents.massacre_duration )
+                       ->set_default_value( talents.massacre_per_stack )
+                       ->set_max_stack(talents.massacre_max_stacks )
+                       ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY );
+
+  buffs.grim_harvest = make_buff<tariq_buff_t>( this, "grim_harvest" )
+                           ->set_duration( talents.grim_harvest_buff_duration )
+                           ->set_default_value( talents.grim_harvest_cc );
+
+  buffs.ancestral_instinct = make_buff<tariq_buff_t>( this, "ancestral_instinct" )
+                                ->set_duration( talents.ancestral_instinct_duration )
+                                ->set_default_value( talents.ancestral_instinct_multiplier - 1 )
+                                ->set_pct_buff_type( STAT_PCT_BUFF_STRENGTH );
+
+  buffs.deaths_arc = make_buff<tariq_buff_t>( this, "deaths_arc" )
+                         ->set_duration( talents.deaths_arc_duration )
+                         ->set_default_value( talents.deaths_arc_added_cc );
+
+  buffs.reign_in_blood = make_buff<tariq_buff_t>( this, "reign_in_blood" )
+                             ->set_default_value( spell_const.reign_in_blood_additional_rend )
+                             ->set_duration( spell_const.reign_in_blood_duration );
+
+  if ( talents_enabled( tariq_t::FRENZIED_REIGN ) )
+  {
+    buffs.reign_in_blood->default_value += talents.frenzied_reign_extra_transfer;
+  }
+
+  buffs.serrated_edge = make_buff<tariq_buff_t>( this, "serrated_edge" )
+                            ->set_duration( spell_const.blood_arc_buff_duration )
+                            ->set_max_stack( spell_const.blood_arc_buff_max_stacks )
+                            ->set_default_value( spell_const.blood_arc_buff_additional_rend );
+
+  if ( talents_enabled( tariq_t::SUPERIOR_SERRATION ) )
+  {
+    //buffs.serrated_edge->set_max_stack( talents.superior_serration_blood_arcs );
+    buffs.serrated_edge->default_value += talents.superior_serration_rend_bonus;
+  }
+
+  buffs.serrated_edge->set_initial_stack( buffs.serrated_edge->max_stack() );
+
+  buffs.crimson_strikes = make_buff<tariq_buff_t>( this, "crimson_strikes" )
+                              ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                              ->set_default_value( talents.crimson_strikes_inc )
+                              ->set_max_stack( 1 );
+}
+
+// tariq_t::invalidate_cache =========================================
+
+void tariq_t::invalidate_cache( cache_e c )
+{
+  fs_player_t::invalidate_cache( c );
+
+  switch ( c )
+  {
+    case CACHE_HASTE:
+      invalidate_cache( CACHE_AUTO_ATTACK_SPEED );
+      break;
+    default:
+      break;
+  }
+}
+
+void tariq_t::create_options()
+{
+  fs_player_t::create_options();
+
+  add_option( opt_bool( "legendary.lego_1", legendary.lego_1 ) );
+  add_option( opt_bool( "legendary.lego_2", legendary.lego_2 ) );
+  add_option( opt_bool( "legendary.lego_3", legendary.lego_3 ) );
+}
+
+// tariq_t::copy_from =======================================================
+
+void tariq_t::copy_from( player_t* source )
+{
+  tariq_t* tariq = static_cast<tariq_t*>( source );
+  fs_player_t::copy_from( source );
+
+  talents     = tariq->talents;
+  legendary   = tariq->legendary;
+  options     = tariq->options;
+  spell_const = tariq->spell_const;
+}
+
+// tariq_t::create_profile  =================================================
+
+std::string tariq_t::create_profile( save_e stype )
+{
+  std::string profile_str = fs_player_t::create_profile( stype );
+
+  // Break out early if we are not saving everything, or gear
+  if ( !( stype & SAVE_PLAYER ) && !( stype & SAVE_GEAR ) )
+  {
+    return profile_str;
+  }
+
+  std::string term = "\n";
+
+  return profile_str;
+}
+
+// tariq_t::init_items ======================================================
+
+void tariq_t::init_items()
+{
+  fs_player_t::init_items();
+}
+
+// tariq_t::init_special_effects ============================================
+
+void tariq_t::init_special_effects()
+{
+  fs_player_t::init_special_effects();
+
+  //{
+  //  auto effect                   = new special_effect_t( this );
+  //  effect->spell_id              = 107;
+  //  effect->name_str              = "tariq_parry";
+  //  effect->proc_flags_           = PF_DAMAGE_TAKEN;
+  //  effect->proc_flags2_          = PF2_PARRY;
+  //  effect->rppm_scale_           = rppm_scale_e::RPPM_NONE;
+  //  effect->proc_chance_          = 1.0;
+  //  effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+  //  special_effects.push_back( effect );
+
+  //  struct parry_cb_t : dbc_proc_callback_t
+  //  {
+  //    parry_cb_t( tariq_t* p, const special_effect_t& e ) : dbc_proc_callback_t( p, e )
+  //    {
+  //    }
+
+  //    tariq_t* p() const
+  //    {
+  //      return static_cast<tariq_t*>( listener );
+  //    }
+
+  //    void execute( action_t*, action_state_t* s ) override
+  //    {
+  //      p()->parry_effects( s );
+  //    }
+  //  };
+
+  //  auto cb = new parry_cb_t( this, *effect );
+  //  cb->initialize();
+  //  cb->activate();
+  //}
+
+  //{
+  //  auto effect                   = new special_effect_t( this );
+  //  effect->spell_id              = 108;
+  //  effect->name_str              = "solaris";
+  //  effect->proc_flags_           = PF_ALL_HEAL_TAKEN;
+  //  effect->proc_flags2_          = PF2_ALL_HIT | PF2_PERIODIC_HEAL;
+  //  effect->set_can_proc_from_procs( true );
+  //  effect->rppm_scale_           = rppm_scale_e::RPPM_NONE;
+  //  effect->proc_chance_          = 1.0;
+  //  effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
+
+  //  special_effects.push_back( effect );
+
+  //  struct solaris_cb_t : dbc_proc_callback_t
+  //  {
+  //    solaris_cb_t( tariq_t* p, const special_effect_t& e ) : dbc_proc_callback_t( p, e )
+  //    {
+  //    }
+
+  //    tariq_t* p() const
+  //    {
+  //      return static_cast<tariq_t*>( listener );
+  //    }
+
+  //    void execute( action_t*, action_state_t* s ) override
+  //    {
+  //      auto overheal = s->result_total - s->result_amount;
+
+  //      if ( overheal > 0 )
+  //      {
+  //        p()->actions.solaris->execute_on_target( p()->actions.solaris->target,
+  //                                                 overheal * p()->spell_const.solaris_overheal_scaler );
+  //      }
+  //    }
+  //  };
+
+  //  auto cb = new solaris_cb_t( this, *effect );
+  //  cb->initialize();
+  //  cb->activate();
+  //}
+}
+
+// tariq_t::init_finished ===================================================
+
+void tariq_t::init_finished()
+{
+  fs_player_t::init_finished();
+}
+
+void tariq_t::init_talents()
+{
+  fs_player_t::init_talents();
+
+  auto talents = util::string_split<std::string_view>( talents_str, "/" );
+  for ( const auto talent : talents )
+  {
+    auto talent_split = util::string_split<std::string_view>( talent, ":" );
+    if ( talent_split.size() != 2 )
+    {
+      sim->error( "Invalid talent string {}", talent );
+      sim->cancel();
+      return;
+    }
+
+    auto ranks = util::to_unsigned( talent_split[ 1 ] );
+
+    for ( tariq_talents_t t = static_cast<tariq_talents_t>( 1U ); t < tariq_talents_t::MAX; t++ )
+    {
+      if ( util::str_compare_ci( talent_split[ 0 ], talent_name( t ) ) )
+      {
+        set_talent_points( t, ranks >= 1 );
+        break;
+      }
+    }
+  }
+}
+
+void tariq_t::init_background_actions()
+{
+  fs_player_t::init_background_actions();
+
+  actions.rend                               = new actions::rend_t( this );
+  actions.slaughter                          = new actions::slaughter_dot_t( this );
+  actions.bloodcraze                         = new actions::bloodcraze_t( this );
+  actions.ravens_precision                   = new actions::ravens_precision_t( this );
+  actions.heart_splitter                     = new actions::heart_splitter_t( "heart_splitter_repeat", this );
+  actions.heart_splitter->name_str_reporting = "Heart Splitter (Legendary)";
+  actions.heart_splitter->background         = true;
+  actions.heart_splitter->cooldown->duration = 0_s;
+}
+
+void tariq_t::init_rng()
+{
+  fs_player_t::init_rng();
+
+  rng_objects.deaths_arc   = get_accumulated_rng( "deaths_arc", rng::CfromP( talents.deaths_arc_chance ) );
+  rng_objects.grim_harvest = get_accumulated_rng( "grim_harvest", rng::CfromP( talents.grim_harvest_chance ) );
+  rng_objects.ancestral_instinct =
+      get_accumulated_rng( "ancestral_instinct", rng::CfromP( talents.ancestral_instinct_chance ) );
+  rng_objects.deep_rend = get_accumulated_rng( "deep_rend", rng::CfromP( talents.deep_rend_proc_chance_st ) );
+  rng_objects.heart_splitter_twice =
+      get_accumulated_rng( "heart_splitter_twice", rng::CfromP( legendary.lego_2_hit_chance ) );
+}
+
+// tariq_t::reset ===========================================================
+
+void tariq_t::reset()
+{
+  fs_player_t::reset();
+  for ( tariq_td_t* td : target_data.get_entries() )
+  {
+    if ( !td )
+      continue;
+
+    td->slaughter_tracker.current_tick = 0;
+    td->rend_tracker.current_tick      = 0;
+
+    for ( auto& bucket : td->slaughter_tracker.tick_buckets )
+    {
+      bucket = 0;
+    }
+    for ( auto& bucket : td->rend_tracker.tick_buckets )
+    {
+      bucket = 0;
+    }
+  }
+}
+
+// tariq_t::activate ========================================================
+
+void tariq_t::activate()
+{
+  fs_player_t::activate();
+}
+
+// tariq_t::cancel_auto_attack ==============================================
+
+void tariq_t::cancel_auto_attacks()
+{
+  if ( actions.melee_hit && actions.melee_hit->execute_event )
+  {
+    actions.melee_hit->canceled            = true;
+    actions.melee_hit->prev_scheduled_time = actions.melee_hit->execute_event->occurs();
+  }
+
+  fs_player_t::cancel_auto_attacks();
+}
+
+double tariq_t::get_current_rend( player_t* t ) const
+{
+  auto& rend_obj = get_target_data( t )->rend_tracker;
+  return std::accumulate( rend_obj.tick_buckets.begin(), rend_obj.tick_buckets.end(), 0.0 );
+}
+
+void tariq_t::spawn_feathers( int quantity )
+{
+  buffs.owed_in_blood->trigger( quantity );
+  procs.feathers->occur( quantity );
+  
+  if ( talents_enabled( tariq_t::SLAYERS_GRIN ) )
+  {
+    for ( int i = 0; i < quantity; i++ )
+      cooldowns.rupture->adjust( -talents.slayers_grin_cdr );
+  }
+
+  if ( talents_enabled( tariq_t::RAVENS_PRECISION ) )
+  {
+    for ( int i = 0; i < quantity; i++ )
+      actions.ravens_precision->execute();
+  }
+}
+
+// tariq_t::arise ===========================================================
+
+void tariq_t::arise()
+{
+  fs_player_t::arise();
+  sim->print_debug( "{} arises. Current max hp is: {}, current is: {}, base: {}, base_mul: {}, init_mul: {}", *this,
+                    resources.max[ RESOURCE_HEALTH ], resources.current[ RESOURCE_HEALTH ],
+                    resources.base[ RESOURCE_HEALTH ], resources.base_multiplier[ RESOURCE_HEALTH ],
+                    resources.initial_multiplier[ RESOURCE_HEALTH ] );
+}
+
+// tariq_t::combat_begin ====================================================
+
+void tariq_t::combat_begin()
+{
+  fs_player_t::combat_begin();
+}
+
+// tariq_t::energy_regen_per_second =========================================
+
+double tariq_t::resource_regen_per_second( resource_e r ) const
+{
+  double reg = fs_player_t::resource_regen_per_second( r );
+
+  return reg;
+}
+
+double tariq_t::resource_gain( resource_e resource_type, double amount, gain_t* source, action_t* action )
+{
+  double actual_amount = fs_player_t::resource_gain( resource_type, amount, source, action );
+
+  return actual_amount;
+}
+
+// tariq_t::non_stacking_movement_modifier ==================================
+
+double tariq_t::non_stacking_movement_modifier() const
+{
+  double ms = fs_player_t::non_stacking_movement_modifier();
+
+  return ms;
+}
+
+// tariq_t::stacking_movement_modifier===================================
+
+double tariq_t::stacking_movement_modifier() const
+{
+  double ms = fs_player_t::stacking_movement_modifier();
+
+  return ms;
+}
+
+// tariq_t::regen ===========================================================
+
+void tariq_t::regen( timespan_t periodicity )
+{
+  fs_player_t::regen( periodicity );
+}
+
+template <typename Base>
+void actions::tariq_action_t<Base>::trigger_auto_attack( const action_state_t* /* state */ )
+{
+  if ( !p()->main_hand_attack || p()->main_hand_attack->execute_event )
+    return;
+
+  p()->actions.auto_attack->schedule_execute();
+}
+
+template <typename Base>
+void actions::tariq_action_t<Base>::trigger_spirit_refund( const action_state_t* state )
+{
+  p()->spirit_refund();
+  p()->spawn_feathers( p()->spell_const.spirit_proc_orbs );
+}
+
+template <typename Base>
+void actions::tariq_action_t<Base>::apply_rend( const action_state_t* state )
+{
+  // todo get from state.
+  auto rs = cast_state( state );
+  if ( rs->get_rend_coefficient() <= 0 || state->result_amount <= 0 )
+    return;
+
+  auto action       = p()->actions.rend;
+  action_state_t* s = action->get_state();
+  s->result_amount = state->result_amount * rs->get_rend_coefficient();
+  s->target = state->target;
+  s->result = RESULT_HIT;
+  action->snapshot_state( s, result_amount_type::DMG_OVER_TIME );
+  action->schedule_travel( s );
+}
+
+
+
+
+// tariq_t::convert_hybrid_stat ==============================================
+
+stat_e tariq_t::convert_hybrid_stat( stat_e s ) const
+{
+  // this converts hybrid stats that either morph based on spec or only work
+  // for certain specs into the appropriate "basic" stats
+  switch ( s )
+  {
+    case STAT_AGI_INT:
+      return STAT_NONE;
+    case STAT_STR_AGI_INT:
+    case STAT_STR_AGI:
+    case STAT_STR_INT:
+      return STAT_STRENGTH;
+    case STAT_BONUS_ARMOR:
+      return STAT_NONE;
+    default:
+      return s;
+  }
+}
+
+void tariq_t::create_cooldowns()
+{
+  cooldowns.blood_arc      = get_cooldown( "blood_arc" );
+  cooldowns.grim_carve     = get_cooldown( "grim_carve" );
+  cooldowns.heart_splitter = get_cooldown( "heart_splitter" );
+  cooldowns.reavers_edge   = get_cooldown( "reavers_edge" );
+  cooldowns.reign_in_blood = get_cooldown( "reign_in_blood" );
+  cooldowns.rupture        = get_cooldown( "rupture" );
+  cooldowns.slaughter      = get_cooldown( "slaughter" );
+}
+
+class tariq_module_t : public module_t
+{
+public:
+  tariq_module_t() : module_t( tariq )
+  {
+  }
+
+  player_t* create_player( sim_t* sim, util::string_view name, race_e r = RACE_NONE ) const override
+  {
+    return new tariq_t( sim, name, r );
+  }
+
+  bool valid() const override
+  {
+    return true;
+  }
+
+  void static_init() const override
+  {
+  }
+
+  void register_hotfixes() const override
+  {
+  }
+
+  void init( player_t* ) const override
+  {
+  }
+  void combat_begin( sim_t* ) const override
+  {
+  }
+  void combat_end( sim_t* ) const override
+  {
+  }
+};
+
+}  // namespace tariq
+}  // namespace fellowship
+
+const module_t* module_t::tariq()
+{
+  static fellowship::tariq::tariq_module_t m;
+  return &m;
+}

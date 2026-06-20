@@ -48,6 +48,7 @@ struct module_t
   static const module_t* elarion();
   static const module_t* xavian();
   static const module_t* gunde();
+  static const module_t* tariq();
   static const module_t* enemy();
   static const module_t* tank_dummy_enemy();
   static const module_t* heal_enemy();
@@ -68,6 +69,8 @@ struct module_t
         return xavian();
       case GUNDE:
         return gunde();
+      case TARIQ:
+        return tariq();
       case ELARION:
         return elarion();
       case ENEMY:

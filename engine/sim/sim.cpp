@@ -3758,23 +3758,10 @@ void sim_t::create_options()
   add_option( opt_bool( "dungeon_route_smart_targeting", dungeon_route_smart_targeting ) );
 
   // Character Creation
-  add_option( opt_func( "deathknight", parse_player ) );
-  add_option( opt_func( "demonhunter", parse_player ) );
-  add_option( opt_func( "druid", parse_player ) );
-  add_option( opt_func( "evoker", parse_player ) );
-  add_option( opt_func( "hunter", parse_player ) );
-  add_option( opt_func( "mage", parse_player ) );
-  add_option( opt_func( "monk", parse_player ) );
-  add_option( opt_func( "priest", parse_player ) );
-  add_option( opt_func( "paladin", parse_player ) );
-  add_option( opt_func( "rogue", parse_player ) );
-  add_option( opt_func( "shaman", parse_player ) );
-  add_option( opt_func( "warlock", parse_player ) );
-  add_option( opt_func( "warrior", parse_player ) );
-  add_option( opt_func( "player_simplified", parse_player ) );
   add_option( opt_func( "mara", parse_player ) );
   add_option( opt_func( "rime", parse_player ) );
   add_option( opt_func( "gunde", parse_player ) );
+  add_option( opt_func( "tariq", parse_player ) );
   add_option( opt_func( "ardeos", parse_player ) );
   add_option( opt_func( "helena", parse_player ) );
   add_option( opt_func( "tariq", parse_player ) );
@@ -3788,8 +3775,6 @@ void sim_t::create_options()
   add_option( opt_func( "pet", parse_player ) );
   add_option( opt_func( "guardian", parse_player ) );
   add_option( opt_func( "copy", parse_player ) );
-  add_option( opt_func( "armory", parse_armory ) );
-  add_option( opt_func( "guild", parse_guild ) );
   add_option( opt_func( "local_json", parse_armory ) );
   add_option( opt_func( "http_clear_cache", clear_http_cache ) );
   add_option( opt_func( "cache_items", parse_cache ) );

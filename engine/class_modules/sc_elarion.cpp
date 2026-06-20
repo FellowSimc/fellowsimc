@@ -312,10 +312,9 @@ public:
     double precision_strike_effectiveness = 0.5;
     timespan_t precision_strike_delay     = 0.2_s;
 
-    double strikers_aim_expertise       = 0.05;
-    timespan_t strikers_aim_duration    = 18_s;
-    unsigned int strikers_aim_threshold = 1;
-    int strikers_aim_max_stacks         = 3;
+    double strikers_aim_expertise  = 0.02;
+    timespan_t strikers_aim_period = 2_s;
+    int strikers_aim_max_stacks    = 15;
 
     double deadly_focus_dmg_mod   = 1.0;
     double deadly_focus_focus_mod = -0.5;
@@ -1575,9 +1574,14 @@ struct highwind_arrow_t : public elarion_attack_t
       } );
     }
 
-    if ( p()->talents_enabled( elarion_t::STRIKERS_AIM ) && execute_state && execute_state->n_targets <= p()->talents.strikers_aim_threshold )
+    if ( p()->talents_enabled( elarion_t::STRIKERS_AIM ) && execute_state )
     {
-      p()->buffs.strikers_aim->trigger();
+      auto stacks = n_targets() - execute_state->n_targets;
+      if ( stacks > p()->buffs.strikers_aim->stack() )
+      {
+        p()->buffs.strikers_aim->expire();
+        p()->buffs.strikers_aim->trigger( stacks );
+      }
     }
 
     if ( !is_precision_strike )
@@ -2398,8 +2402,9 @@ void elarion_t::create_buffs()
   buffs.strikers_aim = make_buff<elarion_buff_t>( this, "strikers_aim" )
                            ->set_default_value( talents.strikers_aim_expertise )
                            ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
-                            ->set_max_stack( talents.strikers_aim_max_stacks )
-                            ->set_duration( talents.strikers_aim_duration )
+                           ->set_max_stack( talents.strikers_aim_max_stacks )
+                           ->set_period( talents.strikers_aim_period )
+                           ->set_reverse( true )
                            ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   buffs.celestial_impetus = make_buff<elarion_buff_t>( this, "celestial_impetus" )

@@ -565,3 +565,21 @@ talents=pyrophibian_frenzy:1/frog_squad:1/apocalyptic_surge:1/cascading_inferno:
 
 
 # 3 5 6 8 9
+
+
+copy="Explosivo Axel","Base Ardeos"
+legendary.explosivo=1
+legendary.devouring_flame=0
+legendary.fire_toad=0
+# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+
+talents=slow_burn:1/great_balls_of_fire:1/apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/rolling_flames:1/reign_of_fire:1/intensifying_inferno:1
+
+
+copy="Explosivo Axel -2IW +UF","Base Ardeos"
+legendary.explosivo=1
+legendary.devouring_flame=0
+legendary.fire_toad=0
+# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+
+talents=slow_burn:1/great_balls_of_fire:1/apocalyptic_surge:1/cascading_inferno:1/rolling_flames:1/reign_of_fire:1/undying_flame:1

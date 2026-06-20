@@ -42,7 +42,7 @@ relative_difference_base="Base Gunde"
 # raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
 # raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
 
-raid_events+=/damage,amount=10,cooldown=10,first=5
+
 
 gunde="Base Gunde"
 level=80
@@ -184,176 +184,176 @@ talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/frenzied_
 # 2 5 6 7 8 9 10 11
 # 2 5 6 7 9 10 11 13
 
-# # copy="Reign Serration","Base Gunde"
-# # talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/frenzied_reign:1/superior_serration:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ancestral_instinct:1
+# copy="Reign Serration","Base Gunde"
+# talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/frenzied_reign:1/superior_serration:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ancestral_instinct:1
 
 
-# # copy="Reign Serration No Philo","Base Gunde"
-# # talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/frenzied_reign:1/superior_serration:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ancestral_instinct:1
-# # neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# copy="Reign Serration No Philo","Base Gunde"
+# talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/frenzied_reign:1/superior_serration:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ancestral_instinct:1
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
 
-# # copy="Gunde massacre0","Base Gunde"
-# # talents+=/massacre:0
-# copy="Gunde deaths_arc","Base Gunde"
-# talents+=/deaths_arc:1
-# copy="Gunde ravens_precision","Base Gunde"
-# talents+=/ravens_precision:1
-# copy="Gunde grim_harvest","Base Gunde"
-# talents+=/grim_harvest:1
-# # copy="Gunde harvesters_toll","Base Gunde"
-# # talents+=/harvesters_toll:1
-# # copy="Gunde crimson_strikes","Base Gunde"
-# # talents+=/crimson_strikes:1
-# # copy="Gunde darkening_hearts","Base Gunde"
-# # talents+=/darkening_hearts:1
-# copy="Gunde superior_serration","Base Gunde"
-# talents+=/superior_serration:1
-# copy="Gunde deaths_arc superior_serration","Base Gunde"
-# talents+=/deaths_arc:1/superior_serration:1
-# copy="Gunde murder_of_crows","Base Gunde"
-# talents+=/murder_of_crows:1
-# copy="Gunde massacre","Base Gunde"
-# talents+=/massacre:1
-# copy="Gunde slayers_grin","Base Gunde"
-# talents+=/slayers_grin:1
-# copy="Gunde slayers_grin murder_of_crows","Base Gunde"
-# talents+=/slayers_grin:1/murder_of_crows:1
-# # copy="Gunde slayers_grin harvesters_toll","Base Gunde"
-# # talents+=/slayers_grin:1/harvesters_toll:1
-# # copy="Gunde slayers_grin harvesters_toll murder_of_crows","Base Gunde"
-# # talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1
-# # copy="Gunde slayers_grin harvesters_toll murder_of_crows bloodcraze","Base Gunde"
-# # talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/bloodcraze:1
-# # copy="Gunde slayers_grin harvesters_toll murder_of_crows ravens_precision","Base Gunde"
-# # talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ravens_precision:1
-# # copy="Gunde slayers_grin harvesters_toll murder_of_crows ravens_precision bloodcraze","Base Gunde"
-# # talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ravens_precision:1/bloodcraze:1
+# copy="Gunde massacre0","Base Gunde"
+# talents+=/massacre:0
+copy="Gunde deaths_arc","Base Gunde"
+talents+=/deaths_arc:1
+copy="Gunde ravens_precision","Base Gunde"
+talents+=/ravens_precision:1
+copy="Gunde grim_harvest","Base Gunde"
+talents+=/grim_harvest:1
+# copy="Gunde harvesters_toll","Base Gunde"
+# talents+=/harvesters_toll:1
+# copy="Gunde crimson_strikes","Base Gunde"
+# talents+=/crimson_strikes:1
+# copy="Gunde darkening_hearts","Base Gunde"
+# talents+=/darkening_hearts:1
+copy="Gunde superior_serration","Base Gunde"
+talents+=/superior_serration:1
+copy="Gunde deaths_arc superior_serration","Base Gunde"
+talents+=/deaths_arc:1/superior_serration:1
+copy="Gunde murder_of_crows","Base Gunde"
+talents+=/murder_of_crows:1
+copy="Gunde massacre","Base Gunde"
+talents+=/massacre:1
+copy="Gunde slayers_grin","Base Gunde"
+talents+=/slayers_grin:1
+copy="Gunde slayers_grin murder_of_crows","Base Gunde"
+talents+=/slayers_grin:1/murder_of_crows:1
+# copy="Gunde slayers_grin harvesters_toll","Base Gunde"
+# talents+=/slayers_grin:1/harvesters_toll:1
+# copy="Gunde slayers_grin harvesters_toll murder_of_crows","Base Gunde"
+# talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1
+# copy="Gunde slayers_grin harvesters_toll murder_of_crows bloodcraze","Base Gunde"
+# talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/bloodcraze:1
+# copy="Gunde slayers_grin harvesters_toll murder_of_crows ravens_precision","Base Gunde"
+# talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ravens_precision:1
+# copy="Gunde slayers_grin harvesters_toll murder_of_crows ravens_precision bloodcraze","Base Gunde"
+# talents+=/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ravens_precision:1/bloodcraze:1
 
-# # copy="Gunde frenzied_reign","Base Gunde"
-# # talents+=/frenzied_reign:1
+# copy="Gunde frenzied_reign","Base Gunde"
+# talents+=/frenzied_reign:1
 
+# copy="Gunde deep_rend","Base Gunde"
+# talents+=/deep_rend:1
+
+# copy="Gunde deep_rend ravens_precision","Base Gunde"
+# talents+=/deep_rend:1/ravens_precision:1
+copy="Gunde bloodcraze","Base Gunde"
+talents+=/bloodcraze:1
+# copy="Gunde deep_rend bloodcraze","Base Gunde"
+# talents+=/deep_rend:1/bloodcraze:1
+# copy="Gunde deep_rend bloodcraze ravens_precision","Base Gunde"
+# talents+=/deep_rend:1/bloodcraze:1/ravens_precision:1
+
+# copy="Gunde oathshatter","Base Gunde"
+# talents+=/oathshatter:1
+# copy="Gunde oathshatter darkening_hearts","Base Gunde"
+# talents+=/oathshatter:1/darkening_hearts:1
+copy="Gunde carnage","Base Gunde"
+talents+=/carnage:1
+copy="Gunde carnage grim_harvest","Base Gunde"
+talents+=/carnage:1/grim_harvest:1
+# copy="Gunde ancestral_instinct","Base Gunde"
+# talents+=/ancestral_instinct:1
+# copy="Gunde bloodbath","Base Gunde"
+# talents+=/bloodbath:1
+# copy="Gunde frenzied reign","Base Gunde"
+# talents+=/frenzied_reign:1
+# copy="Gunde bloodbath frenzied_reign","Base Gunde"
+# talents+=/bloodbath:1/frenzied_reign:1
+
+
+
+# # copy="Gunde sundered_flesh","Base Gunde"
+# # talents+=/sundered_flesh:1
+
+# # # copy="Gunde deaths_arc","Base Gunde"
+# # # talents+=/deaths_arc:1
+# # copy="Gunde ravens_precision","Base Gunde"
+# # talents+=/ravens_precision:1
+# # copy="Gunde grim_harvest","Base Gunde"
+# # talents+=/grim_harvest:1
+# # # copy="Gunde harvesters_toll","Base Gunde"
+# # # talents+=/harvesters_toll:1
+# # # copy="Gunde crimson_strikes","Base Gunde"
+# # # talents+=/crimson_strikes:1
+# # # copy="Gunde darkening_hearts","Base Gunde"
+# # # talents+=/darkening_hearts:1
+# # # copy="Gunde superior_serration","Base Gunde"
+# # # talents+=/superior_serration:1
+# # copy="Gunde murder_of_crows","Base Gunde"
+# # talents+=/murder_of_crows:1
+# # copy="Gunde massacre","Base Gunde"
+# # talents+=/massacre:1
+# # copy="Gunde slayers_grin","Base Gunde"
+# # talents+=/slayers_grin:1
+# # # copy="Gunde frenzied_reign","Base Gunde"
+# # # talents+=/frenzied_reign:1
 # # copy="Gunde deep_rend","Base Gunde"
 # # talents+=/deep_rend:1
-
-# # copy="Gunde deep_rend ravens_precision","Base Gunde"
-# # talents+=/deep_rend:1/ravens_precision:1
-# copy="Gunde bloodcraze","Base Gunde"
-# talents+=/bloodcraze:1
-# # copy="Gunde deep_rend bloodcraze","Base Gunde"
-# # talents+=/deep_rend:1/bloodcraze:1
-# # copy="Gunde deep_rend bloodcraze ravens_precision","Base Gunde"
-# # talents+=/deep_rend:1/bloodcraze:1/ravens_precision:1
-
-# # copy="Gunde oathshatter","Base Gunde"
-# # talents+=/oathshatter:1
-# # copy="Gunde oathshatter darkening_hearts","Base Gunde"
-# # talents+=/oathshatter:1/darkening_hearts:1
-# copy="Gunde carnage","Base Gunde"
-# talents+=/carnage:1
-# copy="Gunde carnage grim_harvest","Base Gunde"
-# talents+=/carnage:1/grim_harvest:1
-# # copy="Gunde ancestral_instinct","Base Gunde"
-# # talents+=/ancestral_instinct:1
-# # copy="Gunde bloodbath","Base Gunde"
-# # talents+=/bloodbath:1
-# # copy="Gunde frenzied reign","Base Gunde"
-# # talents+=/frenzied_reign:1
-# # copy="Gunde bloodbath frenzied_reign","Base Gunde"
-# # talents+=/bloodbath:1/frenzied_reign:1
-
-
-
+# # copy="Gunde bloodcraze","Base Gunde"
+# # talents+=/bloodcraze:1
+# # # copy="Gunde oathshatter","Base Gunde"
+# # # talents+=/oathshatter:1
+# # # copy="Gunde oathshatter darkening_hearts","Base Gunde"
+# # # talents+=/oathshatter:1/darkening_hearts:1
+# # # copy="Gunde carnage","Base Gunde"
+# # # talents+=/carnage:1
+# # # copy="Gunde carnage grim_harvest","Base Gunde"
+# # # talents+=/carnage:1/grim_harvest:1
 # # # copy="Gunde sundered_flesh","Base Gunde"
 # # # talents+=/sundered_flesh:1
+# # # copy="Gunde ancestral_instinct","Base Gunde"
+# # # talents+=/ancestral_instinct:1
+# # copy="Gunde bloodbath","Base Gunde"
+# # talents+=/bloodbath:1
 
-# # # # copy="Gunde deaths_arc","Base Gunde"
-# # # # talents+=/deaths_arc:1
+# # copy="Gunde deaths_arc0","Base Gunde"
+# # talents+=/deaths_arc:0
 # # # copy="Gunde ravens_precision","Base Gunde"
 # # # talents+=/ravens_precision:1
 # # # copy="Gunde grim_harvest","Base Gunde"
 # # # talents+=/grim_harvest:1
-# # # # copy="Gunde harvesters_toll","Base Gunde"
-# # # # talents+=/harvesters_toll:1
-# # # # copy="Gunde crimson_strikes","Base Gunde"
-# # # # talents+=/crimson_strikes:1
-# # # # copy="Gunde darkening_hearts","Base Gunde"
-# # # # talents+=/darkening_hearts:1
-# # # # copy="Gunde superior_serration","Base Gunde"
-# # # # talents+=/superior_serration:1
+# # copy="Gunde harvesters_toll0","Base Gunde"
+# # talents+=/harvesters_toll:0
+# # copy="Gunde crimson_strikes0","Base Gunde"
+# # talents+=/crimson_strikes:0
+# # copy="Gunde darkening_hearts0","Base Gunde"
+# # talents+=/darkening_hearts:0
+# # copy="Gunde superior_serration0","Base Gunde"
+# # talents+=/superior_serration:0
 # # # copy="Gunde murder_of_crows","Base Gunde"
 # # # talents+=/murder_of_crows:1
 # # # copy="Gunde massacre","Base Gunde"
 # # # talents+=/massacre:1
 # # # copy="Gunde slayers_grin","Base Gunde"
 # # # talents+=/slayers_grin:1
-# # # # copy="Gunde frenzied_reign","Base Gunde"
-# # # # talents+=/frenzied_reign:1
+# # copy="Gunde frenzied_reign0","Base Gunde"
+# # talents+=/frenzied_reign:0
 # # # copy="Gunde deep_rend","Base Gunde"
 # # # talents+=/deep_rend:1
 # # # copy="Gunde bloodcraze","Base Gunde"
 # # # talents+=/bloodcraze:1
-# # # # copy="Gunde oathshatter","Base Gunde"
-# # # # talents+=/oathshatter:1
-# # # # copy="Gunde oathshatter darkening_hearts","Base Gunde"
-# # # # talents+=/oathshatter:1/darkening_hearts:1
-# # # # copy="Gunde carnage","Base Gunde"
-# # # # talents+=/carnage:1
-# # # # copy="Gunde carnage grim_harvest","Base Gunde"
-# # # # talents+=/carnage:1/grim_harvest:1
-# # # # copy="Gunde sundered_flesh","Base Gunde"
-# # # # talents+=/sundered_flesh:1
-# # # # copy="Gunde ancestral_instinct","Base Gunde"
-# # # # talents+=/ancestral_instinct:1
+# # copy="Gunde oathshatter0","Base Gunde"
+# # talents+=/oathshatter:0
+# # copy="Gunde carnage0","Base Gunde"
+# # talents+=/carnage:0
+# # # copy="Gunde sundered_flesh","Base Gunde"
+# # # talents+=/sundered_flesh:1
+# # copy="Gunde ancestral_instinct0","Base Gunde"
+# # talents+=/ancestral_instinct:0
 # # # copy="Gunde bloodbath","Base Gunde"
 # # # talents+=/bloodbath:1
 
-# # # copy="Gunde deaths_arc0","Base Gunde"
-# # # talents+=/deaths_arc:0
-# # # # copy="Gunde ravens_precision","Base Gunde"
-# # # # talents+=/ravens_precision:1
-# # # # copy="Gunde grim_harvest","Base Gunde"
-# # # # talents+=/grim_harvest:1
-# # # copy="Gunde harvesters_toll0","Base Gunde"
-# # # talents+=/harvesters_toll:0
-# # # copy="Gunde crimson_strikes0","Base Gunde"
-# # # talents+=/crimson_strikes:0
-# # # copy="Gunde darkening_hearts0","Base Gunde"
-# # # talents+=/darkening_hearts:0
-# # # copy="Gunde superior_serration0","Base Gunde"
-# # # talents+=/superior_serration:0
-# # # # copy="Gunde murder_of_crows","Base Gunde"
-# # # # talents+=/murder_of_crows:1
-# # # # copy="Gunde massacre","Base Gunde"
-# # # # talents+=/massacre:1
-# # # # copy="Gunde slayers_grin","Base Gunde"
-# # # # talents+=/slayers_grin:1
-# # # copy="Gunde frenzied_reign0","Base Gunde"
-# # # talents+=/frenzied_reign:0
-# # # # copy="Gunde deep_rend","Base Gunde"
-# # # # talents+=/deep_rend:1
-# # # # copy="Gunde bloodcraze","Base Gunde"
-# # # # talents+=/bloodcraze:1
-# # # copy="Gunde oathshatter0","Base Gunde"
-# # # talents+=/oathshatter:0
-# # # copy="Gunde carnage0","Base Gunde"
-# # # talents+=/carnage:0
-# # # # copy="Gunde sundered_flesh","Base Gunde"
-# # # # talents+=/sundered_flesh:1
-# # # copy="Gunde ancestral_instinct0","Base Gunde"
-# # # talents+=/ancestral_instinct:0
-# # # # copy="Gunde bloodbath","Base Gunde"
-# # # # talents+=/bloodbath:1
 
+# # # copy="Wep Prim","Base Gunde"
+# # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=primary
+# # # copy="Wep haste","Base Gunde"
+# # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=haste
+# # # copy="Wep crit","Base Gunde"
+# # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=crit
+# # # copy="Wep spirit","Base Gunde"
+# # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=spirit
+# # # copy="Wep expertise","Base Gunde"
+# # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=expertise
 
-# # # # copy="Wep Prim","Base Gunde"
-# # # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=primary
-# # # # copy="Wep haste","Base Gunde"
-# # # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=haste
-# # # # copy="Wep crit","Base Gunde"
-# # # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=crit
-# # # # copy="Wep spirit","Base Gunde"
-# # # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=spirit
-# # # # copy="Wep expertise","Base Gunde"
-# # # # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/spirit,affixes=expertise
-
-# # # # apl/generated/all_gear_options_gunde.simc
+# # # apl/generated/all_gear_options_gunde.simc

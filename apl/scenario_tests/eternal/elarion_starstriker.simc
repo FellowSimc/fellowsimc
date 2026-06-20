@@ -156,7 +156,17 @@ weapon_trait.patient_soul=1
 # gems.emerald_power=500
 # gems.ruby_power=500
 
-talents=fusillade:1/strikers_aim:1/last_lights:1/lunarlight_affinity:1/impending_heartseeker:1/piercing_seekers:1/lunar_fury:1/skylit_grace:1/repeating_stars:1/
+talents=final_crescendo:1/fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/rising_moon:1/skylit_grace:1
+
+copy="Starstrikers ST","Starstriker Elarion"
+talents=final_crescendo:1/fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/skylit_grace:1/strikers_aim:1
+
+copy="Starstrikers Balanced","Starstriker Elarion"
+talents=final_crescendo:1/fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/rising_moon:1/strikers_aim:1
+
+# copy="Starstrikers AoE","Starstriker Elarion"
+# talents=fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+
 
 # 14
 

@@ -664,24 +664,27 @@ if __name__ == "__main__":
 
 
     
-    # combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents14b4.simc", 
-    #             profilesets=True,
-    #             required_talents=[
-    #                 # "resurgent_winds",
-    #                 # "last_lights",
-    #                 # "skyward_munitions"
-    #             ],
-    #             excluded_talents=[
-    #                 "deadly_focus",
-    #                 "swift_reload"
-    #             ],
-    #             forbidden_pairs=[
-    #                 # ("hemotoxin", "malevolence"),
-    #                 # ("gushing_blood", "malevolence"),
-    #                 # ("arachnid_onslaught", "malevolence"),
-    #             ],
-    #             # name_filters=top_x
-    # )
+    combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents14b5.simc", 
+                profilesets=True,
+                required_talents=[
+                    "fusillade",
+                    "last_lights",
+                    "lunarlight_affinity",
+                    "impending_heartseeker",
+                    "piercing_seekers",
+                    "lunar_fury"
+                ],
+                excluded_talents=[
+                    # "deadly_focus",
+                    # "swift_reload"
+                ],
+                forbidden_pairs=[
+                    # ("hemotoxin", "malevolence"),
+                    # ("gushing_blood", "malevolence"),
+                    # ("arachnid_onslaught", "malevolence"),
+                ],
+                # name_filters=top_x
+    )
 
     # all_points_to_File("Elarion", elarion, "generated/elarion_talents.simc")
 

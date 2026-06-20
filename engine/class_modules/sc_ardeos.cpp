@@ -968,7 +968,7 @@ struct flare_up_t : public ardeos_spell_t
     snapshot_flags &= STATE_NO_MULTIPLIER;
     update_flags &= STATE_NO_MULTIPLIER;
 
-    snapshot_flags |= STATE_MUL_DA;
+    snapshot_flags |= STATE_MUL_SPELL_DA;
   }
 
   size_t available_targets( std::vector<player_t*>& tl ) const override

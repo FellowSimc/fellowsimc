@@ -104,6 +104,7 @@ public:
     proc_t* schism_hammer_storm;
     proc_t* them_bones;
     proc_t* kill_em_all;
+    proc_t* executioners_grin;
   } procs;
 
   struct rng_objects_t
@@ -266,10 +267,10 @@ public:
     //Ink.AoeAttack.TargetThresholdForDamageScale, 8.0
     double hammer_storm_threshold = 8.0;
     //Ink.AoeAttack.VisualHitDelay, 0.00	; Leaving this as 0 means that the hit will be registret immediately on the first tick
-    //Ink.AoeAttack.VisualEndDelay, 0.3
-    //Ink.AoeAttack.Cost, 0.50				; Percentage of Max Rage
-    double hammer_storm_cost = 0.5;
-    //Ink.AoeAttack.CostPerTick, 0.04		; DISABLED Percentage of Max Rage
+    //Ink.AoeAttack.VisualEndDelay, 0.3 Ink.AoeAttack.Cost, 0.50				;
+    // Percentage of Max Rage
+    double hammer_storm_cost = 50;
+    // Ink.AoeAttack.CostPerTick, 0.04		; DISABLED Percentage of Max Rage
     //Ink.AoeAttack.TickInterval, 0.50
     timespan_t hammer_storm_period = 0.5_s;
     int hammer_storm_spins         = 3;
@@ -841,13 +842,44 @@ public:
   void trigger_auto_attack( const action_state_t* );
   void trigger_spirit_refund( const action_state_t* );
 
-
   void roll_executioners_grin()
   {
+    if ( !p()->legendary.executioners_grin )
+      return;
+
+    if ( p()->rng_objects.executioners_grin->trigger() )
+    {
+      p()->buffs.executioners_grin->trigger();
+      p()->procs.executioners_grin->occur();
+    }
   }
 
   void roll_kill_em_all()
   {
+    if ( !p()->talents_enabled( tariq_t::KILL_EM_ALL ) )
+      return;
+
+    if ( p()->rng_objects.kill_em_all->trigger() )
+    {
+      p()->buffs.kill_em_all->trigger( p()->talents.kill_em_all_stacks );
+      p()->procs.kill_em_all->occur();
+    }
+  }
+
+  bool in_thunder_call()
+  {
+    return p()->buffs.thunder_call->check() || p()->buffs.raging_currents->check();
+  }
+
+  void consume_square_hammer()
+  {
+    auto stacks = p()->buffs.square_hammer_stacking->check();
+    if ( stacks )
+    {
+      p()->buffs.square_hammer_buff->trigger( stacks );
+      p()->cooldowns.thunder_call->adjust( -stacks * p()->talents.square_hammer_cdr_per_stack, false );
+      p()->buffs.square_hammer_stacking->expire();
+    }
   }
 };
 
@@ -932,6 +964,31 @@ public:
       roll_executioners_grin();
       roll_kill_em_all();
     }
+  }
+};
+
+struct tariq_lightning_attack_t : public tariq_attack_t
+{
+protected:
+  using base_t = tariq_lightning_attack_t;
+
+private:
+  using ab = tariq_attack_t;
+
+public:
+  tariq_lightning_attack_t( util::string_view n, tariq_t* p, util::string_view o = {} ) : ab( n, p, o )
+  {
+    special = true;
+    school  = SCHOOL_MAGIC;
+  }
+  double composite_crit_chance() const override
+  {
+    auto cc = ab::composite_crit_chance();
+
+    if ( p()->talents_enabled( tariq_t::CRACK_THE_SKY ) )
+      cc += p()->talents.crack_the_sky_lightning_crit_chance;
+
+    return cc;
   }
 };
 
@@ -1133,6 +1190,565 @@ struct wild_swing_t : public tariq_attack_t
            s->n_targets * p()->spell_const.wild_swing_dodge_decrease_per_target;
 
     return m;
+  }
+};
+
+struct face_breaker_t : public tariq_attack_t
+{
+  face_breaker_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str )
+  {
+    id                 = 3;
+    name_str_reporting = "Face Breaker";
+
+    ability_flags |= ability_type_e::ABILITY_BASIC;
+
+    cooldown->duration = p->spell_const.face_breaker_cd;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    attack_power_mod.direct = p->spell_const.face_breaker_coeff;
+
+    aoe                 = -1;
+    full_amount_targets = 1;
+    base_aoe_multiplier = p->spell_const.face_breaker_cleave_fraction;
+    reduced_aoe_targets = p->spell_const.face_breaker_cleave_falloff;
+
+    energize_resource = RESOURCE_FURY;
+    energize_amount   = p->spell_const.face_breaker_fury;
+    energize_type     = action_energize::ON_HIT;
+
+    if ( p->talents_enabled( tariq_t::LEFT_HAND_PATH ) )
+      base_crit += p->talents.left_hand_path_cc;
+  }
+};
+
+struct heavy_strike_t : public tariq_attack_t
+{
+  struct heavy_strike_lightning_t : public tariq_lightning_attack_t
+  {
+    heavy_strike_lightning_t( util::string_view name, tariq_t* p )
+      : tariq_lightning_attack_t( std::format( "{}_lightning", name ), p )
+    {
+      id                 = 4;
+      name_str_reporting = "Heavy Strike (Lightning)";
+
+      background = true;
+
+      ability_flags |= ability_type_e::ABILITY_CORE;
+
+      attack_power_mod.direct = p->spell_const.heavy_strike_lightning_coeff;
+
+      aoe                 = -1;
+      reduced_aoe_targets = p->spell_const.heavy_strike_lightning_threshold;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      auto dam = base_t::composite_da_multiplier( s );
+
+      dam *= 1.0 + p()->buffs.kill_em_all->check_value();
+
+      return dam;
+    }
+  };
+
+  heavy_strike_lightning_t* lightning_attack;
+  heavy_strike_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str ), lightning_attack( new heavy_strike_lightning_t( name, p ) )
+  {
+    id                 = 4;
+    name_str_reporting = "Heavy Strike";
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
+
+    cooldown->duration = p->spell_const.heavy_strike_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    attack_power_mod.direct = p->spell_const.heavy_strike_coeff;
+
+    aoe                 = -1;
+    full_amount_targets = 1;
+    base_aoe_multiplier = p->spell_const.heavy_strike_cleave_multiplier;
+    reduced_aoe_targets = p->spell_const.heavy_strike_target_threshold;
+
+    energize_resource = RESOURCE_FURY;
+    energize_amount   = p->spell_const.heavy_strike_fury;
+    energize_type     = action_energize::ON_HIT;
+
+    add_child( lightning_attack );
+  }
+
+  void init_finished() override
+  {
+    base_t::init_finished();
+
+    if ( p()->actions.chain_lightning_blood_and_thunder )
+      add_child( p()->actions.chain_lightning_blood_and_thunder );
+  }
+
+  double recharge_rate_multiplier( const cooldown_t& cd ) const override
+  {
+    auto rrm = base_t::recharge_rate_multiplier( cd );
+
+    rrm = 1.0 / rrm;
+
+    rrm += p()->buffs.kill_em_all->check() * p()->talents.kill_em_all_cda;
+
+    rrm = 1.0 / rrm;
+
+    return rrm;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto dam = base_t::composite_da_multiplier( s );
+
+    dam *= 1.0 + p()->buffs.kill_em_all->check_value();
+
+    return dam;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    if ( in_thunder_call() )
+    {
+      lightning_attack->schedule_execute_child_attack( execute_state );
+    }
+
+    p()->buffs.kill_em_all->decrement();
+
+    if ( p()->talents_enabled( tariq_t::SQUARE_HAMMER ) )
+    {
+      p()->buffs.square_hammer_stacking->trigger();
+    }
+
+    if ( p()->talents_enabled( tariq_t::FAR_BEYOND_DRIVEN ) )
+    {
+      p()->buffs.far_beyond_driven->trigger();
+    }
+
+    if ( p()->talents_enabled( tariq_t::BLOOD_AND_THUNDER ) )
+    {
+      if ( p()->rng_objects.blood_and_thunder->trigger() )
+      {
+        p()->actions.chain_lightning_blood_and_thunder->set_target( target );
+        p()->actions.chain_lightning_blood_and_thunder->execute();
+      }
+    }
+  }
+};
+
+struct skull_crusher_t : public tariq_attack_t
+{
+  struct skull_crusher_lightning_t : public tariq_lightning_attack_t
+  {
+    skull_crusher_lightning_t( util::string_view name, tariq_t* p )
+      : tariq_lightning_attack_t( std::format( "{}_lightning", name ), p )
+    {
+      id                 = 5;
+      name_str_reporting = "Skull Crusher (Lightning)";
+
+      background = true;
+
+      ability_flags |= ability_type_e::ABILITY_POWER;
+
+      attack_power_mod.direct = p->spell_const.skull_crusher_lightning_coeff;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      auto dam = base_t::composite_da_multiplier( s );
+
+      dam *= 1.0 + p()->buffs.schism_skull_crusher->check_value();
+
+      if ( p()->buffs.focused_wrath->check() )
+        dam *= p()->spell_const.focused_wrath_damage_multiplier;
+
+      return dam;
+    }
+  };
+
+  struct sledgehammer_t : public tariq_attack_t
+  {
+    sledgehammer_t( util::string_view name, tariq_t* p ) : tariq_attack_t( std::format( "{}_sledgehammer", name ), p )
+    {
+      aoe                 = -1;
+      base_multiplier     = p->spell_const.heavy_strike_cleave_multiplier;
+      reduced_aoe_targets = p->spell_const.heavy_strike_target_threshold;
+    }
+
+    size_t available_targets( std::vector<player_t*>& tl ) const override
+    {
+      tl.clear();
+
+      for ( auto* t : sim->target_non_sleeping_list )
+      {
+        if ( t->is_enemy() && ( t != target ) )
+        {
+          tl.push_back( t );
+        }
+      }
+
+      if ( sim->debug && !sim->distance_targeting_enabled )
+      {
+        sim->print_debug( "{} regenerated target cache for {} ({})", *player, signature_str, *this );
+        for ( size_t i = 0; i < tl.size(); i++ )
+        {
+          sim->print_debug( "[{}, {} (id={})]", i, *tl[ i ], tl[ i ]->actor_index );
+        }
+      }
+
+      return tl.size();
+    }
+
+    void execute() override
+    {
+      if ( target_list().size() <= 0 )
+        return;
+
+      base_t::execute();
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      return base_multiplier;
+    }
+
+    void init_finished() override
+    {
+      base_t::init_finished();
+      snapshot_flags = STATE_MUL_SPELL_DA;
+      update_flags   = snapshot_flags;
+    }
+  };
+
+  skull_crusher_lightning_t* lightning_attack;
+  sledgehammer_t* sledgehammer;
+  skull_crusher_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str ),
+      lightning_attack( new skull_crusher_lightning_t( name, p ) ),
+      sledgehammer( nullptr )
+  {
+    id                 = 5;
+    name_str_reporting = "Skull Crusher";
+
+    ability_flags |= ability_type_e::ABILITY_POWER;
+
+    attack_power_mod.direct = p->spell_const.skull_crusher_coeff;
+
+    resource_current            = RESOURCE_FURY;
+    base_costs[ RESOURCE_FURY ] = p->spell_const.skull_crusher_cost;
+
+    trigger_gcd = p->spell_const.skull_crusher_gcd;
+
+    add_child( lightning_attack );
+
+    if ( p->talents_enabled( tariq_t::SLEDGEHAMMER ) )
+    {
+      sledgehammer = new sledgehammer_t( name, p );
+      add_child( sledgehammer );
+    }
+  }
+
+  double composite_crit_chance() const override
+  {
+    auto cc = base_t::composite_crit_chance();
+
+    if ( p()->talents_enabled( tariq_t::THEM_BONES ) )
+    {
+      if ( p()->rng_objects.them_bones->trigger() )
+      {
+        cc += p()->talents.them_bones_cc;
+        p()->procs.them_bones->occur();
+      }
+    }
+
+    return cc;
+  }
+
+  double cost() const override
+  {
+    auto amount = base_t::cost();
+
+    if ( p()->buffs.focused_wrath->check() )
+      amount *= p()->spell_const.focused_wrath_cost_multiplier;
+
+    return amount;
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto dam = base_t::composite_da_multiplier( s );
+
+    dam *= 1.0 + p()->buffs.schism_skull_crusher->check_value();
+
+    if ( p()->buffs.focused_wrath->check() )
+      dam *= p()->spell_const.focused_wrath_damage_multiplier;
+
+    return dam;
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    if ( sledgehammer )
+    {
+      sledgehammer->execute_on_target( s->target, s->result_amount );
+    }
+  }
+
+  void execute() override
+  {
+    consume_square_hammer();
+
+    base_t::execute();
+
+    if ( in_thunder_call() )
+    {
+      lightning_attack->schedule_execute_child_attack( execute_state );
+    }
+
+    p()->buffs.focused_wrath->decrement();
+
+    if ( p()->talents_enabled( tariq_t::SCHISM ) )
+    {
+      if ( p()->rng_objects.schism_skull_crusher->trigger() )
+      {
+        p()->buffs.schism_hammer_storm->trigger();
+        p()->procs.schism_skull_crusher->occur();
+      }
+    }
+  }
+};
+
+struct hammer_storm_t : public tariq_attack_t
+{
+  struct hammer_storm_lightning_t : public tariq_lightning_attack_t
+  {
+    hammer_storm_lightning_t( util::string_view name, tariq_t* p )
+      : tariq_lightning_attack_t( std::format( "{}_lightning", name ), p )
+    {
+      id                 = 6;
+      name_str_reporting = "Hammer Storm (Lightning)";
+
+      background = true;
+
+      ability_flags |= ability_type_e::ABILITY_POWER;
+
+      attack_power_mod.direct = p->spell_const.hammer_storm_lightning_coeff;
+      aoe                     = -1;
+      reduced_aoe_targets     = p->spell_const.hammer_storm_lightning_threshold;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      auto dam = base_t::composite_da_multiplier( s );
+
+      if ( parent_dot && parent_dot->current_tick > 1 )
+      {
+        dam *= pow( 1.35, ( parent_dot->current_tick - 1 ) );
+      }
+
+      return dam;
+    }
+  };
+
+  struct hammer_storm_hit_t : public tariq_attack_t
+  {
+    hammer_storm_lightning_t* lightning_attack;
+    hammer_storm_hit_t( util::string_view name, tariq_t* p )
+      : tariq_attack_t( std::format( "{}_hit", name ), p ), lightning_attack( new hammer_storm_lightning_t( name, p ) )
+    {
+      id                 = 6;
+      name_str_reporting = "Hammer Storm";
+
+      background = true;
+
+      ability_flags |= ability_type_e::ABILITY_POWER;
+
+      attack_power_mod.direct = p->spell_const.hammer_storm_coeff;
+      aoe                     = -1;
+      reduced_aoe_targets     = p->spell_const.hammer_storm_threshold;
+
+      add_child( lightning_attack );
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      auto dam = base_t::composite_da_multiplier( s );
+
+      if ( parent_dot && parent_dot->current_tick > 1 )
+      {
+        dam *= pow( 1.35, ( parent_dot->current_tick - 1 ) );
+      }
+
+      return dam;
+    }
+
+    void execute()
+    {
+      base_t::execute();
+
+      if ( in_thunder_call() )
+      {
+        lightning_attack->parent_dot = parent_dot;
+        lightning_attack->schedule_execute_child_attack( execute_state );
+      }
+
+      if ( p()->talents_enabled( tariq_t::ACE_OF_SPADES ) )
+      {
+        if ( p()->rng_objects.ace_of_spades->trigger() )
+        {
+          p()->procs.ace_of_spades->occur();
+          p()->actions.chain_lightning_ace_of_spades->set_target( target );
+          p()->actions.chain_lightning_ace_of_spades->execute();
+        }
+      }
+    }
+  };
+
+  hammer_storm_hit_t* custom_tick_action;
+  hammer_storm_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str )
+  {
+    id                 = 6;
+    name_str_reporting = "Hammer Storm";
+
+    ability_flags |= ability_type_e::ABILITY_POWER;
+
+    resource_current            = RESOURCE_FURY;
+    base_costs[ RESOURCE_FURY ] = p->spell_const.hammer_storm_cost;
+
+    channeled           = true;
+    hasted_ticks        = true;
+    hasted_dot_duration = true;
+    dot_duration        = p->spell_const.hammer_storm_period * p->spell_const.hammer_storm_spins;
+    base_tick_time      = p->spell_const.hammer_storm_period;
+
+    custom_tick_action = new hammer_storm_hit_t( name, p );
+
+    add_child( custom_tick_action );
+  }
+
+  double composite_persistent_multiplier( const action_state_t* s ) const override
+  {
+    auto dam = base_t::composite_persistent_multiplier( s );
+
+    dam *= 1.0 + p()->buffs.schism_hammer_storm->check_value();
+
+    if ( p()->buffs.focused_wrath->check() )
+      dam *= p()->spell_const.focused_wrath_damage_multiplier;
+
+    return dam;
+  }
+
+  double cost() const override
+  {
+    auto amount = base_t::cost();
+
+    if ( p()->buffs.focused_wrath->check() )
+      amount *= p()->spell_const.focused_wrath_cost_multiplier;
+
+    return amount;
+  }
+
+  void init_finished() override
+  {
+    base_t::init_finished();
+
+    if ( p()->actions.chain_lightning_ace_of_spades )
+      add_child( p()->actions.chain_lightning_ace_of_spades );
+  }
+
+  void tick( dot_t* d ) override
+  {
+    base_t::tick( d );
+
+    custom_tick_action->parent_dot = d;
+    custom_tick_action->schedule_execute_child_attack( d->state );
+  }
+
+  void execute() override
+  {
+    consume_square_hammer();
+
+    base_t::execute();
+
+    p()->buffs.focused_wrath->decrement();
+
+    if ( p()->talents_enabled( tariq_t::SCHISM ) )
+    {
+      if ( p()->rng_objects.schism_hammer_storm->trigger() )
+      {
+        p()->buffs.schism_skull_crusher->trigger();
+        p()->procs.schism_hammer_storm->occur();
+      }
+    }
+  }
+};
+
+struct culling_strike_t : public tariq_attack_t
+{
+  double max_cost;
+  culling_strike_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str ), max_cost( p->spell_const.culling_strike_max_fury )
+  {
+    id                 = 8;
+    name_str_reporting = "Culling Strike";
+
+    ability_flags |= ability_type_e::ABILITY_POWER;
+
+    
+    cooldown->duration = p->spell_const.heavy_strike_cooldown;
+    cooldown->charges  = 1;
+    cooldown->hasted   = true;
+
+    attack_power_mod.direct = p->spell_const.culling_strike_coeff;
+
+    resource_current            = RESOURCE_FURY;
+    base_costs[ RESOURCE_FURY ] = 1.0;
+
+    if ( p->talents_enabled( tariq_t::KILLING_IN_THE_NAME ) )
+      base_crit += p->talents.killing_in_the_name_cc;
+  }
+
+  bool target_ready( player_t* candidate_target )
+  {
+    if ( candidate_target->health_percentage() > low_health_threshold )
+      return false;
+
+    return base_t::target_ready( candidate_target );
+  }
+
+  double cost() const override
+  {
+    if ( p()->buffs.executioners_grin->check() )
+      return 0.0;
+
+    return std::max( base_t::cost(), std::min( max_cost, p()->resources.current[ RESOURCE_FURY ] ) );
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto dam = base_t::composite_da_multiplier( s );
+
+    auto resource_cost =
+        p()->buffs.executioners_grin->check() ? p()->legendary.executioners_grin_counted_fury : last_resource_cost;
+
+    dam *= 1.0 + resource_cost * p()->spell_const.culling_strike_increase_per_fury;
+
+    return dam;
+  }
+
+  void execute()
+  {
+    base_t::execute();
+    p()->buffs.executioners_grin->decrement();
   }
 };
 
@@ -1986,6 +2602,16 @@ action_t* tariq_t::create_action( util::string_view name, util::string_view opti
 
   if ( name == "wild_swing" )
     return new wild_swing_t( name, this, options_str );
+  if ( name == "face_breaker" )
+    return new face_breaker_t( name, this, options_str );
+  if ( name == "heavy_strike" )
+    return new heavy_strike_t( name, this, options_str );
+  if ( name == "skull_crusher" )
+    return new skull_crusher_t( name, this, options_str );
+  if ( name == "hammer_storm" )
+    return new hammer_storm_t( name, this, options_str );
+  if ( name == "culling_strike" )
+    return new culling_strike_t( name, this, options_str );
   //if ( name == "grim_carve" )
   //  return new grim_carve_t( name, this, options_str );
   //if ( name == "reavers_edge" )
@@ -2090,6 +2716,11 @@ void tariq_t::init_base_stats()
     resources.base_regen_per_second[ RESOURCE_FURY ] =
         talents.bloodline_fury_amount / talents.bloodline_fury_period.total_seconds();
   }
+
+  if ( talents_enabled( tariq_t::PNEUMA ) )
+  {
+    resources.start_at[ RESOURCE_SPIRIT ] += talents.pneuma_start_spirit;
+  }
 }
 
 // tariq_t::init_spells =====================================================
@@ -2098,7 +2729,7 @@ void tariq_t::init_spells()
 {
   fs_player_t::init_spells();
 
-  actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
+  //actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
 }
 
 // tariq_t::init_gains ======================================================
@@ -2115,12 +2746,13 @@ void tariq_t::init_gains()
 void tariq_t::init_procs()
 {
   fs_player_t::init_procs();
-  procs.ace_of_spades = get_proc( "Ace of Spades" );
-  procs.blood_and_thunder = get_proc( "Blood and Thunder" );
-  procs.kill_em_all = get_proc( "Kill em All" );
-  procs.schism_hammer_storm = get_proc( "Schism Hammer Storm" );
+  procs.ace_of_spades        = get_proc( "Ace of Spades" );
+  procs.blood_and_thunder    = get_proc( "Blood and Thunder" );
+  procs.kill_em_all          = get_proc( "Kill em All" );
+  procs.schism_hammer_storm  = get_proc( "Schism Hammer Storm" );
   procs.schism_skull_crusher = get_proc( "Schism Skull Crusher" );
-  procs.them_bones = get_proc( "Them Bones" );
+  procs.them_bones           = get_proc( "Them Bones" );
+  procs.executioners_grin    = get_proc( "Executioners Grin" );
 }
 
 // tariq_t::init_scaling ====================================================
@@ -2183,7 +2815,7 @@ void tariq_t::create_buffs()
 
   buffs.kill_em_all = make_buff<tariq_buff_t>( this, "kill_em_all" )
                           ->set_duration( talents.kill_em_all_duration )
-                          ->set_default_value( talents.kill_em_all_dmg_multiplier )
+                          ->set_default_value( talents.kill_em_all_dmg_multiplier - 1 )
                           ->set_max_stack( talents.kill_em_all_stacks )
                           ->add_stack_change_callback(
                               [ this ]( auto, auto, auto ) { cooldowns.heavy_strike->adjust_recharge_multiplier(); } );

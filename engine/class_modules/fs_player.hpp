@@ -755,7 +755,7 @@ public:
       snapshot_flags &= STATE_NO_MULTIPLIER;
       update_flags &= STATE_NO_MULTIPLIER;
 
-      snapshot_flags |= STATE_MUL_DA;
+      snapshot_flags |= STATE_MUL_SPELL_DA;
     }
   };
 
@@ -783,6 +783,18 @@ public:
   const fs_player_t* fs_p() const
   {
     return debug_cast<const fs_player_t*>( ab::player );
+  }
+
+  void schedule_execute_child_attack( action_state_t* parent_state )
+  {
+    ab::set_target( parent_state->target );
+    action_state_t* damage_state = ab::get_state();
+    damage_state->target         = ab::target;
+
+    ab::snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+    damage_state->persistent_multiplier = parent_state->persistent_multiplier;
+
+    ab::schedule_execute( damage_state );
   }
 
   double composite_persistent_multiplier( const action_state_t* s ) const

@@ -1682,7 +1682,7 @@ struct heart_splitter_t : public gunde_attack_t
     {
       gunde_attack_t::init_finished();
 
-      snapshot_flags = STATE_MUL_DA;
+      snapshot_flags = STATE_MUL_SPELL_DA;
     }
   };
 

@@ -3363,19 +3363,19 @@ void sim_t::use_optimal_buffs_and_debuffs( int value )
 {
   optimal_raid = value;
 
-  overrides.arcane_intellect        = optimal_raid;
-  overrides.battle_shout            = optimal_raid;
-  overrides.mark_of_the_wild        = optimal_raid;
-  overrides.power_word_fortitude    = optimal_raid;
-  overrides.skyfury                 = optimal_raid;
+  overrides.arcane_intellect        = 0;
+  overrides.battle_shout            = 0;
+  overrides.mark_of_the_wild        = 0;
+  overrides.power_word_fortitude    = 0;
+  overrides.skyfury                 = 0;
 
-  overrides.chaos_brand             = optimal_raid;
-  overrides.mystic_touch            = optimal_raid;
-  overrides.hunters_mark            = optimal_raid;
-  overrides.mortal_wounds           = optimal_raid;
-  overrides.bleeding                = optimal_raid;
+  overrides.chaos_brand             = 0;
+  overrides.mystic_touch            = 0;
+  overrides.hunters_mark            = 0;
+  overrides.mortal_wounds           = 0;
+  overrides.bleeding                = 0;
 
-  overrides.bloodlust               = optimal_raid;
+  overrides.bloodlust               = 0;
 }
 
 // sim_t::time_to_think =====================================================

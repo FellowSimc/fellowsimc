@@ -282,7 +282,6 @@ public:
     timespan_t hemotoxin_sample_per_cp_aa    = 0.3_s;
     double hemotoxin_sample_multiplier_crits = 1.0;
 
-    double maidens_doom_execute_threshold = 35.0;
     double maidens_doom_execute_amp       = 0.2;
 
     double puncture_cc                = 1.0;
@@ -2534,7 +2533,7 @@ double mara_t::composite_player_target_multiplier( player_t* target, school_e sc
 
   if ( buffs.maiden_of_death->check() )
   {
-    if ( talents_enabled( MAIDENS_DOOM ) && target->health_percentage() <= talents.maidens_doom_execute_threshold )
+    if ( talents_enabled( MAIDENS_DOOM ) && target->health_percentage() <= low_health_threshold )
     {
       m *= 1.2 + talents.maidens_doom_execute_amp;
     }

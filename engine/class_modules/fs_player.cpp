@@ -1417,22 +1417,21 @@ void fs_player_t::create_buffs()
           ->set_duration( fs_weapon_trait_values.hunters_focus_duration[ fs_weapons.hunters_focus ] )
           ->set_max_stack( fs_weapon_trait_values.hunters_focus_max_stacks[ fs_weapons.hunters_focus ] )
           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
-  
+
   fs_buffs.patient_soul =
       make_buff<stat_buff_t>( this, "patient_soul" )
           ->add_stat( STAT_VERSATILITY_RATING,
                       fs_weapon_trait_values.patient_soul_expertise[ fs_weapons.patient_soul ] )
-          ->set_default_value( fs_weapon_trait_values.patient_soul_expertise[ fs_weapons.patient_soul ] )
+          ->set_default_value( fs_weapon_trait_values.patient_soul_max_hp[ fs_weapons.patient_soul ] )
           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+          ->set_expire_callback( [ this ]( buff_t* b, int stacks, timespan_t duration ) {
+            b->player->resources.initial_multiplier[ RESOURCE_HEALTH ] -= b->default_value;
+            b->player->recalculate_resource_max( RESOURCE_HEALTH );
+          } )
           ->add_stack_change_callback( [ this ]( buff_t* b, int old, int _new ) {
-            if ( _new )
+            if ( _new && !old )
             {
-              b->player->resources.initial_multiplier[ RESOURCE_HEALTH ] += b->current_value;
-              b->player->recalculate_resource_max( RESOURCE_HEALTH );
-            }
-            else
-            {
-              b->player->resources.initial_multiplier[ RESOURCE_HEALTH ] -= b->current_value;
+              b->player->resources.initial_multiplier[ RESOURCE_HEALTH ] += b->default_value;
               b->player->recalculate_resource_max( RESOURCE_HEALTH );
             }
           } );

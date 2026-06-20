@@ -594,7 +594,7 @@ public:
   void regen( timespan_t periodicity ) override;
   resource_e primary_resource() const override
   {
-    return RESOURCE_NONE;
+    return RESOURCE_SPIRIT;
   }
   role_e primary_role() const override
   {
@@ -671,6 +671,7 @@ public:
     : fs_player_t( sim, name, r, GUNDE ), target_data()
   {
     resource_regeneration = regen_type::DYNAMIC;
+
 
     create_cooldowns();
     spirit_refund_mul = spell_const.spirit_refund_mul;
@@ -2753,6 +2754,10 @@ void gunde_t::spawn_feathers( int quantity )
 void gunde_t::arise()
 {
   fs_player_t::arise();
+  sim->print_debug( "{} arises. Current max hp is: {}, current is: {}, base: {}, base_mul: {}, init_mul: {}", *this,
+                    resources.max[ RESOURCE_HEALTH ], resources.current[ RESOURCE_HEALTH ],
+                    resources.base[ RESOURCE_HEALTH ], resources.base_multiplier[ RESOURCE_HEALTH ],
+                    resources.initial_multiplier[ RESOURCE_HEALTH ] );
 }
 
 // gunde_t::combat_begin ====================================================

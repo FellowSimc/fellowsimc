@@ -7056,9 +7056,6 @@ void player_t::recalculate_resource_max( resource_e resource_type, gain_t* sourc
       // Calculate & set maximum health
       resources.max[ resource_type ] += floor( stamina() ) * current.health_per_stamina;
 
-      // Make sure the player starts combat with full health
-      if ( !in_combat )
-        resources.current[ resource_type ] = resources.max[ resource_type ];
       break;
     }
     default:
@@ -7066,6 +7063,10 @@ void player_t::recalculate_resource_max( resource_e resource_type, gain_t* sourc
   }
 
   resources.max[ resource_type ] *= resources.initial_multiplier[ resource_type ];
+  
+  // Make sure the player starts combat with full health
+  if ( !in_combat && resource_type == RESOURCE_HEALTH )
+    resources.current[ resource_type ] = resources.max[ resource_type ];
 
   // Sanity check on current values
   if ( source && resources.current[ resource_type ] > resources.max[ resource_type ] )

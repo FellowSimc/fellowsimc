@@ -2890,9 +2890,6 @@ void print_html_player_resources( report::sc_html_stream& os, const player_t& p 
     if ( p.resources.max[ timeline.type ] == 0 )
       continue;
 
-    if ( timeline.timeline.mean() == 0 )
-      continue;
-
     if ( !p.resources.is_active( timeline.type ) )  // don't display disabled resources
       continue;
 

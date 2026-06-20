@@ -2,6 +2,7 @@
 #include "util/util.hpp"
 
 #include "simulationcraft.hpp"
+#include <unordered_set>
 
 namespace fellowship
 {
@@ -64,7 +65,7 @@ public:
     actions::melee_t* melee_hit;
     action_t* chain_lightning_ace_of_spades;
     action_t* chain_lightning_blood_and_thunder;
-    action_t* raging_currents_dmg;
+    action_t* raging_currents;
   } actions;
 
   struct buffs_t
@@ -1176,7 +1177,7 @@ struct wild_swing_t : public tariq_attack_t
 
     energize_resource = RESOURCE_FURY;
     energize_amount   = p->spell_const.wild_swing_fury;
-    energize_type     = action_energize::ON_HIT;
+    energize_type     = action_energize::ON_CAST;
 
     may_miss = true;
   }
@@ -1216,7 +1217,7 @@ struct face_breaker_t : public tariq_attack_t
 
     energize_resource = RESOURCE_FURY;
     energize_amount   = p->spell_const.face_breaker_fury;
-    energize_type     = action_energize::ON_HIT;
+    energize_type     = action_energize::ON_CAST;
 
     if ( p->talents_enabled( tariq_t::LEFT_HAND_PATH ) )
       base_crit += p->talents.left_hand_path_cc;
@@ -1275,7 +1276,7 @@ struct heavy_strike_t : public tariq_attack_t
 
     energize_resource = RESOURCE_FURY;
     energize_amount   = p->spell_const.heavy_strike_fury;
-    energize_type     = action_energize::ON_HIT;
+    energize_type     = action_energize::ON_CAST;
 
     add_child( lightning_attack );
   }
@@ -1698,7 +1699,7 @@ struct culling_strike_t : public tariq_attack_t
   culling_strike_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
     : tariq_attack_t( name, p, options_str ), max_cost( p->spell_const.culling_strike_max_fury )
   {
-    id                 = 8;
+    id                 = 7;
     name_str_reporting = "Culling Strike";
 
     ability_flags |= ability_type_e::ABILITY_POWER;
@@ -1752,685 +1753,339 @@ struct culling_strike_t : public tariq_attack_t
   }
 };
 
-//
-//struct grim_carve_t : public tariq_attack_t
-//{
-//  struct grim_carve_hit_t : public tariq_attack_t
-//  {
-//    grim_carve_hit_t( util::string_view name, tariq_t* p ) : tariq_attack_t( name, p )
-//    {
-//      background = true;
-//      id                = 5;
-//
-//      attack_power_mod.direct = p->spell_const.grim_carve_coeff;
-//
-//      aoe                 = -1;
-//      reduced_aoe_targets = p->spell_const.grim_carve_falloff;
-//
-//      name_str_reporting = "Grim Carve Hit";
-//
-//      ability_flags |= ability_type_e::ABILITY_POWER;
-//
-//      if ( p->talents_enabled( tariq_t::CARNAGE ) )
-//      {
-//        attack_power_mod.direct *= p->talents.carnage_damage_multiplier;
-//      }
-//    }
-//
-//    void execute() override
-//    {
-//      base_t::execute();
-//
-//      if ( p()->talents_enabled( tariq_t::CARNAGE ) )
-//      {
-//        auto cooldowns = { p()->cooldowns.reavers_edge, p()->cooldowns.blood_arc, p()->cooldowns.heart_splitter,
-//                           p()->cooldowns.rupture };
-//
-//        for ( auto& cd : cooldowns )
-//        {
-//          cd->adjust( -p()->talents.carnage_cdr_per_hit, false );
-//        }
-//      }
-//    }
-//  };
-//
-//  grim_carve_hit_t* hit;
-//  int num_hits;
-//  double period_multiplier;
-//  timespan_t period;
-//
-//  grim_carve_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-//    : tariq_attack_t( name, p, options_str ),
-//      num_hits(
-//          static_cast<int>( std::floor( p->spell_const.grim_carve_duration / p->spell_const.grim_carve_period ) ) ),
-//      period_multiplier( 1.0 ),
-//      period( p->spell_const.grim_carve_period )
-//  {
-//    id                 = 5;
-//    name_str_reporting = "Grim Carve";
-//
-//    ability_flags |= ability_type_e::ABILITY_POWER;
-//
-//    cooldown->duration = p->spell_const.grim_carve_cooldown;
-//    cooldown->charges  = 1;
-//    cooldown->hasted   = true;
-//
-//    hit = new grim_carve_hit_t( "grim_carve_hit", p );
-//    add_child( hit );
-//
-//    if ( p->legendary.slayers_mosh )
-//    {
-//      auto old_hits = num_hits;
-//      num_hits += p->legendary.lego_1_additional_grim_carve_hits;
-//
-//      period_multiplier *= as<double>( old_hits ) / num_hits;
-//    }
-//  }
-//
-//  void init() override
-//  {
-//    snapshot_flags |= STATE_MUL_DA | STATE_TGT_MUL_DA | STATE_MUL_PERSISTENT | STATE_VERSATILITY | STATE_AP;
-//    base_t::init();
-//  }
-//
-//  double composite_crit_chance() const override
-//  {
-//    auto cc = base_t::composite_crit_chance();
-//
-//    cc += p()->buffs.grim_harvest->check_value();
-//
-//    return cc;
-//  }
-//
-//  double composite_da_multiplier( const action_state_t* s ) const override
-//  {
-//    auto m = base_t::composite_da_multiplier( s );
-//
-//    m *= 1.0 + p()->buffs.bloodbound_spirit->check_value();
-//
-//    return m;
-//  }
-//
-//  void execute() override
-//  {
-//    tariq_attack_t::execute();
-//
-//    if ( p()->talents_enabled( tariq_t::ANCESTRAL_INSTINCT ) )
-//    {
-//      if ( p()->rng_objects.ancestral_instinct->trigger() )
-//      {
-//        p()->buffs.ancestral_instinct->trigger();
-//      }
-//    }
-//
-//    if ( p()->talents_enabled( tariq_t::BLOODBATH ) )
-//    {
-//      p()->buffs.bloodbath->trigger();
-//    }
-//
-//    const timespan_t tick_period = p()->spell_const.grim_carve_period;
-//
-//    for ( int i = 0; i <= num_hits; ++i )
-//    {
-//      auto* damage_state = hit->get_state( execute_state );
-//
-//      hit->set_target( target );
-//
-//      make_event(
-//          *sim,
-//          tick_period * i * p()->cache.attack_haste() * period_multiplier + p()->spell_const.grim_carve_initial_delay,
-//          [ this, damage_state ]() { hit->schedule_execute( damage_state ); } );
-//    }
-//
-//    p()->buffs.grim_harvest->expire();
-//  }
-//};
-//
-//struct reavers_edge_t : public tariq_attack_t
-//{
-//  reavers_edge_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-//    : tariq_attack_t( name, p, options_str )
-//  {
-//    id                 = 6;
-//    name_str_reporting = "Reavers Edge";
-//
-//    ability_flags |= ability_type_e::ABILITY_BASIC;
-//
-//    cooldown->duration = p->spell_const.reavers_edge_cooldown;
-//    cooldown->charges  = 1;
-//    cooldown->hasted   = true;
-//
-//    attack_power_mod.direct = p->spell_const.reavers_edge_coeff;
-//
-//    aoe                 = -1;
-//    reduced_aoe_targets = p->spell_const.reavers_edge_target_threshold;
-//  }
-//
-//  void execute() override
-//  {
-//    base_t::execute();
-//
-//    roll_grim_harvest();
-//
-//    if ( p()->talents_enabled( tariq_t::ANCESTRAL_INSTINCT ) )
-//    {
-//      if ( p()->rng_objects.ancestral_instinct->trigger() )
-//      {
-//        p()->buffs.ancestral_instinct->trigger();
-//      }
-//    }
-//  }
-//};
-//
-//struct blood_arc_t : public tariq_attack_t
-//{
-//  blood_arc_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-//    : tariq_attack_t( name, p, options_str )
-//  {
-//    id                 = 7;
-//    name_str_reporting = "Blood Arc";
-//
-//    ability_flags |= ability_type_e::ABILITY_CORE;
-//
-//    cooldown->duration = p->spell_const.blood_arc_cooldown;
-//    cooldown->charges  = 1;
-//    cooldown->hasted   = true;
-//
-//    attack_power_mod.direct = p->spell_const.blood_arc_coeff;
-//
-//    aoe                 = -1;
-//    reduced_aoe_targets = p->spell_const.blood_arc_target_threshold;
-//  }
-//
-//  double composite_crit_chance() const override
-//  {
-//    auto cc = base_t::composite_crit_chance();
-//
-//    cc += p()->buffs.deaths_arc->check_value();
-//
-//    return cc;
-//  }
-//
-//  void execute() override
-//  {
-//    tariq_attack_t::execute();
-//
-//    roll_grim_harvest();
-//
-//    p()->buffs.serrated_edge->trigger();
-//
-//    if ( p()->talents_enabled( tariq_t::CRIMSON_STRIKES ) )
-//    {
-//      p()->buffs.crimson_strikes->trigger();
-//    }
-//
-//    p()->buffs.deaths_arc->decrement();
-//
-//    if ( p()->talents_enabled( tariq_t::DEATHS_ARC ) )
-//    {
-//      if ( p()->rng_objects.deaths_arc->trigger() )
-//      {
-//        cooldown->reset( true, 1 );
-//        p()->buffs.deaths_arc->trigger();
-//      }
-//    }
-//  }
-//};
-//
-//struct rupture_t : public tariq_attack_t
-//{
-//  rupture_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-//    : tariq_attack_t( name, p, options_str )
-//  {
-//    id                 = 8;
-//    name_str_reporting = "Rupture";
-//
-//    ability_flags |= ability_type_e::ABILITY_POWER;
-//
-//    cooldown->duration = p->spell_const.rupture_cooldown;
-//    cooldown->charges  = 1;
-//    cooldown->hasted   = false;
-//
-//    attack_power_mod.direct = p->spell_const.rupture_coeff;
-//  }
-//
-//  void impact( action_state_t* s ) override
-//  {
-//    base_t::impact( s );
-//
-//    p()->get_target_data( s->target )->debuffs.open_wounds->trigger();
-//  }
-//
-//  void execute() override
-//  {
-//    if ( p()->talents_enabled( tariq_t::HARVESTERS_TOLL ) )
-//    {
-//      p()->buffs.harvesters_toll->trigger();
-//    }
-//
-//    base_t::execute();
-//
-//    roll_grim_harvest();
-//
-//    if ( p()->talents_enabled( tariq_t::MURDER_OF_CROWS ) )
-//    {
-//      //p()->spawn_feathers( p()->talents.murder_of_crows_feathers );
-//      p()->buffs.murder_of_crows->trigger( 2 );
-//    }
-//  }
-//};
-//
-//
-//struct heart_splitter_t : public tariq_attack_t
-//{
-//  struct heart_splitter_exsanguinate_t : public tariq_attack_t
-//  {
-//    heart_splitter_exsanguinate_t( tariq_t* p, std::string_view parent_name, bool oathshatter = false )
-//      : tariq_attack_t( std::format( "{}_exsanguinate", parent_name ), p )
-//    {
-//      id                 = 9;
-//      name_str_reporting = "Heart Splitter Exsanguinate";
-//      base_rend_applied  = 0.0;
-//      background         = true;
-//
-//      base_multiplier = p->spell_const.heart_splitter_exsanguinate_coeff;
-//
-//      if ( oathshatter )
-//      {
-//        aoe                 = -1;
-//        reduced_aoe_targets = p->talents.oathshatter_target_threshold;
-//        base_aoe_multiplier = p->talents.oathshatter_aoe_multiplier;
-//        full_amount_targets = 1;
-//      }
-//
-//      may_crit = false;
-//    }
-//
-//    double composite_da_multiplier( const action_state_t* s ) const override
-//    {
-//      return base_multiplier;
-//    }
-//
-//    void init_finished() override
-//    {
-//      tariq_attack_t::init_finished();
-//
-//      snapshot_flags = STATE_MUL_DA;
-//    }
-//  };
-//
-//  action_t* exsanguinate;
-//  action_t* exsanguinate_oathshatter;
-//  heart_splitter_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-//    : tariq_attack_t( name, p, options_str ),
-//      exsanguinate( nullptr ),
-//      exsanguinate_oathshatter( nullptr )
-//  {
-//    id                 = 9;
-//    name_str_reporting = "Heart Splitter";
-//
-//    ability_flags |= ability_type_e::ABILITY_CORE;
-//
-//    cooldown->duration = p->spell_const.heart_splitter_cooldown;
-//    cooldown->charges  = 1;
-//    cooldown->hasted   = true;
-//
-//    attack_power_mod.direct = p->spell_const.heart_splitter_coeff;
-//
-//    if ( p->talents_enabled( tariq_t::DARKENING_HEARTS ) )
-//      attack_power_mod.direct *= p->talents.darkening_hearts_damage_mul;
-//
-//
-//    base_rend_applied += p->spell_const.heart_splitter_additional_rend;
-//
-//    exsanguinate = new heart_splitter_exsanguinate_t( p, name, false );
-//    add_child( exsanguinate );
-//
-//    if ( p->legendary.thundering_vortex )
-//    {
-//      cooldown->charges = p->legendary.lego_2_charges;
-//    }
-//
-//    if ( p->talents_enabled( tariq_t::OATHSHATTER ) )
-//    {
-//      exsanguinate_oathshatter = new heart_splitter_exsanguinate_t( p, name, true );
-//      add_child( exsanguinate_oathshatter );
-//      base_crit += p->talents.oathshatter_additional_crit;
-//    }
-//  }
-//
-//  void init_finished() override
-//  {
-//    base_t::init_finished();
-//
-//    if ( !background )
-//    {
-//      add_child( p()->actions.heart_splitter );
-//    }
-//  }
-//
-//  double composite_target_crit_chance( player_t* t ) const override
-//  {
-//    auto tcc = base_t::composite_target_crit_chance( t );
-//
-//    if ( p()->talents_enabled( tariq_t::DARKENING_HEARTS ) )
-//    {
-//      if ( t->health_percentage() <= low_health_threshold )
-//      {
-//        tcc += p()->talents.darkening_hearts_execute_cc;
-//      }
-//    }
-//
-//    return tcc;
-//  }
-//
-//  double composite_da_multiplier( const action_state_t* s ) const override
-//  {
-//    auto dam = base_t::composite_da_multiplier( s );
-//
-//    dam *= 1.0 + p()->buffs.bloodbound_spirit->check_value();
-//
-//    return dam;
-//  }
-//
-//  void execute() override
-//  {
-//    base_t::execute();
-//
-//    if ( !background )
-//    {
-//      roll_grim_harvest();
-//    }
-//
-//    if ( p()->legendary.thundering_vortex && p()->rng_objects.heart_splitter_twice->trigger() && !background )
-//    {
-//      auto action = p()->actions.heart_splitter;
-//
-//      action->set_target( target );
-//      action_state_t* damage_state = action->get_state( execute_state );
-//      damage_state->target         = action->target;
-//
-//      action->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
-//      damage_state->persistent_multiplier = execute_state->persistent_multiplier;
-//      cast_state( damage_state )->set_rend_coefficient( cast_state( execute_state )->get_rend_coefficient() );
-//
-//      action->schedule_execute( damage_state );
-//    }
-//  }
-//
-//  void impact( action_state_t* s ) override
-//  {
-//    tariq_attack_t::impact( s );
-//
-//    if ( s->result_amount > 0 )
-//    {
-//      auto exsang_action =
-//          s->result == RESULT_CRIT && exsanguinate_oathshatter ? exsanguinate_oathshatter : exsanguinate;
-//      auto current_rend = p()->get_current_rend( s->target );
-//
-//      if ( current_rend > 0 )
-//        exsang_action->execute_on_target( s->target, current_rend );
-//    }
-//  }
-//};
-//
-//struct reign_in_blood_t : public tariq_spell_t
-//{
-//  reign_in_blood_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-//    : tariq_spell_t( name, p, options_str )
-//  {
-//    id                = 10;
-//    base_rend_applied = 0.0;
-//
-//    name_str_reporting = "Reign in Blood";
-//
-//    trigger_gcd = timespan_t::zero();
-//
-//    cooldown->duration = p->spell_const.reign_in_blood_cooldown;
-//    cooldown->hasted   = false;
-//    cooldown->charges  = 1;
-//
-//    ability_flags |= ability_type_e::ABILITY_MAJOR;
-//  }
-//    
-//  double recharge_rate_multiplier( const cooldown_t& cd ) const override
-//  {
-//    auto rrm = base_t::recharge_rate_multiplier( cd );
-//
-//    rrm = 1.0 / rrm;
-//
-//    rrm += p()->buffs.bloodbath->check_value();
-//
-//    rrm = 1.0 / rrm;
-//
-//    return rrm;
-//  }
-//
-//  void execute() override
-//  {
-//    base_t::execute();
-//    p()->buffs.reign_in_blood->trigger();
-//  }
-//};
-//
-//struct slaughter_t : public tariq_spell_t
-//{
-//  slaughter_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-//    : tariq_spell_t( name, p, options_str )
-//  {
-//    id                = 11;
-//    base_rend_applied = 0.0;
-//
-//    trigger_gcd = timespan_t::zero();
-//
-//    cooldown->duration = p->spell_const.slaughter_cooldown;
-//    cooldown->hasted   = false;
-//    cooldown->charges  = 1;
-//
-//    aoe = -1;
-//
-//    ability_flags |= ability_type_e::ABILITY_MAJOR;
-//  }
-//
-//  void impact( action_state_t* s ) override
-//  {
-//    auto td = p()->get_target_data( s->target );
-//
-//    auto current_rend = p()->get_current_rend( s->target );
-//    auto open_wounds  = td->debuffs.open_wounds->check_value();
-//    td->debuffs.open_wounds->decrement();
-//
-//    int rend_stacks = static_cast<int>( ( current_rend / p()->cache.strength() ) );
-//
-//    if ( p()->talent_enabled( tariq_t::MASSACRE ) )
-//    {
-//      p()->buffs.massacre->trigger( rend_stacks );
-//    }
-//
-//    current_rend *= 1.0 + open_wounds;
-//    current_rend *= p()->spell_const.slaughter_rend_multiplier;
-//
-//    for ( auto& bucket : td->rend_tracker.tick_buckets )
-//    {
-//      bucket = 0;
-//    }
-//
-//    td->rend_tracker.current_tick = 0;
-//    td->dots.rend->cancel();
-//
-//    auto action                     = p()->actions.slaughter;
-//    action_state_t* slaughter_state = action->get_state();
-//    slaughter_state->result_amount  = current_rend;
-//    slaughter_state->target         = s->target;
-//    slaughter_state->result         = RESULT_HIT;
-//    action->snapshot_state( slaughter_state, result_amount_type::DMG_OVER_TIME );
-//    action->schedule_travel( slaughter_state );
-//  }
-//};
-//
-//struct owed_in_blood_t : public tariq_spell_t
-//{
-//  owed_in_blood_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-//    : tariq_spell_t( name, p, options_str )
-//  {
-//    id                = 12;
-//    base_rend_applied = 0.0;
-//
-//    trigger_gcd = timespan_t::zero();
-//
-//    cooldown->duration = p->spell_const.owed_in_blood_cooldown;
-//    cooldown->hasted   = false;
-//    cooldown->charges  = 1;
-//
-//    aoe = -1;
-//
-//    
-//    name_str_reporting = "Owed in Blood";
-//  }
-//
-//  bool ready() override
-//  {
-//    if ( !p()->buffs.owed_in_blood->check() )
-//      return false;
-//
-//    return base_t::ready();
-//  }
-//  
-//  void execute() override
-//  {
-//    base_t::execute();
-//
-//    auto stacks   = p()->buffs.owed_in_blood->check();
-//    auto new_rend = stacks * p()->cache.strength();
-//
-//    auto action                = p()->actions.rend;
-//    action_state_t* rend_state = action->get_state();
-//    rend_state->result_amount  = new_rend;
-//    rend_state->target         = target;
-//    rend_state->result         = RESULT_HIT;
-//    action->snapshot_state( rend_state, result_amount_type::DMG_OVER_TIME );
-//    action->schedule_travel( rend_state );
-//
-//    p()->buffs.owed_in_blood->expire();
-//
-//    if ( p()->talents_enabled( tariq_t::BLOODCRAZE ) )
-//    {
-//      p()->buffs.bloodcraze->expire();
-//      p()->buffs.bloodcraze->trigger( stacks );
-//    }
-//  }
-//};
-//
-//struct bloodcraze_t : public tariq_spell_t
-//{
-//  bloodcraze_t( tariq_t* p ) : tariq_spell_t( "bloodcraze", p )
-//  {
-//    id                 = 13;
-//    name_str_reporting = "Bloodcraze";
-//    base_rend_applied  = 0.0;
-//
-//    background = true;
-//
-//    attack_power_mod.direct = p->talents.bloodcraze_coeff;
-//
-//    aoe                 = -1;
-//    reduced_aoe_targets = p->talents.bloodcraze_falloff;
-//  }
-//
-//  double composite_da_multiplier( const action_state_t* s ) const override
-//  {
-//    auto m = base_t::composite_da_multiplier( s );
-//
-//    m *= ( 1 + p()->buffs.bloodcraze->check_stack_value() );
-//
-//    return m;
-//  }
-//
-//  void impact( action_state_t* s ) override
-//  {
-//    base_t::impact( s );
-//
-//    sim->print_debug(
-//        "{} impacts enemy with bloodcraze. current str: {}, current da mul: {}, result amount: {}. Expected: {}", *p(),
-//        s->attack_power, s->da_multiplier, s->result_amount,
-//        s->attack_power * attack_power_mod.direct * s->da_multiplier * s->versatility );
-//  }
-//};
-//
-//struct ravens_precision_t : public tariq_attack_t
-//{
-//  ravens_precision_t( tariq_t* p ) : tariq_attack_t( "ravens_precision", p )
-//  {
-//    id                 = 14;
-//    name_str_reporting = "Ravens Precision";
-//    base_rend_applied  = 0.0;
-//
-//    background = true;
-//
-//    attack_power_mod.direct = p->talents.ravens_precision_coeff;
-//
-//    aoe                 = -1;
-//    reduced_aoe_targets = p->talents.ravens_precision_falloff;
-//    name_str_reporting  = "Ravens Precision";
-//  }
-//};
-//
-//struct bloodbound_spirit_t : public tariq_attack_t
-//{
-//  struct bloodbound_spirit_hit_t : public tariq_attack_t
-//  {
-//    bloodbound_spirit_hit_t( util::string_view name, tariq_t* p ) : tariq_attack_t( name, p )
-//    {
-//      id = 15;
-//
-//      _affected_by_serrated_edge = false;
-//      background = true;
-//
-//      ability_flags |= ability_type_e::ABILITY_SPIRIT;
-//      attack_power_mod.direct = p->spell_const.bloodbound_spirit_coeff;
-//      aoe                     = -1;
-//      reduced_aoe_targets     = p->spell_const.bloodbound_spirit_falloff;
-//
-//      name_str_reporting = "Bloodbound Spirit (Hit)";
-//    }
-//  };
-//
-//  action_t* damage;
-//  bloodbound_spirit_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-//    : tariq_attack_t( name, p, options_str ), damage( new bloodbound_spirit_hit_t( "bloodbound_spirit_hit", p ) )
-//  {
-//    id                = 15;
-//
-//    _affected_by_serrated_edge = false;
-//
-//    base_execute_time = p->spell_const.bloodbound_spirit_cast_time;
-//
-//    resource_current              = RESOURCE_SPIRIT;
-//    base_costs[ RESOURCE_SPIRIT ] = 100;
-//    ability_flags |= ability_type_e::ABILITY_SPIRIT;
-//    
-//    name_str_reporting = "Bloodbound Spirit";
-//
-//    add_child( damage );
-//  }
-//
-//  void execute() override
-//  {
-//    base_t::execute();
-//
-//    p()->fs_buffs.spirit_of_heroism->trigger();
-//    p()->buffs.bloodbound_spirit->trigger();
-//    p()->used_ultimate();
-//
-//    make_event<ground_aoe_event_t>( *sim, p(),
-//                                    ground_aoe_params_t()
-//                                        .target( execute_state->target )
-//                                        .pulse_time( p()->spell_const.bloodbound_spirit_period )
-//                                        .duration( p()->spell_const.bloodbound_spirit_duration )
-//                                        .action( damage ),
-//                                    true );
-//  }
-//};
+struct thunder_call_t : public tariq_spell_t
+{
+  thunder_call_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_spell_t( name, p, options_str )
+  {
+    id = 8;
+
+    name_str_reporting = "Thunder Call";
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = p->spell_const.thunder_call_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
+  }
+
+  bool ready() override
+  {
+    if ( in_thunder_call() )
+      return false;
+
+    return base_t::ready();
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+    p()->buffs.thunder_call->trigger();
+
+    if ( p()->talent_enabled( tariq_t::RIDE_THE_LIGHTNING ) )
+    {
+      p()->buffs.ride_the_lightning->trigger();
+    }
+  }
+};
+
+struct chain_lightning_t : public tariq_lightning_attack_t
+{
+  secondary_trigger trigger_type;
+  mutable std::unordered_set<size_t> hit_players;
+  mutable std::vector<player_t*>::iterator target_list_end;
+
+  chain_lightning_t( util::string_view name, tariq_t* p, util::string_view options_str = {},
+                     secondary_trigger _trigger_type = secondary_trigger::NONE )
+    : tariq_lightning_attack_t( name, p, options_str ),
+      trigger_type( _trigger_type ),
+      hit_players()
+  {
+    id = 9;
+
+    name_str_reporting = "Chain Lightning";
+
+    cooldown->duration = p->spell_const.chain_lightning_cooldown;
+    cooldown->hasted   = true;
+    cooldown->charges  = 1;
+
+    ability_flags |= ability_type_e::ABILITY_CORE;
+
+    energize_resource = RESOURCE_FURY;
+    energize_amount   = p->spell_const.wild_swing_fury;
+    energize_type     = action_energize::ON_HIT;
+
+    attack_power_mod.direct = p->spell_const.chain_lightning_coeff;
+
+    aoe = p->spell_const.chain_lightning_bounces;
+
+    if ( p->talents_enabled( tariq_t::THUNDERSTRUCK ) )
+      aoe = p->talents.thunderstruck_max_bounces;
+
+    if ( p->talents_enabled( tariq_t::ACE_OF_SPADES ) )
+      cooldown->charges = p->talents.ace_of_spades_charges;
+
+    if ( p->talents_enabled( tariq_t::THE_MOTHERLOAD ) )
+      attack_power_mod.direct *= p->talents.the_motherload_multiplier;
+
+    if ( _trigger_type != secondary_trigger::NONE )
+    {
+      background = true;
+      cooldown->duration = 0_s;
+      ability_flags = ability_type_e::ABILITY_NONE;
+    }
+  }
+
+  void clear_masks()
+  {
+    hit_players.clear();
+  }
+
+  void set_bit_mask( player_t* p ) const
+  {
+    hit_players.insert( p->actor_index );
+  }
+
+  bool get_bit_mask( player_t* p )
+  {
+    return hit_players.contains( p->actor_index );
+  }
+
+  bool ready() override
+  {
+    if ( !in_thunder_call() )
+      return false;
+
+    return base_t::ready();
+  }
+
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto dam = base_t::composite_da_multiplier( s );
+
+    if ( p()->talents_enabled( tariq_t::THE_MOTHERLOAD ) )
+    {
+      dam *= 1.0 + p()->talents.the_motherload_increase_per_enemy * hit_players.size();
+    }
+
+    return dam;
+  }
+
+  double composite_persistent_multiplier( const action_state_t* s ) const override
+  {
+    auto pm = base_t::composite_persistent_multiplier( s );
+
+    if ( p()->buffs.thundering_vortex->check() >= p()->legendary.thundering_vortex_needed )
+    {
+      pm *= p()->legendary.thundering_vortex_multiplier;
+    }
+
+    return pm;
+  }
+
+  double calculate_direct_amount( action_state_t* s ) const override
+  {
+    if ( p()->talents_enabled( tariq_t::THE_MOTHERLOAD ) )
+      set_bit_mask( s->target );
+
+    return base_t::calculate_direct_amount( s );
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    if ( p()->legendary.thundering_vortex )
+      p()->buffs.thundering_vortex->trigger();
+  }
+
+  size_t available_targets( std::vector<player_t*>& tl ) const override
+  {
+    tl.clear();
+
+    tl.push_back( target );
+
+    target_list_end = tl.end();
+
+    for ( auto* t : sim->target_non_sleeping_list )
+    {
+      if ( t->is_enemy() && ( t != target ) )
+      {
+        tl.push_back( t );
+      }
+    }
+
+    while ( tl.size() < n_targets() )
+    {
+      target_list_end = tl.end();
+
+      for ( auto* t : sim->target_non_sleeping_list )
+      {
+        if ( t->is_enemy() )
+        {
+          tl.push_back( t );
+        }
+      }
+    }
+
+    rng().shuffle( target_list_end, tl.end() );
+
+    return tl.size();
+  }
+
+  void execute() override
+  {
+    if ( p()->talents_enabled( tariq_t::THE_MOTHERLOAD ) )
+      clear_masks();
+
+    auto thunder_vortex_threshold = p()->buffs.thundering_vortex->check() >= p()->legendary.thundering_vortex_needed;
+
+    if ( target_cache.is_valid )
+      rng().shuffle( target_list_end, target_cache.list.end() );
+
+    base_t::execute();
+
+    if ( thunder_vortex_threshold )
+      p()->buffs.thundering_vortex->decrement( p()->legendary.thundering_vortex_needed );
+  }
+};
+
+struct focused_wrath_t : public tariq_spell_t
+{
+  focused_wrath_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_spell_t( name, p, options_str )
+  {
+    id = 10;
+
+    name_str_reporting = "Focused Wrath";
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = p->spell_const.focused_wrath_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+    p()->buffs.focused_wrath->trigger( p()->spell_const.focused_wrath_max_stacks );
+  }
+};
+
+struct leap_smash_t : public tariq_attack_t
+{
+  leap_smash_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_attack_t( name, p, options_str )
+  {
+    id = 11;
+
+    name_str_reporting = "Leap Smash";
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = p->spell_const.leap_smash_cooldown;
+    cooldown->hasted   = true;
+    cooldown->charges  = 1;
+
+    ability_flags |= ability_type_e::ABILITY_MOVEMENT;
+
+    attack_power_mod.direct = p->spell_const.leap_smash_coeff;
+    aoe                     = -1;
+    reduced_aoe_targets     = p->spell_const.leap_smash_threshold;
+
+    if ( p->talents_enabled( tariq_t::HIGH_ROAD ) )
+    {
+      energize_resource = RESOURCE_FURY;
+      energize_amount   = p->talents.high_road_leap_smash_fury;
+      energize_type     = action_energize::ON_CAST;
+    }
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    base_t::impact( s );
+
+    if ( p()->legendary.slayers_mosh )
+    {
+      p()->get_target_data( s->target )->debuffs.slayers_mosh->trigger();
+    }
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+    p()->buffs.focused_wrath->trigger( p()->spell_const.focused_wrath_max_stacks );
+
+    if ( hit_any_target && p()->talents_enabled( tariq_t::MOUTH_FOR_WAR ) )
+    {
+      p()->buffs.focused_wrath->trigger();
+    }
+  }
+};
+
+struct raging_currents_t : public tariq_lightning_attack_t
+{
+  raging_currents_t( util::string_view name, tariq_t* p ) : tariq_lightning_attack_t( name, p )
+  {
+    id = 12;
+
+    background = true;
+
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
+    attack_power_mod.direct = p->spell_const.raging_tempest_pulse_coeff;
+
+    name_str_reporting = "Raging Currents";
+  }
+
+  void execute()
+  {
+    auto& tl = target_list();
+    rng().shuffle( tl.begin(), tl.end() );
+    base_t::execute();    
+  }
+};
+
+struct raging_tempest_t : public tariq_lightning_attack_t
+{
+  raging_tempest_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
+    : tariq_lightning_attack_t( name, p, options_str )
+  {
+    id = 12;
+
+    name_str_reporting = "Raging Tempest";
+
+    trigger_gcd = timespan_t::zero();
+
+    ability_flags |= ability_type_e::ABILITY_SPIRIT;
+
+    attack_power_mod.direct = p->spell_const.raging_tempest_impact_coeff;
+    aoe                     = -1;
+    reduced_aoe_targets     = p->spell_const.raging_tempest_impact_threshold;
+
+    resource_current              = RESOURCE_SPIRIT;
+    base_costs[ RESOURCE_SPIRIT ] = 100;
+  }
+
+  void init_finished() override
+  {
+    base_t::init_finished();
+    add_child( p()->actions.raging_currents );
+  }
+
+  void execute() override
+  {
+    base_t::execute();
+
+    p()->fs_buffs.spirit_of_heroism->trigger();
+    p()->buffs.raging_currents->trigger();
+    p()->used_ultimate();
+  }
+};
 
 }  // namespace actions
 
@@ -2555,6 +2210,8 @@ double tariq_t::composite_player_target_multiplier( player_t* target, school_e s
 {
   double m = fs_player_t::composite_player_target_multiplier( target, school );
 
+  m *= 1.0 + get_target_data( target )->debuffs.slayers_mosh->check_value();
+
   return m;
 }
 
@@ -2612,24 +2269,16 @@ action_t* tariq_t::create_action( util::string_view name, util::string_view opti
     return new hammer_storm_t( name, this, options_str );
   if ( name == "culling_strike" )
     return new culling_strike_t( name, this, options_str );
-  //if ( name == "grim_carve" )
-  //  return new grim_carve_t( name, this, options_str );
-  //if ( name == "reavers_edge" )
-  //  return new reavers_edge_t( name, this, options_str );
-  //if ( name == "blood_arc" )
-  //  return new blood_arc_t( name, this, options_str );
-  //if ( name == "rupture" )
-  //  return new rupture_t( name, this, options_str );
-  //if ( name == "heart_splitter" )
-  //  return new heart_splitter_t( name, this, options_str );
-  //if ( name == "reign_in_blood" )
-  //  return new reign_in_blood_t( name, this, options_str );
-  //if ( name == "slaughter" )
-  //  return new slaughter_t( name, this, options_str );
-  //if ( name == "owed_in_blood" )
-  //  return new owed_in_blood_t( name, this, options_str );
-  //if ( name == "bloodbound_spirit" )
-  //  return new bloodbound_spirit_t( name, this, options_str );
+  if ( name == "thunder_call" )
+    return new thunder_call_t( name, this, options_str );
+  if ( name == "chain_lightning" )
+    return new chain_lightning_t( name, this, options_str );
+  if ( name == "focused_wrath" )
+    return new focused_wrath_t( name, this, options_str );
+  if ( name == "leap_smash" )
+    return new leap_smash_t( name, this, options_str );
+  if ( name == "raging_tempest" )
+    return new raging_tempest_t( name, this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -2799,7 +2448,7 @@ void tariq_t::create_buffs()
                               ->set_tick_time_behavior( buff_tick_time_behavior::HASTED )
                               ->set_max_stack( spell_const.raging_tempest_currents_max_stack )
                               ->set_tick_callback( [ this ]( buff_t* buff, int current_tick, timespan_t tick_time ) {
-                                actions.raging_currents_dmg->execute();
+                                actions.raging_currents->execute();
                               } );
 
   buffs.ride_the_lightning =
@@ -2964,9 +2613,12 @@ void tariq_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
-  //actions.chain_lightning_ace_of_spades
-  //actions.chain_lightning_blood_and_thunder
-  //actions.raging_currents_dmg
+  actions.chain_lightning_ace_of_spades = new actions::chain_lightning_t( "chain_lightning_ace_of_spades", this, {}, secondary_trigger::ACE_OF_SPADES );
+  actions.chain_lightning_ace_of_spades->name_str_reporting = "Chain Lightning (Ace of Spades)";
+
+  actions.chain_lightning_blood_and_thunder = new actions::chain_lightning_t( "chain_lightning_blood_and_thunder", this, {}, secondary_trigger::BLOOD_AND_THUNDER );
+  actions.chain_lightning_blood_and_thunder->name_str_reporting = "Chain Lightning (Blood and Thunder)";
+  actions.raging_currents = new actions::raging_currents_t( "raging_currents", this );
 
   //actions.rend                               = new actions::rend_t( this );
   //actions.slaughter                          = new actions::slaughter_dot_t( this );

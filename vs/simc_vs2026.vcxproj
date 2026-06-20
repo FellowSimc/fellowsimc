@@ -29,6 +29,7 @@
     <ClCompile Include="..\engine\class_modules\sc_gunde.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_mara.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_rime.cpp" />
+    <ClCompile Include="..\engine\class_modules\sc_tariq.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_xavian.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

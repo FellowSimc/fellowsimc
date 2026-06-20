@@ -27,8 +27,8 @@ struct attack_t : public action_t
   result_amount_type amount_type( const action_state_t* /* state */, bool /* periodic */ = false ) const override;
   result_amount_type report_amount_type( const action_state_t* /* state */ ) const override;
 
-  double miss_chance( double hit, player_t* t ) const override;
-  double dodge_chance( double /* expertise */, player_t* t ) const override;
+  double miss_chance( action_state_t* s ) const override;
+  double dodge_chance( action_state_t* s ) const override;
   double block_chance( action_state_t* s ) const override;
   double crit_block_chance( action_state_t* s ) const override;
 

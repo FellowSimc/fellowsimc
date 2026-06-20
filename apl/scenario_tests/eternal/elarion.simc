@@ -150,11 +150,11 @@ talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_
 copy="Shimmer HWA DF","Elarion HWA"
 talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/deadly_focus:1/skylit_grace:1
 
-copy="Shimmer HWA DF Fus","Elarion HWA"
-talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/fusillade:1/deadly_focus:1/skylit_grace:1
+# copy="Shimmer HWA DF Fus","Elarion HWA"
+# talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/fusillade:1/deadly_focus:1/skylit_grace:1
 
-copy="Shimmer HWA DF SR","Elarion HWA"
-talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/fusillade:1/swift_reload:1/skylit_grace:1
+# copy="Shimmer HWA DF SR","Elarion HWA"
+# talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/fusillade:1/swift_reload:1/skylit_grace:1
 
 
 copy="Shimmer HWA DF Basics","Elarion HWA"
@@ -200,26 +200,26 @@ main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_s
 copy="Shimmer Hybrid","Elarion HWA"
 talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
 
-copy="Shimmer Hybrid AoE","Elarion HWA"
-talents=last_lights:1/lethal_shots:1/piercing_seekers:1/final_crescendo:1/skyward_munitions:1//impending_heartseeker:1/fusillade:1/resurgent_winds:1
+# copy="Shimmer Hybrid AoE","Elarion HWA"
+# talents=last_lights:1/lethal_shots:1/piercing_seekers:1/final_crescendo:1/skyward_munitions:1//impending_heartseeker:1/fusillade:1/resurgent_winds:1
 
-copy="Shimmer Hybrid more AoE","Elarion HWA"
-talents=last_lights:1/piercing_seekers:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
+# copy="Shimmer Hybrid more AoE","Elarion HWA"
+# talents=last_lights:1/piercing_seekers:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
 
-copy="Shimmer Hybrid more more AoE","Elarion HWA"
-talents=last_lights:1/piercing_seekers:1/strikers_aim:1/rising_moon:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
+# copy="Shimmer Hybrid more more AoE","Elarion HWA"
+# talents=last_lights:1/piercing_seekers:1/strikers_aim:1/rising_moon:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
 
 copy="Shimmer Hybrid alternate","Elarion HWA"
 talents=last_lights:1/lethal_shots:1/rising_moon:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/resurgent_winds:1
 
-copy="Shimmer ST Focused without RW","Elarion HWA"
-talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1
+# copy="Shimmer ST Focused without RW","Elarion HWA"
+# talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1
 
-copy="Shimmer ST Focused without RW FC","Elarion HWA"
-talents=last_lights:1/lethal_shots:1/strikers_aim:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1/lunar_fury:1
+# copy="Shimmer ST Focused without RW FC","Elarion HWA"
+# talents=last_lights:1/lethal_shots:1/strikers_aim:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1/lunar_fury:1
 
-copy="Shimmer AoE Pad","Elarion HWA"
-talents=last_lights:1/lethal_shots:1/strikers_aim:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1/repeating_stars:1
+# copy="Shimmer AoE Pad","Elarion HWA"
+# talents=last_lights:1/lethal_shots:1/strikers_aim:1/skyward_munitions:1/lunarlight_affinity:1/impending_heartseeker:1/fusillade:1/piercing_seekers:1/rising_moon:1/repeating_stars:1
 
 # copy="Elarion focused_expanse","Elarion HWA"
 # talents+=/focused_expanse:1

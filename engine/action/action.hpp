@@ -884,10 +884,10 @@ public:
 
   virtual result_amount_type report_amount_type( const action_state_t* state ) const;
 
-  virtual double miss_chance( double /* hit */, player_t* /* target */ ) const
+  virtual double miss_chance( action_state_t* s ) const
   { return 0; }
 
-  virtual double dodge_chance( double /* expertise */, player_t* /* target */ ) const
+  virtual double dodge_chance( action_state_t* s ) const
   { return 0; }
 
   virtual double parry_chance( action_state_t* ) const

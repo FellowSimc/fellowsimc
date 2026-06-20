@@ -1098,7 +1098,7 @@ struct melee_t : public mara_attack_t
     : mara_attack_t( name, p ), first( true ), canceled( false ), prev_scheduled_time( timespan_t::zero() )
   {
     background = repeating = may_glance = may_crit = true;
-    may_miss                                       = true;
+    may_miss = may_parry      = true;
     allow_class_ability_procs = not_a_proc = true;
     special                                = false;
 
@@ -1108,11 +1108,6 @@ struct melee_t : public mara_attack_t
 
     attack_power_mod.direct = 0.3;
     _breaks_stealth         = false;
-  }
-
-  double miss_chance( double /* hit */, player_t* /* target */ ) const
-  {
-    return 1-0.95*0.95;
   }
 
   void reset() override

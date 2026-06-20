@@ -81,44 +81,29 @@ result_amount_type attack_t::report_amount_type( const action_state_t* state ) c
   return result_type;
 }
 
-double attack_t::miss_chance( double hit, player_t* t ) const
+double attack_t::miss_chance( action_state_t* s ) const
 {
-  if ( t->is_enemy() && sim->auto_attacks_always_land && !special )
+  if ( s->target->is_enemy() && sim->auto_attacks_always_land && !special )
   {
     return 0.0;
   }
 
   // cache.miss() contains the target's miss chance (3.0 base in almost all cases)
-  double miss = t->cache.miss();
+  double miss = s->target->cache.miss();
 
-  // add or subtract 1.5% per level difference
-  miss += ( t->level() - player->level() ) * 0.015;
-
-  // asymmetric hit penalty for npcs attacking higher-level players
-  if ( !t->is_enemy() )
-    miss += std::max( t->level() - player->level() - 3, 0 ) * 0.015;
-
-  // subtract the player's hit chance
-  miss -= hit;
 
   return miss;
 }
 
-double attack_t::dodge_chance( double expertise, player_t* t ) const
+double attack_t::dodge_chance( action_state_t* s ) const
 {
-  if ( t->is_enemy() && sim->auto_attacks_always_land && !special )
+  if ( s->target->is_enemy() && sim->auto_attacks_always_land && !special )
   {
     return 0.0;
   }
 
   // cache.dodge() contains the target's dodge chance (3.0 base, plus spec bonuses and rating)
-  double dodge = t->cache.dodge();
-
-  // WoD mechanics are unchanged from MoP add or subtract 1.5% per level difference
-  dodge += ( t->level() - player->level() ) * 0.015;
-
-  // subtract the player's expertise chance
-  dodge -= expertise;
+  double dodge = s->target->cache.dodge();
 
   return dodge;
 }
@@ -302,8 +287,8 @@ result_e attack_t::calculate_result( action_state_t* s ) const
 
   int delta_level = s->target->level() - player->level();
 
-  double miss = may_miss ? miss_chance( composite_hit(), s->target ) : 0;
-  double dodge = may_dodge ? dodge_chance( composite_expertise(), s->target ) : 0;
+  double miss  = may_miss ? miss_chance( s ) : 0;
+  double dodge = may_dodge ? dodge_chance( s ) : 0;
   double parry =
     may_parry && player->position() == POSITION_FRONT ? parry_chance( s ) : 0;
   double crit = may_crit ? std::max( s->composite_crit_chance() + s->target->cache.crit_avoidance(), 0.0 ) : 0;

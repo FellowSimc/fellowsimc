@@ -149,11 +149,11 @@ gunde = {
     "ravens_precision": 2,
     "grim_harvest": 2,
 
-    "harvesters_toll":1,
+    "sundered_flesh": 1,
     "crimson_strikes": 1,
-    "darkening_hearts": 1,
+    "bloodbath": 1,
 
-    "superior_serration": 2,
+    "darkening_hearts": 2,
     "murder_of_crows": 2,
     "massacre": 2,
 
@@ -165,9 +165,9 @@ gunde = {
     "oathshatter": 3,
     "carnage": 3,
 
-    "sundered_flesh": 1,
+    "superior_serration": 1,
     "ancestral_instinct": 1,
-    "bloodbath": 1,
+    "harvesters_toll":1,
 }
 
 gunde_indicators = {
@@ -176,6 +176,40 @@ gunde_indicators = {
     "oathshatter": "OATH",
     "carnage": "CRN",
 }
+
+
+tariq = {
+    "left_hand_path": 2,
+    "ride_the_lightning": 2,
+    "square_hammer": 2,
+
+    "high_road": 1,
+    "blood_and_thunder": 1,
+    "bloodline": 1,
+
+    "the_motherload": 2,
+    "mouth_for_war": 2,
+    "thunderstruck": 2,
+
+    "pneuma": 1,
+    "sledgehammer": 1,
+    "far_beyond_driven": 1,
+
+    "kill_em_all": 3,
+    "ace_of_spades": 3,
+    "schism": 3,
+
+    "them_bones": 1,
+    "crack_the_sky": 1,
+    "killing_in_the_name":1,
+}
+
+tariq_indicators = {
+    "kill_em_all": "KEA",
+    "ace_of_spades": "AoS",
+    "schism": "Schism",
+}
+
 
 gems = [
     "ruby", "amethyst", "topaz", "emerald", "sapphire", "diamond"

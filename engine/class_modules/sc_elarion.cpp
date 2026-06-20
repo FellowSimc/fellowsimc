@@ -263,7 +263,7 @@ public:
     double fusillade_crit         = 0.2;
 
     double final_crescendo_dmg_mul = 1.0;
-    int final_crescendo_max_stacks = 2;
+    int final_crescendo_max_stacks = 2; // Every third shot
     int final_crescendo_ricochets  = 10;
 
     double skylit_grace_cdr = 1.2;
@@ -977,7 +977,7 @@ struct ranged_shot_t : public elarion_attack_t
     : elarion_attack_t( name, p ), first( true ), canceled( false ), prev_scheduled_time( timespan_t::zero() )
   {
     background = repeating = may_glance = may_crit = true;
-    may_miss                                       = true;
+    may_miss = may_parry      = true;
     allow_class_ability_procs = not_a_proc = true;
     special                                = false;
 
@@ -986,11 +986,6 @@ struct ranged_shot_t : public elarion_attack_t
     name_str_reporting = reporting_name;
 
     attack_power_mod.direct = p->spell_const.auto_attack_ap_coeff;
-  }
-
-  double miss_chance( double /* hit */, player_t* /* target */ ) const
-  {
-    return 1 - 0.95 * 0.95;
   }
 
   void reset() override
@@ -1576,13 +1571,13 @@ struct highwind_arrow_t : public elarion_attack_t
 
     if ( p()->talents_enabled( elarion_t::STRIKERS_AIM ) && execute_state )
     {
-      auto stacks = n_targets() - execute_state->n_targets;
+      int stacks = n_targets() - execute_state->n_targets;
       if ( stacks > p()->buffs.strikers_aim->stack() )
       {
         p()->buffs.strikers_aim->expire();
         p()->buffs.strikers_aim->trigger( stacks );
       }
-    }
+    }    
 
     if ( !is_precision_strike )
     {

@@ -58,7 +58,7 @@ result_e spell_base_t::calculate_result( action_state_t* s ) const
 
   if ( ( result == RESULT_NONE ) && may_miss )
   {
-    if ( rng().roll( miss_chance( composite_hit(), s->target ) ) )
+    if ( rng().roll( miss_chance( s ) ) )
     {
       result = RESULT_MISS;
     }
@@ -157,19 +157,9 @@ spell_t::spell_t( util::string_view token, player_t* p, const spell_data_t* s )
   : spell_base_t( ACTION_SPELL, token, p, s )
 {}
 
-double spell_t::miss_chance( double hit, player_t* t ) const
+double spell_t::miss_chance( action_state_t* s ) const
 {
-  // base spell miss is double base melee miss
-  double miss = t->cache.miss();
-  miss *= 2;
-
-  // 11% level-dependent miss for level+4
-  miss += 0.03 * ( t->level() - player->level() );
-
-  miss += 0.08 * std::max( t->level() - player->level() - 3, 0 );
-
-  // subtract the player's hit and expertise
-  miss -= hit;
+  double miss = s->target->cache.miss();
 
   return miss;
 }

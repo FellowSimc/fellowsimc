@@ -4611,12 +4611,6 @@ void candle_confidant( special_effect_t& effect )
       return this->player->base.attack_crit_chance;
     }
 
-    // They made these guys always miss... rather than fixing their AI.
-    double miss_chance( double, player_t* ) const override
-    {
-      return 1.0;
-    }
-
     // Pet melee attacks seem to still scale with aura 380 and 531
     double composite_da_multiplier( const action_state_t* s ) const override
     {

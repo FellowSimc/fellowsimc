@@ -132,32 +132,6 @@ void snapshot_stats_t::execute()
   // will cause a division by 0 error.
   // We would need to increase the delta before starting the scaling sim to remove this error
 
-  if (role == ROLE_SPELL || role == ROLE_HYBRID || role == ROLE_HEAL)
-  {
-    double chance = proxy_spell->miss_chance(proxy_spell->composite_hit(), sim->target);
-    if (chance < 0)
-      spell_hit_extra = -chance * p->current.rating.spell_hit;
-  }
-
-  if (role == ROLE_ATTACK || role == ROLE_HYBRID || role == ROLE_TANK)
-  {
-    double chance = proxy_attack->miss_chance(proxy_attack->composite_hit(), sim->target);
-    if (p->dual_wield())
-      chance += 0.19;
-    if (chance < 0)
-      attack_hit_extra = -chance * p->current.rating.attack_hit;
-    if (p->position() != POSITION_FRONT)
-    {
-      chance = proxy_attack->dodge_chance(p->cache.attack_expertise(), sim->target);
-      if (chance < 0)
-        expertise_extra = -chance * p->current.rating.expertise;
-    }
-    else if ( p->position() == POSITION_FRONT )
-    {
-      chance = proxy_attack->parry_chance( nullptr );
-    }
-  }
-
   if ( p->scaling )
   {
     p->scaling->over_cap[ STAT_HIT_RATING ]       = std::max( spell_hit_extra, attack_hit_extra );

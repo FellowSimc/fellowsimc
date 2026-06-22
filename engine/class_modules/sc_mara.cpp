@@ -306,8 +306,8 @@ public:
   struct spell_const_t
   {
     double hemorrhaging_strike_energy_gen = 2.0;
-    double hemorrhaging_strike_damage     = 2.73;
-    double hemorrhaging_stike_tick_dmg    = 1.076 * 0.67;
+    double hemorrhaging_strike_damage     = 2.73; 
+    double hemorrhaging_stike_tick_dmg    = 0.7209;
     timespan_t hemorrhaging_strike_period = 3_s;
 
     double queens_fang_coeff     = 2.5212 * 1.12 * 1.1;

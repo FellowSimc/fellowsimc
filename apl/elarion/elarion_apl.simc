@@ -18,7 +18,7 @@ actions.main+=/natures_fury
 actions.main+=/highwind_arrow,target_if=max:target.health*(1+0.5*debuff.lunarlight_mark.up),if=buff.resurgent_winds.up
 actions.main+=/starfall_volley
 # actions.main+=/multishot,if=buff.skystriders_supremacy.up&(buff.skystriders_supremacy.stack-2)*gcd.max<=buff.skystriders_supremacy.remains&(buff.skystriders_supremacy.stack)*gcd.max>=buff.skystriders_supremacy.remains
-actions.main+=/highwind_arrow,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=legendary.shimmer&debuff.shimmer.remains<=gcd.max*3|charges>=(2-debuff.shimmer.stack)&legendary.shimmer&debuff.shimmer.stack<2|buff.resurgent_winds.up|talent.high_impact&weapon.chronoshift&cooldown.chronoshift.remains<=gcd.max*3
+actions.main+=/highwind_arrow,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=legendary.shimmer&debuff.shimmer.remains<=gcd.max*3|charges>=(3-debuff.shimmer.stack)&legendary.shimmer&!debuff.shimmer.at_max_stacks|buff.resurgent_winds.up|talent.high_impact&weapon.chronoshift&cooldown.chronoshift.remains<=gcd.max*3
 actions.main+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,if=buff.impending_heartseeker.up|debuff.lunarlight_mark.up&(talent.fusillade|!legendary.astronomers_hail)|talent.fervent_supremacy&active_enemies=1|buff.event_horizon.up
 actions.main+=/chronoshift,cancel_if=gcd.remains<=0
 actions.main+=/multishot,if=(is_empowered)&active_enemies<=2
@@ -68,6 +68,7 @@ actions.deadly_focus+=/voidbringer,target_if=(target.time_to_die>=12|fight_remai
 actions.deadly_focus+=/natures_fury
 actions.deadly_focus+=/highwind_arrow,if=debuff.shimmer.remains<=gcd.max*3&legendary.shimmer|buff.resurgent_winds.up|full_recharge_time<=gcd.max|charges>=2&talent.resurgent_winds
 actions.deadly_focus+=/starfall_volley
+actions.deadly_focus+=/highwind_arrow,if=!debuff.shimmer.at_max_stacks&legendary.shimmer
 actions.deadly_focus+=/highwind_arrow,if=talent.strikers_aim&(active_enemies<3|talent.final_crescendo)
 actions.deadly_focus+=/chronoshift,if=cooldown.starfall_volley.remains>10
 actions.deadly_focus+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,cancel_if=debuff.lunarlight_mark.stack=0&gcd.remains<=0&active_enemies>2,if=buff.impending_heartseeker.up|debuff.lunarlight_mark.stack>2&active_enemies>1|active_enemies=1&debuff.lunarlight_mark.stack>8

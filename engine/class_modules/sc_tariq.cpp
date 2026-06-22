@@ -250,7 +250,7 @@ public:
     
 
     //Ink.HeavySingleTargetAttack.StrengthCoefficient, 12.2071				;was 9.162 then 10.078 then 13.4374 then 17.4686 then 11.4218
-    double skull_crusher_coeff = 12.2071 * 0.87 * 0.95;
+    double skull_crusher_coeff = 10.0892;
     //Ink.HeavySingleTargetAttack.Spread, 0.1
     //Ink.HeavySingleTargetAttack.VisualHitDelay, 0.52
     //Ink.HeavySingleTargetAttack.Cost, 0.25	; Percentage of Max Rage
@@ -351,7 +351,7 @@ public:
     //Ink.ChargedBuff.ResourceGain, 0.0
     
     //Ink.BouncyProjectile.StrengthCoefficient, 2.0163	;was 1.47 then 2.205 then 1.617 then 1.6979 then 1.568 then 1.1290
-    double chain_lightning_coeff = 2.0163 * 0.9 * 0.87 * 0.95;
+    double chain_lightning_coeff = 1.4998;
     //Ink.BouncyProjectile.Spread, 0.1
     //Ink.BouncyProjectile.MaxRange, 3000.0
     //Ink.BouncyProjectile.MaxNumOfTargets, 6.0

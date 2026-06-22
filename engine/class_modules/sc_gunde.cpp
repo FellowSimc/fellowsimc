@@ -289,7 +289,7 @@ public:
     // Gunde.HeavyMeleeDotBased.Cooldown, 12.0                                     ; RECKONING / heart splitter
     timespan_t heart_splitter_cooldown = 12.0_s;
     // Gunde.HeavyMeleeDotBased.Damage.StrengthCoefficient, 3.70                   ; WAS 3.4
-    double heart_splitter_coeff = 9.4 * 0.5;
+    double heart_splitter_coeff = 4.7;
     // Gunde.HeavyMeleeDotBased.Damage.DotCoefficient, 0.30						; WAS 0.10
     double heart_splitter_exsanguinate_coeff = 0.3;
     // Gunde.HeavyMeleeDotBased.VisualDelay, 0.35

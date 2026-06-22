@@ -192,7 +192,7 @@ public:
     double celestial_shot_ap_coeff   = 2.879;
     double celestial_shot_focus_cost = 15.0;
 
-    double multishot_ap_coeff       = 2.415 * 1.1;
+    double multishot_ap_coeff       = 2.6565;
     double multishot_target_falloff = 12;
     double multishot_focus_cost     = 20;
     int multishot_max_stacks        = 5;
@@ -220,7 +220,7 @@ public:
     int lunarlight_mark_max_targets     = 12;
     int lunarlight_mark_stacks_applied  = 3;
     timespan_t lunarlight_mark_duration = 15_s;
-    double lunarlight_mark_ap_coeff     = 2.2597;
+    double lunarlight_mark_ap_coeff     = 2.2597 * 0.9;
     double lunarlight_mark_chance_hit   = 0.25;
     double lunarlight_mark_chance_crit  = 0.5;
 
@@ -235,7 +235,7 @@ public:
     double starfall_volley_target_falloff = 10;
     timespan_t starfall_volley_cooldown   = 40_s;
     timespan_t starfall_volley_period     = 1_s;
-    double starfall_volley_ap_coeff       = 1.249;
+    double starfall_volley_ap_coeff       = 1.249 * 0.9;
     double starfall_volley_focus_cost     = 30;
 
     timespan_t event_horizon_duration             = 20_s;
@@ -264,7 +264,7 @@ public:
 
     double final_crescendo_dmg_mul = 1.0;
     int final_crescendo_max_stacks = 2; // Every third shot
-    int final_crescendo_ricochets  = 10;
+    int final_crescendo_ricochets  = 10; // total hits
 
     double skylit_grace_cdr = 1.2;
 
@@ -273,7 +273,8 @@ public:
 
     timespan_t skyward_munitions_cdr = 1_s;
 
-    timespan_t repeating_stars_cdr = 0.3_s;
+    timespan_t repeating_stars_cdr = 0.2_s;
+    size_t repeating_stars_cap     = 12;
 
     double lunarlight_affinity_volley_chance_mul = 0.0;
     double lunarlight_affinity_salvo_cc          = 0.2;
@@ -327,16 +328,16 @@ public:
     bool shimmer                 = false;
     timespan_t shimmer_duration  = 9_s;
     double shimmer_mul_per_stack = 0.1;
-    int shimmer_max_stacks       = 2;
+    int shimmer_max_stacks       = 3;
 
     bool starstrikers_ascent                                = false;
     int starstrikers_ascent_spirit_refunds_resurgent_stacks = 1;
     double starstrikers_ascent_chance                       = 0.5;
 
     bool astronomers_hail                        = false;
-    timespan_t astronomers_hail_volley_duration  = 4_s;
+    timespan_t astronomers_hail_volley_duration  = 2_s;
     timespan_t astronomers_hail_multishot_extend = 0.5_s;
-    double astronomers_hail_dmg_bonus            = 1.3;
+    double astronomers_hail_dmg_bonus            = 1.0;
 
 
     bool new_spirit_legendary = false;
@@ -864,18 +865,18 @@ public:
     return mul;
   }
 
-  double recharge_multiplier( const cooldown_t& cd ) const
+  double recharge_rate_multiplier( const cooldown_t& cd ) const override
   {
-    double m = ab::recharge_multiplier( cd );
+    auto rrm = ab::recharge_rate_multiplier( cd );
 
-    if ( p()->buffs.event_horizon->check() )
-    {
-      m *= ab::player->cache.attack_haste();
-    }
+    rrm = 1.0 / rrm;
 
-    return m;
+    rrm += ab::player->cache.attack_haste();
+
+    rrm = 1.0 / rrm;
+
+    return rrm;
   }
-
 
   void consume_resource() override
   {
@@ -933,7 +934,7 @@ public:
     {
       if ( p()->talents_enabled( elarion_t::RESURGENT_WINDS ) )
       {
-        if ( p()->rngs.resurgent_winds->trigger() )
+        if ( p()->rngs.resurgent_winds && p()->rngs.resurgent_winds->trigger() )
         {
           p()->buffs.resurgent_winds->trigger();
         }
@@ -1228,7 +1229,7 @@ struct multishot_t : public elarion_attack_t
 
     if ( result_is_hit( s->result ) )
     {
-      if ( p()->talent_enabled( elarion_t::REPEATING_STARS ) )
+      if ( p()->talent_enabled( elarion_t::REPEATING_STARS ) && s->chain_target < p()->talents.repeating_stars_cap )
       {
         p()->cooldowns.starfall_volley->adjust( -p()->talents.repeating_stars_cdr );
       }
@@ -1819,6 +1820,22 @@ struct skystriders_grace_t : public elarion_spell_t
     ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
+  double recharge_rate_multiplier( const cooldown_t& cd ) const override
+  {
+    auto rrm = base_t::recharge_rate_multiplier( cd );
+
+    rrm = 1.0 / rrm;
+
+    if ( p()->buffs.starfall_volleys->check() && p()->talents_enabled( elarion_t::SKYLIT_GRACE ) )
+    {
+      rrm += p()->talents.skylit_grace_cdr;
+    }
+
+    rrm = 1.0 / rrm;
+
+    return rrm;
+  }
+
   void execute() override
   {
     elarion_spell_t::execute();
@@ -2363,8 +2380,11 @@ void elarion_t::init_rng()
   fs_player_t::init_rng();
 
   rngs.celestial_impetus = get_rppm( "celestial_impetus", spell_const.celestial_impetus_ppm, 1.0, RPPM_HASTE );
-
-  rngs.resurgent_winds =  get_accumulated_rng( "resurgent_winds", rng::CfromP( talents.resurgent_winds_chance ) );
+  
+  if ( talents.resurgent_winds_chance > 0 )
+    rngs.resurgent_winds = get_accumulated_rng( "resurgent_winds", rng::CfromP( talents.resurgent_winds_chance ) );
+  else
+    rngs.resurgent_winds = nullptr;
 }
 
 // elarion_t::init_scaling ====================================================
@@ -2449,9 +2469,8 @@ void elarion_t::create_buffs()
 
   struct skylit_grace_buff_t : elarion_buff_t
   {
-    double cdr_mod;
     skylit_grace_buff_t( elarion_t* pl )
-      : elarion_buff_t( pl, "starfall_volleys" ), cdr_mod( 1 + pl->talents.skylit_grace_cdr )
+      : elarion_buff_t( pl, "starfall_volleys" )
     {
       set_max_stack( 99 );
       set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
@@ -2459,25 +2478,7 @@ void elarion_t::create_buffs()
       add_stack_change_callback( [ this ]( buff_t*, int old, int _new ) {
         if ( _new != old )
         {
-          auto change         = _new - old;
-          auto mod_difference = std::pow( cdr_mod, -change );
-
-          if ( p()->cooldowns.skystriders_grace->action )
-          {
-            p()->cooldowns.skystriders_grace->action->dynamic_recharge_rate_multiplier *= mod_difference;
-            p()->cooldowns.skystriders_grace->adjust_recharge_multiplier();
-          }
-          else
-          {
-            for ( auto& action : p()->action_list )
-            {
-              if ( action->cooldown == p()->cooldowns.skystriders_grace )
-              {
-                action->dynamic_recharge_rate_multiplier *= mod_difference;
-                action->cooldown->adjust_recharge_multiplier();
-              }
-            }
-          }
+          p()->cooldowns.skystriders_grace->adjust_recharge_multiplier();
         }
       } );
     }

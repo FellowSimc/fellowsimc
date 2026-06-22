@@ -167,6 +167,23 @@ talents=final_crescendo:1/fusillade:1/impending_heartseeker:1/last_lights:1/luna
 # copy="Starstrikers AoE","Starstriker Elarion"
 # talents=fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/repeating_stars:1/rising_moon:1/skylit_grace:1
 
+copy="Astronomers Hail HWA Spirit","Starstriker Elarion"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+legendary.shimmer=0
+legendary.starstrikers_ascent=0
+legendary.astronomers_hail=1
+
+# copy="Astronomers Hail FE Spirit","Starstriker Elarion"
+# talents=last_lights:1/focused_expanse:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=0
+# legendary.astronomers_hail=1
+
+# copy="Astronomers Hail FS Spirit","Starstriker Elarion"
+# talents=last_lights:1/fervent_supremacy:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+# legendary.shimmer=0
+# legendary.starstrikers_ascent=0
+# legendary.astronomers_hail=1
 
 # 14
 

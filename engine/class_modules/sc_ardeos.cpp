@@ -208,7 +208,7 @@ public:
     double infernal_wave_cinders = 40;
     double infernal_wave_coeff   = 1.7;
 
-    double fire_frog_coeff             = 0.9381 * 0.92;
+    double fire_frog_coeff             = 0.863;
     double fire_frog_dot_conversion    = 1.0;
     timespan_t fire_frog_dot_duration  = 12_s;
     timespan_t fire_frog_dot_period    = 3_s;

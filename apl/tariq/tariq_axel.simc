@@ -1,0 +1,72 @@
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=15000
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=1
+# relative_difference_base="Tariq Lightning"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_crit_rating=5315
+# scale_haste_rating=5315
+# scale_mastery_rating=5315
+# scale_versatility_rating=5315
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":800000:Humanoid
+# # raid_events+=/pull,pull=02,delay=315,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":300000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+
+tariq="Tariq Lightning"
+level=80
+
+apl/tariq/tariq_apl.simc
+
+finger2=ring2,rarity=legendary,variant=evens,ilevel=15,main_secondary=haste/haste,fixed_secondary=expertise/crit
+
+weapon=fated_strike
+
+gear_haste_rating=206
+gear_mastery_rating=202
+gear_crit_rating=166
+
+# gear_strength=200
+# gear_stamina=280
+# gear_crit_rating=154
+# gear_haste_rating=211
+# gear_versatility_rating=117
+
+
+legendary.thundering_vortex=1
+# talents=square_hammer:1/high_road:1/blood_and_thunder:1/the_motherload:1/thunderstruck:1/kill_em_all:1/ace_of_spades:1
+
+talents=ride_the_lightning:1/square_hammer:1/high_road:1/blood_and_thunder:1/the_motherload:1/thunderstruck:1/ace_of_spades:1/crack_the_sky:1
+
+apl/generated/tariq_talents14_lightning_aos.simc

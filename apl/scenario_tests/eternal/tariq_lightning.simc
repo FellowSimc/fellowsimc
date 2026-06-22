@@ -1,0 +1,103 @@
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=15000
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=1
+# relative_difference_base="Base Tariq"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_crit_rating=5315
+# scale_haste_rating=5315
+# scale_mastery_rating=5315
+# scale_versatility_rating=5315
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":800000:Humanoid
+# # raid_events+=/pull,pull=02,delay=315,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":300000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+
+tariq="Tariq Lightning AoS KeM"
+level=80
+
+apl/tariq/tariq_apl.simc
+
+weapon=fated_strike
+
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_e
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/expertise
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/expertise
+wrist=wrists,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/expertise
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+finger2=ring2,rarity=legendary,variant=evens,ilevel=360,main_secondary=haste/crit,fixed_secondary=expertise/crit
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=crit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+#,affixes=primary/primary
+
+
+legendary.thundering_vortex=1
+# talents=square_hammer:1/high_road:1/blood_and_thunder:1/the_motherload:1/thunderstruck:1/kill_em_all:1/ace_of_spades:1
+
+talents=ace_of_spades:1/blood_and_thunder:1/crack_the_sky:1/kill_em_all:1/square_hammer:1/the_motherload:1/thunderstruck:1
+
+sets.seal_of_the_heskyr=1
+sets.deaths_grasp=1
+sets.draconic_might=1
+sets.dark_prophecy=1
+
+gems.amethyst_power=500
+gems.emerald_power=1200
+gems.ruby_power=500
+gems.sapphire_power=500
+
+weapon_trait.visions_of_grandeur=1
+weapon_trait.hunters_focus=4
+weapon_trait.emerald_judgement=2
+weapon_trait.amethyst_splinters=4
+
+# 38 used
+
+
+
+
+# copy="Pneuma","Base Tariq"
+# talents+=/pneuma:1
+
+
+
+# apl/generated/all_gear_options_tariq.simc

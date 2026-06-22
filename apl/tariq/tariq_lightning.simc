@@ -1,0 +1,273 @@
+# report_details=1
+# optimal_raid=0
+# # max_time=420
+# # max_time=50
+# max_time=250
+# # max_time=60
+# target_error=0.1
+# iterations=15000
+# chart_show_relative_difference=1
+# vary_combat_length=0.1
+# single_actor_batch=1
+# max_time=720
+# desired_targets=1
+# relative_difference_base="Tariq Lightning"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+# scale_only=crit,haste,mastery,vers
+# scale_crit_rating=5315
+# scale_haste_rating=5315
+# scale_mastery_rating=5315
+# scale_versatility_rating=5315
+# positive_scale_delta=1
+# calculate_scale_factors=1
+# dps_plot_stat=haste,crit_rating,mastery,versatility
+# dps_plot_stat=haste:0,mastery:0,crit:0,versatility:0
+# dps_plot_points=10
+# dps_plot_step=300
+# dps_plot_positive=1
+
+
+# optimal_raid=0
+# fight_style=dungeonroute
+# max_time=7200
+# vary_combat_length=0.0
+# enemy=Dummy
+# raid_events=pull,pull=01,delay=5,enemies="BOSS_1tar":800000:Humanoid
+# # raid_events+=/pull,pull=02,delay=315,shared_health=0,enemies="PRIO_fat_man":3000000:Humanoid:1|"11t":1500000:Humanoid:11
+# raid_events+=/pull,pull=02,delay=300,shared_health=1,enemies="12t":300000:Humanoid:12
+# raid_events+=/resource,pull=02,resource=spirit,reset_to_initial=1,cooldown=10101010
+# raid_events+=/resource,pull=02,resource=combo_points,reset_to_initial=1,cooldown=10101010
+
+
+
+tariq="Tariq Lightning KeA AoS"
+level=80
+
+apl/tariq/tariq_apl.simc
+
+
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=finesse_e/finesse_e/finesse_e/finesse_e
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/expertise
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/expertise
+
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/expertise
+wrist=wrists,rarity=legendary,variant=evens,ilevel=360,main_secondary=crit,fixed_secondary=haste/haste
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
+
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/crit
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=crit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+
+# weapon=voidbringers_touch
+
+# copy="+50 str","Tariq Lightning"
+# set_custom_buff=str,stat_value=50_str
+
+# copy="+50 crit","Tariq Lightning"
+# set_custom_buff=str,stat_value=50_crit
+
+
+# copy="+50 haste","Tariq Lightning"
+# set_custom_buff=str,stat_value=50_haste
+
+
+# copy="+50 spirit","Tariq Lightning"
+# set_custom_buff=str,stat_value=50_spiri
+
+
+# copy="+50 expertise","Tariq Lightning"
+# set_custom_buff=str,stat_value=50_expertis
+
+# weapon=fated_strike
+
+# copy="Fated Strike","Tariq Lightning"
+weapon=fated_strike
+
+# talents=mouth_for_war:1/crack_the_sky:1/high_road:1
+
+# talents=the_motherload:1/crack_the_sky:1/thunderstruck:1/blood_and_thunder:1/kill_em_all:1/square_hammer:1/ride_the_lightning:1
+#/ace_of_spades:1
+# 2 3 5 7 10 12
+
+legendary.thundering_vortex=1
+
+
+
+# copy="Executioners Grin","Tariq Lightning"
+# legendary.executioners_grin=1
+
+# copy="Thundering Vortex","Tariq Lightning"
+# legendary.thundering_vortex=1
+
+# copy="Slayers Mosh","Tariq Lightning"
+# legendary.slayers_mosh=1
+
+# copy="Tariq left_hand_path","Tariq Lightning"
+# talents+=/left_hand_path:1
+# copy="Tariq ride_the_lightning","Tariq Lightning"
+# talents+=/ride_the_lightning:1
+# # copy="Tariq square_hammer","Tariq Lightning"
+# # talents+=/square_hammer:1
+# # copy="Tariq ride_the_lightning square_hammer","Tariq Lightning"
+# # talents+=/ride_the_lightning:1/square_hammer:1
+# copy="Tariq high_road","Tariq Lightning"
+# talents+=/high_road:1
+# # copy="Tariq blood_and_thunder","Tariq Lightning"
+# # talents+=/blood_and_thunder:1
+# copy="Tariq bloodline","Tariq Lightning"
+# talents+=/bloodline:1
+# # copy="Tariq the_motherload","Tariq Lightning"
+# # talents+=/the_motherload:1
+# copy="Tariq mouth_for_war","Tariq Lightning"
+# talents+=/mouth_for_war:1
+# # copy="Tariq thunderstruck","Tariq Lightning"
+# # talents+=/thunderstruck:1
+# # copy="Tariq thunderstruck the_motherload","Tariq Lightning"
+# # talents+=/thunderstruck:1
+# talents+=/the_motherload:1
+# copy="Tariq pneuma","Tariq Lightning"
+# talents+=/pneuma:1
+# copy="Tariq sledgehammer","Tariq Lightning"
+# talents+=/sledgehammer:1
+# copy="Tariq far_beyond_driven","Tariq Lightning"
+# talents+=/far_beyond_driven:1
+# # copy="Tariq kill_em_all","Tariq Lightning"
+# # talents+=/kill_em_all:1
+# # copy="Tariq kill_em_all square_hammer","Tariq Lightning"
+# # talents+=/square_hammer:1/kill_em_all:1
+# # copy="Tariq ride_the_lightning square_hammer kill_em_all","Tariq Lightning"
+# # talents+=/ride_the_lightning:1/square_hammer:1/kill_em_all:1
+# copy="Tariq ace_of_spades","Tariq Lightning"
+# talents+=/ace_of_spades:1
+# copy="Tariq schism","Tariq Lightning"
+# talents+=/schism:1
+# copy="Tariq schism sledge","Tariq Lightning"
+# talents+=/schism:1/sledgehammer:1
+# copy="Tariq them_bones","Tariq Lightning"
+# talents+=/them_bones:1
+# # copy="Tariq crack_the_sky","Tariq Lightning"
+# # talents+=/crack_the_sky:1
+# copy="Tariq killing_in_the_name","Tariq Lightning"
+# talents+=/killing_in_the_name:1
+
+sets.seal_of_the_heskyr=1
+sets.deaths_grasp=1
+sets.draconic_might=1
+sets.dark_prophecy=1
+
+gems.emerald_power=1200
+gems.amethyst_power=500
+gems.ruby_power=500
+
+# 22
+
+weapon_trait.emerald_judgement=2
+weapon_trait.amethyst_splinters=4
+weapon_trait.hunters_focus=4
+# 32
+weapon_trait.martial_initiative=1
+weapon_trait.visions_of_grandeur=1
+#34
+weapon_trait.seized_opportunity=4
+#38 used
+
+
+# apl/generated/tariq_talents14_lightning.simc
+# apl/generated/all_gear_options_tariq.simc
+
+# # REAL BUILDS
+
+# #profileset."Tariq_KEA_AoS_313"=
+# copy="Tariq_Lightning_KEA_AoS_313"
+talents=ace_of_spades:1/blood_and_thunder:1/crack_the_sky:1/kill_em_all:1/square_hammer:1/the_motherload:1/thunderstruck:1
+# copy="Tariq_Lightning_KEA_310"
+# talents=blood_and_thunder:1/crack_the_sky:1/kill_em_all:1/mouth_for_war:1/square_hammer:1/the_motherload:1/them_bones:1/thunderstruck:1
+# copy="Tariq_Lightning_KEA_280"
+# talents=blood_and_thunder:1/crack_the_sky:1/high_road:1/kill_em_all:1/mouth_for_war:1/square_hammer:1/the_motherload:1/thunderstruck:1
+
+apl/generated/tariq_talents14_lightning_aos.simc
+
+# talents=bloodline:1/crack_the_sky:1
+
+
+# copy="Mosh KEA RtL Square","Tariq Lightning"
+# legendary.thundering_vortex=0
+# legendary.slayers_mosh=1
+# talents+=/kill_em_all:1/ride_the_lightning:1/square_hammer:1
+# copy="Thundering KEA RtL Square","Tariq Lightning"
+# legendary.thundering_vortex=1
+# legendary.slayers_mosh=0
+# talents+=/kill_em_all:1/ride_the_lightning:1/square_hammer:1
+# copy="Mosh Ace Motherload Thunderstruck","Tariq Lightning"
+# legendary.thundering_vortex=0
+# legendary.slayers_mosh=1
+# talents+=/ace_of_spades:1/motherload:1/thunderstruck:1
+# copy="Thundering Ace Motherload Thunderstruck","Tariq Lightning"
+# legendary.thundering_vortex=1
+# legendary.slayers_mosh=0
+# talents+=/ace_of_spades:1/motherload:1/thunderstruck:1
+
+# copy="No Thundering Vortex","Tariq Lightning"
+# legendary.thundering_vortex=0
+# copy="Mosh instead","Tariq Lightning"
+# legendary.thundering_vortex=0
+# legendary.slayers_mosh=1
+
+# copy="Tariq left_hand_path","Tariq Lightning"
+# talents+=/left_hand_path:1
+# copy="Tariq ride_the_lightning","Tariq Lightning"
+# talents+=/ride_the_lightning:1
+# copy="Tariq square_hammer","Tariq Lightning"
+# talents+=/square_hammer:1
+# copy="Tariq ride_the_lightning square_hammer","Tariq Lightning"
+# talents+=/ride_the_lightning:1/square_hammer:1
+# copy="Tariq high_road","Tariq Lightning"
+# talents+=/high_road:1
+# copy="Tariq blood_and_thunder","Tariq Lightning"
+# talents+=/blood_and_thunder:1
+# # copy="Tariq bloodline","Tariq Lightning"
+# # talents+=/bloodline:1
+# copy="Tariq the_motherload","Tariq Lightning"
+# talents+=/the_motherload:1
+# copy="Tariq mouth_for_war","Tariq Lightning"
+# talents+=/mouth_for_war:1
+# copy="Tariq thunderstruck","Tariq Lightning"
+# talents+=/thunderstruck:1
+# copy="Tariq thunderstruck the_motherload","Tariq Lightning"
+# talents+=/thunderstruck:1
+# talents+=/the_motherload:1
+# copy="Tariq pneuma","Tariq Lightning"
+# talents+=/pneuma:1
+# copy="Tariq sledgehammer","Tariq Lightning"
+# talents+=/sledgehammer:1
+# copy="Tariq far_beyond_driven","Tariq Lightning"
+# talents+=/far_beyond_driven:1
+# copy="Tariq kill_em_all","Tariq Lightning"
+# talents+=/kill_em_all:1
+# copy="Tariq kill_em_all square_hammer","Tariq Lightning"
+# talents+=/square_hammer:1/kill_em_all:1
+# copy="Tariq ride_the_lightning square_hammer kill_em_all","Tariq Lightning"
+# talents+=/ride_the_lightning:1/square_hammer:1/kill_em_all:1
+# copy="Tariq ace_of_spades","Tariq Lightning"
+# talents+=/ace_of_spades:1
+# copy="Tariq schism","Tariq Lightning"
+# talents+=/schism:1
+# copy="Tariq schism sledge","Tariq Lightning"
+# talents+=/schism:1/sledgehammer:1
+# copy="Tariq them_bones","Tariq Lightning"
+# talents+=/them_bones:1
+# # copy="Tariq crack_the_sky","Tariq Lightning"
+# # talents+=/crack_the_sky:1
+# copy="Tariq killing_in_the_name","Tariq Lightning"
+# talents+=/killing_in_the_name:1

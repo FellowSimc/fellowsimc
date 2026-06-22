@@ -1,0 +1,33 @@
+actions.precombat=snapshot_stats
+
+actions.finishers=/hammer_storm,if=buff.schism_hammer_storm.up&(buff.focused_wrath.up|active_enemies>=3)
+actions.finishers+=/skull_crusher,if=buff.schism_skull_crusher.up
+actions.finishers+=/skull_crusher,if=(talent.schism)&(fury>50)
+#&(fury>=90|fight_remains<=10|buff.thunder_call.up)
+actions.finishers+=/hammer_storm,if=active_enemies>=3&(fury>50|fight_remains<=10|buff.thunder_call.up)
+#&(!talent.schism|fury>=50)
+actions.finishers+=/skull_crusher,if=active_enemies<3&(fury>50|fight_remains<=10|buff.thunder_call.up)
+
+actions+=/thunder_call
+actions+=/raging_tempest,if=!buff.thunder_call.up
+actions+=/leap_smash,if=talent.high_road&fury.deficit>=20|talent.mouth_for_war&!buff.focused_wrath.at_max_stacks|legendary.slayers_mosh|1
+actions+=/voidbringers_touch
+actions+=/sahrils_wrath
+actions+=/focused_wrath,if=buff.focused_wrath.stack<2
+actions+=/culling_strike,if=active_enemies<=20&(fury>=10)|buff.executioners_grin.up|talent.pneuma
+actions+=/heavy_strike,if=buff.kill_em_all.up
+actions+=/chain_lightning,if=fury.deficit>=10
+actions+=/heavy_strike,if=fury.deficit>=12
+actions+=/call_action_list,name=finishers
+#,if=fury.deficit>=12
+actions+=/face_breaker,if=fury.deficit>=7
+actions+=/fated_strike
+#,if=fury.deficit>=7
+
+#&(!talent.schism|fury>50)
+# actions+=/skull_crusher,if=buff.schism_skull_crusher.up&(fury>=90|fight_remains<=10|buff.thunder_call.up)
+# actions+=/hammer_storm,if=buff.schism_hammer_storm.up
+# actions+=/skull_crusher,if=(active_enemies<=2|talent.sledgehammer|talent.schism)&(fury>=80|fight_remains<=10|buff.thunder_call.up)|talent.schism&fury>50
+# actions+=/hammer_storm,if=(active_enemies>=3)&(fury>=80|fight_remains<=10|buff.thunder_call.up)
+actions+=/earthbreaker
+actions+=/wild_swing

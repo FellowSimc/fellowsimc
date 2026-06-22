@@ -3,6 +3,8 @@
 Fork of the https://github.com/simulationcraft/simc project for the Game Fellowship.
 Significant adaptions in progress to adapt the engine to better support Fellowship.
 
+This is a personal project so there will be no support with using the software. There are numerous bugs. Updates will be sporadic as I find and fix things.
+
 Heavy work in progress.
 
 WoW code has yet to be pruned.

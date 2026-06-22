@@ -4,3 +4,4 @@
 *.json
 *.log
 ./apl/output/*
+*.sh

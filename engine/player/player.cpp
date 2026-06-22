@@ -1492,6 +1492,9 @@ void player_t::init_base_stats()
   base.dodge = 0.00;
   base.miss = 0.00;
   base.parry = 0.0;
+  
+  base.spell_crit_chance  = 0.05;
+  base.attack_crit_chance = 0.05;
 
   if ( primary_role() == ROLE_TANK )
   {

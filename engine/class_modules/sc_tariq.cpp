@@ -63,7 +63,8 @@ public:
   {
     action_t* auto_attack;
     actions::melee_t* melee_hit;
-    action_t* chain_lightning_ace_of_spades;
+    action_t* chain_lightning_ace_of_spades_spin;
+    action_t* chain_lightning_ace_of_spades_crush;
     action_t* chain_lightning_blood_and_thunder;
     action_t* raging_currents;
   } actions;
@@ -212,11 +213,11 @@ public:
 
     
     //Ink.AutoAttackBuff.StrengthCoefficient, 6.2560	;was 4.065 then 5.0813 then 4.3902
-    double heavy_strike_coeff = 6.256;
+    double heavy_strike_coeff = 6.256 * 0.87 * 0.95 * 0.95;
     //Ink.AutoAttackBuff.Weak.DamageMultiplier, 0.2
     //Ink.AutoAttackBuff.Weak.ResourceGainMultiplier, 0.2
     //Ink.AutoAttackBuff.Cleave.DamageMultiplier, 0.20	;was 0.50
-    double heavy_strike_cleave_multiplier = 0.2;
+    double heavy_strike_cleave_multiplier = 0.3;
     //Ink.AutoAttackBuff.Cleave.PieMaxRadius, 800.0	; Total length
     //Ink.AutoAttackBuff.Cleave.PieMinRadius, 10.0	; Offset from character position. VFX will also start from here
     //Ink.AutoAttackBuff.Cleave.PieAngleWidth, 270.0
@@ -229,7 +230,7 @@ public:
     //Ink.AutoAttackBuff.Cooldown, 8.0
     timespan_t heavy_strike_cooldown = 8_s;
     //Ink.AutoAttackBuff.Lightning.StrengthCoefficient, 2.1896 	;was 1.4227 and then x and then 1.7784
-    double heavy_strike_lightning_coeff = 2.1896;
+    double heavy_strike_lightning_coeff = 2.1896 * 0.87 * 0.95;
     //Ink.AutoAttackBuff.Lightning.TargetThresholdForDamageScale, 5.0	;was 8.0
     double heavy_strike_lightning_threshold = 5.0;
     //Ink.AutoAttackBuff.Lightning.VisualDelay, 0.25	; Added upon the original visual delay
@@ -249,7 +250,7 @@ public:
     
 
     //Ink.HeavySingleTargetAttack.StrengthCoefficient, 12.2071				;was 9.162 then 10.078 then 13.4374 then 17.4686 then 11.4218
-    double skull_crusher_coeff = 12.2071;
+    double skull_crusher_coeff = 12.2071 * 0.87 * 0.95;
     //Ink.HeavySingleTargetAttack.Spread, 0.1
     //Ink.HeavySingleTargetAttack.VisualHitDelay, 0.52
     //Ink.HeavySingleTargetAttack.Cost, 0.25	; Percentage of Max Rage
@@ -257,16 +258,16 @@ public:
     //Ink.HeavySingleTargetAttack.Cooldown, 1.0
     timespan_t skull_crusher_gcd = 1_s;
     //Ink.HeavySingleTargetAttack.Lightning.StrengthCoefficient, 4.2725 	;was 2.863 then 3.5273 then 4.7031 then 6.1140 then 3.9976
-    double skull_crusher_lightning_coeff = 4.2725;
+    double skull_crusher_lightning_coeff = 4.2725 * 0.87 * 0.95;
     //Ink.HeavySingleTargetAttack.Lightning.Spread, 0.20
     //Ink.HeavySingleTargetAttack.Lightning.VisualHitDelay, 0.35	; Added upon the original visual delay
     
     //Ink.AoeAttack.StrengthCoefficient, 1.2514	;was 1.1047 then 1.3256 then 1.0970
-    double hammer_storm_coeff = 1.2514;
+    double hammer_storm_coeff = 1.2514 * 1.3 * 1.1 * 1.2 * 1.15 * 0.87 * 0.95 * 0.95;
     //Ink.AoeAttack.Spread, 0.1
     //Ink.AoeAttack.Radius, 700.0
     //Ink.AoeAttack.TargetThresholdForDamageScale, 8.0
-    double hammer_storm_threshold = 8.0;
+    double hammer_storm_threshold = 12.0;
     //Ink.AoeAttack.VisualHitDelay, 0.00	; Leaving this as 0 means that the hit will be registret immediately on the first tick
     //Ink.AoeAttack.VisualEndDelay, 0.3 Ink.AoeAttack.Cost, 0.50				;
     // Percentage of Max Rage
@@ -279,11 +280,11 @@ public:
     //Ink.AoeAttack.MaxRageToSpend, 0.25	; Percentage of Max Rage
     //Ink.AoeAttack.Cooldown, 1.5
     //Ink.AoeAttack.Lightning.StrengthCoefficient, 0.4380	;was 0.3866 then 0.425 then 0.3840
-    double hammer_storm_lightning_coeff = 0.438;
+    double hammer_storm_lightning_coeff = 0.438 * 1.3 * 1.1 * 1.2 * 1.15 * 0.87 * 0.95 * 0.95;
     //Ink.AoeAttack.Lightning.Spread, 0.20
     //Ink.AoeAttack.Lightning.VisualDelay, 0.08	; Added upon the original visual delay
     //Ink.AoeAttack.Lightning.TargetThresholdForDamageScale, 10.0	;was 12.0
-    double hammer_storm_lightning_threshold = 10.0;
+    double hammer_storm_lightning_threshold = 15.0;
     //Ink.AoeAttack.Talent.ReducedIncomingDamage.IncomingDamageMultiplier, 0.80	;talent disabled
     //Ink.AoeAttack.Talent.ReducedIncomingDamage.IncreasedStatBonus, 0.20			;talent disabled	
     //Ink.AoeAttack.Talent.ReducedIncomingDamage.PassiveReduceIncomingAoeDamage, 0.10
@@ -317,7 +318,7 @@ public:
     
 
     //Ink.SingleTargetHeavyNonSpender.StrengthCoefficient, 5.915	;was 4.732
-    double face_breaker_coeff = 5.915;
+    double face_breaker_coeff = 5.915 * 1.1 * 1.15 * 0.87 * 0.95;
     //Ink.SingleTargetHeavyNonSpender.VisualHitDelay, 0.23
     //Ink.SingleTargetHeavyNonSpender.Cost, 0.0
     //Ink.SingleTargetHeavyNonSpender.Cooldown, 6.0
@@ -326,7 +327,7 @@ public:
     double face_breaker_fury = 7;
 
     //Ink.CleaveAttack.StrengthCoefficient, 1.5625	;was 1.25
-    double wild_swing_coeff = 1.5625;
+    double wild_swing_coeff = 1.5625 * 0.87 * 0.95;
     //Ink.CleaveAttack.Spread, 0.1
     //Ink.CleaveAttack.Radius, 500.0
     //Ink.CleaveAttack.TargetThresholdForDamageScale, 5.0
@@ -350,7 +351,7 @@ public:
     //Ink.ChargedBuff.ResourceGain, 0.0
     
     //Ink.BouncyProjectile.StrengthCoefficient, 2.0163	;was 1.47 then 2.205 then 1.617 then 1.6979 then 1.568 then 1.1290
-    double chain_lightning_coeff = 2.0163;
+    double chain_lightning_coeff = 2.0163 * 0.9 * 0.87 * 0.95;
     //Ink.BouncyProjectile.Spread, 0.1
     //Ink.BouncyProjectile.MaxRange, 3000.0
     //Ink.BouncyProjectile.MaxNumOfTargets, 6.0
@@ -398,7 +399,7 @@ public:
     
     //Ink.LowHealthSingleTargetResourceDamage.VisualHitDelay, 0.23
     //Ink.LowHealthSingleTargetResourceDamage.StrengthCoefficient, 3.6575	;was 3.08
-    double culling_strike_coeff = 3.6575;
+    double culling_strike_coeff = 3.6575 * 0.87;
     //Ink.LowHealthSingleTargetResourceDamage.Spread, 0.1
     //Ink.LowHealthSingleTargetResourceDamage.MaxResourceToSpend, 0.10		    ; Percentage of Max fury
     double culling_strike_max_fury = 10;
@@ -423,9 +424,10 @@ public:
     //Ink.CostReductionBuff.CostReduction, 0.48
     double focused_wrath_cost_multiplier = 0.48;
     //Ink.CostReductionBuff.DamageIncrease, 1.4
-    double focused_wrath_damage_multiplier = 1.4;
+    double focused_wrath_damage_multiplier = 1.1;
     //Ink.CostReductionBuff.NumOfStacks, 2.0
-    int focused_wrath_max_stacks = 2;
+    int focused_wrath_stacks = 2;
+    int focused_wrath_max_stacks = 3;
     //Ink.CostReductionBuff.VisualDelay, 0.3
     //Ink.CostReductionBuff.Talent.CooldownReductionInSeconds, 45.0
     
@@ -443,8 +445,8 @@ public:
 
   struct talents_t
   {
-
-    double pneuma_start_spirit = 0.5;
+    double pneuma_start_spirit = 50;
+    double pneuma_generated_spirit = 1.0;
 
     int mouth_for_war_focused_wrath_stacks = 1;
 
@@ -477,7 +479,7 @@ public:
     // Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.Buff.MaxStacks, 2.0
     int kill_em_all_stacks = 2;
     // Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.Buff.AutoAttackBuffDamageScaler, 3.00	;was 4.00
-    double kill_em_all_dmg_multiplier = 3; // Multiplier, not an increase.
+    double kill_em_all_dmg_multiplier = 2.5; // Multiplier, not an increase.
     double kill_em_all_cda            = 0.6;
 
     // Leap Smash
@@ -539,12 +541,12 @@ public:
     int ace_of_spades_charges = 2;
     
     //Ink.BouncyProjectile.Talent.DamagePerUniqueTarget.Scaler, 0.40	;new talent
-    double the_motherload_increase_per_enemy = 0.4;
+    double the_motherload_increase_per_enemy = 0.5;
     // Ink.BouncyProjectile.Talent.IncreasedDamage.DamageMultiplier, 1.10	;now as part of Blood and Thunder
     double the_motherload_multiplier = 1.1;
         
     // Ink.LowHealthSingleTargetResourceDamage.Talent.AddedCritChance, 0.35
-    double killing_in_the_name_cc = 0.35;
+    double killing_in_the_name_cc = 0.5;
 
     // Face Breaker
     // Ink.SecondChanceSingleTargetAttack.Talent.IncreasedCritChance.Increase, 0.40	; Additive
@@ -576,19 +578,19 @@ public:
   struct legendary_t
   {
     bool slayers_mosh      = false;
-    timespan_t slayers_mosh_duration = 4_s;
-    double slayers_mosh_multiplier    = 1.15;
+    timespan_t slayers_mosh_duration = 6_s;
+    double slayers_mosh_multiplier    = 1.2;
 
     bool thundering_vortex = false;
     int thundering_vortex_needed = 20;
-    double thundering_vortex_multiplier = 1.5;
+    double thundering_vortex_multiplier = 2;
 
     // Ink.LowHealthSingleTargetResourceDamage.Talent.Chance, 0.06
     // Ink.LowHealthSingleTargetResourceDamage.Talent.ResourceAmountToDamage, 0.20
     // Ink.LowHealthSingleTargetResourceDamage.Talent.BuffDuration, 8.0
     bool executioners_grin = false;
     double executioners_grin_chance = 0.06;
-    int executioners_grin_counted_fury = 20;
+    int executioners_grin_counted_fury = 30;
     timespan_t executioners_grin_duration = 8_s;
   } legendary;
 
@@ -855,6 +857,17 @@ public:
     }
   }
 
+  void consume_resource() override
+  {
+    ab::consume_resource();
+
+    if ( ab::current_resource() == RESOURCE_FURY && ab::last_resource_cost > 0 )
+    {
+      if ( p()->rng().roll( p()->cache.mastery_value() ) )
+        trigger_spirit_refund( ab::execute_state );
+    }
+  }
+
   void roll_kill_em_all()
   {
     if ( !p()->talents_enabled( tariq_t::KILL_EM_ALL ) )
@@ -877,7 +890,10 @@ public:
     auto stacks = p()->buffs.square_hammer_stacking->check();
     if ( stacks )
     {
-      p()->buffs.square_hammer_buff->trigger( stacks );
+      if ( p()->buffs.square_hammer_buff->check() )
+        p()->buffs.square_hammer_buff->refresh();
+      else
+        p()->buffs.square_hammer_buff->trigger( stacks );
       p()->cooldowns.thunder_call->adjust( -stacks * p()->talents.square_hammer_cdr_per_stack, false );
       p()->buffs.square_hammer_stacking->expire();
     }
@@ -959,11 +975,15 @@ public:
   {
     ab::execute();
 
-    // ab::hit_any_target
-    if ( !background )
+    if ( !background && trigger_gcd > timespan_t::zero() )
     {
-      roll_executioners_grin();
-      roll_kill_em_all();
+      // not cull
+      if ( id != 7 )
+        roll_executioners_grin();
+
+      // not heavy strike
+      if ( id != 4 )
+        roll_kill_em_all();
     }
   }
 };
@@ -1455,6 +1475,14 @@ struct skull_crusher_t : public tariq_attack_t
     }
   }
 
+  void init_finished() override
+  {
+    base_t::init_finished();
+
+    if ( p()->actions.chain_lightning_ace_of_spades_crush )
+      add_child( p()->actions.chain_lightning_ace_of_spades_crush );
+  }
+
   double composite_crit_chance() const override
   {
     auto cc = base_t::composite_crit_chance();
@@ -1475,7 +1503,7 @@ struct skull_crusher_t : public tariq_attack_t
   {
     auto amount = base_t::cost();
 
-    if ( p()->buffs.focused_wrath->check() )
+    if ( p()->buffs.focused_wrath->up() )
       amount *= p()->spell_const.focused_wrath_cost_multiplier;
 
     return amount;
@@ -1515,6 +1543,17 @@ struct skull_crusher_t : public tariq_attack_t
     }
 
     p()->buffs.focused_wrath->decrement();
+    p()->buffs.schism_skull_crusher->decrement();
+
+    if ( p()->talents_enabled( tariq_t::ACE_OF_SPADES ) )
+    {
+      if ( p()->rng_objects.ace_of_spades->trigger() )
+      {
+        p()->procs.ace_of_spades->occur();
+        p()->actions.chain_lightning_ace_of_spades_crush->set_target( target );
+        p()->actions.chain_lightning_ace_of_spades_crush->execute();
+      }
+    }
 
     if ( p()->talents_enabled( tariq_t::SCHISM ) )
     {
@@ -1606,8 +1645,8 @@ struct hammer_storm_t : public tariq_attack_t
         if ( p()->rng_objects.ace_of_spades->trigger() )
         {
           p()->procs.ace_of_spades->occur();
-          p()->actions.chain_lightning_ace_of_spades->set_target( target );
-          p()->actions.chain_lightning_ace_of_spades->execute();
+          p()->actions.chain_lightning_ace_of_spades_spin->set_target( target );
+          p()->actions.chain_lightning_ace_of_spades_spin->execute();
         }
       }
     }
@@ -1642,7 +1681,7 @@ struct hammer_storm_t : public tariq_attack_t
 
     dam *= 1.0 + p()->buffs.schism_hammer_storm->check_value();
 
-    if ( p()->buffs.focused_wrath->check() )
+    if ( p()->buffs.focused_wrath->up() )
       dam *= p()->spell_const.focused_wrath_damage_multiplier;
 
     return dam;
@@ -1662,8 +1701,8 @@ struct hammer_storm_t : public tariq_attack_t
   {
     base_t::init_finished();
 
-    if ( p()->actions.chain_lightning_ace_of_spades )
-      add_child( p()->actions.chain_lightning_ace_of_spades );
+    if ( p()->actions.chain_lightning_ace_of_spades_spin )
+      add_child( p()->actions.chain_lightning_ace_of_spades_spin );
   }
 
   void tick( dot_t* d ) override
@@ -1681,6 +1720,7 @@ struct hammer_storm_t : public tariq_attack_t
     base_t::execute();
 
     p()->buffs.focused_wrath->decrement();
+    p()->buffs.schism_hammer_storm->decrement();
 
     if ( p()->talents_enabled( tariq_t::SCHISM ) )
     {
@@ -1705,7 +1745,7 @@ struct culling_strike_t : public tariq_attack_t
     ability_flags |= ability_type_e::ABILITY_POWER;
 
     
-    cooldown->duration = p->spell_const.heavy_strike_cooldown;
+    cooldown->duration = p->spell_const.culling_strike_cooldown;
     cooldown->charges  = 1;
     cooldown->hasted   = true;
 
@@ -1714,13 +1754,22 @@ struct culling_strike_t : public tariq_attack_t
     resource_current            = RESOURCE_FURY;
     base_costs[ RESOURCE_FURY ] = 1.0;
 
+    trigger_gcd = 0_s;
+
     if ( p->talents_enabled( tariq_t::KILLING_IN_THE_NAME ) )
       base_crit += p->talents.killing_in_the_name_cc;
+
+    if ( p->talents_enabled( tariq_t::PNEUMA ) )
+    {
+      energize_amount   = p->talents.pneuma_generated_spirit;
+      energize_resource = RESOURCE_SPIRIT;
+      energize_type     = action_energize::ON_HIT;
+    }
   }
 
   bool target_ready( player_t* candidate_target )
   {
-    if ( candidate_target->health_percentage() > low_health_threshold )
+    if ( candidate_target->health_percentage() > low_health_threshold && !p()->buffs.executioners_grin->check() )
       return false;
 
     return base_t::target_ready( candidate_target );
@@ -1814,8 +1863,8 @@ struct chain_lightning_t : public tariq_lightning_attack_t
     ability_flags |= ability_type_e::ABILITY_CORE;
 
     energize_resource = RESOURCE_FURY;
-    energize_amount   = p->spell_const.wild_swing_fury;
-    energize_type     = action_energize::ON_HIT;
+    energize_amount   = p->spell_const.chain_lightning_fury_per_hit;
+    energize_type     = action_energize::PER_HIT;
 
     attack_power_mod.direct = p->spell_const.chain_lightning_coeff;
 
@@ -1865,9 +1914,9 @@ struct chain_lightning_t : public tariq_lightning_attack_t
   {
     auto dam = base_t::composite_da_multiplier( s );
 
-    if ( p()->talents_enabled( tariq_t::THE_MOTHERLOAD ) )
+    if ( p()->talents_enabled( tariq_t::THE_MOTHERLOAD ) && hit_players.size() > 1 )
     {
-      dam *= 1.0 + p()->talents.the_motherload_increase_per_enemy * hit_players.size();
+      dam *= 1.0 + p()->talents.the_motherload_increase_per_enemy * ( hit_players.size() - 1 );
     }
 
     return dam;
@@ -1904,10 +1953,13 @@ struct chain_lightning_t : public tariq_lightning_attack_t
   size_t available_targets( std::vector<player_t*>& tl ) const override
   {
     tl.clear();
+    tl.reserve( std::max<size_t>( n_targets(), sim->target_non_sleeping_list.size() ) );
 
     tl.push_back( target );
 
     target_list_end = tl.end();
+
+    auto start = tl.begin();
 
     for ( auto* t : sim->target_non_sleeping_list )
     {
@@ -1930,7 +1982,10 @@ struct chain_lightning_t : public tariq_lightning_attack_t
       }
     }
 
-    rng().shuffle( target_list_end, tl.end() );
+    if ( target_list_end < tl.end() )
+    {
+      rng().shuffle( target_list_end, tl.end() );
+    }
 
     return tl.size();
   }
@@ -1973,7 +2028,7 @@ struct focused_wrath_t : public tariq_spell_t
   void execute() override
   {
     base_t::execute();
-    p()->buffs.focused_wrath->trigger( p()->spell_const.focused_wrath_max_stacks );
+    p()->buffs.focused_wrath->trigger( p()->spell_const.focused_wrath_stacks );
   }
 };
 
@@ -2019,11 +2074,10 @@ struct leap_smash_t : public tariq_attack_t
   void execute() override
   {
     base_t::execute();
-    p()->buffs.focused_wrath->trigger( p()->spell_const.focused_wrath_max_stacks );
 
     if ( hit_any_target && p()->talents_enabled( tariq_t::MOUTH_FOR_WAR ) )
     {
-      p()->buffs.focused_wrath->trigger();
+      p()->buffs.focused_wrath->trigger( p()->talents.mouth_for_war_focused_wrath_stacks );
     }
   }
 };
@@ -2480,7 +2534,8 @@ void tariq_t::create_buffs()
 
   buffs.square_hammer_buff = make_buff<tariq_buff_t>( this, "square_hammer_buff" )
                                  ->set_duration( talents.square_hammer_expertise_duration )
-                                 ->set_max_stack( talents.square_hammer_max_stacks )
+                                 //->set_max_stack( talents.square_hammer_max_stacks )
+                                 ->set_max_stack( 1 )
                                  ->set_default_value( talents.square_hammer_expertise_per_stack )
                                  ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
                                  ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
@@ -2489,7 +2544,7 @@ void tariq_t::create_buffs()
                                 ->set_duration( talents.far_beyond_driven_duration )
                                 ->set_max_stack( talents.far_beyond_driven_max_stacks )
                                 ->set_default_value( talents.far_beyond_driven_spirit_per_stack )
-                                ->set_pct_buff_type( STAT_PCT_BUFF_SPIRIT )
+                                ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY )
                                 ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   buffs.schism_hammer_storm = make_buff<tariq_buff_t>( this, "schism_hammer_storm" )
@@ -2613,8 +2668,12 @@ void tariq_t::init_background_actions()
 {
   fs_player_t::init_background_actions();
 
-  actions.chain_lightning_ace_of_spades = new actions::chain_lightning_t( "chain_lightning_ace_of_spades", this, {}, secondary_trigger::ACE_OF_SPADES );
-  actions.chain_lightning_ace_of_spades->name_str_reporting = "Chain Lightning (Ace of Spades)";
+  actions.chain_lightning_ace_of_spades_spin  = new actions::chain_lightning_t( "chain_lightning_ace_of_spades_spin", this, {}, secondary_trigger::ACE_OF_SPADES );
+  actions.chain_lightning_ace_of_spades_crush = new actions::chain_lightning_t( "chain_lightning_ace_of_spades_crush", this, {}, secondary_trigger::ACE_OF_SPADES );
+  
+  actions.chain_lightning_ace_of_spades_spin->name_str_reporting  = "Chain Lightning (Ace of Spades)";
+  actions.chain_lightning_ace_of_spades_crush->name_str_reporting = "Chain Lightning (Ace of Spades)";
+
 
   actions.chain_lightning_blood_and_thunder = new actions::chain_lightning_t( "chain_lightning_blood_and_thunder", this, {}, secondary_trigger::BLOOD_AND_THUNDER );
   actions.chain_lightning_blood_and_thunder->name_str_reporting = "Chain Lightning (Blood and Thunder)";
@@ -2742,12 +2801,14 @@ void actions::tariq_action_t<Base>::trigger_auto_attack( const action_state_t* /
 template <typename Base>
 void actions::tariq_action_t<Base>::trigger_spirit_refund( const action_state_t* state )
 {
+  double fury_restored = ab::last_resource_cost;
+
+  make_event( ab::sim, 200_ms, [ fury_restored, this ] {
+    p()->resource_gain( RESOURCE_FURY, fury_restored, p()->gains.spirit_procs, this );
+  } );
+
   p()->spirit_refund();
-  p()->spawn_feathers( p()->spell_const.spirit_proc_orbs );
 }
-
-
-
 
 // tariq_t::convert_hybrid_stat ==============================================
 

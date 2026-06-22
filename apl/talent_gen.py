@@ -114,7 +114,7 @@ mara_indicators = {
 elarion = {
     "focused_expanse": 2,
     "piercing_seekers": 2,
-    "final_crescendo": 2,
+    "resurgent_winds": 2,
 
     "skylit_grace":1,
     "fusillade": 1,
@@ -130,7 +130,7 @@ elarion = {
 
     "fervent_supremacy": 3,
     "impending_heartseeker": 3,
-    "resurgent_winds": 3,
+    "final_crescendo": 3,
 
     "last_lights": 1,
     "swift_reload": 1,
@@ -255,7 +255,7 @@ trait_ranks = [1,4]
 
 
 sets = [
-    "seal_of_the_heskyr",
+    # "seal_of_the_heskyr",
     "tuzari_grace",
     "torment_of_baelaurum",
     "sin_warding",
@@ -284,6 +284,14 @@ finesses = [
 ]
 
 finesse_ranks = [1,4]
+
+stats = [
+    "primary",
+    "haste",
+    "crit",
+    "spirit",
+    "expertise"
+]
 
 
 def make_sim_entry(prefix, profile_name, changes, profilesets = False):
@@ -332,6 +340,12 @@ def generate_item_checks(prefix, fodder_slot, file_path, profilesets = False):
                 extra = "affixes=" + "/".join([finesse]*rank)
                 line = make_sim_entry(prefix, profile_name, [f"{fodder_slot},{extra}"], profilesets=profilesets)
                 f.write(line)
+
+        for stat in stats:
+            profile_name = f"{prefix}_stat_{stat}"
+            extra = f"affixes={stat}"
+            line = make_sim_entry(prefix, profile_name, [f"{fodder_slot},{extra}"], profilesets=profilesets)
+            f.write(line)
 
     
   #trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste
@@ -602,7 +616,6 @@ def sorted_by_overall(build_dicts):
 
 
 
-
 if __name__ == "__main__":
     # top_x = top_sim_results("output/rime_et27.json", 500)
     # # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
@@ -719,6 +732,31 @@ if __name__ == "__main__":
                 ],
                 # name_filters=top_x
     )
+    
+    
+    combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents_hwa.simc", 
+                profilesets=True,
+                required_talents=[
+                    "final_crescendo",
+                    "resurgent_winds",
+                    "strikers_aim",
+                    "lethal_shots",
+                    "skyward_munitions"
+                ],
+                excluded_talents=[
+                    "lunar_fury",
+                    "fervent_supremacy",
+                    "focused_expanse"
+                    # "deadly_focus",
+                    # "swift_reload"
+                ],
+                forbidden_pairs=[
+                    # ("hemotoxin", "malevolence"),
+                    # ("gushing_blood", "malevolence"),
+                    # ("arachnid_onslaught", "malevolence"),
+                ],
+                # name_filters=top_x
+    )
 
     # all_points_to_File("Elarion", elarion, "generated/elarion_talents.simc")
 
@@ -732,5 +770,74 @@ if __name__ == "__main__":
 
     generate_item_checks("Gunde", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste", "generated/all_gear_options_gunde.simc")
 
+    all_points_to_File("Tariq", tariq, "generated/tariq_talents.simc")
+
+    # generate_item_checks("Tariq", "finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/crit", "generated/all_gear_options_tariq.simc")
+    generate_item_checks("Tariq", "main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste", "generated/all_gear_options_tariq.simc")
+    
+    
+    # combos_to_file("Tariq", tariq, tariq_indicators, 14, "generated/tariq_talents14_lightning_aos.simc", 
+    #             profilesets=True,
+    #             required_talents=[
+    #                 "ace_of_spades",
+    #                 "crack_the_sky",
+    #                 "thunderstruck",
+    #                 "the_motherload",
+    #                 "kill_em_all",
+    #             ],
+    #             excluded_talents=[
+    #                 "killing_in_the_name",
+    #                 # "deadly_focus",
+    #                 # "swift_reload"
+    #             ],
+    #             forbidden_pairs=[
+    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("gushing_blood", "malevolence"),
+    #                 # ("arachnid_onslaught", "malevolence"),
+    #             ],
+    #             # name_filters=top_x
+    # )
+
+    combos_to_file("Tariq", tariq, tariq_indicators, 14, "generated/tariq_talents14_lightning_schism.simc", 
+                profilesets=True,
+                required_talents=[
+                    "schism",
+                    "sledgehammer",
+                    "kill_em_all",
+                    "square_hammer"
+                ],
+                excluded_talents=[
+                    "killing_in_the_name",
+                    # "deadly_focus",
+                    # "swift_reload"
+                ],
+                forbidden_pairs=[
+                    # ("hemotoxin", "malevolence"),
+                    # ("gushing_blood", "malevolence"),
+                    # ("arachnid_onslaught", "malevolence"),
+                ],
+                # name_filters=top_x
+    )
+
+    # combos_to_file("Tariq", tariq, tariq_indicators, 14, "generated/tariq_talents14_spender.simc", 
+    #             profilesets=True,
+    #             required_talents=[
+    #                 "schism",
+    #                 "sledgehammer",
+    #                 "them_bones"
+    #             ],
+    #             excluded_talents=[
+    #                 "killing_in_the_name",
+    #                 "the_motherload",
+    #                 # "deadly_focus",
+    #                 # "swift_reload"
+    #             ],
+    #             forbidden_pairs=[
+    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("gushing_blood", "malevolence"),
+    #                 # ("arachnid_onslaught", "malevolence"),
+    #             ],
+    #             # name_filters=top_x
+    # )
 # for combo in combos:
 #     print(combo)

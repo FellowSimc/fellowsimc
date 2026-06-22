@@ -238,7 +238,7 @@ public:
     timespan_t reavers_edge_delay = 0.45_s;
     // Gunde.InstantWhirlwindAoe.AoeRadius, 700.0
     // Gunde.InstantWhirlwindAoe.DamageStrengthCoefficient, 2.20                   ; WAS 1.616
-    double reavers_edge_coeff = 1.847;
+    double reavers_edge_coeff = 1.847 * 1.1;
     // Gunde.InstantWhirlwindAoe.DamageScalingTargetCountThreshold, 8.0			 ; WAS 3.0
     double reavers_edge_target_threshold = 8.0;
     // Gunde.InstantWhirlwindAoe.Cooldown, 5.0
@@ -253,7 +253,7 @@ public:
     timespan_t rupture_cooldown = 60_s;
 
     // Gunde.TargetedAoeProjectile.DamageStrengthCoefficientPerHit, 2.076           ; WAS 1.635
-    double grim_carve_coeff = 2.076;
+    double grim_carve_coeff = 2.076 * 1.1 * 0.909;
     // Gunde.TargetedAoeProjectile.DamageScalingTargetCountThreshold, 5.0			; was 12.0
     double grim_carve_falloff = 5;
     // Gunde.TargetedAoeProjectile.Aoe.Duration, 1.15
@@ -375,7 +375,7 @@ public:
     // Gunde.InstantAoeWithBuff.ConePieAngleWidth, 120.0
 
     // Gunde.InstantAoeWithBuff.DamageStrengthCoefficient, 1.212                    ; WAS 2.0
-    double blood_arc_coeff = 2.4629;
+    double blood_arc_coeff = 2.4629 * 1.1;
     // Gunde.InstantAoeWithBuff.DamageScalingTargetCountThreshold, 5.0
     double blood_arc_target_threshold = 8.0;
     // Gunde.InstantAoeWithBuff.Cooldown, 9.0
@@ -452,9 +452,9 @@ public:
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.Radius, 500.0
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AdditionalTargets, 4.0	; OLD
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.TargetThresholdScaling, 8.0
-    double oathshatter_target_threshold = 8.0;
+    double oathshatter_target_threshold = 12.0;
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AoeDamageScaler, 0.25
-    double oathshatter_aoe_multiplier = 0.25;
+    double oathshatter_aoe_multiplier = 0.35;
     // Gunde.HeavyMeleeDotBased.Talent.LowHealthTarget.AddedCriticalStrikeChance, 1.00
     double darkening_hearts_execute_cc = 1.0;
     double darkening_hearts_damage_mul = 1.1;
@@ -504,7 +504,7 @@ public:
     // Gunde.DotTransfer.Talent.Aoe.StackDuration, 10.0
  
     // Gunde.DotTransfer.Talent.ExplosionOnPickup.StrengthCoefficient, 0.34
-    double ravens_precision_coeff = 0.34;
+    double ravens_precision_coeff = 0.34 * 1.1;
     // Gunde.DotTransfer.Talent.ExplosionOnPickup.Radius, 700.0
     // Gunde.DotTransfer.Talent.ExplosionOnPickup.TargetThresholdScaling, 8.0
     double ravens_precision_falloff = 8;
@@ -512,9 +512,9 @@ public:
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.BaseStrengthCoefficient, 0.20
     double bloodcraze_coeff = 0.2;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.DamageIncreasePerStack, 0.90
-    double bloodcraze_amp_per_stack = 0.9;
+    double bloodcraze_amp_per_stack = 1.3;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.TargetThresholdScaling, 5.0
-    double bloodcraze_falloff = 5.0;
+    double bloodcraze_falloff = 3.0;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Period, 3.0
     timespan_t bloodcraze_period = 3_s;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Duration, 6.15

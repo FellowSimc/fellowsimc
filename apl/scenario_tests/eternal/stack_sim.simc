@@ -4,7 +4,7 @@ optimal_raid=0
 # max_time=50
 max_time=250
 # max_time=60
-target_error=0.1
+target_error=0.2
 iterations=15000
 chart_show_relative_difference=1
 vary_combat_length=0.1
@@ -20,8 +20,7 @@ apl/scenario_tests/eternal/mara_finisher.simc
 apl/scenario_tests/eternal/mara_bleed.simc
 
 
-# apl/generated/elarion_talents14b3.simc
-# apl/generated/all_gear_options.simc
-# apl/scenario_tests/eternal/gunde_test.simc
 apl/scenario_tests/eternal/gunde_feather.simc
 apl/scenario_tests/eternal/gunde_heartsplitter.simc
+apl/scenario_tests/eternal/tariq_lightning.simc
+apl/scenario_tests/eternal/tariq_schism.simc

@@ -272,7 +272,7 @@ public:
     double bird_coeff             = 0.469;
     double bird_spirit_multiplier = 1.5;
 
-    double ice_comet_coeff = 4.082 * 1.07; //*1.2;
+    double ice_comet_coeff = 4.082 * 1.07 * 1.1; //*1.2;
     double ice_comet_falloff = 12;
     int ice_comet_cost       = 2;
 

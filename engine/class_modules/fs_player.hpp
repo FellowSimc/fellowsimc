@@ -236,8 +236,8 @@ public:
 
     const double ruby_stat_stamina_minor = 12.0;
     const double ruby_stat_stamina_major = 36.0;
-    const double ruby_stat_main_minor = 6.0;
-    const double ruby_stat_main_major = 2.0;
+    const double ruby_stat_main_minor = 2.0;
+    const double ruby_stat_main_major = 6.0;
 
     const double amethyst_crit_minor     = 0.05;
     const double amethyst_crit_threshold = 50.0;
@@ -415,7 +415,7 @@ public:
 
   struct fs_weapon_trait_values_t
   {
-    const double willful_momentum_spirit[ 5 ]           = { 0, 5, 8, 12, 16 };
+    const double willful_momentum_spirit[ 5 ]           = { 0, 7, 11, 17, 23 };
     const double willful_momentum_amp[ 5 ]              = { 0, 0.015, 0.026, 0.037, 0.048 };
     const timespan_t willful_momentum_duration          = 4_s;
     const double vengeful_soul_amp[ 5 ]                 = { 0, 0.03, 0.051, 0.072, 0.093 };

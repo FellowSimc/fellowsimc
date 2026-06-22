@@ -314,7 +314,7 @@ public:
     double caustic_poison_coeff  = 4.476 * 1.07;
     double seething_poison_coeff = 1.116 * 1.1;
 
-    double arachnid_assault_coeff = 0.858 * 1.1;
+    double arachnid_assault_coeff = 0.858 * 1.1 * 1.08;
 
     double volatile_poison_explode_coeff = 1.248;
     double volatile_poison_tick_coeff = 0.312;

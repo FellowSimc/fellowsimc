@@ -192,7 +192,7 @@ public:
     double celestial_shot_ap_coeff   = 2.879;
     double celestial_shot_focus_cost = 15.0;
 
-    double multishot_ap_coeff       = 2.415;
+    double multishot_ap_coeff       = 2.415 * 1.1;
     double multishot_target_falloff = 12;
     double multishot_focus_cost     = 20;
     int multishot_max_stacks        = 5;
@@ -293,7 +293,7 @@ public:
     timespan_t impending_heartseeker_duration  = 15_s;
 
     timespan_t resurgent_winds_duration  = 15_s;
-    double resurgent_winds_mul           = 0.5;
+    double resurgent_winds_mul           = 1.5;
     int resurgent_winds_maximum_stacks   = 2;
     double resurgent_winds_cast_time_mul = 0.0;
     double resurgent_winds_chance        = 0.05;
@@ -334,8 +334,9 @@ public:
     double starstrikers_ascent_chance                       = 0.5;
 
     bool astronomers_hail                        = false;
-    timespan_t astronomers_hail_volley_duration  = 2_s;
+    timespan_t astronomers_hail_volley_duration  = 4_s;
     timespan_t astronomers_hail_multishot_extend = 0.5_s;
+    double astronomers_hail_dmg_bonus            = 1.3;
 
 
     bool new_spirit_legendary = false;
@@ -1501,7 +1502,7 @@ struct highwind_arrow_t : public elarion_attack_t
 
     if ( p()->buffs.resurgent_winds->check() )
     {
-      m *= 1.0 + p()->talents.resurgent_winds_mul;
+      m *= p()->talents.resurgent_winds_mul;
     }
 
     return m;
@@ -1517,20 +1518,6 @@ struct highwind_arrow_t : public elarion_attack_t
     }
 
     return cc;
-  }
-
-  void update_ready( timespan_t cd_duration ) override
-  {
-    // Decrementing a stack of shadowy insight will consume a max charge. Consuming a max charge loses you a current
-    // charge. Therefore update_ready needs to not be called in that case.
-    if ( p()->buffs.resurgent_winds->up() )
-    {
-      p()->buffs.resurgent_winds->decrement();
-    }
-    else
-    {
-      base_t::update_ready( cd_duration );
-    }
   }
 
   void reset() override
@@ -1600,7 +1587,10 @@ struct highwind_arrow_t : public elarion_attack_t
     {
       p()->buffs.multishot->trigger();
     }
+
+    p()->buffs.resurgent_winds->decrement();
   }
+
 };
 
 struct heartseeker_barrage_t : public elarion_attack_t
@@ -2008,6 +1998,12 @@ struct starfall_volley_damage_t : public elarion_attack_t
     attack_power_mod.direct = p->spell_const.starfall_volley_ap_coeff;
 
     reduced_aoe_targets = p->spell_const.starfall_volley_target_falloff;
+
+    
+    if ( p->legendary.astronomers_hail )
+    {
+      attack_power_mod.direct *= p->legendary.astronomers_hail_dmg_bonus;
+    }
 
     if ( p->talents_enabled( elarion_t::LUNARLIGHT_AFFINITY ) )
     {
@@ -2432,8 +2428,9 @@ void elarion_t::create_buffs()
   buffs.resurgent_winds = make_buff<elarion_buff_t>( this, "resurgent_winds" )
                               ->set_duration( talents.resurgent_winds_duration )
                               ->set_max_stack( talents.resurgent_winds_maximum_stacks )
-                              ->add_stack_change_callback( [ this ]( buff_t*, int old, int cur ) {
-                                cooldowns.highwind_arrow->adjust_max_charges( cur - old );
+                              ->add_stack_change_callback( [ this ]( buff_t*, int old, int _new ) {
+                                if ( _new > old )
+                                  cooldowns.highwind_arrow->reset( true, 1 );
                               } );
 
   buffs.skystriders_supremacy = make_buff<elarion_buff_t>( this, "skystriders_supremacy" )

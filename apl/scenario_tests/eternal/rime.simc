@@ -107,49 +107,33 @@ talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilli
 # # Beam
 # talents=biting_cold:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/icy_flow:1/soulfrost_torrent:1/supreme_torrent:1/wisdom_of_the_north:1
 
-# 35 Mods
+# gear has 4 stats
+# 14 blessings
+# 18 mods
 
-# 29 mods -6stat
-# 28 mods -fink
-
-# 10 
-
-weapon_trait.visions_of_grandeur=1
-weapon_trait.martial_initiative=1
-weapon_trait.emerald_judgement=2
-
-# 15
-
-# 23 mods -5
-# 4Trait
 sets.dark_prophecy=1
 sets.deaths_grasp=1
-
-# 19
-# 19 mods -4
-# copy="visions1","Base Rime"
-# weapon_trait.visions_of_grandeur=1
-
-
+sets.draconic_might=1
 sets.seal_of_the_heskyr=1
+
+# +8 in sets, 26 mods
+
 gems.amethyst_power=500
 gems.sapphire_power=500
 gems.emerald_power=500
 gems.ruby_power=500
 
-# 21
-
 weapon_trait.hunters_focus=4
-
-# 25
-sets.draconic_might=1
-# 27
-
+# 30 mods
 weapon_trait.amethyst_splinters=4
-# 31
-# 4 stats
-# 35
-# add 3 ranks of ?
+# 34 mods
+weapon_trait.emerald_judgement=2
+# 36 mods
+weapon_trait.visions_of_grandeur=1
+# 37 mods
+weapon_trait.martial_initiative=1
+# 38 mods
+
 
 # copy="FinesseA","Base Rime"
 # chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/finesse_a/finesse_a/finesse_a/finesse_a

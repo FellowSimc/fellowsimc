@@ -220,7 +220,7 @@ public:
     int lunarlight_mark_max_targets     = 12;
     int lunarlight_mark_stacks_applied  = 3;
     timespan_t lunarlight_mark_duration = 15_s;
-    double lunarlight_mark_ap_coeff     = 2.2597 * 0.9;
+    double lunarlight_mark_ap_coeff     = 2.2597;// *0.9;
     double lunarlight_mark_chance_hit   = 0.25;
     double lunarlight_mark_chance_crit  = 0.5;
 
@@ -235,7 +235,7 @@ public:
     double starfall_volley_target_falloff = 10;
     timespan_t starfall_volley_cooldown   = 40_s;
     timespan_t starfall_volley_period     = 1_s;
-    double starfall_volley_ap_coeff       = 1.249 * 0.9;
+    double starfall_volley_ap_coeff       = 1.249;// *0.9;
     double starfall_volley_focus_cost     = 30;
 
     timespan_t event_horizon_duration             = 20_s;

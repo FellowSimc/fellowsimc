@@ -1,4 +1,4 @@
-# [SimulationCraft](https://www.simulationcraft.org/) [![CI](https://github.com/simulationcraft/simc/workflows/CI/badge.svg)](https://github.com/simulationcraft/simc/actions?query=workflow%3ACI)
+# FellowSimc
 ## What is This
 Fork of the https://github.com/simulationcraft/simc project for the Game Fellowship.
 Significant adaptions in progress to adapt the engine to better support Fellowship.
@@ -21,9 +21,6 @@ Increasing class synergy and the prevalence of proc-based combat modifiers have 
 SimulationCraft allows raid/party creation of arbitrary size, generating detailed charts and reports for both individual and raid performance.
 
 Graphical interface is slated for removal to remove dependencies due to it being based on the World of Warcraft code. It will not be supported.
-
-## How Can I Contribute?
-See [Contributing](CONTRIBUTING.md).
 
 ## Original Source
 SimulationCraft (https://github.com/simulationcraft/simc). GNU GPL v3 License (see License for more information)

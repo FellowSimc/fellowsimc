@@ -19,10 +19,10 @@ actions.main+=/highwind_arrow,target_if=max:target.health*(1+0.5*debuff.lunarlig
 actions.main+=/starfall_volley
 # actions.main+=/multishot,if=buff.skystriders_supremacy.up&(buff.skystriders_supremacy.stack-2)*gcd.max<=buff.skystriders_supremacy.remains&(buff.skystriders_supremacy.stack)*gcd.max>=buff.skystriders_supremacy.remains
 actions.main+=/highwind_arrow,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=legendary.shimmer&debuff.shimmer.remains<=gcd.max*3|charges>=(3-debuff.shimmer.stack)&legendary.shimmer&!debuff.shimmer.at_max_stacks|buff.resurgent_winds.up|talent.high_impact&weapon.chronoshift&cooldown.chronoshift.remains<=gcd.max*3
-actions.main+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,if=buff.impending_heartseeker.up|debuff.lunarlight_mark.up&(talent.fusillade|!legendary.astronomers_hail)|talent.fervent_supremacy&active_enemies=1|buff.event_horizon.up
+actions.main+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,if=buff.impending_heartseeker.up|debuff.lunarlight_mark.up&(talent.fusillade|!legendary.astronomers_hail)&(active_enemies<8|talent.piercing_seekers)|talent.fervent_supremacy&active_enemies=1|buff.event_horizon.up
 actions.main+=/chronoshift,cancel_if=gcd.remains<=0
 actions.main+=/multishot,if=(is_empowered)&active_enemies<=2
-actions.main+=/highwind_arrow,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=charges_fractional>=2&(!buff.skystriders_supremacy.up|talent.fervent_supremacy|talent.resurgent_winds)&active_enemies<=12
+actions.main+=/highwind_arrow,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=charges_fractional>=2&(!buff.skystriders_supremacy.up|talent.fervent_supremacy|talent.resurgent_winds)
 actions.main+=/celestial_shot,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=buff.celestial_impetus.react&talent.impending_heartseeker&!buff.impending_heartseeker.up
 #actions.main+=/highwind_arrow,target_if=max:target.health*(1+debuff.shimmer.stack_value),if=legendary.shimmer&charges>=2|!legendary.shimmer&(active_enemies=1|!buff.multishot.at_max_stacks)
 actions.main+=/skystriders_supremacy,if=!buff.skystriders_supremacy.up&!talent.fervent_supremacy
@@ -71,7 +71,8 @@ actions.deadly_focus+=/starfall_volley
 actions.deadly_focus+=/highwind_arrow,if=!debuff.shimmer.at_max_stacks&legendary.shimmer
 actions.deadly_focus+=/highwind_arrow,if=talent.strikers_aim&(active_enemies<3|talent.final_crescendo)
 actions.deadly_focus+=/chronoshift,if=cooldown.starfall_volley.remains>10
-actions.deadly_focus+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,cancel_if=debuff.lunarlight_mark.stack=0&gcd.remains<=0&active_enemies>2,if=buff.impending_heartseeker.up|debuff.lunarlight_mark.stack>2&active_enemies>1|active_enemies=1&debuff.lunarlight_mark.stack>8
+actions.deadly_focus+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,if=buff.event_horizon.up
+#actions.deadly_focus+=/heartseeker_barrage,target_if=max:debuff.lunarlight_mark.stack,cancel_if=debuff.lunarlight_mark.stack=0&gcd.remains<=0&active_enemies>2,if=buff.impending_heartseeker.up|debuff.lunarlight_mark.stack>2&active_enemies>1|active_enemies=1&debuff.lunarlight_mark.stack>8
 actions.deadly_focus+=/celestial_shot,if=buff.finesse_n.at_max_stacks
 # This should not happen just checking if it does
 actions.deadly_focus+=/focused_shot,if=buff.finesse_n.at_max_stacks

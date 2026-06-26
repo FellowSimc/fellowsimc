@@ -525,7 +525,7 @@ public:
   {
     bool lego_1 = false;
     // Gunde.TargetedAoeProjectile.Talent.AdditionalTicks.Amount, 2.0
-    int lego_1_additional_grim_carve_hits = 1;
+    int lego_1_additional_grim_carve_hits = 2;
 
     bool lego_2 = false;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.NumOfCharges, 2.0

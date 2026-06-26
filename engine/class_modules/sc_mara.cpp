@@ -239,8 +239,6 @@ public:
     double venomous_delight_chance = 0.1;
     double venomous_delight_energy = 10;
 
-    double vile_venoms_poison_multiplier = 1.15;
-
     double efficient_killer_energy_cost_modifier = 0.9;
     double efficient_killer_max_energy_boost     = 1.1;
     double efficient_killer_energy_per_cp        = 1.0;
@@ -278,8 +276,8 @@ public:
     bool hemotoxin_old_double_dip_stats       = false;
     bool hemotoxin_old_double_dip_multipliers = false;
 
-    timespan_t hemotoxin_sample_per_cp_qf    = 0.6_s;
-    timespan_t hemotoxin_sample_per_cp_aa    = 0.3_s;
+    timespan_t hemotoxin_sample_per_cp_qf    = 0.8_s;
+    timespan_t hemotoxin_sample_per_cp_aa    = 0.4_s;
     double hemotoxin_sample_multiplier_crits = 1.0;
 
     double maidens_doom_execute_amp       = 0.2;
@@ -295,7 +293,7 @@ public:
     timespan_t assassins_guile_buff_duration = 4.99_s;
 
     double seething_burst_chance = 0.2;
-    double seething_burst_damage = 0.6 * 2.5; // 2.2
+    double seething_burst_damage = 0.6 * 2.5;
     int seething_burst_max_targets = 10;
 
     double caustic_wounds_chance = 0.3;
@@ -305,8 +303,10 @@ public:
   
   struct spell_const_t
   {
+    double poison_and_bleed_increase_per_haste = 0.5;
+
     double hemorrhaging_strike_energy_gen = 2.0;
-    double hemorrhaging_strike_damage     = 2.73; 
+    double hemorrhaging_strike_damage     = 2.73 * 1.05; 
     double hemorrhaging_stike_tick_dmg    = 0.7209;
     timespan_t hemorrhaging_strike_period = 3_s;
 
@@ -868,6 +868,15 @@ public:
     return c;
   }
 
+  inline double poison_multiplier( const action_state_t* s ) const
+  {
+    auto haste_mul = 1.0 / s->haste;
+    
+    haste_mul = ( haste_mul - 1 ) * p()->spell_const.poison_and_bleed_increase_per_haste + 1;
+
+    return haste_mul;
+  }
+
   double composite_crit_damage_bonus_multiplier() const override
   {
     double cm = ab::composite_crit_damage_bonus_multiplier();
@@ -1026,7 +1035,7 @@ struct mara_poison_t : public mara_attack_t
   {
     double m = mara_attack_t::composite_ta_multiplier( s );
 
-    m /= s->haste;
+    m *= poison_multiplier( s );
 
     return m;
   }
@@ -1035,7 +1044,7 @@ struct mara_poison_t : public mara_attack_t
   {
     double m = mara_attack_t::composite_ta_multiplier( s );
 
-    m /= s->haste;
+    m *= poison_multiplier( s );
 
     return m;
   }
@@ -1498,7 +1507,7 @@ struct hemorrhaging_strike_t : public mara_attack_t
   {
     double m = mara_attack_t::composite_ta_multiplier( s );
 
-    m /= s->haste;
+    m *= poison_multiplier( s );
 
     if ( p()->talents_enabled( mara_t::GUSHING_BLOOD ) &&
          p()->get_target_data( s->target )->dots.seething_poison->is_ticking() )

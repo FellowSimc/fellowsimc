@@ -144,7 +144,15 @@ sets.draconic_might=1
 
 # 14
 
-talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/swift_reload:1/rising_moon:1/skylit_grace:1
+
+# copy="Elarion HWA Supremacy SG"
+# talents=last_lights:1/lethal_shots:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/swift_reload:1/fervent_supremacy:1/skylit_grace:1
+
+# copy="Elarion HWA Supremacy SA"
+# talents=last_lights:1/lethal_shots:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/swift_reload:1/fervent_supremacy:1/strikers_aim:1
+# copy="Elarion HWA Supremacy LA"
+# talents=last_lights:1/lethal_shots:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/swift_reload:1/fervent_supremacy:1/lunarlight_affinity:1
 # # 14
 
 # copy="Astronomers Hail HWA No Spirit","Elarion HWA"

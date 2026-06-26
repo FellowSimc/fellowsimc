@@ -526,7 +526,7 @@ def talent_combinations(
 def combos_to_file(prefix, talents, indicator_dict, target_points, file_path, profilesets=True,
     required_talents=None,
     excluded_talents=None,
-    forbidden_pairs=None, name_filters=None):
+    forbidden_pairs=None, name_filters=None, extra_options=None):
     combos = talent_combinations(talents, target_points, required_talents=required_talents, excluded_talents=excluded_talents, forbidden_pairs=forbidden_pairs )
 
     with open(file_path, "w") as f:
@@ -561,6 +561,13 @@ def combos_to_file(prefix, talents, indicator_dict, target_points, file_path, pr
             if len(combo) == 0:
                 continue
             line = "talents="+":1/".join(combo)+":1\n"
+
+            if extra_options:
+                for option in extra_options:
+                    if profilesets:
+                        line += f"profileset.\"{profile_name}\"+="
+                    line += option + "\n"
+
             #print(header+line)
             f.write(header)
             f.write(line)
@@ -747,6 +754,31 @@ if __name__ == "__main__":
                     "lunar_fury",
                     "fervent_supremacy",
                     "focused_expanse"
+                    # "deadly_focus",
+                    # "swift_reload"
+                ],
+                forbidden_pairs=[
+                    # ("hemotoxin", "malevolence"),
+                    # ("gushing_blood", "malevolence"),
+                    # ("arachnid_onslaught", "malevolence"),
+                ],
+                # name_filters=top_x
+    )
+
+    combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents_volley.simc", 
+                profilesets=True,
+                required_talents=[
+                    "repeating_stars",
+                    "resurgent_winds",
+                    "lethal_shots",
+                    "lunarlight_affinity"
+                ],
+                extra_options=[
+                    "legendary.shimmer=0",
+                    "legendary.starstrikers_ascent=0",
+                    "legendary.astronomers_hail=1"
+                ],
+                excluded_talents=[
                     # "deadly_focus",
                     # "swift_reload"
                 ],

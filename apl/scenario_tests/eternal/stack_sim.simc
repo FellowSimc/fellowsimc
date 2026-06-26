@@ -12,15 +12,15 @@ single_actor_batch=1
 max_time=720
 desired_targets=1
 
-apl/scenario_tests/eternal/rime.simc
-apl/scenario_tests/eternal/elarion.simc
-apl/scenario_tests/eternal/elarion_starstriker.simc
-apl/scenario_tests/eternal/ardeos.simc
+# apl/scenario_tests/eternal/rime.simc
+# apl/scenario_tests/eternal/elarion.simc
+# apl/scenario_tests/eternal/elarion_starstriker.simc
+# apl/scenario_tests/eternal/ardeos.simc
 apl/scenario_tests/eternal/mara_finisher.simc
 apl/scenario_tests/eternal/mara_bleed.simc
 
 
-apl/scenario_tests/eternal/gunde_feather.simc
-apl/scenario_tests/eternal/gunde_heartsplitter.simc
-apl/scenario_tests/eternal/tariq_lightning.simc
-apl/scenario_tests/eternal/tariq_schism.simc
+# apl/scenario_tests/eternal/gunde_feather.simc
+# apl/scenario_tests/eternal/gunde_heartsplitter.simc
+# apl/scenario_tests/eternal/tariq_lightning.simc
+# apl/scenario_tests/eternal/tariq_schism.simc

@@ -11,7 +11,7 @@
 # single_actor_batch=1
 # max_time=720
 # desired_targets=1
-# relative_difference_base="Base Rime"
+relative_difference_base="Base Rime"
 
 # apl/chuey_dungeon.simc
 
@@ -97,7 +97,8 @@ main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_s
 legendary.skandis_decree=1
 # legendary.frostwyrms_spite=1
 # legendary.undulating_spirit=1
-weapon=chronoshift
+# weapon=chronoshift
+weapon=icicles_of_anzhyr
 
 # # Talons Beam Okay
 # talents=burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/cold_shower:1/glacial_assault:1/greater_glacial_blast:1/icy_talons:1/navirs_keeper:1/wisdom_of_the_north:1
@@ -134,6 +135,159 @@ weapon_trait.visions_of_grandeur=1
 weapon_trait.martial_initiative=1
 # 38 mods
 
+# apl/generated/rime_talents_talons_sk.simc
+# apl/generated/rime_talents_talons_us.simc
+
+# copy="Rime US SFT Talons","Base Rime"
+# talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/greater_glacial_blast:1/icy_talons:1/soulfrost_torrent:1/supreme_torrent:1/wisdom_of_the_north:1
+
+# copy="Rime US SFT Talons2","Base Rime"
+# talents=coalescing_frost:1/bursting_swallows:1/cascading_blitz:1/greater_glacial_blast:1/icy_talons:1/soulfrost_torrent:1/supreme_torrent:1/wisdom_of_the_north:1
+
+# copy="Rime US SFT Talons3","Base Rime"
+# talents=cold_shower:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/greater_glacial_blast:1/icy_talons:1/soulfrost_torrent:1/supreme_torrent:1/wisdom_of_the_north:1
+
+# Top AoE
+# copy="Rime US Talons Beam AoE","Base Rime"
+# legendary.skandis_decree=0
+# legendary.frostwyrms_spite=0
+# legendary.undulating_spirit=1
+# talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/cold_shower:1/greater_glacial_blast:1/icy_talons:1/wisdom_of_the_north:1
+
+# Top ST
+copy="Rime US Talons Beam ST","Base Rime"
+legendary.skandis_decree=0
+legendary.frostwyrms_spite=0
+legendary.undulating_spirit=1
+talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1/wisdom_of_the_north:1
+copy="Rime SK Talons Beam ST","Base Rime"
+talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1/wisdom_of_the_north:1
+
+# copy="Rime US Talons Beam ST Wayfarer","Base Rime"
+# legendary.skandis_decree=0
+# legendary.frostwyrms_spite=0
+# legendary.undulating_spirit=1
+# talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1/wisdom_of_the_north:1
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_i/finesse_i
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_i/finesse_i
+# copy="Rime US Talons Beam ST Intepid","Base Rime"
+# legendary.skandis_decree=0
+# legendary.frostwyrms_spite=0
+# legendary.undulating_spirit=1
+# talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1/wisdom_of_the_north:1
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_a/finesse_a
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_a/finesse_a
+# copy="Rime US Talons Beam ST Mystic","Base Rime"
+# legendary.skandis_decree=0
+# legendary.frostwyrms_spite=0
+# legendary.undulating_spirit=1
+# talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1/wisdom_of_the_north:1
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_j/finesse_j
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_j/finesse_j
+
+# # copy="Rime US Talons Beam2","Base Rime"
+# # legendary.skandis_decree=0
+# # legendary.frostwyrms_spite=0
+# # legendary.undulating_spirit=1
+# # talents=coalescing_frost:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1/wisdom_of_the_north:1
+
+# # copy="Rime US Talons Beam3","Base Rime"
+# # legendary.skandis_decree=0
+# # legendary.frostwyrms_spite=0
+# # legendary.undulating_spirit=1
+# # talents=cold_shower:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1/wisdom_of_the_north:1
+
+copy="Rime US Talons GA WOTN","Base Rime"
+legendary.skandis_decree=0
+legendary.frostwyrms_spite=0
+legendary.undulating_spirit=1
+talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/glacial_assault:1/wisdom_of_the_north:1/greater_glacial_blast:1/icy_talons:1/navirs_keeper:1
+
+# # copy="Glacial Assault Talons HIv2","Base Rime"
+# # talents=burstbolter:1/bursting_swallows:1/cascading_blitz:1/wisdom_of_the_north:1/glacial_assault:1/harrowing_ice:1/greater_glacial_blast:1/icy_talons:1/navirs_keeper:1
+
+# # copy="Rime US Talons Beam old","Base Rime"
+# # legendary.skandis_decree=0
+# # legendary.frostwyrms_spite=0
+# # legendary.undulating_spirit=1
+# # talents=wisdom_of_the_north:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/cold_shower:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1
+
+# copy="Rime FWW ST","Base Rime"
+# talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/frostweavers_wrath:1/greater_glacial_blast:1/harrowing_ice:1/icy_flow:1
+
+copy="Rime SFT Natty","Base Rime"
+talents=coalescing_frost:1/cold_shower:1/chilling_finesse:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/soulfrost_torrent:1/supreme_torrent:1
+
+# # copy="Rime FWW Something Coal","Base Rime"
+# # talents=coalescing_frost:1/chilling_finesse:1/burstbolter:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/frostweavers_wrath:1/biting_cold:1
+
+copy="Rime FWW Something Coal CS","Base Rime"
+talents=coalescing_frost:1/chilling_finesse:1/cold_shower:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/frostweavers_wrath:1/biting_cold:1
+
+copy="Rime FWW Something Ava CS","Base Rime"
+talents=avalanche:1/chilling_finesse:1/cold_shower:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/frostweavers_wrath:1/biting_cold:1
+
+# copy="Rime FWW Something Coal CS Cloak","Base Rime"
+# talents=coalescing_frost:1/chilling_finesse:1/cold_shower:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/frostweavers_wrath:1/biting_cold:1
+# legendary.skandis_decree=0
+# legendary.frostwyrms_spite=1
+# legendary.undulating_spirit=0
+# copy="Rime FWW Something Coal CS Cloak gear change","Base Rime"
+# talents=coalescing_frost:1/chilling_finesse:1/cold_shower:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/frostweavers_wrath:1/biting_cold:1
+# legendary.skandis_decree=0
+# legendary.frostwyrms_spite=1
+# legendary.undulating_spirit=0
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=finesse_n/finesse_n
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_n/finesse_n
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_i
+# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit,affixes=finesse_i/finesse_i/finesse_i/finesse_c
+# copy="Rime SFT Natty FrostLego","Base Rime"
+# talents=coalescing_frost:1/cold_shower:1/chilling_finesse:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/soulfrost_torrent:1/supreme_torrent:1
+# legendary.skandis_decree=0
+# legendary.frostwyrms_spite=1
+# legendary.undulating_spirit=0
+
+# copy="Rime SFT Natty FrostLego R2","Base Rime"
+# talents=coalescing_frost:1/cold_shower:1/chilling_finesse:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/soulfrost_torrent:1/supreme_torrent:1
+# legendary.skandis_decree=0
+# legendary.frostwyrms_spite=1
+# legendary.undulating_spirit=0
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=finesse_n/finesse_n
+
+copy="Rime SFT Vehement FrostLego","Base Rime"
+talents=coalescing_frost:1/cold_shower:1/chilling_finesse:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/soulfrost_torrent:1/supreme_torrent:1
+legendary.skandis_decree=0
+legendary.frostwyrms_spite=1
+legendary.undulating_spirit=0
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=finesse_n/finesse_n
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_n/finesse_n
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_i
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit,affixes=finesse_i/finesse_i/finesse_i/finesse_c
+copy="Rime SFT Vehement Vainglorious FrostLego","Base Rime"
+talents=coalescing_frost:1/cold_shower:1/chilling_finesse:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/soulfrost_torrent:1/supreme_torrent:1
+legendary.skandis_decree=0
+legendary.frostwyrms_spite=1
+legendary.undulating_spirit=0
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=finesse_n/finesse_n
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_n/finesse_n
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_h
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit,affixes=finesse_h/finesse_h/finesse_h/finesse_c
+
+
+# copy="Rime FWW Something Coal CS US","Base Rime"
+# legendary.skandis_decree=0
+# legendary.frostwyrms_spite=0
+# legendary.undulating_spirit=1
+# talents=coalescing_frost:1/chilling_finesse:1/cold_shower:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/frostweavers_wrath:1/biting_cold:1
+
+# copy="Rime FWW Something Coal CS v2","Base Rime"
+# talents=coalescing_frost:1/cold_shower:1/burstbolter:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/greater_glacial_blast:1/frostweavers_wrath:1/biting_cold:1
+
+
+# copy="Rime FWW random cook","Base Rime"
+# talents=avalanche:1/coalescing_frost:1/cold_shower:1/chilling_finesse:1/cascading_blitz:1/icy_flow:1/bursting_swallows:1/frostweavers_wrath:1
+# copy="Glacial Assault Talons HiV3","Base Rime"
+# talents=burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/glacial_assault:1/wisdom_of_the_north:1/greater_glacial_blast:1/icy_talons:1/harrowing_ice:1
 
 # copy="FinesseA","Base Rime"
 # chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/finesse_a/finesse_a/finesse_a/finesse_a

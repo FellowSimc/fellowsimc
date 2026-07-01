@@ -630,22 +630,66 @@ if __name__ == "__main__":
     # overalls = sorted_by_overall(sim_results)
     # print(overalls)
 
-    # combos_to_file("Rime", rime, rime_indicators, 14, "rime/talent_output_filtered.simc", 
-    #             required_talents=[
-    #                 #    "icy_talons",
-    #                 #    "greater_glacial_blast",
-    #                 #    "glacial_assault"
-    #             ],
-    #             excluded_talents=[
-    #                 #  "frostweavers_wrath",
-    #                 #  "cascading_blitz",
-    #                 #  "avalanche"
-    #             ],
-    #             forbidden_pairs=[
-    #                    ("icy_talons", "frostweavers_wrath")
-    #             ],
-    #             name_filters=top_x
-    # )
+    combos_to_file("Rime_US", rime, rime_indicators, 14, "generated/rime_talents_talons_us.simc", 
+                required_talents=[
+                    "cascading_blitz",
+                    "burstbolter",
+                    "greater_glacial_blast",
+                    "icy_talons",
+                    "bursting_swallows"
+                    # "greater_glacial_blast",
+                    # "frostweavers_wrath"
+                    #    "icy_talons",
+                    #    "greater_glacial_blast",
+                    #    "glacial_assault"
+                ],
+                extra_options=[
+                    "legendary.skandis_decree=0",
+                    "legendary.undulating_spirit=1",
+                    "legendary.frostwyrms_spite=0"
+                ],
+                excluded_talents=[
+                    # "cascading_blitz",
+                    #  "frostweavers_wrath",
+                    #  "cascading_blitz",
+                    #  "avalanche"
+                ],
+                forbidden_pairs=[
+                       ("icy_talons", "frostweavers_wrath")
+                ],
+                # profilesets=False
+                # name_filters=top_x
+    )
+    combos_to_file("Rime_SK", rime, rime_indicators, 14, "generated/rime_talents_talons_sk.simc", 
+                required_talents=[
+                    "cascading_blitz",
+                    "burstbolter",
+                    "greater_glacial_blast",
+                    "icy_talons",
+                    "bursting_swallows"
+                    # "greater_glacial_blast",
+                    # "frostweavers_wrath"
+                    #    "icy_talons",
+                    #    "greater_glacial_blast",
+                    #    "glacial_assault"
+                ],
+                extra_options=[
+                    "legendary.skandis_decree=1",
+                    "legendary.undulating_spirit=0",
+                    "legendary.frostwyrms_spite=0"
+                ],
+                excluded_talents=[
+                    # "cascading_blitz",
+                    #  "frostweavers_wrath",
+                    #  "cascading_blitz",
+                    #  "avalanche"
+                ],
+                forbidden_pairs=[
+                       ("icy_talons", "frostweavers_wrath")
+                ],
+                # profilesets=False
+                # name_filters=top_x
+    )
 
     
     # top_x = top_sim_results("output/ardeos_et104.json", 500)
@@ -830,16 +874,17 @@ if __name__ == "__main__":
     #             # name_filters=top_x
     # )
 
-    combos_to_file("Tariq", tariq, tariq_indicators, 14, "generated/tariq_talents14_lightning_schism.simc", 
+    combos_to_file("Tariq", tariq, tariq_indicators, 14, "generated/tariq_talents14_schism.simc", 
                 profilesets=True,
                 required_talents=[
                     "schism",
                     "sledgehammer",
-                    "kill_em_all",
-                    "square_hammer"
+                    "them_bones"
                 ],
                 excluded_talents=[
-                    "killing_in_the_name",
+                    "kill_em_all",
+                    "square_hammer",
+                    "left_hand_path"
                     # "deadly_focus",
                     # "swift_reload"
                 ],

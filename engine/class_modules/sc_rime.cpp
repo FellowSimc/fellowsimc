@@ -132,6 +132,8 @@ public:
     accumulated_rng_t* frostweavers_wrath;
     accumulated_rng_t* bursting_swallows;
     accumulated_rng_t* cold_shower;
+    accumulated_rng_t* avalanche_double;
+    accumulated_rng_t* avalanche_triple;
   } rngs;
 
 #define RIME_TALENT_LIST( X )                                                  \
@@ -207,14 +209,14 @@ public:
 
     int glacial_assault_stacks      = 4;
     double glacial_assault_amp      = 0.4;
-    double glacial_assault_cleave   = 0.2;
+    double glacial_assault_cleave   = 0.3;
     int glacial_assault_aoe_falloff = 12;
 
     int burstbolter_bursting_ice_pulses = 1;
     double burstbolter_bursting_ice_amp = 0.2;
 
     timespan_t icy_flow_buff_duration = 15_s;
-    double icy_flow_cc                = 0.15;
+    double icy_flow_cc                = 0.2;
     double icy_flow_temp_haste        = 0.5;
     int icy_flow_max_stacks           = 2;
 
@@ -222,11 +224,11 @@ public:
 
     int cascading_blitz_birds_per_anima = 1;
 
-    double avalanche_double = 0.15;
-    double avalanche_triple = 0.07;
+    double avalanche_double = 0.18;
+    double avalanche_triple = 0.09;
 
     timespan_t coalescing_frost_duration      = 3_s;
-    double coalescing_frost_sp_mul            = 0.333 * 1.07;  // *1.2;
+    double coalescing_frost_sp_mul            = 0.56 / 1.481;  // *1.2;
     double coalescing_frost_crit_extra_chance = 0.5;
     int coalescing_frost_crit_stacks          = 2;
     int coalescing_frost_max_stacks           = 30;
@@ -237,12 +239,12 @@ public:
     double greater_glacial_blast_amp                 = 0.4;
     timespan_t greater_glacial_blast_added_cast_time = 0.5_s;
 
-    double cold_shower_chance = 0.06;
+    double cold_shower_chance = 0.07;
 
-    double icy_talons_st_multiplier  = 0.45;
-    double icy_talons_aoe_multiplier = 0.45;
+    double icy_talons_st_multiplier  = 0.4;
+    double icy_talons_aoe_multiplier = 0.4;
 
-    double frostweavers_wrath_chance_per_orb    = 0.17;
+    double frostweavers_wrath_chance_per_orb    = 0.2;
     timespan_t frostweavers_wrath_buff_duration = 12_s;
     double frostweavers_wrath_added_cc          = 1.0;
 
@@ -272,7 +274,7 @@ public:
     double bird_coeff             = 0.469;
     double bird_spirit_multiplier = 1.5;
 
-    double ice_comet_coeff   = 4.8045;
+    double ice_comet_coeff   = 4.8045 * 1.1;
     double ice_comet_falloff = 12;
     int ice_comet_cost       = 2;
 
@@ -303,7 +305,7 @@ public:
     int bursting_ice_anima_gen       = 1;
     double bursting_ice_amp          = 0.2;
 
-    timespan_t ice_blitz_cd                 = 120_s;
+    timespan_t ice_blitz_cd                 = 60_s;
     double ice_blitz_mul                    = 0.2;
     timespan_t ice_blitz_extension_per_bird = 0.1_s;
 
@@ -314,7 +316,7 @@ public:
   struct legendary_t
   {
     bool frostwyrms_spite                 = false;
-    double frostwyrms_spite_dmg_per_stack = 0.20;
+    double frostwyrms_spite_dmg_per_stack = 0.3;
     int frostwyrms_spite_max_stacks       = 30;
     timespan_t frostwyrms_spite_duration  = 15_s;
 
@@ -323,10 +325,9 @@ public:
 
     bool undulating_spirit                         = false;
     double undulating_spirit_additional_spirit     = 50.0;
-    double undulating_spirit_chance                = 0.05;
     double undulating_spirit_spirit_value          = 2.0;
-    bool undulating_spirit_alternative_check       = false;
-    double undulating_spirit_alternative_check_mul = 2.0;
+    int undulating_spirit_stacks                   = 2;
+    int undulating_spirit_max_stacks               = 4;
   } legendary;
 
   struct options_t
@@ -438,8 +439,7 @@ public:
   double composite_mastery() const override
   {
     double cm = fs_player_t::composite_mastery();
-    if ( legendary.undulating_spirit && legendary.undulating_spirit_alternative_check )
-      cm *= legendary.undulating_spirit_alternative_check_mul;
+
     return cm;
   }
 
@@ -885,15 +885,6 @@ public:
         p()->buffs.soulfrost_torrent->trigger();
       }
     }
-
-    if ( p()->legendary.undulating_spirit && !is_secondary_action() && !ab::tick_action && !ab::background &&
-         !p()->legendary.undulating_spirit_alternative_check )
-    {
-      //if ( p()->rng().roll( p()->legendary.undulating_spirit_chance ) )
-      //{
-      //  p()->buffs.undulating_spirit->trigger();
-      //}
-    }
   }
 
   void schedule_travel( action_state_t* state ) override
@@ -1250,8 +1241,8 @@ struct ice_comet_t : public rime_spell_t
 
   double composite_crit_chance() const override
   {
-    if ( secondary_trigger_type == secondary_trigger::AVALANCHE )
-      return rime_spell_t::composite_crit_chance() + p()->buffs.frostweavers_wrath->check_value();
+    //if ( secondary_trigger_type == secondary_trigger::AVALANCHE )
+    //  return rime_spell_t::composite_crit_chance() + p()->buffs.frostweavers_wrath->check_value();
 
     return rime_spell_t::composite_crit_chance() + p()->buffs.icy_flow->check_value() +
            p()->buffs.frostweavers_wrath->check_value();
@@ -1265,20 +1256,20 @@ struct ice_comet_t : public rime_spell_t
 
     if ( !is_secondary_action() || secondary_trigger_type == secondary_trigger::COLD_SHOWER )
     {
-      p()->buffs.icy_flow->decrement();
-
       if ( p()->talents_enabled( rime_t::AVALANCHE ) )
       {
-        if ( p()->rng().roll( p()->talents.avalanche_double ) )
+        if ( p()->rngs.avalanche_double->trigger() )
         {
           p()->actions.ice_comet_avalanche->trigger_secondary_action( target, 0.3_s );
         }
-
-        if ( p()->rng().roll( p()->talents.avalanche_triple ) )
+        else if ( p()->rngs.avalanche_triple->trigger() )
         {
+          p()->actions.ice_comet_avalanche->trigger_secondary_action( target, 0.3_s );
           p()->actions.ice_comet_avalanche->trigger_secondary_action( target, 0.6_s );
-        }
+        } 
       }
+
+      p()->buffs.icy_flow->decrement();
     }
   }
 };
@@ -1653,7 +1644,7 @@ struct winters_blessing_t : public rime_spell_t
 
     if ( p()->legendary.undulating_spirit )
     {
-      p()->buffs.undulating_spirit->trigger( 2 );
+      p()->buffs.undulating_spirit->trigger( p()->legendary.undulating_spirit_stacks );
     }
   }
 };
@@ -1736,6 +1727,7 @@ struct cold_snap_t : public rime_spell_t
     if ( p->legendary.frostwyrms_spite )
     {
       reduced_aoe_targets = 3;
+      full_amount_targets = 1;
     }
     ability_flags |= ability_type_e::ABILITY_BASIC;
   }
@@ -2551,6 +2543,9 @@ void rime_t::init_rng()
 
   if ( talents_enabled( rime_t::COLD_SHOWER ) )
     rngs.cold_shower = get_accumulated_rng( "cold_shower", rng::CfromP( talents.cold_shower_chance ) );
+
+  rngs.avalanche_double = get_accumulated_rng( "avalanche_double", rng::CfromP( talents.avalanche_double ) );
+  rngs.avalanche_triple = get_accumulated_rng( "avalanche_triple", rng::CfromP( talents.avalanche_triple ) );
 }
 
 // rime_t::init_scaling ====================================================
@@ -2638,7 +2633,7 @@ void rime_t::create_buffs()
                                ->set_default_value( legendary.frostwyrms_spite_dmg_per_stack )
                                ->set_refresh_behavior( buff_refresh_behavior::DURATION );
 
-  buffs.undulating_spirit = make_buff<rime_buff_t>( this, "undulating_spirit" )->set_max_stack( 4 );
+  buffs.undulating_spirit = make_buff<rime_buff_t>( this, "undulating_spirit" )->set_max_stack( legendary.undulating_spirit_max_stacks );
 
   buffs.navirs_keeper = make_buff<rime_buff_t>( this, "navirs_keeper" )
                             ->set_max_stack( talents.navirs_keeper_cold_snaps )
@@ -2666,10 +2661,6 @@ void rime_t::create_options()
   add_option( opt_bool( "legendary.frostwyrms_spite", legendary.frostwyrms_spite ) );
   add_option( opt_bool( "legendary.skandis_decree", legendary.skandis_decree ) );
   add_option( opt_bool( "legendary.undulating_spirit", legendary.undulating_spirit ) );
-  add_option(
-      opt_bool( "legendary.undulating_spirit_alternative_check", legendary.undulating_spirit_alternative_check ) );
-  add_option(
-      opt_float( "legendary.undulating_spirit_alternative_mul", legendary.undulating_spirit_alternative_check_mul ) );
 }
 
 // rime_t::copy_from =======================================================
@@ -2880,7 +2871,7 @@ void actions::rime_action_t<Base>::spend_winter_orbs( const action_state_t* s )
 
     trigger_spirit_refund( s, orbs_spent );
   }
-  else if ( p()->legendary.undulating_spirit && p()->buffs.undulating_spirit->check() )
+  else if ( p()->buffs.undulating_spirit->check() )
   {
     p()->buffs.undulating_spirit->decrement();
     p()->sim->print_debug( "{} proc'd Undulating Spirit Refund", *p() );

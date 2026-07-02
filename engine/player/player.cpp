@@ -4743,19 +4743,10 @@ double player_t::composite_weapon_attack_power_by_type( attack_power_type ap_typ
 
 double player_t::composite_total_attack_power_by_type( attack_power_type ap_type ) const
 {
-  // duplicate code to prevent recursion
-  if ( current.attack_power_per_spell_power > 0 )
-  {
-    // total spell power is rounded to integer
-    auto sp = std::round( cache.spell_power( SCHOOL_MAX ) * composite_spell_power_multiplier() );
-
-    return std::round( current.attack_power_per_spell_power * sp );
-  }
-
   auto mul = composite_attack_power_multiplier();
 
   // total attack power is rounded to integer
-  return std::round( cache.attack_power() * mul + cache.weapon_attack_power( ap_type ) * mul );
+  return std::round( cache.attack_power() * mul );
 }
 
 double player_t::composite_attack_power_multiplier() const
@@ -4767,8 +4758,6 @@ double player_t::composite_attack_power_multiplier() const
 
   double m = current.attack_power_multiplier;
 
-  m *= 1.0 + sim->auras.battle_shout->check_value();
-
   // multiplier is rounded to 3 digits
   return std::round( m * 1000 ) * 0.001;
 }
@@ -4778,9 +4767,6 @@ double player_t::composite_melee_crit_chance() const
   double ac = current.attack_crit_chance;
 
   ac += apply_combat_rating_dr( RATING_MELEE_CRIT, composite_melee_crit_rating() * current.rating.attack_crit );
-
-  if ( current.attack_crit_per_agility )
-    ac += ( cache.agility() / current.attack_crit_per_agility / 100.0 );
 
   for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_CRIT ] )
     ac += b->check_stack_value();
@@ -4980,18 +4966,6 @@ double player_t::composite_spell_power( school_e /* school */ ) const
 
 double player_t::composite_total_spell_power( school_e school ) const
 {
-  // dupplicate code to prevent recursion
-  if ( current.spell_power_per_attack_power > 0 )
-  {
-    auto mul = composite_attack_power_multiplier();
-
-    // total attack power is rounded to integer
-    auto ap = std::round( cache.attack_power() * mul +
-                          cache.weapon_attack_power( attack_power_type::WEAPON_MAINHAND ) * mul );
-
-    return std::round( current.spell_power_per_attack_power * ap );
-  }
-
   // total spell power is rounded to integer
   return std::round( cache.spell_power( school ) * composite_spell_power_multiplier() );
 }

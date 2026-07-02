@@ -213,7 +213,7 @@ public:
 
     
     //Ink.AutoAttackBuff.StrengthCoefficient, 6.2560	;was 4.065 then 5.0813 then 4.3902
-    double heavy_strike_coeff = 6.256 * 0.87 * 0.95 * 0.95;
+    double heavy_strike_coeff = 5.66;
     //Ink.AutoAttackBuff.Weak.DamageMultiplier, 0.2
     //Ink.AutoAttackBuff.Weak.ResourceGainMultiplier, 0.2
     //Ink.AutoAttackBuff.Cleave.DamageMultiplier, 0.20	;was 0.50
@@ -222,7 +222,7 @@ public:
     //Ink.AutoAttackBuff.Cleave.PieMinRadius, 10.0	; Offset from character position. VFX will also start from here
     //Ink.AutoAttackBuff.Cleave.PieAngleWidth, 270.0
     //Ink.AutoAttackBuff.Cleave.TargetThresholdForDamageScale, 5.0	;was 8.0
-    double heavy_strike_target_threshold = 5.0;
+    double heavy_strike_target_threshold = 8.0;
     //Ink.AutoAttackBuff.ResourceGain, 0.12	; was 0.05 In percentage of max
     double heavy_strike_fury = 12;
     //Ink.AutoAttackBuff.Cost, 0.0
@@ -230,7 +230,7 @@ public:
     //Ink.AutoAttackBuff.Cooldown, 8.0
     timespan_t heavy_strike_cooldown = 8_s;
     //Ink.AutoAttackBuff.Lightning.StrengthCoefficient, 2.1896 	;was 1.4227 and then x and then 1.7784
-    double heavy_strike_lightning_coeff = 2.1896 * 0.87 * 0.95;
+    double heavy_strike_lightning_coeff = 1.98;
     //Ink.AutoAttackBuff.Lightning.TargetThresholdForDamageScale, 5.0	;was 8.0
     double heavy_strike_lightning_threshold = 5.0;
     //Ink.AutoAttackBuff.Lightning.VisualDelay, 0.25	; Added upon the original visual delay
@@ -250,7 +250,7 @@ public:
     
 
     //Ink.HeavySingleTargetAttack.StrengthCoefficient, 12.2071				;was 9.162 then 10.078 then 13.4374 then 17.4686 then 11.4218
-    double skull_crusher_coeff = 10.0892;
+    double skull_crusher_coeff = 11.6;
     //Ink.HeavySingleTargetAttack.Spread, 0.1
     //Ink.HeavySingleTargetAttack.VisualHitDelay, 0.52
     //Ink.HeavySingleTargetAttack.Cost, 0.25	; Percentage of Max Rage
@@ -258,12 +258,12 @@ public:
     //Ink.HeavySingleTargetAttack.Cooldown, 1.0
     timespan_t skull_crusher_gcd = 1_s;
     //Ink.HeavySingleTargetAttack.Lightning.StrengthCoefficient, 4.2725 	;was 2.863 then 3.5273 then 4.7031 then 6.1140 then 3.9976
-    double skull_crusher_lightning_coeff = 4.2725 * 0.87 * 0.95;
+    double skull_crusher_lightning_coeff = 4.06;
     //Ink.HeavySingleTargetAttack.Lightning.Spread, 0.20
     //Ink.HeavySingleTargetAttack.Lightning.VisualHitDelay, 0.35	; Added upon the original visual delay
     
     //Ink.AoeAttack.StrengthCoefficient, 1.2514	;was 1.1047 then 1.3256 then 1.0970
-    double hammer_storm_coeff = 1.2514 * 1.3 * 1.1 * 1.2 * 1.15 * 0.87 * 0.95 * 0.95;
+    double hammer_storm_coeff = 2.23;
     //Ink.AoeAttack.Spread, 0.1
     //Ink.AoeAttack.Radius, 700.0
     //Ink.AoeAttack.TargetThresholdForDamageScale, 8.0
@@ -280,7 +280,7 @@ public:
     //Ink.AoeAttack.MaxRageToSpend, 0.25	; Percentage of Max Rage
     //Ink.AoeAttack.Cooldown, 1.5
     //Ink.AoeAttack.Lightning.StrengthCoefficient, 0.4380	;was 0.3866 then 0.425 then 0.3840
-    double hammer_storm_lightning_coeff = 0.438 * 1.3 * 1.1 * 1.2 * 1.15 * 0.87 * 0.95 * 0.95;
+    double hammer_storm_lightning_coeff = 0.78;
     //Ink.AoeAttack.Lightning.Spread, 0.20
     //Ink.AoeAttack.Lightning.VisualDelay, 0.08	; Added upon the original visual delay
     //Ink.AoeAttack.Lightning.TargetThresholdForDamageScale, 10.0	;was 12.0
@@ -318,7 +318,7 @@ public:
     
 
     //Ink.SingleTargetHeavyNonSpender.StrengthCoefficient, 5.915	;was 4.732
-    double face_breaker_coeff = 5.915 * 1.1 * 1.15 * 0.87 * 0.95;
+    double face_breaker_coeff = 6.18426;
     //Ink.SingleTargetHeavyNonSpender.VisualHitDelay, 0.23
     //Ink.SingleTargetHeavyNonSpender.Cost, 0.0
     //Ink.SingleTargetHeavyNonSpender.Cooldown, 6.0
@@ -327,7 +327,7 @@ public:
     double face_breaker_fury = 7;
 
     //Ink.CleaveAttack.StrengthCoefficient, 1.5625	;was 1.25
-    double wild_swing_coeff = 1.5625 * 0.87 * 0.95;
+    double wild_swing_coeff = 1.2914;
     //Ink.CleaveAttack.Spread, 0.1
     //Ink.CleaveAttack.Radius, 500.0
     //Ink.CleaveAttack.TargetThresholdForDamageScale, 5.0
@@ -525,7 +525,7 @@ public:
     // Chain Lightning
     
     // Ink.BouncyProjectile.Talent.IncreasedMaxNumOfTargets.TotalTargets, 8.0
-    int thunderstruck_max_bounces = 8;
+    int thunderstruck_max_bounces = 9;
     
     
     //Ink.BouncyProjectile.Talent.FreeCastFromAttack.Chance, 0.20			;Blood and Thunder
@@ -541,9 +541,9 @@ public:
     int ace_of_spades_charges = 2;
     
     //Ink.BouncyProjectile.Talent.DamagePerUniqueTarget.Scaler, 0.40	;new talent
-    double the_motherload_increase_per_enemy = 0.5;
+    double the_motherload_increase_per_enemy = 0.65;
     // Ink.BouncyProjectile.Talent.IncreasedDamage.DamageMultiplier, 1.10	;now as part of Blood and Thunder
-    double the_motherload_multiplier = 1.1;
+    double the_motherload_multiplier = 1.0;
         
     // Ink.LowHealthSingleTargetResourceDamage.Talent.AddedCritChance, 0.35
     double killing_in_the_name_cc = 0.5;
@@ -557,11 +557,11 @@ public:
 
     // Ink.Talent.ChanceIncreasedSpenderDamage.PPM, 3.2	;old
     // Ink.Talent.ChanceIncreasedSpenderDamage.ProcChance, 0.25
-    double schism_proc_chance = 0.25;
+    double schism_proc_chance = 0.35;
     // Ink.Talent.ChanceIncreasedSpenderDamage.HeavySingleTargetAttack.DamageMultiplier, 3.50
-    double schism_damage_skull_crusher_multiplier = 3.5;
+    double schism_damage_skull_crusher_multiplier = 2.5;
     // Ink.Talent.ChanceIncreasedSpenderDamage.AoeAttack.DamageMultiplier, 3.50
-    double schism_damage_hammer_storm_multiplier = 3.5;
+    double schism_damage_hammer_storm_multiplier = 2.5;
     
     // Ink.Talent.DecreasedIncomingMagicDamage.DamageMultiplier, 0.90
     // Ink.Talent.UnchargedResourceIncrease.ResourceMultiplier, 1.10
@@ -583,7 +583,8 @@ public:
 
     bool thundering_vortex = false;
     int thundering_vortex_needed = 20;
-    double thundering_vortex_multiplier = 2;
+    double thundering_vortex_multiplier = 1.5;
+    double thundering_vortex_cl_fury_multiplier = 1.5;
 
     // Ink.LowHealthSingleTargetResourceDamage.Talent.Chance, 0.06
     // Ink.LowHealthSingleTargetResourceDamage.Talent.ResourceAmountToDamage, 0.20
@@ -1869,6 +1870,11 @@ struct chain_lightning_t : public tariq_lightning_attack_t
     attack_power_mod.direct = p->spell_const.chain_lightning_coeff;
 
     aoe = p->spell_const.chain_lightning_bounces;
+
+    if ( p->legendary.thundering_vortex )
+    {
+      energize_amount *= p->legendary.thundering_vortex_cl_fury_multiplier;
+    }
 
     if ( p->talents_enabled( tariq_t::THUNDERSTRUCK ) )
       aoe = p->talents.thunderstruck_max_bounces;

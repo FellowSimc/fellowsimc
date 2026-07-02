@@ -254,7 +254,7 @@ public:
     double corrosive_spill_cumulative_chance_per_tick_of_miss = 0.1;
 
     int feed_the_queen_max_stacks         = 6;
-    double feed_the_queen_bonus_per_stack = 0.1;
+    double feed_the_queen_bonus_per_stack = 0.12;
     timespan_t feed_the_queen_duration    = 12_s;
 
     double nightstalker_damage_taken = 0.1;
@@ -264,17 +264,17 @@ public:
 
     timespan_t sinners_pride_cdr_reduction_per_cp = 0.6_s;
 
-    double hemotoxin_old_chance               = 0.12;
-    int hemotoxin_old_applied_stacks          = 1;
-    int hemotoxin_old_max_stacks              = 3;
-    double hemotoxin_old_damage_coefficient   = 0.2;
-    timespan_t hemotoxin_old_duration         = 9_s;
-    timespan_t hemotoxin_old_period           = 1.5_s;
-    double hemotoxin_old_conversion_rate      = 0.50;
-    double hemotoxin_old_aoe_damage_reduction = 0.8;
-    double hemotoxin_old_aoe_falloff          = 1.0;
-    bool hemotoxin_old_double_dip_stats       = false;
-    bool hemotoxin_old_double_dip_multipliers = false;
+    double hemotoxin_old_chance                = 0.12;
+    int hemotoxin_old_applied_stacks           = 1;
+    int hemotoxin_old_max_stacks               = 3;
+    double hemotoxin_old_damage_coefficient    = 0.2;
+    timespan_t hemotoxin_old_duration          = 9_s;
+    timespan_t hemotoxin_old_period            = 1.5_s;
+    double hemotoxin_old_conversion_rate       = 1.0;
+    double hemotoxin_old_aoe_damage_multiplier = 0.67;
+    double hemotoxin_old_aoe_falloff           = 1.0;
+    bool hemotoxin_old_double_dip_stats        = false;
+    bool hemotoxin_old_double_dip_multipliers  = false;
 
     timespan_t hemotoxin_sample_per_cp_qf    = 0.8_s;
     timespan_t hemotoxin_sample_per_cp_aa    = 0.4_s;
@@ -303,18 +303,18 @@ public:
   
   struct spell_const_t
   {
-    double poison_and_bleed_increase_per_haste = 0.5;
+    double poison_and_bleed_increase_per_haste = 1.0;
 
     double hemorrhaging_strike_energy_gen = 2.0;
     double hemorrhaging_strike_damage     = 2.73 * 1.05; 
     double hemorrhaging_stike_tick_dmg    = 0.7209;
     timespan_t hemorrhaging_strike_period = 3_s;
 
-    double queens_fang_coeff     = 2.5212 * 1.12 * 1.1;
+    double queens_fang_coeff     = 3.355 / 1.08 * 1.15;
     double caustic_poison_coeff  = 4.476 * 1.07;
     double seething_poison_coeff = 1.116 * 1.1;
 
-    double arachnid_assault_coeff = 0.858 * 1.1 * 1.08;
+    double arachnid_assault_coeff = 1.1 / 1.08 * 1.15;
 
     double volatile_poison_explode_coeff = 1.248;
     double volatile_poison_tick_coeff = 0.312;
@@ -324,7 +324,7 @@ public:
   {
     bool vexiras_venom = false;
     // Consider penalising it by 25%
-    double vexiras_venom_accumulate   = 0.25;
+    double vexiras_venom_accumulate   = 0.28;
     timespan_t vexiras_venom_period   = 2_s;
     timespan_t vexiras_venom_duration = 6_s;
 
@@ -335,7 +335,7 @@ public:
     bool from_the_shadows                           = false;
     double from_the_shadows_chance                  = 0.15;
     int from_the_shadows_combo_points               = 6;
-    double from_the_shadows_qf_mul                  = 0.5;
+    double from_the_shadows_qf_mul                  = 1.0;
     double from_the_shadows_bleed_period_multiplier = 0.87;
 
     bool spirit_procs_clones                = false;
@@ -1475,7 +1475,7 @@ struct hemorrhaging_strike_t : public mara_attack_t
   timespan_t composite_dot_duration( const action_state_t* s ) const override
   {
     const auto rs       = cast_state( s );
-    timespan_t duration = 15_s * ( 1 + rs->get_combo_points() * combo_point_multiplier );
+    timespan_t duration = 12_s + 3_s * rs->get_combo_points();
 
     return duration;
   }
@@ -1560,7 +1560,10 @@ struct hemorrhaging_strike_t : public mara_attack_t
     if ( p()->talents_enabled( mara_t::HEMOTOXIN_OLD ) && p()->get_target_data( s->target )->debuffs.hemotoxin_old->check() )
     {
       p()->get_target_data( s->target )->debuffs.hemotoxin_old->decrement();
-      
+
+      sim->print_debug( "{} current agi: {}, current ap: {}, state ap: {}", *p(), p()->cache.agility(),
+                        p()->cache.attack_power(), s->attack_power );
+
       double amount = hemo_tick_damage_over_time( composite_dot_duration( s ), get_dot( s->target ) ) * p()->talents.hemotoxin_old_conversion_rate;
       p()->actions.hemotoxin_old->execute_on_target( s->target, amount );
     }
@@ -2067,16 +2070,8 @@ struct hemotoxin_old_explosion_t : public mara_poison_t
 
     reduced_aoe_targets = p->talents.hemotoxin_old_aoe_falloff;
     full_amount_targets = 1;
-  }
-
-  double composite_aoe_multiplier( const action_state_t* s ) const override
-  {
-    auto aoe = mara_poison_t::composite_aoe_multiplier( s );
-
-    if ( s->chain_target > 0 )
-      aoe *= p()->talents.hemotoxin_old_aoe_damage_reduction;
-
-    return aoe;
+    base_aoe_multiplier = p->talents.hemotoxin_old_aoe_damage_multiplier;
+    full_amount_targets_counted_for_sqrt = false;
   }
 
   void init() override

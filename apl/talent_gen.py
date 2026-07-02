@@ -846,6 +846,26 @@ if __name__ == "__main__":
 
     generate_item_checks("Gunde", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste", "generated/all_gear_options_gunde.simc")
 
+    combos_to_file("Gunde", gunde, gunde_indicators, 14, "generated/gunde_split_craze.simc", 
+                profilesets=True,
+                required_talents=[
+                    "bloodcraze",
+                    "oathshatter",
+                    "darkening_hearts"
+                ],
+                excluded_talents=[
+                    "sundered_flesh",
+                    # "deadly_focus",
+                    # "swift_reload"
+                ],
+                forbidden_pairs=[
+                    # ("hemotoxin", "malevolence"),
+                    # ("gushing_blood", "malevolence"),
+                    # ("arachnid_onslaught", "malevolence"),
+                ],
+                # name_filters=top_x
+    )
+
     all_points_to_File("Tariq", tariq, "generated/tariq_talents.simc")
 
     # generate_item_checks("Tariq", "finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/crit", "generated/all_gear_options_tariq.simc")

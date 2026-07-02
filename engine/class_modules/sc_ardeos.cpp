@@ -131,6 +131,8 @@ public:
   struct rppms_t
   {
     real_ppm_t* reign_of_fire;
+    accumulated_rng_t* pyrophibian_frenzy;
+    accumulated_rng_t* pyrophibian_frenzy_crit;
   } rppm;
 
  
@@ -202,11 +204,11 @@ public:
   struct spell_const_t
   {
     timespan_t wildfire_duration = 9_s;
-    double wildfire_tickrate     = 0.2;
+    double wildfire_tickrate     = 0.3;
     timespan_t wildfire_cooldown = 45_s;
 
     double infernal_wave_cinders = 40;
-    double infernal_wave_coeff   = 1.7;
+    double infernal_wave_coeff   = 2.0;
 
     double fire_frog_coeff             = 0.863;
     double fire_frog_dot_conversion    = 1.0;
@@ -260,7 +262,7 @@ public:
 
     timespan_t apocalypse_cast_time = 3_s;
     timespan_t apocalypse_cooldown  = 45_s;
-    double apocalypse_coeff         = 20.9285;
+    double apocalypse_coeff         = 20.9285 * 1.15;
     double apocalypse_falloff       = 1;
   } spell_const;
 
@@ -336,20 +338,21 @@ public:
     double untamed_flame_spirit      = 0.3;
     double untamed_flame_crit_chance = 0.3;
 
-    bool fire_toad              = false;
-    double fire_toad_chance     = 0.10;
-    double fire_toad_mul        = 10.0;
-    double fire_toad_falloff    = 1;
-    bool fire_toad_full_primary = false;
-    bool fire_toad_on_cast      = true;
-    int fire_toad_convert       = 0;
+    bool fire_toad                      = false;
+    double fire_toad_chance             = 0.20;
+    double fire_toad_primary_multiplier = 8.0;
+    double fire_toad_cleave_multiplier  = 1.0;
+    double fire_toad_falloff            = 1;
+    bool fire_toad_full_primary         = true;
+    bool fire_toad_on_cast              = true;
+    int fire_toad_convert               = 0;
 
     bool brimstone_cataclysm                   = false;
     timespan_t brimstone_cataclysm_cdr_per_hit = 2_s;
     timespan_t brimstone_cataclysm_cdr_cap     = 30_s;
 
     bool devouring_flame       = false;
-    double devouring_flame_amp = 0.06;
+    double devouring_flame_amp = 0.07;
 
     bool explosivo                    = false;
     int explosivo_extra_charges       = 1;
@@ -2167,14 +2170,15 @@ struct fire_frog_hit_t : public ardeos_spell_t
 
     if ( toad )
     {
-      base_dd_multiplier *= p->legendary.fire_toad_mul;
+      base_dd_multiplier *= p->legendary.fire_toad_primary_multiplier;
       aoe                 = -1;
       full_amount_targets = p->legendary.fire_toad_full_primary ? 1 : 0;
       reduced_aoe_targets = p->legendary.fire_toad_falloff;
+      base_aoe_multiplier *= p->legendary.fire_toad_cleave_multiplier / p->legendary.fire_toad_primary_multiplier;
       travel_delay        = 0.5;
     }
     
-    ability_flags |= ability_type_e::ABILITY_POWER;
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   void impact( action_state_t* s ) override
@@ -2206,7 +2210,7 @@ struct fire_frog_t : public ardeos_spell_t
       frog_hits += p->talents.frog_squad_extra_hits;
     }
     
-    ability_flags |= ability_type_e::ABILITY_POWER;
+    ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   void execute() override
@@ -2692,7 +2696,9 @@ void ardeos_t::init_rng()
 {
   fs_player_t::init_rng();
 
-  rppm.reign_of_fire = get_rppm( "reign_of_fire", talents.reign_of_fire_ppm, 1.0, RPPM_HASTE );
+  rppm.reign_of_fire            = get_rppm( "reign_of_fire", talents.reign_of_fire_ppm, 1.0, RPPM_HASTE );
+  rppm.pyrophibian_frenzy       = get_accumulated_rng( "pyrophibian_frenzy", rng::CfromP( talents.pyrophibian_frenzy_chance ) );
+  rppm.pyrophibian_frenzy_crit  = get_accumulated_rng( "pyrophibian_frenzy_crit", rng::CfromP( talents.pyrophibian_frenzy_chance_crit ) );
 }
 
 // ardeos_t::init_scaling ====================================================
@@ -2824,7 +2830,7 @@ void ardeos_t::create_options()
 
   add_option( opt_bool( "legendary.fire_toad", legendary.fire_toad ) );
   add_option( opt_float( "legendary.fire_toad_chance", legendary.fire_toad_chance ) );
-  add_option( opt_float( "legendary.fire_toad_mul", legendary.fire_toad_mul ) );
+  add_option( opt_float( "legendary.fire_toad_primary_multiplier", legendary.fire_toad_primary_multiplier ) );
   add_option( opt_bool( "legendary.fire_toad_on_cast", legendary.fire_toad_on_cast ) );
 }
 
@@ -3001,9 +3007,8 @@ void actions::ardeos_action_t<Base>::tick( dot_t* d )
   {
     if ( d->state->result > 0 && d->target->is_enemy() )
     {
-      auto pyro_chance = d->state->result == RESULT_CRIT ? p()->talents.pyrophibian_frenzy_chance_crit
-                                                         : p()->talents.pyrophibian_frenzy_chance;
-      if ( p()->rng().roll( pyro_chance ) )
+      if ( d->state->result == RESULT_CRIT && p()->rppm.pyrophibian_frenzy_crit->trigger() ||
+           p()->rppm.pyrophibian_frenzy->trigger() )
       {
         p()->actions.fire_frog->execute();
       }

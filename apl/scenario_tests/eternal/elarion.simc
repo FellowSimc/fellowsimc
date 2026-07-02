@@ -179,8 +179,8 @@ talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_
 # copy="Shimmer Repeating RM","Elarion HWA"
 # talents=rising_moon:1/final_crescendo:1/last_lights:1/repeating_stars:1/lunarlight_affinity:1/resurgent_winds:1/rising_moon:1/skylit_grace:1/skyward_munitions:1/strikers_aim:1
 
-copy="Shimmer DF","Elarion HWA"
-talents=deadly_focus:1/final_crescendo:1/last_lights:1/lethal_shots:1/lunarlight_affinity:1/resurgent_winds:1/rising_moon:1/skylit_grace:1/skyward_munitions:1/strikers_aim:1
+# copy="Shimmer DF","Elarion HWA"
+# talents=deadly_focus:1/final_crescendo:1/last_lights:1/lethal_shots:1/lunarlight_affinity:1/resurgent_winds:1/rising_moon:1/skylit_grace:1/skyward_munitions:1/strikers_aim:1
 
 copy="Shimmer DF Basics","Elarion HWA"
 talents=deadly_focus:1/final_crescendo:1/last_lights:1/lethal_shots:1/lunarlight_affinity:1/resurgent_winds:1/rising_moon:1/skylit_grace:1/skyward_munitions:1/strikers_aim:1

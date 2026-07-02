@@ -175,6 +175,39 @@ talents=carnage:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ravens_prec
 
 # copy="GC Lego","Base Gunde"
 legendary.lego_1=1
+# copy="Gunde Feathers Deaths Arc","Gunde Feathers"
+# talents=deaths_arc:1/ravens_precision:1/murder_of_crows:1/slayers_grin:1/bloodcraze:1/carnage:1/harvesters_toll:1
+
+# copy="Gunde Feathers Blood Arc Lego","Gunde Feathers"
+# legendary.lego_1=0
+# legendary.lego_3=1
+
+# copy="Gunde Feathers Deaths Arc Blood Arc Lego","Gunde Feathers"
+# talents=deaths_arc:1/ravens_precision:1/murder_of_crows:1/slayers_grin:1/bloodcraze:1/carnage:1/harvesters_toll:1
+# legendary.lego_1=0
+# legendary.lego_3=1
+
+# copy="Gunde Feathers Deaths Arc Non Carnage Mass AI Blood Arc Lego","Gunde Feathers"
+# talents=deaths_arc:1/ravens_precision:1/murder_of_crows:1/slayers_grin:1/bloodcraze:1/harvesters_toll:1/massacre:1/ancestral_instinct:1
+# legendary.lego_1=0
+# legendary.lego_3=1
+
+# copy="Gunde Feathers Deaths Arc Non Carnage Mass DR Blood Arc Lego","Gunde Feathers"
+# talents=deaths_arc:1/ravens_precision:1/murder_of_crows:1/slayers_grin:1/bloodcraze:1/harvesters_toll:1/massacre:1/deep_rend:1
+# legendary.lego_1=0
+# legendary.lego_3=1
+
+copy="Gunde Feathers Blood Arc Lego","Gunde Feathers"
+legendary.lego_1=0
+legendary.lego_3=1
+
+copy="Gunde Feathers Deaths Arc","Gunde Feathers"
+talents=deaths_arc:1/ravens_precision:1/murder_of_crows:1/slayers_grin:1/bloodcraze:1/harvesters_toll:1/massacre:1/crimson_strikes:1
+
+copy="Gunde Feathers Deaths Arc Blood Arc Lego","Gunde Feathers"
+talents=deaths_arc:1/ravens_precision:1/murder_of_crows:1/slayers_grin:1/bloodcraze:1/harvesters_toll:1/massacre:1/crimson_strikes:1
+legendary.lego_1=0
+legendary.lego_3=1
 
 # copy="HS Lego","Base Gunde"
 # legendary.lego_2=1

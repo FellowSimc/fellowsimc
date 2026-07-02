@@ -182,6 +182,16 @@ legendary.lego_2=1
 talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/massacre:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ancestral_instinct:1
 # 2 5 6 7 9 10 11 13 14
 
+# copy="Base Profile New Lego","Gunde Heart Split Massacre"
+# legendary.lego_2=0
+# legendary.lego_4=1
+
+# copy="Base Profile SS over AI","Gunde Heart Split Massacre"
+# talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/massacre:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/superior_serration:1
+
+copy="Gunde Heart Splitter Deaths Arc","Gunde Heart Split Massacre"
+talents=deaths_arc:1/crimson_strikes:1/deep_rend:1/darkening_hearts:1/massacre:1/frenzied_reign:1/bloodbath:1/oathshatter:1/superior_serration:1
+
 copy="Gunde Heart Splitter Not Massacre","Gunde Heart Split Massacre"
 talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/frenzied_reign:1/superior_serration:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ancestral_instinct:1
 neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
@@ -190,21 +200,42 @@ copy="Gunde Heart Splitter Not Massacre Deaths Arc","Gunde Heart Split Massacre"
 talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/frenzied_reign:1/ancestral_instinct:1/bloodbath:1/harvesters_toll:1/deaths_arc:1/superior_serration:1
 neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
 
-copy="Gunde Grim Carve Axel","Gunde Heart Split Massacre"
-legendary.lego_2=0
-legendary.lego_1=1
-talents=deaths_arc:1/grim_harvest:1/crimson_strikes:1/bloodbath:1/massacre:1/deep_rend:1/carnage:1/superior_serration:1/harvesters_toll:1
-neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# copy="Gunde Heart Splitter Not Massacre Deaths Arc Carnage","Gunde Heart Split Massacre"
+# talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/superior_serration:1/ancestral_instinct:1/carnage:1/deaths_arc:1
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
 
-copy="Gunde Grim Carve Axel Philo","Gunde Heart Split Massacre"
-legendary.lego_2=0
-legendary.lego_1=1
-talents=deaths_arc:1/grim_harvest:1/crimson_strikes:1/bloodbath:1/massacre:1/deep_rend:1/carnage:1/superior_serration:1/harvesters_toll:1
+# copy="Gunde Heart Splitter Not Massacre Deaths Arc Carnage GC","Gunde Heart Split Massacre"
+# talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/superior_serration:1/ancestral_instinct:1/carnage:1/deaths_arc:1
+# legendary.lego_2=0
+# legendary.lego_1=1
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+
+# copy="Gunde Heart Splitter Not Massacre Deaths Arc Carnage GC Alt Gear","Gunde Heart Split Massacre"
+# talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/superior_serration:1/ancestral_instinct:1/carnage:1/deaths_arc:1
+# legendary.lego_2=0
+# legendary.lego_1=1
+
+# copy="Gunde Grim Carve Axel","Gunde Heart Split Massacre"
+# legendary.lego_2=0
+# legendary.lego_1=1
+# talents=deaths_arc:1/grim_harvest:1/crimson_strikes:1/bloodbath:1/massacre:1/deep_rend:1/carnage:1/superior_serration:1/harvesters_toll:1
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+
+# copy="Gunde Grim Carve Axel Philo","Gunde Heart Split Massacre"
+# legendary.lego_2=0
+# legendary.lego_1=1
+# talents=deaths_arc:1/grim_harvest:1/crimson_strikes:1/bloodbath:1/massacre:1/deep_rend:1/carnage:1/superior_serration:1/harvesters_toll:1
 
 copy="Gunde Grim Carve Sael -Massacre","Gunde Heart Split Massacre"
 legendary.lego_2=0
 legendary.lego_1=1
 talents=deaths_arc:1/grim_harvest:1/crimson_strikes:1/bloodbath:1/frenzied_reign:1/ancestral_instinct:1/deep_rend:1/carnage:1/superior_serration:1/harvesters_toll:1
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+
+copy="Gunde Grim Carve Sael ST -Massacre","Gunde Heart Split Massacre"
+legendary.lego_2=0
+legendary.lego_1=1
+talents=darkening_hearts:1/grim_harvest:1/crimson_strikes:1/bloodbath:1/frenzied_reign:1/ancestral_instinct:1/deep_rend:1/carnage:1/superior_serration:1/harvesters_toll:1
 neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
 
 # copy="Gunde deaths_arc","Base Gunde"

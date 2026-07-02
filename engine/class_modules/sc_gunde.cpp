@@ -95,6 +95,9 @@ public:
     buff_t* bloodbath;
     buff_t* bloodbound_spirit;
     buff_t* murder_of_crows;
+    buff_t* heartsplitter_slaughter;
+    buff_t* carrion_onslaught;
+    buff_t* carrion_onslaught_feathers;
   } buffs;
 
   struct cooldowns_t
@@ -125,6 +128,7 @@ public:
     accumulated_rng_t* ancestral_instinct;
     accumulated_rng_t* deep_rend;
     accumulated_rng_t* heart_splitter_twice;
+    accumulated_rng_t* heart_splitter_twice_2;
   } rng_objects;
 
 #define GUNDE_TALENT_LIST( X )                                         \
@@ -238,7 +242,7 @@ public:
     timespan_t reavers_edge_delay = 0.45_s;
     // Gunde.InstantWhirlwindAoe.AoeRadius, 700.0
     // Gunde.InstantWhirlwindAoe.DamageStrengthCoefficient, 2.20                   ; WAS 1.616
-    double reavers_edge_coeff = 1.847 * 1.1;
+    double reavers_edge_coeff = 2.0317;
     // Gunde.InstantWhirlwindAoe.DamageScalingTargetCountThreshold, 8.0			 ; WAS 3.0
     double reavers_edge_target_threshold = 8.0;
     // Gunde.InstantWhirlwindAoe.Cooldown, 5.0
@@ -253,7 +257,7 @@ public:
     timespan_t rupture_cooldown = 60_s;
 
     // Gunde.TargetedAoeProjectile.DamageStrengthCoefficientPerHit, 2.076           ; WAS 1.635
-    double grim_carve_coeff = 2.076 * 1.1 * 0.909;
+    double grim_carve_coeff = 2.076;
     // Gunde.TargetedAoeProjectile.DamageScalingTargetCountThreshold, 5.0			; was 12.0
     double grim_carve_falloff = 5;
     // Gunde.TargetedAoeProjectile.Aoe.Duration, 1.15
@@ -315,7 +319,7 @@ public:
 
     // Gunde.DotTransfer.MaxRange, 2000.0                                          ; OWED IN BLOOD
     // Gunde.DotTransfer.SelfBuff.Duration, 45.0			;was 30
-    timespan_t owed_in_blood_duration;
+    timespan_t owed_in_blood_duration = 45_s;
     // Gunde.DotTransfer.VisualDelay, 0.25
     // Gunde.DotTransfer.Target.Cooldown, 3.0
     timespan_t owed_in_blood_cooldown = 3_s;
@@ -375,7 +379,7 @@ public:
     // Gunde.InstantAoeWithBuff.ConePieAngleWidth, 120.0
 
     // Gunde.InstantAoeWithBuff.DamageStrengthCoefficient, 1.212                    ; WAS 2.0
-    double blood_arc_coeff = 2.4629 * 1.1;
+    double blood_arc_coeff = 2.7092;
     // Gunde.InstantAoeWithBuff.DamageScalingTargetCountThreshold, 5.0
     double blood_arc_target_threshold = 8.0;
     // Gunde.InstantAoeWithBuff.Cooldown, 9.0
@@ -419,8 +423,7 @@ public:
     // Gunde.HeavyMeleeDotBoost.Talent.IncreasedCritAndNoneCritDamage.NoneCritDamageMultiplier, 1.1
     // Gunde.HeavyMeleeDotBoost.Talent.ReducedCooldown.ReductionInSeconds, 1.0
     // Gunde.HeavyMeleeDotBoost.Talent.OrbDropper.NumOfOrbs, 8.0
-    int murder_of_crows_feathers = 12;
-    // Gunde.HeavyMeleeDotBoost.Talent.ReducedCooldownPerOrb.ReductionInSeconds, 0.2
+    // Gunde.HeavyMeleeDotBoost.Talent.ReducedCooldownPerOrb.ReductionInSeconds, 0.4
     timespan_t slayers_grin_cdr = 0.4_s;
 
     // Talent Deep Rend
@@ -452,12 +455,12 @@ public:
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.Radius, 500.0
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AdditionalTargets, 4.0	; OLD
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.TargetThresholdScaling, 8.0
-    double oathshatter_target_threshold = 12.0;
+    double oathshatter_target_threshold = 5.0;
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AoeDamageScaler, 0.25
-    double oathshatter_aoe_multiplier = 0.35;
+    double oathshatter_aoe_multiplier = 0.5;
     // Gunde.HeavyMeleeDotBased.Talent.LowHealthTarget.AddedCriticalStrikeChance, 1.00
     double darkening_hearts_execute_cc = 1.0;
-    double darkening_hearts_damage_mul = 1.1;
+    double darkening_hearts_damage_mul = 1.3;
     // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.AdditionalCooldownRecovery, 0.5
     double bloodbath_cooldown_recovery = 2.0;
     // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.Duration, 3.0
@@ -493,7 +496,7 @@ public:
     int massacre_max_stacks = 100;
 
     // Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.DamageScalePerStack, 0.0025
-    double harvesters_toll_amp = 0.075;
+    double harvesters_toll_increase = 0.075;
     // Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.MaxStacks, 30.0
     // Gunde.DotTransfer.Talent.IncreasedDamageOnSelf.Duration, 10.0
     timespan_t harvesters_toll_duration = 10_s;
@@ -504,17 +507,17 @@ public:
     // Gunde.DotTransfer.Talent.Aoe.StackDuration, 10.0
  
     // Gunde.DotTransfer.Talent.ExplosionOnPickup.StrengthCoefficient, 0.34
-    double ravens_precision_coeff = 0.34 * 1.1;
+    double ravens_precision_coeff = 0.374;
     // Gunde.DotTransfer.Talent.ExplosionOnPickup.Radius, 700.0
     // Gunde.DotTransfer.Talent.ExplosionOnPickup.TargetThresholdScaling, 8.0
-    double ravens_precision_falloff = 8;
+    double ravens_precision_falloff = 5;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Radius, 700.0
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.BaseStrengthCoefficient, 0.20
     double bloodcraze_coeff = 0.2;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.DamageIncreasePerStack, 0.90
-    double bloodcraze_amp_per_stack = 1.3;
+    double bloodcraze_amp_per_stack = 1.7;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.TargetThresholdScaling, 5.0
-    double bloodcraze_falloff = 3.0;
+    double bloodcraze_falloff = 1.0;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Period, 3.0
     timespan_t bloodcraze_period = 3_s;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Duration, 6.15
@@ -531,11 +534,25 @@ public:
     // Gunde.HeavyMeleeDotBased.Talent.Charges.NumOfCharges, 2.0
     int lego_2_charges = 2;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.Chance, 0.2
-    double lego_2_hit_chance = 0.2;
+    double lego_2_hit_chance = 0.25;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.DelayBetweenStrikes, 0.4
     timespan_t lego_2_delay = 0.4_s;
 
-    bool lego_3 = false;
+    bool lego_3                             = false;
+    double lego_3_base_blood_arc_amp        = 0.2;
+    double lego_3_blood_arc_amp_per_stack   = 0.02;
+    double lego_3_base_feathers                = 1;
+    double lego_3_feathers                     = 1;
+    double lego_3_feathers_stack_divisor       = 3;
+    timespan_t carrion_onslaught_period     = 2_s;
+    timespan_t carrion_onslaught_duration   = 8_s;
+    int carrion_onslaught_max_feathers_per_tick = 10;
+
+    bool lego_4              = false;
+    int lego_4_charges       = 2;
+    int lego_4_double_hits   = 1;
+    double lego_4_hit_chance = 0.1;
+
   } legendary;
 
   struct options_t
@@ -802,9 +819,9 @@ public:
     return p()->get_target_data( t );
   }
 
-  double composite_da_multiplier(const action_state_t* s) const
+  double composite_persistent_multiplier( const action_state_t* s ) const
   {
-    auto mul = ab::composite_da_multiplier( s );
+    auto mul = ab::composite_persistent_multiplier( s );
 
     mul *= 1.0 + p()->buffs.crimson_strikes->check_value();
 
@@ -1404,6 +1421,24 @@ struct grim_carve_t : public gunde_attack_t
       }
     }
 
+    double composite_crit_chance() const override
+    {
+      auto cc = base_t::composite_crit_chance();
+
+      cc += p()->buffs.grim_harvest->check_value();
+
+      return cc;
+    }
+
+    double composite_da_multiplier( const action_state_t* s ) const override
+    {
+      auto m = base_t::composite_da_multiplier( s );
+
+      m *= 1.0 + p()->buffs.bloodbound_spirit->check_value();
+
+      return m;
+    }
+
     void execute() override
     {
       base_t::execute();
@@ -1460,24 +1495,6 @@ struct grim_carve_t : public gunde_attack_t
     base_t::init();
   }
 
-  double composite_crit_chance() const override
-  {
-    auto cc = base_t::composite_crit_chance();
-
-    cc += p()->buffs.grim_harvest->check_value();
-
-    return cc;
-  }
-
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    auto m = base_t::composite_da_multiplier( s );
-
-    m *= 1.0 + p()->buffs.bloodbound_spirit->check_value();
-
-    return m;
-  }
-
   void execute() override
   {
     gunde_attack_t::execute();
@@ -1500,6 +1517,9 @@ struct grim_carve_t : public gunde_attack_t
     for ( int i = 0; i <= num_hits; ++i )
     {
       auto* damage_state = hit->get_state( execute_state );
+
+      hit->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+      damage_state->persistent_multiplier = execute_state->persistent_multiplier;
 
       hit->set_target( target );
 
@@ -1578,6 +1598,19 @@ struct blood_arc_t : public gunde_attack_t
     return cc;
   }
 
+  double composite_da_multiplier( const action_state_t* s ) const override
+  {
+    auto da = base_t::composite_da_multiplier( s );
+
+    if ( p()->buffs.carrion_onslaught->check() )
+    {
+      da *= 1.0 + p()->legendary.lego_3_base_blood_arc_amp +
+            p()->legendary.lego_3_blood_arc_amp_per_stack * p()->buffs.carrion_onslaught->check();
+    }
+
+    return da;
+  }
+
   void execute() override
   {
     gunde_attack_t::execute();
@@ -1585,6 +1618,18 @@ struct blood_arc_t : public gunde_attack_t
     roll_grim_harvest();
 
     p()->buffs.serrated_edge->trigger();
+
+    if ( p()->buffs.carrion_onslaught->check() )
+    {
+      p()->buffs.carrion_onslaught_feathers->expire();
+
+      auto feathers = as<int>( std::round( std::max(
+          p()->legendary.lego_3_base_feathers, p()->legendary.lego_3_feathers * p()->buffs.carrion_onslaught->check() /
+                                                   p()->legendary.lego_3_feathers_stack_divisor ) ) );
+
+      p()->buffs.carrion_onslaught_feathers->trigger( feathers );
+      p()->buffs.carrion_onslaught->expire();
+    }
 
     if ( p()->talents_enabled( gunde_t::CRIMSON_STRIKES ) )
     {
@@ -1718,6 +1763,11 @@ struct heart_splitter_t : public gunde_attack_t
       cooldown->charges = p->legendary.lego_2_charges;
     }
 
+    if ( p->legendary.lego_4 )
+    {
+      cooldown->charges = p->legendary.lego_4_charges;
+    }
+
     if ( p->talents_enabled( gunde_t::OATHSHATTER ) )
     {
       exsanguinate_oathshatter = new heart_splitter_exsanguinate_t( p, name, true );
@@ -1767,21 +1817,29 @@ struct heart_splitter_t : public gunde_attack_t
     if ( !background )
     {
       roll_grim_harvest();
-    }
 
-    if ( p()->legendary.lego_2 && p()->rng_objects.heart_splitter_twice->trigger() && !background )
-    {
-      auto action = p()->actions.heart_splitter;
+      auto double_hit = p()->legendary.lego_2 && p()->rng_objects.heart_splitter_twice->trigger() ||
+                        p()->buffs.heartsplitter_slaughter->check();
 
-      action->set_target( target );
-      action_state_t* damage_state = action->get_state( execute_state );
-      damage_state->target         = action->target;
+      if ( !double_hit && p()->legendary.lego_4 && p()->rng_objects.heart_splitter_twice_2->trigger() )
+        double_hit = true;
 
-      action->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
-      damage_state->persistent_multiplier = execute_state->persistent_multiplier;
-      cast_state( damage_state )->set_rend_coefficient( cast_state( execute_state )->get_rend_coefficient() );
+      if ( double_hit )
+      {
+        auto action = p()->actions.heart_splitter;
 
-      action->schedule_execute( damage_state );
+        action->set_target( target );
+        action_state_t* damage_state = action->get_state( execute_state );
+        damage_state->target         = action->target;
+
+        action->snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
+        damage_state->persistent_multiplier = execute_state->persistent_multiplier;
+        cast_state( damage_state )->set_rend_coefficient( cast_state( execute_state )->get_rend_coefficient() );
+
+        action->schedule_execute( damage_state );
+
+        p()->buffs.heartsplitter_slaughter->decrement();
+      }
     }
   }
 
@@ -1893,7 +1951,64 @@ struct slaughter_t : public gunde_spell_t
     action->snapshot_state( slaughter_state, result_amount_type::DMG_OVER_TIME );
     action->schedule_travel( slaughter_state );
   }
+
+  bool ready() override
+  {
+    if ( p()->legendary.lego_4 )
+      return false;
+
+    return base_t::ready();
+  }
 };
+
+struct slaughter_splitter_t : public gunde_spell_t
+{
+  slaughter_splitter_t( util::string_view name, gunde_t* p, util::string_view options_str = {} )
+    : gunde_spell_t( name, p, options_str )
+  {
+    id                = 11;
+    base_rend_applied = 0.0;
+
+    trigger_gcd = timespan_t::zero();
+
+    cooldown->duration = p->spell_const.slaughter_cooldown;
+    cooldown->hasted   = false;
+    cooldown->charges  = 1;
+
+    aoe = -1;
+
+    ability_flags |= ability_type_e::ABILITY_MAJOR;
+  }
+
+  bool ready() override
+  {
+    if ( !p()->legendary.lego_4 )
+      return false;
+
+    return base_t::ready();
+  }
+
+  void impact( action_state_t* s ) override
+  {
+    auto td = p()->get_target_data( s->target );
+
+    auto current_rend = p()->get_current_rend( s->target );
+
+    int rend_stacks = static_cast<int>( ( current_rend / p()->cache.strength() ) );
+
+    if ( p()->talent_enabled( gunde_t::MASSACRE ) )
+    {
+      p()->buffs.massacre->trigger( rend_stacks );
+    }
+  }
+
+  void execute()
+  {
+    base_t::execute();
+    p()->buffs.heartsplitter_slaughter->trigger();
+  }
+};
+
 
 struct owed_in_blood_t : public gunde_spell_t
 {
@@ -1927,12 +2042,23 @@ struct owed_in_blood_t : public gunde_spell_t
   {
     base_t::execute();
 
-    auto stacks   = p()->buffs.owed_in_blood->check();
-    auto new_rend = stacks * p()->cache.strength();
+    auto stacks = p()->buffs.owed_in_blood->check();
 
-    auto action                = p()->actions.rend;
+    if ( p()->legendary.lego_3 )
+    {
+      // Do not be dumb, this deletes itself
+      p()->buffs.carrion_onslaught->expire();
+
+      p()->buffs.carrion_onslaught->trigger( stacks );
+    }
+
+    auto rend_damage = stacks * p()->cache.strength();
+
+    auto action = p()->actions.rend;
+    action->set_target( target );
+
     action_state_t* rend_state = action->get_state();
-    rend_state->result_amount  = new_rend;
+    rend_state->result_amount  = rend_damage;
     rend_state->target         = target;
     rend_state->result         = RESULT_HIT;
     action->snapshot_state( rend_state, result_amount_type::DMG_OVER_TIME );
@@ -1971,16 +2097,6 @@ struct bloodcraze_t : public gunde_spell_t
     m *= ( 1 + p()->buffs.bloodcraze->check_stack_value() );
 
     return m;
-  }
-
-  void impact( action_state_t* s ) override
-  {
-    base_t::impact( s );
-
-    sim->print_debug(
-        "{} impacts enemy with bloodcraze. current str: {}, current da mul: {}, result amount: {}. Expected: {}", *p(),
-        s->attack_power, s->da_multiplier, s->result_amount,
-        s->attack_power * attack_power_mod.direct * s->da_multiplier * s->versatility );
   }
 };
 
@@ -2246,6 +2362,8 @@ action_t* gunde_t::create_action( util::string_view name, util::string_view opti
     return new reign_in_blood_t( name, this, options_str );
   if ( name == "slaughter" )
     return new slaughter_t( name, this, options_str );
+  if ( name == "slaughter_splitter" )
+    return new slaughter_splitter_t( name, this, options_str );
   if ( name == "owed_in_blood" )
     return new owed_in_blood_t( name, this, options_str );
   if ( name == "bloodbound_spirit" )
@@ -2271,7 +2389,11 @@ std::unique_ptr<expr_t> gunde_t::create_expression( util::string_view name_str )
   {
     if ( split.size() == 2 )
     {
-      if ( util::str_compare_ci( split[ 1 ], "lego_2" ) )
+      if ( util::str_compare_ci( split[ 1 ], "lego_1" ) )
+      {
+        return make_ref_expr( name_str, legendary.lego_1 );
+      }
+      else if ( util::str_compare_ci( split[ 1 ], "lego_2" ) )
       {
         return make_ref_expr( name_str, legendary.lego_2 );
       }
@@ -2279,9 +2401,9 @@ std::unique_ptr<expr_t> gunde_t::create_expression( util::string_view name_str )
       {
         return make_ref_expr( name_str, legendary.lego_3 );
       }
-      else if ( util::str_compare_ci( split[ 1 ], "lego_1" ) )
+      else if ( util::str_compare_ci( split[ 1 ], "lego_4" ) )
       {
-        return make_ref_expr( name_str, legendary.lego_1 );
+        return make_ref_expr( name_str, legendary.lego_4 );
       }
     }
   }
@@ -2414,7 +2536,7 @@ void gunde_t::create_buffs()
                             [ this ]( auto, auto, auto ) { cooldowns.reign_in_blood->adjust_recharge_multiplier(); } );
 
   buffs.harvesters_toll = make_buff<gunde_buff_t>( this, "harvesters_toll" )
-                              ->set_default_value( talents.harvesters_toll_amp )
+                              ->set_default_value( talents.harvesters_toll_increase )
                               ->set_duration( talents.harvesters_toll_duration )
                               ->add_invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER );
 
@@ -2468,6 +2590,32 @@ void gunde_t::create_buffs()
                               ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
                               ->set_default_value( talents.crimson_strikes_inc )
                               ->set_max_stack( 1 );
+
+  buffs.heartsplitter_slaughter = make_buff<gunde_buff_t>( this, "heartsplitter_slaughter" )
+                                      ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                                      ->set_max_stack( legendary.lego_4_double_hits )
+                                      ->set_initial_stack( legendary.lego_4_double_hits );
+
+  buffs.carrion_onslaught = make_buff<gunde_buff_t>( this, "carrion_onslaught" )
+                                ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                                ->set_max_stack( spell_const.owed_in_blood_max_stacks )
+                                ->set_default_value( legendary.lego_3_base_feathers );
+
+  buffs.carrion_onslaught_feathers = make_buff<gunde_buff_t>( this, "carrion_onslaught_feathers" )
+                                         ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                                         ->set_max_stack( spell_const.owed_in_blood_max_stacks )
+                                         ->set_period( legendary.carrion_onslaught_period )
+                                         ->set_tick_behavior( buff_tick_behavior::CLIP )
+                                         ->set_tick_zero( true )
+                                         ->set_freeze_stacks( true )
+                                         ->set_reverse_stack_count( legendary.carrion_onslaught_max_feathers_per_tick )
+                                         ->set_reverse( true )
+                                         ->set_tick_callback( [ this ]( buff_t* buff, int, timespan_t ) {
+                                           auto feathers =
+                                               std::min( buff->reverse_stack_reduction, buff->current_stack );
+                                           spawn_feathers( feathers );
+                                           buff->decrement( buff->reverse_stack_reduction );
+                                         } );
 }
 
 // gunde_t::invalidate_cache =========================================
@@ -2493,6 +2641,7 @@ void gunde_t::create_options()
   add_option( opt_bool( "legendary.lego_1", legendary.lego_1 ) );
   add_option( opt_bool( "legendary.lego_2", legendary.lego_2 ) );
   add_option( opt_bool( "legendary.lego_3", legendary.lego_3 ) );
+  add_option( opt_bool( "legendary.lego_4", legendary.lego_4 ) );
 }
 
 // gunde_t::copy_from =======================================================
@@ -2537,81 +2686,6 @@ void gunde_t::init_items()
 void gunde_t::init_special_effects()
 {
   fs_player_t::init_special_effects();
-
-  //{
-  //  auto effect                   = new special_effect_t( this );
-  //  effect->spell_id              = 107;
-  //  effect->name_str              = "gunde_parry";
-  //  effect->proc_flags_           = PF_DAMAGE_TAKEN;
-  //  effect->proc_flags2_          = PF2_PARRY;
-  //  effect->rppm_scale_           = rppm_scale_e::RPPM_NONE;
-  //  effect->proc_chance_          = 1.0;
-  //  effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
-
-  //  special_effects.push_back( effect );
-
-  //  struct parry_cb_t : dbc_proc_callback_t
-  //  {
-  //    parry_cb_t( gunde_t* p, const special_effect_t& e ) : dbc_proc_callback_t( p, e )
-  //    {
-  //    }
-
-  //    gunde_t* p() const
-  //    {
-  //      return static_cast<gunde_t*>( listener );
-  //    }
-
-  //    void execute( action_t*, action_state_t* s ) override
-  //    {
-  //      p()->parry_effects( s );
-  //    }
-  //  };
-
-  //  auto cb = new parry_cb_t( this, *effect );
-  //  cb->initialize();
-  //  cb->activate();
-  //}
-
-  //{
-  //  auto effect                   = new special_effect_t( this );
-  //  effect->spell_id              = 108;
-  //  effect->name_str              = "solaris";
-  //  effect->proc_flags_           = PF_ALL_HEAL_TAKEN;
-  //  effect->proc_flags2_          = PF2_ALL_HIT | PF2_PERIODIC_HEAL;
-  //  effect->set_can_proc_from_procs( true );
-  //  effect->rppm_scale_           = rppm_scale_e::RPPM_NONE;
-  //  effect->proc_chance_          = 1.0;
-  //  effect->type                  = special_effect_e::SPECIAL_EFFECT_EQUIP;
-
-  //  special_effects.push_back( effect );
-
-  //  struct solaris_cb_t : dbc_proc_callback_t
-  //  {
-  //    solaris_cb_t( gunde_t* p, const special_effect_t& e ) : dbc_proc_callback_t( p, e )
-  //    {
-  //    }
-
-  //    gunde_t* p() const
-  //    {
-  //      return static_cast<gunde_t*>( listener );
-  //    }
-
-  //    void execute( action_t*, action_state_t* s ) override
-  //    {
-  //      auto overheal = s->result_total - s->result_amount;
-
-  //      if ( overheal > 0 )
-  //      {
-  //        p()->actions.solaris->execute_on_target( p()->actions.solaris->target,
-  //                                                 overheal * p()->spell_const.solaris_overheal_scaler );
-  //      }
-  //    }
-  //  };
-
-  //  auto cb = new solaris_cb_t( this, *effect );
-  //  cb->initialize();
-  //  cb->activate();
-  //}
 }
 
 // gunde_t::init_finished ===================================================
@@ -2674,6 +2748,8 @@ void gunde_t::init_rng()
   rng_objects.deep_rend = get_accumulated_rng( "deep_rend", rng::CfromP( talents.deep_rend_proc_chance_st ) );
   rng_objects.heart_splitter_twice =
       get_accumulated_rng( "heart_splitter_twice", rng::CfromP( legendary.lego_2_hit_chance ) );
+  rng_objects.heart_splitter_twice_2 =
+      get_accumulated_rng( "heart_splitter_twice_2", rng::CfromP( legendary.lego_4_hit_chance ) );
 }
 
 // gunde_t::reset ===========================================================
@@ -2828,6 +2904,8 @@ void actions::gunde_action_t<Base>::apply_rend( const action_state_t* state )
     return;
 
   auto action       = p()->actions.rend;
+  action->set_target( state->target );
+
   action_state_t* s = action->get_state();
   s->result_amount = state->result_amount * rs->get_rend_coefficient();
   s->target = state->target;

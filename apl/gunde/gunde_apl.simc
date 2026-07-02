@@ -2,14 +2,18 @@ actions.precombat=snapshot_stats
 
 actions=bloodbound_spirit
 actions+=/reign_in_blood
-actions+=/owed_in_blood,target_if=debuff.open_wounds.up,if=!buff.bloodcraze.up&buff.owed_in_blood.stack>=30
+actions+=/owed_in_blood,target_if=debuff.open_wounds.up,if=!buff.bloodcraze.up&buff.owed_in_blood.stack>=30&!legendary.lego_3
+actions+=/owed_in_blood,target_if=max:debuff.open_wounds.remains,if=!buff.bloodcraze.up&buff.owed_in_blood.stack>=30&legendary.lego_3&(buff.deaths_arc.up|!talent.deaths_arc)
+#&(debuff.open_wounds.up|buff.owed_in_blood.stack>=120)
 actions+=/sahrils_wrath
 actions+=/voidbringers_touch
 #actions+=/slaughter,target_if=debuff.open_wounds.up,if=(debuff.open_wounds.remains<=gcd.max*3)&(active_enemies=1|!talent.oathshatter)
 # actions+=/slaughter,if=talent.massacre&debuff.open_wounds.remains<=gcd.max&!buff.finesse_g.up&blessing.finesse_g
 actions+=/slaughter,if=fight_remains<=10
+actions+=/slaughter_splitter
+actions+=/blood_arc,if=buff.carrion_onslaught.up&buff.deaths_arc.up
 actions+=/rupture,if=buff.serrated_edge.up&active_enemies<=2|active_enemies>2
-actions+=/heart_splitter,if=(active_enemies<=3|talent.oathshatter)&(full_recharge_time<=gcd.max*3|buff.serrated_edge.up)
+actions+=/heart_splitter,if=(active_enemies<=3|talent.oathshatter|buff.heartsplitter_slaughter.up)&(full_recharge_time<=gcd.max*3|buff.serrated_edge.up)
 actions+=/grim_carve,if=buff.grim_harvest.up
 # actions+=/blood_arc,if=legendary.lego_2&talent.oathshattery
 actions+=/grim_carve,if=active_enemies>3&!talent.carnage

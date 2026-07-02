@@ -1,3 +1,4 @@
+*.diff
 *.[ado]
 *.csv
 *.dat

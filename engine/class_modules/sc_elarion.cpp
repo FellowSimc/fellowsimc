@@ -181,7 +181,7 @@ public:
     timespan_t auto_attack_time = 2.4_s;
     double auto_attack_ap_coeff = 0.6;
 
-    double focused_shot_ap_coeff          = 1.347;
+    double focused_shot_ap_coeff          = 1.347 * 1.2;
     timespan_t focused_shot_cast_time     = 1.5_s;
     double focused_shot_resource_gain     = 20;
     int celestial_impetus_max_stacks      = 2;
@@ -189,10 +189,10 @@ public:
     int celestial_impetus_marks_applied   = 3;
     timespan_t celestial_impetus_duration = 15_s;
 
-    double celestial_shot_ap_coeff   = 2.879;
+    double celestial_shot_ap_coeff   = 2.879 * 1.2;
     double celestial_shot_focus_cost = 15.0;
 
-    double multishot_ap_coeff       = 2.6565;
+    double multishot_ap_coeff       = 2.6565 * 1.4;
     double multishot_target_falloff = 12;
     double multishot_focus_cost     = 20;
     int multishot_max_stacks        = 5;
@@ -203,11 +203,11 @@ public:
 
     timespan_t heartseeker_barrage_period   = 0.2_s;
     timespan_t heartseeker_barrage_duration = 2.0_s;
-    double heartseeker_barrage_ap_coeff     = 1.249;
+    double heartseeker_barrage_ap_coeff     = 1.249 * 1.1;
     timespan_t heartseeker_barrage_cooldown = 20_s;
     double heartseeker_barrage_focus_cost   = 30;
 
-    double highwind_arrow_ap_coeff                    = 10.23;
+    double highwind_arrow_ap_coeff                    = 10.23 * 0.95;
     timespan_t highwind_arrow_cast_time               = 2.0_s;
     double highwind_arrow_focus_cost                  = 30;
     int highwind_arrow_charges                        = 3;
@@ -220,7 +220,7 @@ public:
     int lunarlight_mark_max_targets     = 12;
     int lunarlight_mark_stacks_applied  = 3;
     timespan_t lunarlight_mark_duration = 15_s;
-    double lunarlight_mark_ap_coeff     = 2.2597;// *0.9;
+    double lunarlight_mark_ap_coeff     = 2.2597;
     double lunarlight_mark_chance_hit   = 0.25;
     double lunarlight_mark_chance_crit  = 0.5;
 
@@ -235,7 +235,7 @@ public:
     double starfall_volley_target_falloff = 10;
     timespan_t starfall_volley_cooldown   = 40_s;
     timespan_t starfall_volley_period     = 1_s;
-    double starfall_volley_ap_coeff       = 1.249;// *0.9;
+    double starfall_volley_ap_coeff       = 1.249;
     double starfall_volley_focus_cost     = 30;
 
     timespan_t event_horizon_duration             = 20_s;

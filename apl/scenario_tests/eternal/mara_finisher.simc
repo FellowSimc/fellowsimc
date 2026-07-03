@@ -167,6 +167,47 @@ talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/mal
 copy="Finisher Spill Burst -MD","Mara Finisher Full ST"
 talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/seething_burst:1/malevolence:1/sinners_pride:1/corrosive_spill:1
 
+# copy="Finisher Hemotoxin BR GB No Haste","Mara Finisher Full ST"
+# talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/malevolence:1/hemotoxin_old:1/bloodrush:1/gushing_blood:1
+
+# copy="Finisher Hemotoxin BR GB FTS No Haste","Mara Finisher Full ST"
+# legendary.vexiras_venom=0
+# legendary.drenched_in_blood=0
+# legendary.from_the_shadows=1
+# talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/malevolence:1/hemotoxin_old:1/bloodrush:1/gushing_blood:1
+#6
+
+copy="Finisher Full ST Spirit","Mara Finisher Full ST"
+
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=spirit/crit
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=spirit/crit
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=spirit/spirit
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary,affixes=crit
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=spirit/spirit
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=spirit/spirit
+
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=spirit/spirit
+wrist=wrists,rarity=legendary,variant=evens,ilevel=360,main_secondary=crit,fixed_secondary=spirit/spirit
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/expertise,affixes=finesse_b/finesse_b
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/primary,affixes=finesse_b/finesse_b
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=spirit/spirit
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=primary/primary
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_b/finesse_b/finesse_b/finesse_b
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=spirit/primary,affixes=spirit/spirit
+
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g/finesse_b/finesse_b/finesse_b/finesse_b/finesse_j/finesse_j/finesse_j/finesse_j
+weapon_trait.hunters_focus=0
+copy="Finisher Spill Spirit","Finisher Full ST Spirit"
+talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/malevolence:1/sinners_pride:1/corrosive_spill:1
+
+# copy="Finisher HT BR Spirit Philo Mystic","Finisher Full ST Spirit Philo Mystic"
+# talents=assassins_guile:1/deadly_scheme:1/malevolence:1/sinners_pride:1/hemotoxin_old:1/bloodrush:1
+
 
 # copy="HF0","Base Mara"
 # weapon_trait.hunters_focus=0

@@ -247,6 +247,8 @@ legendary.vexiras_venom=0
 # copy="Axel Bleed","Mara Bleed FTS"
 talents=red_ledger:1/bloodrush:1/gushing_blood:1/maidens_doom:1/seething_burst:1/hemotoxin_old:1/sinners_pride:1/caustic_wounds:1
 
+copy="Finisher Hemotoxin BR GB Haste"
+talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/malevolence:1/hemotoxin_old:1/bloodrush:1/gushing_blood:1
 # copy="Axel Bleed DS over RL","Mara Bleed FTS"
 # talents=deadly_scheme:1/bloodrush:1/gushing_blood:1/maidens_doom:1/seething_burst:1/hemotoxin_old:1/sinners_pride:1/caustic_wounds:1
 

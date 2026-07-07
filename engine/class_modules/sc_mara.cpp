@@ -303,11 +303,12 @@ public:
   
   struct spell_const_t
   {
-    double poison_and_bleed_increase_per_haste = 1.0;
+    double poison_and_bleed_increase_per_haste = 0.5;
+    double poison_and_bleed_haste_cap = 1.0;
 
     double hemorrhaging_strike_energy_gen = 2.0;
     double hemorrhaging_strike_damage     = 2.73 * 1.05; 
-    double hemorrhaging_stike_tick_dmg    = 0.7209;
+    double hemorrhaging_stike_tick_dmg    = 0.9841;
     timespan_t hemorrhaging_strike_period = 3_s;
 
     double queens_fang_coeff     = 3.355 / 1.08 * 1.15;
@@ -870,9 +871,11 @@ public:
 
   inline double poison_multiplier( const action_state_t* s ) const
   {
-    auto haste_mul = 1.0 / s->haste;
-    
-    haste_mul = ( haste_mul - 1 ) * p()->spell_const.poison_and_bleed_increase_per_haste + 1;
+    auto haste_mul = 1.0 / s->haste - 1;
+
+    haste_mul = std::min( haste_mul, p()->spell_const.poison_and_bleed_haste_cap );
+
+    haste_mul = haste_mul * p()->spell_const.poison_and_bleed_increase_per_haste + 1;
 
     return haste_mul;
   }

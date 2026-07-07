@@ -192,7 +192,7 @@ public:
     double celestial_shot_ap_coeff   = 2.879 * 1.2;
     double celestial_shot_focus_cost = 15.0;
 
-    double multishot_ap_coeff       = 2.6565 * 1.4;
+    double multishot_ap_coeff       = 3.7191;
     double multishot_target_falloff = 12;
     double multishot_focus_cost     = 20;
     int multishot_max_stacks        = 5;
@@ -203,17 +203,17 @@ public:
 
     timespan_t heartseeker_barrage_period   = 0.2_s;
     timespan_t heartseeker_barrage_duration = 2.0_s;
-    double heartseeker_barrage_ap_coeff     = 1.249 * 1.1;
+    double heartseeker_barrage_ap_coeff     = 1.305;
     timespan_t heartseeker_barrage_cooldown = 20_s;
     double heartseeker_barrage_focus_cost   = 30;
 
-    double highwind_arrow_ap_coeff                    = 10.23 * 0.95;
+    double highwind_arrow_ap_coeff                    = 14.09;
     timespan_t highwind_arrow_cast_time               = 2.0_s;
     double highwind_arrow_focus_cost                  = 30;
     int highwind_arrow_charges                        = 3;
     timespan_t highwind_arrow_cooldown                = 15_s;
     int highwind_arrow_targets                        = 3;
-    double highwind_arrow_cleave_mul                  = 0.7;
+    double highwind_arrow_cleave_mul                  = 0.5;
     unsigned int highwind_arrow_targets_for_multishot = 3;
 
     timespan_t lunarlight_mark_cooldown = 40_s;
@@ -223,8 +223,9 @@ public:
     double lunarlight_mark_ap_coeff     = 2.2597;
     double lunarlight_mark_chance_hit   = 0.25;
     double lunarlight_mark_chance_crit  = 0.5;
+    double lunarlight_salvo_aoe_target_falloff = 12;
 
-    double barrage_mark_aoe_chance = 0.2;
+    double barrage_mark_aoe_chance = 0.25;
 
     timespan_t skystriders_supremacy_duration = 4_s;
     double skystriders_supremacy_focus_mul    = 0.5;
@@ -232,10 +233,10 @@ public:
     timespan_t skystriders_supremacy_cooldown = 45_s;
 
     timespan_t starfall_volley_duration   = 8_s;
-    double starfall_volley_target_falloff = 10;
+    double starfall_volley_target_falloff = 12;
     timespan_t starfall_volley_cooldown   = 40_s;
     timespan_t starfall_volley_period     = 1_s;
-    double starfall_volley_ap_coeff       = 1.249;
+    double starfall_volley_ap_coeff       = 1.0;
     double starfall_volley_focus_cost     = 30;
 
     timespan_t event_horizon_duration             = 20_s;
@@ -246,8 +247,8 @@ public:
     timespan_t event_horizon_barrage_cdr_highwind = 0.5_s;
     timespan_t event_horizon_volley_cdr_barrage   = 1.5_s;
 
-    int spirit_refund_marks_applied       = 3;
-    int spirit_refund_marks_cleave        = 1;
+    int spirit_refund_marks_applied       = 5;
+    int spirit_refund_marks_cleave        = 2;
     int spirit_refund_marks_extra_targets = 2;
   } spell_const;
 
@@ -273,10 +274,10 @@ public:
 
     timespan_t skyward_munitions_cdr = 1_s;
 
-    timespan_t repeating_stars_cdr = 0.2_s;
-    size_t repeating_stars_cap     = 12;
+    timespan_t repeating_stars_mshot_cdr  = 1.5_s;
+    timespan_t repeating_stars_emshot_cdr = 3_s;
 
-    double lunarlight_affinity_volley_chance_mul = 0.0;
+    double lunarlight_affinity_volley_chance_inc = 0.0;
     double lunarlight_affinity_salvo_cc          = 0.2;
 
     double lethal_shots_proc_chance = 0.4;
@@ -327,18 +328,18 @@ public:
   {
     bool shimmer                 = false;
     timespan_t shimmer_duration  = 9_s;
-    double shimmer_mul_per_stack = 0.1;
+    double shimmer_mul_per_stack = 0.08;
     int shimmer_max_stacks       = 3;
 
     bool starstrikers_ascent                                = false;
     int starstrikers_ascent_spirit_refunds_resurgent_stacks = 1;
     double starstrikers_ascent_chance                       = 0.5;
 
-    bool astronomers_hail                        = false;
-    timespan_t astronomers_hail_volley_duration  = 2_s;
-    timespan_t astronomers_hail_multishot_extend = 0.5_s;
-    double astronomers_hail_dmg_bonus            = 1.0;
-
+    bool astronomers_hail                          = false;
+    double astronomers_hail_main_target_multiplier = 2.0;
+    timespan_t astronomers_hail_volley_duration    = 3_s;
+    timespan_t astronomers_hail_multishot_extend   = 0.25_s;
+    double astronomers_hail_dmg_bonus              = 1.0;
 
     bool new_spirit_legendary = false;
     double new_spirit_legendary_chance_to_consume_mark = 1.0;
@@ -424,6 +425,7 @@ public:
         }
 
         current_target = p()->rng().range( p()->actions.starfall_volley->target_list() );
+        p()->actions.starfall_volley->target = current_target;
       }
 
       return current_target;
@@ -589,7 +591,10 @@ public:
     for ( auto it : starfall_volley_handlers )
     {
       if ( !it->is_active() )
+      {
         handler = it;
+        break;
+      }
     }
 
     if ( !handler )
@@ -1223,19 +1228,6 @@ struct multishot_t : public elarion_attack_t
     parse_options( options_str );
   }
 
-  void impact( action_state_t* s ) override
-  {
-    base_t::impact( s );
-
-    if ( result_is_hit( s->result ) )
-    {
-      if ( p()->talent_enabled( elarion_t::REPEATING_STARS ) && s->chain_target < p()->talents.repeating_stars_cap )
-      {
-        p()->cooldowns.starfall_volley->adjust( -p()->talents.repeating_stars_cdr );
-      }
-    }
-  }
-
   bool is_empowered() const
   {
     return p()->buffs.skystriders_supremacy->check() || p()->buffs.focused_expanse->check() || p()->buffs.stars_aligned->check();
@@ -1338,6 +1330,12 @@ struct multishot_t : public elarion_attack_t
       p()->cooldowns.highwind_arrow->adjust( -p()->talents.skyward_munitions_cdr );
     }
 
+    if ( p()->talent_enabled( elarion_t::REPEATING_STARS ) )
+    {
+      auto cdr = is_empowered() ? p()->talents.repeating_stars_emshot_cdr : p()->talents.repeating_stars_mshot_cdr;
+      p()->cooldowns.starfall_volley->adjust( -cdr, false );
+    }
+
     if ( p()->buffs.skystriders_supremacy->check() )
     {
       if ( p()->talents_enabled( elarion_t::FERVENT_SUPREMACY ) )
@@ -1408,6 +1406,8 @@ struct highwind_arrow_t : public elarion_attack_t
 
     attack_power_mod.direct = p->spell_const.highwind_arrow_ap_coeff;
     aoe                     = p->spell_const.highwind_arrow_targets;
+
+    base_aoe_multiplier *= p->spell_const.highwind_arrow_cleave_mul;
 
     name_str_reporting = is_precision_strike ? "Precision Strike" : "Highwind Arrow";
 
@@ -1489,12 +1489,7 @@ struct highwind_arrow_t : public elarion_attack_t
 
   double composite_da_multiplier( const action_state_t* s ) const override
   {
-   double m = base_t::composite_da_multiplier( s );
-
-    if ( s->chain_target > 0 )
-    {
-      m *= p()->spell_const.highwind_arrow_cleave_mul;
-    }
+    double m = base_t::composite_da_multiplier( s );
 
     if ( p()->buffs.final_crescendo->at_max_stacks() )
     {
@@ -1610,6 +1605,8 @@ struct heartseeker_barrage_t : public elarion_attack_t
       attack_power_mod.direct = p->spell_const.heartseeker_barrage_ap_coeff;
       aoe = p->talents_enabled( elarion_t::PIERCING_SEEKERS ) ? 1 + p->talents.piercing_seekers_ricochet_targets : 0;
 
+      base_aoe_multiplier *= p->talents.piercing_seekers_ricochet_mul;
+
       if ( p->talents_enabled( elarion_t::FUSILLADE ) )
       {
         base_crit += p->talents.fusillade_crit;
@@ -1678,18 +1675,6 @@ struct heartseeker_barrage_t : public elarion_attack_t
           p()->cooldowns.starfall_volley->adjust( -p()->spell_const.event_horizon_volley_cdr_barrage );
         }
       }
-    }
-
-    double composite_da_multiplier( const action_state_t* s ) const override
-    {
-      double m = base_t::composite_da_multiplier( s );
-
-      if ( s->chain_target > 0 )
-      {
-        m *= p()->talents.piercing_seekers_ricochet_mul;
-      }
-
-      return m;
     }
   };
 
@@ -1910,7 +1895,9 @@ struct lunarlight_salvo_aoe_t : public elarion_spell_t
     attack_power_mod.direct = p->spell_const.lunarlight_mark_ap_coeff;
 
     ability_flags |= ability_type_e::ABILITY_MAJOR;
-    aoe = 12;
+    aoe = -1;
+    reduced_aoe_targets = p->spell_const.lunarlight_salvo_aoe_target_falloff;
+    full_amount_targets = 1;
 
     if ( p->talents_enabled( elarion_t::LUNAR_FURY ) )
     {
@@ -2020,15 +2007,29 @@ struct starfall_volley_damage_t : public elarion_attack_t
     if ( p->legendary.astronomers_hail )
     {
       attack_power_mod.direct *= p->legendary.astronomers_hail_dmg_bonus;
+      base_multiplier *= p->legendary.astronomers_hail_main_target_multiplier;
+      base_aoe_multiplier /= p->legendary.astronomers_hail_main_target_multiplier;
     }
 
     if ( p->talents_enabled( elarion_t::LUNARLIGHT_AFFINITY ) )
     {
       trigger_lunarlight_without_consume = true;
-      // lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_mul;
-      // lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_mul;
+      // lunarlight_salvo_chance_hit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_inc;
+      // lunarlight_salvo_chance_crit *= 1.0 + p->talents.lunarlight_affinity_volley_chance_inc;
     }
   }
+
+  //double composite_da_multiplier( const action_state_t* s ) const override
+  //{
+  //  double m = base_t::composite_da_multiplier( s );
+  //  
+  //  if ( p()->legendary.astronomers_hail && s->chain_target == 0 )
+  //  {
+  //    m *= p()->legendary.astronomers_hail_main_target_multiplier;
+  //  }
+
+  //  return m;
+  //}
 };
 
 struct starfall_volley_t : public elarion_spell_t

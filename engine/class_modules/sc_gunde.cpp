@@ -537,6 +537,7 @@ public:
     double lego_2_hit_chance = 0.25;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.DelayBetweenStrikes, 0.4
     timespan_t lego_2_delay = 0.4_s;
+    double lego_2_crit_chance = 1.0;
 
     bool lego_3                             = false;
     double lego_3_base_blood_arc_amp        = 0.2;
@@ -1795,6 +1796,14 @@ struct heart_splitter_t : public gunde_attack_t
       if ( t->health_percentage() <= low_health_threshold )
       {
         tcc += p()->talents.darkening_hearts_execute_cc;
+      }
+    }
+
+    if ( p()->legendary.lego_2 )
+    {
+      if ( t->health_percentage() >= healthy_threshold )
+      {
+        tcc += p()->legendary.lego_2_crit_chance;
       }
     }
 

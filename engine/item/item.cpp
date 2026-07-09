@@ -1696,10 +1696,13 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool is_dynamic, weighti
     amount = pow( primary_power_base, parsed.item_level / primary_divisible ) * pow( parsed.item_level, 0.5 ) *
              primary_and_stamina_multiplier * settings.primary_multiplier / settings.weight_multiplier;
 
-    
     if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
     {
       amount *= settings.stamina_weight;
+      if ( parsed.item_level >= 315 )
+      {
+        amount *= 1.5;
+      }
     }
     else
     {

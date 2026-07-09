@@ -77,8 +77,8 @@ shoulder=shoulder,rarity=rare,variant=evens,ilevel=90,tempering=6,main_secondary
 back=back,rarity=rare,variant=evens,ilevel=45,tempering=6,main_secondary=expertise,fixed_secondary=expertise
 chest=chest,rarity=uncommon,variant=evens,ilevel=90,tempering=6,main_secondary=haste,fixed_secondary=primary
 hands=hands,rarity=uncommon,variant=evens,ilevel=90,tempering=6,main_secondary=haste,fixed_secondary=stamina
-legs=legs,rarity=regal,variant=evens,ilevel=45,tempering=6,main_secondary=haste,fixed_secondary=haste/stamina,affixes=amethyst/spirit/finesse_c
-feet=feet,rarity=epic,variant=evens,ilevel=45,tempering=6,main_secondary=haste,fixed_secondary=primary,affixes=finesse_b
+legs=legs,rarity=regal,variant=evens,ilevel=45,tempering=6,main_secondary=haste,fixed_secondary=haste/stamina,affixes=amethyst/spirit/subduer
+feet=feet,rarity=epic,variant=evens,ilevel=45,tempering=6,main_secondary=haste,fixed_secondary=primary,affixes=the_trickster
 
 neck=neck,rarity=epic,variant=evens,ilevel=90,tempering=6,main_secondary=haste/crit,fixed_secondary=expertise/spirit,affixes=sapphire
 wrist=wrists,rarity=rare,variant=evens,ilevel=165,tempering=6,main_secondary=crit,fixed_secondary=expertise
@@ -86,7 +86,7 @@ wrist=wrists,rarity=rare,variant=evens,ilevel=165,tempering=6,main_secondary=cri
 finger1=ring1,rarity=heroic,variant=evens,ilevel=90,tempering=6,main_secondary=haste/crit,fixed_secondary=primary/expertise,affixes=diamond/diamond
 #finger2=ring2,rarity=rare,variant=evens,ilevel=90,tempering=5,main_secondary=haste/crit,fixed_secondary=primary/expertise,affixes=ruby
 trinket1=relic1,rarity=rare,variant=evens,ilevel=90,tempering=6,main_secondary=haste/crit,fixed_secondary=crit
-trinket2=relic2,rarity=epic,variant=evens,ilevel=90,tempering=6,main_secondary=spirit/crit,fixed_secondary=haste,affixes=finesse_e
+trinket2=relic2,rarity=epic,variant=evens,ilevel=90,tempering=6,main_secondary=spirit/crit,fixed_secondary=haste,affixes=the_sinister
 
 main_hand=weap,rarity=uncommon,variant=evens,ilevel=165,tempering=6,main_secondary=expertise,fixed_secondary=stamina
 

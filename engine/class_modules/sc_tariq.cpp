@@ -562,7 +562,9 @@ public:
     double schism_damage_skull_crusher_multiplier = 2.5;
     // Ink.Talent.ChanceIncreasedSpenderDamage.AoeAttack.DamageMultiplier, 3.50
     double schism_damage_hammer_storm_multiplier = 2.5;
-    
+    timespan_t schism_duration = 20_s;
+    int schism_stacks = 2;
+
     // Ink.Talent.DecreasedIncomingMagicDamage.DamageMultiplier, 0.90
     // Ink.Talent.UnchargedResourceIncrease.ResourceMultiplier, 1.10
 
@@ -2555,11 +2557,16 @@ void tariq_t::create_buffs()
 
   buffs.schism_hammer_storm = make_buff<tariq_buff_t>( this, "schism_hammer_storm" )
                                   ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                                  ->set_max_stack( talents.schism_stacks )
+                                  ->set_duration( talents.schism_duration )
                                   ->set_default_value( talents.schism_damage_hammer_storm_multiplier - 1 );
 
   buffs.schism_skull_crusher = make_buff<tariq_buff_t>( this, "schism_skull_crusher" )
                                    ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                                   ->set_max_stack( talents.schism_stacks )
+                                   ->set_duration( talents.schism_duration )
                                    ->set_default_value( talents.schism_damage_skull_crusher_multiplier - 1 );
+
   buffs.thundering_vortex = make_buff<tariq_buff_t>( this, "thundering_vortex" )
                                 ->set_max_stack( legendary.thundering_vortex_needed * 2 )
                                 ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )

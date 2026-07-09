@@ -58,16 +58,16 @@ hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_sec
 legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
 feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit
 
-neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher/the_philosopher/the_philosopher
 wrist=wrists,rarity=legendary,variant=evens,ilevel=360,main_secondary=crit,fixed_secondary=haste/haste
 
 finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
 #,affixes=fiensse_k/fiensse_k
-#,affixes=finesse_g/finesse_g
-finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_i/finesse_i/finesse_i/finesse_i
-#,affixes=finesse_g/finesse_g
-trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=finesse_e/finesse_e/finesse_e/finesse_e
-#finesse_n
+#,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_wayfarer/the_wayfarer/the_wayfarer/the_wayfarer
+#,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_sinister/the_sinister/the_sinister/the_sinister
+#the_vehement
 trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste
 
 main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=haste/haste
@@ -80,16 +80,16 @@ main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_
 # legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
 # feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit
 
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=subduer/subduer/subduer/subduer
 # wrist=wrists,rarity=legendary,variant=evens,ilevel=360,main_secondary=crit,fixed_secondary=haste/haste
 
 # finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
 # #,affixes=fiensse_k/fiensse_k
-# #,affixes=finesse_g/finesse_g
-# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_i/finesse_i/finesse_i/finesse_i
-# #,affixes=finesse_g/finesse_g
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=finesse_g/finesse_g/finesse_g/finesse_g
-# #finesse_n
+# #,affixes=the_philosopher/the_philosopher
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_wayfarer/the_wayfarer/the_wayfarer/the_wayfarer
+# #,affixes=the_philosopher/the_philosopher
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_philosopher/the_philosopher/the_philosopher/the_philosopher
+# #the_vehement
 # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=spirit/spirit
 
 # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=haste/haste
@@ -179,7 +179,7 @@ weapon_trait.patient_soul=1
 # copy="HS Lego","Base Gunde"
 legendary.lego_2=1
 
-neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=subduer/subduer/subduer/subduer
 talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/frenzied_reign:1/ancestral_instinct:1/bloodbath:1/harvesters_toll:1/deaths_arc:1/superior_serration:1
 # 2 5 6 7 8 9 10 11
 # 2 5 6 7 9 10 11 13
@@ -190,7 +190,7 @@ talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/frenzied_
 
 # copy="Reign Serration No Philo","Base Gunde"
 # talents=darkening_hearts:1/oathshatter:1/deep_rend:1/crimson_strikes:1/frenzied_reign:1/superior_serration:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ancestral_instinct:1
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=subduer/subduer/subduer/subduer
 
 # copy="Gunde massacre0","Base Gunde"
 # talents+=/massacre:0

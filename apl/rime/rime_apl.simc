@@ -2,7 +2,7 @@
 actions.precombat=snapshot_stats
 actions.precombat+=/frost_bolt
 
-# actions+=/run_action_list,name=basics,if=legendary.frostwyrms_spite&blessing.finesse_n
+# actions+=/run_action_list,name=basics,if=legendary.frostwyrms_spite&blessing.the_vehement
 actions+=/run_action_list,name=main
 
 actions.variables=variable,name=will_spend_orbs,value=active_enemies>=3|talent.icy_talons|(action.frost_bolt.execute_time<=1.16|!talent.cascading_blitz|talent.bursting_swallows&talent.burstbolter&action.frost_bolt.execute_time<=1.25|talent.icy_flow&talent.burstbolter&talent.bursting_swallows&!talent.greater_glacial_blast&action.frost_bolt.execute_time<=1.36|!buff.ice_blitz.up),op=set
@@ -18,9 +18,9 @@ actions.main+=/voidbringers_touch,if=!debuff.voidbringer_accumulator.up
 # actions.main+=/frost_bolt,if=cooldown.bursting_ice.up&talent.icy_talons&time<=10&worb<4&talent.burstbolter&talent.icy_talons
 # actions.main+=/freezing_torrent,target_if=max:target.health,if=(worb<5)&target.time_to_die>=4&talent.coalescing_frost&legendary.frostwyrms_spite&(cooldown.bursting_ice.remains<=duration+1.5|buff.ice_blitz.up&talent.cascading_blitz)
 actions.main+=/bursting_ice,target_if=max:target.health,if=refreshable&(!talent.icy_talons|worb>=4|legendary.skandis_decree|talent.harrowing_ice)
-actions.main+=/ice_blitz,target_if=max:target.health,if=(!talent.cascading_blitz&target.time_to_die>=18|target.time_to_die>=25|fight_remains<=60)&!buff.ice_blitz.up|!buff.finesse_g.up&buff.winters_embrace.up
-# actions.main+=/cold_snap,if=worb<5&legendary.frostwyrms_spite&blessing.finesse_n&!buff.frostwyrms_spite.up
-actions.main+=/cold_snap,target_if=max:target.health,if=buff.finesse_n.at_max_stacks&buff.winters_embrace.up&buff.frostwyrms_spite.up
+actions.main+=/ice_blitz,target_if=max:target.health,if=(!talent.cascading_blitz&target.time_to_die>=18|target.time_to_die>=25|fight_remains<=60)&!buff.ice_blitz.up|!buff.the_philosopher.up&buff.winters_embrace.up
+# actions.main+=/cold_snap,if=worb<5&legendary.frostwyrms_spite&blessing.the_vehement&!buff.frostwyrms_spite.up
+actions.main+=/cold_snap,target_if=max:target.health,if=buff.the_vehement.at_max_stacks&buff.winters_embrace.up&buff.frostwyrms_spite.up
 actions.main+=/cold_snap,target_if=max:target.health,if=full_recharge_time<=gcd.max*3&worb<5&(!buff.icy_flow.at_max_stacks|talent.icy_talons)&variable.will_spend_orbs
 actions.main+=/talon_strike,target_if=max:target.health,if=buff.winters_embrace.up&buff.glacial_assault.at_max_stacks
 actions.main+=/rising_talons,target_if=max:target.health,if=(buff.winters_embrace.up&worb>=5|worb>=4&buff.wrath_of_winter.up|worb>=5&cooldown.bursting_ice.remains>=gcd.max*2)&active_enemies>=(3+talent.greater_glacial_blast)
@@ -29,8 +29,8 @@ actions.main+=/glacial_blast,target_if=max:target.health,if=buff.glacial_assault
 actions.main+=/ice_comet,if=active_enemies>=2&(worb>=5&!talent.cascading_blitz|buff.undulating_spirit.react|buff.winters_embrace.up)
 actions.main+=/freezing_torrent,target_if=max:target.health,if=(worb<5)&target.time_to_die>=4
 actions.main+=/glacial_blast,target_if=max:target.health,if=active_enemies=1&(worb>=4&variable.will_spend_orbs|buff.undulating_spirit.react|buff.winters_embrace.up|buff.icy_flow.at_max_stacks|buff.icy_flow.up&(talent.supreme_torrent|talent.soulfrost_torrent))&(!talent.harrowing_ice|!talent.cascading_blitz|!talent.burstbolter|!buff.ice_blitz.up|action.frost_bolt.execute_time<=1.16|buff.wrath_of_winter.up|buff.icy_flow.up)
-actions.main+=/cold_snap,target_if=max:target.health,if=(buff.flight_of_the_navir.up|(cooldown.flight_of_the_navir.remains>=cooldown.cold_snap.duration*2|legendary.frostwyrms_spite)&(!buff.frostwyrms_spite.up|buff.winters_embrace.up)|target.time_to_die<=12)&(!buff.icy_flow.at_max_stacks|talent.icy_talons|legendary.frostwyrms_spite)&(!legendary.frostwyrms_spite|!blessing.finesse_n|buff.finesse_n.at_max_stacks|!buff.frostwyrms_spite.up)&(!buff.glacial_assault.at_max_stacks|!talent.icy_talons)
+actions.main+=/cold_snap,target_if=max:target.health,if=(buff.flight_of_the_navir.up|(cooldown.flight_of_the_navir.remains>=cooldown.cold_snap.duration*2|legendary.frostwyrms_spite)&(!buff.frostwyrms_spite.up|buff.winters_embrace.up)|target.time_to_die<=12)&(!buff.icy_flow.at_max_stacks|talent.icy_talons|legendary.frostwyrms_spite)&(!legendary.frostwyrms_spite|!blessing.the_vehement|buff.the_vehement.at_max_stacks|!buff.frostwyrms_spite.up)&(!buff.glacial_assault.at_max_stacks|!talent.icy_talons)
 actions.main+=/chronoshift,if=!cooldown.flight_of_the_navir.up&!cooldown.winters_blessing.up&!cooldown.bursting_ice.up
 actions.main+=/natures_fury
-actions.main+=/cold_snap,target_if=max:target.health,if=buff.finesse_n.at_max_stacks
+actions.main+=/cold_snap,target_if=max:target.health,if=buff.the_vehement.at_max_stacks
 actions.main+=/frost_bolt,target_if=max:target.health

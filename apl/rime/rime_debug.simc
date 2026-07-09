@@ -103,7 +103,7 @@ legendary.undulating_spirit=1
 
 talents=icy_flow:1/greater_glacial_blast:1/icy_talons:1/cascading_blitz:1/bursting_swallows:1/burstbolter:1/wisdom_of_the_north:1/glacial_assault:1/navirs_keeper:1
 
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_herald/the_herald/the_herald/the_herald
 
 weapon_trait.navigators_intuition=4
 
@@ -176,7 +176,7 @@ weapon_trait.navigators_intuition=4
 
 
 
-# copy="Finesse_J1_SPIRIT","Initial Stat Spread"
+# copy="the_mystic1_SPIRIT","Initial Stat Spread"
 # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
 # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
@@ -189,11 +189,11 @@ weapon_trait.navigators_intuition=4
 # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
 # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
 # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_mystic
 # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
 
-# copy="Finesse_J4_SPIRIT","Initial Stat Spread"
+# copy="the_mystic4_SPIRIT","Initial Stat Spread"
 # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
 # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
@@ -206,30 +206,12 @@ weapon_trait.navigators_intuition=4
 # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
 # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
 # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
-# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
-
-
-# copy="Finesse_G1_SPIRIT","Initial Stat Spread"
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
-# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
-# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
-# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
-# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
-# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
-# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
-# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
-# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
-# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_mystic/the_mystic/the_mystic/the_mystic
 # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
 
 
-# copy="Finesse_G4_SPIRIT","Initial Stat Spread"
+# copy="the_philosopher1_SPIRIT","Initial Stat Spread"
 # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
 # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
@@ -242,6 +224,24 @@ weapon_trait.navigators_intuition=4
 # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
 # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
 # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_philosopher
+# trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
+
+
+# copy="the_philosopher4_SPIRIT","Initial Stat Spread"
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
+# head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
+# neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
+# shoulder=shoulder,variant=big_secondary,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# back=back,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=expertise/crit
+# chest=chest,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/expertise,affixes=primary/primary/primary
+# wrist=wrists,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/expertise
+# hands=hands,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=crit/spirit
+# legs=legs,variant=evens,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/primary/spirit
+# feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
+# finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_philosopher/the_philosopher/the_philosopher/the_philosopher
 # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary

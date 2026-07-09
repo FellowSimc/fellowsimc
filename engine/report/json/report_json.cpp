@@ -751,10 +751,8 @@ void to_json( JsonOutput& arr, const ::report::json::report_configuration_t& rep
   auto root = arr.add();  // Add a fresh object to the players array and use it as root
 
   root[ "name" ] = p.name();
-  root[ "race" ] = util::race_type_string( p.race );
-  root[ "level" ] = p.true_level;
+  root[ "player_type" ]       = util::player_type_string( p.type );
   root[ "role" ] = util::role_type_string( p.role );
-  root[ "specialization" ] = util::specialization_string( p.specialization() );
   root[ "profile_source" ] = util::profile_source_string( p.profile_source_ );
   root[ "talents" ] = p.talents_str;
   root[ "party" ] = p.party;
@@ -762,24 +760,6 @@ void to_json( JsonOutput& arr, const ::report::json::report_configuration_t& rep
   root[ "bugs" ] = p.bugs;
   root[ "valid_fight_style" ] = p.validate_fight_style( p.sim->fight_style );
   root[ "scale_player" ] = p.scale_player;
-  root[ "potion_used" ] = p.potion_used;
-  root[ "timeofday" ] = p.timeofday == player_t::NIGHT_TIME ? "NIGHT_TIME" : "DAY_TIME";
-  root[ "zandalari_loa" ] = p.zandalari_loa == player_t::AKUNDA      ? "akunda"
-                            : p.zandalari_loa == player_t::BWONSAMDI ? "bwonsamdi"
-                            : p.zandalari_loa == player_t::GONK      ? "gonk"
-                            : p.zandalari_loa == player_t::KIMBUL    ? "kimbul"
-                            : p.zandalari_loa == player_t::KRAGWA    ? "kragwa"
-                                                                     : "paku";
-  root[ "vulpera_tricks" ] = p.vulpera_tricks == player_t::HOLY      ? "holy"
-                             : p.vulpera_tricks == player_t::FLAMES  ? "flames"
-                             : p.vulpera_tricks == player_t::SHADOWS ? "shadows"
-                             : p.vulpera_tricks == player_t::HEALING ? "healing"
-                                                                     : "corrosive";
-  root[ "earthen_mineral" ] = p.earthen_mineral == player_t::AMBER      ? "amber"
-                              : p.earthen_mineral == player_t::EMERALD  ? "emerald"
-                              : p.earthen_mineral == player_t::ONYX     ? "onyx"
-                              : p.earthen_mineral == player_t::SAPPHIRE ? "sapphire"
-                                                                        : "ruby";
 
   if ( p.is_enemy() )
   {
@@ -804,16 +784,6 @@ void to_json( JsonOutput& arr, const ::report::json::report_configuration_t& rep
   root[ "brain_lag" ] = p.brain_lag.mean;
   root[ "brain_lag_stddev" ] = p.brain_lag.stddev;
   
-  to_json( root[ "dbc" ], *p.dbc );
-
-  for ( auto i = PROFESSION_NONE; i < PROFESSION_MAX; ++i )
-  {
-    if ( p.profession[ i ] > 0 )
-    {
-      root[ "professions" ][ util::profession_type_string( i ) ] = p.profession[ i ];
-    }
-  }
-
   for ( resource_e r = RESOURCE_NONE; r < RESOURCE_MAX; ++r )
   {
     std::string name = "base_";
@@ -821,13 +791,6 @@ void to_json( JsonOutput& arr, const ::report::json::report_configuration_t& rep
     name += "_regen_per_second";
     add_non_zero( root, name, p.resources.base_regen_per_second[ r ] );
   }
-
-  root[ "potion" ] = p.potion_str.empty() ? p.default_potion() : p.potion_str;
-  root[ "flask" ] = p.flask_str.empty() ? p.default_flask() : p.flask_str;
-  root[ "food" ] = p.food_str.empty() ? p.default_food() : p.food_str;
-  root[ "augmentation" ] = p.rune_str.empty() ? p.default_rune() : p.rune_str;
-  root[ "temporary_enchant" ] =
-      p.temporary_enchant_str.empty() ? p.default_temporary_enchant() : p.temporary_enchant_str;
 
   /* TODO: Not implemented reporting begins here
 

@@ -311,11 +311,11 @@ public:
     double hemorrhaging_stike_tick_dmg    = 0.9841;
     timespan_t hemorrhaging_strike_period = 3_s;
 
-    double queens_fang_coeff     = 3.355 / 1.08 * 1.15;
+    double queens_fang_coeff     = 3.572;
     double caustic_poison_coeff  = 4.476 * 1.07;
     double seething_poison_coeff = 1.116 * 1.1;
 
-    double arachnid_assault_coeff = 1.1 / 1.08 * 1.15;
+    double arachnid_assault_coeff = 1.1722;
 
     double volatile_poison_explode_coeff = 1.248;
     double volatile_poison_tick_coeff = 0.312;

@@ -80,12 +80,12 @@ hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_sec
 legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
 feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
 
-neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer
 wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=crit/crit
 
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_g/finesse_g/finesse_g/finesse_g/finesse_k
-finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_j/finesse_j/finesse_j/finesse_j/finesse_g/finesse_g/finesse_g/finesse_g/finesse_k
-#  finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_j/finesse_j/finesse_j/finesse_j/finesse_c/finesse_c/finesse_c/finesse_c/finesse_k
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer/subduer/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
+#  finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/subduer/subduer/subduer/subduer/the_monarch
 finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit
 trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
 trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
@@ -107,7 +107,8 @@ legendary.starstrikers_ascent=1
 # 35 mods
 # -8 bless
 
-weapon=icicles_of_anzhyr
+# weapon=icicles_of_anzhyr
+weapon=chronoshift
 
 
 # 9 mods
@@ -156,24 +157,86 @@ weapon_trait.patient_soul=1
 # gems.emerald_power=500
 # gems.ruby_power=500
 
-talents=final_crescendo:1/fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/rising_moon:1/skylit_grace:1
+#copy="Elarion_FS_203"
 
+talents=fervent_supremacy:1/fusillade:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/repeating_stars:1/rising_moon:1/skylit_grace:1
 
-copy="Starstrikers ST","Starstriker Elarion"
-talents=final_crescendo:1/fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/skylit_grace:1/strikers_aim:1
+copy="Elarion_FS_357"
+talents=fervent_supremacy:1/final_crescendo:1/fusillade:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/rising_moon:1
+copy="Elarion_RW_52"
+talents=final_crescendo:1/fusillade:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/resurgent_winds:1/rising_moon:1/skylit_grace:1
+copy="Elarion_RW_135"
+talents=final_crescendo:1/fusillade:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/resurgent_winds:1/rising_moon:1/strikers_aim:1
+copy="Elarion_FS_328"
+talents=fervent_supremacy:1/fusillade:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/repeating_stars:1/rising_moon:1/swift_reload:1
+copy="Elarion_FS_IH_355"
+talents=fervent_supremacy:1/fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/rising_moon:1
+copy="Elarion_IH_205"
+talents=fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/repeating_stars:1/rising_moon:1/skylit_grace:1
 
-copy="Starstrikers Balanced","Starstriker Elarion"
-talents=final_crescendo:1/fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/rising_moon:1/strikers_aim:1
+# talents=final_crescendo:1/fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/rising_moon:1/skylit_grace:1
+# 3 -> 4 -> 7 -> 8 -> 10 -> 11 -> 13 -> 14 -> 15
+
+# copy="Starstrikers ST","Starstriker Elarion"
+# talents=final_crescendo:1/fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/skylit_grace:1/strikers_aim:1
+
+# copy="Starstrikers Balanced","Starstriker Elarion"
+# talents=final_crescendo:1/fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/rising_moon:1/strikers_aim:1
 
 # copy="Starstrikers AoE","Starstriker Elarion"
 # talents=fusillade:1/impending_heartseeker:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/repeating_stars:1/rising_moon:1/skylit_grace:1
 
-# copy="Astronomers Hail HWA Spirit","Starstriker Elarion"
-# talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/swift_reload:1/rising_moon:1/skylit_grace:1
-# legendary.shimmer=0
-# legendary.starstrikers_ascent=0
-# legendary.astronomers_hail=1
+copy="Astronomers Hail HWA Spirit","Starstriker Elarion"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/swift_reload:1/rising_moon:1/skylit_grace:1
 
+legendary.shimmer=0
+legendary.starstrikers_ascent=0
+legendary.astronomers_hail=1
+
+copy="Astronomers Hail HWA Mid Spirit","Starstriker Elarion"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/swift_reload:1/rising_moon:1/skylit_grace:1
+legendary.shimmer=0
+legendary.starstrikers_ascent=0
+legendary.astronomers_hail=1
+
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer
+wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=crit/crit
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer/subduer/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
+#  finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/subduer/subduer/subduer/subduer/the_monarch
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=haste
+
+copy="Astronomers Hail RS HWA Spirit","Astronomers Hail HWA Spirit"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+
+copy="Astronomers Hail RS HWA Mid Spirit","Astronomers Hail HWA Mid Spirit"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+
+# copy="Astronomers Hail Mid Spirit Full Multishot","Astronomers Hail HWA Mid Spirit"
+# talents=focused_expanse:1/resurgent_winds:1/skyward_munitions:1/repeating_stars:1/rising_moon:1/lunarlight_affinity:1/fervent_supremacy:1/last_lights:1/skylit_grace:1
+
+# copy="Astronomers Hail Mid Spirit Full Multishot V2","Astronomers Hail HWA Mid Spirit"
+# talents=focused_expanse:1/resurgent_winds:1/swift_reload:1/repeating_stars:1/rising_moon:1/lunarlight_affinity:1/fervent_supremacy:1/last_lights:1/skylit_grace:1
+
+# copy="Astronomers Hail Mid Spirit Fervent HWA","Astronomers Hail HWA Mid Spirit"
+# talents=resurgent_winds:1/repeating_stars:1/rising_moon:1/lunarlight_affinity:1/strikers_aim:1/fervent_supremacy:1/final_crescendo:1/skylit_grace:1
+# copy="Astronomers Hail Mid Spirit Fervent HWA V2","Astronomers Hail HWA Mid Spirit"
+# talents=resurgent_winds:1/repeating_stars:1/rising_moon:1/lunarlight_affinity:1/strikers_aim:1/fervent_supremacy:1/final_crescendo:1/last_lights:1
+# copy="Astronomers Hail Mid Spirit Fervent HWA V3","Astronomers Hail HWA Mid Spirit"
+# talents=resurgent_winds:1/repeating_stars:1/last_lights:1/lunarlight_affinity:1/strikers_aim:1/fervent_supremacy:1/final_crescendo:1/skylit_grace:1
 # 14
 
 # copy="Elarion focused_expanse","Base Elarion"

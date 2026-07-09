@@ -107,7 +107,7 @@ finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste
 finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=haste/haste
 trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
 trinket2=relic2,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise
-main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/finesse_j/finesse_j/finesse_j/finesse_j/finesse_g/finesse_g/finesse_g/finesse_g
+main_hand=weap,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary,affixes=primary/primary/the_mystic/the_mystic/the_mystic/the_mystic/the_philosopher/the_philosopher/the_philosopher/the_philosopher
 
 legendary.undulating_spirit=1
 # legendary.skandis_decree=1

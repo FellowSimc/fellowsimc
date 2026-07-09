@@ -81,9 +81,9 @@ feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secon
 neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
 wrist=wrists,rarity=legendary,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/primary
 
-finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/haste,affixes=finesse_g/finesse_g
-finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/haste,affixes=finesse_g/finesse_g
-trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=finesse_k
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch
 trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste
 
 main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/primary,affixes=primary/haste
@@ -180,22 +180,22 @@ sets.draconic_might=1
 # weapon_trait.willful_momentum=4
 
 
-# copy="Finesse_A4","Base Rime"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_a/finesse_a/finesse_a/finesse_a
-# copy="Finesse_B4","Base Rime"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_b/finesse_b/finesse_b/finesse_b
-# copy="Finesse_G4","Base Rime"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_g/finesse_g/finesse_g/finesse_g
-# copy="Finesse_J4","Base Rime"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_j/finesse_j/finesse_j/finesse_j
-# copy="Finesse_K1","Base Rime"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k
-# copy="Finesse_K2","Base Rime"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_k
-# copy="Finesse_K3","Base Rime"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_k/finesse_k
-# copy="Finesse_K4","Base Rime"
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+# copy="the_intrepid4","Base Rime"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=the_intrepid/the_intrepid/the_intrepid/the_intrepid
+# copy="the_trickster4","Base Rime"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=the_trickster/the_trickster/the_trickster/the_trickster
+# copy="the_philosopher4","Base Rime"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher/the_philosopher/the_philosopher
+# copy="the_mystic4","Base Rime"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=the_mystic/the_mystic/the_mystic/the_mystic
+# copy="the_monarch1","Base Rime"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=the_monarch
+# copy="the_monarch2","Base Rime"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=the_monarch/the_monarch
+# copy="the_monarch3","Base Rime"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=the_monarch/the_monarch/the_monarch
+# copy="the_monarch4","Base Rime"
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste,affixes=the_monarch/the_monarch/the_monarch/the_monarch
 
 # copy="HF1","Base Rime"
 # weapon_trait.hunters_focus=1

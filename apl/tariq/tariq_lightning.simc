@@ -52,9 +52,9 @@ apl/tariq/tariq_apl.simc
 
 head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/primary
 shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
-back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c
-chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=finesse_e/finesse_e/finesse_e/finesse_e
-hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/expertise,affixes=subduer/subduer/subduer/subduer
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=the_sinister/the_sinister/the_sinister/the_sinister
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=the_trickster/the_trickster/the_trickster/the_trickster
 legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/expertise
 feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/expertise
 

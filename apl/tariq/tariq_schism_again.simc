@@ -55,9 +55,9 @@ head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_seconda
 shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
 back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/expertise
 chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary
-hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/primary,affixes=subduer/subduer/subduer/subduer
 legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/expertise
-feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/expertise,affixes=the_trickster/the_trickster/the_trickster/the_trickster
 
 neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/expertise
 wrist=wrists,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/expertise

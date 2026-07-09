@@ -60,7 +60,7 @@ trinket1=relic1,ilevel=315,main_secondary=haste,fixed_secondary=crit/expertise
 trinket2=relic2,ilevel=315,main_secondary=haste,fixed_secondary=crit/expertise
 main_hand=weap,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/crit
 #,affixes=crit/expertise
-#/finesse_h/finesse_h/finesse_h/finesse_h
+#/the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious
 
 weapon=fated_strike
 

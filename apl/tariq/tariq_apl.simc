@@ -1,7 +1,7 @@
 actions.precombat=snapshot_stats
 
-actions.finishers=/hammer_storm,if=buff.schism_hammer_storm.up&(buff.focused_wrath.up|active_enemies>=3)
-actions.finishers+=/skull_crusher,if=buff.schism_skull_crusher.up
+actions.finishers=/hammer_storm,if=buff.schism_hammer_storm.up&(buff.focused_wrath.up|active_enemies>=3&(buff.schism_hammer_storm.stack=2|buff.schism_hammer_storm.remains<=gcd.max*3))
+actions.finishers+=/skull_crusher,if=buff.schism_skull_crusher.up&(buff.schism_skull_crusher.stack=2|buff.schism_skull_crusher.remains<=gcd.max*3|buff.focused_wrath.up)
 actions.finishers+=/skull_crusher,if=(talent.schism)&(fury>50)
 #&(fury>=90|fight_remains<=10|buff.thunder_call.up)
 actions.finishers+=/hammer_storm,if=active_enemies>=3&(fury>50|fight_remains<=10|buff.thunder_call.up)

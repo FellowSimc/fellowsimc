@@ -268,19 +268,19 @@ sets = [
 
 
 finesses = [
-    "finesse_a",
-    "finesse_b",
-    "finesse_c",
-    "finesse_d",
-    "finesse_e",
-    "finesse_f",
-    "finesse_g",
-    "finesse_h",
-    "finesse_i",
-    "finesse_j",
-    "finesse_k",
-    "finesse_l",
-    "finesse_n",
+    "the_intrepid",
+    "the_trickster",
+    "subduer",
+    "the_celestial",
+    "the_sinister",
+    "the_heretic",
+    "the_philosopher",
+    "the_vainglorious",
+    "the_wayfarer",
+    "the_mystic",
+    "the_monarch",
+    "the_usurper",
+    "the_vehement",
 ]
 
 finesse_ranks = [1,4]
@@ -597,30 +597,75 @@ def top_sim_results(path_to_json, total_runs=100):
 
         return top_x
 
-def dps_sim_results(paths_to_json, total_runs=-1):
+def dps_sim_results(paths_to_json, weights = None, weights_are_health=False, total_runs=-1):
     runs = defaultdict(list)
+    if not weights:
+        weights = []
+    
+    for _ in range(len(weights), len(paths_to_json)):
+        weights.append(1)
+
+
+    index = 0
     for json_path in paths_to_json:
+        weight = weights[index]
+        index += 1
         with open(json_path, "r") as file_handle:
             js = json.load(file_handle)
             
-            results = sorted(js["sim"]["profilesets"]["results"], key=lambda x: x["mean"], reverse = True)
+            # print(js["sim"]["players"][0]["collected_data"].keys())
+            # print("---")
+            # print(js["sim"]["players"][0]["name"])
+            # print(js["sim"]["players"][0]["collected_data"]["dps"])
 
-            for elem in results[:total_runs]:
-                runs[elem['name']].append(elem['mean'])
+            results = []
+
+            if "profilesets" in js["sim"]:
+                results = sorted(js["sim"]["profilesets"]["results"], key=lambda x: x["mean"], reverse = True)
+            else:
+                for actor in js["sim"]["players"]:
+                    result = {'name': actor["name"], 'mean': actor["collected_data"]["dps"]["mean"], 'class': actor["player_type"]}
+                    results.append(result)
+                    # print(result)
+
+            for elem in results:
+                name = elem['name']
+                if name not in runs:
+                    runs[name] = {'class': elem['class'], 'dps': []}
+                
+                if weights_are_health:
+                    runs[name]['dps'].append(weight/elem['mean'])
+                else:
+                    runs[name]['dps'].append(weight*elem['mean'])
+
 
             # top_x = ([(x['name'], x['mean']) for x in results[:total_runs]])
 
             # runs[].append(top_x)
     
-    return {x: y for x,y in runs.items() if len(y)>1}
+    return {x: y for x,y in runs.items() if len(y['dps'])>=1}
 
     return runs
 
-def sorted_by_overall(build_dicts):
-    new_dict = {x: sum(y)/len(y) for x,y in build_dicts.items()}
-    return sorted(new_dict.items(), key=lambda x: x[1], reverse=True)
+def sorted_by_overall(build_dicts, descending=True):
+    new_dict = {x: (y['class'], sum(y['dps'])) for x,y in build_dicts.items()}
+    return sorted([(a,b,c) for a, (b,c) in new_dict.items()], key=lambda x: x[2], reverse=descending)
     
+def class_occurance(tuples):
+    out = []
 
+    seen = {}
+
+    for occurance in tuples:
+        if not occurance[1] in seen:
+            seen[occurance[1]] = 1
+        else:
+            seen[occurance[1]] += 1
+        
+        out.append((occurance[0], f"{occurance[1]}_{seen[occurance[1]]}", occurance[2]))
+
+    return out
+            
 
 
 if __name__ == "__main__":
@@ -834,6 +879,33 @@ if __name__ == "__main__":
                 # name_filters=top_x
     )
 
+    combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents_barrage.simc", 
+                profilesets=True,
+                required_talents=[
+                    "piercing_seekers",
+                    "fusillade",
+                    "lunar_fury",
+                    "lunarlight_affinity"
+                ],
+                extra_options=[
+                    "legendary.shimmer=0",
+                    "legendary.starstrikers_ascent=1",
+                    "legendary.astronomers_hail=0"
+                ],
+                excluded_talents=[
+                    "deadly_focus",
+                    "focused_expanse"
+                    # "deadly_focus",
+                    # "swift_reload"
+                ],
+                forbidden_pairs=[
+                    # ("hemotoxin", "malevolence"),
+                    # ("gushing_blood", "malevolence"),
+                    # ("arachnid_onslaught", "malevolence"),
+                ],
+                # name_filters=top_x
+    )
+
     # all_points_to_File("Elarion", elarion, "generated/elarion_talents.simc")
 
 
@@ -938,3 +1010,27 @@ if __name__ == "__main__":
     # )
 # for combo in combos:
 #     print(combo)
+    
+    # sim_results = dps_sim_results(["output/eternal_tests_st326.json", "output/eternal_tests_12t326.json", "output/eternal_tests_20t326.json"], weights = [0.5, 0.2, 0.3])
+    # # print(sim_results)
+    # overalls = sorted_by_overall(sim_results)
+    # print(overalls[:30])
+    # print([x for x in overalls if "IH" in x[0]][:5])
+    # print(sim_results["Elarion_SM_266"])
+        
+    # sim_results = dps_sim_results(["output/eternal_tests_st328.json", "output/eternal_tests_12t328.json", "output/eternal_tests_20t328.json"], weights = [0.4, 0.3, 0.3])
+
+    weights = [0.4, 0.3, 0.3]
+    expected_dps = [24000, 90000, 120000]
+    expected_time = 60 * 10
+    healths = [expected_time * x * y for x,y in zip(weights, expected_dps)]
+
+    sim_results = dps_sim_results(["output/eternal_tests_st328.json", "output/eternal_tests_12t328.json", "output/eternal_tests_20t328.json"], weights = healths, weights_are_health=True)
+    # print(sim_results)
+    overalls = sorted_by_overall(sim_results, descending=False)
+    
+
+    
+
+    from tabulate import tabulate
+    print(tabulate(class_occurance(overalls), headers=['Actor', 'Class', 'Time'], tablefmt='orgtbl'))

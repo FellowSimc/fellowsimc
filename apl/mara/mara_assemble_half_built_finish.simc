@@ -434,77 +434,77 @@ copy="Diamond 9","Base Mara"
 # Wasted 50
 gems.diamond_power=1300
 
-copy="Finesse_A1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a
+copy="the_intrepid1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_intrepid
 
-copy="Finesse_A4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+copy="the_intrepid4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_intrepid/the_intrepid/the_intrepid/the_intrepid
 
-copy="Finesse_B1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b
+copy="the_trickster1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_trickster
 
-copy="Finesse_B4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+copy="the_trickster4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_trickster/the_trickster/the_trickster/the_trickster
 
-copy="Finesse_D1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d
+copy="the_celestial1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_celestial
 
-copy="Finesse_D4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+copy="the_celestial4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_celestial/the_celestial/the_celestial/the_celestial
 
-copy="Finesse_E1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e
+copy="the_sinister1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_sinister
 
-copy="Finesse_E4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+copy="the_sinister4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_sinister/the_sinister/the_sinister/the_sinister
 
-copy="Finesse_F1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f
+copy="the_heretic1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_heretic
 
-copy="Finesse_F4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+copy="the_heretic4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_heretic/the_heretic/the_heretic/the_heretic
 
-copy="Finesse_H1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h
+copy="the_vainglorious1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_vainglorious
 
-copy="Finesse_H4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+copy="the_vainglorious4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious
 
-copy="Finesse_I1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i
+copy="the_wayfarer1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_wayfarer
 
-copy="Finesse_I4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+copy="the_wayfarer4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_wayfarer/the_wayfarer/the_wayfarer/the_wayfarer
 
-copy="Finesse_K1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k
+copy="the_monarch1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_monarch
 
-copy="Finesse_K4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+copy="the_monarch4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_monarch/the_monarch/the_monarch/the_monarch
 
-copy="Finesse_L1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l
+copy="the_usurper1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_usurper
 
-copy="Finesse_L4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+copy="the_usurper4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_usurper/the_usurper/the_usurper/the_usurper
 
-copy="Finesse_J1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_j
+copy="the_mystic1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_mystic
 
-copy="Finesse_J4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j/
+copy="the_mystic4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_mystic/the_mystic/the_mystic/the_mystic/
 
-copy="Finesse_G1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_g
+copy="the_philosopher1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_philosopher
 
-copy="Finesse_G4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+copy="the_philosopher4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_philosopher/the_philosopher/the_philosopher/the_philosopher
 
-copy="Finesse_M1","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m
+copy="the_herald1","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_herald
 
-copy="Finesse_M4","Base Mara"
-trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+copy="the_herald4","Base Mara"
+trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_herald/the_herald/the_herald/the_herald
 
 
 # copy="Willful Momentum1 sapphire 6","Base Mara"
@@ -526,11 +526,11 @@ trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/experti
 # weapon_trait.visions_of_grandeur=4
 # gems.sapphire_power=600
 
-# copy="Finesse_M1 Sapphire 6","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m
+# copy="the_herald1 Sapphire 6","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_herald
 # gems.sapphire_power=600
-# copy="Finesse_M4 Sapphire 6","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+# copy="the_herald4 Sapphire 6","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_herald/the_herald/the_herald/the_herald
 # gems.sapphire_power=600
 
 
@@ -708,61 +708,61 @@ trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/experti
 
 
 
-# copy="Finesse_A1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a
+# copy="the_intrepid1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_intrepid
 
-# copy="Finesse_A4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+# copy="the_intrepid4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_intrepid/the_intrepid/the_intrepid/the_intrepid
 
-# copy="Finesse_B1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b
+# copy="the_trickster1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_trickster
 
-# copy="Finesse_B4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+# copy="the_trickster4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_trickster/the_trickster/the_trickster/the_trickster
 
-# copy="Finesse_D1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d
+# copy="the_celestial1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_celestial
 
-# copy="Finesse_D4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+# copy="the_celestial4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_celestial/the_celestial/the_celestial/the_celestial
 
-# copy="Finesse_E1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e
+# copy="the_sinister1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_sinister
 
-# copy="Finesse_E4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+# copy="the_sinister4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_sinister/the_sinister/the_sinister/the_sinister
 
-# copy="Finesse_F1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f
+# copy="the_heretic1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_heretic
 
-# copy="Finesse_F4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+# copy="the_heretic4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_heretic/the_heretic/the_heretic/the_heretic
 
-# copy="Finesse_H1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h
+# copy="the_vainglorious1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_vainglorious
 
-# copy="Finesse_H4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+# copy="the_vainglorious4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious
 
-# copy="Finesse_I1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i
+# copy="the_wayfarer1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_wayfarer
 
-# copy="Finesse_I4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+# copy="the_wayfarer4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_wayfarer/the_wayfarer/the_wayfarer/the_wayfarer
 
-# copy="Finesse_K1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k
+# copy="the_monarch1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_monarch
 
-# copy="Finesse_K4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+# copy="the_monarch4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_monarch/the_monarch/the_monarch/the_monarch
 
-# copy="Finesse_L1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l
+# copy="the_usurper1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_usurper
 
-# copy="Finesse_L4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+# copy="the_usurper4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_usurper/the_usurper/the_usurper/the_usurper
 
-# copy="Finesse_J1_SPIRIT","Base Mara"
+# copy="the_mystic1_SPIRIT","Base Mara"
 # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
 # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
@@ -775,11 +775,11 @@ trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/experti
 # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
 # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
 # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_mystic
 # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
 
-# copy="Finesse_J4_SPIRIT","Base Mara"
+# copy="the_mystic4_SPIRIT","Base Mara"
 # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
 # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
@@ -792,12 +792,12 @@ trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/experti
 # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
 # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
 # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_mystic/the_mystic/the_mystic/the_mystic
 # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
 
 
-# copy="Finesse_G1_SPIRIT","Base Mara"
+# copy="the_philosopher1_SPIRIT","Base Mara"
 # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
 # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
@@ -810,12 +810,12 @@ trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/experti
 # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
 # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
 # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_philosopher
 # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
 
 
-# copy="Finesse_G4_SPIRIT","Base Mara"
+# copy="the_philosopher4_SPIRIT","Base Mara"
 # trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # head=hat,variant=big_secondary,ilevel=420,main_secondary=crit,fixed_secondary=primary/primary,affixes=primary/haste/spirit
 # neck=neck,ilevel=420,main_secondary=expertise,fixed_secondary=expertise/spirit
@@ -828,18 +828,18 @@ trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/experti
 # feet=feet,variant=evens,ilevel=420,main_secondary=expertise,fixed_secondary=primary/primary
 # finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
 # finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
-# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+# trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_philosopher/the_philosopher/the_philosopher/the_philosopher
 # trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 # main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary
 
-# copy="Finesse_J1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_J
+# copy="the_mystic1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_mystic
 
-# copy="Finesse_J4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_J/finesse_J/finesse_J/finesse_J
+# copy="the_mystic4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_mystic/the_mystic/the_mystic/the_mystic
 
-# copy="Finesse_G1","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_G
+# copy="the_philosopher1","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_philosopher
 
-# copy="Finesse_G4","Base Mara"
-# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=finesse_G/finesse_G/finesse_G/finesse_G
+# copy="the_philosopher4","Base Mara"
+# trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/expertise,affixes=the_philosopher/the_philosopher/the_philosopher/the_philosopher

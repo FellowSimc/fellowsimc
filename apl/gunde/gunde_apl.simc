@@ -8,7 +8,7 @@ actions+=/owed_in_blood,target_if=max:debuff.open_wounds.remains,if=!buff.bloodc
 actions+=/sahrils_wrath
 actions+=/voidbringers_touch
 #actions+=/slaughter,target_if=debuff.open_wounds.up,if=(debuff.open_wounds.remains<=gcd.max*3)&(active_enemies=1|!talent.oathshatter)
-# actions+=/slaughter,if=talent.massacre&debuff.open_wounds.remains<=gcd.max&!buff.finesse_g.up&blessing.finesse_g
+# actions+=/slaughter,if=talent.massacre&debuff.open_wounds.remains<=gcd.max&!buff.the_philosopher.up&blessing.the_philosopher
 actions+=/slaughter,if=fight_remains<=10
 actions+=/slaughter_splitter
 actions+=/blood_arc,if=buff.carrion_onslaught.up&buff.deaths_arc.up

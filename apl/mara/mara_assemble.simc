@@ -87,7 +87,7 @@ finger1=ring1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 finger2=ring2,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit
 trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
 trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/spirit
-main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g/finesse_j/finesse_j/finesse_j/finesse_j
+main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=primary/primary,affixes=primary/primary/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_mystic/the_mystic/the_mystic/the_mystic
 
 talents=deadly_scheme:1/malevolence:1/assassins_guile:1/seething_burst:1/sinners_pride:1/macabre_stratagem:1/maidens_doom:1
 

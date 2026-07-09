@@ -83,9 +83,9 @@ feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secon
 neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
 wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=crit/crit
 
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_g/finesse_g/finesse_g/finesse_g/finesse_k
-finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_k/finesse_c/finesse_c/finesse_c/finesse_c/finesse_b/finesse_b/finesse_b/finesse_b
-#  finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_j/finesse_j/finesse_j/finesse_j/finesse_c/finesse_c/finesse_c/finesse_c/finesse_k
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer/subduer/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_monarch/subduer/subduer/subduer/subduer/the_trickster/the_trickster/the_trickster/the_trickster
+#  finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/subduer/subduer/subduer/subduer/the_monarch
 finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/haste,fixed_secondary=crit/crit
 trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/haste,fixed_secondary=haste/haste
 trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
@@ -107,7 +107,8 @@ legendary.shimmer=1
 # 35 mods
 # -8 bless
 
-weapon=icicles_of_anzhyr
+# weapon=icicles_of_anzhyr
+weapon=chronoshift
 
 weapon_trait.hunters_focus=4
 # 14
@@ -155,18 +156,38 @@ talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_
 # talents=last_lights:1/lethal_shots:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/swift_reload:1/fervent_supremacy:1/lunarlight_affinity:1
 # # 14
 
+copy="Shimmer HWA Barrage","Elarion HWA"
+talents=last_lights:1/impending_heartseeker:1/final_crescendo:1/strikers_aim:1/lethal_shots:1/skyward_munitions:1/fusillade:1/resurgent_winds:1
+
+copy="Shimmer HWA Barrage Piercing","Elarion HWA"
+talents=last_lights:1/impending_heartseeker:1/final_crescendo:1/strikers_aim:1/piercing_seekers:1/skyward_munitions:1/fusillade:1/resurgent_winds:1
+
+copy="Shimmer HWA Barrage RS","Elarion HWA"
+talents=last_lights:1/impending_heartseeker:1/final_crescendo:1/strikers_aim:1/repeating_stars:1/skyward_munitions:1/fusillade:1/resurgent_winds:1
+
+copy="Shimmer HWA Barrage LA SR","Elarion HWA"
+talents=last_lights:1/impending_heartseeker:1/final_crescendo:1/strikers_aim:1/lunarlight_affinity:1/swift_reload:1/skyward_munitions:1/fusillade:1/resurgent_winds:1
+
+copy="Shimmer HWA RS No Spirit","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+
+copy="Astronomers Hail HWA RS No Spirit","Elarion HWA"
+talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+legendary.shimmer=0
+legendary.astronomers_hail=1
+
 # copy="Astronomers Hail HWA No Spirit","Elarion HWA"
-# talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+# talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/swift_reload:1/rising_moon:1/skylit_grace:1
 # legendary.shimmer=0
 # legendary.astronomers_hail=1
 
 # copy="Astronomers Hail FE No Spirit","Elarion HWA"
-# talents=last_lights:1/focused_expanse:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+# talents=last_lights:1/focused_expanse:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
 # legendary.shimmer=0
 # legendary.astronomers_hail=1
 
 # copy="Astronomers Hail FS No Spirit","Elarion HWA"
-# talents=last_lights:1/fervent_supremacy:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
+# talents=last_lights:1/fervent_supremacy:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/skylit_grace:1
 # legendary.shimmer=0
 # legendary.astronomers_hail=1
 
@@ -186,7 +207,7 @@ copy="Shimmer DF Basics","Elarion HWA"
 talents=deadly_focus:1/final_crescendo:1/last_lights:1/lethal_shots:1/lunarlight_affinity:1/resurgent_winds:1/rising_moon:1/skylit_grace:1/skyward_munitions:1/strikers_aim:1
 sets.draconic_might=0
 sets.draconic_might=0
-finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_b/finesse_b/finesse_b/finesse_b/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_trickster/the_trickster/the_trickster/the_trickster/the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious/the_vehement/the_vehement/the_vehement/the_vehement
 main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
 # copy="Shimmer HWA DF","Elarion HWA"
@@ -202,40 +223,40 @@ main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_s
 # copy="Shimmer HWA DF Basics","Elarion HWA"
 # talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/deadly_focus:1/skylit_grace:1
 # sets.draconic_might=0
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer/subduer/the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious/the_vehement/the_vehement/the_vehement/the_vehement
 # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 # copy="Shimmer HWA DF Fus Basics","Elarion HWA"
 # talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/fusillade:1/deadly_focus:1/skylit_grace:1
 # sets.draconic_might=0
 # sets.draconic_might=0
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer/subduer/the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious/the_vehement/the_vehement/the_vehement/the_vehement
 # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
 # copy="Shimmer HWA DF Basics Trick","Elarion HWA"
 # talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/repeating_stars:1/deadly_focus:1/skylit_grace:1
 # sets.draconic_might=0
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_b/finesse_b/finesse_b/finesse_b/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_trickster/the_trickster/the_trickster/the_trickster/the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious/the_vehement/the_vehement/the_vehement/the_vehement
 # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
 # copy="Shimmer HWA DF Fus Basics Trick","Elarion HWA"
 # talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/fusillade:1/deadly_focus:1/skylit_grace:1
 # sets.draconic_might=0
 # sets.draconic_might=0
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_b/finesse_b/finesse_b/finesse_b/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_trickster/the_trickster/the_trickster/the_trickster/the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious/the_vehement/the_vehement/the_vehement/the_vehement
 # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
 # copy="Shimmer HWA DF SR Basics","Elarion HWA"
 # talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/swift_reload:1/deadly_focus:1/skylit_grace:1
 # sets.draconic_might=0
 # sets.draconic_might=0
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer/subduer/the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious/the_vehement/the_vehement/the_vehement/the_vehement
 # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
 # copy="Shimmer HWA DF SR Basics Trick","Elarion HWA"
 # talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/skyward_munitions:1/lunarlight_affinity:1/rising_moon:1/swift_reload:1/deadly_focus:1/skylit_grace:1
 # sets.draconic_might=0
 # sets.draconic_might=0
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=finesse_b/finesse_b/finesse_b/finesse_b/finesse_h/finesse_h/finesse_h/finesse_h/finesse_n/finesse_n/finesse_n/finesse_n
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_trickster/the_trickster/the_trickster/the_trickster/the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious/the_vehement/the_vehement/the_vehement/the_vehement
 # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
 
 

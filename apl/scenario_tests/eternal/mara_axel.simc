@@ -63,12 +63,12 @@ apl/mara/mara.simc
 # neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/haste
 # wrist=wrists,rarity=legendary,variant=evens,ilevel=360,main_secondary=crit,fixed_secondary=expertise/primary
 
-# # finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/expertise,affixes=finesse_b/finesse_b
-# # finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/primary,affixes=finesse_b/finesse_b
-# # trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c
+# # finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/expertise,affixes=the_trickster/the_trickster
+# # finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=primary/primary,affixes=the_trickster/the_trickster
+# # trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise/crit,fixed_secondary=crit/expertise,affixes=subduer/subduer/subduer/subduer
 # finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/expertise
 # finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise,affixes=finesse_c/finesse_c/finesse_c/finesse_c/finesse_b/finesse_b/finesse_b/finesse_b
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise,affixes=subduer/subduer/subduer/subduer/the_trickster/the_trickster/the_trickster/the_trickster
 # trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
 
 # main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/haste,affixes=haste/haste

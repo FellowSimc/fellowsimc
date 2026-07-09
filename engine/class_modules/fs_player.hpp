@@ -103,8 +103,8 @@ public:
     action_t* amethyst_splinters;
     action_t* voidbringer_dmg;
     action_t* aurastone_dmg;
-    action_t* finesse_f;
-    action_t* finesse_l;
+    action_t* the_heretic;
+    action_t* the_usurper;
   } fs_actions;
 
   struct fs_buffs_t
@@ -129,22 +129,22 @@ public:
     buff_t* hidden_power;
     buff_t* sundering_wrath;
     buff_t* harmonious_soul;
-    buff_t* finesse_a;
-    buff_t* finesse_b;
-    buff_t* finesse_g;
-    buff_t* finesse_i;
-    buff_t* finesse_i_cd;
+    buff_t* the_intrepid;
+    buff_t* the_trickster;
+    buff_t* the_philosopher;
+    buff_t* the_wayfarer;
+    buff_t* the_wayfarer_cd;
     buff_t* hunters_focus;
     buff_t* patient_soul;
-    buff_t* finesse_n;
+    buff_t* the_vehement;
 
     buff_t* rising_spirit;
   } fs_buffs;
 
   struct rng_objects_t
   {
-    accumulated_rng_t* finesse_d;
-    accumulated_rng_t* finesse_f;
+    accumulated_rng_t* the_celestial;
+    accumulated_rng_t* the_heretic;
   } fs_rng_objects;
 
   struct fs_cooldowns_t
@@ -155,7 +155,7 @@ public:
   {
     gain_t* grandeur;
     gain_t* spirit_procs;
-    gain_t* finesse_d;
+    gain_t* the_celestial;
   } fs_gains;
 
   struct options_t
@@ -207,8 +207,8 @@ public:
     double sintharas_veil_magic_dr = 0.1;
 
     bool torment_of_baelaurum            = false;
-    double torment_of_baelaurum_amp      = 0.04;
-    double torment_of_baelaurum_heal_pct = 0.35;
+    double torment_of_baelaurum_amp      = 0.05;
+    double torment_of_baelaurum_heal_pct = 0.4;
 
     bool tuzari_grace                  = false;
     double tuzari_grace_haste          = 0.04;
@@ -320,7 +320,7 @@ public:
     const double finesse_i_haste[ 5 ]      = { 0, 0.06, 0.10, 0.16, 0.25 }; // The Wayfarer
     const timespan_t finesse_i_interval    = 60_s;
     const timespan_t finesse_i_duration    = 14_s;
-    const timespan_t finesse_i_cdr         = 4_s;
+    const timespan_t the_wayfarer_cdr         = 4_s;
     const timespan_t finesse_i_cdr_divisor = 30_s;
     const timespan_t finesse_i_min_cdr     = 0.2_s;
     const timespan_t finesse_i_max_cdr     = 8_s;
@@ -335,8 +335,8 @@ public:
     const double finesse_k_amp_multiplier   = 1.0;
     const timespan_t finesse_k_amp_duration = 5_s;
 
-    const double finesse_l_dmg[ 5 ]    = { 0, 1.43, 2.28, 3.65, 5.84 }; // The Usurper
-    const double finesse_l_heal[ 5 ]   = { 0, 1.22, 1.95, 3.12, 5.00 };
+    const double finesse_l_dmg[ 5 ]    = { 0, 1.43 * 1.2, 2.28 * 1.2, 3.65 * 1.2, 5.84 * 1.2 };  // The Usurper
+    const double finesse_l_heal[ 5 ]   = { 0, 1.22 * 1.2, 1.95 * 1.2, 3.12 * 1.2, 5.00 * 1.2 };
     const int finesse_l_targets        = 4;
     const int finesse_l_max_stacks     = 1;
     const double finesse_l_both_chance = 0.2;
@@ -533,7 +533,7 @@ public:
   void arise() override;
   void combat_begin() override;
 
-  void finesse_i_cdr( timespan_t cdr );
+  void the_wayfarer_cdr( timespan_t cdr );
 
   action_t* create_action( util::string_view name, util::string_view options ) override;
 
@@ -760,17 +760,17 @@ public:
   };
 
   double finesse_j_mul;
-  action_t* finesse_n;
+  action_t* the_vehement;
   bool finesse_n_active;
   fs_player_action_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
-    : ab( n, p, spell_data_t::nil() ), finesse_j_mul( 0.0 ), finesse_n( nullptr ), finesse_n_active( false )
+    : ab( n, p, spell_data_t::nil() ), finesse_j_mul( 0.0 ), the_vehement( nullptr ), finesse_n_active( false )
   {
     ab::may_crit = ab::tick_may_crit = true;
     ab::school                       = SCHOOL_PHYSICAL;
 
-    if ( fs_p()->finesse_traits[ FINESSE_J ] )
+    if ( fs_p()->finesse_traits[ THE_MYSTIC ] )
     {
-      finesse_j_mul = fs_p()->finesse_trait_values.finesse_j_amp[ fs_p()->finesse_traits[ FINESSE_J ] ] /
+      finesse_j_mul = fs_p()->finesse_trait_values.finesse_j_amp[ fs_p()->finesse_traits[ THE_MYSTIC ] ] /
                       fs_p()->finesse_trait_values.finesse_j_divisor;
     }
   }
@@ -801,12 +801,12 @@ public:
   {
     auto m = ab::composite_persistent_multiplier( s );
 
-    if ( fs_p()->fs_buffs.finesse_a && ab::ability_flags & ability_type_e::ABILITY_POWER )
+    if ( fs_p()->fs_buffs.the_intrepid && ab::ability_flags & ability_type_e::ABILITY_POWER )
     {
-      m *= 1.0 + fs_p()->fs_buffs.finesse_a->check_stack_value();
+      m *= 1.0 + fs_p()->fs_buffs.the_intrepid->check_stack_value();
     }
 
-    if ( fs_p()->finesse_traits[ FINESSE_J ] && ab::ability_flags & ability_type_e::ABILITY_POWER )
+    if ( fs_p()->finesse_traits[ THE_MYSTIC ] && ab::ability_flags & ability_type_e::ABILITY_POWER )
     {
       auto mast = std::min( fs_p()->finesse_trait_values.finesse_j_max, fs_p()->cache.mastery() );
       m *= 1.0 + finesse_j_mul * mast;
@@ -819,9 +819,9 @@ public:
   {
     auto m = ab::recharge_rate_multiplier( c );
 
-    if ( fs_p()->finesse_traits[ FINESSE_K ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MAJOR )
+    if ( fs_p()->finesse_traits[ THE_MONARCH ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MAJOR )
     {
-      auto cdr = fs_p()->finesse_trait_values.finesse_k_cdr[ fs_p()->finesse_traits[ FINESSE_K ] ];
+      auto cdr = fs_p()->finesse_trait_values.finesse_k_cdr[ fs_p()->finesse_traits[ THE_MONARCH ] ];
 
       auto current_haste = 1.0 / fs_p()->cache.spell_haste() - 1;
       current_haste      = std::max( fs_p()->finesse_trait_values.finesse_k_cdr_haste_cap, current_haste );
@@ -838,19 +838,19 @@ public:
   {
     ab::init();
 
-    if ( fs_p()->finesse_traits[ FINESSE_N ] > 0 && ab::ability_flags & ability_type_e::ABILITY_BASIC )
+    if ( fs_p()->finesse_traits[ THE_VEHEMENT ] > 0 && ab::ability_flags & ability_type_e::ABILITY_BASIC )
     {
-      finesse_n = new finesse_n_t( fs_p(), std::format( "{}_cleave", ab::name() ) );
-      finesse_n->init();
-      ab::add_child( finesse_n );
+      the_vehement = new finesse_n_t( fs_p(), std::format( "{}_cleave", ab::name() ) );
+      the_vehement->init();
+      ab::add_child( the_vehement );
     }
 
     if ( ab::ability_flags & ability_type_e::ABILITY_CORE )
-      ab::base_crit += fs_p()->finesse_trait_values.finesse_e_cc[ fs_p()->finesse_traits[ FINESSE_E ] ];
+      ab::base_crit += fs_p()->finesse_trait_values.finesse_e_cc[ fs_p()->finesse_traits[ THE_SINISTER ] ];
 
-    if ( fs_p()->finesse_traits[ FINESSE_H ] > 0 && ab::ability_flags & ability_type_e::ABILITY_BASIC )
+    if ( fs_p()->finesse_traits[ THE_VAINGLORIOUS ] > 0 && ab::ability_flags & ability_type_e::ABILITY_BASIC )
     {
-      auto added = fs_p()->finesse_trait_values.finesse_h_added[ fs_p()->finesse_traits[ FINESSE_H ] ];
+      auto added = fs_p()->finesse_trait_values.finesse_h_added[ fs_p()->finesse_traits[ THE_VAINGLORIOUS ] ];
       if ( ab::spell_power_mod.direct )
       {
         ab::spell_power_mod.direct += added;
@@ -872,23 +872,23 @@ public:
   void impact( action_state_t* s ) override
   {
     ab::impact( s );
-    if ( finesse_n && s->result_amount > 0 && s->chain_target == 0 && finesse_n_active )
+    if ( the_vehement && s->result_amount > 0 && s->chain_target == 0 && finesse_n_active )
     {
-      finesse_n->execute_on_target( s->target, s->result_amount );
-      fs_p()->fs_buffs.finesse_n->expire();
+      the_vehement->execute_on_target( s->target, s->result_amount );
+      fs_p()->fs_buffs.the_vehement->expire();
     }
   }
 
   void execute() override
   {
-    if ( !ab::background && fs_p()->finesse_traits[ FINESSE_B ] > 0 &&
+    if ( !ab::background && fs_p()->finesse_traits[ THE_TRICKSTER ] > 0 &&
          ab::ability_flags & ability_type_e::ABILITY_POWER )
     {
-      fs_p()->fs_buffs.finesse_b->trigger();
+      fs_p()->fs_buffs.the_trickster->trigger();
     }
 
     if ( !ab::background )
-      finesse_n_active = fs_p()->fs_buffs.finesse_n->at_max_stacks();
+      finesse_n_active = fs_p()->fs_buffs.the_vehement->at_max_stacks();
 
     ab::execute();
 
@@ -896,65 +896,65 @@ public:
     {
       if ( ab::ability_flags & ability_type_e::ABILITY_BASIC )
       {
-        if ( fs_p()->finesse_traits[ FINESSE_A ] > 0 )
+        if ( fs_p()->finesse_traits[ THE_INTREPID ] > 0 )
         {
-          fs_p()->fs_buffs.finesse_a->trigger();
+          fs_p()->fs_buffs.the_intrepid->trigger();
         }
 
-        if ( fs_p()->finesse_traits[ FINESSE_N ] > 0 )
+        if ( fs_p()->finesse_traits[ THE_VEHEMENT ] > 0 )
         {
           if ( finesse_n_active )
-            fs_p()->fs_buffs.finesse_n->expire();
+            fs_p()->fs_buffs.the_vehement->expire();
 
-          fs_p()->fs_buffs.finesse_n->trigger();
+          fs_p()->fs_buffs.the_vehement->trigger();
         }
       }
 
       if ( ab::ability_flags & ability_type_e::ABILITY_POWER )
       {
-        fs_p()->fs_buffs.finesse_a->expire();
+        fs_p()->fs_buffs.the_intrepid->expire();
       }
 
-      if ( fs_p()->finesse_traits[ FINESSE_D ] > 0 && ab::ability_flags & ability_type_e::ABILITY_POWER &&
-           fs_p()->fs_rng_objects.finesse_d->trigger() )
+      if ( fs_p()->finesse_traits[ THE_CELESTIAL ] > 0 && ab::ability_flags & ability_type_e::ABILITY_POWER &&
+           fs_p()->fs_rng_objects.the_celestial->trigger() )
       {
         fs_p()->resource_gain( RESOURCE_SPIRIT, fs_p()->finesse_trait_values.finesse_d_spirit_points,
-                               fs_p()->fs_gains.finesse_d );
+                               fs_p()->fs_gains.the_celestial );
       }
 
-      if ( fs_p()->finesse_traits[ FINESSE_G ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MAJOR )
+      if ( fs_p()->finesse_traits[ THE_PHILOSOPHER ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MAJOR )
       {
         auto mast = std::min( fs_p()->finesse_trait_values.finesse_g_max, fs_p()->cache.mastery() );
 
-        fs_p()->fs_buffs.finesse_g->trigger(
-            1, fs_p()->finesse_trait_values.finesse_g_spirit_to_stats[ fs_p()->finesse_traits[ FINESSE_G ] ] * mast );
+        fs_p()->fs_buffs.the_philosopher->trigger(
+            1, fs_p()->finesse_trait_values.finesse_g_spirit_to_stats[ fs_p()->finesse_traits[ THE_PHILOSOPHER ] ] * mast );
       }
 
-      if ( fs_p()->finesse_traits[ FINESSE_F ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE &&
-           fs_p()->fs_rng_objects.finesse_f->trigger() )
+      if ( fs_p()->finesse_traits[ THE_HERETIC ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE &&
+           fs_p()->fs_rng_objects.the_heretic->trigger() )
       {
-        fs_p()->fs_actions.finesse_f->execute_on_target( ab::target );
+        fs_p()->fs_actions.the_heretic->execute_on_target( ab::target );
       }
 
-      if ( fs_p()->finesse_traits[ FINESSE_I ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )
+      if ( fs_p()->finesse_traits[ THE_WAYFARER ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )
       {
-        auto cdr = fs_p()->finesse_trait_values.finesse_i_cdr *
+        auto cdr = fs_p()->finesse_trait_values.the_wayfarer_cdr *
                    ( ab::cooldown->duration / fs_p()->finesse_trait_values.finesse_i_cdr_divisor );
 
         cdr = std::min( fs_p()->finesse_trait_values.finesse_i_max_cdr,
                         std::max( fs_p()->finesse_trait_values.finesse_i_min_cdr, cdr ) );
         // ab::sim->print_debug( "{} reduces cooldown of Finesse I by {} seconds with {}.", *fs_p(), cdr, ab::name() );
-        fs_p()->finesse_i_cdr( cdr );
+        fs_p()->the_wayfarer_cdr( cdr );
       }
 
-      if ( fs_p()->finesse_traits[ FINESSE_L ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )
+      if ( fs_p()->finesse_traits[ THE_USURPER ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )
       {
         auto chance = fs_p()->cache.spell_crit_chance() +
-                      fs_p()->finesse_trait_values.finesse_e_cc[ fs_p()->finesse_traits[ FINESSE_E ] ];
+                      fs_p()->finesse_trait_values.finesse_e_cc[ fs_p()->finesse_traits[ THE_SINISTER ] ];
 
         if ( ab::rng().roll( chance ) )
         {
-          fs_p()->fs_actions.finesse_l->execute();
+          fs_p()->fs_actions.the_usurper->execute();
         }
       }
     }
@@ -964,9 +964,9 @@ public:
   {
     double cm = ab::composite_player_critical_multiplier( s );
 
-    if ( fs_p()->finesse_traits[ FINESSE_E ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )
+    if ( fs_p()->finesse_traits[ THE_SINISTER ] > 0 && ab::ability_flags & ability_type_e::ABILITY_CORE )
     {
-      cm *= 1.0 + fs_p()->finesse_trait_values.finesse_e_cdmg[ fs_p()->finesse_traits[ FINESSE_E ] ];
+      cm *= 1.0 + fs_p()->finesse_trait_values.finesse_e_cdmg[ fs_p()->finesse_traits[ THE_SINISTER ] ];
     }
 
     return cm;

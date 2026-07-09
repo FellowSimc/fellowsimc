@@ -207,7 +207,7 @@ public:
     timespan_t heartseeker_barrage_cooldown = 20_s;
     double heartseeker_barrage_focus_cost   = 30;
 
-    double highwind_arrow_ap_coeff                    = 14.09;
+    double highwind_arrow_ap_coeff                    = 13.6673;
     timespan_t highwind_arrow_cast_time               = 2.0_s;
     double highwind_arrow_focus_cost                  = 30;
     int highwind_arrow_charges                        = 3;
@@ -220,7 +220,7 @@ public:
     int lunarlight_mark_max_targets     = 12;
     int lunarlight_mark_stacks_applied  = 3;
     timespan_t lunarlight_mark_duration = 15_s;
-    double lunarlight_mark_ap_coeff     = 2.2597;
+    double lunarlight_mark_ap_coeff     = 2.19;
     double lunarlight_mark_chance_hit   = 0.25;
     double lunarlight_mark_chance_crit  = 0.5;
     double lunarlight_salvo_aoe_target_falloff = 12;
@@ -337,7 +337,7 @@ public:
 
     bool astronomers_hail                          = false;
     double astronomers_hail_main_target_multiplier = 2.0;
-    timespan_t astronomers_hail_volley_duration    = 3_s;
+    timespan_t astronomers_hail_volley_duration    = 2_s;
     timespan_t astronomers_hail_multishot_extend   = 0.25_s;
     double astronomers_hail_dmg_bonus              = 1.0;
 
@@ -463,6 +463,10 @@ public:
       //  p()->buffs.stars_aligned->trigger();
 
       tick_event = make_event( p()->sim, tick_interval(), std::bind( std::mem_fn( &starfall_volley_event_handler_t::tick ), this ) );
+
+      p()->sim->print_debug( "{} Starfall Volley tick {} on {}. Next tick in {} at {}. Current haste: {}", *p(),
+                             tick_number - 1, *t, tick_interval(), tick_event->occurs(),
+                             1.0 / p()->cache.spell_haste() - 1 );
     }
 
     void stars_aligned_tick()

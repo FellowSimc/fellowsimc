@@ -73,8 +73,8 @@ apl/rime/rime_apl.simc
 
 
 back=back,rarity=rare,variant=evens,ilevel=45,tempering=4,main_secondary=expertise,fixed_secondary=expertise
-legs=legs,rarity=regal,variant=evens,ilevel=45,tempering=3,main_secondary=haste,fixed_secondary=haste/stamina,affixes=amethyst/spirit/finesse_a
-feet=feet,rarity=epic,variant=evens,ilevel=45,tempering=3,main_secondary=haste,fixed_secondary=primary,affixes=finesse_b
+legs=legs,rarity=regal,variant=evens,ilevel=45,tempering=3,main_secondary=haste,fixed_secondary=haste/stamina,affixes=amethyst/spirit/the_intrepid
+feet=feet,rarity=epic,variant=evens,ilevel=45,tempering=3,main_secondary=haste,fixed_secondary=primary,affixes=the_trickster
 
 chest=chest,rarity=uncommon,variant=evens,ilevel=90,tempering=3,main_secondary=haste,fixed_secondary=primary
 trinket1=relic1,rarity=rare,variant=evens,ilevel=90,tempering=4,main_secondary=haste/crit,fixed_secondary=crit

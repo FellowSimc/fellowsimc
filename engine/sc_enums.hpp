@@ -145,20 +145,20 @@ constexpr weapon_trait_e weapon_trait_pretty( std::string_view trait )
 }
 
 #define FINESSE_LIST( X )                                                                 \
-  X( FINESSE_A, finesse_a, "Finesse A" )                                                  \
-  X( FINESSE_B, finesse_b, "Finesse B" )                                                  \
-  X( FINESSE_C, finesse_c, "Finesse C" )                                                  \
-  X( FINESSE_D, finesse_d, "Finesse D" )                                                  \
-  X( FINESSE_E, finesse_e, "Finesse E" )                                                  \
-  X( FINESSE_F, finesse_f, "Finesse F" )                                                  \
-  X( FINESSE_G, finesse_g, "Finesse G" )                                                  \
-  X( FINESSE_H, finesse_h, "Finesse H" )                                                  \
-  X( FINESSE_I, finesse_i, "Finesse I" )                                                  \
-  X( FINESSE_J, finesse_j, "Finesse J" )                                                  \
-  X( FINESSE_K, finesse_k, "Finesse K" )                                                  \
-  X( FINESSE_L, finesse_l, "Finesse L" )                                                  \
-  X( FINESSE_M, finesse_m, "Finesse M" )                                                  \
-  X( FINESSE_N, finesse_n, "Finesse N" )                                                  \
+  X( THE_INTREPID, the_intrepid, "The Intrepid" )                                         \
+  X( THE_TRICKSTER, the_trickster, "The Trickster" )                                      \
+  X( SUBDUER, subduer, "Subduer" )                                                        \
+  X( THE_CELESTIAL, the_celestial, "The Celestial" )                                      \
+  X( THE_SINISTER, the_sinister, "The Sinister" )                                         \
+  X( THE_HERETIC, the_heretic, "The Heretic" )                                            \
+  X( THE_PHILOSOPHER, the_philosopher, "The Philosopher" )                                \
+  X( THE_VAINGLORIOUS, the_vainglorious, "The Vainglorious" )                             \
+  X( THE_WAYFARER, the_wayfarer, "The Wayfarer" )                                         \
+  X( THE_MYSTIC, the_mystic, "The Mystic" )                                               \
+  X( THE_MONARCH, the_monarch, "The Monarch" )                                            \
+  X( THE_USURPER, the_usurper, "The Usurper" )                                            \
+  X( THE_HERALD, the_herald, "The Herald" )                                               \
+  X( THE_VEHEMENT, the_vehement, "The Vehement" )                                         \
   X( FINESSE_O, finesse_o, "Finesse O" )                                                  \
   X( FINESSE_P, finesse_p, "Finesse P" )                                                  \
   X( FINESSE_Q, finesse_q, "Finesse Q" )                                                  \

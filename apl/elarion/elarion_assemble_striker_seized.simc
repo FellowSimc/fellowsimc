@@ -78,7 +78,7 @@ finger1=ring1,ilevel=420,main_secondary=haste,fixed_secondary=haste/expertise
 finger2=ring2,ilevel=420,main_secondary=haste,fixed_secondary=crit/expertise
 trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
 trinket2=relic2,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise
-main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit,affixes=primary/primary/finesse_g/finesse_g/finesse_g/finesse_g
+main_hand=weap,variant=evens,ilevel=420,main_secondary=spirit,fixed_secondary=spirit/spirit,affixes=primary/primary/the_philosopher/the_philosopher/the_philosopher/the_philosopher
 
 # talents+=/skyward_munitions:1/fervent_supremacy:1/lunarlight_affinity:1/lunar_fury:1/repeating_stars:1/strikers_aim:1/focused_expanse:1/skylit_grace:1
 # 10

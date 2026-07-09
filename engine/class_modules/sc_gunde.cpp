@@ -455,12 +455,12 @@ public:
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.Radius, 500.0
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AdditionalTargets, 4.0	; OLD
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.TargetThresholdScaling, 8.0
-    double oathshatter_target_threshold = 5.0;
+    double oathshatter_target_threshold = 8.0;
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AoeDamageScaler, 0.25
     double oathshatter_aoe_multiplier = 0.5;
     // Gunde.HeavyMeleeDotBased.Talent.LowHealthTarget.AddedCriticalStrikeChance, 1.00
     double darkening_hearts_execute_cc = 1.0;
-    double darkening_hearts_damage_mul = 1.3;
+    double darkening_hearts_damage_mul = 1.1;
     // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.AdditionalCooldownRecovery, 0.5
     double bloodbath_cooldown_recovery = 2.0;
     // Gunde.HeavyMeleeDotBased.Talent.CooldownAcceleration.Duration, 3.0
@@ -513,9 +513,9 @@ public:
     double ravens_precision_falloff = 5;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Radius, 700.0
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.BaseStrengthCoefficient, 0.20
-    double bloodcraze_coeff = 0.2;
+    double bloodcraze_coeff = 0.25;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.DamageIncreasePerStack, 0.90
-    double bloodcraze_amp_per_stack = 1.7;
+    double bloodcraze_amp_per_stack = 1.5;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.TargetThresholdScaling, 5.0
     double bloodcraze_falloff = 1.0;
     // Gunde.DotTransfer.Talent.AoeBasedOnStacks.Period, 3.0
@@ -1376,7 +1376,7 @@ struct double_strike_t : public gunde_attack_t
   void execute() override
   {
     // Manual Finesse N (Vehement) handling due to dual child.
-    auto was_finesse_n_active = fs_p()->fs_buffs.finesse_n->at_max_stacks();
+    auto was_finesse_n_active = fs_p()->fs_buffs.the_vehement->at_max_stacks();
 
     gunde_attack_t::execute();
     
@@ -1389,7 +1389,7 @@ struct double_strike_t : public gunde_attack_t
 
       if ( was_finesse_n_active )
       {
-        fs_p()->fs_buffs.finesse_n->expire();
+        fs_p()->fs_buffs.the_vehement->expire();
         was_finesse_n_active = false;
       }
 

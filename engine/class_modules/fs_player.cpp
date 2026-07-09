@@ -296,9 +296,9 @@ double fs_player_t::composite_player_target_multiplier( player_t* target, school
     m *= 1.0 + fs_sets.death_grasp_execute_amp;
   }
 
-  if ( finesse_traits[ FINESSE_C ] > 0 && target->health_percentage() <= low_health_threshold )
+  if ( finesse_traits[ SUBDUER ] > 0 && target->health_percentage() <= low_health_threshold )
   {
-    m *= 1.0 + finesse_trait_values.finesse_c_execute_amp[ finesse_traits[ FINESSE_C ] ];
+    m *= 1.0 + finesse_trait_values.finesse_c_execute_amp[ finesse_traits[ SUBDUER ] ];
   }
 
   return m;
@@ -882,9 +882,9 @@ struct sapphire_aurastone_dmg_t : fs_player_action_t<spell_t>
   }
 };
 
-struct finesse_f_dmg_t : fs_proc_spell_t
+struct the_heretic_dmg_t : fs_proc_spell_t
 {
-  finesse_f_dmg_t( util::string_view n, fs_player_t* p ) : fs_proc_spell_t( n, p )
+  the_heretic_dmg_t( util::string_view n, fs_player_t* p ) : fs_proc_spell_t( n, p )
   {
     id = 2589871;
 
@@ -892,14 +892,14 @@ struct finesse_f_dmg_t : fs_proc_spell_t
     school             = SCHOOL_MAGIC;
     background         = true;
 
-    spell_power_mod.direct = p->finesse_trait_values.finesse_f_drain[ p->finesse_traits[ FINESSE_F ] ];
+    spell_power_mod.direct = p->finesse_trait_values.finesse_f_drain[ p->finesse_traits[ THE_HERETIC ] ];
     ability_flags |= ability_type_e::ABILITY_CORE;
   }
 };
 
-struct finesse_l_dmg_t : fs_proc_spell_t
+struct the_usurper_dmg_t : fs_proc_spell_t
 {
-  finesse_l_dmg_t( util::string_view n, fs_player_t* p ) : fs_proc_spell_t( n, p )
+  the_usurper_dmg_t( util::string_view n, fs_player_t* p ) : fs_proc_spell_t( n, p )
   {
     id = 2589872;
 
@@ -908,7 +908,7 @@ struct finesse_l_dmg_t : fs_proc_spell_t
     background         = true;
     aoe                = p->finesse_trait_values.finesse_l_targets;
 
-    spell_power_mod.direct = p->finesse_trait_values.finesse_l_dmg[ p->finesse_traits[ FINESSE_L ] ];
+    spell_power_mod.direct = p->finesse_trait_values.finesse_l_dmg[ p->finesse_traits[ THE_USURPER ] ];
 
     ability_flags |= ability_type_e::ABILITY_CORE;
   }
@@ -1112,9 +1112,9 @@ void fs_player_t::init_base_stats()
   resources.base_regen_per_second[ RESOURCE_SPIRIT ] = 100.0 / 300 * 1.20;
 
   
-  if ( finesse_traits[ FINESSE_M ] )
+  if ( finesse_traits[ THE_HERALD ] )
   {
-    resources.start_at[ RESOURCE_SPIRIT ] += finesse_trait_values.finesse_m_spirit[ finesse_traits[ FINESSE_M ] ];
+    resources.start_at[ RESOURCE_SPIRIT ] += finesse_trait_values.finesse_m_spirit[ finesse_traits[ THE_HERALD ] ];
   }
 
   if ( fs_sets.seal_of_the_heskyr )
@@ -1153,7 +1153,7 @@ void fs_player_t::init_gains()
 
   fs_gains.grandeur     = get_gain( "Visions of Grandeur" );
   fs_gains.spirit_procs = get_gain( "Spirit Procs" );
-  fs_gains.finesse_d = get_gain( "Finesse D" );
+  fs_gains.the_celestial = get_gain( "The Celestial" );
 }
 
 // fs_player_t::init_procs ======================================================
@@ -1223,51 +1223,50 @@ void fs_player_t::create_buffs()
   }
 
 
-  auto rank          = finesse_traits[ FINESSE_A ];
-  fs_buffs.finesse_a = make_buff<fs_player_buff_t>( this, "finesse_a" )
+  auto rank          = finesse_traits[ THE_INTREPID ];
+  fs_buffs.the_intrepid = make_buff<fs_player_buff_t>( this, "the_intrepid" )
                            ->set_default_value( finesse_trait_values.finesse_a_per_stack[ rank ] )
                            ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
                            ->set_max_stack( finesse_trait_values.finesse_a_max_stacks );
 
-  rank               = finesse_traits[ FINESSE_N ];
-  fs_buffs.finesse_n =
-      make_buff<fs_player_buff_t>( this, "finesse_n" )->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+  rank               = finesse_traits[ THE_VEHEMENT ];
+  fs_buffs.the_vehement =
+      make_buff<fs_player_buff_t>( this, "the_vehement" )->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   if ( rank > 0 )
-    fs_buffs.finesse_n->set_max_stack( finesse_trait_values.finesse_n_casts[ rank ] );
+    fs_buffs.the_vehement->set_max_stack( finesse_trait_values.finesse_n_casts[ rank ] );
 
-  rank               = finesse_traits[ FINESSE_B ];
-  fs_buffs.finesse_b = make_buff<fs_player_buff_t>( this, "finesse_b" )
-                           ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
-                           //->set_stack_behavior( buff_stack_behavior::ASYNCHRONOUS )
-                           ->set_default_value( finesse_trait_values.finesse_b_crit[ rank ] )
-                           //->set_max_stack( finesse_trait_values.finesse_a_max_stacks )
-                           ->set_duration( finesse_trait_values.finesse_b_duration );
+  rank                   = finesse_traits[ THE_TRICKSTER ];
+  fs_buffs.the_trickster = make_buff<fs_player_buff_t>( this, "the_trickster" )
+                               ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
+                               ->set_default_value( finesse_trait_values.finesse_b_crit[ rank ] )
+                               ->set_duration( finesse_trait_values.finesse_b_duration );
 
-  rank               = finesse_traits[ FINESSE_G ];
-  fs_buffs.finesse_g = make_buff<fs_player_buff_t>( this, "finesse_g" )
-                           ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
-                           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-                           ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
-                           ->set_default_value( 0.0 )
-                           ->set_duration( finesse_trait_values.finesse_g_duration[ rank ] );
+  rank                     = finesse_traits[ THE_PHILOSOPHER ];
+  fs_buffs.the_philosopher = make_buff<fs_player_buff_t>( this, "the_philosopher" )
+                                 ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+                                 ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                                 ->set_pct_buff_type( STAT_PCT_BUFF_CRIT )
+                                 ->set_default_value( 0.0 )
+                                 ->set_refresh_behavior( buff_refresh_behavior::PANDEMIC )
+                                 ->set_duration( finesse_trait_values.finesse_g_duration[ rank ] );
 
-  rank               = finesse_traits[ FINESSE_I ];
-  fs_buffs.finesse_i = make_buff<fs_player_buff_t>( this, "finesse_i" )
-                           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-                           ->set_default_value( finesse_trait_values.finesse_i_haste[ rank ] )
-                           ->set_duration( finesse_trait_values.finesse_i_duration );
+  rank                  = finesse_traits[ THE_WAYFARER ];
+  fs_buffs.the_wayfarer = make_buff<fs_player_buff_t>( this, "the_wayfarer" )
+                              ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
+                              ->set_default_value( finesse_trait_values.finesse_i_haste[ rank ] )
+                              ->set_duration( finesse_trait_values.finesse_i_duration );
 
-  fs_buffs.finesse_i_cd = make_buff( this, "finesse_i_cd" )
-                              ->set_duration( finesse_trait_values.finesse_i_interval )
-                              ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
-                              ->set_stack_change_callback( [ this ]( buff_t* b, int old_stack, int new_stack ) {
-                                if ( old_stack == 1 && !is_sleeping() )
-                                {
-                                  fs_buffs.finesse_i->trigger();
-                                  fs_buffs.finesse_i_cd->trigger();
-                                }
-                              } );
+  fs_buffs.the_wayfarer_cd = make_buff( this, "the_wayfarer_cd" )
+                                 ->set_duration( finesse_trait_values.finesse_i_interval )
+                                 ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+                                 ->set_stack_change_callback( [ this ]( buff_t* b, int old_stack, int new_stack ) {
+                                   if ( old_stack == 1 && !is_sleeping() )
+                                   {
+                                     fs_buffs.the_wayfarer->trigger();
+                                     fs_buffs.the_wayfarer_cd->trigger();
+                                   }
+                                 } );
 
   fs_buffs.spirit_of_heroism = make_buff<fs_player_buff_t>( this, "spirit_of_heroism" )
                                    ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
@@ -1438,7 +1437,8 @@ void fs_player_t::create_buffs()
 
   fs_buffs.martial_initiative =
       make_buff<fs_player_buff_t>( this, "martial_initiative" )
-          ->set_default_value( 0.1 )
+                                    ->set_default_value( 0.1 )
+                                    ->set_refresh_behavior( buff_refresh_behavior::PANDEMIC )
           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
@@ -2700,26 +2700,26 @@ void fs_player_t::init_background_actions()
     fs_actions.voidbringer_dmg = new actions::voidbringers_touch_dmg_t( "voidbringers_touch_dmg", this );
   if ( fs_weapons.sapphire_aurastone )
     fs_actions.aurastone_dmg = new actions::sapphire_aurastone_dmg_t( "sapphire_aurastone_dmg", this );
-  if ( finesse_traits[ FINESSE_F ] )
-    fs_actions.finesse_f = new actions::finesse_f_dmg_t( "finesse_f_dmg", this );
-  if ( finesse_traits[ FINESSE_L ] )
-    fs_actions.finesse_l = new actions::finesse_l_dmg_t( "finesse_l_dmg", this );
+  if ( finesse_traits[ THE_HERETIC ] )
+    fs_actions.the_heretic = new actions::the_heretic_dmg_t( "the_heretic_dmg", this );
+  if ( finesse_traits[ THE_USURPER ] )
+    fs_actions.the_usurper = new actions::the_usurper_dmg_t( "the_usurper_dmg", this );
 }
 
 void fs_player_t::init_rng()
 {
   player_t::init_rng();
 
-  if ( finesse_traits[ FINESSE_D ] > 0 )
+  if ( finesse_traits[ THE_CELESTIAL ] > 0 )
   {
-    fs_rng_objects.finesse_d = get_accumulated_rng(
-        "finesse_d", rng::CfromP( finesse_trait_values.finesse_d_chance[ finesse_traits[ FINESSE_D ] ] ) );
+    fs_rng_objects.the_celestial = get_accumulated_rng(
+        "the_celestial", rng::CfromP( finesse_trait_values.finesse_d_chance[ finesse_traits[ THE_CELESTIAL ] ] ) );
   }
 
-  if ( finesse_traits[ FINESSE_F ] > 0 )
+  if ( finesse_traits[ THE_HERETIC ] > 0 )
   {
-    fs_rng_objects.finesse_f =
-        get_accumulated_rng( "finesse_f", rng::CfromP( finesse_trait_values.finesse_f_drain_chance ) );
+    fs_rng_objects.the_heretic =
+        get_accumulated_rng( "the_heretic", rng::CfromP( finesse_trait_values.finesse_f_drain_chance ) );
   }
 }
 
@@ -2748,9 +2748,9 @@ void fs_player_t::arise()
 {
   player_t::arise();
 
-  if ( finesse_traits[ FINESSE_I ] )
+  if ( finesse_traits[ THE_WAYFARER ] )
   {
-    fs_buffs.finesse_i_cd->trigger();
+    fs_buffs.the_wayfarer_cd->trigger();
   }
 
   if ( fs_weapons.patient_soul )
@@ -2759,9 +2759,9 @@ void fs_player_t::arise()
   }
 }
 
-void fs_player_t::finesse_i_cdr( timespan_t cdr )
+void fs_player_t::the_wayfarer_cdr( timespan_t cdr )
 {
-  fs_buffs.finesse_i_cd->extend_duration( this, -cdr );
+  fs_buffs.the_wayfarer_cd->extend_duration( this, -cdr );
 }
 
 

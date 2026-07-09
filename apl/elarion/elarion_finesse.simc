@@ -117,74 +117,74 @@ weapon_trait.emerald_judgement=1
 weapon_trait.martial_initiative=1
 
 
-copy="Finesse_A1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_a
+copy="the_intrepid1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_intrepid
 
-copy="Finesse_A4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_a/finesse_a/finesse_a/finesse_a
+copy="the_intrepid4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_intrepid/the_intrepid/the_intrepid/the_intrepid
 
-copy="Finesse_B1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_b
+copy="the_trickster1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_trickster
 
-copy="Finesse_B4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_b/finesse_b/finesse_b/finesse_b
+copy="the_trickster4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_trickster/the_trickster/the_trickster/the_trickster
 
-copy="Finesse_D1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_d
+copy="the_celestial1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_celestial
 
-copy="Finesse_D4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_d/finesse_d/finesse_d/finesse_d
+copy="the_celestial4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_celestial/the_celestial/the_celestial/the_celestial
 
-copy="Finesse_E1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_e
+copy="the_sinister1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_sinister
 
-copy="Finesse_E4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_e/finesse_e/finesse_e/finesse_E
+copy="the_sinister4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_sinister/the_sinister/the_sinister/the_sinister
 
-copy="Finesse_F1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_f
+copy="the_heretic1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_heretic
 
-copy="Finesse_F4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_f/finesse_f/finesse_f/finesse_f
+copy="the_heretic4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_heretic/the_heretic/the_heretic/the_heretic
 
-copy="Finesse_G1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g
+copy="the_philosopher1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_philosopher
 
-copy="Finesse_G4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_g/finesse_g/finesse_g/finesse_g
+copy="the_philosopher4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_philosopher/the_philosopher/the_philosopher/the_philosopher
 
-copy="Finesse_H1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_h
+copy="the_vainglorious1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_vainglorious
 
-copy="Finesse_H4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_h/finesse_h/finesse_h/finesse_h
+copy="the_vainglorious4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_vainglorious/the_vainglorious/the_vainglorious/the_vainglorious
 
-copy="Finesse_I1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_i
+copy="the_wayfarer1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_wayfarer
 
-copy="Finesse_I4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_i/finesse_i/finesse_i/finesse_i
+copy="the_wayfarer4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_wayfarer/the_wayfarer/the_wayfarer/the_wayfarer
 
-copy="Finesse_J1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j
+copy="the_mystic1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_mystic
 
-copy="Finesse_J4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_j/finesse_j/finesse_j/finesse_j
+copy="the_mystic4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_mystic/the_mystic/the_mystic/the_mystic
 
-copy="Finesse_K1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_k
+copy="the_monarch1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_monarch
 
-copy="Finesse_K4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_k/finesse_k/finesse_k/finesse_k
+copy="the_monarch4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_monarch/the_monarch/the_monarch/the_monarch
 
-copy="Finesse_L1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_l
+copy="the_usurper1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_usurper
 
-copy="Finesse_L4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_l/finesse_l/finesse_l/finesse_l
+copy="the_usurper4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_usurper/the_usurper/the_usurper/the_usurper
 
-copy="Finesse_M1","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_m
+copy="the_herald1","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_herald
 
-copy="Finesse_M4","Initial Stat Spread"
-trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=finesse_m/finesse_m/finesse_m/finesse_m
+copy="the_herald4","Initial Stat Spread"
+trinket1=relic1,ilevel=420,main_secondary=spirit,fixed_secondary=crit/expertise,affixes=the_herald/the_herald/the_herald/the_herald

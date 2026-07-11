@@ -81,9 +81,9 @@ sets.draconic_might=1
 sets.dark_prophecy=1
 
 gems.amethyst_power=500
-gems.emerald_power=1200
+gems.emerald_power=500
 gems.ruby_power=500
-gems.sapphire_power=500
+gems.sapphire_power=1200
 
 weapon_trait.visions_of_grandeur=1
 weapon_trait.hunters_focus=4

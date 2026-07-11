@@ -228,6 +228,32 @@ double player_stat_cache_t::attack_haste() const
   return _attack_haste;
 }
 
+double player_stat_cache_t::attack_haste_pct() const
+{
+  if ( !active || !valid[ CACHE_ATTACK_HASTE ] )
+  {
+    valid[ CACHE_ATTACK_HASTE ] = true;
+    _attack_haste_pct           = player->composite_melee_haste_pct();
+    _attack_haste               = player->composite_melee_haste();
+  }
+  else
+    assert( _attack_haste_pct == player->composite_melee_haste_pct() );
+  return _attack_haste_pct;
+}
+
+double player_stat_cache_t::spell_haste_pct() const
+{
+  if ( !active || !valid[ CACHE_SPELL_HASTE ] )
+  {
+    valid[ CACHE_SPELL_HASTE ] = true;
+    _spell_haste_pct           = player->composite_spell_haste_pct();
+    _spell_haste               = player->composite_spell_haste();
+  }
+  else
+    assert( _spell_haste_pct == player->composite_spell_haste_pct() );
+  return _spell_haste_pct;
+}
+
 double player_stat_cache_t::auto_attack_speed() const
 {
   if ( !active || !valid[ CACHE_AUTO_ATTACK_SPEED ] )
@@ -579,10 +605,12 @@ double player_stat_cache_t::attack_expertise() const { return _player->composite
 double player_stat_cache_t::attack_hit() const { return _player->composite_melee_hit(); }
 double player_stat_cache_t::attack_crit_chance() const { return _player->composite_melee_crit_chance(); }
 double player_stat_cache_t::attack_haste() const { return _player->composite_melee_haste(); }
+double player_stat_cache_t::attack_haste_pct() const { return _player->composite_melee_haste_pct(); }
 double player_stat_cache_t::auto_attack_speed() const { return _player->composite_melee_auto_attack_speed(); }
 double player_stat_cache_t::spell_hit() const { return _player->composite_spell_hit(); }
 double player_stat_cache_t::spell_crit_chance() const { return _player->composite_spell_crit_chance(); }
 double player_stat_cache_t::spell_haste() const { return _player->composite_spell_haste(); }
+double player_stat_cache_t::spell_haste_pct() const { return _player->composite_spell_haste_pct(); }
 double player_stat_cache_t::spell_cast_speed() const { return _player->composite_spell_cast_speed(); }
 double player_stat_cache_t::dodge() const { return _player->composite_dodge(); }
 double player_stat_cache_t::parry() const { return _player->composite_parry(); }

@@ -201,6 +201,11 @@ copy="Gunde Feathers Blood Arc Lego","Gunde Feathers"
 legendary.lego_1=0
 legendary.lego_3=1
 
+copy="Gunde Feathers Blood Arc Lego DA over RP","Gunde Feathers"
+legendary.lego_1=0
+legendary.lego_3=1
+talents=carnage:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/deaths_arc:1/bloodcraze:1/massacre:1
+
 copy="Gunde Feathers Deaths Arc","Gunde Feathers"
 talents=deaths_arc:1/ravens_precision:1/murder_of_crows:1/slayers_grin:1/bloodcraze:1/harvesters_toll:1/massacre:1/crimson_strikes:1
 

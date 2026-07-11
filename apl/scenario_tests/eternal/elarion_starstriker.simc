@@ -84,7 +84,7 @@ neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixe
 wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=crit/crit
 
 # finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer/subduer/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
-finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
+finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch/the_trickster/the_trickster/the_trickster/the_trickster
 #  finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/subduer/subduer/subduer/subduer/the_monarch
 finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit
 trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
@@ -131,7 +131,7 @@ sets.deaths_grasp=1
 sets.dark_prophecy=1
 # 28 mods
 
-weapon_trait.amethyst_splinters=4
+weapon_trait.amethyst_splinters=0
 # 32 mods
 
 weapon_trait.visions_of_grandeur=1
@@ -225,15 +225,18 @@ talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_
 copy="Astronomers Hail RS HWA Mid Spirit","Astronomers Hail HWA Mid Spirit"
 talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
 
-copy="Astronomers Hail Barrage IH","Astronomers Hail HWA Spirit"
-talents=piercing_seekers:1/fusillade:1/repeating_stars:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/impending_heartseeker:1/last_lights:1/skylit_grace:1
-copy="Astronomers Hail Barrage FS","Astronomers Hail HWA Spirit"
-talents=piercing_seekers:1/fusillade:1/repeating_stars:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/fervent_supremacy:1/last_lights:1/skylit_grace:1
-copy="Astronomers Hail Barrage SM RW","Astronomers Hail HWA Spirit"
-talents=piercing_seekers:1/fusillade:1/repeating_stars:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/skyward_munitions:1/resurgent_winds:1/last_lights:1/skylit_grace:1
 
-copy="Astronomers Hail Barrage IH RW-RS","Astronomers Hail HWA Spirit"
-talents=piercing_seekers:1/fusillade:1/resurgent_winds:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/impending_heartseeker:1/last_lights:1/skylit_grace:1
+# copy="Astronomers Hail Barrage IH","Astronomers Hail HWA Spirit"
+# talents=piercing_seekers:1/fusillade:1/repeating_stars:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/impending_heartseeker:1/last_lights:1/skylit_grace:1
+# copy="Astronomers Hail Barrage FS","Astronomers Hail HWA Spirit"
+# talents=piercing_seekers:1/fusillade:1/repeating_stars:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/fervent_supremacy:1/last_lights:1/skylit_grace:1
+# copy="Astronomers Hail Barrage SM RW","Astronomers Hail HWA Spirit"
+# talents=piercing_seekers:1/fusillade:1/repeating_stars:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/skyward_munitions:1/resurgent_winds:1/last_lights:1/skylit_grace:1
+
+# copy="Astronomers Hail Barrage IH RW-RS","Astronomers Hail HWA Spirit"
+# talents=piercing_seekers:1/fusillade:1/resurgent_winds:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/impending_heartseeker:1/last_lights:1/skylit_grace:1
+
+
 
 
 # copy="Astronomers Hail Mid Spirit Full Multishot","Astronomers Hail HWA Mid Spirit"

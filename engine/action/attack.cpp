@@ -331,13 +331,13 @@ result_e attack_t::calculate_result( action_state_t* s ) const
   return result;
 }
 
-double attack_t::recharge_rate_multiplier( const cooldown_t& cd ) const
+double attack_t::composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const
 {
-  double m = action_t::recharge_rate_multiplier( cd );
+  double m = action_t::composite_additive_cooldown_recovery_rate( cd );
 
   if ( cd.hasted )
   {
-    m *= player->cache.attack_haste();
+    m += player->cache.attack_haste_pct();
   }
 
   return m;

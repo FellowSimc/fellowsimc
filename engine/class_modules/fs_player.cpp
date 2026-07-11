@@ -261,7 +261,7 @@ double fs_player_t::composite_player_multiplier( school_e school ) const
 {
   double m = player_t::composite_player_multiplier( school );
 
-  if ( in_boss_encounter && fs_options.ruby_allow_boss_amp )
+  if ( in_boss_encounter && sim->overrides.ruby_allow_boss_amp )
   {
     if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_10 )
     {
@@ -1351,8 +1351,11 @@ void fs_player_t::create_buffs()
                               ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
                               ->set_duration( fs_gems.emerald_first_strike_duration );
 
-  fs_buffs.might_of_the_minotaur = make_buff<fs_player_buff_t>( this, "might_of_the_minotaur" )
-                                       ->set_default_value( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_6 ? fs_gems.ruby_minotaur_major : fs_gems.ruby_minotaur_minor );
+  fs_buffs.might_of_the_minotaur =
+      make_buff<fs_player_buff_t>( this, "might_of_the_minotaur" )
+          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+          ->set_default_value( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_6 ? fs_gems.ruby_minotaur_major
+                                                                            : fs_gems.ruby_minotaur_minor );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
   {
@@ -1524,7 +1527,7 @@ void fs_player_t::create_buffs()
 
   struct fated_strike_buff_t : fs_player_buff_t
   {
-    double cdr_mod = 3.0;
+    double cdr_mod = 2.0;
     fated_strike_buff_t( player_t* pl ) : fs_player_buff_t( pl, "fated_strike" )
     {
       set_duration( 6_s );
@@ -1533,7 +1536,7 @@ void fs_player_t::create_buffs()
         {
           for ( auto& action : p()->action_list )
           {
-            action->dynamic_recharge_rate_multiplier /= cdr_mod;
+            action->additive_cooldown_recovery_rate += cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
         }
@@ -1541,7 +1544,7 @@ void fs_player_t::create_buffs()
         {
           for ( auto& action : p()->action_list )
           {
-            action->dynamic_recharge_rate_multiplier *= cdr_mod;
+            action->additive_cooldown_recovery_rate -= cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
         }
@@ -1551,7 +1554,8 @@ void fs_player_t::create_buffs()
 
   struct chronoshift_buff_t : fs_player_buff_t
   {
-    double cdr_mod = 9.0;
+    // This is 8.0 mod but its actually 700% additive. (?) - Angry
+    double cdr_mod = 7.0;
 
     chronoshift_buff_t( player_t* pl ) : fs_player_buff_t( pl, "chronoshift_barrier" )
     {
@@ -1562,7 +1566,7 @@ void fs_player_t::create_buffs()
         {
           for ( auto& action : p()->action_list )
           {
-            action->dynamic_recharge_rate_multiplier /= cdr_mod;
+            action->additive_cooldown_recovery_rate += cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
         }
@@ -1570,7 +1574,7 @@ void fs_player_t::create_buffs()
         {
           for ( auto& action : p()->action_list )
           {
-            action->dynamic_recharge_rate_multiplier *= cdr_mod;
+            action->additive_cooldown_recovery_rate -= cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
         }
@@ -1729,8 +1733,6 @@ void fs_player_t::create_options()
   add_option( opt_uint( "weapon_trait.willful_momentum", fs_weapons.willful_momentum, 0, 4 ) );
 
   add_option( opt_float( "spirit_refund_mul", spirit_refund_mul ) );
-
- add_option( opt_bool( "ruby_allow_boss_amp", fs_options.ruby_allow_boss_amp ) );
 }
 
 // fs_player_t::copy_from =======================================================
@@ -2633,7 +2635,7 @@ void fs_player_t::init_finished()
 {
   player_t::init_finished();
 
-  if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_5 && fs_options.ruby_allow_boss_amp )
+  if ( fs_gems.gem_powers[ GEM_RUBY ] >= GEM_TIER_5 && sim->overrides.ruby_allow_boss_amp )
   {
     sim->target_non_sleeping_list.register_callback(
         [ this ]( player_t* p ) { cache.invalidate( CACHE_PLAYER_DAMAGE_MULTIPLIER ); } );
@@ -2643,7 +2645,7 @@ void fs_player_t::init_finished()
   {
     for ( auto action : action_list )
     {
-      action->base_recharge_multiplier -= fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_10 ? 0.12: 0.04;
+      action->additive_cooldown_reduction -= fs_gems.gem_powers[ GEM_EMERALD ] >= GEM_TIER_10 ? 0.12 : 0.04;
       action->cooldown->adjust_recharge_multiplier();
     }
   }
@@ -2652,7 +2654,7 @@ void fs_player_t::init_finished()
   {
     for ( auto action : action_list )
     {
-      action->base_recharge_rate_multiplier /= 1.1;
+      action->additive_cooldown_recovery_rate += 0.1;
       action->cooldown->adjust_recharge_multiplier();
     }
   }

@@ -4640,7 +4640,7 @@ double player_t::apply_combat_rating_dr( rating_e rating, double value ) const
   }
 }
 
-double player_t::composite_melee_haste() const
+double player_t::composite_melee_haste_pct() const
 {
   double h;
 
@@ -4655,9 +4655,12 @@ double player_t::composite_melee_haste() const
       h += b->check_stack_value();
   }
 
-  h = 1.0 / ( 1.0 + h );
-
   return h;
+}
+
+double player_t::composite_melee_haste() const
+{
+  return 1.0 / ( 1.0 + cache.attack_haste_pct() );
 }
 
 double player_t::composite_melee_auto_attack_speed() const
@@ -4922,10 +4925,7 @@ double player_t::composite_crit_avoidance() const
   return 0;
 }
 
-/**
- * This is the subset of the old_spell_haste that applies to RPPM
- */
-double player_t::composite_spell_haste() const
+double player_t::composite_spell_haste_pct() const
 {
   double h;
 
@@ -4939,10 +4939,16 @@ double player_t::composite_spell_haste() const
     for ( auto b : buffs.stat_pct_buffs[ STAT_PCT_BUFF_HASTE ] )
       h += b->check_stack_value();
   }
-  
-  h = 1.0 / ( 1.0 + h );
 
   return h;
+}
+
+/**
+ * This is the subset of the old_spell_haste that applies to RPPM
+ */
+double player_t::composite_spell_haste() const
+{
+  return 1.0 / ( 1.0 + cache.spell_haste_pct() );
 }
 
 /**

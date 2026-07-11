@@ -878,11 +878,10 @@ public:
   {
     auto rrm = ab::recharge_rate_multiplier( cd );
 
-    rrm = 1.0 / rrm;
-
-    rrm += ab::player->cache.attack_haste();
-
-    rrm = 1.0 / rrm;
+    if ( p()->buffs.event_horizon->check() )
+    {
+      rrm *= ab::player->cache.attack_haste();
+    }
 
     return rrm;
   }
@@ -1809,18 +1808,14 @@ struct skystriders_grace_t : public elarion_spell_t
     ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
-  double recharge_rate_multiplier( const cooldown_t& cd ) const override
+  double composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const override
   {
-    auto rrm = base_t::recharge_rate_multiplier( cd );
-
-    rrm = 1.0 / rrm;
+    auto rrm = base_t::composite_additive_cooldown_recovery_rate( cd );
 
     if ( p()->buffs.starfall_volleys->check() && p()->talents_enabled( elarion_t::SKYLIT_GRACE ) )
     {
       rrm += p()->talents.skylit_grace_cdr;
     }
-
-    rrm = 1.0 / rrm;
 
     return rrm;
   }
@@ -2620,13 +2615,14 @@ void elarion_t::init_special_effects()
   //```
 
 
-  auto effect = new special_effect_t( this );
-  effect->spell_id = 9;
-  effect->name_str = "lunarlight_salvo";
+  auto effect          = new special_effect_t( this );
+  effect->spell_id     = 9;
+  effect->name_str     = "lunarlight_salvo";
   effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
   effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
   effect->cooldown_    = 0_s;
   effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
+  effect->proc_chance_ = 1.0;
   effect->set_can_proc_from_procs( true );
 
   struct lunarlight_salvo_cb_t : dbc_proc_callback_t
@@ -2652,7 +2648,7 @@ void elarion_t::init_special_effects()
       dbc_proc_callback_t::trigger( a, s );
     }
 
-    void execute( action_t*, action_state_t* s ) override
+    void execute( action_t* /* a */, action_state_t* s ) override
     {
       if ( s->result_amount > 0 )
       {
@@ -2675,7 +2671,7 @@ void elarion_t::init_special_effects()
     }
   };
 
-  lunarlight_mark_external = new dbc_proc_callback_t( this, *effect );
+  lunarlight_mark_external = new lunarlight_salvo_cb_t( this, *effect );
   lunarlight_mark_external->initialize();
   lunarlight_mark_external->activate();
 }

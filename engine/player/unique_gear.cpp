@@ -10,7 +10,6 @@
 #include "sc_enums.hpp"
 #include "sim/expressions.hpp"
 #include "unique_gear_dragonflight.hpp"
-#include "unique_gear_shadowlands.hpp"
 #include "unique_gear_thewarwithin.hpp"
 #include "util/util.hpp"
 
@@ -1823,76 +1822,6 @@ void item::essence_of_yulon( special_effect_t& effect )
 
 void item::readiness( special_effect_t& effect )
 {
-  maintenance_check( 528 );
-
-  struct cooldowns_t
-  {
-    specialization_e spec;
-    std::array<const char*, 8> cooldowns;
-  };
-
-  static const cooldowns_t __cd[] =
-  {
-    // NOTE: Spells that trigger buffs must have the cooldown of their buffs removed if they have one, or this trinket may cause undesirable results.
-    { ROGUE_ASSASSINATION, { "evasion", "vanish", "cloak_of_shadows", "vendetta", nullptr, nullptr } },
-    { ROGUE_OUTLAW,        { "evasion", "adrenaline_rush", "cloak_of_shadows", "killing_spree", nullptr, nullptr } },
-    { ROGUE_SUBTLETY,      { "evasion", "vanish", "cloak_of_shadows", "shadow_dance", nullptr, nullptr } },
-    { SHAMAN_ENHANCEMENT,  { "earth_elemental_totem", "fire_elemental_totem", "shamanistic_rage", "ascendance", "feral_spirit", nullptr } },
-    { DRUID_FERAL,         { "tigers_fury", "berserk", "barkskin", "survival_instincts", nullptr, nullptr, nullptr } },
-    { DRUID_GUARDIAN,      { "might_of_ursoc", "berserk", "barkskin", "survival_instincts", nullptr, nullptr, nullptr } },
-    { WARRIOR_FURY,        { "dragon_roar", "bladestorm", "shockwave", "avatar", "bloodbath", "recklessness", "storm_bolt", "heroic_leap" } },
-    { WARRIOR_ARMS,        { "dragon_roar", "bladestorm", "shockwave", "avatar", "bloodbath", "recklessness", "storm_bolt", "heroic_leap" } },
-    { WARRIOR_PROTECTION,  { "shield_wall", "demoralizing_shout", "last_stand", "recklessness", "heroic_leap", nullptr, nullptr } },
-    { DEATH_KNIGHT_BLOOD,  { "antimagic_shell", "dancing_rune_weapon", "icebound_fortitude", "outbreak", "vampiric_blood", "bone_shield", nullptr } },
-    { DEATH_KNIGHT_FROST,  { "antimagic_shell", "army_of_the_dead", "icebound_fortitude", "empower_rune_weapon", "outbreak", "pillar_of_frost", nullptr  } },
-    { DEATH_KNIGHT_UNHOLY, { "antimagic_shell", "army_of_the_dead", "icebound_fortitude", "outbreak", "summon_gargoyle", nullptr } },
-    { MONK_BREWMASTER,	   { "fortifying_brew", "guard", "zen_meditation", nullptr, nullptr, nullptr, nullptr } },
-    { MONK_WINDWALKER,     { "energizing_brew", "fists_of_fury", "fortifying_brew", "zen_meditation", nullptr, nullptr, nullptr } },
-    { PALADIN_PROTECTION,  { "ardent_defender", "avenging_wrath", "divine_protection", "divine_shield", "guardian_of_ancient_kings", nullptr } },
-    { PALADIN_RETRIBUTION, { "avenging_wrath", "divine_protection", "divine_shield", "guardian_of_ancient_kings", nullptr, nullptr } },
-    { HUNTER_BEAST_MASTERY,{ "camouflage", "feign_death", "disengage", "stampede", "rapid_fire", "bestial_wrath", nullptr } },
-    { HUNTER_MARKSMANSHIP, { "camouflage", "feign_death", "disengage", "stampede", "rapid_fire", nullptr, nullptr } },
-    { HUNTER_SURVIVAL,     { "black_arrow", "camouflage", "feign_death", "disengage", "stampede", "rapid_fire", nullptr } },
-    { SPEC_NONE,           { nullptr } }
-  };
-
-  player_t* p = effect.item -> player;
-
-  const spell_data_t* cdr_spell = p -> find_spell( effect.spell_id );
-  const random_prop_data_t& budget = p -> dbc->random_property( effect.item -> item_level() );
-  double cdr = 1.0 / ( 1.0 + budget.p_epic[ 0 ] * cdr_spell -> effectN( 1 ).m_coefficient() / 100.0 );
-
-  if ( p -> level() > 90 )
-  { // We have no clue how the trinket actually scales down with level. This will linearly decrease CDR until it hits .90 at level 100.
-    double level_nerf = ( static_cast<double>( p -> level() - 90 ) / 10.0 );
-    level_nerf = ( 1 - cdr ) * level_nerf;
-    cdr += level_nerf;
-    cdr = std::min( 0.90, cdr ); // The amount of CDR doesn't go above 90%, even at level 100.
-  }
-
-  const cooldowns_t* cd = &( __cd[ 0 ] );
-  do
-  {
-    if ( p -> specialization() != cd -> spec )
-    {
-      cd++;
-      continue;
-    }
-
-    for ( size_t i = 0; i < 7; i++ )
-    {
-      if ( cd -> cooldowns[ i ] == nullptr )
-        break;
-
-      auto action = p -> find_action( cd -> cooldowns[ i ] );
-      if ( action != nullptr )
-      {
-        action -> base_recharge_multiplier *= cdr;
-      }
-    }
-
-    break;
-  } while ( cd -> spec != SPEC_NONE );
 }
 
 void item::amplification( special_effect_t& effect )
@@ -4229,12 +4158,6 @@ std::unique_ptr<expr_t> unique_gear::create_expression( player_t& player, util::
 
   auto splits = util::string_split<util::string_view>( name_str, "." );
 
-  // Shards of Domination
-  if ( splits[ 0 ] == "rune_word" )
-  {
-    return shadowlands::items::shards_of_domination::create_expression( player, name_str );
-  }
-
   // Hyperthread Wristwraps
   if ( splits[ 0 ] == "hyperthread_wristwraps" )
   {
@@ -4649,8 +4572,6 @@ void unique_gear::register_special_effects()
 
   register_special_effects_bfa();
 
-  shadowlands::register_special_effects();
-
   dragonflight::register_special_effects();
 
   thewarwithin::register_special_effects();
@@ -4847,9 +4768,7 @@ void unique_gear::unregister_special_effects()
 
 action_t* unique_gear::create_action( player_t* player, util::string_view name, util::string_view options )
 {
-  if ( auto action = shadowlands::create_action( player, name, options ) )
-    return action;
-  else if ( auto action = thewarwithin::create_action( player, name, options ) )
+ if ( auto action = thewarwithin::create_action( player, name, options ) )
     return action;
 
   return nullptr;
@@ -4859,7 +4778,6 @@ void unique_gear::register_hotfixes()
 {
   register_hotfixes_legion();
   register_hotfixes_bfa();
-  shadowlands::register_hotfixes();
   dragonflight::register_hotfixes();
   thewarwithin::register_hotfixes();
 }
@@ -4868,8 +4786,6 @@ void unique_gear::register_target_data_initializers( sim_t* sim )
 {
   register_target_data_initializers_legion( sim );
   register_target_data_initializers_bfa( sim );
-
-  shadowlands::register_target_data_initializers( *sim );
 
   dragonflight::register_target_data_initializers( *sim );
 

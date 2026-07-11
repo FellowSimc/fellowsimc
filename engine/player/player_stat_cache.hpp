@@ -53,6 +53,7 @@ private:
   mutable double _attack_hit, _spell_hit;
   mutable double _attack_crit_chance, _spell_crit_chance;
   mutable double _attack_haste, _spell_haste;
+  mutable double _attack_haste_pct, _spell_haste_pct;
   mutable double _auto_attack_speed, _spell_cast_speed;
   mutable double _dodge, _parry, _block, _crit_block, _armor, _bonus_armor;
   mutable double _mastery, _mastery_value, _crit_avoidance, _miss;
@@ -82,10 +83,12 @@ public:
   double attack_hit() const;
   double attack_crit_chance() const;
   double attack_haste() const;
+  double attack_haste_pct() const;
   double auto_attack_speed() const;
   double spell_hit() const;
   double spell_crit_chance() const;
   double spell_haste() const;
+  double spell_haste_pct() const;
   double spell_cast_speed() const;
   double dodge() const;
   double parry() const;
@@ -123,10 +126,12 @@ public:
   double attack_hit() const { return _player->composite_melee_hit(); }
   double attack_crit_chance() const { return _player->composite_melee_crit_chance(); }
   double attack_haste() const { return _player->composite_melee_haste(); }
+  double attack_haste_pct() const { return _player->composite_melee_haste_pct(); }
   double auto_attack_speed() const { return _player->composite_melee_auto_attack_speed(); }
   double spell_hit() const { return _player->composite_spell_hit(); }
   double spell_crit_chance() const { return _player->composite_spell_crit_chance(); }
   double spell_haste() const { return _player->composite_spell_haste(); }
+  double spell_haste_pct() const { return _player->composite_spell_haste_pct(); }
   double spell_cast_speed() const { return _player->composite_spell_cast_speed(); }
   double dodge() const { return _player->composite_dodge(); }
   double parry() const { return _player->composite_parry(); }

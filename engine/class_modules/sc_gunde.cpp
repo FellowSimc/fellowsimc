@@ -649,6 +649,10 @@ public:
   {
     return get_current_rend( target );
   }
+  double get_current_target_rend_stacks() const
+  {
+    return floor( get_current_target_rend() / cache.strength() );
+  }
 
   void spawn_feathers( int quantity = 1 );
 
@@ -1486,7 +1490,7 @@ struct grim_carve_t : public gunde_attack_t
       auto old_hits = num_hits;
       num_hits += p->legendary.lego_1_additional_grim_carve_hits;
 
-      period_multiplier *= as<double>( old_hits ) / num_hits;
+      // period_multiplier *= as<double>( old_hits ) / num_hits;
     }
   }
 
@@ -2432,6 +2436,10 @@ std::unique_ptr<expr_t> gunde_t::create_expression( util::string_view name_str )
   else if ( util::str_compare_ci( split[ 0 ], "rend_on_target" ) )
   {
     return make_fn_expr( name_str, std::bind( std::mem_fn( &gunde_t::get_current_target_rend ), this ) );
+  }
+  else if ( util::str_compare_ci( split[ 0 ], "rend_stacks_on_target" ) )
+  {
+    return make_fn_expr( name_str, std::bind( std::mem_fn( &gunde_t::get_current_target_rend_stacks ), this ) );
   }
   // Split expressions
 

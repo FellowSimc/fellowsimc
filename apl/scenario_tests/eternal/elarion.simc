@@ -1,16 +1,16 @@
-# report_details=1
-# optimal_raid=0
-# # max_time=420
-# # max_time=50
-# max_time=250
-# # max_time=60
-# target_error=0.1
-# iterations=15000
-# chart_show_relative_difference=1
-# vary_combat_length=0.1
-# single_actor_batch=1
-# max_time=720
-# desired_targets=12
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=250
+# max_time=60
+target_error=0.1
+iterations=15000
+chart_show_relative_difference=1
+vary_combat_length=0.1
+single_actor_batch=1
+max_time=720
+desired_targets=12
 # relative_difference_base="Elarion HWA"
 
 # apl/chuey_dungeon.simc
@@ -139,7 +139,7 @@ sets.draconic_might=1
 #38
 
 
-
+# talents=fervent_supremacy:1/fusillade:1/last_lights:1/lunar_fury:1/lunarlight_affinity:1/piercing_seekers:1/repeating_stars:1/rising_moon:1/skylit_grace:1
 
 # talents=fusillade:1/strikers_aim:1/last_lights:1/lunarlight_affinity:1/impending_heartseeker:1/piercing_seekers:1/lunar_fury:1/skylit_grace:1/skyward_munitions:1/rising_moon:1
 

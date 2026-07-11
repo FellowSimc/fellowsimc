@@ -206,6 +206,8 @@ struct sim_t : private sc_thread_t
   // Buffs and Debuffs Overrides
   struct overrides_t
   {
+    int ruby_allow_boss_amp = 1;
+
     // Buff overrides
     int arcane_intellect;
     int battle_shout;

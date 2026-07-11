@@ -3362,7 +3362,8 @@ cooldown_t* sim_t::get_cooldown( util::string_view name )
 void sim_t::use_optimal_buffs_and_debuffs( int value )
 {
   optimal_raid = value;
-
+  
+  overrides.ruby_allow_boss_amp     = 1;
   overrides.arcane_intellect        = 0;
   overrides.battle_shout            = 0;
   overrides.mark_of_the_wild        = 0;
@@ -3653,6 +3654,7 @@ void sim_t::create_options()
   // Raid buff overrides
   add_option( opt_func( "optimal_raid", parse_optimal_raid ) );
   add_option( opt_func( "fight_style", parse_fight_style ) );
+  add_option( opt_int( "override.ruby_allow_boss_amp", overrides.ruby_allow_boss_amp ) );
   add_option( opt_int( "override.arcane_intellect", overrides.arcane_intellect ) );
   add_option( opt_int( "override.battle_shout", overrides.battle_shout ) );
   add_option( opt_int( "override.mark_of_the_wild", overrides.mark_of_the_wild ) );

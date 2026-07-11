@@ -480,15 +480,15 @@ public:
   /// Static reduction of damage for AoE
   double base_aoe_multiplier;
 
-  /// Static action cooldown duration multiplier
-  double base_recharge_multiplier;
+  // Control the base cooldown of the ability. E.g. Green Gems.
+  // Default Initialised to 1.
+  double additive_cooldown_reduction;
+  double multiplicative_cooldown_reduction;
 
-  /// A second static action cooldown duration multiplier that also reduces the effectiveness of flat cooldown adjustments
-  double base_recharge_rate_multiplier;
-
-  /// Dynamically adjustable action cooldown duration multipliers. These are reset to 1.0 in action_t::reset.
-  double dynamic_recharge_multiplier;
-  double dynamic_recharge_rate_multiplier;
+  // Additive Cooldown Recovery Rate. E.g. Haste, CDR from legendary, etc.
+  // Default Initialised to 1.
+  double additive_cooldown_recovery_rate;
+  double multiplicative_cooldown_recovery_rate;
 
   /// Maximum distance that the ability can travel. Used on abilities that instantly move you, or nearly instantly move you to a location.
   double base_teleport_distance;
@@ -785,9 +785,6 @@ public:
 
   player_t* select_target_if_target();
 
-  void apply_affecting_aura( const spell_data_t*, const spell_data_t* modifier = nullptr );
-  void apply_affecting_effect( const spelleffect_data_t& effect, const spelleffect_data_t* modifier = nullptr );
-
   action_state_t* get_state( const action_state_t* = nullptr );
 
   void execute_on_target( player_t*, double = -1.0 );
@@ -858,14 +855,40 @@ public:
 
   virtual double calculate_crit_damage_bonus( action_state_t* s ) const;
 
-  virtual double recharge_multiplier( const cooldown_t& ) const
+  virtual double composite_additive_cooldown_reduction( const cooldown_t& cd ) const
   {
-    return std::max( 0.0, base_recharge_multiplier * dynamic_recharge_multiplier );
+    return additive_cooldown_reduction;
+  }
+
+  virtual double composite_multiplicative_cooldown_reduction( const cooldown_t& cd ) const
+  {
+    return multiplicative_cooldown_reduction;
+  }
+
+  virtual double recharge_multiplier( const cooldown_t& cd ) const
+  {
+    return std::max( 0.0,
+                     composite_additive_cooldown_reduction( cd ) * composite_multiplicative_cooldown_reduction( cd ) );
+  }
+
+  virtual double composite_additive_cooldown_recovery_rate( const cooldown_t& ) const
+  {
+    return additive_cooldown_recovery_rate;
+  }
+
+  virtual double composite_multiplicative_cooldown_recovery_rate( const cooldown_t& ) const
+  {
+    return multiplicative_cooldown_recovery_rate;
   }
 
   virtual double recharge_rate_multiplier( const cooldown_t& cd ) const
   {
-    return base_recharge_rate_multiplier * dynamic_recharge_rate_multiplier;
+    auto mod = composite_additive_cooldown_recovery_rate( cd ) * composite_multiplicative_cooldown_recovery_rate( cd );
+
+    if ( mod <= 0.0 )
+      return 0.0;
+
+    return 1.0 / mod;
   }
 
   /** Cooldown base duration for action based cooldowns. */

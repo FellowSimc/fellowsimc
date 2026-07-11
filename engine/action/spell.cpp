@@ -111,13 +111,13 @@ double spell_base_t::composite_haste() const
   return action_t::composite_haste() * player->cache.spell_cast_speed();
 }
 
-double spell_base_t::recharge_rate_multiplier( const cooldown_t& cd ) const
+double spell_base_t::composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const
 {
-  double m = action_t::recharge_rate_multiplier( cd );
+  double m = action_t::composite_additive_cooldown_recovery_rate( cd );
 
   if ( cd.hasted )
   {
-    m *= player->cache.spell_haste();
+    m += player->cache.spell_haste_pct();
   }
 
   return m;

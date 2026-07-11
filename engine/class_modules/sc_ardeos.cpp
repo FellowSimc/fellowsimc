@@ -3008,7 +3008,7 @@ void actions::ardeos_action_t<Base>::tick( dot_t* d )
     if ( d->state->result > 0 && d->target->is_enemy() )
     {
       if ( d->state->result == RESULT_CRIT && p()->rppm.pyrophibian_frenzy_crit->trigger() ||
-           p()->rppm.pyrophibian_frenzy->trigger() )
+           d->state->result == RESULT_HIT && p()->rppm.pyrophibian_frenzy->trigger() )
       {
         p()->actions.fire_frog->execute();
       }

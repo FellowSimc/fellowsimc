@@ -160,7 +160,6 @@ public:
 
   struct options_t
   {
-    bool ruby_allow_boss_amp = true;
   } fs_options;
 
   struct fs_sets_t

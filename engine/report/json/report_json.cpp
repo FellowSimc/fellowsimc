@@ -1212,14 +1212,7 @@ void to_json( const ::report::json::report_configuration_t& report_configuration
 
   // Overrides
   auto overrides = root[ "overrides" ];
-  add_non_zero( overrides, "arcane_intellect", sim.overrides.arcane_intellect );
-  add_non_zero( overrides, "battle_shout", sim.overrides.battle_shout );
-  add_non_zero( overrides, "power_word_fortitude", sim.overrides.power_word_fortitude );
-  add_non_zero( overrides, "chaos_brand", sim.overrides.chaos_brand );
-  add_non_zero( overrides, "mystic_touch", sim.overrides.mystic_touch );
-  add_non_zero( overrides, "mortal_wounds", sim.overrides.mortal_wounds );
-  add_non_zero( overrides, "bleeding", sim.overrides.bleeding );
-  add_non_zero( overrides, "bloodlust", sim.overrides.bloodlust );
+  add_non_zero( overrides, "ruby_allow_boss_amp", sim.overrides.ruby_allow_boss_amp );
   if ( sim.overrides.bloodlust )
   {
     add_non_zero( overrides, "bloodlust_percent", sim.bloodlust_percent );

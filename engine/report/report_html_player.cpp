@@ -966,7 +966,7 @@ void print_html_action_info( report::sc_html_stream& os, unsigned stats_mask, co
                  "<li><span>cooldown:</span>{:.3f}</li>"
                  "<li><span>cooldown hasted:</span>{}</li>"
                  "<li><span>charges:</span>{}</li>"
-                 "<li><span>base_recharge_multiplier:</span>{:.3f}</li>"
+                 "<li><span>additive_cooldown_reduction:</span>{:.3f}</li>"
                  "<li><span>base_execute_time:</span>{:.2f}</li>"
                  "<li><span>base_crit:</span>{:.2f}</li>"
                  "<li><span>target:</span>{}</li>"
@@ -983,7 +983,7 @@ void print_html_action_info( report::sc_html_stream& os, unsigned stats_mask, co
                  a->cooldown->duration.total_seconds(),
                  a->cooldown->hasted ? "true" : "false",
                  a->cooldown->charges,
-                 a->base_recharge_multiplier,
+                 a->additive_cooldown_reduction,
                  a->base_execute_time.total_seconds(),
                  a->base_crit,
                  a->target ? util::encode_html( a->target->name() ) : "",

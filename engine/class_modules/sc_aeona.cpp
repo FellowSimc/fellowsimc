@@ -2142,13 +2142,13 @@ void aeona_t::create_buffs()
         {
           if ( _new )
           {
-            action->dynamic_recharge_rate_multiplier /= cdr_mod;
+            action->additive_cooldown_recovery_rate += cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
             sim->print_debug( "Applying Fleeting Hour CDR to {}", *action );
           }
           else
           {
-            action->dynamic_recharge_rate_multiplier *= cdr_mod;
+            action->additive_cooldown_recovery_rate -= cdr_mod;
             sim->print_debug( "Removing Fleeting Hour CDR to {}", *action );
           }
           if ( action->cooldown->action == action )
@@ -2177,12 +2177,12 @@ void aeona_t::create_buffs()
         {
           if ( _new )
           {
-            action->dynamic_recharge_rate_multiplier /= cdr_mod;
+            action->additive_cooldown_recovery_rate += cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
           else
           {
-            action->dynamic_recharge_rate_multiplier *= cdr_mod;
+            action->additive_cooldown_recovery_rate -= cdr_mod;
           }
           if ( action->cooldown->action == action )
             action->cooldown->adjust_recharge_multiplier();
@@ -2207,12 +2207,12 @@ void aeona_t::create_buffs()
         {
           if ( _new )
           {
-            action->dynamic_recharge_rate_multiplier /= cdr_mod;
+            action->multiplicative_cooldown_recovery_rate *= cdr_mod;
             action->cooldown->adjust_recharge_multiplier();
           }
           else
           {
-            action->dynamic_recharge_rate_multiplier *= cdr_mod;
+            action->multiplicative_cooldown_recovery_rate /= cdr_mod;
           }
           if ( action->cooldown->action == action )
             action->cooldown->adjust_recharge_multiplier();

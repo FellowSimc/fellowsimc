@@ -1053,6 +1053,7 @@ public:
   double apply_combat_rating_fellow_dr( double value ) const;
   double apply_combat_rating_dr( rating_e rating, double value ) const;
 
+  virtual double composite_melee_haste_pct() const;
   virtual double composite_melee_haste() const;
   virtual double composite_melee_auto_attack_speed() const;
   virtual double composite_melee_attack_power() const;
@@ -1063,6 +1064,7 @@ public:
   virtual double composite_melee_crit_chance_multiplier() const
   { return 1.0; }
   virtual double composite_melee_expertise( const weapon_t* w = nullptr ) const;
+  virtual double composite_spell_haste_pct() const;
   virtual double composite_spell_haste() const;
   virtual double composite_spell_cast_speed() const;
   virtual double composite_spell_power( school_e school ) const;

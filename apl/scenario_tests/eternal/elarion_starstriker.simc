@@ -225,6 +225,17 @@ talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_
 copy="Astronomers Hail RS HWA Mid Spirit","Astronomers Hail HWA Mid Spirit"
 talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
 
+copy="Astronomers Hail Barrage IH","Astronomers Hail HWA Spirit"
+talents=piercing_seekers:1/fusillade:1/repeating_stars:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/impending_heartseeker:1/last_lights:1/skylit_grace:1
+copy="Astronomers Hail Barrage FS","Astronomers Hail HWA Spirit"
+talents=piercing_seekers:1/fusillade:1/repeating_stars:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/fervent_supremacy:1/last_lights:1/skylit_grace:1
+copy="Astronomers Hail Barrage SM RW","Astronomers Hail HWA Spirit"
+talents=piercing_seekers:1/fusillade:1/repeating_stars:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/skyward_munitions:1/resurgent_winds:1/last_lights:1/skylit_grace:1
+
+copy="Astronomers Hail Barrage IH RW-RS","Astronomers Hail HWA Spirit"
+talents=piercing_seekers:1/fusillade:1/resurgent_winds:1/lunar_fury:1/rising_moon:1/lunarlight_affinity:1/impending_heartseeker:1/last_lights:1/skylit_grace:1
+
+
 # copy="Astronomers Hail Mid Spirit Full Multishot","Astronomers Hail HWA Mid Spirit"
 # talents=focused_expanse:1/resurgent_winds:1/skyward_munitions:1/repeating_stars:1/rising_moon:1/lunarlight_affinity:1/fervent_supremacy:1/last_lights:1/skylit_grace:1
 

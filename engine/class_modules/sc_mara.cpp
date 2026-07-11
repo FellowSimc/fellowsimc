@@ -270,7 +270,8 @@ public:
     double hemotoxin_old_damage_coefficient    = 0.2;
     timespan_t hemotoxin_old_duration          = 9_s;
     timespan_t hemotoxin_old_period            = 1.5_s;
-    double hemotoxin_old_conversion_rate       = 1.0;
+    double hemotoxin_old_conversion_rate       = 0.75;
+    //double hemotoxin_old_conversion_rate       = 1.0;
     double hemotoxin_old_aoe_damage_multiplier = 0.67;
     double hemotoxin_old_aoe_falloff           = 1.0;
     bool hemotoxin_old_double_dip_stats        = false;
@@ -307,7 +308,7 @@ public:
     double poison_and_bleed_haste_cap = 1.0;
 
     double hemorrhaging_strike_energy_gen = 2.0;
-    double hemorrhaging_strike_damage     = 2.73 * 1.05; 
+    double hemorrhaging_strike_damage     = 2.8665; 
     double hemorrhaging_stike_tick_dmg    = 0.9841;
     timespan_t hemorrhaging_strike_period = 3_s;
 
@@ -1036,7 +1037,7 @@ struct mara_poison_t : public mara_attack_t
 
   double composite_da_multiplier( const action_state_t* s ) const override
   {
-    double m = mara_attack_t::composite_ta_multiplier( s );
+    double m = mara_attack_t::composite_da_multiplier( s );
 
     m *= poison_multiplier( s );
 
@@ -1549,6 +1550,7 @@ struct hemorrhaging_strike_t : public mara_attack_t
     double ticks_left   = duration / dot_tick_time;
     double total_damage = ticks_left * tick_base_damage;
     total_damage /= state->target_ta_multiplier;
+
     action_state_t::release( state );
     return total_damage;
   }
@@ -1567,7 +1569,13 @@ struct hemorrhaging_strike_t : public mara_attack_t
       sim->print_debug( "{} current agi: {}, current ap: {}, state ap: {}", *p(), p()->cache.agility(),
                         p()->cache.attack_power(), s->attack_power );
 
-      double amount = hemo_tick_damage_over_time( composite_dot_duration( s ), get_dot( s->target ) ) * p()->talents.hemotoxin_old_conversion_rate;
+      auto dot = get_dot( s->target );
+
+      auto base_duration = composite_dot_duration( s ); 
+      auto refresh_duration = calculate_dot_refresh_duration( dot, base_duration );
+
+      double amount = hemo_tick_damage_over_time( refresh_duration, dot ) * p()->talents.hemotoxin_old_conversion_rate;
+
       p()->actions.hemotoxin_old->execute_on_target( s->target, amount );
     }
   }
@@ -3138,9 +3146,8 @@ void mara_t::init_background_actions()
       new actions::queens_fang_t( "ult", this, {} , secondary_trigger::ULTIMATE_CLONE );
   actions.queens_fang_ult_clone->background = true;
 
-  actions.queens_fang_fts_clone =
-      new actions::queens_fang_t( "fts", this, {}, secondary_trigger::TALENT_CLONE );
-  actions.queens_fang_fts_clone->background = true;
+  actions.queens_fang_fts_clone = new actions::queens_fang_t( "fts", this, {}, secondary_trigger::TALENT_CLONE );
+  actions.queens_fang_fts_clone->background    = true;
 
   actions.queens_fang_lego_clone =
       new actions::queens_fang_t( "lego", this, {}, secondary_trigger::LEGENDARY_CLONE );

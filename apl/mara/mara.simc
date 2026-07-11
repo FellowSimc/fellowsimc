@@ -13,8 +13,9 @@ actions.aoe+=/cycling_variable,name=low_duration_bleeds,op=add,value=dot.hemorrh
 actions.aoe+=/variable,name=energy_regen_estimate,op=set,value=20*spirit_pct+energy.regen_combined+0.5*talent.venomous_delight*((((active_enemies*6+active_enemies*active_enemies)>?(energy.deficit+80))%cooldown.brooding_shadows.duration)+(active_dot.seething_poison%action.seething_poison.tick_time)*(1+talent.seething_burst*active_enemies)+(active_dot.vexiras_venom%2))
 actions.aoe+=/matriach_macabre,target_if=max:target.health,if=combo_points>=4&(buff.maiden_of_death.up|(((fight_remains-10-cooldown.maiden_of_death.remains)*spirit.regen)%%100<((fight_remains-10)*spirit.regen)%%100)&(!raid_event.adds.exists|active_enemies>=raid_event.adds.count))&(!talent.gushing_blood|variable.low_duration_bleeds<=0|expected_combat_length>=60)&!buff.matriach_macabre.up|fight_remains<=20
 actions.aoe+=/maiden_of_death,if=combo_points>=4&!buff.maiden_of_death.up&(spirit>=action.matriach_macabre.cost|spirit.time_to_max>=8|talent.sinners_pride)&(raid_event.adds.remains>=30|talent.sinners_pride|!talent.gushing_blood|!raid_event.adds.exists|!legendary.from_the_shadows)
+# actions.aoe+=/maiden_of_death,target_if=min:dot.hemorrhaging_strike.remains,if=dot.hemorrhaging_strike.remains<=10&combo
 actions.aoe+=/macabre_stratagem,if=buff.maiden_of_death.up&spirit.time_to_max>=10&(buff.deadly_scheme.up|buff.malevolence_qf_buffs_aa.stack=2|buff.maiden_of_death.up&!talent.deadly_scheme&!talent.malevolence)
-actions.aoe+=/sahrils_wrath,if=!buff.sundering_wrath.up&(weapon_trait.visions_of_grandeur&cooldown.maiden_of_death.remains>=10|buff.maiden_of_death.up)
+actions.aoe+=/sahrils_wrath,if=!buff.sundering_wrath.up&(buff.matriach_macabre.up|spirit.deficit>=70|fight_remains<=20)
 actions.aoe+=/earthbreaker,if=(weapon_trait.visions_of_grandeur&cooldown.maiden_of_death.remains>=10|buff.maiden_of_death.up)
 actions.aoe+=/fated_strike,if=(cooldown.brooding_shadows.full_recharge_time>=gcd.max*2&(cooldown.maiden_of_death.full_recharge_time>=gcd.max*2|talent.sinners_pride)|weapon_trait.visions_of_grandeur)&!buff.fated_strike.up
 actions.aoe+=/voidbringers_touch,target_if=max:target.health*(1-2*debuff.voidbringer_accumulator.up),if=(cooldown.maiden_of_death.remains<=6|buff.matriach_macabre.up|buff.maiden_of_death.up|!weapon_trait.brave_machinations&buff.deadly_scheme.up)&!debuff.voidbringer_accumulator.up
@@ -27,14 +28,15 @@ actions.aoe+=/final_stratagem,if=(cooldown.maiden_of_death.remains>=30|talent.si
 actions.aoe+=/pool_resource,if=energy<=100&cooldown.maiden_of_death.remains<=6&!buff.maiden_of_death.up&action.widows_bite.charges<2&(!talent.gushing_blood|energy<=60)&(raid_event.adds.remains>=30|!talent.gushing_blood|!raid_event.adds.exists)
 actions.aoe+=/arachnid_assault,if=combo_points>=4&buff.spirit_procs_clones.up
 actions.aoe+=/queens_fang,target_if=max:target.health,if=combo_points>=1&talent.malevolence&!buff.malevolence_qf_buffs_aa.up&!buff.deadly_scheme.up&!buff.spirit_procs_clones.up
-actions.aoe+=/hemorrhaging_strike,target_if=max:debuff.hemotoxin_old.up,if=talent.hemotoxin_old&combo_points>=6&debuff.hemotoxin_old.up&!buff.deadly_scheme.up
-actions.aoe+=/hemorrhaging_strike,target_if=min:dot.hemorrhaging_strike.remains,if=dot.hemorrhaging_strike.refreshable&(cooldown.maiden_of_death.remains>=10+10*talent.sinners_pride|active_enemies<=3|!talent.gushing_blood)&(active_enemies<=5|talent.hemotoxin|talent.gushing_blood&buff.maiden_of_death.up)
+actions.aoe+=/hemorrhaging_strike,target_if=min:debuff.hemotoxin_old.remains-100*debuff.hemotoxin_old.up,if=talent.hemotoxin_old&combo_points>=6&debuff.hemotoxin_old.up&!buff.deadly_scheme.up&(buff.maiden_of_death.up|debuff.hemotoxin_old.at_max_stacks|debuff.hemotoxin_old.remains<=4)
+actions.aoe+=/hemorrhaging_strike,target_if=min:dot.hemorrhaging_strike.remains,if=dot.hemorrhaging_strike.refreshable&(cooldown.maiden_of_death.remains>=10+10*talent.sinners_pride|buff.maiden_of_death.up|active_enemies<=3|!talent.gushing_blood)&(active_enemies<=5|talent.hemotoxin|talent.gushing_blood&buff.maiden_of_death.up)
 #&dot.hemorrhaging_strike.remains<=15
 #|dot.hemorrhaging_strike.refreshable&(!talent.gushing_blood|active_enemies<=5)
 # #actions.aoe+=/hemorrhaging_strike,target_if=min:dot.hemorrhaging_strike.remains-100*(target.time_to_die>=20),if=combo_points>=4&refreshable&!buff.deadly_scheme.up&talent.gushing_blood&(active_dot.hemorrhaging_strike<=active_enemies-3|variable.low_duration_bleeds>=4)&(buff.maiden_of_death.up|talent.gushing_blood_always_works)&target.time_to_die>=18
 # actions.aoe+=/hemorrhaging_strike,target_if=min:dot.hemorrhaging_strike.remains-100*(target.time_to_die>=20),if=combo_points>=4&dot.hemorrhaging_strike.refreshable&variable.low_duration_bleeds>1&talent.gushing_blood&(buff.maiden_of_death.up)&target.time_to_die>=18&(!buff.assassins_guile.up&!buff.deadly_scheme.up|variable.low_duration_bleeds>=2)
 # actions.aoe+=/hemorrhaging_strike,target_if=min:dot.hemorrhaging_strike.remains-100*(target.time_to_die>=30),if=combo_points>=4&refreshable&!buff.deadly_scheme.up&(legendary.from_the_shadows|energy%(variable.energy_generation_threshold-variable.energy_regen_estimate)<target.time_to_die&(variable.energy_generation_threshold-variable.energy_regen_estimate)>0)&(!talent.gushing_blood|cooldown.maiden_of_death.remains>10&(!talent.sinners_pride|!talent.gushing_blood))&target.time_to_die>=18&!buff.assassins_guile.up&!talent.gushing_blood
 # actions.aoe+=/hemorrhaging_strike,target_if=max:dot.hemorrhaging_strike.remains-100*(target.time_to_die>=18),if=combo_points>=4&refreshable&!buff.deadly_scheme.up&talent.red_ledger&target.time_to_die>=15&!buff.assassins_guile.up&active_dot.hemorrhaging_strike<1
+# actions.aoe+=/hemorrhaging_strike,target_if=min:dot.hemorrhaging_strike.remains,if=!dot.hemorrhaging_strike.ticking
 actions.aoe+=/arachnid_assault,if=combo_points>=4&(buff.deadly_scheme.up|buff.malevolence_qf_buffs_aa.at_max_stacks)
 #&(!buff.deadly_scheme.up|combo_points>=6)
 # actions.aoe+=/hemorrhaging_strike,target_if=max:dot.hemorrhaging_strike.remains-100*(target.time_to_die>=18),if=combo_points>=4&combo_points<6&buff.deadly_scheme.up
@@ -61,7 +63,7 @@ actions.st+=/macabre_stratagem,if=buff.maiden_of_death.up&combo_points>=5&spirit
 actions.st+=/final_stratagem,if=!cooldown.brooding_shadows.up&cooldown.maiden_of_death.remains>=10&combo_points=0&(!cooldown.widows_bite.up|energy.regen_combined>=19)&(buff.matriach_macabre.up|fight_remains>=190|(fight_remains-spirit.time_to_max-10)%%180<(fight_remains-10)%%180)&!buff.brooding_shadows.up|fight_remains<=20
 actions.st+=/skittering_blades,if=buff.brooding_shadows.up&active_enemies>=4
 actions.st+=/backstab,if=buff.brooding_shadows.up&combo_points=0&active_enemies<4
-actions.st+=/hemorrhaging_strike,target_if=max:debuff.hemotoxin_old.remains,if=combo_points>=5&debuff.hemotoxin_old.up&!buff.deadly_scheme.up
+actions.st+=/hemorrhaging_strike,target_if=max:debuff.hemotoxin_old.remains,if=combo_points>=5&debuff.hemotoxin_old.up&!buff.deadly_scheme.up&(buff.maiden_of_death.up|debuff.hemotoxin_old.at_max_stacks|debuff.hemotoxin_old.remains<=4)
 actions.st+=/hemorrhaging_strike,target_if=max:dot.hemorrhaging_strike.refreshable*1000+target.time_to_die,if=combo_points>=5&refreshable&target.time_to_die>=18
 actions.st+=/queens_fang,if=combo_points>=5&buff.spirit_procs_clones.up
 actions.st+=/arachnid_assault,if=combo_points>=1&talent.malevolence&!buff.malevolence_aa_buffs_qf.up&!buff.deadly_scheme.up&!buff.spirit_procs_clones.up

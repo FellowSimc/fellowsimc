@@ -562,7 +562,7 @@ public:
     double schism_damage_skull_crusher_multiplier = 2.5;
     // Ink.Talent.ChanceIncreasedSpenderDamage.AoeAttack.DamageMultiplier, 3.50
     double schism_damage_hammer_storm_multiplier = 2.5;
-    timespan_t schism_duration = 20_s;
+    timespan_t schism_duration = 30_s;
     int schism_stacks = 2;
 
     // Ink.Talent.DecreasedIncomingMagicDamage.DamageMultiplier, 0.90

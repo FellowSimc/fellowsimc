@@ -9,7 +9,7 @@ actions.main=apocalypse,target_if=max:target.health,if=(legendary.explosivo&targ
 actions.main+=/icicles_of_anzhyr,if=(!raid_event.adds.exists|active_enemies%2>=raid_event.adds.count|raid_event.adds.in>=12)&(active_dot.curse_of_anzhyr<active_enemies|!raid_event.adds.exists|raid_event.adds.in>=30)
 actions.main+=/fire_ball,if=full_recharge_time<=(gcd.max*3)|(active_dot.fire_ball_dot=0)&(active_dot.engulfing_flames>0|cooldown.wildfire.remains<=gcd.max*3|!talent.slow_burn)|weapon.chronoshift&cooldown.chronoshift.up&!talent.slow_burn
 #,if=dot.searing_blaze.refreshable
-actions.main+=/fire_frogs,if=cooldown.wildfire.up&(legendary.fire_toad|active_enemies<12|talent.pyrophibian_frenzy)&cooldown.engulfing_flames.full_recharge_time>gcd.max
+actions.main+=/fire_frogs,if=(legendary.fire_toad|active_enemies<12|talent.pyrophibian_frenzy)&cooldown.engulfing_flames.full_recharge_time>gcd.max
 actions.main+=/engulfing_flames,target_if=max:target.health,if=full_recharge_time<=(gcd.max*3+talent.rolling_flames*active_dot.searing_blaze*0.4)&(cooldown.wildfire.remains>=10|talent.rolling_flames)|cooldown.wildfire.remains<=gcd.max*4|buff.wildfire.up|cooldown.chronoshift.up&weapon.chronoshift
 actions.main+=/voidbringers_touch,target_if=max:target.health,if=buff.wildfire.up
 # actions.main+=/engulfing_flames
@@ -25,7 +25,7 @@ actions.main+=/detonate,if=(active_dot.engulfing_flames>=1)&cinders>=300|buff.wi
 #actions.main+=/searing_blaze,target_if=refreshable&target.time_to_die>=12,if=cooldown.apocalypse.remains>=10|raid_event.adds.in<=30|(active_enemies-active_dot.searing_blaze)<4|active_enemies<=4
 actions.main+=/detonate,if=active_dot.searing_blaze>=6&active_dot.engulfing_flames>1
 actions.main+=/natures_fury
-actions.main+=/detonate,if=cinders>=360&(active_dot.searing_blaze>=4|active_dot.apocalypse>0)
+actions.main+=/detonate,if=cinders>=360&(active_dot.searing_blaze>=4|active_dot.apocalypse>0)|cinder>=300
 actions.main+=/infernal_wave,target_if=max:target.health
 
 

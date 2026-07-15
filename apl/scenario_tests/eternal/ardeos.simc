@@ -19,23 +19,23 @@ level=80
 apl/ardeos/ardeos_apl.simc
 
 
-head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste
-shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/haste,affixes=subduer/subduer
-back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit
+head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=crit/crit
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer
+back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=crit/crit
 chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=crit/haste
-hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=expertise/haste
-legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste,affixes=subduer/subduer
-feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/crit
+hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit
+legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer
+feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit
 
-neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/spirit
-wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=expertise/expertise
+neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/crit
+wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=primary/primary
 
 finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
 finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
 trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/crit
-trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/expertise,affixes=the_monarch/the_trickster/the_trickster/the_trickster/the_trickster
+trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=crit/expertise,affixes=the_monarch/the_trickster/the_trickster/the_trickster/the_trickster
 
-main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary,affixes=crit/haste
+main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary,affixes=crit/crit
 
 # 11 mods
 
@@ -138,11 +138,11 @@ talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/undying_flame:1/crack
 
 copy="Frogxplosivo","Base Ardeos"
 talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/undying_flame:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1
-copy="Frogxplosivo Crackled","Base Ardeos"
-talents=slow_burn:1/great_balls_of_fire:1/crackling_inferno:1/undying_flame:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1
-copy="Frogxplosivo IW Package","Base Ardeos"
-talents=slow_burn:1/great_balls_of_fire:1/crackling_inferno:1/cascading_inferno:1/intensifying_inferno:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1
-#2 4 5 7 8 11 14
+# copy="Frogxplosivo Crackled","Base Ardeos"
+# talents=slow_burn:1/great_balls_of_fire:1/crackling_inferno:1/undying_flame:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1
+# copy="Frogxplosivo IW Package","Base Ardeos"
+# talents=slow_burn:1/great_balls_of_fire:1/crackling_inferno:1/cascading_inferno:1/intensifying_inferno:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1
+# #2 4 5 7 8 11 14
 
 copy="Frogxplosivo FrogSquad Crackle","Base Ardeos"
 talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/undying_flame:1/apocalyptic_surge:1/frog_squad:1/pyrophibian_frenzy:1/crackling_inferno:1
@@ -152,6 +152,24 @@ talents=slow_burn:1/great_balls_of_fire:1/cascading_inferno:1/undying_flame:1/ap
 
 copy="Frogxplosivo FrogSquad","Base Ardeos"
 talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/frog_squad:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1
+
+copy="Frogxplosivo FrogSquad FS Crackle","Base Ardeos"
+talents=slow_burn:1/firestarter:1/crash_and_burn:1/undying_flame:1/apocalyptic_surge:1/frog_squad:1/pyrophibian_frenzy:1/crackling_inferno:1
+
+copy="Frogxplosivo FrogSquad Crackle Casc BI SC","Base Ardeos"
+talents=slow_burn:1/spontaneous_combustion:1/burning_initiative:1/cascading_inferno:1/undying_flame:1/apocalyptic_surge:1/frog_squad:1/pyrophibian_frenzy:1/crackling_inferno:1
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=the_herald/the_herald
+
+copy="Frogxplosivo Rolling Crackle Casc BI","Base Ardeos"
+talents=slow_burn:1/rolling_flames:1/cascading_inferno:1/undying_flame:1/apocalyptic_surge:1/burning_initiative:1/pyrophibian_frenzy:1/crackling_inferno:1
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=the_herald/the_herald
+
+copy="Frogxplosivo FrogSquad Crackle Casc BI SC -Undy +FSt","Base Ardeos"
+talents=slow_burn:1/spontaneous_combustion:1/burning_initiative:1/cascading_inferno:1/firestarter:1/apocalyptic_surge:1/frog_squad:1/pyrophibian_frenzy:1/crackling_inferno:1
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=the_herald/the_herald
+copy="Frogxplosivo FrogSquad Crackle Casc BI SC -Undy +GBOF","Base Ardeos"
+talents=slow_burn:1/spontaneous_combustion:1/burning_initiative:1/cascading_inferno:1/great_balls_of_fire:1/apocalyptic_surge:1/frog_squad:1/pyrophibian_frenzy:1/crackling_inferno:1
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=the_herald/the_herald
 
 # copy="Frogxplosivo FroggerSquadderv2","Base Ardeos"
 # talents=great_balls_of_fire:1/crash_and_burn:1/undying_flame:1/apocalyptic_surge:1/reign_of_fire:1/pyrophibian_frenzy:1/frog_squad:1
@@ -509,23 +527,23 @@ talents=slow_burn:1/great_balls_of_fire:1/crash_and_burn:1/frog_squad:1/apocalyp
 
 # # real
 
-copy="Frogs Toad Rolling FrSq FS BD","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=0
-legendary.fire_toad=1
-# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+# copy="Frogs Toad Rolling FrSq FS BD","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=0
+# legendary.fire_toad=1
+# # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
 
-talents=pyrophibian_frenzy:1/frog_squad:1/firestarter:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/rolling_flames:1
-#yes
+# talents=pyrophibian_frenzy:1/frog_squad:1/firestarter:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/rolling_flames:1
+# #yes
 
-copy="Frogs Toad Rolling FrSq SB BD","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=0
-legendary.fire_toad=1
-# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+# copy="Frogs Toad Rolling FrSq SB BD","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=0
+# legendary.fire_toad=1
+# # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
 
-talents=pyrophibian_frenzy:1/frog_squad:1/slow_burn:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/rolling_flames:1
-#yes
+# talents=pyrophibian_frenzy:1/frog_squad:1/slow_burn:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/rolling_flames:1
+# #yes
 
 copy="Frogs Toad Rolling FrSq SB SC","Base Ardeos"
 legendary.explosivo=0
@@ -534,32 +552,32 @@ legendary.fire_toad=1
 # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
 
 talents=pyrophibian_frenzy:1/frog_squad:1/slow_burn:1/apocalyptic_surge:1/spontaneous_combustion:1/undying_flame:1/rolling_flames:1
-# yes
+# # yes
 
-copy="Frogs Toad Rolling Firestarter SB SC","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=0
-legendary.fire_toad=1
-# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+# copy="Frogs Toad Rolling Firestarter SB SC","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=0
+# legendary.fire_toad=1
+# # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
 
-talents=pyrophibian_frenzy:1/firestarter:1/slow_burn:1/apocalyptic_surge:1/spontaneous_combustion:1/undying_flame:1/rolling_flames:1
-#yes
+# talents=pyrophibian_frenzy:1/firestarter:1/slow_burn:1/apocalyptic_surge:1/spontaneous_combustion:1/undying_flame:1/rolling_flames:1
+# #yes
 
-copy="Frogs Toad Rolling Casc Crack SB Etc","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=0
-legendary.fire_toad=1
-# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+# copy="Frogs Toad Rolling Casc Crack SB Etc","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=0
+# legendary.fire_toad=1
+# # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
 
-talents=pyrophibian_frenzy:1/cascading_inferno:1/crackling_inferno:1/slow_burn:1/apocalyptic_surge:1/spontaneous_combustion:1/undying_flame:1/rolling_flames:1
+# talents=pyrophibian_frenzy:1/cascading_inferno:1/crackling_inferno:1/slow_burn:1/apocalyptic_surge:1/spontaneous_combustion:1/undying_flame:1/rolling_flames:1
 
-copy="Frogs Toad Axel","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=0
-legendary.fire_toad=1
-# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+# copy="Frogs Toad Axel","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=0
+# legendary.fire_toad=1
+# # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
 
-talents=frog_squad:1/backdraft:1/apocalyptic_surge:1/firestarter:1/undying_flame:1/cascading_inferno:1/cascading_inferno:1/pyrophibian_frenzy:1/spontaneous_combustion:1
+# talents=frog_squad:1/backdraft:1/apocalyptic_surge:1/firestarter:1/undying_flame:1/cascading_inferno:1/cascading_inferno:1/pyrophibian_frenzy:1/spontaneous_combustion:1
 
 
 
@@ -584,48 +602,107 @@ talents=frog_squad:1/backdraft:1/apocalyptic_surge:1/firestarter:1/undying_flame
 # #7/8/9/11
 
 
-copy="Frogs Toad ST Specialised","Base Ardeos"
+# copy="Frogs Toad ST Specialised","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=0
+# legendary.fire_toad=1
+# # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+
+# talents=pyrophibian_frenzy:1/frog_squad:1/apocalyptic_surge:1/slow_burn:1/cascading_inferno:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1/undying_flame:1
+# # # 3 5 6 8 9 10 11 12 14
+
+# copy="Frogs Toad Super AoE Specialised","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=0
+# legendary.fire_toad=1
+# # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+
+# talents=pyrophibian_frenzy:1/frog_squad:1/apocalyptic_surge:1/cascading_inferno:1/great_balls_of_fire:1/slow_burn:1/reign_of_fire:1
+
+
+copy="Frogs Toad Rolling FrSq SB BI","Base Ardeos"
 legendary.explosivo=0
 legendary.devouring_flame=0
 legendary.fire_toad=1
 # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
 
-talents=pyrophibian_frenzy:1/frog_squad:1/apocalyptic_surge:1/slow_burn:1/cascading_inferno:1/crackling_inferno:1/intensifying_inferno:1/flare_up:1/undying_flame:1
-# # 3 5 6 8 9 10 11 12 14
+talents=pyrophibian_frenzy:1/frog_squad:1/slow_burn:1/apocalyptic_surge:1/burning_initiative:1/undying_flame:1/rolling_flames:1
 
-copy="Frogs Toad Super AoE Specialised","Base Ardeos"
+
+# copy="Frogs TOads ROlling FrSq SB BI Philo","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=0
+# legendary.fire_toad=1
+# # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+
+# talents=pyrophibian_frenzy:1/frog_squad:1/slow_burn:1/apocalyptic_surge:1/burning_initiative:1/undying_flame:1/rolling_flames:1
+
+# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit,fixed_secondary=haste/haste
+# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/haste,affixes=the_philosopher/the_philosopher
+# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=crit/spirit
+# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary
+# #,affixes=crit/haste
+# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/haste
+# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=the_philosopher/the_philosopher
+# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
+
+# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/spirit
+# wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=crit/crit
+
+# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=primary/expertise
+# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=primary/expertise
+# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=crit/crit
+# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/spirit,fixed_secondary=haste/expertise,affixes=the_monarch/the_trickster/the_trickster/the_trickster/the_trickster
+
+# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/primary,affixes=crit/haste
+
+# weapon_trait.brave_machinations=3
+# # weapon_trait.emerald_judgement=1
+
+
+copy="Frogs Toad Rolling FrSq SB BI Hera1","Base Ardeos"
 legendary.explosivo=0
 legendary.devouring_flame=0
 legendary.fire_toad=1
 # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
 
-talents=pyrophibian_frenzy:1/frog_squad:1/apocalyptic_surge:1/cascading_inferno:1/great_balls_of_fire:1/slow_burn:1/reign_of_fire:1
+talents=pyrophibian_frenzy:1/frog_squad:1/slow_burn:1/apocalyptic_surge:1/burning_initiative:1/undying_flame:1/rolling_flames:1
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=the_herald/haste
+copy="Frogs Toad Rolling FrSq SB BI Hera2","Base Ardeos"
+legendary.explosivo=0
+legendary.devouring_flame=0
+legendary.fire_toad=1
+# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+
+talents=pyrophibian_frenzy:1/frog_squad:1/slow_burn:1/apocalyptic_surge:1/burning_initiative:1/undying_flame:1/rolling_flames:1
+chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/primary,affixes=the_herald/the_herald
 
 copy="Ardeos_Rolling_Pyrophibian_UF Devour","Base Ardeos"
 legendary.explosivo=0
 legendary.devouring_flame=1
-talents=apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:1/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_Pyrophibian_UF w/o pyro Devour","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=1
-talents=apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:0/rolling_flames:1/slow_burn:1/undying_flame:1
-copy="Ardeos_Rolling_ROF_UF Devour","Base Ardeos"
-legendary.explosivo=0
-legendary.devouring_flame=1
-talents=apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:0/rolling_flames:1/slow_burn:1/undying_flame:1/reign_of_fire:1
+talents=pyrophibian_frenzy:1/frog_squad:1/firestarter:1/apocalyptic_surge:1/backdraft:1/undying_flame:1/rolling_flames:1
+
+# copy="Ardeos_Rolling_Pyrophibian_UF w/o pyro Devour","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=1
+# talents=apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:0/rolling_flames:1/slow_burn:1/undying_flame:1
+# copy="Ardeos_Rolling_ROF_UF Devour","Base Ardeos"
+# legendary.explosivo=0
+# legendary.devouring_flame=1
+# talents=apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/pyrophibian_frenzy:0/rolling_flames:1/slow_burn:1/undying_flame:1/reign_of_fire:1
 
 # # Real End
 
 # 3 5 6 8 9
 
 
-copy="Explosivo Axel","Base Ardeos"
-legendary.explosivo=1
-legendary.devouring_flame=0
-legendary.fire_toad=0
-# talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
+# copy="Explosivo Axel","Base Ardeos"
+# legendary.explosivo=1
+# legendary.devouring_flame=0
+# legendary.fire_toad=0
+# # talents=apocalyptic_surge:1/backdraft:1/cascading_inferno:1/crackling_inferno:1/crash_and_burn:1/rolling_flames:1/spontaneous_combustion:1/undying_flame:1 
 
-talents=slow_burn:1/great_balls_of_fire:1/apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/rolling_flames:1/reign_of_fire:1/intensifying_inferno:1
+# talents=slow_burn:1/great_balls_of_fire:1/apocalyptic_surge:1/cascading_inferno:1/crackling_inferno:1/rolling_flames:1/reign_of_fire:1/intensifying_inferno:1
 
 
 

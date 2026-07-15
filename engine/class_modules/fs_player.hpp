@@ -814,20 +814,20 @@ public:
     return m;
   }
 
-  double recharge_rate_multiplier( const cooldown_t& c ) const override
+  double composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const override
   {
-    auto m = ab::recharge_rate_multiplier( c );
+    auto m = ab::composite_additive_cooldown_recovery_rate( cd );
 
     if ( fs_p()->finesse_traits[ THE_MONARCH ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MAJOR )
     {
       auto cdr = fs_p()->finesse_trait_values.finesse_k_cdr[ fs_p()->finesse_traits[ THE_MONARCH ] ];
 
-      auto current_haste = 1.0 / fs_p()->cache.spell_haste() - 1;
+      auto current_haste = fs_p()->cache.spell_haste_pct();
       current_haste      = std::max( fs_p()->finesse_trait_values.finesse_k_cdr_haste_cap, current_haste );
 
       cdr += fs_p()->finesse_trait_values.finesse_k_cdr_per_haste * current_haste;
 
-      m /= 1.0 + cdr;
+      m += cdr;
     }
 
     return m;
@@ -1087,6 +1087,14 @@ public:
     if ( active_weapon && !ab::background && !ab::channeled )
     {
       ab::fs_p()->weapon_cd = ab::cooldown;
+    }
+
+    if ( ab::fs_p()->finesse_traits[ THE_MONARCH ] > 0 && ab::ability_flags & ability_type_e::ABILITY_MAJOR )
+    {
+      if ( !ab::cooldown->hasted )
+      {
+        ab::fs_p()->dynamic_cooldown_list.push_back( ab::cooldown );
+      }
     }
   }
    

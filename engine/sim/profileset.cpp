@@ -181,7 +181,7 @@ void simulate_profileset( sim_t* parent, profileset::profile_set_t& set, sim_t*&
 bool is_actor_scope( const option_tuple_t& opt )
 {
   static constexpr std::array<util::string_view, 33> actor_scope_opts{
-      { "enemy", "tank_dummy", "pet", "guardian", "copy", "local_json", "rime", "xavian", "ardeos", "meiko",
+      { "enemy", "tank_dummy", "pet", "guardian", "copy", "local_json", "rime", "gunde", "xavian", "ardeos", "meiko",
         "elarion", "aeona", "sylvie", "helena", "vigour", "mara", "tariq" } };
 
   return range::any_of( actor_scope_opts, [ &opt ]( util::string_view name ) {

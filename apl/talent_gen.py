@@ -175,6 +175,10 @@ gunde_indicators = {
     "bloodcraze": "BC",
     "oathshatter": "OATH",
     "carnage": "CRN",
+    "massacre": "MAS",
+    "slayers_grin": "SG",
+    "murder_of_crows": "MOC",
+    "deaths_arc": "DA"
 }
 
 
@@ -675,123 +679,151 @@ if __name__ == "__main__":
     # overalls = sorted_by_overall(sim_results)
     # print(overalls)
 
-    combos_to_file("Rime_US", rime, rime_indicators, 14, "generated/rime_talents_talons_us.simc", 
-                required_talents=[
-                    "cascading_blitz",
-                    "burstbolter",
-                    "greater_glacial_blast",
-                    "icy_talons",
-                    "bursting_swallows"
-                    # "greater_glacial_blast",
-                    # "frostweavers_wrath"
-                    #    "icy_talons",
-                    #    "greater_glacial_blast",
-                    #    "glacial_assault"
-                ],
-                extra_options=[
-                    "legendary.skandis_decree=0",
-                    "legendary.undulating_spirit=1",
-                    "legendary.frostwyrms_spite=0"
-                ],
-                excluded_talents=[
-                    # "cascading_blitz",
-                    #  "frostweavers_wrath",
-                    #  "cascading_blitz",
-                    #  "avalanche"
-                ],
-                forbidden_pairs=[
-                       ("icy_talons", "frostweavers_wrath")
-                ],
-                # profilesets=False
-                # name_filters=top_x
-    )
-    combos_to_file("Rime_SK", rime, rime_indicators, 14, "generated/rime_talents_talons_sk.simc", 
-                required_talents=[
-                    "cascading_blitz",
-                    "burstbolter",
-                    "greater_glacial_blast",
-                    "icy_talons",
-                    "bursting_swallows"
-                    # "greater_glacial_blast",
-                    # "frostweavers_wrath"
-                    #    "icy_talons",
-                    #    "greater_glacial_blast",
-                    #    "glacial_assault"
-                ],
-                extra_options=[
-                    "legendary.skandis_decree=1",
-                    "legendary.undulating_spirit=0",
-                    "legendary.frostwyrms_spite=0"
-                ],
-                excluded_talents=[
-                    # "cascading_blitz",
-                    #  "frostweavers_wrath",
-                    #  "cascading_blitz",
-                    #  "avalanche"
-                ],
-                forbidden_pairs=[
-                       ("icy_talons", "frostweavers_wrath")
-                ],
-                # profilesets=False
-                # name_filters=top_x
-    )
-
-    
-    # top_x = top_sim_results("output/ardeos_et104.json", 500)
-    # # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
-    # sim_results = dps_sim_results(["output/ardeos_et104.json", "output/ardeos_et105.json"])
-    # overalls = sorted_by_overall(sim_results)
-    # print(overalls)
-
-
-    # combos_to_file("Ardeos", ardeos, ardeos_indicators, 3, "ardeos/talent_output_1.simc", 
-    #             profilesets=False,
+    # combos_to_file("Rime_US", rime, rime_indicators, 14, "generated/rime_talents_talons_us.simc", 
     #             required_talents=[
-    #                     # "rolling_flames",
-    #                     # "undying_flame",
-    #                     # "slow_burn"
+    #                 "cascading_blitz",
+    #                 "burstbolter",
+    #                 "greater_glacial_blast",
+    #                 "icy_talons",
+    #                 "bursting_swallows"
+    #                 # "greater_glacial_blast",
+    #                 # "frostweavers_wrath"
+    #                 #    "icy_talons",
+    #                 #    "greater_glacial_blast",
+    #                 #    "glacial_assault"
+    #             ],
+    #             extra_options=[
+    #                 "legendary.skandis_decree=0",
+    #                 "legendary.undulating_spirit=1",
+    #                 "legendary.frostwyrms_spite=0"
     #             ],
     #             excluded_talents=[
+    #                 # "cascading_blitz",
     #                 #  "frostweavers_wrath",
     #                 #  "cascading_blitz",
     #                 #  "avalanche"
     #             ],
     #             forbidden_pairs=[
+    #                    ("icy_talons", "frostweavers_wrath")
     #             ],
+    #             # profilesets=False
+    #             # name_filters=top_x
+    # )
+    # combos_to_file("Rime_SK", rime, rime_indicators, 14, "generated/rime_talents_talons_sk.simc", 
+    #             required_talents=[
+    #                 "cascading_blitz",
+    #                 "burstbolter",
+    #                 "greater_glacial_blast",
+    #                 "icy_talons",
+    #                 "bursting_swallows"
+    #                 # "greater_glacial_blast",
+    #                 # "frostweavers_wrath"
+    #                 #    "icy_talons",
+    #                 #    "greater_glacial_blast",
+    #                 #    "glacial_assault"
+    #             ],
+    #             extra_options=[
+    #                 "legendary.skandis_decree=1",
+    #                 "legendary.undulating_spirit=0",
+    #                 "legendary.frostwyrms_spite=0"
+    #             ],
+    #             excluded_talents=[
+    #                 # "cascading_blitz",
+    #                 #  "frostweavers_wrath",
+    #                 #  "cascading_blitz",
+    #                 #  "avalanche"
+    #             ],
+    #             forbidden_pairs=[
+    #                    ("icy_talons", "frostweavers_wrath")
+    #             ],
+    #             # profilesets=False
     #             # name_filters=top_x
     # )
 
-    # all_points_to_File("Ardeos", ardeos, "ardeos/single_talents.simc")
+    
+    # # top_x = top_sim_results("output/ardeos_et104.json", 500)
+    # # # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
+    # # sim_results = dps_sim_results(["output/ardeos_et104.json", "output/ardeos_et105.json"])
+    # # overalls = sorted_by_overall(sim_results)
+    # # print(overalls)
 
 
-        # top_x = top_sim_results("output/ardeos_et104.json", 500)
-    # # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
-    # sim_results = dps_sim_results(["output/ardeos_et104.json", "output/ardeos_et105.json"])
-    # overalls = sorted_by_overall(sim_results)
-    # print(overalls)
+    # # combos_to_file("Ardeos", ardeos, ardeos_indicators, 3, "ardeos/talent_output_1.simc", 
+    # #             profilesets=False,
+    # #             required_talents=[
+    # #                     # "rolling_flames",
+    # #                     # "undying_flame",
+    # #                     # "slow_burn"
+    # #             ],
+    # #             excluded_talents=[
+    # #                 #  "frostweavers_wrath",
+    # #                 #  "cascading_blitz",
+    # #                 #  "avalanche"
+    # #             ],
+    # #             forbidden_pairs=[
+    # #             ],
+    # #             # name_filters=top_x
+    # # )
+
+    # # all_points_to_File("Ardeos", ardeos, "ardeos/single_talents.simc")
 
 
-    # combos_to_file("Mara", mara, mara_indicators, 14, "generated/mara_talents14b2.simc", 
-    #             profilesets=False,
+    #     # top_x = top_sim_results("output/ardeos_et104.json", 500)
+    # # # print(dps_sim_results(["output/rime_et27.json", "output/rime_et28.json"]))
+    # # sim_results = dps_sim_results(["output/ardeos_et104.json", "output/ardeos_et105.json"])
+    # # overalls = sorted_by_overall(sim_results)
+    # # print(overalls)
+
+
+    # # combos_to_file("Mara", mara, mara_indicators, 14, "generated/mara_talents14b2.simc", 
+    # #             profilesets=False,
+    # #             required_talents=[
+    # #                 "gushing_blood",
+    # #                 "bloodrush",
+    # #                 "hemotoxin",
+    # #                 "sinners_pride",
+    # #                 "red_ledger"
+    # #                     # "deadly_scheme",
+    # #                     # "venomous_delight",
+    # #                     # "malevolence",
+    # #                     # "assassins_guile"
+    # #             ],
+    # #             excluded_talents=[
+    # #                 "efficient_killer",
+    # #                 # "arachnid_onslaught",
+    # #                 # "caustic_wounds",
+    # #                 "feed_the_queen",
+    # #                 # "puncture",
+    # #                 "venomous_delight"
+    # #                 # "gushing_blood"
+    # #             ],
+    # #             forbidden_pairs=[
+    # #                 # ("hemotoxin", "malevolence"),
+    # #                 # ("gushing_blood", "malevolence"),
+    # #                 # ("arachnid_onslaught", "malevolence"),
+    # #             ],
+    # #             # name_filters=top_x
+    # # )
+
+    # # all_points_to_File("Mara", mara, "generated/mara_talents.simc")
+    
+    # # generate_item_checks("Elarion", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste", "generated/all_gear_options.simc")
+
+
+    
+    # combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents14b5.simc", 
+    #             profilesets=True,
     #             required_talents=[
-    #                 "gushing_blood",
-    #                 "bloodrush",
-    #                 "hemotoxin",
-    #                 "sinners_pride",
-    #                 "red_ledger"
-    #                     # "deadly_scheme",
-    #                     # "venomous_delight",
-    #                     # "malevolence",
-    #                     # "assassins_guile"
+    #                 "fusillade",
+    #                 "last_lights",
+    #                 "lunarlight_affinity",
+    #                 "impending_heartseeker",
+    #                 "piercing_seekers",
+    #                 "lunar_fury"
     #             ],
     #             excluded_talents=[
-    #                 "efficient_killer",
-    #                 # "arachnid_onslaught",
-    #                 # "caustic_wounds",
-    #                 "feed_the_queen",
-    #                 # "puncture",
-    #                 "venomous_delight"
-    #                 # "gushing_blood"
+    #                 # "deadly_focus",
+    #                 # "swift_reload"
     #             ],
     #             forbidden_pairs=[
     #                 # ("hemotoxin", "malevolence"),
@@ -800,161 +832,21 @@ if __name__ == "__main__":
     #             ],
     #             # name_filters=top_x
     # )
-
-    # all_points_to_File("Mara", mara, "generated/mara_talents.simc")
-    
-    # generate_item_checks("Elarion", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste", "generated/all_gear_options.simc")
-
-
-    
-    combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents14b5.simc", 
-                profilesets=True,
-                required_talents=[
-                    "fusillade",
-                    "last_lights",
-                    "lunarlight_affinity",
-                    "impending_heartseeker",
-                    "piercing_seekers",
-                    "lunar_fury"
-                ],
-                excluded_talents=[
-                    # "deadly_focus",
-                    # "swift_reload"
-                ],
-                forbidden_pairs=[
-                    # ("hemotoxin", "malevolence"),
-                    # ("gushing_blood", "malevolence"),
-                    # ("arachnid_onslaught", "malevolence"),
-                ],
-                # name_filters=top_x
-    )
     
     
-    combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents_hwa.simc", 
-                profilesets=True,
-                required_talents=[
-                    "final_crescendo",
-                    "resurgent_winds",
-                    "strikers_aim",
-                    "lethal_shots",
-                    "skyward_munitions"
-                ],
-                excluded_talents=[
-                    "lunar_fury",
-                    "fervent_supremacy",
-                    "focused_expanse"
-                    # "deadly_focus",
-                    # "swift_reload"
-                ],
-                forbidden_pairs=[
-                    # ("hemotoxin", "malevolence"),
-                    # ("gushing_blood", "malevolence"),
-                    # ("arachnid_onslaught", "malevolence"),
-                ],
-                # name_filters=top_x
-    )
-
-    combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents_volley.simc", 
-                profilesets=True,
-                required_talents=[
-                    "repeating_stars",
-                    "resurgent_winds",
-                    "lethal_shots",
-                    "lunarlight_affinity"
-                ],
-                extra_options=[
-                    "legendary.shimmer=0",
-                    "legendary.starstrikers_ascent=0",
-                    "legendary.astronomers_hail=1"
-                ],
-                excluded_talents=[
-                    # "deadly_focus",
-                    # "swift_reload"
-                ],
-                forbidden_pairs=[
-                    # ("hemotoxin", "malevolence"),
-                    # ("gushing_blood", "malevolence"),
-                    # ("arachnid_onslaught", "malevolence"),
-                ],
-                # name_filters=top_x
-    )
-
-    combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents_barrage.simc", 
-                profilesets=True,
-                required_talents=[
-                    "piercing_seekers",
-                    "fusillade",
-                    "lunar_fury",
-                    "lunarlight_affinity"
-                ],
-                extra_options=[
-                    "legendary.shimmer=0",
-                    "legendary.starstrikers_ascent=1",
-                    "legendary.astronomers_hail=0"
-                ],
-                excluded_talents=[
-                    "deadly_focus",
-                    "focused_expanse"
-                    # "deadly_focus",
-                    # "swift_reload"
-                ],
-                forbidden_pairs=[
-                    # ("hemotoxin", "malevolence"),
-                    # ("gushing_blood", "malevolence"),
-                    # ("arachnid_onslaught", "malevolence"),
-                ],
-                # name_filters=top_x
-    )
-
-    # all_points_to_File("Elarion", elarion, "generated/elarion_talents.simc")
-
-
-    # sim_results = dps_sim_results(["output/scenario_et_145.json", "output/scenario_et_146.json"])
-    # # print(sim_results)
-    # overalls = sorted_by_overall(sim_results)
-    # print(overalls[:100])
-
-    all_points_to_File("Gunde", gunde, "generated/gunde_talents.simc")
-
-    generate_item_checks("Gunde", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste", "generated/all_gear_options_gunde.simc")
-
-    combos_to_file("Gunde", gunde, gunde_indicators, 14, "generated/gunde_split_craze.simc", 
-                profilesets=True,
-                required_talents=[
-                    "bloodcraze",
-                    "oathshatter",
-                    "darkening_hearts"
-                ],
-                excluded_talents=[
-                    "sundered_flesh",
-                    # "deadly_focus",
-                    # "swift_reload"
-                ],
-                forbidden_pairs=[
-                    # ("hemotoxin", "malevolence"),
-                    # ("gushing_blood", "malevolence"),
-                    # ("arachnid_onslaught", "malevolence"),
-                ],
-                # name_filters=top_x
-    )
-
-    all_points_to_File("Tariq", tariq, "generated/tariq_talents.simc")
-
-    # generate_item_checks("Tariq", "finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/crit", "generated/all_gear_options_tariq.simc")
-    generate_item_checks("Tariq", "main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste", "generated/all_gear_options_tariq.simc")
-    
-    
-    # combos_to_file("Tariq", tariq, tariq_indicators, 14, "generated/tariq_talents14_lightning_aos.simc", 
+    # combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents_hwa.simc", 
     #             profilesets=True,
     #             required_talents=[
-    #                 "ace_of_spades",
-    #                 "crack_the_sky",
-    #                 "thunderstruck",
-    #                 "the_motherload",
-    #                 "kill_em_all",
+    #                 "final_crescendo",
+    #                 "resurgent_winds",
+    #                 "strikers_aim",
+    #                 "lethal_shots",
+    #                 "skyward_munitions"
     #             ],
     #             excluded_talents=[
-    #                 "killing_in_the_name",
+    #                 "lunar_fury",
+    #                 "fervent_supremacy",
+    #                 "focused_expanse"
     #                 # "deadly_focus",
     #                 # "swift_reload"
     #             ],
@@ -966,27 +858,139 @@ if __name__ == "__main__":
     #             # name_filters=top_x
     # )
 
-    combos_to_file("Tariq", tariq, tariq_indicators, 14, "generated/tariq_talents14_schism.simc", 
-                profilesets=True,
-                required_talents=[
-                    "schism",
-                    "sledgehammer",
-                    "them_bones"
-                ],
-                excluded_talents=[
-                    "kill_em_all",
-                    "square_hammer",
-                    "left_hand_path"
-                    # "deadly_focus",
-                    # "swift_reload"
-                ],
-                forbidden_pairs=[
-                    # ("hemotoxin", "malevolence"),
-                    # ("gushing_blood", "malevolence"),
-                    # ("arachnid_onslaught", "malevolence"),
-                ],
-                # name_filters=top_x
-    )
+    # combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents_volley.simc", 
+    #             profilesets=True,
+    #             required_talents=[
+    #                 "repeating_stars",
+    #                 "resurgent_winds",
+    #                 "lethal_shots",
+    #                 "lunarlight_affinity"
+    #             ],
+    #             extra_options=[
+    #                 "legendary.shimmer=0",
+    #                 "legendary.starstrikers_ascent=0",
+    #                 "legendary.astronomers_hail=1"
+    #             ],
+    #             excluded_talents=[
+    #                 # "deadly_focus",
+    #                 # "swift_reload"
+    #             ],
+    #             forbidden_pairs=[
+    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("gushing_blood", "malevolence"),
+    #                 # ("arachnid_onslaught", "malevolence"),
+    #             ],
+    #             # name_filters=top_x
+    # )
+
+    # combos_to_file("Elarion", elarion, elarion_indicators, 14, "generated/elarion_talents_barrage.simc", 
+    #             profilesets=True,
+    #             required_talents=[
+    #                 "piercing_seekers",
+    #                 "fusillade",
+    #                 "lunar_fury",
+    #                 "lunarlight_affinity"
+    #             ],
+    #             extra_options=[
+    #                 "legendary.shimmer=0",
+    #                 "legendary.starstrikers_ascent=1",
+    #                 "legendary.astronomers_hail=0"
+    #             ],
+    #             excluded_talents=[
+    #                 "deadly_focus",
+    #                 "focused_expanse"
+    #                 # "deadly_focus",
+    #                 # "swift_reload"
+    #             ],
+    #             forbidden_pairs=[
+    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("gushing_blood", "malevolence"),
+    #                 # ("arachnid_onslaught", "malevolence"),
+    #             ],
+    #             # name_filters=top_x
+    # )
+
+    # # all_points_to_File("Elarion", elarion, "generated/elarion_talents.simc")
+
+
+    # # sim_results = dps_sim_results(["output/scenario_et_145.json", "output/scenario_et_146.json"])
+    # # # print(sim_results)
+    # # overalls = sorted_by_overall(sim_results)
+    # # print(overalls[:100])
+
+    # all_points_to_File("Gunde", gunde, "generated/gunde_talents.simc")
+
+    # generate_item_checks("Gunde", "trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=spirit/crit,fixed_secondary=haste/haste", "generated/all_gear_options_gunde.simc")
+
+    # combos_to_file("Gunde", gunde, gunde_indicators, 14, "generated/gunde_split_craze.simc", 
+    #             profilesets=True,
+    #             required_talents=[
+    #                 "bloodcraze",
+    #                 "oathshatter",
+    #                 "darkening_hearts"
+    #             ],
+    #             excluded_talents=[
+    #                 "sundered_flesh",
+    #                 # "deadly_focus",
+    #                 # "swift_reload"
+    #             ],
+    #             forbidden_pairs=[
+    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("gushing_blood", "malevolence"),
+    #                 # ("arachnid_onslaught", "malevolence"),
+    #             ],
+    #             # name_filters=top_x
+    # )
+
+    # all_points_to_File("Tariq", tariq, "generated/tariq_talents.simc")
+
+    # # generate_item_checks("Tariq", "finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=expertise/crit", "generated/all_gear_options_tariq.simc")
+    # generate_item_checks("Tariq", "main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste", "generated/all_gear_options_tariq.simc")
+    
+    
+    # # combos_to_file("Tariq", tariq, tariq_indicators, 14, "generated/tariq_talents14_lightning_aos.simc", 
+    # #             profilesets=True,
+    # #             required_talents=[
+    # #                 "ace_of_spades",
+    # #                 "crack_the_sky",
+    # #                 "thunderstruck",
+    # #                 "the_motherload",
+    # #                 "kill_em_all",
+    # #             ],
+    # #             excluded_talents=[
+    # #                 "killing_in_the_name",
+    # #                 # "deadly_focus",
+    # #                 # "swift_reload"
+    # #             ],
+    # #             forbidden_pairs=[
+    # #                 # ("hemotoxin", "malevolence"),
+    # #                 # ("gushing_blood", "malevolence"),
+    # #                 # ("arachnid_onslaught", "malevolence"),
+    # #             ],
+    # #             # name_filters=top_x
+    # # )
+
+    # combos_to_file("Tariq", tariq, tariq_indicators, 14, "generated/tariq_talents14_schism.simc", 
+    #             profilesets=True,
+    #             required_talents=[
+    #                 "schism",
+    #                 "sledgehammer",
+    #                 "them_bones"
+    #             ],
+    #             excluded_talents=[
+    #                 "kill_em_all",
+    #                 "square_hammer",
+    #                 "left_hand_path"
+    #                 # "deadly_focus",
+    #                 # "swift_reload"
+    #             ],
+    #             forbidden_pairs=[
+    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("gushing_blood", "malevolence"),
+    #                 # ("arachnid_onslaught", "malevolence"),
+    #             ],
+    #             # name_filters=top_x
+    # )
 
     # combos_to_file("Tariq", tariq, tariq_indicators, 14, "generated/tariq_talents14_spender.simc", 
     #             profilesets=True,
@@ -1034,3 +1038,22 @@ if __name__ == "__main__":
 
     from tabulate import tabulate
     print(tabulate(class_occurance(overalls), headers=['Actor', 'Class', 'Time'], tablefmt='orgtbl'))
+
+    combos_to_file("Gunde", gunde, gunde_indicators, 14, "generated/gunde_full_search.simc", 
+            profilesets=True,
+            required_talents=[
+                "darkening_hearts",
+                # "massacre"
+            ],
+            excluded_talents=[
+                "sundered_flesh"
+                # "deadly_focus",
+                # "swift_reload"
+            ],
+            forbidden_pairs=[
+                # ("hemotoxin", "malevolence"),
+                # ("gushing_blood", "malevolence"),
+                # ("arachnid_onslaught", "malevolence"),
+            ],
+            # name_filters=top_x
+            )

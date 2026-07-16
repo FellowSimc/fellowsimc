@@ -1890,17 +1890,13 @@ struct reign_in_blood_t : public gunde_spell_t
 
     ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
-    
-  double recharge_rate_multiplier( const cooldown_t& cd ) const override
+
+  double composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const override
   {
-    auto rrm = base_t::recharge_rate_multiplier( cd );
-
-    rrm = 1.0 / rrm;
-
+    auto rrm = base_t::composite_additive_cooldown_recovery_rate( cd );
+    
     rrm += p()->buffs.bloodbath->check_value();
-
-    rrm = 1.0 / rrm;
-
+    
     return rrm;
   }
 

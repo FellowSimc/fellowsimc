@@ -440,6 +440,7 @@ action_t::action_t( action_e ty, util::string_view token, player_t* p, const spe
     crit_bonus(),
     base_dd_adder(),
     base_ta_adder(),
+    ignores_class_cdr( false ),
     weapon_multiplier( 0.0 ),
     chain_multiplier( 1.0 ),
     chain_bonus_damage(),

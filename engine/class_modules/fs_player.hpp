@@ -1073,6 +1073,8 @@ public:
     {
       ab::base_multiplier *= p->fs_weapon_trait_values.heroic_brand_amp[ p->fs_weapons.heroic_brand ];
     }
+
+    ab::ignores_class_cdr = true;
   }
 
   void init_finished() override
@@ -1148,14 +1150,6 @@ public:
             false );
       } );
     }
-  }
-
-  double recharge_rate_multiplier( const cooldown_t& cd ) const override
-  {
-    if ( cd.hasted )
-      return ab::player->cache.attack_haste();
-
-    return 1.0;
   }
     
   double composite_total_spell_power() const override

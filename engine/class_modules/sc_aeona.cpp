@@ -2140,21 +2140,24 @@ void aeona_t::create_buffs()
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
         for ( auto& action : p()->action_list )
         {
-          if ( _new )
+          if ( !action->ignores_class_cdr )
           {
-            action->additive_cooldown_recovery_rate += cdr_mod;
-            action->cooldown->adjust_recharge_multiplier();
-            sim->print_debug( "Applying Fleeting Hour CDR to {}", *action );
+            if ( _new )
+            {
+              action->additive_cooldown_recovery_rate += cdr_mod;
+              action->cooldown->adjust_recharge_multiplier();
+              sim->print_debug( "Applying Fleeting Hour CDR to {}", *action );
+            }
+            else
+            {
+              action->additive_cooldown_recovery_rate -= cdr_mod;
+              sim->print_debug( "Removing Fleeting Hour CDR to {}", *action );
+            }
+            if ( action->cooldown->action == action )
+              action->cooldown->adjust_recharge_multiplier();
+            if ( action->internal_cooldown->action == action )
+              action->internal_cooldown->adjust_recharge_multiplier();
           }
-          else
-          {
-            action->additive_cooldown_recovery_rate -= cdr_mod;
-            sim->print_debug( "Removing Fleeting Hour CDR to {}", *action );
-          }
-          if ( action->cooldown->action == action )
-            action->cooldown->adjust_recharge_multiplier();
-          if ( action->internal_cooldown->action == action )
-            action->internal_cooldown->adjust_recharge_multiplier();
         }
         if ( !_new )
           p()->cooldowns.fleeting_hour->start( p()->cooldowns.fleeting_hour->action );
@@ -2170,24 +2173,27 @@ void aeona_t::create_buffs()
     lonesome_song_t( aeona_t* pl )
       : aeona_buff_t( pl, "lonesome_song" ), cdr_mod( pl->legendary.lonesome_song_cdr_mul )
     {
-      set_duration( pl->legendary.lonesome_song_duration);
+      set_duration( pl->legendary.lonesome_song_duration );
       set_refresh_behavior( buff_refresh_behavior::DURATION );
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
         for ( auto& action : p()->action_list )
         {
-          if ( _new )
+          if ( !action->ignores_class_cdr )
           {
-            action->additive_cooldown_recovery_rate += cdr_mod;
-            action->cooldown->adjust_recharge_multiplier();
+            if ( _new )
+            {
+              action->additive_cooldown_recovery_rate += cdr_mod;
+              action->cooldown->adjust_recharge_multiplier();
+            }
+            else
+            {
+              action->additive_cooldown_recovery_rate -= cdr_mod;
+            }
+            if ( action->cooldown->action == action )
+              action->cooldown->adjust_recharge_multiplier();
+            if ( action->internal_cooldown->action == action )
+              action->internal_cooldown->adjust_recharge_multiplier();
           }
-          else
-          {
-            action->additive_cooldown_recovery_rate -= cdr_mod;
-          }
-          if ( action->cooldown->action == action )
-            action->cooldown->adjust_recharge_multiplier();
-          if ( action->internal_cooldown->action == action )
-            action->internal_cooldown->adjust_recharge_multiplier();
         }
       } );
     }

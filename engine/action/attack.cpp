@@ -335,9 +335,21 @@ double attack_t::composite_additive_cooldown_recovery_rate( const cooldown_t& cd
 {
   double m = action_t::composite_additive_cooldown_recovery_rate( cd );
 
-  if ( cd.hasted )
+  if ( cd.hasted && cd.charges > 1 )
   {
     m += player->cache.attack_haste_pct();
+  }
+
+  return m;
+}
+
+double attack_t::composite_multiplicative_cooldown_reduction( const cooldown_t& cd ) const
+{
+  double m = action_t::composite_multiplicative_cooldown_reduction( cd );
+
+  if ( cd.hasted && cd.charges <= 1 )
+  {
+    m *= player->cache.attack_haste();
   }
 
   return m;

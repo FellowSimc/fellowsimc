@@ -1536,16 +1536,22 @@ void fs_player_t::create_buffs()
         {
           for ( auto& action : p()->action_list )
           {
-            action->additive_cooldown_recovery_rate += cdr_mod;
-            action->cooldown->adjust_recharge_multiplier();
+            if ( !action->ignores_class_cdr )
+            {
+              action->additive_cooldown_recovery_rate += cdr_mod;
+              action->cooldown->adjust_recharge_multiplier();
+            }
           }
         }
         else
         {
           for ( auto& action : p()->action_list )
           {
-            action->additive_cooldown_recovery_rate -= cdr_mod;
-            action->cooldown->adjust_recharge_multiplier();
+            if ( !action->ignores_class_cdr )
+            {
+              action->additive_cooldown_recovery_rate -= cdr_mod;
+              action->cooldown->adjust_recharge_multiplier();
+            }
           }
         }
       } );
@@ -1566,16 +1572,22 @@ void fs_player_t::create_buffs()
         {
           for ( auto& action : p()->action_list )
           {
-            action->additive_cooldown_recovery_rate += cdr_mod;
-            action->cooldown->adjust_recharge_multiplier();
+            if ( !action->ignores_class_cdr )
+            {
+              action->additive_cooldown_recovery_rate += cdr_mod;
+              action->cooldown->adjust_recharge_multiplier();
+            }
           }
         }
         else
         {
           for ( auto& action : p()->action_list )
           {
-            action->additive_cooldown_recovery_rate -= cdr_mod;
-            action->cooldown->adjust_recharge_multiplier();
+            if ( !action->ignores_class_cdr )
+            {
+              action->additive_cooldown_recovery_rate -= cdr_mod;
+              action->cooldown->adjust_recharge_multiplier();
+            }
           }
         }
       } );
@@ -2654,8 +2666,11 @@ void fs_player_t::init_finished()
   {
     for ( auto action : action_list )
     {
-      action->additive_cooldown_recovery_rate += 0.1;
-      action->cooldown->adjust_recharge_multiplier();
+      if ( !action->ignores_class_cdr )
+      {
+        action->additive_cooldown_recovery_rate += 0.1;
+        action->cooldown->adjust_recharge_multiplier();
+      }
     }
   }
 }

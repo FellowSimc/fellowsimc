@@ -1312,15 +1312,11 @@ struct heavy_strike_t : public tariq_attack_t
       add_child( p()->actions.chain_lightning_blood_and_thunder );
   }
 
-  double recharge_rate_multiplier( const cooldown_t& cd ) const override
+  double composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const override
   {
-    auto rrm = base_t::recharge_rate_multiplier( cd );
-
-    rrm = 1.0 / rrm;
+    auto rrm = base_t::composite_additive_cooldown_recovery_rate( cd );
 
     rrm += p()->buffs.kill_em_all->check() * p()->talents.kill_em_all_cda;
-
-    rrm = 1.0 / rrm;
 
     return rrm;
   }

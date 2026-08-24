@@ -42,6 +42,7 @@ struct attack_t : public action_t
   double composite_haste() const override;
   double composite_versatility( const action_state_t* state ) const override;
   double composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const override;
+  double composite_multiplicative_cooldown_reduction( const cooldown_t& cd ) const override;
 
   virtual double composite_expertise() const;
   virtual void reschedule_auto_attack( double old_swing_haste );

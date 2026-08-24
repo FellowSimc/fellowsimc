@@ -468,6 +468,8 @@ public:
   double base_dd_adder;
   double base_ta_adder;
 
+  bool ignores_class_cdr;
+
   /// Weapon damage for the ability.
   double weapon_multiplier;
 

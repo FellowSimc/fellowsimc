@@ -115,9 +115,21 @@ double spell_base_t::composite_additive_cooldown_recovery_rate( const cooldown_t
 {
   double m = action_t::composite_additive_cooldown_recovery_rate( cd );
 
-  if ( cd.hasted )
+  if ( cd.hasted && cd.charges > 1 )
   {
     m += player->cache.spell_haste_pct();
+  }
+
+  return m;
+}
+
+double spell_base_t::composite_multiplicative_cooldown_reduction( const cooldown_t& cd ) const
+{
+  double m = action_t::composite_multiplicative_cooldown_reduction( cd );
+
+  if ( cd.hasted && cd.charges <= 1 )
+  {
+    m *= player->cache.spell_haste();
   }
 
   return m;

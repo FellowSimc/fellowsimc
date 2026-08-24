@@ -1318,7 +1318,8 @@ struct rising_talons_t : public rime_spell_t
 
       spell_power_mod.direct = p->spell_const.ice_comet_coeff;
       aoe                    = -1;
-      reduced_aoe_targets    = p->spell_const.ice_comet_falloff;
+      // Toonic 26/08/26 YY/MM/DD there is no aoe falloff.
+      // reduced_aoe_targets    = p->spell_const.ice_comet_falloff;
 
       spell_power_mod.direct *= p->talents.icy_talons_aoe_multiplier;
       ability_flags |= ability_type_e::ABILITY_POWER;

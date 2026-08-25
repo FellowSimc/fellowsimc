@@ -1733,6 +1733,12 @@ struct cold_snap_t : public rime_spell_t
     ability_flags |= ability_type_e::ABILITY_BASIC;
   }
 
+  void reset() override
+  {
+    cooldown->charges = p()->spell_const.cold_snap_charges;
+    rime_spell_t::reset();
+  }
+
   void update_ready( timespan_t cd_duration ) override
   {
     // Decrementing a stack of shadowy insight will consume a max charge. Consuming a max charge loses you a current
@@ -1769,7 +1775,7 @@ struct cold_snap_t : public rime_spell_t
       p()->buffs.icy_flow->trigger();
 
     if ( p()->talents_enabled( rime_t::CHILLING_FINESSE ) )
-      p()->cooldowns.freezing_torrent->adjust( -p()->talents.chilling_finesse_torrent_cdr_per_snap, true, false );
+      p()->cooldowns.freezing_torrent->adjust( -p()->talents.chilling_finesse_torrent_cdr_per_snap );
   }
 
   int n_targets() const override
@@ -2070,7 +2076,7 @@ struct freezing_torrent_t : public rime_spell_t
 
     if ( p()->talents_enabled( rime_t::CHILLING_FINESSE ) )
     {
-      p()->cooldowns.bursting_ice->adjust( -p()->talents.chilling_finesse_bursting_ice_cdr_per_tick, false, false );
+      p()->cooldowns.bursting_ice->adjust( -p()->talents.chilling_finesse_bursting_ice_cdr_per_tick );
     }
 
     if ( p()->buffs.flight_of_the_navir->check() )

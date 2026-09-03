@@ -2664,14 +2664,14 @@ std::unique_ptr<expr_t> mara_t::create_expression( util::string_view name_str )
 {
   auto split = util::string_split<util::string_view>( name_str, "." );
 
-  if ( split[ 0 ] == "combo_points" || split[ 1 ] == "cp" )
+  if ( util::str_compare_ci( split[ 0 ], "combo_points" ) || util::str_compare_ci( split[ 0 ], "cp" ) )
   {
     if ( split.size() == 1 )
     {
       return make_fn_expr( name_str, [ this ] { return this->current_cp( true ); } );
     }
 
-    if ( split.size() == 2 && split[ 1 ] == "deficit" )
+    if ( split.size() == 2 && util::str_compare_ci( split[ 1 ], "deficit" ) )
     {
       return make_fn_expr( name_str,
                            [ this ] { return resources.max[ RESOURCE_COMBO_POINT ] - this->current_cp( true ); } );

@@ -526,25 +526,25 @@ public:
 
   struct legendary_t
   {
-    bool lego_1 = false;
+    bool bloody_mess = false;
     // Gunde.TargetedAoeProjectile.Talent.AdditionalTicks.Amount, 2.0
-    int lego_1_additional_grim_carve_hits = 2;
+    int bloody_mess_additional_grim_carve_hits = 2;
 
-    bool lego_2 = false;
+    bool bleeding_hearts = false;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.NumOfCharges, 2.0
-    int lego_2_charges = 2;
+    int bleeding_hearts_charges = 2;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.Chance, 0.2
-    double lego_2_hit_chance = 0.25;
+    double bleeding_hearts_hit_chance = 0.25;
     // Gunde.HeavyMeleeDotBased.Talent.Charges.DoubleStrike.DelayBetweenStrikes, 0.4
-    timespan_t lego_2_delay = 0.4_s;
-    double lego_2_crit_chance = 1.0;
+    timespan_t bleeding_hearts_delay = 0.4_s;
+    double bleeding_hearts_crit_chance = 1.0;
 
-    bool lego_3                             = false;
-    double lego_3_base_blood_arc_amp        = 0.2;
-    double lego_3_blood_arc_amp_per_stack   = 0.02;
-    double lego_3_base_feathers                = 1;
-    double lego_3_feathers                     = 1;
-    double lego_3_feathers_stack_divisor       = 3;
+    bool carrion_onslaught                             = false;
+    double carrion_onslaught_base_blood_arc_amp        = 0.2;
+    double carrion_onslaught_blood_arc_amp_per_stack   = 0.02;
+    double carrion_onslaught_base_feathers                = 1;
+    double carrion_onslaught_feathers                     = 1;
+    double carrion_onslaught_feathers_stack_divisor       = 3;
     timespan_t carrion_onslaught_period     = 2_s;
     timespan_t carrion_onslaught_duration   = 8_s;
     int carrion_onslaught_max_feathers_per_tick = 10;
@@ -1485,10 +1485,10 @@ struct grim_carve_t : public gunde_attack_t
     hit = new grim_carve_hit_t( "grim_carve_hit", p );
     add_child( hit );
 
-    if ( p->legendary.lego_1 )
+    if ( p->legendary.bloody_mess )
     {
       auto old_hits = num_hits;
-      num_hits += p->legendary.lego_1_additional_grim_carve_hits;
+      num_hits += p->legendary.bloody_mess_additional_grim_carve_hits;
 
       // period_multiplier *= as<double>( old_hits ) / num_hits;
     }
@@ -1609,8 +1609,8 @@ struct blood_arc_t : public gunde_attack_t
 
     if ( p()->buffs.carrion_onslaught->check() )
     {
-      da *= 1.0 + p()->legendary.lego_3_base_blood_arc_amp +
-            p()->legendary.lego_3_blood_arc_amp_per_stack * p()->buffs.carrion_onslaught->check();
+      da *= 1.0 + p()->legendary.carrion_onslaught_base_blood_arc_amp +
+            p()->legendary.carrion_onslaught_blood_arc_amp_per_stack * p()->buffs.carrion_onslaught->check();
     }
 
     return da;
@@ -1629,8 +1629,8 @@ struct blood_arc_t : public gunde_attack_t
       p()->buffs.carrion_onslaught_feathers->expire();
 
       auto feathers = as<int>( std::round( std::max(
-          p()->legendary.lego_3_base_feathers, p()->legendary.lego_3_feathers * p()->buffs.carrion_onslaught->check() /
-                                                   p()->legendary.lego_3_feathers_stack_divisor ) ) );
+          p()->legendary.carrion_onslaught_base_feathers, p()->legendary.carrion_onslaught_feathers * p()->buffs.carrion_onslaught->check() /
+                                                   p()->legendary.carrion_onslaught_feathers_stack_divisor ) ) );
 
       p()->buffs.carrion_onslaught_feathers->trigger( feathers );
       p()->buffs.carrion_onslaught->expire();
@@ -1647,7 +1647,7 @@ struct blood_arc_t : public gunde_attack_t
     {
       if ( p()->rng_objects.deaths_arc->trigger() )
       {
-        cooldown->reset( true, 1 );
+        cooldown->reset( false, 1 );
         p()->buffs.deaths_arc->trigger();
       }
     }
@@ -1763,9 +1763,9 @@ struct heart_splitter_t : public gunde_attack_t
     exsanguinate = new heart_splitter_exsanguinate_t( p, name, false );
     add_child( exsanguinate );
 
-    if ( p->legendary.lego_2 )
+    if ( p->legendary.bleeding_hearts )
     {
-      cooldown->charges = p->legendary.lego_2_charges;
+      cooldown->charges = p->legendary.bleeding_hearts_charges;
     }
 
     if ( p->legendary.lego_4 )
@@ -1803,11 +1803,11 @@ struct heart_splitter_t : public gunde_attack_t
       }
     }
 
-    if ( p()->legendary.lego_2 )
+    if ( p()->legendary.bleeding_hearts )
     {
       if ( t->health_percentage() >= healthy_threshold )
       {
-        tcc += p()->legendary.lego_2_crit_chance;
+        tcc += p()->legendary.bleeding_hearts_crit_chance;
       }
     }
 
@@ -1831,7 +1831,7 @@ struct heart_splitter_t : public gunde_attack_t
     {
       roll_grim_harvest();
 
-      auto double_hit = p()->legendary.lego_2 && p()->rng_objects.heart_splitter_twice->trigger() ||
+      auto double_hit = p()->legendary.bleeding_hearts && p()->rng_objects.heart_splitter_twice->trigger() ||
                         p()->buffs.heartsplitter_slaughter->check();
 
       if ( !double_hit && p()->legendary.lego_4 && p()->rng_objects.heart_splitter_twice_2->trigger() )
@@ -2053,7 +2053,7 @@ struct owed_in_blood_t : public gunde_spell_t
 
     auto stacks = p()->buffs.owed_in_blood->check();
 
-    if ( p()->legendary.lego_3 )
+    if ( p()->legendary.carrion_onslaught )
     {
       // Do not be dumb, this deletes itself
       p()->buffs.carrion_onslaught->expire();
@@ -2398,17 +2398,17 @@ std::unique_ptr<expr_t> gunde_t::create_expression( util::string_view name_str )
   {
     if ( split.size() == 2 )
     {
-      if ( util::str_compare_ci( split[ 1 ], "lego_1" ) )
+      if ( util::str_compare_ci( split[ 1 ], "bloody_mess" ) )
       {
-        return make_ref_expr( name_str, legendary.lego_1 );
+        return make_ref_expr( name_str, legendary.bloody_mess );
       }
-      else if ( util::str_compare_ci( split[ 1 ], "lego_2" ) )
+      else if ( util::str_compare_ci( split[ 1 ], "bleeding_hearts" ) )
       {
-        return make_ref_expr( name_str, legendary.lego_2 );
+        return make_ref_expr( name_str, legendary.bleeding_hearts );
       }
-      else if ( util::str_compare_ci( split[ 1 ], "lego_3" ) )
+      else if ( util::str_compare_ci( split[ 1 ], "carrion_onslaught" ) )
       {
-        return make_ref_expr( name_str, legendary.lego_3 );
+        return make_ref_expr( name_str, legendary.carrion_onslaught );
       }
       else if ( util::str_compare_ci( split[ 1 ], "lego_4" ) )
       {
@@ -2612,7 +2612,7 @@ void gunde_t::create_buffs()
   buffs.carrion_onslaught = make_buff<gunde_buff_t>( this, "carrion_onslaught" )
                                 ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
                                 ->set_max_stack( spell_const.owed_in_blood_max_stacks )
-                                ->set_default_value( legendary.lego_3_base_feathers );
+                                ->set_default_value( legendary.carrion_onslaught_base_feathers );
 
   buffs.carrion_onslaught_feathers = make_buff<gunde_buff_t>( this, "carrion_onslaught_feathers" )
                                          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
@@ -2651,9 +2651,9 @@ void gunde_t::create_options()
 {
   fs_player_t::create_options();
 
-  add_option( opt_bool( "legendary.lego_1", legendary.lego_1 ) );
-  add_option( opt_bool( "legendary.lego_2", legendary.lego_2 ) );
-  add_option( opt_bool( "legendary.lego_3", legendary.lego_3 ) );
+  add_option( opt_bool( "legendary.bloody_mess", legendary.bloody_mess ) );
+  add_option( opt_bool( "legendary.bleeding_hearts", legendary.bleeding_hearts ) );
+  add_option( opt_bool( "legendary.carrion_onslaught", legendary.carrion_onslaught ) );
   add_option( opt_bool( "legendary.lego_4", legendary.lego_4 ) );
 }
 
@@ -2760,7 +2760,7 @@ void gunde_t::init_rng()
       get_accumulated_rng( "ancestral_instinct", rng::CfromP( talents.ancestral_instinct_chance ) );
   rng_objects.deep_rend = get_accumulated_rng( "deep_rend", rng::CfromP( talents.deep_rend_proc_chance_st ) );
   rng_objects.heart_splitter_twice =
-      get_accumulated_rng( "heart_splitter_twice", rng::CfromP( legendary.lego_2_hit_chance ) );
+      get_accumulated_rng( "heart_splitter_twice", rng::CfromP( legendary.bleeding_hearts_hit_chance ) );
   rng_objects.heart_splitter_twice_2 =
       get_accumulated_rng( "heart_splitter_twice_2", rng::CfromP( legendary.lego_4_hit_chance ) );
 }

@@ -118,8 +118,8 @@ main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_
 #/ravens_precision:1/bloodcraze:1
 # 4 5 6 7 8 10
 
-# legendary.lego_1=1
-# legendary.lego_2=1
+# legendary.bloody_mess=1
+# legendary.bleeding_hearts=1
 
 weapon=fated_strike
 
@@ -174,10 +174,10 @@ talents=carnage:1/slayers_grin:1/harvesters_toll:1/murder_of_crows:1/ravens_prec
 #3 4 5 7 9 12 14
 
 # copy="GC Lego","Base Gunde"
-legendary.lego_1=1
+legendary.bloody_mess=1
 
 # copy="HS Lego","Base Gunde"
-# legendary.lego_2=1
+# legendary.bleeding_hearts=1
 
 # copy="Gunde deaths_arc","Base Gunde"
 # talents+=/deaths_arc:1

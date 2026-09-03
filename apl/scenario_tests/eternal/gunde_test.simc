@@ -95,8 +95,8 @@ main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_
 talents=darkening_hearts:1/deep_rend:1/carnage:1/oathshatter:1/crimson_strikes:1/frenzied_reign:1/ancestral_instinct:1/harvesters_toll:1/deaths_arc:1
 # 12
 
-# legendary.lego_1=1
-legendary.lego_2=1
+# legendary.bloody_mess=1
+legendary.bleeding_hearts=1
 
 weapon=fated_strike
 
@@ -142,10 +142,10 @@ weapon_trait.patient_soul=1
 # weapon=voidbringers_touch
 
 # copy="GC Lego","Base Gunde"
-# legendary.lego_1=1
+# legendary.bloody_mess=1
 
 # copy="HS Lego","Base Gunde"
-# legendary.lego_2=1
+# legendary.bleeding_hearts=1
 
 # copy="Gunde deaths_arc","Base Gunde"
 # talents+=/deaths_arc:1

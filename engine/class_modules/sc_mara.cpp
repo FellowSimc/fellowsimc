@@ -2305,9 +2305,6 @@ struct arachnid_assault_t : public mara_attack_t
       }
     }
 
-    if ( !is_secondary_action() )
-      p()->buffs.deadly_scheme->expire();
-
     if ( !is_secondary_action() && p()->talents_enabled( mara_t::MALEVOLENCE ) )
     {
       p()->buffs.malevolence_aa_buffs_qf->trigger();
@@ -2318,7 +2315,10 @@ struct arachnid_assault_t : public mara_attack_t
   void impact( action_state_t* state ) override
   {
     mara_attack_t::impact( state );
-
+    
+    if ( !is_secondary_action() )
+        p()->buffs.deadly_scheme->expire();
+    
     handle_vexiras_venom( state );
     handle_hemotoxin( state, hemotoxin, p()->talents.hemotoxin_sample_per_cp_aa );
   }

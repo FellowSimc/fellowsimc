@@ -180,7 +180,7 @@ legendary.drenched_in_blood=0
 legendary.vexiras_venom=0
 
 # copy="Axel Bleed","Mara Bleed FTS"
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/maidens_doom:1/seething_burst:1/hemotoxin_old:1/sinners_pride:1/caustic_wounds:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/maidens_doom:1/seething_burst:1/hemotoxin:1/sinners_pride:1/caustic_wounds:1
 
 
 mara="Mara Spirit Bleed FTS"
@@ -206,7 +206,7 @@ trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spiri
 
 main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=haste/haste
 
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/maidens_doom:1/seething_burst:1/hemotoxin_old:1/sinners_pride:1/caustic_wounds:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/maidens_doom:1/seething_burst:1/hemotoxin:1/sinners_pride:1/caustic_wounds:1
 
 legendary.from_the_shadows=1
 legendary.drenched_in_blood=0

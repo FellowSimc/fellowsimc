@@ -88,7 +88,7 @@ mara = {
     "maidens_doom": 1,
     "seething_burst": 1,
 
-    "hemotoxin": 3,
+    "hemotoxin_removed": 3,
     "sinners_pride": 3,
     "malevolence": 3,
 
@@ -98,7 +98,7 @@ mara = {
 }
 
 mara_indicators = {
-    "hemotoxin": "HT",
+    "hemotoxin_removed": "HT",
     "sinners_pride": "Sinners",
     "malevolence": "MV",
     "deadly_scheme": "DS",
@@ -780,7 +780,7 @@ if __name__ == "__main__":
     # #             required_talents=[
     # #                 "gushing_blood",
     # #                 "bloodrush",
-    # #                 "hemotoxin",
+    # #                 "hemotoxin_removed",
     # #                 "sinners_pride",
     # #                 "red_ledger"
     # #                     # "deadly_scheme",
@@ -798,7 +798,7 @@ if __name__ == "__main__":
     # #                 # "gushing_blood"
     # #             ],
     # #             forbidden_pairs=[
-    # #                 # ("hemotoxin", "malevolence"),
+    # #                 # ("hemotoxin_removed", "malevolence"),
     # #                 # ("gushing_blood", "malevolence"),
     # #                 # ("arachnid_onslaught", "malevolence"),
     # #             ],
@@ -826,7 +826,7 @@ if __name__ == "__main__":
     #                 # "swift_reload"
     #             ],
     #             forbidden_pairs=[
-    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("hemotoxin_removed", "malevolence"),
     #                 # ("gushing_blood", "malevolence"),
     #                 # ("arachnid_onslaught", "malevolence"),
     #             ],
@@ -851,7 +851,7 @@ if __name__ == "__main__":
     #                 # "swift_reload"
     #             ],
     #             forbidden_pairs=[
-    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("hemotoxin_removed", "malevolence"),
     #                 # ("gushing_blood", "malevolence"),
     #                 # ("arachnid_onslaught", "malevolence"),
     #             ],
@@ -876,7 +876,7 @@ if __name__ == "__main__":
     #                 # "swift_reload"
     #             ],
     #             forbidden_pairs=[
-    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("hemotoxin_removed", "malevolence"),
     #                 # ("gushing_blood", "malevolence"),
     #                 # ("arachnid_onslaught", "malevolence"),
     #             ],
@@ -903,7 +903,7 @@ if __name__ == "__main__":
     #                 # "swift_reload"
     #             ],
     #             forbidden_pairs=[
-    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("hemotoxin_removed", "malevolence"),
     #                 # ("gushing_blood", "malevolence"),
     #                 # ("arachnid_onslaught", "malevolence"),
     #             ],
@@ -935,7 +935,7 @@ if __name__ == "__main__":
     #                 # "swift_reload"
     #             ],
     #             forbidden_pairs=[
-    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("hemotoxin_removed", "malevolence"),
     #                 # ("gushing_blood", "malevolence"),
     #                 # ("arachnid_onslaught", "malevolence"),
     #             ],
@@ -963,7 +963,7 @@ if __name__ == "__main__":
     # #                 # "swift_reload"
     # #             ],
     # #             forbidden_pairs=[
-    # #                 # ("hemotoxin", "malevolence"),
+    # #                 # ("hemotoxin_removed", "malevolence"),
     # #                 # ("gushing_blood", "malevolence"),
     # #                 # ("arachnid_onslaught", "malevolence"),
     # #             ],
@@ -985,7 +985,7 @@ if __name__ == "__main__":
     #                 # "swift_reload"
     #             ],
     #             forbidden_pairs=[
-    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("hemotoxin_removed", "malevolence"),
     #                 # ("gushing_blood", "malevolence"),
     #                 # ("arachnid_onslaught", "malevolence"),
     #             ],
@@ -1006,7 +1006,7 @@ if __name__ == "__main__":
     #                 # "swift_reload"
     #             ],
     #             forbidden_pairs=[
-    #                 # ("hemotoxin", "malevolence"),
+    #                 # ("hemotoxin_removed", "malevolence"),
     #                 # ("gushing_blood", "malevolence"),
     #                 # ("arachnid_onslaught", "malevolence"),
     #             ],
@@ -1051,7 +1051,7 @@ if __name__ == "__main__":
                 # "swift_reload"
             ],
             forbidden_pairs=[
-                # ("hemotoxin", "malevolence"),
+                # ("hemotoxin_removed", "malevolence"),
                 # ("gushing_blood", "malevolence"),
                 # ("arachnid_onslaught", "malevolence"),
             ],

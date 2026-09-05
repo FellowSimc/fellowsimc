@@ -57,14 +57,14 @@ talent.assassins_guile=1
 # legendary.vexiras_venom=0
 # legendary.drenched_in_blood=1
 # talent.corrosive_spill=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.arachnid_onslaught=0
 
 # copy="Mara_Bleed_Alt2_Drenched","Mara_Bleed_Vexira"
 # legendary.vexiras_venom=0
 # legendary.drenched_in_blood=1
 # talent.deadly_scheme=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.arachnid_onslaught=0
 
 copy="Mara_Spender_Prio_Vexira","Mara_Bleed_Vexira"
@@ -120,24 +120,24 @@ talent.feed_the_queen=1
 
 # copy="Mara_Bleed_Hemo","Mara_Bleed_Vexira"
 # talent.from_the_shadows=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 
 
 # copy="Mara_Bleed_Hemo_Maiden","Mara_Bleed_Vexira"
 # talent.from_the_shadows=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.arachnid_onslaught=0
 # talent.maidens_doom=1
 
 # copy="Mara_Bleed_Hemo_VD","Mara_Bleed_Vexira"
 # talent.from_the_shadows=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.arachnid_onslaught=0
 # talent.venomous_delight=1
 
 # copy="Mara_Bleed_Hemo_Puncture","Mara_Bleed_Vexira"
 # talent.from_the_shadows=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.arachnid_onslaught=0
 # talent.puncture=1
 
@@ -292,41 +292,41 @@ talent.feed_the_queen=1
 # copy="Tuzari Set no ICD"
 # sets.haste_buff_on_ability_use_cooldown=0
 
-# copy="Hemotoxin Variant1"
+# copy="hemotoxin_removed Variant1"
 # talent.gushing_blood=0
 # talent.arachnid_onslaught=0
 # talent.from_the_shadows=0
 # talent.red_ledger=0
 
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.bloodrush=1
 # talent.venomous_delight=1
 # talent.assassins_guile=1
 
 # apl_variable.play_around_bloodrush_hemo=1
 
-# copy="Hemotoxin Variant2"
+# copy="hemotoxin_removed Variant2"
 # talent.venomous_delight=1
 # talent.assassins_guile=0
 # talent.red_ledger=1
 # talent.malevolence=1
 # talent.maidens_doom=0
 
-# copy="Hemotoxin Variant3","Hemotoxin Variant1"
+# copy="hemotoxin_removed Variant3","hemotoxin_removed Variant1"
 # apl_variable.play_around_bloodrush_hemo=0
 # talent.gushing_blood=1
 # talent.red_ledger=1
 # talent.assassins_guile=0
 # talent.maidens_doom=0
 
-# copy="Hemotoxin Variant4","Hemotoxin Variant1"
+# copy="hemotoxin_removed Variant4","hemotoxin_removed Variant1"
 # apl_variable.play_around_bloodrush_hemo=1
 # talent.gushing_blood=1
 # talent.red_ledger=1
 # talent.assassins_guile=0
 # talent.maidens_doom=0
 
-# copy="Hemotoxin Variant5","Hemotoxin Variant1"
+# copy="hemotoxin_removed Variant5","hemotoxin_removed Variant1"
 # apl_variable.play_around_bloodrush_hemo=0
 # talent.gushing_blood=1
 # talent.from_the_shadows=1
@@ -334,7 +334,7 @@ talent.feed_the_queen=1
 # talent.maidens_doom=0
 # talent.venomous_delight=0
 
-# copy="Hemotoxin Variant6","Hemotoxin Variant1"
+# copy="hemotoxin_removed Variant6","hemotoxin_removed Variant1"
 # apl_variable.play_around_bloodrush_hemo=1
 # talent.gushing_blood=1
 # talent.from_the_shadows=1
@@ -376,15 +376,15 @@ talent.feed_the_queen=1
 # talent.from_the_shadows=1
 # talent.feed_the_queen=1
 
-# copy="Mara_Crit_Hemotoxin","Mara_Crit"
-# talent.hemotoxin=1
+# copy="Mara_Crit_hemotoxin_removed","Mara_Crit"
+# talent.hemotoxin_removed=1
 
-# # copy="Mara_Crit_Hemotoxin&Bloodrush","Mara_Crit"
-# # talent.hemotoxin=1
+# # copy="Mara_Crit_hemotoxin_removed&Bloodrush","Mara_Crit"
+# # talent.hemotoxin_removed=1
 # # talent.bloodrush=1
 
-# # copy="Mara_Crit_Hemotoxin&Bloodrush&SingleDot","Mara_Crit"
-# # talent.hemotoxin=1
+# # copy="Mara_Crit_hemotoxin_removed&Bloodrush&SingleDot","Mara_Crit"
+# # talent.hemotoxin_removed=1
 # # talent.bloodrush=1
 # # apl_variable.play_around_bloodrush_hemo=1
 
@@ -491,15 +491,15 @@ talent.feed_the_queen=1
 # talent.from_the_shadows=1
 # talent.feed_the_queen=1
 
-# copy="Mara_Spirit_Hemotoxin","Mara_Spirit"
-# talent.hemotoxin=1
+# copy="Mara_Spirit_hemotoxin_removed","Mara_Spirit"
+# talent.hemotoxin_removed=1
 
-# # copy="Mara_Spirit_Hemotoxin&Bloodrush","Mara_Spirit"
-# # talent.hemotoxin=1
+# # copy="Mara_Spirit_hemotoxin_removed&Bloodrush","Mara_Spirit"
+# # talent.hemotoxin_removed=1
 # # talent.bloodrush=1
 
-# # copy="Mara_Spirit_Hemotoxin&Bloodrush&SingleDot","Mara_Spirit"
-# # talent.hemotoxin=1
+# # copy="Mara_Spirit_hemotoxin_removed&Bloodrush&SingleDot","Mara_Spirit"
+# # talent.hemotoxin_removed=1
 # # talent.bloodrush=1
 # # apl_variable.play_around_bloodrush_hemo=1
 
@@ -535,7 +535,7 @@ talent.feed_the_queen=1
 # #9
 # talent.bloodrush=1
 # #12
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # #13
 # talent.maidens_doom=1
 # legendary.vexiras_venom=1
@@ -647,8 +647,8 @@ talent.feed_the_queen=1
 # talent.from_the_shadows=1
 # talent.feed_the_queen=1
 
-# copy="hemotoxin","test_mara"
-# talent.hemotoxin=1
+# copy="hemotoxin_removed","test_mara"
+# talent.hemotoxin_removed=1
 
 # copy="guile","test_mara"
 # talent.assassins_guile=1
@@ -694,7 +694,7 @@ talent.feed_the_queen=1
 # talent.assassins_guile=0
 # legendary.vexiras_venom=0
 
-# copy="Hemotoxin Ledger Variant","test_mara"
+# copy="hemotoxin_removed Ledger Variant","test_mara"
 # #2
 # talent.deadly_scheme=1
 # #4
@@ -706,12 +706,12 @@ talent.feed_the_queen=1
 # #9
 # talent.bloodrush=1
 # #12
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # #13
 # talent.maidens_doom=1
 # legendary.vexiras_venom=1
 
-# copy="Hemotoxin malevolence Variant","test_mara"
+# copy="hemotoxin_removed malevolence Variant","test_mara"
 # #2
 # talent.deadly_scheme=1
 # #4
@@ -723,13 +723,13 @@ talent.feed_the_queen=1
 # #9
 # talent.bloodrush=1
 # #12
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # #13
 # talent.maidens_doom=1
 # legendary.vexiras_venom=1
 
 
-# copy="Hemotoxin Ledger malevolence no deadly Variant","test_mara"
+# copy="hemotoxin_removed Ledger malevolence no deadly Variant","test_mara"
 # #2
 # talent.red_ledger=1
 # #4
@@ -741,7 +741,7 @@ talent.feed_the_queen=1
 # #9
 # talent.bloodrush=1
 # #12
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # #13
 # talent.maidens_doom=1
 # legendary.vexiras_venom=1
@@ -798,7 +798,7 @@ talent.feed_the_queen=1
 # #4
 # talent.bloodrush=1
 # #7
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # legendary.vexiras_venom=1
 # #9
 # talent.red_ledger=1
@@ -902,43 +902,43 @@ talent.feed_the_queen=1
 
 
 
-# copy="Hemotoxin 3pt","test_mara"
-# talent.hemotoxin=1
+# copy="hemotoxin_removed 3pt","test_mara"
+# talent.hemotoxin_removed=1
 
-# copy="Hemotoxin Bloodrush 4pt","test_mara"
-# talent.hemotoxin=1
+# copy="hemotoxin_removed Bloodrush 4pt","test_mara"
+# talent.hemotoxin_removed=1
 # talent.bloodrush=1
 
-# copy="Hemotoxin Bloodrush VV 5pt","test_mara"
-# talent.hemotoxin=1
+# copy="hemotoxin_removed Bloodrush VV 5pt","test_mara"
+# talent.hemotoxin_removed=1
 # talent.bloodrush=1
 # talent.vile_venoms=1
 
-# copy="Hemotoxin Bloodrush Red Deadly 6pt","test_mara"
-# talent.hemotoxin=1
+# copy="hemotoxin_removed Bloodrush Red Deadly 6pt","test_mara"
+# talent.hemotoxin_removed=1
 # talent.bloodrush=1
 # talent.deadly_scheme=1
 
-# copy="Hemotoxin Bloodrush Red Ledger 6pt","test_mara"
-# talent.hemotoxin=1
+# copy="hemotoxin_removed Bloodrush Red Ledger 6pt","test_mara"
+# talent.hemotoxin_removed=1
 # talent.bloodrush=1
 # talent.red_ledger=1
 
-# copy="Hemotoxin Bloodrush Red Ledger VV 7pt","test_mara"
-# talent.hemotoxin=1
+# copy="hemotoxin_removed Bloodrush Red Ledger VV 7pt","test_mara"
+# talent.hemotoxin_removed=1
 # talent.bloodrush=1
 # talent.red_ledger=1
 # talent.vile_venoms=1
 
-# copy="Hemotoxin Bloodrush Red Ledger VV Deadly 9pt","test_mara"
-# talent.hemotoxin=1
+# copy="hemotoxin_removed Bloodrush Red Ledger VV Deadly 9pt","test_mara"
+# talent.hemotoxin_removed=1
 # talent.bloodrush=1
 # talent.red_ledger=1
 # talent.vile_venoms=1
 # talent.deadly_scheme=1
 
-# copy="Hemotoxin Bloodrush Red Ledger VV malevolence 9pt","test_mara"
-# talent.hemotoxin=1
+# copy="hemotoxin_removed Bloodrush Red Ledger VV malevolence 9pt","test_mara"
+# talent.hemotoxin_removed=1
 # talent.bloodrush=1
 # talent.red_ledger=1
 # talent.vile_venoms=1

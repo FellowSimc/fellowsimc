@@ -873,23 +873,23 @@ trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/experti
 # # # -- Talents
 
 # # copy="Bleed Vex DSAG","Base Mara"
-# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/assassins_guile:1
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin_removed:1/deadly_scheme:1/assassins_guile:1
 # # copy="Bleed FTS DSAG","Base Mara"
 # # legendary.vexiras_venom=0
 # # legendary.from_the_shadows=1
-# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/assassins_guile:1
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin_removed:1/deadly_scheme:1/assassins_guile:1
 # # copy="Bleed Vex DSRL","Base Mara"
-# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/red_ledger:1
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin_removed:1/deadly_scheme:1/red_ledger:1
 # # copy="Bleed FTS DSRL","Base Mara"
 # # legendary.vexiras_venom=0
 # # legendary.from_the_shadows=1
-# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/red_ledger:1
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin_removed:1/deadly_scheme:1/red_ledger:1
 # # copy="Bleed Vex DSMV","Base Mara"
-# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/malevolence:1
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin_removed:1/deadly_scheme:1/malevolence:1
 # # copy="Bleed FTS DSMV","Base Mara"
 # # legendary.vexiras_venom=0
 # # legendary.from_the_shadows=1
-# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin:1/deadly_scheme:1/malevolence:1
+# # talents=bloodrush:1/sinners_pride:1/gushing_blood:1/hemotoxin_removed:1/deadly_scheme:1/malevolence:1
 
 # # copy="Vexiras Venom","Base Mara"
 # # legendary.vexiras_venom=1
@@ -936,8 +936,8 @@ trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/experti
 # # copy="Maidens Doom","Base Mara"
 # # talents+=/maidens_doom:1
 
-# # copy="Hemotoxin","Base Mara"
-# # talents+=/hemotoxin:1
+# # copy="hemotoxin_removed","Base Mara"
+# # talents+=/hemotoxin_removed:1
 
 # # # copy="Sinners Pride","Base Mara"
 # # # talents+=/sinners_pride:1
@@ -994,8 +994,8 @@ trinket1=relic1,ilevel=420,main_secondary=expertise,fixed_secondary=crit/experti
 # # # copy="-Maidens Doom","Base Mara"
 # # # talents+=/maidens_doom:0
 
-# # # copy="-Hemotoxin","Base Mara"
-# # # talents+=/hemotoxin:0
+# # # copy="-hemotoxin_removed","Base Mara"
+# # # talents+=/hemotoxin_removed:0
 
 # # copy="-Sinners Pride","Base Mara"
 # # talents+=/sinners_pride:0

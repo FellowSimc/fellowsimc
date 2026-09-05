@@ -141,8 +141,8 @@ talents+=/feed_the_queen:1
 copy="Maidens Doom","Base Mara"
 talents+=/maidens_doom:1
 
-copy="Hemotoxin","Base Mara"
-talents+=/hemotoxin:1
+copy="hemotoxin_removed","Base Mara"
+talents+=/hemotoxin_removed:1
 
 # copy="Sinners Pride","Base Mara"
 # talents+=/sinners_pride:1

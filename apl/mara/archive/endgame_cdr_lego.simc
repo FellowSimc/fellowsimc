@@ -65,7 +65,7 @@ talent.feed_the_queen=0
 talent.puncture=0
 
 talent.deadly_scheme=1
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 talent.red_ledger=1
 talent.bloodrush=1
 talent.gushing_blood=1

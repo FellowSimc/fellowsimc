@@ -87,59 +87,59 @@ talents=assassins_guile:1/venomous_delight:1/deadly_scheme:1/malevolence:1/sinne
 copy="Bleed MD SB Vex","Finisher FTQ"
 legendary.vexiras_venom=1
 legendary.from_the_shadows=0
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/maidens_doom:1/seething_burst:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/maidens_doom:1/seething_burst:1
 
 copy="Bleed MD MS Vex","Finisher FTQ"
 legendary.vexiras_venom=1
 legendary.from_the_shadows=0
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/maidens_doom:1/macabre_stratagem:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/maidens_doom:1/macabre_stratagem:1
 
 copy="Bleed MS SB Vex","Finisher FTQ"
 legendary.vexiras_venom=1
 legendary.from_the_shadows=0
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/seething_burst:1/macabre_stratagem:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/seething_burst:1/macabre_stratagem:1
 
 copy="Bleed MD SB FTS","Finisher FTQ"
 legendary.vexiras_venom=0
 legendary.from_the_shadows=1
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/maidens_doom:1/seething_burst:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/maidens_doom:1/seething_burst:1
 
 copy="Bleed MD MS FTS","Finisher FTQ"
 legendary.vexiras_venom=0
 legendary.from_the_shadows=1
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/maidens_doom:1/macabre_stratagem:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/maidens_doom:1/macabre_stratagem:1
 
 copy="Bleed MS SB FTS","Finisher FTQ"
 legendary.vexiras_venom=0
 legendary.from_the_shadows=1
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/seething_burst:1/macabre_stratagem:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/seething_burst:1/macabre_stratagem:1
 
 copy="Bleed DS Vex","Finisher FTQ"
 legendary.vexiras_venom=1
 legendary.from_the_shadows=0
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/deadly_scheme:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/deadly_scheme:1
 
 copy="Bleed DS FTS","Finisher FTQ"
 legendary.vexiras_venom=0
 legendary.from_the_shadows=1
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/deadly_scheme:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/deadly_scheme:1
 
 copy="Bleed CS Vex","Finisher FTQ"
 legendary.vexiras_venom=1
 legendary.from_the_shadows=0
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/corrosive_spill:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/corrosive_spill:1
 
 copy="Bleed CS FTS","Finisher FTQ"
 legendary.vexiras_venom=0
 legendary.from_the_shadows=1
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/corrosive_spill:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/corrosive_spill:1
 
 copy="Bleed AG Vex","Finisher FTQ"
 legendary.vexiras_venom=1
 legendary.from_the_shadows=0
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/assassins_guile:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/assassins_guile:1
 
 copy="Bleed AG FTS","Finisher FTQ"
 legendary.vexiras_venom=0
 legendary.from_the_shadows=1
-talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/sinners_pride:1/assassins_guile:1
+talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/sinners_pride:1/assassins_guile:1

@@ -62,7 +62,7 @@ talent.gushing_blood_always_works=0
 # talent.red_ledger=1
 # talent.bloodrush=1
 # talent.gushing_blood=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.maidens_doom=1
 # talent.sinners_pride=1
 
@@ -83,7 +83,7 @@ talent.gushing_blood_always_works=0
 # talent.venomous_delight=1
 # talent.deadly_scheme=1
 # talent.maidens_doom=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.malevolence=1
 
 # talent.sinners_pride=1
@@ -102,7 +102,7 @@ talent.gushing_blood_always_works=0
 talent.red_ledger=1
 talent.bloodrush=1
 talent.gushing_blood=1
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 talent.maidens_doom=1
 talent.sinners_pride=1
 

@@ -185,14 +185,14 @@ talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/mal
 copy="Finisher Spill Burst -MD","Mara Finisher Full ST"
 talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/seething_burst:1/malevolence:1/sinners_pride:1/corrosive_spill:1
 
-# copy="Finisher Hemotoxin BR GB No Haste","Mara Finisher Full ST"
-# talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/malevolence:1/hemotoxin_old:1/bloodrush:1/gushing_blood:1
+# copy="Finisher hemotoxin_removed BR GB No Haste","Mara Finisher Full ST"
+# talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/malevolence:1/hemotoxin:1/bloodrush:1/gushing_blood:1
 
-# copy="Finisher Hemotoxin BR GB FTS No Haste","Mara Finisher Full ST"
+# copy="Finisher hemotoxin_removed BR GB FTS No Haste","Mara Finisher Full ST"
 # legendary.vexiras_venom=0
 # legendary.drenched_in_blood=0
 # legendary.from_the_shadows=1
-# talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/malevolence:1/hemotoxin_old:1/bloodrush:1/gushing_blood:1
+# talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/malevolence:1/hemotoxin:1/bloodrush:1/gushing_blood:1
 #6
 
 # # Spirit builds
@@ -226,7 +226,7 @@ talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/seething_burst:1/m
 # talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/maidens_doom:1/malevolence:1/sinners_pride:1/corrosive_spill:1
 
 # copy="Finisher HT BR Spirit Philo Mystic","Finisher Full ST Spirit Philo Mystic"
-# talents=assassins_guile:1/deadly_scheme:1/malevolence:1/sinners_pride:1/hemotoxin_old:1/bloodrush:1
+# talents=assassins_guile:1/deadly_scheme:1/malevolence:1/sinners_pride:1/hemotoxin:1/bloodrush:1
 
 
 # copy="HF0","Base Mara"
@@ -257,12 +257,12 @@ talents=assassins_guile:1/deadly_scheme:1/macabre_stratagem:1/seething_burst:1/m
 # # legendary.from_the_shadows=1
 # # legendary.drenched_in_blood=0
 # # legendary.vexiras_venom=0
-# # talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/sinners_pride:1
+# # talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin_removed:1/puncture:1/sinners_pride:1
 # # copy="Bleed Max ST Vex","Base Mara"
 # # legendary.from_the_shadows=0
 # # legendary.drenched_in_blood=0
 # # legendary.vexiras_venom=1
-# # talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin:1/puncture:1/sinners_pride:1
+# # talents=assassins_guile:1/bloodrush:1/deadly_scheme:1/gushing_blood:1/hemotoxin_removed:1/puncture:1/sinners_pride:1
 # # copy="Mara_ruby_100","Base Mara"
 # # gems.ruby_power=100
 # # copy="Mara_ruby_300","Base Mara"

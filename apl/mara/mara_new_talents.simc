@@ -74,7 +74,7 @@ talent.seething_burst_damage=2.2
 
 
 # copy="Mara Bleed Punc MD","Mara Finisher SP MD Punc"
-# talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/sinners_pride:1/puncture:1/maidens_doom:1
+# talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/maidens_doom:1/sinners_pride:1/puncture:1/maidens_doom:1
 
 # legendary.from_the_shadows=1
 # legendary.vexiras_venom=0
@@ -85,7 +85,7 @@ talent.seething_burst_damage=2.2
 # gear_mastery_rating=200
 
 # copy="Mara Bleed Deadly","Mara Finisher SP MD Punc"
-# talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin:1/maidens_doom:1/sinners_pride:1/deadly_scheme:1
+# talents=red_ledger:1/bloodrush:1/gushing_blood:1/hemotoxin_removed:1/maidens_doom:1/sinners_pride:1/deadly_scheme:1
 
 # legendary.from_the_shadows=1
 # legendary.vexiras_venom=0

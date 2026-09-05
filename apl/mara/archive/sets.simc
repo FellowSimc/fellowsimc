@@ -38,7 +38,7 @@ gear_mastery_rating=290
 # talent.from_the_shadows=1
 
 # copy="Hemo","Mara"
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 
 # copy="DM","Mara"
 # talent.malevolence=1
@@ -62,7 +62,7 @@ talent.arachnid_onslaught=1
 # talent.deadly_scheme=1
 
 copy="Hemo GB BR AO","Mara"
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 talent.gushing_blood=1
 talent.bloodrush=1
 talent.arachnid_onslaught=1

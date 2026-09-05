@@ -169,7 +169,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.puncture=1
 
 # copy="Bleed RL HT Drenched","Mara"
@@ -185,7 +185,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.puncture=1
 
 # legendary.vexiras_venom=0
@@ -204,7 +204,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.puncture=1
 
 # legendary.vexiras_venom=0
@@ -226,7 +226,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.puncture=1
 
 # copy="Bleed DS HT","Mara"
@@ -242,7 +242,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.puncture=1
 
 # copy="Bleed RL AG DS","Mara"
@@ -258,7 +258,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=0
 
 # copy="Bleed RL AG DS Punc","Mara"
@@ -274,7 +274,7 @@ gems.emerald_power=1296
 # talent.bloodrush=0
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=1
 
 # copy="Bleed RL AG DS VD","Mara"
@@ -290,7 +290,7 @@ gems.emerald_power=1296
 # talent.bloodrush=0
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=0
 
 # copy="Bleed RL DS BR VD PUNC","Mara"
@@ -306,7 +306,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=1
 
 
@@ -323,7 +323,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=1
 
 # copy="Bleed RL AG MD","Mara"
@@ -339,7 +339,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=1
 
 # copy="Bleed DS AG MD","Mara"
@@ -355,7 +355,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=1
 
 # copy="Bleed Finisher VD","Mara"
@@ -371,7 +371,7 @@ gems.emerald_power=1296
 # talent.bloodrush=0
 # talent.gushing_blood=1
 # legendary.from_the_shadows=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=1
 
 # copy="Finisher HT RL BR","Mara"
@@ -389,7 +389,7 @@ gems.emerald_power=1296
 # talent.venomous_delight=1
 # talent.deadly_scheme=1
 # talent.maidens_doom=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.malevolence=1
 # talent.puncture=0
 
@@ -408,7 +408,7 @@ gems.emerald_power=1296
 # talent.venomous_delight=1
 # talent.deadly_scheme=1
 # talent.maidens_doom=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.malevolence=1
 # talent.puncture=0
 
@@ -427,7 +427,7 @@ gems.emerald_power=1296
 # talent.venomous_delight=1
 # talent.deadly_scheme=1
 # talent.maidens_doom=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.malevolence=1
 # talent.puncture=1
 
@@ -446,7 +446,7 @@ gems.emerald_power=1296
 # talent.venomous_delight=1
 # talent.deadly_scheme=1
 # talent.maidens_doom=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.malevolence=0
 # talent.puncture=1
 
@@ -462,7 +462,7 @@ gems.emerald_power=1296
 # talent.red_ledger=0
 # talent.bloodrush=1
 # talent.gushing_blood=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=0
 # talent.sinners_pride=1
 # legendary.vexiras_venom=0
@@ -480,7 +480,7 @@ gems.emerald_power=1296
 # talent.red_ledger=0
 # talent.bloodrush=1
 # talent.gushing_blood=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.arachnid_onslaught=1
 # talent.sinners_pride=1
 
@@ -501,7 +501,7 @@ gems.emerald_power=1296
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # talent.sinners_pride=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.maidens_doom=1
 # legendary.vexiras_venom=0
 # legendary.from_the_shadows=1
@@ -521,7 +521,7 @@ gems.emerald_power=1296
 # talent.arachnid_onslaught=1
 # talent.gushing_blood=1
 # talent.sinners_pride=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.maidens_doom=1
 # legendary.vexiras_venom=0
 # legendary.from_the_shadows=1
@@ -540,7 +540,7 @@ gems.emerald_power=1296
 # talent.bloodrush=0
 # talent.arachnid_onslaught=0
 # talent.gushing_blood=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.maidens_doom=0
 # talent.sinners_pride=1
 # legendary.vexiras_venom=0
@@ -558,7 +558,7 @@ gems.emerald_power=1296
 # talent.red_ledger=0
 # talent.bloodrush=1
 # talent.gushing_blood=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=1
 # talent.sinners_pride=1
 # legendary.from_the_shadows=0
@@ -576,7 +576,7 @@ gems.emerald_power=1296
 # talent.red_ledger=0
 # talent.bloodrush=1
 # talent.gushing_blood=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.arachnid_onslaught=1
 # talent.sinners_pride=1
 
@@ -592,7 +592,7 @@ gems.emerald_power=1296
 # talent.red_ledger=1
 # talent.bloodrush=1
 # talent.gushing_blood=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.puncture=1
 # talent.sinners_pride=1
 
@@ -623,7 +623,7 @@ gems.emerald_power=1296
 # talent.venomous_delight=1
 # talent.deadly_scheme=1
 # talent.maidens_doom=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.malevolence=0
 # talent.puncture=0
 
@@ -649,7 +649,7 @@ gems.emerald_power=1296
 # talent.venomous_delight=1
 # talent.deadly_scheme=1
 # talent.maidens_doom=0
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.malevolence=0
 # talent.puncture=0
 
@@ -674,7 +674,7 @@ talent.bloodrush=0
 talent.venomous_delight=1
 talent.deadly_scheme=1
 talent.maidens_doom=1
-talent.hemotoxin=0
+talent.hemotoxin_removed=0
 talent.malevolence=1
 
 talent.sinners_pride=1
@@ -694,7 +694,7 @@ talent.sinners_pride=1
 # talent.venomous_delight=1
 # talent.deadly_scheme=1
 # talent.maidens_doom=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.malevolence=1
 # talent.sinners_pride=1
 
@@ -727,7 +727,7 @@ talent.maidens_doom=0
 talent.red_ledger=1
 talent.bloodrush=1
 talent.gushing_blood=1
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 talent.maidens_doom=1
 talent.sinners_pride=1
 
@@ -756,7 +756,7 @@ legendary.from_the_shadows=1
 # talent.red_ledger=0
 # talent.bloodrush=1
 # talent.gushing_blood=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.maidens_doom=1
 # talent.sinners_pride=1
 
@@ -786,7 +786,7 @@ legendary.from_the_shadows=1
 # talent.bloodrush=1
 # talent.gushing_blood=1
 # talent.sinners_pride=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=1
 
 
@@ -804,7 +804,7 @@ legendary.from_the_shadows=1
 # talent.maidens_doom=1
 # talent.gushing_blood=1
 # talent.sinners_pride=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=1
 
 # copy="Bleed Finisher BR MD","Mara"
@@ -821,7 +821,7 @@ legendary.from_the_shadows=1
 # talent.maidens_doom=1
 # talent.gushing_blood=1
 # talent.sinners_pride=1
-# talent.hemotoxin=0
+# talent.hemotoxin_removed=0
 # talent.puncture=0
 
 
@@ -1007,7 +1007,7 @@ legendary.from_the_shadows=1
 # legendary.from_the_shadows=1
 
 # #4
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.gushing_blood=1
 #  #10
 # talent.deadly_scheme=1
@@ -1091,7 +1091,7 @@ talent.bloodrush=1
 #3
 talent.gushing_blood=1
 #5
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 #8
 talent.maidens_doom=1
 #9
@@ -1117,7 +1117,7 @@ talent.bloodrush=1
 #3
 talent.gushing_blood=1
 #5
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 #8
 talent.maidens_doom=0
 #9
@@ -1144,7 +1144,7 @@ talent.bloodrush=1
 #3
 talent.gushing_blood=1
 #5
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 #8
 talent.maidens_doom=1
 #9
@@ -1169,7 +1169,7 @@ talent.bloodrush=1
 #3
 talent.gushing_blood=1
 #5
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 #8
 talent.maidens_doom=1
 #9
@@ -1194,7 +1194,7 @@ talent.bloodrush=1
 #3
 talent.gushing_blood=1
 #5
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 #8
 talent.maidens_doom=0
 #9
@@ -1220,7 +1220,7 @@ talent.bloodrush=1
 #3
 talent.gushing_blood=1
 #5
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 #8
 talent.maidens_doom=0
 #9

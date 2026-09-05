@@ -46,35 +46,35 @@ legendary.vexiras_venom=1
 
 # legendary.spirit_procs_clones=1
 
-copy="Finisher Hemotoxin","Mara"
+copy="Finisher hemotoxin_removed","Mara"
 talent.assassins_guile=1
 talent.venomous_delight=1
 talent.bloodrush=1
 talent.deadly_scheme=1
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 talent.malevolence=1
 talent.puncture=1
 
-# copy="Finisher Hemotoxin EK","Mara"
+# copy="Finisher hemotoxin_removed EK","Mara"
 # talent.assassins_guile=1
 # talent.venomous_delight=1
 # talent.bloodrush=1
 # talent.deadly_scheme=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.malevolence=1
 # talent.efficient_killer=1
 
-# copy="Funnel Hemotoxin","Mara"
+# copy="Funnel hemotoxin_removed","Mara"
 # talent.assassins_guile=1
 # talent.venomous_delight=1
 # talent.deadly_scheme=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.malevolence=1
 # talent.feed_the_queen=1
 
 copy="Bleed RL DS","Mara"
 talent.deadly_scheme=1
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 talent.red_ledger=1
 talent.bloodrush=1
 talent.gushing_blood=1
@@ -82,7 +82,7 @@ talent.from_the_shadows=1
 
 # copy="Bleed RL AG","Mara"
 # talent.red_ledger=1
-# talent.hemotoxin=1
+# talent.hemotoxin_removed=1
 # talent.assassins_guile=1
 # talent.bloodrush=1
 # talent.gushing_blood=1
@@ -90,7 +90,7 @@ talent.from_the_shadows=1
 
 copy="Bleed AG DS","Mara"
 talent.deadly_scheme=1
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 talent.assassins_guile=1
 talent.bloodrush=1
 talent.gushing_blood=1
@@ -116,7 +116,7 @@ copy="Finisher Hemo CS","Mara"
 talent.assassins_guile=1
 talent.venomous_delight=1
 talent.deadly_scheme=1
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 talent.malevolence=1
 talent.corrosive_spill=1
 
@@ -175,7 +175,7 @@ talent.puncture=1
 
 copy="Bleed CS DS Hemo","Mara"
 talent.deadly_scheme=1
-talent.hemotoxin=1
+talent.hemotoxin_removed=1
 talent.corrosive_spill=1
 talent.bloodrush=1
 talent.gushing_blood=1

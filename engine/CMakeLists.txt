@@ -5,10 +5,38 @@
 # define source files
 include(../source_files/cmake_engine.txt)
 
+# The Fellowship branch removes the upstream WoW class implementations, while
+# the generated source manifest can still contain those paths. Keep the third-
+# party build self-contained by retaining only files present in this checkout
+# and adding the Fellowship class modules maintained by this branch.
+set(existing_source_files)
+foreach(source_file IN LISTS source_files)
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${source_file}")
+    list(APPEND existing_source_files "${source_file}")
+  endif()
+endforeach()
+set(source_files ${existing_source_files})
+
+list(APPEND source_files
+  class_modules/fs_player.cpp
+  class_modules/sc_aeona.cpp
+  class_modules/sc_ardeos.cpp
+  class_modules/sc_elarion.cpp
+  class_modules/sc_gunde.cpp
+  class_modules/sc_mara.cpp
+  class_modules/sc_rime.cpp
+  class_modules/sc_tariq.cpp
+  class_modules/sc_xavian.cpp
+)
+
 # Define engine library
 add_library(engine ${source_files})
 target_include_directories(engine PUBLIC . ./include ./lib)
 sc_common_compiler_options(engine)
+
+if(NOT MSVC)
+  target_compile_definitions(engine PRIVATE __popcnt64=__builtin_popcountll)
+endif()
 
 # Make cmake selections visible to C++ code
 if(SC_NO_THREADING)

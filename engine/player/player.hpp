@@ -217,7 +217,7 @@ struct player_t : public actor_t
   // Currently not created and will return nullptr
   std::unique_ptr<player_talent_points_t> talent_points;
 
-  unsigned long long talent_points_fs;
+  uint64_t talent_points_fs;
   unsigned long talent_points_fs_count;
 
   // Player selected (trait entry id, rank) tuples

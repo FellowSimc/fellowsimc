@@ -301,14 +301,14 @@ public:
 
     timespan_t macabre_stratagem_duration = 10_s;
   } talents;
-  
+
   struct spell_const_t
   {
     double poison_and_bleed_increase_per_haste = 0.5;
     double poison_and_bleed_haste_cap = 1.0;
 
     double hemorrhaging_strike_energy_gen = 2.0;
-    double hemorrhaging_strike_damage     = 2.8665; 
+    double hemorrhaging_strike_damage     = 2.8665;
     double hemorrhaging_stike_tick_dmg    = 0.9841;
     timespan_t hemorrhaging_strike_period = 3_s;
 
@@ -393,7 +393,7 @@ public:
   void copy_from( player_t* source ) override;
   std::string create_profile( save_e stype ) override;
   void init_action_list() override;
- 
+
   void reset() override;
   void activate() override;
   void arise() override;
@@ -1311,12 +1311,12 @@ struct queens_fang_t : public mara_attack_t
     base_costs[ RESOURCE_COMBO_POINT ] = 1;
     base_costs[ RESOURCE_ENERGY ]      = 40;
 
-    
+
     ability_flags |= ability_type_e::ABILITY_POWER;
 
     /*if ( p->talents.efficient_killer )
       base_costs[ RESOURCE_ENERGY ] *= p->talents.efficient_killer_energy_cost_modifier;*/
-        
+
     if ( st == secondary_trigger::NONE && p->legendary.spirit_procs_clones )
     {
       add_child( p->actions.queens_fang_lego_clone );
@@ -1571,7 +1571,7 @@ struct hemorrhaging_strike_t : public mara_attack_t
 
       auto dot = get_dot( s->target );
 
-      auto base_duration = composite_dot_duration( s ); 
+      auto base_duration = composite_dot_duration( s );
       auto refresh_duration = calculate_dot_refresh_duration( dot, base_duration );
 
       double amount = hemo_tick_damage_over_time( refresh_duration, dot ) * p()->talents.hemotoxin_old_conversion_rate;
@@ -1700,7 +1700,7 @@ struct seething_burst_t : public mara_poison_t
 
     aoe                 = -1;
     reduced_aoe_targets = p->talents.seething_burst_max_targets;
-    
+
     ability_flags |= ability_type_e::ABILITY_CORE;
   }
 };
@@ -1791,14 +1791,14 @@ struct widows_bite_t : public mara_attack_t
     cooldown->duration = 9_s;
     cooldown->hasted   = true;
     cooldown->charges  = 3;
-    
+
     ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
   void impact( action_state_t* s ) override
   {
     mara_attack_t::impact( s );
-    
+
     widows_bite_hit_1->set_target( s->target );
     widows_bite_hit_2->set_target( s->target );
 
@@ -1856,7 +1856,7 @@ struct brooding_shadows_t : public mara_spell_t
     cooldown->duration = 15_s;
     cooldown->hasted   = true;
     cooldown->charges  = 2;
-    
+
     ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
@@ -1906,7 +1906,7 @@ struct final_stratagem_t : public mara_spell_t
     : mara_spell_t( name, p, options_str )
   {
     id = 10;
-        
+
     energize_type     = action_energize::ON_CAST;
     energize_amount   = p->resources.base[ RESOURCE_ENERGY ];
     energize_resource = RESOURCE_ENERGY;
@@ -1959,7 +1959,7 @@ struct macabre_stratagem_t : public mara_spell_t
     cooldown->duration = 180_s;
     cooldown->hasted   = false;
     cooldown->charges  = 1;
-    
+
     ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
 
@@ -1998,7 +1998,7 @@ struct matriach_macabre_t : public mara_spell_t
     add_child( p->actions.arachnid_assault_clone );
 
     ability_flags |= ability_type_e::ABILITY_SPIRIT;
-    
+
   }
 
   void execute() override
@@ -2111,7 +2111,7 @@ struct stalker_step_t : public mara_spell_t
     cooldown->duration = 30_s;
     cooldown->hasted   = true;
     cooldown->charges  = 2;
-    
+
     ability_flags |= ability_type_e::ABILITY_MOVEMENT;
   }
 
@@ -2130,7 +2130,7 @@ struct vexiras_venom_t : public residual_action::residual_periodic_action_t<mara
     name_str_reporting = "Vexiras Venom";
 
     tick_may_crit = false;
-        
+
     dot_duration           = p->legendary.vexiras_venom_duration;
     dot_behavior           = DOT_REFRESH_DURATION;
     base_tick_time         = p->legendary.vexiras_venom_period;
@@ -2143,7 +2143,7 @@ struct vexiras_venom_t : public residual_action::residual_periodic_action_t<mara
     attack_t::snapshot_state( state, rt );
   }
 
- 
+
   void init() override
   {
     base_t::init();
@@ -2171,7 +2171,7 @@ struct skittering_blades_t : public mara_attack_t
     reduced_aoe_targets = 8;
 
     name_str_reporting = "Skittering Blades";
-    
+
     ability_flags |= ability_type_e::ABILITY_BASIC;
   }
 
@@ -2214,7 +2214,7 @@ struct arachnid_assault_t : public mara_attack_t
 
     secondary_trigger_type = st;
 
-    
+
     if ( p->talents_enabled( mara_t::HEMOTOXIN ) )
     {
       hemotoxin = new hemotoxin_t( flavour.size() > 0 ? std::format( "AA_{}", flavour ) : "AA", p );
@@ -2222,7 +2222,7 @@ struct arachnid_assault_t : public mara_attack_t
     }
 
     name_str_reporting = flavour.size() > 0 ? std::format( "Arachnid Assault - {}", flavour ) : "Arachnid Assault";
-        
+
     aoe                 = -1;
     reduced_aoe_targets = 8;
 
@@ -2318,6 +2318,13 @@ struct arachnid_assault_t : public mara_attack_t
   void impact( action_state_t* state ) override
   {
     mara_attack_t::impact( state );
+    if ( !is_secondary_action() )
+    {
+      if ( p()->buffs.deadly_scheme->check() )
+        p()->procs.deathly_scheme_arachnid_assault->occur();
+
+      p()->buffs.deadly_scheme->expire();
+    }
 
     handle_vexiras_venom( state );
     handle_hemotoxin( state, hemotoxin, p()->talents.hemotoxin_sample_per_cp_aa );
@@ -2943,7 +2950,7 @@ void mara_t::create_buffs()
 {
   fs_player_t::create_buffs();
 
-  
+
   buffs.feed_the_queen = make_buff<mara_buff_t>( this, "feed_the_queen" );
   buffs.feed_the_queen->set_duration( talents.feed_the_queen_duration )
       ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
@@ -3037,7 +3044,7 @@ void mara_t::create_options()
   add_option( opt_int( "talent.gushing_blood_hemorrhaging_additional_targets",
                        talents.gushing_blood_hemorrhaging_additional_targets, 1, 20 ) );
 
-  
+
   add_option( opt_timespan( "talent.sinners_pride_cdr_reduction_per_cp",
                             talents.sinners_pride_cdr_reduction_per_cp, 0_s, 180_s ) );
 
@@ -3067,7 +3074,7 @@ void mara_t::create_options()
 
   add_option(
       opt_float( "talent.hemotoxin_sample_multiplier_crits", talents.hemotoxin_sample_multiplier_crits, 1.0, 100 ) );
-  
+
 
   /*add_option( opt_bool( "ready_trigger", options.mara_ready_trigger ) );
 
@@ -3247,7 +3254,7 @@ double mara_t::resource_regen_per_second( resource_e r ) const
 double mara_t::resource_loss( resource_e resource_type, double amount, gain_t* source, action_t* action )
 {
   double actual_amount = fs_player_t::resource_loss( resource_type, amount, source, action );
-  
+
   if ( talent_enabled( DEADLY_SCHEME ) && resource_type == RESOURCE_ENERGY && actual_amount > 0 )
   {
     deadly_energy_tracker += actual_amount;
@@ -3362,7 +3369,7 @@ void actions::mara_action_t<Base>::spend_combo_points( const action_state_t* sta
     p()->cooldowns.maiden_of_death->adjust( -max_spend * p()->talents.sinners_pride_cdr_reduction_per_cp, false, true );
   }
 
-  if ( p()->talents_enabled( mara_t::EFFICIENT_KILLER ) ) 
+  if ( p()->talents_enabled( mara_t::EFFICIENT_KILLER ) )
   {
     p()->resource_gain( RESOURCE_ENERGY, p()->talents.efficient_killer_energy_per_cp * max_spend,
                         p()->gains.efficient_killer, this );
@@ -3445,7 +3452,7 @@ inline double dot_tick_over_time( timespan_t sample_duration, const dot_t* dot )
   double sampled_ticks = sample_duration / dot_tick_time;
   double total_damage  = sampled_ticks * tick_base_damage;
   total_damage /= state->target_ta_multiplier;
-  
+
   dot->current_action->player->sim->print_debug( "Sampled {} ticks of {} over {} for a total of {} damage",
                                                  sampled_ticks, dot->current_action->name(), sample_duration,
                                                  total_damage );

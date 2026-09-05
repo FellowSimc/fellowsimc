@@ -41,14 +41,14 @@ public:
     dot_t* hemorrhaging_strike;
     dot_t* seething_poison;
     dot_t* volatile_poison;
-    dot_t* hemotoxin_old;
+    dot_t* hemotoxin;
     dot_t* vexiras_venom;
     dot_t* corrosive_spill;
   } dots;
 
   struct
   {
-    buff_t* hemotoxin_old;
+    buff_t* hemotoxin;
     buff_t* nightstalker;
     buff_t* puncture;
   } debuffs;
@@ -62,7 +62,7 @@ public:
 
   int total_poisons() const
   {
-    return dots.seething_poison->is_ticking() + dots.volatile_poison->is_ticking() + dots.hemotoxin_old->is_ticking() +
+    return dots.seething_poison->is_ticking() + dots.volatile_poison->is_ticking() + dots.hemotoxin->is_ticking() +
            dots.vexiras_venom->is_ticking() + dots.corrosive_spill->is_ticking();
   }
 };
@@ -118,8 +118,8 @@ public:
     actions::mara_spell_t* maiden_of_death;
     actions::mara_spell_t* final_stratagem;         // 3m reset cd
     actions::mara_spell_t* matriach_macabre;  // ult
-    actions::mara_poison_t* hemotoxin_old_dot;
-    actions::mara_poison_t* hemotoxin_old;
+    actions::mara_poison_t* hemotoxin_dot;
+    actions::mara_poison_t* hemotoxin;
     actions::mara_poison_t* corrosive_spill;
     actions::mara_spell_t* stalker_step;
     actions::mara_poison_t* vexiras_venom;
@@ -170,8 +170,8 @@ public:
   X( FEED_THE_QUEEN, "feed_the_queen", "Feed the Queen" )             \
   X( DEADLY_SCHEME, "deadly_scheme", "Deadly Scheme" )                \
   X( MAIDENS_DOOM, "maidens_doom", "Maidens Doom" )                   \
-  X( HEMOTOXIN_OLD, "hemotoxin_old", "Hemotoxin_old" )                \
-  X( HEMOTOXIN, "hemotoxin", "Hemotoxin" )                            \
+  X( HEMOTOXIN, "hemotoxin", "Hemotoxin" )                \
+  X( HEMOTOXIN_REMOVED, "hemotoxin_removed", "Hemotoxin Removed" )                            \
   X( SINNERS_PRIDE, "sinners_pride", "Sinners Pride" )                \
   X( MALEVOLENCE, "malevolence", "Malevolence" )                      \
   X( ARACHNID_ONSLAUGHT, "arachnid_onslaught", "Arachnid Onslaught" ) \
@@ -264,22 +264,22 @@ public:
 
     timespan_t sinners_pride_cdr_reduction_per_cp = 0.6_s;
 
-    double hemotoxin_old_chance                = 0.12;
-    int hemotoxin_old_applied_stacks           = 1;
-    int hemotoxin_old_max_stacks               = 3;
-    double hemotoxin_old_damage_coefficient    = 0.2;
-    timespan_t hemotoxin_old_duration          = 9_s;
-    timespan_t hemotoxin_old_period            = 1.5_s;
-    double hemotoxin_old_conversion_rate       = 0.75;
-    //double hemotoxin_old_conversion_rate       = 1.0;
-    double hemotoxin_old_aoe_damage_multiplier = 0.67;
-    double hemotoxin_old_aoe_falloff           = 1.0;
-    bool hemotoxin_old_double_dip_stats        = false;
-    bool hemotoxin_old_double_dip_multipliers  = false;
+    double hemotoxin_chance                = 0.12;
+    int hemotoxin_applied_stacks           = 1;
+    int hemotoxin_max_stacks               = 3;
+    double hemotoxin_damage_coefficient    = 0.2;
+    timespan_t hemotoxin_duration          = 9_s;
+    timespan_t hemotoxin_period            = 1.5_s;
+    double hemotoxin_conversion_rate       = 0.75;
+    //double hemotoxin_conversion_rate       = 1.0;
+    double hemotoxin_aoe_damage_multiplier = 0.67;
+    double hemotoxin_aoe_falloff           = 1.0;
+    bool hemotoxin_double_dip_stats        = false;
+    bool hemotoxin_double_dip_multipliers  = false;
 
-    timespan_t hemotoxin_sample_per_cp_qf    = 0.8_s;
-    timespan_t hemotoxin_sample_per_cp_aa    = 0.4_s;
-    double hemotoxin_sample_multiplier_crits = 1.0;
+    timespan_t hemotoxin_removed_sample_per_cp_qf    = 0.8_s;
+    timespan_t hemotoxin_removed_sample_per_cp_aa    = 0.4_s;
+    double hemotoxin_removed_sample_multiplier_crits = 1.0;
 
     double maidens_doom_execute_amp       = 0.2;
 
@@ -814,10 +814,10 @@ public:
   void trigger_auto_attack( const action_state_t* );
   void trigger_spirit_refund( const action_state_t*, double );
   void trigger_poison_bomb( const action_state_t*, double );
-  void roll_for_hemotoxin_old( const action_state_t* );
+  void roll_for_hemotoxin( const action_state_t* );
   void handle_vexiras_venom( const action_state_t* );
   void trigger_combo_point_gain( int, gain_t* gain = nullptr );
-  void handle_hemotoxin( const action_state_t*, action_t*, timespan_t );
+  void handle_hemotoxin_removed( const action_state_t*, action_t*, timespan_t );
 
   // General Methods ==========================================================
 
@@ -1079,15 +1079,15 @@ struct mara_poison_t : public mara_attack_t
   }
 };
 
-struct hemotoxin_t : public mara_poison_t
+struct hemotoxin_removed_t : public mara_poison_t
 {
-  hemotoxin_t( util::string_view flavour, mara_t* p ) : mara_poison_t( std::format( "hemotoxin_{}", flavour ), p )
+  hemotoxin_removed_t( util::string_view flavour, mara_t* p ) : mara_poison_t( std::format( "hemotoxin_removed_{}", flavour ), p )
   {
     background = true;
     may_crit   = true;
     id         = 14;
 
-    name_str_reporting = std::format( "Hemotoxin - {}", flavour );
+    name_str_reporting = std::format( "Hemotoxin Removed - {}", flavour );
   }
 
   void init() override
@@ -1152,7 +1152,7 @@ struct melee_t : public mara_attack_t
   {
     base_t::impact( s );
 
-    roll_for_hemotoxin_old( s );
+    roll_for_hemotoxin( s );
   }
 
   void schedule_execute( action_state_t* state ) override
@@ -1270,7 +1270,7 @@ struct backstab_t : public mara_attack_t
 
     trigger_combo_point_gain( state->result == RESULT_CRIT ? 3 : 2, gain );
 
-    roll_for_hemotoxin_old( state );
+    roll_for_hemotoxin( state );
 
     if ( p()->talent_enabled( mara_t::CAUSTIC_WOUNDS ) )
     {
@@ -1287,11 +1287,11 @@ struct backstab_t : public mara_attack_t
 
 struct queens_fang_t : public mara_attack_t
 {
-  action_t* hemotoxin;
+  action_t* hemotoxin_removed;
   queens_fang_t( util::string_view flavour, mara_t* p, util::string_view options_str = {},
                  secondary_trigger st = secondary_trigger::NONE )
     : mara_attack_t( flavour.size() > 0 ? std::format( "queens_fang_{}", flavour ) : "queens_fang", p, options_str ),
-      hemotoxin( nullptr )
+      hemotoxin_removed( nullptr )
   {
     id = 3;
 
@@ -1299,10 +1299,10 @@ struct queens_fang_t : public mara_attack_t
 
     name_str_reporting = flavour.size() > 0 ? std::format( "Queens Fang - {}", flavour ) : "Queens Fang";
 
-    if ( p->talents_enabled( mara_t::HEMOTOXIN ) )
+    if ( p->talents_enabled( mara_t::HEMOTOXIN_REMOVED ) )
     {
-      hemotoxin = new hemotoxin_t( flavour.size() > 0 ? std::format( "QF_{}", flavour ) : "QF", p );
-      add_child( hemotoxin );
+      hemotoxin_removed = new hemotoxin_removed_t( flavour.size() > 0 ? std::format( "QF_{}", flavour ) : "QF", p );
+      add_child( hemotoxin_removed );
     }
 
     school                             = SCHOOL_PHYSICAL;
@@ -1409,7 +1409,7 @@ struct queens_fang_t : public mara_attack_t
     mara_attack_t::impact( state );
 
     handle_vexiras_venom( state );
-    handle_hemotoxin( state, hemotoxin, p()->talents.hemotoxin_sample_per_cp_qf );
+    handle_hemotoxin_removed( state, hemotoxin_removed, p()->talents.hemotoxin_removed_sample_per_cp_qf );
   }
 };
 
@@ -1440,8 +1440,8 @@ struct hemorrhaging_strike_t : public mara_attack_t
     if ( p->legendary.from_the_shadows )
       add_child( p->actions.queens_fang_fts_clone );
 
-    if ( p->talents_enabled( mara_t::HEMOTOXIN_OLD ) )
-      add_child( p->actions.hemotoxin_old );
+    if ( p->talents_enabled( mara_t::HEMOTOXIN ) )
+      add_child( p->actions.hemotoxin );
   }
 
   int n_targets() const override
@@ -1568,9 +1568,9 @@ struct hemorrhaging_strike_t : public mara_attack_t
     if ( p()->talents_enabled( mara_t::RED_LEDGER ) )
       make_event( *p()->sim, [ this ] { trigger_red_ledger(); } );
 
-    if ( p()->talents_enabled( mara_t::HEMOTOXIN_OLD ) && p()->get_target_data( s->target )->debuffs.hemotoxin_old->check() )
+    if ( p()->talents_enabled( mara_t::HEMOTOXIN ) && p()->get_target_data( s->target )->debuffs.hemotoxin->check() )
     {
-      p()->get_target_data( s->target )->debuffs.hemotoxin_old->decrement();
+      p()->get_target_data( s->target )->debuffs.hemotoxin->decrement();
 
       sim->print_debug( "{} current agi: {}, current ap: {}, state ap: {}", *p(), p()->cache.agility(),
                         p()->cache.attack_power(), s->attack_power );
@@ -1580,9 +1580,9 @@ struct hemorrhaging_strike_t : public mara_attack_t
       auto base_duration = composite_dot_duration( s ); 
       auto refresh_duration = calculate_dot_refresh_duration( dot, base_duration );
 
-      double amount = hemo_tick_damage_over_time( refresh_duration, dot ) * p()->talents.hemotoxin_old_conversion_rate;
+      double amount = hemo_tick_damage_over_time( refresh_duration, dot ) * p()->talents.hemotoxin_conversion_rate;
 
-      p()->actions.hemotoxin_old->execute_on_target( s->target, amount );
+      p()->actions.hemotoxin->execute_on_target( s->target, amount );
     }
   }
 
@@ -1764,7 +1764,7 @@ struct widows_bite_t : public mara_attack_t
       mara_attack_t::impact( state );
 
       trigger_combo_point_gain( state->result == RESULT_CRIT ? 3 : 2, this->gain );
-      roll_for_hemotoxin_old( state );
+      roll_for_hemotoxin( state );
 
       if ( p()->talents_enabled( mara_t::PUNCTURE ) && p()->talents.puncture_buff && state->result == RESULT_CRIT )
       {
@@ -2047,47 +2047,47 @@ struct corrosive_spill_dot_t : public mara_poison_t
   }
 };
 
-struct hemotoxin_old_dot_t : public mara_poison_t
+struct hemotoxin_dot_t : public mara_poison_t
 {
-  hemotoxin_old_dot_t( util::string_view name, mara_t* p ) : mara_poison_t( name, p )
+  hemotoxin_dot_t( util::string_view name, mara_t* p ) : mara_poison_t( name, p )
   {
     background     = true;
 
-    dot_duration   = p->talents.hemotoxin_old_duration;
+    dot_duration   = p->talents.hemotoxin_duration;
     dot_behavior   = DOT_REFRESH_DURATION;
-    base_tick_time = p->talents.hemotoxin_old_period;
+    base_tick_time = p->talents.hemotoxin_period;
     hasted_ticks   = true;
 
     id = 13;
 
-    name_str_reporting = "Hemotoxin_old (DoT)";
+    name_str_reporting = "HEMOTOXIN (DoT)";
 
-    attack_power_mod.tick = p->talents.hemotoxin_old_damage_coefficient;
+    attack_power_mod.tick = p->talents.hemotoxin_damage_coefficient;
   }
 
   void last_tick( dot_t* d ) override
   {
     mara_poison_t::last_tick( d );
 
-    p()->get_target_data( d->state->target )->debuffs.hemotoxin_old->expire();
+    p()->get_target_data( d->state->target )->debuffs.hemotoxin->expire();
   }
 };
 
-struct hemotoxin_old_explosion_t : public mara_poison_t
+struct hemotoxin_explosion_t : public mara_poison_t
 {
-  hemotoxin_old_explosion_t( util::string_view name, mara_t* p ) : mara_poison_t( name, p )
+  hemotoxin_explosion_t( util::string_view name, mara_t* p ) : mara_poison_t( name, p )
   {
     background = true;
     may_crit   = true;
     id         = 14;
 
-    name_str_reporting = "Hemotoxin_old";
+    name_str_reporting = "HEMOTOXIN";
 
     aoe                 = -1;
 
-    reduced_aoe_targets = p->talents.hemotoxin_old_aoe_falloff;
+    reduced_aoe_targets = p->talents.hemotoxin_aoe_falloff;
     full_amount_targets = 1;
-    base_aoe_multiplier = p->talents.hemotoxin_old_aoe_damage_multiplier;
+    base_aoe_multiplier = p->talents.hemotoxin_aoe_damage_multiplier;
     full_amount_targets_counted_for_sqrt = false;
   }
 
@@ -2212,7 +2212,7 @@ struct skittering_blades_t : public mara_attack_t
 
 struct arachnid_assault_t : public mara_attack_t
 {
-  action_t* hemotoxin;
+  action_t* hemotoxin_removed;
   arachnid_assault_t( util::string_view flavour, mara_t* p, util::string_view options_str = {}, secondary_trigger st = secondary_trigger::NONE )
     : mara_attack_t( flavour.size() > 0 ? std::format( "arachnid_assault_{}", flavour ) : "arachnid_assault", p, options_str )
   {
@@ -2221,10 +2221,10 @@ struct arachnid_assault_t : public mara_attack_t
     secondary_trigger_type = st;
 
     
-    if ( p->talents_enabled( mara_t::HEMOTOXIN ) )
+    if ( p->talents_enabled( mara_t::HEMOTOXIN_REMOVED ) )
     {
-      hemotoxin = new hemotoxin_t( flavour.size() > 0 ? std::format( "AA_{}", flavour ) : "AA", p );
-      add_child( hemotoxin );
+      hemotoxin_removed = new hemotoxin_removed_t( flavour.size() > 0 ? std::format( "AA_{}", flavour ) : "AA", p );
+      add_child( hemotoxin_removed );
     }
 
     name_str_reporting = flavour.size() > 0 ? std::format( "Arachnid Assault - {}", flavour ) : "Arachnid Assault";
@@ -2327,7 +2327,7 @@ struct arachnid_assault_t : public mara_attack_t
     mara_attack_t::impact( state );
 
     handle_vexiras_venom( state );
-    handle_hemotoxin( state, hemotoxin, p()->talents.hemotoxin_sample_per_cp_aa );
+    handle_hemotoxin_removed( state, hemotoxin_removed, p()->talents.hemotoxin_removed_sample_per_cp_aa );
   }
 };
 
@@ -2405,7 +2405,7 @@ mara_td_t::mara_td_t( player_t* target, mara_t* source ) : fellowship::fs_player
 {
   dots.seething_poison     = target->get_dot( "seething_poison", source );
   dots.hemorrhaging_strike = target->get_dot( "hemorrhaging_strike", source );
-  dots.hemotoxin_old       = target->get_dot( "hemotoxin_old_dot", source );
+  dots.hemotoxin       = target->get_dot( "hemotoxin_dot", source );
   dots.volatile_poison     = target->get_dot( "volatile_poison", source );
   dots.corrosive_spill     = target->get_dot( "corrosive_spill", source );
   dots.vexiras_venom       = target->get_dot( "vexiras_venom", source );
@@ -2416,14 +2416,14 @@ mara_td_t::mara_td_t( player_t* target, mara_t* source ) : fellowship::fs_player
                              ->set_refresh_behavior( buff_refresh_behavior::DURATION )
                              ->set_default_value( source->talents.nightstalker_damage_taken );
 
-  debuffs.hemotoxin_old = make_buff( *this, "hemotoxin_old" )
-                          ->set_duration( source->talents.hemotoxin_old_duration )
-                          ->set_max_stack( source->talents.hemotoxin_old_max_stacks )
+  debuffs.hemotoxin = make_buff( *this, "hemotoxin" )
+                          ->set_duration( source->talents.hemotoxin_duration )
+                          ->set_max_stack( source->talents.hemotoxin_max_stacks )
                           ->set_refresh_behavior( buff_refresh_behavior::DURATION )
                           ->set_stack_change_callback( [ this ]( buff_t* b, int old, int _new ) {
                             if ( !_new )
                             {
-                              dots.hemotoxin_old->reset();
+                              dots.hemotoxin->reset();
                             }
                           } );
 
@@ -3073,7 +3073,7 @@ void mara_t::create_options()
   add_option( opt_timespan( "talent.macabre_stratagem_duration", talents.macabre_stratagem_duration ) );
 
   add_option(
-      opt_float( "talent.hemotoxin_sample_multiplier_crits", talents.hemotoxin_sample_multiplier_crits, 1.0, 100 ) );
+      opt_float( "talent.hemotoxin_removed_sample_multiplier_crits", talents.hemotoxin_removed_sample_multiplier_crits, 1.0, 100 ) );
   
 
   /*add_option( opt_bool( "ready_trigger", options.mara_ready_trigger ) );
@@ -3166,8 +3166,8 @@ void mara_t::init_background_actions()
 
   actions.corrosive_spill = new actions::corrosive_spill_dot_t( "corrosive_spill", this );
 
-  actions.hemotoxin_old_dot = new actions::hemotoxin_old_dot_t( "hemotoxin_old_dot", this );
-  actions.hemotoxin_old     = new actions::hemotoxin_old_explosion_t( "hemotoxin_old", this );
+  actions.hemotoxin_dot = new actions::hemotoxin_dot_t( "hemotoxin_dot", this );
+  actions.hemotoxin     = new actions::hemotoxin_explosion_t( "hemotoxin", this );
 
   actions.vexiras_venom = new actions::vexiras_venom_t( "vexiras_venom", this );
 
@@ -3422,17 +3422,17 @@ void actions::mara_action_t<Base>::trigger_poison_bomb( const action_state_t* st
 }
 
 template <typename Base>
-void actions::mara_action_t<Base>::roll_for_hemotoxin_old( const action_state_t* state )
+void actions::mara_action_t<Base>::roll_for_hemotoxin( const action_state_t* state )
 {
-  if ( !p()->talents_enabled( mara_t::HEMOTOXIN_OLD ) || ab::result_is_miss( state->result ) )
+  if ( !p()->talents_enabled( mara_t::HEMOTOXIN ) || ab::result_is_miss( state->result ) )
     return;
 
-  if ( p()->rng().roll( p()->talents.hemotoxin_old_chance ) )
+  if ( p()->rng().roll( p()->talents.hemotoxin_chance ) )
   {
     mara_td_t* tdata = p()->get_target_data( state->target );
-    tdata->debuffs.hemotoxin_old->trigger( p()->talents.hemotoxin_old_applied_stacks );
-    p()->actions.hemotoxin_old_dot->set_target( state->target );
-    p()->actions.hemotoxin_old_dot->execute();
+    tdata->debuffs.hemotoxin->trigger( p()->talents.hemotoxin_applied_stacks );
+    p()->actions.hemotoxin_dot->set_target( state->target );
+    p()->actions.hemotoxin_dot->execute();
   }
 }
 
@@ -3462,9 +3462,9 @@ inline double dot_tick_over_time( timespan_t sample_duration, const dot_t* dot )
 }
 
 template <typename Base>
-inline void actions::mara_action_t<Base>::handle_hemotoxin( const action_state_t* state, action_t* hemo_action, timespan_t base_sample )
+inline void actions::mara_action_t<Base>::handle_hemotoxin_removed( const action_state_t* state, action_t* hemo_action, timespan_t base_sample )
 {
-  if ( !hemo_action || !p()->talents_enabled( mara_t::HEMOTOXIN ) || ab::result_is_miss( state->result ) )
+  if ( !hemo_action || !p()->talents_enabled( mara_t::HEMOTOXIN_REMOVED ) || ab::result_is_miss( state->result ) )
     return;
 
   mara_td_t* tdata = p()->get_target_data( state->target );
@@ -3476,7 +3476,7 @@ inline void actions::mara_action_t<Base>::handle_hemotoxin( const action_state_t
   timespan_t sample_duration = base_sample * rs->get_combo_points();
 
   if ( state->result == RESULT_CRIT )
-    sample_duration *= p()->talents.hemotoxin_sample_multiplier_crits;
+    sample_duration *= p()->talents.hemotoxin_removed_sample_multiplier_crits;
 
   auto damage = dot_tick_over_time( sample_duration, tdata->dots.hemorrhaging_strike );
 

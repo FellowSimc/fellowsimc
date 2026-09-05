@@ -1363,6 +1363,9 @@ struct queens_fang_t : public mara_attack_t
       had_clones = p()->buffs.spirit_proc_clones->check();
       p()->buffs.spirit_proc_clones->decrement();
     }
+
+    bool had_deadly_scheme = p()->buffs.deadly_scheme->check();
+
     mara_attack_t::execute();
 
     if ( secondary_trigger_type == secondary_trigger::NONE && had_clones )
@@ -1376,6 +1379,24 @@ struct queens_fang_t : public mara_attack_t
       }
     }
 
+    if ( secondary_trigger_type == secondary_trigger::NONE && p()->buffs.ultimate_buff_window->check() )
+    {
+      p()->actions.queens_fang_ult_clone->trigger_secondary_action(
+          p()->actions.queens_fang_ult_clone->get_state( execute_state ), 0.3_s );
+      p()->actions.queens_fang_ult_clone->trigger_secondary_action(
+          p()->actions.queens_fang_ult_clone->get_state( execute_state ), 0.6_s );
+    }
+
+    if ( !is_secondary_action() )
+    {
+      if ( had_deadly_scheme )
+      {
+        p()->buffs.deadly_scheme->expire();
+      }
+
+      p()->buffs.feed_the_queen->expire();
+    }
+
     if ( !is_secondary_action() && p()->talents_enabled( mara_t::MALEVOLENCE ) )
     {
       p()->buffs.malevolence_qf_buffs_aa->trigger();
@@ -1387,22 +1408,7 @@ struct queens_fang_t : public mara_attack_t
   {
     mara_attack_t::impact( state );
 
-    if ( secondary_trigger_type == secondary_trigger::NONE && p()->buffs.ultimate_buff_window->check() )
-    {
-      p()->actions.queens_fang_ult_clone->trigger_secondary_action(
-          p()->actions.queens_fang_ult_clone->get_state( state ), 0.3_s );
-      p()->actions.queens_fang_ult_clone->trigger_secondary_action(
-          p()->actions.queens_fang_ult_clone->get_state( state ), 0.6_s );
-    }
-
-    if ( !is_secondary_action() )
-    {
-      p()->buffs.deadly_scheme->expire();
-      p()->buffs.feed_the_queen->expire();
-    }
-
     handle_vexiras_venom( state );
-
     handle_hemotoxin( state, hemotoxin, p()->talents.hemotoxin_sample_per_cp_qf );
   }
 };
@@ -2283,8 +2289,9 @@ struct arachnid_assault_t : public mara_attack_t
       p()->buffs.spirit_proc_clones->decrement();
     }
 
-    mara_attack_t::execute();
+    bool had_deadly_scheme = p()->buffs.deadly_scheme->check();
 
+    mara_attack_t::execute();
 
     if ( secondary_trigger_type == secondary_trigger::NONE && p()->buffs.ultimate_buff_window->check() )
     {
@@ -2305,7 +2312,7 @@ struct arachnid_assault_t : public mara_attack_t
       }
     }
 
-    if ( !is_secondary_action() )
+    if ( !is_secondary_action() && had_deadly_scheme )
       p()->buffs.deadly_scheme->expire();
 
     if ( !is_secondary_action() && p()->talents_enabled( mara_t::MALEVOLENCE ) )

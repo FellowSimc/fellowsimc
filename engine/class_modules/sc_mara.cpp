@@ -2248,6 +2248,10 @@ struct arachnid_assault_t : public mara_attack_t
       add_child( p->actions.arachnid_assault_lego_clone );
     }
 
+    if ( st == secondary_trigger::ULTIMATE_CLONE )
+    {
+      base_dd_multiplier *= 0.5;
+    }
   }
 
   double composite_da_multiplier( const action_state_t* state ) const override

@@ -1171,7 +1171,7 @@ struct glacial_blast_t : public rime_spell_t
 
   void schedule_execute( action_state_t* state ) override
   {
-    if ( p()->talents_enabled( rime_t::ICY_FLOW ) )
+    if ( p()->talents_enabled( rime_t::ICY_FLOW ) && p()->buffs.icy_flow->check() )
     {
       p()->buffs.icy_flow_haste->trigger();
     }
@@ -1565,7 +1565,8 @@ struct talon_strike_t : public rime_spell_t
 
   void execute()
   {
-    auto cp = p()->resources.current[ RESOURCE_WINTER_ORB ];
+    auto cp = p()->buffs.glacial_assault->at_max_stacks() ? p()->resources.max[ RESOURCE_WINTER_ORB ]
+                                                          : p()->resources.current[ RESOURCE_WINTER_ORB ];
     rime_spell_t::execute();
 
     for ( int i = 0; i < cp; ++i )
@@ -1819,11 +1820,13 @@ struct bursting_ice_tick_t : public rime_spell_t
 
     spell_power_mod.direct = p->spell_const.bursting_ice_coeff;
 
-    if ( true )
+    energize_type     = action_energize::ON_CAST;
+    energize_resource = RESOURCE_ANIMA;
+    energize_amount   = p->spell_const.bursting_ice_anima_gen;
+
+    if ( p->talents_enabled( rime_t::BURSTBOLTER ) )
     {
-      energize_type     = action_energize::ON_CAST;
-      energize_resource = RESOURCE_ANIMA;
-      energize_amount   = p->spell_const.bursting_ice_anima_gen;
+      base_dd_multiplier *= 1.0 + p->talents.burstbolter_bursting_ice_amp;
     }
 
     ability_flags |= ability_type_e::ABILITY_CORE;

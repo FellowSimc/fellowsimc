@@ -1603,6 +1603,16 @@ void fs_player_t::create_buffs()
 void fs_player_t::invalidate_cache( cache_e c )
 {
   player_t::invalidate_cache( c );
+
+  //if ( c == cache_e::CACHE_MASTERY && fs_buffs.the_philosopher->check() )
+  //{
+  //  auto mast = std::min( finesse_trait_values.finesse_g_max, cache.mastery() );
+
+  //  auto new_val = finesse_trait_values.finesse_g_spirit_to_stats[ finesse_traits[ THE_PHILOSOPHER ] ] * mast;
+
+  //  fs_buffs.the_philosopher->current_value = new_val;
+  //  fs_buffs.the_philosopher->invalidate_cache();
+  //}
 }
 
 bool parse_fsweapon( sim_t* sim, std::string_view, std::string_view value )

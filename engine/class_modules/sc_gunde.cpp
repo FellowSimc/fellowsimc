@@ -858,7 +858,7 @@ public:
     {
       if ( p()->rng_objects.grim_harvest->trigger() )
       {
-        p()->cooldowns.grim_carve->reset( true, 1 );
+        p()->cooldowns.grim_carve->reset( false, 1 );
         p()->buffs.grim_harvest->trigger();
       }
     }
@@ -1169,7 +1169,7 @@ struct rend_t : public gunde_attack_t
       // dot_duration /= p->talents.deep_rend_tick_speed_increase;
     }
 
-    rend_ticks = as<size_t>( dot_duration / base_tick_time );
+    rend_ticks = as<size_t>( std::floor( dot_duration / base_tick_time ) );
   }
 
   void init_finished() override
@@ -1479,7 +1479,7 @@ struct grim_carve_t : public gunde_attack_t
     ability_flags |= ability_type_e::ABILITY_POWER;
 
     cooldown->duration = p->spell_const.grim_carve_cooldown;
-    cooldown->charges  = 1;
+    // cooldown->charges  = 1;
     cooldown->hasted   = true;
 
     hit = new grim_carve_hit_t( "grim_carve_hit", p );
@@ -1527,11 +1527,10 @@ struct grim_carve_t : public gunde_attack_t
       damage_state->persistent_multiplier = execute_state->persistent_multiplier;
 
       hit->set_target( target );
+      cast_state( damage_state )->set_rend_coefficient( cast_state( execute_state )->get_rend_coefficient() );
 
-      make_event(
-          *sim,
-          tick_period * i * p()->cache.attack_haste() * period_multiplier + p()->spell_const.grim_carve_initial_delay,
-          [ this, damage_state ]() { hit->schedule_execute( damage_state ); } );
+      make_event( *sim, tick_period * i * period_multiplier + p()->spell_const.grim_carve_initial_delay,
+                  [ this, damage_state ]() { hit->schedule_execute( damage_state ); } );
     }
 
     p()->buffs.grim_harvest->expire();
@@ -1549,7 +1548,7 @@ struct reavers_edge_t : public gunde_attack_t
     ability_flags |= ability_type_e::ABILITY_BASIC;
 
     cooldown->duration = p->spell_const.reavers_edge_cooldown;
-    cooldown->charges  = 1;
+    //cooldown->charges  = 1;
     cooldown->hasted   = true;
 
     attack_power_mod.direct = p->spell_const.reavers_edge_coeff;
@@ -1585,7 +1584,7 @@ struct blood_arc_t : public gunde_attack_t
     ability_flags |= ability_type_e::ABILITY_CORE;
 
     cooldown->duration = p->spell_const.blood_arc_cooldown;
-    cooldown->charges  = 1;
+    //cooldown->charges  = 1;
     cooldown->hasted   = true;
 
     attack_power_mod.direct = p->spell_const.blood_arc_coeff;
@@ -1645,7 +1644,7 @@ struct blood_arc_t : public gunde_attack_t
 
     if ( p()->talents_enabled( gunde_t::DEATHS_ARC ) )
     {
-      if ( p()->rng_objects.deaths_arc->trigger() )
+      if ( p()->rng().roll( p()->talents.deaths_arc_chance ) )
       {
         cooldown->reset( false, 1 );
         p()->buffs.deaths_arc->trigger();
@@ -1665,7 +1664,7 @@ struct rupture_t : public gunde_attack_t
     ability_flags |= ability_type_e::ABILITY_POWER;
 
     cooldown->duration = p->spell_const.rupture_cooldown;
-    cooldown->charges  = 1;
+    //cooldown->charges  = 1;
     cooldown->hasted   = false;
 
     attack_power_mod.direct = p->spell_const.rupture_coeff;
@@ -1749,7 +1748,7 @@ struct heart_splitter_t : public gunde_attack_t
     ability_flags |= ability_type_e::ABILITY_CORE;
 
     cooldown->duration = p->spell_const.heart_splitter_cooldown;
-    cooldown->charges  = 1;
+    //cooldown->charges  = 1;
     cooldown->hasted   = true;
 
     attack_power_mod.direct = p->spell_const.heart_splitter_coeff;
@@ -1886,7 +1885,7 @@ struct reign_in_blood_t : public gunde_spell_t
 
     cooldown->duration = p->spell_const.reign_in_blood_cooldown;
     cooldown->hasted   = false;
-    cooldown->charges  = 1;
+    //cooldown->charges  = 1;
 
     ability_flags |= ability_type_e::ABILITY_MAJOR;
   }
@@ -1919,7 +1918,7 @@ struct slaughter_t : public gunde_spell_t
 
     cooldown->duration = p->spell_const.slaughter_cooldown;
     cooldown->hasted   = false;
-    cooldown->charges  = 1;
+    //cooldown->charges  = 1;
 
     aoe = -1;
 
@@ -1982,7 +1981,7 @@ struct slaughter_splitter_t : public gunde_spell_t
 
     cooldown->duration = p->spell_const.slaughter_cooldown;
     cooldown->hasted   = false;
-    cooldown->charges  = 1;
+    //cooldown->charges  = 1;
 
     aoe = -1;
 
@@ -2031,10 +2030,9 @@ struct owed_in_blood_t : public gunde_spell_t
 
     cooldown->duration = p->spell_const.owed_in_blood_cooldown;
     cooldown->hasted   = false;
-    cooldown->charges  = 1;
+    //cooldown->charges  = 1;
 
     aoe = -1;
-
     
     name_str_reporting = "Owed in Blood";
   }

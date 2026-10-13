@@ -6,6 +6,7 @@ optimal_raid=0
 # max_time=60
 target_error=0.15
 iterations=15000
+# iterations=5000
 chart_show_relative_difference=1
 vary_combat_length=0.0
 single_actor_batch=1

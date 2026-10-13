@@ -220,8 +220,8 @@ double player_stat_cache_t::attack_haste() const
 {
   if ( !active || !valid[ CACHE_ATTACK_HASTE ] )
   {
-    valid[ CACHE_ATTACK_HASTE ] = true;
     _attack_haste               = player->composite_melee_haste();
+    // Will recalculate the cache state from pct haste.
   }
   else
     assert( _attack_haste == player->composite_melee_haste() );
@@ -322,8 +322,8 @@ double player_stat_cache_t::spell_haste() const
 {
   if ( !active || !valid[ CACHE_SPELL_HASTE ] )
   {
-    valid[ CACHE_SPELL_HASTE ] = true;
     _spell_haste               = player->composite_spell_haste();
+    // This will implicitly recalculate it from the cached pct spell haste.
   }
   else
     assert( _spell_haste == player->composite_spell_haste() );

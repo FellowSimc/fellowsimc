@@ -51,46 +51,25 @@ level=80
 
 apl/elarion/elarion_apl.simc
 
+head=hat,variant=ffff,ilevel=315,main_secondary=haste/spirit
+shoulder=shoulder,variant=ffff,ilevel=315,main_secondary=haste/spirit
+back=back,variant=ffff,ilevel=315,main_secondary=expertise/spirit
+chest=chest,rarity=legendary,ilevel=360
+hands=hands,variant=ffff,ilevel=315,main_secondary=haste/spirit
+legs=legs,variant=ffff,ilevel=315,main_secondary=haste/spirit
+feet=feet,variant=ffff,ilevel=315,main_secondary=haste/haste
+
+neck=neck,variant=ffff,ilevel=315,main_secondary=haste/spirit,affixes=subduer/subduer/subduer
+wrist=wrists,variant=ffff,ilevel=315,main_secondary=haste/spirit
 
 
-# head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=expertise/haste
-# shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
-# back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/crit
-# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=primary/crit
-# hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/primary
-# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/primary
-# feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+finger1=ring1,ilevel=315,main_secondary=haste/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch/the_trickster/the_trickster/the_trickster/the_trickster
+finger2=ring2,ilevel=315,main_secondary=haste/spirit
 
-# neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
-# wrist=wrists,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=primary/expertise
+trinket1=relic1,main_secondary=haste,ilevel=315
+trinket2=relic2,main_secondary=expertise,ilevel=315
 
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=primary/expertise
-# finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/expertise
-# trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=crit/haste
-# trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/crit,fixed_secondary=haste/haste
-
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=primary/haste
-
-
-head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit
-shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit
-back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/spirit
-chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit
-hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
-legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
-feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
-
-neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer
-wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=crit/crit
-
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer/subduer/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
-finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch/the_trickster/the_trickster/the_trickster/the_trickster
-#  finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/subduer/subduer/subduer/subduer/the_monarch
-finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit
-trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
-trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
-
-main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=haste
+main_hand=weap,ilevel=315
 # weapon=voidbringers_touch
 
 # weapon_trait.hunters_focus=1
@@ -199,25 +178,25 @@ legendary.shimmer=0
 legendary.starstrikers_ascent=0
 legendary.astronomers_hail=1
 
-head=hat,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit
-shoulder=shoulder,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=crit/crit
-back=back,rarity=regal,variant=evens,ilevel=315,main_secondary=expertise,fixed_secondary=expertise/crit
-chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit
-hands=hands,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
-legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit
-feet=feet,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/haste
+head=hat,variant=ffff,ilevel=315,main_secondary=haste/crit
+shoulder=shoulder,variant=ffff,ilevel=315,main_secondary=haste/crit
+back=back,variant=ffff,ilevel=315,main_secondary=expertise/crit
+chest=chest,variant=legendary,ilevel=360
 
-neck=neck,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer
-wrist=wrists,rarity=legendary,variant=big_secondary,ilevel=360,main_secondary=crit,fixed_secondary=crit/crit
+hands=hands,variant=ffff,ilevel=315,main_secondary=haste/spirit
+legs=legs,variant=ffff,ilevel=315,main_secondary=haste/spirit
+feet=feet,variant=ffff,ilevel=315,main_secondary=haste/haste
 
-# finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=subduer/subduer/subduer/subduer/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
-finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
-#  finger1=ring1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/subduer/subduer/subduer/subduer/the_monarch
-finger2=ring2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=spirit/spirit
-trinket1=relic1,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
-trinket2=relic2,rarity=regal,variant=evens,ilevel=315,main_secondary=haste/spirit,fixed_secondary=haste/haste
+neck=neck,variant=ffff,ilevel=315,main_secondary=haste/spirit,affixes=subduer/subduer/subduer
+wrist=wrists,variant=ffff,ilevel=315,main_secondary=haste/spirit
 
-main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=haste
+finger1=ring1,variant=ffff,ilevel=315,main_secondary=haste/spirit,affixes=the_mystic/the_mystic/the_mystic/the_mystic/the_philosopher/the_philosopher/the_philosopher/the_philosopher/the_monarch
+finger2=ring2,variant=ffff,ilevel=315,main_secondary=haste/spirit
+
+trinket1=relic1,main_secondary=haste,ilevel=315
+trinket2=relic2,main_secondary=expertise,ilevel=315
+
+main_hand=weap,variant=evens,ilevel=315
 
 copy="Astronomers Hail RS HWA Spirit","Astronomers Hail HWA Spirit"
 talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_winds:1/lunarlight_affinity:1/repeating_stars:1/rising_moon:1/skylit_grace:1
@@ -301,36 +280,36 @@ talents=last_lights:1/lethal_shots:1/strikers_aim:1/final_crescendo:1/resurgent_
 # weapon=voidbringers_touch
 
 # copy="Wep Haste","Base Elarion"
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=haste/haste
+# main_hand=weap,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=haste/haste
 # copy="Wep Prim","Base Elarion"
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=primary/haste
+# main_hand=weap,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=primary/haste
 # copy="Wep Spirit","Base Elarion"
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=spirit/haste
+# main_hand=weap,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=spirit/haste
 # copy="Wep Crit","Base Elarion"
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+# main_hand=weap,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
 # copy="Wep Exp","Base Elarion"
-# main_hand=weap,rarity=regal,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=expertise/haste
+# main_hand=weap,variant=evens,ilevel=315,main_secondary=crit,fixed_secondary=haste/haste,affixes=expertise/haste
 
 
 # copy="Chest Haste","Base Elarion"
-# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=haste
+# chest=chest,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=haste
 # copy="Chest Prim","Base Elarion"
-# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=primary
+# chest=chest,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=primary
 # copy="Chest Spirit","Base Elarion"
-# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=spirit
+# chest=chest,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=spirit
 # copy="Chest Crit","Base Elarion"
-# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=crit
+# chest=chest,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=crit
 # copy="Chest Exp","Base Elarion"
-# chest=chest,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=expertise
+# chest=chest,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=spirit/spirit,affixes=expertise
 
 # copy="Legs Haste","Base Elarion"
-# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=haste
+# legs=legs,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=haste
 # copy="Legs Prim","Base Elarion"
-# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=primary
+# legs=legs,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=primary
 # copy="Legs Spirit","Base Elarion"
-# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=spirit
+# legs=legs,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=spirit
 # copy="Legs Crit","Base Elarion"
-# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=crit
+# legs=legs,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=crit
 # copy="Legs Exp","Base Elarion"
-# legs=legs,rarity=regal,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=expertise
+# legs=legs,variant=evens,ilevel=315,main_secondary=haste,fixed_secondary=haste/spirit,affixes=expertise
 

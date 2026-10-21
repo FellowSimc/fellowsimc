@@ -255,11 +255,24 @@ double fs_player_t::matching_gear_multiplier( attribute_e attr ) const
   return 0.0;
 }
 
+// fs_player_t::composite_player_heal_multiplier =====================================
+
+double fs_player_t::composite_player_heal_multiplier( const action_state_t* s ) const
+{
+  double m = player_t::composite_player_heal_multiplier( s );
+
+  m *= balancing_heal_aura;
+
+  return m;
+}
+
 // fs_player_t::composite_player_multiplier =====================================
 
 double fs_player_t::composite_player_multiplier( school_e school ) const
 {
   double m = player_t::composite_player_multiplier( school );
+
+  m *= balancing_damage_aura;
 
   if ( in_boss_encounter && sim->overrides.ruby_allow_boss_amp )
   {

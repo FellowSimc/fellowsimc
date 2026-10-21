@@ -204,6 +204,8 @@ public:
     // Gunde.SpiritProc.SpiritPointsGain
     double spirit_refund_mul = 1.0;
 
+    double balancing_damage_aura = 1.0;
+
     // Gunde.SpiritProc.AmountOfOrbs
     int spirit_proc_orbs = 5;
 
@@ -455,7 +457,7 @@ public:
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.Radius, 500.0
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AdditionalTargets, 4.0	; OLD
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.TargetThresholdScaling, 8.0
-    double oathshatter_target_threshold = 8.0;
+    double oathshatter_target_threshold = 10.0;
     // Gunde.HeavyMeleeDotBased.Talent.CritToAoe.AoeDamageScaler, 0.25
     double oathshatter_aoe_multiplier = 0.5;
     // Gunde.HeavyMeleeDotBased.Talent.LowHealthTarget.AddedCriticalStrikeChance, 1.00
@@ -697,6 +699,7 @@ public:
 
     create_cooldowns();
     spirit_refund_mul = spell_const.spirit_refund_mul;
+    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 
@@ -2142,6 +2145,8 @@ struct bloodbound_spirit_t : public gunde_attack_t
       reduced_aoe_targets     = p->spell_const.bloodbound_spirit_falloff;
 
       name_str_reporting = "Bloodbound Spirit (Hit)";
+
+      base_rend_applied = 1.0;
     }
   };
 

@@ -272,7 +272,7 @@ public:
     timespan_t hemotoxin_period            = 1.5_s;
     double hemotoxin_conversion_rate       = 0.75;
     //double hemotoxin_conversion_rate       = 1.0;
-    double hemotoxin_aoe_damage_multiplier = 0.67;
+    double hemotoxin_aoe_damage_multiplier = 0.5 / hemotoxin_conversion_rate;
     double hemotoxin_aoe_falloff           = 1.0;
     bool hemotoxin_double_dip_stats        = false;
     bool hemotoxin_double_dip_multipliers  = false;
@@ -304,6 +304,9 @@ public:
   
   struct spell_const_t
   {
+    double spirit_refund_mul                   = 1.0;
+    double balancing_damage_aura               = 1.04;
+
     double poison_and_bleed_increase_per_haste = 0.5;
     double poison_and_bleed_haste_cap = 1.0;
 
@@ -313,8 +316,10 @@ public:
     timespan_t hemorrhaging_strike_period = 3_s;
 
     double queens_fang_coeff     = 3.572;
-    double caustic_poison_coeff  = 4.476 * 1.07;
-    double seething_poison_coeff = 1.116 * 1.1;
+    // Mara.StrongerBehindAttackBuilder.Poison.AgilityCoefficient, 4.7893
+    double caustic_poison_coeff  = 4.7893;
+    // Mara.ChargedDoubleAttackBuilder.Poison.AgilityCoefficient, 1.2276
+    double seething_poison_coeff = 1.2276;
 
     double arachnid_assault_coeff = 1.1722;
 
@@ -492,6 +497,9 @@ public:
     regen_caches[ CACHE_ATTACK_HASTE ] = true;
 
     create_cooldowns();
+
+    spirit_refund_mul     = spell_const.spirit_refund_mul;
+    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 
@@ -1408,7 +1416,9 @@ struct queens_fang_t : public mara_attack_t
   {
     mara_attack_t::impact( state );
 
-    handle_vexiras_venom( state );
+    if ( !is_secondary_action() )
+      handle_vexiras_venom( state );
+
     handle_hemotoxin_removed( state, hemotoxin_removed, p()->talents.hemotoxin_removed_sample_per_cp_qf );
   }
 };
@@ -2330,7 +2340,9 @@ struct arachnid_assault_t : public mara_attack_t
   {
     mara_attack_t::impact( state );
 
-    handle_vexiras_venom( state );
+    if ( !is_secondary_action() )
+      handle_vexiras_venom( state );
+    
     handle_hemotoxin_removed( state, hemotoxin_removed, p()->talents.hemotoxin_removed_sample_per_cp_aa );
   }
 };

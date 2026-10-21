@@ -7,9 +7,9 @@ rime = {
     "coalescing_frost": 2,
     "glacial_assault": 2,
 
-    "burstbolter": 1,
+    "cold_shower": 1,
     "chilling_finesse": 1,
-    "navirs_keeper": 1,
+    "burstbolter": 1,
 
     "cascading_blitz": 2,
     "harrowing_ice": 2,
@@ -17,7 +17,7 @@ rime = {
 
     "bursting_swallows": 1,
     "greater_glacial_blast": 1,
-    "cold_shower": 1,
+    "navirs_keeper": 1,
 
     "icy_talons": 3,
     "frostweavers_wrath": 3,
@@ -30,9 +30,13 @@ rime = {
 
 rime_indicators = {
     "cascading_blitz": "CB",
+    "bursting_swallows": "BS",
+    "burstbolter": "BB",
     "icy_talons": "IT",
     "frostweavers_wrath": "FWW",
     "soulfrost_torrent": "SFT",
+    "icy_flow": "IF",
+    "greater_glacial_blast": "GGB",
 }
 
 
@@ -626,6 +630,8 @@ def dps_sim_results(paths_to_json, weights = None, weights_are_health=False, tot
 
             if "profilesets" in js["sim"]:
                 results = sorted(js["sim"]["profilesets"]["results"], key=lambda x: x["mean"], reverse = True)
+                for result in results:
+                    result.update({'class': js["sim"]["players"][0]["player_type"]})
             else:
                 for actor in js["sim"]["players"]:
                     result = {'name': actor["name"], 'mean': actor["collected_data"]["dps"]["mean"], 'class': actor["player_type"]}
@@ -1024,36 +1030,119 @@ if __name__ == "__main__":
         
     # sim_results = dps_sim_results(["output/eternal_tests_st328.json", "output/eternal_tests_12t328.json", "output/eternal_tests_20t328.json"], weights = [0.4, 0.3, 0.3])
 
-    weights = [0.4, 0.3, 0.3]
-    expected_dps = [24000, 90000, 120000]
+    # weights = [0.4, 0.3, 0.3]
+    # expected_dps = [24000, 90000, 120000]
+    # expected_time = 60 * 10
+    # healths = [expected_time * x * y for x,y in zip(weights, expected_dps)]
+
+    # sim_results = dps_sim_results(["output/eternal_tests_st328.json", "output/eternal_tests_12t328.json", "output/eternal_tests_20t328.json"], weights = healths, weights_are_health=True)
+    # # print(sim_results)
+    # overalls = sorted_by_overall(sim_results, descending=False)
+    
+
+    # from tabulate import tabulate
+    # print(tabulate(class_occurance(overalls), headers=['Actor', 'Class', 'Time'], tablefmt='orgtbl'))
+
+    # combos_to_file("Gunde", gunde, gunde_indicators, 14, "generated/gunde_full_search.simc", 
+    #         profilesets=True,
+    #         required_talents=[
+    #             "darkening_hearts",
+    #             # "massacre"
+    #         ],
+    #         excluded_talents=[
+    #             "sundered_flesh"
+    #             # "deadly_focus",
+    #             # "swift_reload"
+    #         ],
+    #         forbidden_pairs=[
+    #             # ("hemotoxin_removed", "malevolence"),
+    #             # ("gushing_blood", "malevolence"),
+    #             # ("arachnid_onslaught", "malevolence"),
+    #         ],
+    #         # name_filters=top_x
+    #         )
+
+
+    # combos_to_file("Rime", rime, rime_indicators, 2, "generated/rime_2pt.simc", 
+    #         profilesets=True,
+    #         required_talents=[
+    #             "darkening_hearts",
+    #             # "massacre"
+    #         ],
+    #         excluded_talents=[
+    #             rime[]
+    #             # "deadly_focus",
+    #             # "swift_reload"
+    #         ],
+    #         forbidden_pairs=[
+    #             # ("hemotoxin_removed", "malevolence"),
+    #             # ("gushing_blood", "malevolence"),
+    #             # ("arachnid_onslaught", "malevolence"),
+    #         ],
+    #         # name_filters=top_x
+    #         )
+
+    print(list(rime.keys())[3:])
+
+    talent_unlocks = [(1,2), (2, 4), (3, 5), (3, 7), (4, 8), (5, 10), (6, 12), (6, 14)]
+
+    for row, pt in talent_unlocks:
+        file_name = f"generated/rime_row{row}_{pt}pt.simc"
+        print(file_name)
+
+        exclude = list(rime.keys())[row*3:]
+        required = []
+
+        if "burstbolter" not in exclude:
+            required.append("burstbolter")
+        if "cascading_blitz" not in exclude:
+            required.append("cascading_blitz")
+        if "cascading_blitz" not in exclude and "bursting_swallows" not in exclude:
+            required.append("bursting_swallows")
+        # if "avalanche" not in exclude and "icy_talons" in exclude:
+        #     required.append("avalanche")
+        # if "icy_talons" not in exclude and pt >= 12:
+        #     required.append("icy_talons")
+
+        combos_to_file("Rime", rime, rime_indicators, pt, file_name, 
+                    profilesets=True,
+                    required_talents=required,
+                    excluded_talents=exclude,
+                    forbidden_pairs=[
+                        ("frostweavers_wrath", "icy_talons"),
+                        ("avalanche", "icy_talons"),
+                    ],
+                    # name_filters=top_x
+                    )
+    
+    weights = [0.3, 0.3, 0.4]
+    expected_dps = [1400, 5500, 8000]
     expected_time = 60 * 10
     healths = [expected_time * x * y for x,y in zip(weights, expected_dps)]
 
-    sim_results = dps_sim_results(["output/eternal_tests_st328.json", "output/eternal_tests_12t328.json", "output/eternal_tests_20t328.json"], weights = healths, weights_are_health=True)
+    # 7 -> 10pt
+    # 8 -> 12pt
+    # 12 -> 14pt
+    # 13 -> 10pt, 1.5s ggb +0.5
+    # 14 -> 12pt, 1.5s ggb +0.5
+    # 15 > 10pt, 2s ggb +0.5
+    # 16 > ??
+    # 17 > 10pt 1.5s ggb +0.5
+    prog_test_id = 17
+
+    sim_results = dps_sim_results([f"output/prog_tests_st{prog_test_id}.json", f"output/prog_tests_12t{prog_test_id}.json", f"output/prog_tests_20t{prog_test_id}.json"], weights = healths, weights_are_health=True)
     # print(sim_results)
     overalls = sorted_by_overall(sim_results, descending=False)
-    
-
     
 
     from tabulate import tabulate
     print(tabulate(class_occurance(overalls), headers=['Actor', 'Class', 'Time'], tablefmt='orgtbl'))
 
-    combos_to_file("Gunde", gunde, gunde_indicators, 14, "generated/gunde_full_search.simc", 
-            profilesets=True,
-            required_talents=[
-                "darkening_hearts",
-                # "massacre"
-            ],
-            excluded_talents=[
-                "sundered_flesh"
-                # "deadly_focus",
-                # "swift_reload"
-            ],
-            forbidden_pairs=[
-                # ("hemotoxin_removed", "malevolence"),
-                # ("gushing_blood", "malevolence"),
-                # ("arachnid_onslaught", "malevolence"),
-            ],
-            # name_filters=top_x
-            )
+    # Row 1 2pt
+    # Row 2 4pt
+    # Row 3 5pt
+    # Row 3 7pt
+    # Row 4 8pt
+    # Row 5 10pt
+    # Row 6 12pt
+    # Row 6 14pt

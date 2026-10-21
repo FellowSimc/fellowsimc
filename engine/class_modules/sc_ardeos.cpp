@@ -203,6 +203,9 @@ public:
 
   struct spell_const_t
   {
+    double spirit_refund_mul     = 1.0;
+    double balancing_damage_aura = 1.1;
+
     timespan_t wildfire_duration = 9_s;
     double wildfire_tickrate     = 0.3;
     timespan_t wildfire_cooldown = 45_s;
@@ -210,7 +213,7 @@ public:
     double infernal_wave_cinders = 40;
     double infernal_wave_coeff   = 2.0;
 
-    double fire_frog_coeff             = 0.863;
+    double fire_frog_coeff             = 0.863052;
     double fire_frog_dot_conversion    = 1.0;
     timespan_t fire_frog_dot_duration  = 12_s;
     timespan_t fire_frog_dot_period    = 3_s;
@@ -490,6 +493,9 @@ public:
     : fs_player_t( sim, name, r, ARDEOS ), target_data()
   {
     create_cooldowns();
+
+    spirit_refund_mul     = spell_const.spirit_refund_mul;
+    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 

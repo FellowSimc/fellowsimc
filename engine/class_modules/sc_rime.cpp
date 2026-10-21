@@ -213,7 +213,7 @@ public:
     int glacial_assault_aoe_falloff = 12;
 
     int burstbolter_bursting_ice_pulses = 1;
-    double burstbolter_bursting_ice_amp = 0.2;
+    double burstbolter_bursting_ice_amp = 0.3;
 
     timespan_t icy_flow_buff_duration = 15_s;
     double icy_flow_cc                = 0.2;
@@ -228,7 +228,8 @@ public:
     double avalanche_triple = 0.09;
 
     timespan_t coalescing_frost_duration      = 3_s;
-    double coalescing_frost_sp_mul            = 0.56 / 1.481;  // *1.2;
+    // Rime.ChanneledBeamSingleDamage.Talent.DelayedAoe.DamageDividerToInt
+    double coalescing_frost_sp_coeff            = 0.56;  // *1.2;
     double coalescing_frost_crit_extra_chance = 0.5;
     int coalescing_frost_crit_stacks          = 2;
     int coalescing_frost_max_stacks           = 30;
@@ -264,7 +265,8 @@ public:
 
   struct
   {
-    double spirit_refund_mul = 2.0;
+    double spirit_refund_mul     = 2.0;
+    double balancing_damage_aura = 1.04;
 
     double frost_bolt_coeff    = 2.017;
     timespan_t frost_bolt_cast = 1.5_s;
@@ -274,12 +276,12 @@ public:
     double bird_coeff             = 0.469;
     double bird_spirit_multiplier = 1.5;
 
-    double ice_comet_coeff   = 4.8045 * 1.1;
+    double ice_comet_coeff   = 5.285;
     double ice_comet_falloff = 12;
     int ice_comet_cost       = 2;
 
     double glacial_blast_coeff    = 10.24;
-    timespan_t glacial_blast_cast = 2_s;
+    timespan_t glacial_blast_cast = 1.5_s;
     int glacial_blast_cost        = 2;
 
     timespan_t winters_blessing_cd           = 60_s;
@@ -493,7 +495,8 @@ public:
   rime_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE ) : fs_player_t( sim, name, r, RIME ), target_data()
   {
     create_cooldowns();
-    spirit_refund_mul = spell_const.spirit_refund_mul;
+    spirit_refund_mul   = spell_const.spirit_refund_mul;
+    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 
@@ -2107,13 +2110,13 @@ struct coalescing_frost_t : public rime_spell_t
 
     background = true;
 
-    spell_power_mod.direct = p->spell_const.freezing_torrent_tick_coeff;
-    if ( p->talents_enabled( rime_t::SUPREME_TORRENT ) )
-    {
-      spell_power_mod.direct *= 1.0 + p->talents.supreme_torrent_dmg_amp;
-    }
+    spell_power_mod.direct = p->talents.coalescing_frost_sp_coeff;
+    
+    // if ( p->talents_enabled( rime_t::SUPREME_TORRENT ) )
+    //{
+    //   spell_power_mod.direct *= 1.0 + p->talents.supreme_torrent_dmg_amp;
+    // }
 
-    spell_power_mod.direct *= p->talents.coalescing_frost_sp_mul;
     ability_flags |= ability_type_e::ABILITY_CORE;
   }
 };

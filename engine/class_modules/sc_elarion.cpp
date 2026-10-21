@@ -178,10 +178,13 @@ public:
 
   struct spell_const_t
   {
+    double spirit_refund_mul     = 1.0;
+    double balancing_damage_aura = 1.08;
+
     timespan_t auto_attack_time = 2.4_s;
     double auto_attack_ap_coeff = 0.6;
 
-    double focused_shot_ap_coeff          = 1.347 * 1.2;
+    double focused_shot_ap_coeff          = 1.6164;
     timespan_t focused_shot_cast_time     = 1.5_s;
     double focused_shot_resource_gain     = 20;
     int celestial_impetus_max_stacks      = 2;
@@ -189,7 +192,7 @@ public:
     int celestial_impetus_marks_applied   = 3;
     timespan_t celestial_impetus_duration = 15_s;
 
-    double celestial_shot_ap_coeff   = 2.879 * 1.2;
+    double celestial_shot_ap_coeff   = 3.4548;
     double celestial_shot_focus_cost = 15.0;
 
     double multishot_ap_coeff       = 3.7191;
@@ -288,8 +291,8 @@ public:
 
     timespan_t fervent_supremacy_duration         = 15_s;
     timespan_t fervent_supremacy_reduced_cooldown = 10_s;
-    int fervent_supremacy_stacks                  = 4;
-    double fervent_supremacy_mod                  = 0.5;
+    int fervent_supremacy_stacks                  = 5;
+    double fervent_supremacy_mod                  = 0.65;
 
     double impending_heartseeker_mul_per_arrow = 0.1;
     timespan_t impending_heartseeker_duration  = 15_s;
@@ -318,7 +321,7 @@ public:
     timespan_t strikers_aim_period = 2_s;
     int strikers_aim_max_stacks    = 15;
 
-    double deadly_focus_dmg_mod   = 1.0;
+    double deadly_focus_dmg_mod   = 1.5;
     double deadly_focus_focus_mod = -0.5;
 
     timespan_t swift_reload_cdr = 0.5_s;
@@ -713,6 +716,9 @@ public:
     regen_caches[ CACHE_ATTACK_HASTE ] = true;
 
     create_cooldowns();
+
+    spirit_refund_mul     = spell_const.spirit_refund_mul;
+    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 

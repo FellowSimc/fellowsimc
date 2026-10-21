@@ -458,6 +458,8 @@ public:
   } fs_weapon_trait_values;
 
   double spirit_refund_mul = 1;
+  double balancing_damage_aura = 1.0;
+  double balancing_heal_aura = 1.0;
 
   cooldown_t* weapon_cd;
   bool brave_machinations_available;
@@ -553,6 +555,7 @@ public:
   double composite_leech() const override;
   double matching_gear_multiplier( attribute_e attr ) const override;
   double composite_player_multiplier( school_e school ) const override;
+  double composite_player_heal_multiplier( const action_state_t* s ) const override;
   double composite_player_pet_damage_multiplier( const action_state_t*, bool ) const override;
   double composite_player_target_multiplier( player_t* target, school_e school ) const override;
   double composite_player_target_crit_chance( player_t* target ) const override;

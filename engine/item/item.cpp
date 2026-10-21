@@ -1544,11 +1544,11 @@ void item_t::init()
     return;
 
   decode_ilevel();
-  decode_item_variant();
   decode_item_rarity();
+  decode_item_variant();
 
   handle_base_stats();
-  decode_fixed_secondarys();
+  // decode_fixed_secondarys();
   decode_affix_list();
 
   // Process basic stats
@@ -1595,16 +1595,31 @@ void item_t::init()
 
 void item_t::decode_item_variant()
 {
-  /*if ( slot == SLOT_NECK || slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 )
-  {
-    parsed.item_variant = VARIANT_JEWELLERY;
-    return;
-  }
   if ( slot == SLOT_TRINKET_1 || slot == SLOT_TRINKET_2 )
   {
     parsed.item_variant = VARIANT_RELIC;
     return;
-  }*/
+  }
+
+  if ( slot == SLOT_MAIN_HAND || slot == SLOT_OFF_HAND )
+  {
+    parsed.item_variant       = player->role == ROLE_TANK ? VARIANT_WEAPTANK : VARIANT_WEAP;
+    option_main_secondary_str = "haste/crit/expertise/spirit";
+    return;
+  }
+
+  if ( parsed.item_variant == VARIANT_LEGENDARY )
+  {
+    parsed.rarity = RARITY_LEGENDARY;
+  }
+
+
+  if ( parsed.rarity == RARITY_LEGENDARY )    
+  {
+    parsed.item_variant       = VARIANT_LEGENDARY;
+    option_main_secondary_str = "haste/crit/expertise/spirit";
+    return;
+  }
 
   if ( !option_item_variant_str.empty() )
   {
@@ -1613,6 +1628,23 @@ void item_t::decode_item_variant()
     {
       throw std::invalid_argument( fmt::format( "Invalid item variant '{}'.", option_item_variant_str ) );
     }
+
+    if ( slot == SLOT_NECK )
+    {
+      if ( parsed.item_variant == VARIANT_FFFF )
+        parsed.item_variant = VARIANT_FFFFNECK;
+      if ( parsed.item_variant == VARIANT_SVTH )
+        parsed.item_variant = VARIANT_SVTHNECK;
+    }
+
+    if ( slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 )
+    {
+      if ( parsed.item_variant == VARIANT_FFFF )
+        parsed.item_variant = VARIANT_FFFFRING;
+      if ( parsed.item_variant == VARIANT_SVTH )
+        parsed.item_variant = VARIANT_SVTHRING;
+    }
+
     return;
   }
 
@@ -1634,7 +1666,7 @@ void item_t::decode_item_rarity()
     return;
   }
 
-  parsed.rarity = RARITY_HEROIC;
+  parsed.rarity = RARITY_REGAL;
 }
 
 double item_t::slot_multiplier() const
@@ -1642,38 +1674,38 @@ double item_t::slot_multiplier() const
   switch ( slot )
   {
     case SLOT_HEAD:
-      return 0.08;
+      return 0.088;
     case SLOT_NECK:
-      return 0.07;
+      return 0.0616;
     case SLOT_SHOULDERS:
-      return 0.08;
+      return 0.0792;
     case SLOT_BACK:
-      return 0.05;
+      return 0.0528;
     case SLOT_CHEST:
-      return 0.1;
+      return 0.088;
     case SLOT_WRISTS:
-      return 0.05;
+      return 0.0528;
     case SLOT_HANDS:
-      return 0.06;
+      return 0.0616;
     case SLOT_LEGS:
-      return 0.09;
+      return 0.088;
     case SLOT_FEET:
-      return 0.07;
+      return 0.0704;
     case SLOT_FINGER_1:
     case SLOT_FINGER_2:
-      return 0.06;
+      return 0.0528;
     case SLOT_TRINKET_1:
     case SLOT_TRINKET_2:
-      return 0.06;
+      return 0.0528;
     case SLOT_MAIN_HAND:
     case SLOT_OFF_HAND:
-      return 0.11;
+      return 0.132;
     default:
       return 0.0;
   }
 }
 
-double item_t::get_stat_value( gear_affix_e stat_affix, bool is_dynamic, weighting_pool_e pool ) const
+double item_t::get_stat_value( gear_affix_e stat_affix, weighting_pool_e pool ) const
 {
   stat_e stat = stat_from_gear_affix( stat_affix );
 
@@ -1688,7 +1720,9 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool is_dynamic, weighti
   if ( parsed.item_variant == VARIANT_NONE || parsed.rarity == RARITY_NONE )
     return 0.0;
 
-  item_calculation_settings_t settings = is_dynamic ? dynamic_slot_settings : base_settings;
+  // item_calculation_settings_t settings = is_dynamic ? dynamic_slot_settings : base_settings;
+
+  constexpr item_calculation_settings_t settings = base_settings;
 
 
   if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_PRIMARY || stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
@@ -1720,11 +1754,7 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool is_dynamic, weighti
 
   if ( pool == weighting_pool_e::WEIGHTING_POOL_AUTO )
   {
-    if ( is_dynamic )
-    {
-      pool = weighting_pool_e::WEIGHTING_POOL_DYNAMIC;
-    }
-    else if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
+    if ( stat_affix == gear_affix_e::GEAR_AFFIX_STAT_STAMINA )
     {
       pool = weighting_pool_e::WEIGHTING_POOL_STAMINA;
     }
@@ -1734,43 +1764,28 @@ double item_t::get_stat_value( gear_affix_e stat_affix, bool is_dynamic, weighti
     }
     else
     {
-      pool = weighting_pool_e::WEIGHTING_POOL_SECONDARY;
+      pool = weighting_pool_e::WEIGHTING_POOL_SECONDARY_1;
     }
   }
 
-  switch ( pool )
-  {
-    case weighting_pool_e::WEIGHTING_POOL_PRIMARY:
-      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].primary_weight;
-      break;
-    case weighting_pool_e::WEIGHTING_POOL_STAMINA:
-      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].stamina_weight;
-      break;
-    case weighting_pool_e::WEIGHTING_POOL_SECONDARY:
-      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_weight;
-      break;
-    case weighting_pool_e::WEIGHTING_POOL_DYNAMIC:
-      amount *= ITEM_VARIANTS[ parsed.item_variant - 1 ].rolled_weight;
-      break;
-  }
+  amount *= weighting_pool_multiplier( pool );
 
   amount /= pow( slot_rarity_base, RARITY_DATA[ parsed.rarity - 1 ].stat_scale_factor );
 
   amount *= slot_multiplier();
 
-  sim->print_debug( "{} item {} decoded stat {}, slot_multiplier: {}, random: {}", *player, name(), gear_affix_lower( stat_affix ), slot_multiplier(), is_dynamic );
+  sim->print_debug( "{} item {} decoded stat {}, slot_multiplier: {}", *player, name(), gear_affix_lower( stat_affix ), slot_multiplier() );
 
   return round( amount );
 }
 
 // item_t::handle_base_stats ==================================================
-void item_t::add_gear_affix_stats( gear_affix_e affix_stat, bool is_dynamic,
-                                   weighting_pool_e pool )
+void item_t::add_gear_affix_stats( gear_affix_e affix_stat, weighting_pool_e pool )
 {
   stat_e stat = stat_from_gear_affix( affix_stat );
   if ( stat != STAT_NONE )
   {
-    auto value = get_stat_value( affix_stat, is_dynamic, pool );
+    auto value = get_stat_value( affix_stat, pool );
     sim->print_debug( "{} item {} decoded base stat {}, quantity: {}", *player, name(), stat, value );
     if ( value > 0 )
     {
@@ -1797,8 +1812,8 @@ void item_t::add_gear_affix_stats( gear_affix_e affix_stat, double value )
 // item_t::handle_base_stats ==================================================
 void item_t::handle_base_stats()
 {
-  bool has_primary = !( slot == SLOT_NECK || slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 );
-  bool has_stamina = !( slot == SLOT_TRINKET_1 || slot == SLOT_TRINKET_2 );
+  //bool has_primary = !( slot == SLOT_NECK || slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 );
+  //bool has_stamina = !( slot == SLOT_TRINKET_1 || slot == SLOT_TRINKET_2 );
 
   if ( !option_tempering_str.empty() )
   {
@@ -1814,46 +1829,38 @@ void item_t::handle_base_stats()
 
   std::vector<util::string_view> split;
 
+
   if ( !option_main_secondary_str.empty() )
   {
     split = util::string_split<util::string_view>( option_main_secondary_str, "/" );
   }
 
-  if ( has_stamina )
+  if ( weighting_pool_multiplier( WEIGHTING_POOL_STAMINA ) > 0.0 )
   {
-    add_gear_affix_stats( GEAR_AFFIX_STAT_STAMINA, false );
+    add_gear_affix_stats( GEAR_AFFIX_STAT_STAMINA, WEIGHTING_POOL_STAMINA );
     add_gear_affix_stats( GEAR_AFFIX_STAT_STAMINA, parsed.tempering_level );
   }
-  else
-  {
-    if ( split.size() > 1 )
-    {
-      gear_affix_e affix_stat = gear_affix_from_string( split[ 1 ] );
-      add_gear_affix_stats( affix_stat, false, WEIGHTING_POOL_STAMINA );
-      add_gear_affix_stats( affix_stat, parsed.tempering_level );
-    }
-  }
 
-  if ( has_primary )
+  if ( weighting_pool_multiplier( WEIGHTING_POOL_PRIMARY ) > 0.0 )
   {
-    add_gear_affix_stats( GEAR_AFFIX_STAT_PRIMARY, false );
+    add_gear_affix_stats( GEAR_AFFIX_STAT_PRIMARY, WEIGHTING_POOL_PRIMARY );
     add_gear_affix_stats( GEAR_AFFIX_STAT_PRIMARY, parsed.tempering_level );
   }
-  else
+ 
+  auto pool = WEIGHTING_POOL_SECONDARY_1;
+
+  for ( auto& stat_str : split )
   {
-    if ( split.size() > 1 )
+    if ( weighting_pool_multiplier( pool ) > 0.0 )
     {
-      gear_affix_e affix_stat = gear_affix_from_string( split[ 1 ] );
-      add_gear_affix_stats( affix_stat, false, WEIGHTING_POOL_PRIMARY );
+      gear_affix_e affix_stat = gear_affix_from_string( stat_str );
+      add_gear_affix_stats( affix_stat, pool );
       add_gear_affix_stats( affix_stat, parsed.tempering_level );
     }
-  }
 
-  if ( split.size() > 0 )
-  {
-    gear_affix_e affix_stat = gear_affix_from_string( split[ 0 ] );
-    add_gear_affix_stats( affix_stat, false );
-    add_gear_affix_stats( affix_stat, parsed.tempering_level );
+    pool++;
+    if ( pool > WEIGHTING_POOL_SECONDARY_4 )
+      break;
   }
 }
 
@@ -1891,13 +1898,58 @@ void item_t::decode_affix_list()
 
     for ( auto& affix_str : split )
     {
-      gear_affix_e affix_stat = gear_affix_from_string( affix_str );
+      auto split2             = util::string_split<util::string_view>( affix_str, ":" );
+      gear_affix_e affix_stat = gear_affix_from_string( split2[ 0 ] );
       add_gear_affix_stats( affix_stat, true );
 
       fellowship::fs_player_t* casted_player = dynamic_cast<fellowship::fs_player_t*>( player );
 
       if ( casted_player )
       {
+        if ( affix_stat >= GEAR_AFFIX_ENCHANT_START && affix_stat <= GEAR_AFFIX_ENCHANT_END )
+        {
+          int affix_value = 0;
+          if ( split2.size() > 1 )
+          {
+            affix_value = util::to_int( split2[ 1 ] );
+          }
+          // +4 for base value
+          affix_value += 4;
+
+          switch ( affix_stat )
+          {
+            case GEAR_AFFIX_ENCHANT_UNDINES_CUNNING:
+            case GEAR_AFFIX_ENCHANT_SPHINXS_CUNNING:
+            case GEAR_AFFIX_ENCHANT_CHIMERAS_CUNNING:
+              add_gear_affix_stats( GEAR_AFFIX_STAT_EXPERTISE, affix_value );
+              break;
+          }
+          switch ( affix_stat )
+          {
+            case GEAR_AFFIX_ENCHANT_UNDINES_CUNNING:
+            case GEAR_AFFIX_ENCHANT_SALAMANDERS_CUNNING:
+            case GEAR_AFFIX_ENCHANT_UNICORNS_CUNNING:
+              add_gear_affix_stats( GEAR_AFFIX_STAT_HASTE, affix_value );
+              break;
+          }
+          switch ( affix_stat )
+          {
+            case GEAR_AFFIX_ENCHANT_UNICORNS_CUNNING:
+            case GEAR_AFFIX_ENCHANT_SPHINXS_CUNNING:
+            case GEAR_AFFIX_ENCHANT_BANSHEES_CUNNING:
+              add_gear_affix_stats( GEAR_AFFIX_STAT_SPIRIT, affix_value );
+              break;
+          }
+          switch ( affix_stat )
+          {
+            case GEAR_AFFIX_ENCHANT_SALAMANDERS_CUNNING:
+            case GEAR_AFFIX_ENCHANT_BANSHEES_CUNNING:
+            case GEAR_AFFIX_ENCHANT_CHIMERAS_CUNNING:
+              add_gear_affix_stats( GEAR_AFFIX_STAT_CRIT, affix_value );
+              break;
+          }
+        }
+
         if ( affix_stat >= GEAR_AFFIX_FINESSE_START && affix_stat <= GEAR_AFFIX_FINESSE_END )
         {
           casted_player->finesse_traits[ finesse_trait_from_gear_affix( affix_stat ) ]++;

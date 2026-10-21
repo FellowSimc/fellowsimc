@@ -238,6 +238,15 @@ enum gear_affix_e : unsigned
   GEAR_AFFIX_ATTUNEMENT_DIAMOND,
   GEAR_AFFIX_ATTUNEMENT_END,
 
+  GEAR_AFFIX_ENCHANT_START,
+  GEAR_AFFIX_ENCHANT_UNDINES_CUNNING,
+  GEAR_AFFIX_ENCHANT_SPHINXS_CUNNING,
+  GEAR_AFFIX_ENCHANT_CHIMERAS_CUNNING,
+  GEAR_AFFIX_ENCHANT_SALAMANDERS_CUNNING,
+  GEAR_AFFIX_ENCHANT_UNICORNS_CUNNING,
+  GEAR_AFFIX_ENCHANT_BANSHEES_CUNNING,
+  GEAR_AFFIX_ENCHANT_END,
+
   GEAR_AFFIX_TRAIT_START,
 #define X( UPPER, lower, pretty ) GEAR_AFFIX_TRAIT_##UPPER,
   WEAPON_TRAIT_LIST( X )
@@ -252,6 +261,27 @@ enum gear_affix_e : unsigned
 
   GEAR_AFFIX_MAX
 };
+
+constexpr std::string_view gear_enchant_lower( gear_affix_e t )
+{
+  switch ( t )
+  {
+    case GEAR_AFFIX_ENCHANT_UNDINES_CUNNING:
+      return "undines_cunning";
+    case GEAR_AFFIX_ENCHANT_SPHINXS_CUNNING:
+      return "sphinxs_cunning";
+    case GEAR_AFFIX_ENCHANT_CHIMERAS_CUNNING:
+      return "chimeras_cunning";
+    case GEAR_AFFIX_ENCHANT_SALAMANDERS_CUNNING:
+      return "salamanders_cunning";
+    case GEAR_AFFIX_ENCHANT_UNICORNS_CUNNING:
+      return "unicorns_cunning";
+    case GEAR_AFFIX_ENCHANT_BANSHEES_CUNNING:
+      return "banshees_cunning";
+    default:
+      return "unknown";
+  }
+}
 
 enum fsweapon_e : unsigned
 {
@@ -2083,6 +2113,9 @@ constexpr std::string_view gear_affix_lower( gear_affix_e t )
 
   if ( t >= gear_affix_e::GEAR_AFFIX_STAT_START && t < gear_affix_e::GEAR_AFFIX_STAT_END )
     return gear_affix_stat_lower( t );
+    
+  if ( t >= gear_affix_e::GEAR_AFFIX_ENCHANT_START && t < gear_affix_e::GEAR_AFFIX_ENCHANT_END )
+    return gear_enchant_lower( t );
 
   return "error gear affix";
   // return FINESSE_TRAITS[ t - 1 ].lower_string;
@@ -2102,13 +2135,20 @@ constexpr gear_affix_e gear_affix_from_string( std::string_view affix )
       return static_cast<gear_affix_e>( entry.enum_id + gear_affix_e::GEAR_AFFIX_TRAIT_START );
   
   gem_type_e parsed_gem = gem_type_from_string( affix );
-  if ( parsed_gem != GEM_NONE)
+  if ( parsed_gem != GEM_NONE )
     return gear_affix_from_gem_type( parsed_gem );
 
   for ( unsigned stat = gear_affix_e::GEAR_AFFIX_STAT_START; stat < gear_affix_e::GEAR_AFFIX_STAT_END; stat++ )
   {
     auto stat_e = static_cast<gear_affix_e>( stat );
     if ( affix == gear_affix_stat_lower( stat_e ) )
+      return static_cast<gear_affix_e>( stat_e );
+  }
+
+  for ( unsigned stat = gear_affix_e::GEAR_AFFIX_ENCHANT_START; stat < gear_affix_e::GEAR_AFFIX_ENCHANT_END; stat++ )
+  {
+    auto stat_e = static_cast<gear_affix_e>( stat );
+    if ( affix == gear_enchant_lower( stat_e ) )
       return static_cast<gear_affix_e>( stat_e );
   }
   
@@ -2123,16 +2163,24 @@ constexpr std::string_view gear_affix_pretty( gear_affix_e t )
   return FINESSE_TRAITS[ t - 1 ].pretty_string;
 }
 
-#define ITEM_VARIANT_LIST( X )                                              \
-  X( EVENS, evens, "Evens", 0.28, 0.28, 0.28, 0.16 )                        \
-  X( BIG_SECONDARY, big_secondary, "Big Secondary", 0.22, 0.22, 0.4, 0.16 ) \
-  X( BIG_STAMINA, big_stamina, "Big Stamina", 0.4, 0.17, 0.27, 0.16 )       
+#define ITEM_VARIANT_LIST( X )                                                \
+  X( EVENS,     evens,     "Evens",      0.28, 0.28, 0.28, 0.00, 0.00, 0.00 ) \
+  X( LEGENDARY, legendary, "Legendary",  0.22, 0.22, 0.36, 0.36, 0.36, 0.36 ) \
+  X( FFFF,      ffff,      "55_45",      0.22, 0.22, 0.22, 0.18, 0.00, 0.00 ) \
+  X( SVTH,      svth,      "70_30",      0.22, 0.22, 0.28, 0.12, 0.00, 0.00 ) \
+  X( FFFFNECK,  ffffneck,  "55_45_Neck", 0.40, 0.00, 0.22, 0.18, 0.00, 0.00 ) \
+  X( SVTHNECK,  svthneck,  "70_30_Neck", 0.40, 0.00, 0.28, 0.12, 0.00, 0.00 ) \
+  X( FFFFRING,  ffffring,  "55_45_Ring", 0.00, 0.24, 0.33, 0.27, 0.00, 0.00 ) \
+  X( SVTHRING,  svthring,  "70_30_Ring", 0.00, 0.24, 0.42, 0.18, 0.00, 0.00 ) \
+  X( WEAP,      weap,      "Weap",       0.00, 0.44, 0.24, 0.24, 0.24, 0.24 ) \
+  X( WEAPTANK,  weaptank,  "Weap_Tank",  0.22, 0.22, 0.24, 0.24, 0.24, 0.24 ) \
+  X( RELIC,     relic,     "Relic",      0.00, 0.00, 0.84, 0.00, 0.00, 0.00 ) \
 
 enum item_variant_e : unsigned
 {
   VARIANT_NONE = 0,
 
-#define X( UPPER, lower, pretty, stamina, primary, secondary, rolled ) VARIANT_##UPPER,
+#define X( UPPER, lower, pretty, stamina, primary, secondary_1, secondary_2, secondary_3, secondary_4 ) VARIANT_##UPPER,
   ITEM_VARIANT_LIST( X )
 #undef X
 
@@ -2146,13 +2194,15 @@ struct item_variant_data_t
   std::string_view pretty_string;
   double stamina_weight;
   double primary_weight;
-  double secondary_weight;
-  double rolled_weight;
+  double secondary_1_weight;
+  double secondary_2_weight;
+  double secondary_3_weight;
+  double secondary_4_weight;
 };
 
 static constexpr item_variant_data_t ITEM_VARIANTS[] = {
-#define X( upper, lower, pretty, stamina, primary, secondary, rolled ) \
-  { item_variant_e::VARIANT_##upper, #lower, pretty, stamina, primary, secondary, rolled },
+#define X( upper, lower, pretty, stamina, primary, secondary_1, secondary_2, secondary_3, secondary_4 ) \
+  { item_variant_e::VARIANT_##upper, #lower, pretty, stamina, primary, secondary_1, secondary_2, secondary_3, secondary_4 },
     ITEM_VARIANT_LIST( X )
 #undef X
 };

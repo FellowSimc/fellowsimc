@@ -227,15 +227,45 @@ struct item_t
     WEIGHTING_POOL_AUTO = 0,
     WEIGHTING_POOL_STAMINA,
     WEIGHTING_POOL_PRIMARY,
-    WEIGHTING_POOL_SECONDARY,
-    WEIGHTING_POOL_DYNAMIC
+    WEIGHTING_POOL_SECONDARY_1,
+    WEIGHTING_POOL_SECONDARY_2,
+    WEIGHTING_POOL_SECONDARY_3,
+    WEIGHTING_POOL_SECONDARY_4,
+    WEIGHTING_POOL_MAX
   };
 
-  double get_stat_value( gear_affix_e stat, bool is_dynamic, weighting_pool_e pool = WEIGHTING_POOL_AUTO ) const;
+  inline double weighting_pool_multiplier( weighting_pool_e pool ) const
+  {
+    switch ( pool )
+    {
+      case weighting_pool_e::WEIGHTING_POOL_PRIMARY:
+        return ITEM_VARIANTS[ parsed.item_variant - 1 ].primary_weight;
+        break;
+      case weighting_pool_e::WEIGHTING_POOL_STAMINA:
+        return ITEM_VARIANTS[ parsed.item_variant - 1 ].stamina_weight;
+        break;
+      case weighting_pool_e::WEIGHTING_POOL_SECONDARY_1:
+        return ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_1_weight;
+        break;
+      case weighting_pool_e::WEIGHTING_POOL_SECONDARY_2:
+        return ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_2_weight;
+        break;
+      case weighting_pool_e::WEIGHTING_POOL_SECONDARY_3:
+        return ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_3_weight;
+        break;
+      case weighting_pool_e::WEIGHTING_POOL_SECONDARY_4:
+        return ITEM_VARIANTS[ parsed.item_variant - 1 ].secondary_4_weight;
+        break;
+    }
+
+    return 0.0;
+  };
+
+  double get_stat_value( gear_affix_e stat, weighting_pool_e pool = WEIGHTING_POOL_AUTO ) const;
 
   double slot_multiplier() const;
 
-  void add_gear_affix_stats( gear_affix_e affix, bool is_dynamic, weighting_pool_e pool = WEIGHTING_POOL_AUTO );
+  void add_gear_affix_stats( gear_affix_e affix, weighting_pool_e pool = WEIGHTING_POOL_AUTO );
   void add_gear_affix_stats( gear_affix_e affix, double amount );
   inline void add_gear_affix_stats( gear_affix_e affix, int amount )
   {

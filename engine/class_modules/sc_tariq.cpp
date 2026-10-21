@@ -193,7 +193,8 @@ public:
     double auto_attack_fury           = 1.0;
 
     // Ink.SpiritProc.ResourceRefund.FlatSpiritPointGain, 1.0
-    double spirit_refund_mul = 1.0;
+    double spirit_refund_mul     = 1.0;
+    double balancing_damage_aura = 1.0;
 
     // Ink.Rage.MaxRageMultiplier, 200.0					; This is multiplied with his strength and will result in his total amount of max rage
     // Ink.Rage.RageIncreaseBaseline, 0.5				;was 7.0        The rage will increase by RageIncreaseBaseline * (Damage Done / 100) and same for Damage Taken
@@ -399,7 +400,7 @@ public:
     
     //Ink.LowHealthSingleTargetResourceDamage.VisualHitDelay, 0.23
     //Ink.LowHealthSingleTargetResourceDamage.StrengthCoefficient, 3.6575	;was 3.08
-    double culling_strike_coeff = 3.6575 * 0.87;
+    double culling_strike_coeff = 3.182025;
     //Ink.LowHealthSingleTargetResourceDamage.Spread, 0.1
     //Ink.LowHealthSingleTargetResourceDamage.MaxResourceToSpend, 0.10		    ; Percentage of Max fury
     double culling_strike_max_fury = 10;
@@ -469,11 +470,11 @@ public:
     // Ink.AutoAttackBuff.Talent.StackingBuffConsumedByNextSpender.Buff.Duration, 4.0
     timespan_t square_hammer_expertise_duration = 4_s;
     // Ink.AutoAttackBuff.Talent.StackingBuffConsumedByNextSpender.Buff.AddedExpertisePerStack, 0.05
-    double square_hammer_expertise_per_stack = 0.05;
+    double square_hammer_expertise_per_stack = 0.08;
     timespan_t square_hammer_cdr_per_stack   = 1_s;
     
     // Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.ProcChance, 0.08
-    double kill_em_all_chance = 0.08;
+    double kill_em_all_chance = 0.1;
     // Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.Buff.Duration, 8.0
     timespan_t kill_em_all_duration = 8_s;
     // Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.Buff.MaxStacks, 2.0
@@ -550,7 +551,7 @@ public:
 
     // Face Breaker
     // Ink.SecondChanceSingleTargetAttack.Talent.IncreasedCritChance.Increase, 0.40	; Additive
-    double left_hand_path_cc = 0.4;
+    double left_hand_path_cc = 0.6;
     
     // Ink.Talent.PassiveLightningCritChanceIncrease, 0.20
     double crack_the_sky_lightning_crit_chance = 0.2;
@@ -726,7 +727,8 @@ public:
 
 
     create_cooldowns();
-    spirit_refund_mul = spell_const.spirit_refund_mul;
+    spirit_refund_mul     = spell_const.spirit_refund_mul;
+    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 
@@ -1201,19 +1203,6 @@ struct wild_swing_t : public tariq_attack_t
     energize_resource = RESOURCE_FURY;
     energize_amount   = p->spell_const.wild_swing_fury;
     energize_type     = action_energize::ON_CAST;
-
-    may_miss = true;
-  }
-
-  double miss_chance( action_state_t* s ) const override
-  {
-    auto m = base_t::miss_chance( s );
-
-    if ( s->n_targets <= 2 )
-      m += p()->spell_const.wild_swing_extra_dodge -
-           s->n_targets * p()->spell_const.wild_swing_dodge_decrease_per_target;
-
-    return m;
   }
 };
 

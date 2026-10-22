@@ -91,6 +91,8 @@ item_t::parsed_input_t::parsed_input_t()
   range::fill( gem_actual_ilevel, 0 );
   
   tempering_level = -1;
+  item_variant    = VARIANT_NONE;
+  rarity          = RARITY_NONE;
 }
 
 item_t::parsed_input_t::~parsed_input_t() = default;
@@ -1612,7 +1614,6 @@ void item_t::decode_item_variant()
   {
     parsed.rarity = RARITY_LEGENDARY;
   }
-
 
   if ( parsed.rarity == RARITY_LEGENDARY )    
   {

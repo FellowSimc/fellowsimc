@@ -2,6 +2,7 @@
 #include "util/util.hpp"
 
 #include "simulationcraft.hpp"
+#include "fellowship_includes/character_data.hpp"
 
 namespace fellowship
 {  // UNNAMED NAMESPACE
@@ -505,6 +506,18 @@ public:
   virtual constexpr std::string_view talent_name_formatted( long long t )
   {
     return "";
+  }
+
+  const character_csv_lookup_t* find_csv_data( util::string_view name )
+  {
+    auto data = character_csv_lookup_t::find( name );
+
+    if ( data )
+      return data;
+
+    sim->error( "{} csv data string '{}' not valid.", *this, name );
+
+    return &character_csv_lookup_t::nil();
   }
 
   // Character Definition

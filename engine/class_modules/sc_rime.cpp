@@ -268,9 +268,7 @@ public:
     double spirit_refund_mul     = 2.0;
     double balancing_damage_aura = 1.04;
 
-    double frost_bolt_coeff    = 2.017;
     timespan_t frost_bolt_cast = 1.5_s;
-    int frost_bolt_anima_gen   = 3;
 
     timespan_t flight_of_navir_cd = 60_s;
     double bird_coeff             = 0.469;
@@ -953,20 +951,20 @@ struct frost_bolt_t : public rime_spell_t
   {
     id = 2;
 
-    spell_power_mod.direct = p->spell_const.frost_bolt_coeff;
-
+    spell_power_mod.direct = p->find_csv_data( "Rime.CastedProjectileDamageFiller.IntellectCoefficient" )->value();
+        
     name_str_reporting = "Frost Bolt";
 
     energize_type     = action_energize::ON_CAST;
     energize_resource = RESOURCE_ANIMA;
-    energize_amount   = p->spell_const.frost_bolt_anima_gen;
+    energize_amount   = p->find_csv_data( "Rime.CastedProjectileDamageFiller.ResourceGain" )->value();
 
     if ( p->talents_enabled( rime_t::BURSTBOLTER ) )
     {
       add_child( p->actions.bursting_ice_tick_burstbolter );
     }
 
-    base_execute_time = p->spell_const.frost_bolt_cast;
+    base_execute_time = p->find_csv_data( "Rime.CastedProjectileDamageFiller.CastingDuration" )->seconds();
 
     ability_flags |= ability_type_e::ABILITY_BASIC;
   }

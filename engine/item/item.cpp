@@ -1839,7 +1839,8 @@ void item_t::handle_base_stats()
   if ( weighting_pool_multiplier( WEIGHTING_POOL_STAMINA ) > 0.0 )
   {
     add_gear_affix_stats( GEAR_AFFIX_STAT_STAMINA, WEIGHTING_POOL_STAMINA );
-    add_gear_affix_stats( GEAR_AFFIX_STAT_STAMINA, parsed.tempering_level );
+    add_gear_affix_stats( GEAR_AFFIX_STAT_STAMINA,
+                          parsed.item_level >= 315 ? 2 * parsed.tempering_level : parsed.tempering_level );
   }
 
   if ( weighting_pool_multiplier( WEIGHTING_POOL_PRIMARY ) > 0.0 )

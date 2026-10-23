@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\engine\class_modules\fs_player.hpp" />
+    <ClInclude Include="..\engine\fellowship_includes\character_data.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\engine\class_modules\fs_player.cpp" />
@@ -31,6 +32,7 @@
     <ClCompile Include="..\engine\class_modules\sc_rime.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_tariq.cpp" />
     <ClCompile Include="..\engine\class_modules\sc_xavian.cpp" />
+    <ClCompile Include="..\engine\fellowship_includes\character_data.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

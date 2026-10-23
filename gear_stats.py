@@ -45,7 +45,6 @@ SlotToSimcMap: dict[Slot, str] = {
   Slot.RELIC_1: "trinket1",
   Slot.RELIC_2: "trinket2",
   Slot.WEAPON: "main_hand",
-
 }
 
 class WeightingPool(Enum):
@@ -370,12 +369,7 @@ class Item:
 
     return False
 
-  def __init__(self, slot: Slot, variant: str, ilvl: int = 0, secondary_1: Stats = Stats.NONE, secondary_2: Stats = Stats.NONE, rarity: ItemRarity = ItemRarity.UNCOMMON, tempers: int = 0):
-    self.item_type = slot
-    self.item_level = ilvl
-    self.tempers = tempers
-    self.rarity = rarity
-
+  def set_variant(self, variant: str):
     self.variant = self.get_variant(variant)
 
     if self.item_type == Slot.NECK:
@@ -385,7 +379,16 @@ class Item:
       if (resolved_variant := self.get_variant(variant+"_Ring")) != null_variant:
         self.variant = resolved_variant
 
+
+  def __init__(self, slot: Slot, variant: str, ilvl: int = 0, secondary_1: Stats = Stats.NONE, secondary_2: Stats = Stats.NONE, rarity: ItemRarity = ItemRarity.UNCOMMON, tempers: int = 0):
+    self.item_type = slot
+    self.item_level = ilvl
+    self.tempers = tempers
+    self.rarity = rarity
+
     self.item_secondarys = [secondary_1, secondary_2, Stats.NONE, Stats.NONE]
+
+    self.set_variant(variant)
 
     if (self.item_type == Slot.RELIC_1 or self.item_type == Slot.RELIC_2):
       self.variant = self.get_variant("Relic")
@@ -463,7 +466,12 @@ class Item:
 
   def getItemStamina(self):
     if self.weighting_pool_multiplier(WeightingPool.WEIGHTING_POOL_STAMINA) > 0.0:
-      return self.getStatValue( Stats.STAMINA ) + self.tempers
+      
+      tempering_stats = self.tempers
+      if self.item_level >= 315:
+        tempering_stats *= 2
+
+      return self.getStatValue( Stats.STAMINA ) + tempering_stats
     
     return 0.0
   
@@ -804,7 +812,9 @@ apl/rime/rime_apl.simc
 
     return choices([ItemRarity.UNCOMMON, ItemRarity.RARE, ItemRarity.EPIC, ItemRarity.CHAMPION, ItemRarity.HEROIC], weights=weights)[0]
 
-  def createRandomItem(self, slot: Slot, ilvl: int, equip: bool = False) -> Item:
+  def createRandomItem(self, slot: Slot, ilvl: int, equip: bool = False) -> Item | None:
+    if slot == Slot.NONE:
+      return
     secondary_1, secondary_2 = RandomSecondary(2)
     variant = choice(["70_30", "55_45"])
 
@@ -1443,20 +1453,28 @@ def custom_json(obj):
     if isinstance(obj, DataPoint):
       return {"run": obj.run, "ilvl": obj.ilvl, "sim_dps": obj.sim_dps, "combat_power_heuristic": obj.combat_power_heuristic}
 
-def progress_sim_basic():
+def progress_sim_basic(max_ilvl: float = 300):
+
+  if max_ilvl > 300:
+    max_ilvl = 300
+
   base_character = Character(Role.DPS)
 
   data: list[DataPoint] = []
   data.append(DataPoint(ilvl=base_character.averageItemLevel(), run=base_character.completed_runs, combat_power_heuristic=base_character.getCharacterOffencePowerEstimate(), sim_dps=base_character.run_sim()))
   
-  while (base_character.averageItemLevel() < 300):
+  while (base_character.averageItemLevel() < max_ilvl):
     base_character.completeDungeon()
     data.append(DataPoint(ilvl=base_character.averageItemLevel(), run=base_character.completed_runs, combat_power_heuristic=base_character.getCharacterOffencePowerEstimate(), sim_dps=base_character.run_sim()))
 
   with open(f"apl/generated/harness_sims/output/{base_character.character_uuid}_prog.json", "w") as f:
     json.dump(data, f, default=custom_json)
 
-def progress_sim():
+def progress_sim(max_ilvl: float = 300):
+
+  if max_ilvl > 300:
+    max_ilvl = 300
+    
   base_character = Character(Role.DPS)
 
   data: list[DataPoint] = []
@@ -1468,7 +1486,7 @@ def progress_sim():
   sim_actors.append(base_character.simc_output(f"_{base_character.completed_runs}"))
 
   
-  while (base_character.averageItemLevel() < 300):
+  while (base_character.averageItemLevel() < max_ilvl):
     base_character.completeDungeon()
     sim_actors.append(base_character.simc_output(f"_{base_character.completed_runs}"))
     # data.append(DataPoint(ilvl=base_character.averageItemLevel(), run=base_character.completed_runs, combat_power_heuristic=base_character.getCharacterOffencePowerEstimate(), sim_dps=base_character.run_sim()))
@@ -1530,6 +1548,36 @@ def check_again():
   c.completeDungeon()
   print(f"3: {c.getCharacterOffencePowerEstimate()}")
 
+
+def secondary_stat_by_variant():
+
+  c = Character(Role.DPS)
+
+  stats_per_slot = {}
+
+  for slot in Slot:
+    if slot == Slot.NONE:
+      continue
+    c.createRandomItem(slot, 315, True)
+    
+    if slot == Slot.RELIC_1 or slot == Slot.RELIC_2 or slot == Slot.WEAPON:
+      continue
+
+    secondaries = [0,0]
+    c.items[slot].set_variant("55_45")
+    secondaries[0] = c.items[slot].getItemTotalSecondary()
+    c.items[slot].set_variant("70_30")
+    secondaries[1] = c.items[slot].getItemTotalSecondary()
+    stats_per_slot[slot] = tuple(secondaries)
+
+  print("Slot            | 55_45 | 70_30")
+  for slot, stats in stats_per_slot.items():
+    print(f"{slot:15} |   {stats[0]:3.0f} |   {stats[1]:3.0f}")
+
+
+  # for i in range(1, 50):
+  #   print(i, round(0.3*i)+round(0.7*i)-i)
+
 if __name__ == "__main__":
   # check_again()
   # testGems()
@@ -1546,7 +1594,9 @@ if __name__ == "__main__":
 
 
   # progression()
-  progress_sim()
+  progress_sim(100)
+
+  # secondary_stat_by_variant()
 
 
-  # testCharStuff()
+  # testCharStuff()ex

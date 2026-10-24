@@ -156,6 +156,10 @@ fs_player_t::fs_player_t( sim_t* sim, util::string_view name, util::string_view 
   {
     character_attribute_data = find_attribute_data( internal_name );
   }
+  else
+  {
+    character_attribute_data = &character_attribute_data_t::nil();
+  }
   // resource_regeneration              = regen_type::DYNAMIC;
   // regen_caches[ CACHE_HASTE ]        = true;
   // regen_caches[ CACHE_ATTACK_HASTE ] = true;

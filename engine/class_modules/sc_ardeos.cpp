@@ -204,7 +204,6 @@ public:
   struct spell_const_t
   {
     double spirit_refund_mul     = 1.0;
-    double balancing_damage_aura = 1.1;
 
     timespan_t wildfire_duration = 9_s;
     double wildfire_tickrate     = 0.3;
@@ -490,12 +489,11 @@ public:
   }
 
   ardeos_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
-    : fs_player_t( sim, name, r, ARDEOS ), target_data()
+    : fs_player_t( sim, name, "Firemage", r, ARDEOS ), target_data()
   {
     create_cooldowns();
 
     spirit_refund_mul     = spell_const.spirit_refund_mul;
-    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 
@@ -2623,11 +2621,6 @@ void ardeos_t::init_base_stats()
     base.distance = 5;
 
   fs_player_t::init_base_stats();
-
-  base.stats.attribute[ STAT_INTELLECT ] = 100;
-  resources.base[ RESOURCE_HEALTH ]      = 1592;
-
-  base.health_per_stamina = 48.12;
 
   resources.base[ RESOURCE_CINDERS ] = 400;
 

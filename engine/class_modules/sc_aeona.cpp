@@ -521,7 +521,7 @@ static constexpr std::string_view talent_name_formatted( aeona_talents_t t )
   }
 
   aeona_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
-    : fs_player_t( sim, name, r, AEONA ), target_data()
+    : fs_player_t( sim, name, "Lisa", r, AEONA ), target_data()
   {
     create_cooldowns();
   }
@@ -1979,14 +1979,7 @@ void aeona_t::init_base_stats()
 
   fs_player_t::init_base_stats();
 
-  base.stats.attribute[ STAT_INTELLECT ] = 100;
-  resources.base[ RESOURCE_HEALTH ]      = 1618;
-
-  base.health_per_stamina = 47.506;
-
-  resources.base[ RESOURCE_CHRONA ]                = 100;
-  resources.base[ RESOURCE_MANA ]                  = 1440;
-  resources.base_regen_per_second[ RESOURCE_MANA ] = 0.005 * resources.base[ RESOURCE_MANA ];
+  resources.base[ RESOURCE_CHRONA ] = 100;
 
   resources.base_multiplier[ RESOURCE_MANA ] *= options.max_mana_multiplier;
 

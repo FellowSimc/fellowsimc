@@ -1258,7 +1258,7 @@ def create_runs_plot(difficulty: Difficulty, file_prefix="", iterations = 1000):
   fig, axes = plt.subplots(1, 2, figsize=(16, 8))
 
   data_x = [0,15,30,45,60,75,90,105,120,135,150,165,180,195,210,225,240,255,270,285,300,315,318]
-  data_y = np.array([2.500,2.683,2.991,3.425,3.984,4.669,5.479,6.415,7.476,8.663,9.975,11.413,12.976,14.665,16.479,18.419,20.484,22.675,24.991,27.433,30.000,35.000,40.000])/2.5 * 3
+  data_y = np.array([2.652,3.871,5.307,6.006,6.874,7.484,9.361,11.167,14.333,15.009,16.254,17.656,18.984,20.013,21.368,22.782,24.554,26.449,28.286,30.138,31.200,35.100,48.750])
   
   # Graph 1: x vs df["power"]
   axes[0].scatter(df["ilvl"], power_plot, color="blue", label="Data")
@@ -1588,13 +1588,13 @@ if __name__ == "__main__":
   # create_runs_plot([30,15], file_prefix="growth_sims/medium_", iterations=1000)
   # create_runs_plot(Difficulty.EASY, file_prefix="growth_sims/easy_", iterations=1000)
   # create_runs_plot(Difficulty.MEDIUM, file_prefix="growth_sims/medium_", iterations=1000)
-  # create_runs_plot(Difficulty.HARD, file_prefix="growth_sims/hard_", iterations=1000)
+  create_runs_plot(Difficulty.HARD, file_prefix="growth_sims/hard_", iterations=1000)
   # generate_run_data([45,30,15], log_output=True)
 
 
 
   # progression()
-  progress_sim(100)
+  # progress_sim(100)
 
   # secondary_stat_by_variant()
 

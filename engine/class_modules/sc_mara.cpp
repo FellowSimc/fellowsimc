@@ -305,7 +305,6 @@ public:
   struct spell_const_t
   {
     double spirit_refund_mul                   = 1.0;
-    double balancing_damage_aura               = 1.04;
 
     double poison_and_bleed_increase_per_haste = 0.5;
     double poison_and_bleed_haste_cap = 1.0;
@@ -486,7 +485,7 @@ public:
   }
 
   mara_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
-    : fs_player_t( sim, name, r, MARA ),
+    : fs_player_t( sim, name, "Mara", r, MARA ),
       deadly_energy_tracker( 0.0 ),
       seething_poison_target( nullptr ),
       target_data(),
@@ -499,7 +498,6 @@ public:
     create_cooldowns();
 
     spirit_refund_mul     = spell_const.spirit_refund_mul;
-    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 
@@ -2825,13 +2823,6 @@ void mara_t::init_base_stats()
     base.distance = 5;
 
   fs_player_t::init_base_stats();
-
-  base.stats.attribute[ STAT_AGILITY ] = 100;
-  resources.base[ RESOURCE_HEALTH ]    = 1724;
-
-  base.health_per_stamina = 53.099;
-
-  base.mastery = 0.0;
 
   resources.base[ RESOURCE_COMBO_POINT ] = COMBO_POINT_MAX;
 

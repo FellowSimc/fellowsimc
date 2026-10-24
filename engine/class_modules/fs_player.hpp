@@ -3,6 +3,7 @@
 
 #include "simulationcraft.hpp"
 #include "fellowship_includes/character_data.hpp"
+#include "fellowship_includes/character_attribute_data.hpp"
 
 namespace fellowship
 {  // UNNAMED NAMESPACE
@@ -98,6 +99,8 @@ struct fs_player_buff_t : public buff_t
 class fs_player_t : public player_t
 {
 public:
+  const std::string_view internal_name;
+  const character_attribute_data_t* character_attribute_data;
 
   struct fs_actions_t
   {
@@ -508,6 +511,18 @@ public:
     return "";
   }
 
+  const character_attribute_data_t* find_attribute_data( util::string_view name )
+  {
+    auto data = character_attribute_data_t::find( name );
+
+    if ( data )
+      return data;
+
+    sim->error( "{} attribute data string '{}' not valid.", *this, name );
+
+    return &character_attribute_data_t::nil();
+  }
+
   const character_csv_lookup_t* find_csv_data( util::string_view name )
   {
     auto data = character_csv_lookup_t::find( name );
@@ -682,7 +697,7 @@ public:
     return a;
   }
 
-  fs_player_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE, player_e p = PLAYER_NONE );
+  fs_player_t( sim_t* sim, util::string_view name, util::string_view internal_name, race_e r = RACE_NONE, player_e p = PLAYER_NONE );
 
   // Secondary Action Tracking
 private:

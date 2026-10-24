@@ -266,7 +266,6 @@ public:
   struct
   {
     double spirit_refund_mul     = 2.0;
-    double balancing_damage_aura = 1.04;
 
     timespan_t frost_bolt_cast = 1.5_s;
 
@@ -324,7 +323,7 @@ public:
     timespan_t skandis_decree_duration_bonus = 2_s;
 
     bool undulating_spirit                         = false;
-    double undulating_spirit_additional_spirit     = 50.0;
+    double undulating_spirit_additional_spirit     = 0.0;
     double undulating_spirit_spirit_value          = 2.0;
     int undulating_spirit_stacks                   = 2;
     int undulating_spirit_max_stacks               = 4;
@@ -490,11 +489,11 @@ public:
     return "disabled";
   }
 
-  rime_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE ) : fs_player_t( sim, name, r, RIME ), target_data()
+  rime_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
+    : fs_player_t( sim, name, "Rime", r, RIME ), target_data()
   {
     create_cooldowns();
     spirit_refund_mul   = spell_const.spirit_refund_mul;
-    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 
@@ -2457,11 +2456,6 @@ void rime_t::init_base_stats()
     base.distance = 5;
 
   fs_player_t::init_base_stats();
-
-  base.stats.attribute[ STAT_INTELLECT ] = 100;
-  resources.base[ RESOURCE_HEALTH ]      = 1618;
-
-  base.health_per_stamina = 47.506;
 
   resources.base[ RESOURCE_ANIMA ] = 18;
 

@@ -204,8 +204,6 @@ public:
     // Gunde.SpiritProc.SpiritPointsGain
     double spirit_refund_mul = 1.0;
 
-    double balancing_damage_aura = 1.0;
-
     // Gunde.SpiritProc.AmountOfOrbs
     int spirit_proc_orbs = 5;
 
@@ -692,14 +690,13 @@ public:
   }
 
   gunde_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
-    : fs_player_t( sim, name, r, GUNDE ), target_data()
+    : fs_player_t( sim, name, "Gunde", r, GUNDE ), target_data()
   {
     resource_regeneration = regen_type::DYNAMIC;
 
 
     create_cooldowns();
     spirit_refund_mul = spell_const.spirit_refund_mul;
-    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 
@@ -2459,17 +2456,9 @@ void gunde_t::init_base_stats()
 
   fs_player_t::init_base_stats();
 
-  base.stats.attribute[ STAT_STRENGTH ] = 100;
-  resources.base[ RESOURCE_HEALTH ]     = 1811;
-
-  base.health_per_stamina = 53.332;
-
   base_gcd = timespan_t::from_seconds( 1.5 );
   min_gcd  = timespan_t::from_seconds( 0 );
   //min_gcd  = timespan_t::from_seconds( 0.75 );
-
-  base.parry = 0.05;
-  base.dodge = 0.05;
 }
 
 // gunde_t::init_spells =====================================================

@@ -179,7 +179,6 @@ public:
   struct spell_const_t
   {
     double spirit_refund_mul     = 1.0;
-    double balancing_damage_aura = 1.08;
 
     timespan_t auto_attack_time = 2.4_s;
     double auto_attack_ap_coeff = 0.6;
@@ -709,7 +708,7 @@ public:
   std::set<player_t*> starfall_volley_players;
 
   elarion_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
-    : fs_player_t( sim, name, r, ELARION ), target_data(), starfall_volley_players()
+    : fs_player_t( sim, name, "Bowguy", r, ELARION ), target_data(), starfall_volley_players()
   {
     resource_regeneration              = regen_type::DYNAMIC;
     regen_caches[ CACHE_HASTE ]        = true;
@@ -718,7 +717,6 @@ public:
     create_cooldowns();
 
     spirit_refund_mul     = spell_const.spirit_refund_mul;
-    balancing_damage_aura = spell_const.balancing_damage_aura;
   }
 };
 
@@ -2317,12 +2315,6 @@ void elarion_t::init_base_stats()
     base.distance = 25;
 
   fs_player_t::init_base_stats();
-
-  base.stats.attribute[ STAT_AGILITY ] = 100;
-  base.stats.attribute[ STAT_STAMINA ] = 100;
-  resources.base[ RESOURCE_HEALTH ]    = 1713;
-
-  base.health_per_stamina = 48.851;
 
   resources.base[ RESOURCE_FOCUS ]                  = 100;
   resources.base_regen_per_second[ RESOURCE_FOCUS ] = 0.05 / 0.01;

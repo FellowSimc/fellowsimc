@@ -1490,7 +1490,7 @@ void player_t::init_base_stats()
   }
 
   base.dodge = 0.00;
-  base.miss = 0.00;
+  base.miss = 0.0;
   base.parry = 0.0;
   
   base.spell_crit_chance  = 0.05;

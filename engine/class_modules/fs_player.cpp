@@ -142,14 +142,20 @@ fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
 // FS Character Definition
 // ==========================================================================
 
-fs_player_t::fs_player_t( sim_t* sim, util::string_view name, race_e r, player_e p )
+fs_player_t::fs_player_t( sim_t* sim, util::string_view name, util::string_view internal_name, race_e r, player_e p )
   : player_t( sim, p, name, r ),
     target_data(),
     fs_gems(),
     fs_weapons(),
     weapon_cd( nullptr ),
-    brave_machinations_available( false )
+    brave_machinations_available( false ),
+    internal_name( internal_name ),
+    character_attribute_data( nullptr )
 {
+  if ( !internal_name.empty() )
+  {
+    character_attribute_data = find_attribute_data( internal_name );
+  }
   // resource_regeneration              = regen_type::DYNAMIC;
   // regen_caches[ CACHE_HASTE ]        = true;
   // regen_caches[ CACHE_ATTACK_HASTE ] = true;
@@ -1108,23 +1114,43 @@ void fs_player_t::init_base_stats()
       base.rating.heal_versatility = base.rating.spell_crit = base.rating.spell_haste = base.rating.spell_hit = 0.0016;
 
   /*base.stats.attribute[ STAT_AGILITY ] = 1000;*/
-  base.stats.attribute[ STAT_STAMINA ] = 100;
-  resources.base[ RESOURCE_HEALTH ]    = 11480;
+  base.stats.attribute[ STAT_STAMINA ] = character_attribute_data->stamina;
+  resources.base[ RESOURCE_HEALTH ]    = character_attribute_data->baseHealth;
 
-  base.health_per_stamina = 36.638;
+  base.mastery = character_attribute_data->spirit;
 
-  base.attack_power_per_strength = 1.0;
-  base.attack_power_per_agility  = 1.0;
-  base.spell_power_per_intellect = 1.0;
+  balancing_damage_aura = character_attribute_data->balancingDamageAura;
+  balancing_heal_aura   = character_attribute_data->balancingHealAura;
 
-  base.mastery = 0.0;
+  resources.base[ RESOURCE_MANA ] = character_attribute_data->mana;
 
-  resources.base[ RESOURCE_SPIRIT ] = resources.max[ RESOURCE_SPIRIT ] = 100;
+  if ( character_attribute_data->manaRegenTickTime > 0 )
+  {
+    resources.base_regen_per_second[ RESOURCE_MANA ] = character_attribute_data->manaRegenRate /
+                                                       character_attribute_data->manaRegenTickTime *
+                                                       resources.base[ RESOURCE_MANA ];
+  }
+
+  base.dodge = character_attribute_data->dodgeChance;
+  base.parry = character_attribute_data->parryChance;
+
+  base.spell_crit_chance  = character_attribute_data->critChance;
+  base.attack_crit_chance = character_attribute_data->critChance;
+
+  base.health_per_stamina = character_attribute_data->staminaToMaxHealthMultiplier;
+
+  base.attack_power_per_strength         = 1.0;
+  base.attack_power_per_agility          = 1.0;
+  base.spell_power_per_intellect         = 1.0;
+  base.stats.attribute[ STAT_AGILITY ]   = character_attribute_data->agility;
+  base.stats.attribute[ STAT_STRENGTH ]  = character_attribute_data->strength;
+  base.stats.attribute[ STAT_INTELLECT ] = character_attribute_data->intellect;
+
+  resources.base[ RESOURCE_SPIRIT ] = resources.max[ RESOURCE_SPIRIT ] = character_attribute_data->maxSpiritPoints;
 
   resources.start_at[ RESOURCE_SPIRIT ]              = 0;
   resources.base_regen_per_second[ RESOURCE_SPIRIT ] = 100.0 / 300 * 1.20;
 
-  
   if ( finesse_traits[ THE_HERALD ] )
   {
     resources.start_at[ RESOURCE_SPIRIT ] += finesse_trait_values.finesse_m_spirit[ finesse_traits[ THE_HERALD ] ];

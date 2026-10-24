@@ -471,7 +471,7 @@ public:
   }
 
   xavian_t( sim_t* sim, util::string_view name, race_e r = RACE_NONE )
-    : fs_player_t( sim, name, r, XAVIAN ), target_data()
+    : fs_player_t( sim, name, "Sune", r, XAVIAN ), target_data()
   {
     resource_regeneration = regen_type::DYNAMIC;
 
@@ -1695,21 +1695,9 @@ void xavian_t::init_base_stats()
 
   fs_player_t::init_base_stats();
 
-  base.stats.attribute[ STAT_STRENGTH ] = 100;
-  resources.base[ RESOURCE_HEALTH ]     = 2556;
-
-  base.health_per_stamina = 81.303 * 0.9;
-
-  resources.base[ RESOURCE_MANA ] = 1440;
-
-  resources.base_regen_per_second[ RESOURCE_MANA ] = 0.005 * resources.base[ RESOURCE_MANA ];
-
   base_gcd = timespan_t::from_seconds( 1.5 );
   min_gcd  = timespan_t::from_seconds( 0 );
   //min_gcd  = timespan_t::from_seconds( 0.75 );
-
-  base.parry = 0.05;
-  base.dodge = 0.05;
 
   if ( talents_enabled( VANGUARD_OF_VENGEANCE ) )
     base.parry += talents.vanguard_of_vengeance_parry;

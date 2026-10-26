@@ -243,7 +243,7 @@ public:
     double brilliant_flash_dmg_coeff     = 2.22;  // Brilliant Flash
     double brilliant_flash_heal_coeff    = 6.95;
     double brilliant_flash_self_heal_mul = 1.2;
-    int swift_reprieval_max_stacks       = 12;
+    int swift_reprieval_max_stacks       = 3;
 
     double ruptured_dawn_coeff  = 0.78;
     int ruptured_dawn_falloff   = 8;
@@ -264,7 +264,7 @@ public:
     double solar_shield_dr           = 0.8;
 
     int omega_reprieval_stacks             = 2;
-    int omega_reprieval_max_stacks         = 3;
+    int omega_reprieval_max_stacks         = 20;
     timespan_t omega_reprieval_cd          = 60_s;
     double omega_reprieval_main_target_mul = 1.5;
     int omega_reprieval_falloff            = 3;
@@ -2278,7 +2278,9 @@ void xavian_t::create_buffs()
           ->set_max_stack( as<int>( find_csv_data( "Sune.SingleTargetAbsorb.Talent.ParryBoost.StackCap" )->value() ) )
           ->set_duration( find_csv_data( "Sune.SingleTargetAbsorb.Talent.ParryBoost.Duration" )->seconds() );
 
-  buffs.invictus_haste = make_buff<xavian_buff_t>( this, "invictus_haste" )->set_max_stack( 4 );
+  buffs.invictus_haste = make_buff<xavian_buff_t>( this, "invictus_haste" )
+                             ->set_max_stack( 4 )
+                             ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   buffs.shining_halo = make_buff<xavian_buff_t>( this, "shining_halo" )
                            ->set_duration( find_csv_data( "Sune.DroppedPulseAoe.AoeDuration" )->seconds() )

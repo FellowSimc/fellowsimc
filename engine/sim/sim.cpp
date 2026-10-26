@@ -3479,7 +3479,7 @@ std::unique_ptr<expr_t> sim_t::create_expression( util::string_view name_str )
 
         for ( const player_t* p : sim->player_list )
         {
-          if ( p->role != ROLE_NONE )
+          if ( p->primary_role() != ROLE_NONE )
           {
             switch ( p->specialization() )
             {

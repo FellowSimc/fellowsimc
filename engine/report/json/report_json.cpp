@@ -581,9 +581,9 @@ void collected_data_to_json( JsonOutput root, const ::report::json::report_confi
   add_non_zero( root, "dps", cd.dps );
   add_non_zero( root, "dpse", cd.dpse );
 
-  if ( p.role == ROLE_TANK || p.role == ROLE_HEAL )
+  if ( p.primary_role() == ROLE_TANK || p.primary_role() == ROLE_HEAL )
   {
-    if ( p.role == ROLE_TANK )
+    if ( p.primary_role() == ROLE_TANK )
     {
       root[ "dtps" ] = cd.dmg_taken;
       root[ "timeline_dmg_taken" ] = cd.timeline_dmg_taken;
@@ -598,7 +598,7 @@ void collected_data_to_json( JsonOutput root, const ::report::json::report_confi
     root[ "compound_absorb" ] = cd.compound_absorb;
     root[ "aps" ] = cd.aps;
 
-    if ( p.role == ROLE_TANK )
+    if ( p.primary_role() == ROLE_TANK )
     {
       root[ "htps" ] = cd.htps;
       root[ "heal_taken" ] = cd.heal_taken;

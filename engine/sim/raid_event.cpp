@@ -2384,7 +2384,7 @@ bool raid_event_t::filter_player( const player_t* p )
   if ( !sim->rng().roll( player_chance ) )
     return true;
 
-  if ( affected_role != ROLE_NONE && p->role != affected_role )
+  if ( affected_role != ROLE_NONE && p->primary_role() != affected_role )
     return true;
 
   return false;

@@ -1605,7 +1605,7 @@ void item_t::decode_item_variant()
 
   if ( slot == SLOT_MAIN_HAND || slot == SLOT_OFF_HAND )
   {
-    parsed.item_variant       = player->role == ROLE_TANK ? VARIANT_WEAPTANK : VARIANT_WEAP;
+    parsed.item_variant       = player->primary_role() == ROLE_TANK ? VARIANT_WEAPTANK : VARIANT_WEAP;
     option_main_secondary_str = "haste/crit/expertise/spirit";
     return;
   }

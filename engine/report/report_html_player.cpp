@@ -2140,7 +2140,7 @@ bool print_html_sample_sequence_resource( const player_t& p,
   if ( !p.resources.active_resource[ r ] && !p.sim->maximize_reporting )
     return false;
 
-  if ( p.role == ROLE_TANK && r == RESOURCE_HEALTH )
+  if ( p.primary_role() == ROLE_TANK && r == RESOURCE_HEALTH )
     return true;
 
   if ( data.resource_snapshot[ r ] < 0 )

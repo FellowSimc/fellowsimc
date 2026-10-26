@@ -7086,7 +7086,7 @@ bool player_t::has_shield_equipped() const
 
 bool player_t::record_healing() const
 {
-  return role == ROLE_TANK || role == ROLE_HEAL || sim -> enable_dps_healing;
+  return primary_role() == ROLE_TANK || primary_role() == ROLE_HEAL || sim->enable_dps_healing;
 }
 
 /**

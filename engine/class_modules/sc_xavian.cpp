@@ -75,6 +75,9 @@ public:
     action_t* solaris;
     action_t* decree_of_the_sun_dmg;
     action_t* decree_of_the_sun_heal;
+    action_t* sunburn;
+    action_t* suns_touch_dot;
+    action_t* suns_touch_hot;
   } actions;
 
   struct buffs_t
@@ -713,7 +716,7 @@ struct melee_t : public xavian_attack_t
     trigger_gcd        = timespan_t::zero();
     name_str_reporting = reporting_name;
 
-    attack_power_mod.direct = p->spell_const.auto_attack_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Sune.MeleeAutoAttack.StrengthCoefficient" )->value();
   }
   void reset() override
   {
@@ -801,33 +804,29 @@ struct auto_melee_attack_t : public action_t
 
 struct sun_strike_t : public xavian_attack_t
 {
+  int debuffs_applied;
   sun_strike_t( util::string_view name, xavian_t* p, util::string_view options_str = {} )
-    : xavian_attack_t( name, p, options_str )
+    : xavian_attack_t( name, p, options_str ), debuffs_applied(1)
   {
     id = 2;
     _procs_golden_hour      = true;
 
     school                  = SCHOOL_PHYSICAL;
-    attack_power_mod.direct = p->spell_const.sun_strike_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Sune.SingleTargetFillerMelee.DamageStrengthCoefficient" )->value();
 
     name_str_reporting     = "Sun Strike";
-    swift_reprieval_chance = p->spell_const.sun_strike_resource_proc_chance;
+    swift_reprieval_chance = p->find_csv_data( "Sune.SingleTargetFillerMelee.ResourceProcChance" )->value();
 
     aoe                 = -1;
-    reduced_aoe_targets = p->spell_const.sun_strike_scaling_thresold;
+    base_aoe_multiplier = p->find_csv_data( "Sune.SingleTargetFillerMelee.Cleave.DamageScaler" )->value();
+    reduced_aoe_targets = p->find_csv_data( "Sune.SingleTargetFillerMelee.Cleave.TargetCountThreshold" )->value();
     full_amount_targets = 1;
 
     ability_flags |= ability_type_e::ABILITY_BASIC;
-  }
 
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = xavian_attack_t::composite_da_multiplier( s );
-
-    if ( s->chain_target > 0 )
-      m *= p()->spell_const.sun_strike_cleave_mod;
-
-    return m;
+    if ( p->talents_enabled( xavian_t::GLEAMING_STRIKES ) )
+      debuffs_applied += as<int>(
+          p->find_csv_data( "Sune.SingleTargetFillerMelee.Talent.ExtraDebuffFromCrit.ExtraDebuffStack" )->value() );
   }
 
   void impact( action_state_t* s ) override
@@ -836,12 +835,7 @@ struct sun_strike_t : public xavian_attack_t
 
     if ( s->chain_target == 0 )
     {
-      int debuffs = 1;
-
-      if ( p()->talent_enabled( xavian_t::GLEAMING_STRIKES )  )
-        debuffs += p()->talents.gleaming_strikes_extra_sunstruck_on_crit;
-
-      p()->get_target_data( s->target )->debuffs.sunstruck->trigger( debuffs );
+      p()->get_target_data( s->target )->debuffs.sunstruck->trigger( debuffs_applied );
     }
   }
 
@@ -866,16 +860,16 @@ struct blinding_slash_t : public xavian_attack_t
     _procs_golden_hour      = true;
 
     school                  = SCHOOL_PHYSICAL;
-    attack_power_mod.direct = p->spell_const.blinding_slash_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Sune.InstantCleaveMelee.DamageStrengthCoefficient" )->value();
 
     name_str_reporting     = "Blinding Slash";
-    swift_reprieval_chance = p->spell_const.blinding_slash_resource_proc_chance;
+    swift_reprieval_chance = p->find_csv_data( "Sune.InstantCleaveMelee.ResourceProcChance" )->value();
 
     aoe                 = -1;
-    reduced_aoe_targets = p->spell_const.blinding_slash_scaling_threshold;
+    reduced_aoe_targets = p->find_csv_data( "Sune.InstantCleaveMelee.DamageScalingTargetCountThreshold" )->value();
 
     cooldown->hasted   = true;
-    cooldown->duration = p->spell_const.blinding_slash_cd;
+    cooldown->duration = p->find_csv_data( "Sune.InstantCleaveMelee.Cooldown" )->seconds();
     cooldown->charges  = 1;
 
     ability_flags |= ability_type_e::ABILITY_BASIC;
@@ -920,29 +914,35 @@ struct omnistrike_t : public xavian_attack_t
     }
   };
 
+  double base_mana_refund;
+  double mana_refund_per_stack;
+
   omnistrike_t( util::string_view name, xavian_t* p, util::string_view options_str = {} )
-    : xavian_attack_t( name, p, options_str )
+    : xavian_attack_t( name, p, options_str ), base_mana_refund( 0 ), mana_refund_per_stack( 0 )
   {
     id = 4;
     _procs_golden_hour      = true;
 
     school                  = SCHOOL_PHYSICAL;
-    attack_power_mod.direct = p->spell_const.omnistrike_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Sune.AoeMelee.DamageStrengthCoefficient" )->value();
 
     name_str_reporting     = "Omnistrike";
-    swift_reprieval_chance = p->spell_const.omnistrike_resource_proc_chance;
+    swift_reprieval_chance = p->find_csv_data( "Sune.AoeMelee.ResourceProcChance" )->value();
 
     aoe                 = -1;
-    reduced_aoe_targets = p->spell_const.omnistrike_scaling_threshold;
+    reduced_aoe_targets = p->find_csv_data( "Sune.AoeMelee.DamageScalingTargetCountThreshold" )->value();
 
     cooldown->hasted   = true;
-    cooldown->duration = p->spell_const.omnistrike_cooldown;
+    cooldown->duration = p->find_csv_data( "Sune.AoeMelee.Cooldown" )->seconds();
     cooldown->charges  = 1;
 
     energize_type     = action_energize::ON_CAST;
-    energize_amount   = p->spell_const.omnistrike_spirit_gain;
+    energize_amount   = p->find_csv_data( "Sune.AoeMelee.SpiritPointGain" )->value();
     energize_resource = RESOURCE_SPIRIT;
     
+    mana_refund_per_stack = p->find_csv_data( "Sune.AoeMeleeDamageBoostAndManaRefundDebuff" )->value();
+    base_mana_refund      = p->find_csv_data( "Sune.AoeMeleeDamageBoostAndManaRefundDebuff.ManaRefundBase" )->value();
+
     ability_flags |= ability_type_e::ABILITY_CORE;
   }
 
@@ -971,8 +971,10 @@ struct omnistrike_t : public xavian_attack_t
   double composite_da_multiplier( const action_state_t* s ) const override
   {
     double m = xavian_attack_t::composite_da_multiplier( s );
+
     if ( p()->talents_enabled( xavian_t::GLEAMING_STRIKES ) && cast_state( s )->sunstruck_stacks > 0 )
       m *= 1 + p()->talents.gleaming_strikes_omnistrike_sunstruck_amp * cast_state( s )->sunstruck_stacks;
+
     return m;
   }
 
@@ -994,8 +996,7 @@ struct omnistrike_t : public xavian_attack_t
 
     if ( debuffs > 0 )
     {
-      auto mana_gained = p()->spell_const.sunstruck_mana_refund_base +
-                         ( debuffs - 1 ) * p()->spell_const.sunstruck_mana_refund_per_stack;
+      auto mana_gained = base_mana_refund + ( debuffs - 1 ) * mana_refund_per_stack;
       p()->resource_gain( RESOURCE_MANA, mana_gained, gain, this );
     }
 
@@ -1021,20 +1022,22 @@ struct suns_verdict_t : public xavian_attack_t
     background = true;
 
     school                  = SCHOOL_MAGIC;
-    attack_power_mod.direct = p->talents.suns_verdict_coeff;
+    attack_power_mod.direct =
+        p->find_csv_data( "Sune.SingleTargetFillerMelee.Talent.AoeProcBuff.Aoe.DamageStrengthCoefficient" )->value();
 
     name_str_reporting = "Suns Verdict";
 
-    aoe                 = -1;
-    reduced_aoe_targets = p->talents.suns_verdict_scaling_threshold;
-    full_amount_targets = 1;
+    aoe = -1;
+    reduced_aoe_targets =
+        p->find_csv_data( "Sune.SingleTargetFillerMelee.Talent.AoeProcBuff.Aoe.DamageScalingTargetCountThreshold" )->value();
   }
 };
 
 struct solar_blades_t : public xavian_attack_t
 {
+  double solar_burn_amount;
   solar_blades_t( util::string_view name, xavian_t* p, util::string_view options_str = {} )
-    : xavian_attack_t( name, p, options_str )
+      : xavian_attack_t( name, p, options_str ), solar_burn_amount( 0.0 )
   {
     id = 6;
     _procs_golden_hour = true;
@@ -1044,22 +1047,28 @@ struct solar_blades_t : public xavian_attack_t
     gcd_type    = gcd_haste_type::NONE;
     trigger_gcd = 0_s;
 
-    attack_power_mod.direct = p->spell_const.solar_blades_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Sune.AtTargetInstantAoe.DamageStrengthCoefficient" )->value();
 
     name_str_reporting     = "Solar Blades";
-    swift_reprieval_chance = p->spell_const.solar_blades_resource_chance;
+    swift_reprieval_chance = p->find_csv_data( "Sune.AtTargetInstantAoe.ResourceProcChance" )->value();
 
     aoe                 = -1;
-    reduced_aoe_targets = p->spell_const.solar_blades_scaling_threshold;
+    reduced_aoe_targets = p->find_csv_data( "Sune.AtTargetInstantAoe.DamageScalingTargetCountThreshold" )->value();
     full_amount_targets = 1;
 
     cooldown->hasted   = true;
-    cooldown->duration = p->spell_const.solar_blades_cd;
+    cooldown->duration = p->find_csv_data( "Sune.AtTargetInstantAoe.Cooldown" )->seconds();
     cooldown->charges  = 1;
 
     resource_current            = RESOURCE_MANA;
-    base_costs[ RESOURCE_MANA ] = p->spell_const.solar_blades_mana_cost;
+    base_costs[ RESOURCE_MANA ] = p->find_csv_data( "Sune.AtTargetInstantAoe.ManaCost" )->value();
     ability_flags |= ability_type_e::ABILITY_CORE;
+
+    auto main_target_multiplier = p->find_csv_data( "Sune.AtTargetInstantAoe.MainTargetDamageScaler" )->value();
+    base_multiplier *= main_target_multiplier;
+    base_aoe_multiplier /= main_target_multiplier;
+
+    solar_burn_amount = p->find_csv_data( "Sune.AtTargetInstantAoe.Talent.AddsDot.DotDamageScaler" )->value();
   }
 
   void impact( action_state_t* s ) override
@@ -1074,6 +1083,7 @@ struct solar_blades_t : public xavian_attack_t
     if ( s->chain_target == 0 && p()->talents_enabled( xavian_t::SOLAR_BURN ) )
     {
       p()->get_target_data( s->target )->debuffs.sunburn->trigger();
+      p()->actions.sunburn->execute_on_target( s->target, s->result_amount * solar_burn_amount );
       // Also do the residual dot.
     }
   }
@@ -1101,6 +1111,84 @@ struct solar_blades_t : public xavian_attack_t
   void execute() override
   {
     xavian_attack_t::execute();
+  }
+};
+
+struct sunburn_t : public residual_action::residual_periodic_action_t<xavian_spell_t>
+{
+  sunburn_t( xavian_t* p ) : residual_action_t( "Sunburn", p )
+  {
+    id = 13;
+
+    name_str_reporting = "Sunburn";
+
+    tick_may_crit = false;
+
+    dot_duration           = p->find_csv_data( "Sune.AtTargetInstantAoe.Talent.AddsDot.DotDuration" )->seconds();
+    dot_behavior           = DOT_REFRESH_DURATION;
+    base_tick_time         = p->find_csv_data( "Sune.AtTargetInstantAoe.Talent.AddsDot.DotPeriod" )->seconds();
+    hasted_ticks           = true;
+    dot_allow_partial_tick = true;
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    spell_t::snapshot_state( state, rt );
+  }
+
+  void init() override
+  {
+    base_t::init();
+
+    snapshot_flags &= STATE_NO_MULTIPLIER;
+    snapshot_flags |= STATE_HASTE;
+    update_flags &= STATE_NO_MULTIPLIER;
+    update_flags |= STATE_HASTE;
+  }
+};
+
+template <typename Base>
+struct suns_touch_t : public residual_action::residual_periodic_action_t<Base>
+{
+  using ab = residual_action::residual_periodic_action_t<Base>;
+
+  suns_touch_t( util::string_view name, xavian_t* p ) : ab( name, p )
+  {
+    ab::id = 14;
+
+    ab::name_str_reporting = "Suns Touch";
+
+    ab::tick_may_crit = false;
+
+    ab::dot_duration           = p->find_csv_data( "Sune.InstantSingleTargetHealOrDamage.Talent.DotHot.Duration" )->seconds();
+    ab::dot_behavior           = DOT_REFRESH_DURATION;
+    ab::base_tick_time         = p->find_csv_data( "Sune.InstantSingleTargetHealOrDamage.Talent.DotHot.Period" )->seconds();
+    ab::hasted_ticks           = true;
+    ab::dot_allow_partial_tick = true;
+
+    ab::base_multiplier =
+        p->find_csv_data( "Sune.InstantSingleTargetHealOrDamage.Talent.DotHot.DirectValueToPeriodicValueScaler" )
+            ->value();
+  }
+
+  double composite_ta_multiplier( const action_state_t* ) const override
+  {
+    return ab::base_multiplier;
+  }
+
+  void snapshot_state( action_state_t* state, result_amount_type rt ) override
+  {
+    Base::snapshot_state( state, rt );
+  }
+
+  void init() override
+  {
+    ab::init();
+
+    ab::snapshot_flags &= STATE_NO_MULTIPLIER;
+    ab::snapshot_flags |= STATE_HASTE | STATE_MUL_TA;
+    ab::update_flags &= STATE_NO_MULTIPLIER;
+    ab::update_flags |= STATE_HASTE;
   }
 };
 
@@ -1709,6 +1797,9 @@ void xavian_t::init_spells()
 {
   fs_player_t::init_spells();
 
+  talents.gleaming_strikes_omnistrike_sunstruck_amp =
+      find_csv_data( "Sune.AoeMeleeDamageBoostAndManaRefundDebuff.AoeMeleeBonusDamagePerStack" )->value();
+
   actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
 }
 
@@ -1965,7 +2056,7 @@ void xavian_t::init_special_effects()
 // xavian_t::parry_effects ===================================================
 void xavian_t::parry_effects( action_state_t* s )
 {
-  if ( !s )
+  if ( !s || !s->action || !s->action->player )
     return;
 
   player_t* source = s->action->player;
@@ -2032,6 +2123,10 @@ void xavian_t::init_background_actions()
   actions.solaris                = new actions::solaris_t( this );
   actions.decree_of_the_sun_dmg  = new actions::decree_of_the_sun_dmg_t( this );
   actions.decree_of_the_sun_heal = new actions::decree_of_the_sun_heal_t( this );
+
+  actions.sunburn        = new actions::sunburn_t( this );
+  actions.suns_touch_hot = new actions::suns_touch_t<actions::xavian_heal_t>( "suns_touch_hot", this );
+  actions.suns_touch_dot = new actions::suns_touch_t<actions::xavian_spell_t>( "suns_touch_dot", this );
 }
 
 void xavian_t::init_rng()

@@ -592,7 +592,7 @@ public:
   double non_stacking_movement_modifier() const override;
   double stacking_movement_modifier() const override;
   void invalidate_cache( cache_e ) override;
-  void spirit_refund();
+  virtual void spirit_refund();
   void used_ultimate();
   void voidbringer_accumulate( double damage );
   void sapphire_aurastone_accumulate( double damage );

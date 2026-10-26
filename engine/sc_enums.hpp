@@ -2303,5 +2303,7 @@ enum ability_type_e : unsigned
   ABILITY_SPIRIT   = 1 << 4,
   ABILITY_MOVEMENT = 1 << 5,
   ABILITY_CONTROL  = 1 << 6,
-  ABILITY_MAX      = 1 << 7,
+  ABILITY_UTILITY  = 1 << 7,
+  ABILITY_DEFENSIVE  = 1 << 8,
+  ABILITY_MAX      = 1 << 9,
 };

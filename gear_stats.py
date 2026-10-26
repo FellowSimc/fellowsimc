@@ -1578,6 +1578,17 @@ def secondary_stat_by_variant():
   # for i in range(1, 50):
   #   print(i, round(0.3*i)+round(0.7*i)-i)
 
+def fully_geared_guy():
+  c = Character(Role.TANK)
+  
+  for slot in Slot:
+    if slot == Slot.NONE:
+      continue
+    c.createRandomItem(slot, 315, True)
+    c.items[slot].tempers = 8
+
+  print(c.simc_output())
+
 if __name__ == "__main__":
   # check_again()
   # testGems()
@@ -1588,7 +1599,7 @@ if __name__ == "__main__":
   # create_runs_plot([30,15], file_prefix="growth_sims/medium_", iterations=1000)
   # create_runs_plot(Difficulty.EASY, file_prefix="growth_sims/easy_", iterations=1000)
   # create_runs_plot(Difficulty.MEDIUM, file_prefix="growth_sims/medium_", iterations=1000)
-  create_runs_plot(Difficulty.HARD, file_prefix="growth_sims/hard_", iterations=1000)
+  # create_runs_plot(Difficulty.HARD, file_prefix="growth_sims/hard_", iterations=1000)
   # generate_run_data([45,30,15], log_output=True)
 
 
@@ -1599,4 +1610,6 @@ if __name__ == "__main__":
   # secondary_stat_by_variant()
 
 
-  # testCharStuff()ex
+  # testCharStuff()
+
+  fully_geared_guy()

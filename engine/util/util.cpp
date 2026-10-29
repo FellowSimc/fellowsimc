@@ -226,7 +226,7 @@ std::string util::version_info_str( const dbc_t* dbc )
     return {};
   }
 
-  return fmt::format( "SimulationCraft {} for World of Warcraft {} {}", SC_VERSION,
+  return fmt::format( "SimulationCraft {} for Fellowship {} {}", SC_VERSION,
                       dbc::client_data_version_str( dbc->ptr ), dbc->wow_ptr_status() );
 }
 

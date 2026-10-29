@@ -1,0 +1,168 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+# max_time=250
+# max_time=60
+target_error=0.2
+iterations=15000
+# iterations=5000
+chart_show_relative_difference=1
+vary_combat_length=0.0
+single_actor_batch=1
+max_time=720
+# max_time=100
+desired_targets=1
+
+enemy="e1"
+actions=/auto_attack_hit,damage=800,attack_speed=2,aoe_tanks=1
+
+copy="e2"
+copy="e3"
+copy="e4"
+copy="e5"
+copy="e6"
+copy="e7"
+copy="e8"
+copy="e9"
+copy="e10"
+copy="e11"
+copy="e12"
+copy="e13"
+copy="e14"
+copy="e15"
+copy="e16"
+copy="e17"
+copy="e18"
+copy="e19"
+copy="e20"
+
+
+xavian="Xavian"
+
+# apl/rime/rime_apl.simc
+
+# head=head,ilevel=120,tempering=1,rarity=epic,variant=svth,main_secondary=spirit/expertise
+# neck=neck,ilevel=135,tempering=1,rarity=epic,variant=ffffneck,main_secondary=expertise/crit
+# shoulders=shoulders,ilevel=105,tempering=1,rarity=rare,variant=ffff,main_secondary=haste/crit
+# back=back,ilevel=135,tempering=1,rarity=rare,variant=ffff,main_secondary=expertise/crit
+# chest=chest,ilevel=105,tempering=1,rarity=rare,variant=ffff,main_secondary=haste/crit
+# wrists=wrists,ilevel=120,tempering=1,rarity=rare,variant=svth,main_secondary=haste/crit
+# hands=hands,ilevel=105,tempering=1,rarity=rare,variant=svth,main_secondary=crit/expertise
+# legs=legs,ilevel=135,tempering=1,rarity=epic,variant=svth,main_secondary=spirit/crit
+# feet=feet,ilevel=120,tempering=1,rarity=epic,variant=ffff,main_secondary=haste/expertise
+# finger1=finger1,ilevel=120,tempering=1,rarity=rare,variant=ffffring,main_secondary=haste/crit
+# finger2=finger2,ilevel=135,tempering=1,rarity=rare,variant=svthring,main_secondary=crit/spirit
+# trinket1=trinket1,ilevel=105,tempering=1,rarity=rare,variant=relic,main_secondary=haste
+# trinket2=trinket2,ilevel=105,tempering=1,rarity=rare,variant=relic,main_secondary=haste
+# main_hand=main_hand,ilevel=150,tempering=0,rarity=epic,variant=weap,main_secondary=haste/crit/expertise/spirit
+
+
+head=head,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=kindling/chimeras_cunning:2/kindling
+neck=neck,ilevel=315,variant=ffffneck,rarity=regal,main_secondary=haste/expertise,tempering=8,affixes=unicorns_cunning:2/topaz/salamanders_cunning:2
+shoulders=shoulders,ilevel=315,variant=svth,rarity=regal,main_secondary=haste/crit,tempering=8,affixes=willful_momentum/salamanders_cunning:2/emerald
+back=back,ilevel=315,variant=ffff,rarity=regal,main_secondary=spirit/haste,tempering=8,affixes=emerald_judgement/brave_machinations/amethyst
+chest=chest,ilevel=315,variant=svth,rarity=regal,main_secondary=expertise/crit,tempering=8,affixes=the_vehement/the_trickster/kindling
+wrists=wrists,ilevel=315,variant=ffff,rarity=regal,main_secondary=spirit/haste,tempering=8,affixes=topaz/ruby/banshees_cunning:2
+hands=hands,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=topaz/the_subduer/unicorns_cunning:2
+legs=legs,ilevel=315,variant=svth,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=hunters_focus/emerald_judgement/the_trickster
+feet=feet,ilevel=315,variant=svth,rarity=regal,main_secondary=spirit/haste,tempering=8,affixes=willful_momentum/inspired_allegiance/banshees_cunning:2
+finger1=finger1,ilevel=315,variant=ffffring,rarity=regal,main_secondary=spirit/expertise,tempering=8,affixes=banshees_cunning:2/salamanders_cunning:2/sapphire
+finger2=finger2,ilevel=315,variant=ffffring,rarity=regal,main_secondary=expertise/haste,tempering=8,affixes=chimeras_cunning:2/salamanders_cunning:2/topaz
+trinket1=trinket1,ilevel=315,variant=relic,rarity=regal,main_secondary=spirit,tempering=8,affixes=unicorns_cunning:2/topaz/banshees_cunning:2
+trinket2=trinket2,ilevel=315,variant=relic,rarity=regal,main_secondary=expertise,tempering=8,affixes=amethyst/sphinxs_cunning:2/sphinxs_cunning:2
+main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,main_secondary=haste/crit/expertise/spirit,tempering=8,affixes=ruby/undines_cunning:2/undines_cunning:2
+
+
+gems.sapphire_power=500
+gems.ruby_power=500
+gems.amethyst_power=500
+gems.emerald_power=500
+
+sets.seal_of_the_heskyr=1
+sets.dark_prophecy=1
+
+actions.precombat=snapshot_stats
+actions.precombat+=/aura_of_solace
+
+actions=solar_shield
+#,if=talent.invictus
+actions+=/solar_blades
+actions+=/alzeracs_shackle
+actions+=/shining_halo,if=!buff.shining_halo.up
+actions+=/decree_of_the_sun
+actions+=/omnistrike
+actions+=/brilliant_flash,if=buff.omega_reprieval.at_max_stacks|buff.omega_reprieval.stack>1&cooldown.omega_reprieval.remains<=gcd.max+3*talent.celestial_favor
+actions+=/omega_reprieval
+actions+=/blinding_slash,target_if=min:debuff.blind.stack,if=debuff.blind.stack<1|!talent.gleaming_strikes&active_enemies>1
+actions+=/fated_strike
+actions+=/brilliant_flash
+actions+=/sun_strike,if=talent.gleaming_strikes
+actions+=/blinding_slash
+actions+=/sun_strike
+
+weapon=fated_strike
+
+
+legendary.solar_glare=1
+talents=vanguard_of_vengeance:1/invictus:1/golden_hour:1/solar_burn:1/rising_sun:1/suns_touch:1
+
+copy="shackle"
+weapon=alzeracs_shackle
+
+# talents=vanguard_of_vengeance:1/invictus:1/golden_hour:1
+
+# copy="Grossly Incandescent","Xavian"
+# legendary.grossly_incandescent=1
+# copy="Grossly Incandescent Suns Touch","Xavian"
+# legendary.grossly_incandescent=1
+# talents+=/suns_touch:1
+# copy="Solar Glare","Xavian"
+# legendary.solar_glare=1
+# copy="Solar Glare Solar Burn","Xavian"
+# legendary.solar_glare=1
+# talents+=/solar_burn:1
+# copy="Solar Glare Rising Sun","Xavian"
+# legendary.solar_glare=1
+# talents+=/rising_sun:1
+# copy="Solar Glare Rising Sun Solar Burn","Xavian"
+# legendary.solar_glare=1
+# talents+=/rising_sun:1/solar_burn:1
+# copy="Suns Touch","Xavian"
+# talents+=/suns_touch:1
+# copy="Grand Halo","Xavian"
+# talents+=/grand_halo:1
+# copy="Solar Burn","Xavian"
+# talents+=/solar_burn:1
+# copy="lights_oath","Xavian"
+# talents+=/lights_oath:1
+# copy="Rising Sun","Xavian"
+# talents+=/rising_sun:1
+# copy="Solar Burn Rising Sun","Xavian"
+# talents+=/solar_burn:1/rising_sun:1
+# copy="Celestial Favor","Xavian"
+# talents+=/celestial_favor:1
+# copy="Gleaming Strikes","Xavian"
+# talents+=/gleaming_strikes:1
+# copy="Suns Verdict","Xavian"
+# talents+=/suns_verdict:1
+# copy="Hallowed Shield","Xavian"
+# talents+=/hallowed_shield:1
+# copy="Vanguard of Vengenace","Xavian"
+# talents+=/vanguard_of_vengeance:1
+# copy="Invictus","Xavian"
+# talents+=/invictus:1
+# copy="Invictus HS","Xavian"
+# talents+=/invictus:1/hallowed_shield:1
+# copy="Invictus VoV","Xavian"
+# talents+=/invictus:1/vanguard_of_vengeance:1
+# copy="Golden Hour","Xavian"
+# talents+=/golden_hour:1
+# copy="Golden Hour Suns Touch","Xavian"
+# talents+=/golden_hour:1/suns_touch:1
+# copy="Golden Hour Rising Sun","Xavian"
+# talents+=/golden_hour:1/rising_sun:1
+# copy="Golden Hour Solar Burn Rising Sun","Xavian"
+# talents+=/golden_hour:1/solar_burn:1/rising_sun:1
+# copy="lights_oath grand halo","Xavian"
+# talents+=/lights_oath:1/grand_halo:1

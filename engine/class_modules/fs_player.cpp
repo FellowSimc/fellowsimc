@@ -133,7 +133,8 @@ fs_player_td_t::fs_player_td_t( player_t* target, fs_player_t* source )
         make_buff<stat_buff_t>( *this, "inspired_allegiance" )
             ->add_stat(
                 STAT_HASTE_RATING,
-                source->fs_weapon_trait_values.inspired_allegiance_haste[ source->fs_weapons.inspired_allegiance ] )
+                        source->fs_weapon_trait_values.inspired_allegiance_haste
+                            [ source->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_INSPIRED_ALLEGIANCE ] ] )
             ->set_duration( 8_s );
   }
 }
@@ -319,9 +320,9 @@ double fs_player_t::composite_player_target_multiplier( player_t* target, school
     m *= 1.0 + fs_sets.death_grasp_execute_amp;
   }
 
-  if ( finesse_traits[ SUBDUER ] > 0 && target->health_percentage() <= low_health_threshold )
+  if ( finesse_traits[ THE_SUBDUER ] > 0 && target->health_percentage() <= low_health_threshold )
   {
-    m *= 1.0 + finesse_trait_values.finesse_c_execute_amp[ finesse_traits[ SUBDUER ] ];
+    m *= 1.0 + finesse_trait_values.finesse_c_execute_amp[ finesse_traits[ THE_SUBDUER ] ];
   }
 
   return m;
@@ -396,7 +397,8 @@ struct amethyst_splinters_t : public residual_action::residual_periodic_action_t
     hasted_ticks           = true;
     dot_allow_partial_tick = true;
 
-    base_multiplier *= p->fs_weapon_trait_values.amethyst_splinters_fraction[ p->fs_weapons.amethyst_splinters ];
+    base_multiplier *= p->fs_weapon_trait_values.amethyst_splinters_fraction
+                           [ p->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_AMETHYST_SPLINTERS ] ];
   }
 
   void snapshot_state( action_state_t* state, result_amount_type rt ) override
@@ -421,9 +423,6 @@ struct amethyst_splinters_t : public residual_action::residual_periodic_action_t
 
 struct fated_strike_t : fs_weapon_action_t<attack_t>
 {
-  double st_mod       = 7.39;
-  double cleave_mod   = 2.874;
-  double cleave_ratio = cleave_mod / st_mod;
 
   fated_strike_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
     : fs_weapon_action_t( n, p, options )
@@ -433,7 +432,10 @@ struct fated_strike_t : fs_weapon_action_t<attack_t>
     base_execute_time = trigger_gcd = min_gcd = 0.3_s;
 
     gcd_type                = gcd_haste_type::NONE;
-    attack_power_mod.direct = st_mod;
+    attack_power_mod.direct = p->find_csv_data("Weapon.CleaveDamageBuffCooldownReduction.PrimaryAttributeCoefficient")->value();
+
+    double cleave_mod = p->find_csv_data( "Weapon.CleaveDamageBuffCooldownReduction.Cleave.PrimaryAttributeCoefficient" )->value();
+    base_aoe_multiplier = cleave_mod / attack_power_mod.direct;
 
     name_str_reporting = "Fated Strike";
     cooldown->duration = 60_s;
@@ -442,24 +444,12 @@ struct fated_strike_t : fs_weapon_action_t<attack_t>
 
     aoe                 = -1;
     full_amount_targets = 1;
-    reduced_aoe_targets = 3;
+    reduced_aoe_targets = p->find_csv_data( "Weapon.CleaveDamageBuffCooldownReduction.Cleave.DamageFalloffTargetCountThreshold" )->value();
 
     if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_FATED_STRIKE )
       active_weapon = true;
 
     parse_options( options );
-  }
-
-  double composite_da_multiplier( const action_state_t* s ) const override
-  {
-    double m = base_t::composite_da_multiplier( s );
-
-    if ( s->chain_target != 0 )
-    {
-      m *= cleave_ratio;
-    }
-
-    return m;
   }
 
   void execute() override
@@ -818,6 +808,92 @@ struct icicles_of_anzhyr_t : fs_weapon_action_t<spell_t>
   }
 };
 
+struct alzeracs_shackle_t : fs_weapon_action_t<spell_t>
+{
+  struct alzeracs_shackle_aoe_dot_t : fs_weapon_action_t<spell_t>
+  {
+    alzeracs_shackle_aoe_dot_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
+    {
+      id                 = 11348;
+      name_str_reporting = "Alzerac's Shackle (AoE DoT)";
+      school             = SCHOOL_MAGIC;
+
+      spell_power_mod.tick =
+          p->find_csv_data( "Weapon.StunDotAoeDamageSlow.Debuff.Dot.PrimaryAttributeCoefficient" )->value();
+      base_tick_time = p->find_csv_data( "Weapon.StunDotAoeDamageSlow.Debuff.Dot.TickInterval" )->seconds();
+      dot_duration   = p->find_csv_data( "Weapon.StunDotAoeDamageSlow.Debuff.Duration" )->seconds();
+
+      hasted_ticks           = true;
+      tick_may_crit          = true;
+      dot_allow_partial_tick = true;
+
+      background = true;
+    }
+  };
+
+  struct alzeracs_shackle_aoe_t : fs_weapon_action_t<spell_t>
+  {
+    alzeracs_shackle_aoe_t( util::string_view n, fs_player_t* p ) : fs_weapon_action_t( n, p )
+    {
+      id                     = 11348;
+      name_str_reporting     = "Alzerac's Shackle (AoE)";
+      school                 = SCHOOL_MAGIC;
+      spell_power_mod.direct =
+          p->find_csv_data( "Weapon.StunDotAoeDamageSlow.Aoe.PrimaryAttributeCoefficient" )->value();
+      reduced_aoe_targets =
+          p->find_csv_data( "Weapon.StunDotAoeDamageSlow.Aoe.DamageFalloffTargetCountThreshold" )->value();
+      aoe                    = -1;
+      background             = true;
+
+      impact_action = new alzeracs_shackle_aoe_dot_t( "alzeracs_shackle_aoe_dot", p );
+      add_child( impact_action );
+    }
+  };
+
+  action_t* aoe_action;
+  alzeracs_shackle_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
+    : fs_weapon_action_t( n, p, options ), aoe_action( nullptr )
+  {
+    base_execute_time = trigger_gcd = min_gcd = 0_s;
+    gcd_type                                  = gcd_haste_type::NONE;
+
+    spell_power_mod.tick =
+        p->find_csv_data( "Weapon.StunDotAoeDamageSlow.Stun.Dot.PrimaryAttributeCoefficient" )->value();
+    base_tick_time = p->find_csv_data( "Weapon.StunDotAoeDamageSlow.Stun.Dot.TickInterval" )->seconds();
+    dot_duration   = p->find_csv_data( "Weapon.StunDotAoeDamageSlow.Stun.Duration" )->seconds();
+
+    hasted_ticks           = true;
+    tick_may_crit          = true;
+    dot_allow_partial_tick = true;
+
+    id                 = 11348;
+    name_str_reporting = "Alzerac's Shackle";
+    school             = SCHOOL_MAGIC;
+    cooldown->duration = 30_s;
+
+    base_execute_time = trigger_gcd = min_gcd = 0_s;
+    gcd_type                                  = gcd_haste_type::NONE;
+     
+    aoe_action = new alzeracs_shackle_aoe_t( "alzeracs_shackle_aoe", p );
+    add_child( aoe_action );
+
+    if ( fs_p()->fs_weapons.equipped_weapon == FSWEAPON_ALZERACS_SHACKLE )
+      active_weapon = true;
+
+    parse_options( options );
+  }
+
+  void last_tick( dot_t* d )
+  {
+    base_t::last_tick( d );
+
+    if ( d->target && !d->target->is_sleeping() )
+    {
+      aoe_action->execute_on_target( d->target );
+    }
+  }
+};
+
 struct voidbringers_touch_t : fs_weapon_action_t<spell_t>
 {
   voidbringers_touch_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
@@ -1027,6 +1103,8 @@ action_t* fs_player_t::create_action( util::string_view name, util::string_view 
     return new alzeracs_essence_t( name, this, options_str );
   if ( name == "earthbreaker" )
     return new earthbreaker_t( name, this, options_str );
+  if ( name == "alzeracs_shackle" )
+    return new alzeracs_shackle_t( name, this, options_str );
 
   return player_t::create_action( name, options_str );
 }
@@ -1076,9 +1154,9 @@ std::unique_ptr<expr_t> fs_player_t::create_expression( util::string_view name_s
     else if ( util::str_compare_ci( split[ 0 ], "weapon_trait" ) )
     {
       if ( util::str_compare_ci( split[ 1 ], "visions_of_grandeur" ) )
-        return make_ref_expr( name_str, fs_weapons.visions_of_grandeur );
+        return make_ref_expr( name_str, fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_VISIONS_OF_GRANDEUR ] );
       else if ( util::str_compare_ci( split[ 1 ], "brave_machinations" ) )
-        return make_ref_expr( name_str, fs_weapons.brave_machinations );
+        return make_ref_expr( name_str, fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_BRAVE_MACHINATIONS ] );
     }
     else if ( util::str_compare_ci( split[ 0 ], "weapon" ) )
     {
@@ -1417,7 +1495,7 @@ void fs_player_t::create_buffs()
 
   fs_buffs.willful_momentum =
       make_buff<fs_player_buff_t>( this, "willful_momentum" )
-          ->set_default_value( fs_weapon_trait_values.willful_momentum_amp[ fs_weapons.willful_momentum ] )
+          ->set_default_value( fs_weapon_trait_values.willful_momentum_amp[ fs_weapons.weapon_traits[weapon_trait_e::WEAPON_TRAIT_WILLFUL_MOMENTUM ] ] )
           ->set_duration( fs_weapon_trait_values.willful_momentum_duration );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
@@ -1437,7 +1515,7 @@ void fs_player_t::create_buffs()
 
   fs_buffs.vengeful_soul =
       make_buff<fs_player_buff_t>( this, "vengeful_soul" )
-          ->set_default_value( fs_weapon_trait_values.vengeful_soul_amp[ fs_weapons.vengeful_soul ] )
+          ->set_default_value( fs_weapon_trait_values.vengeful_soul_amp[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_VENGEFUL_SOUL] ] )
           ->set_duration( fs_weapon_trait_values.vengeful_soul_duration )
           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
@@ -1456,18 +1534,18 @@ void fs_player_t::create_buffs()
       break;
   }
 
-  fs_buffs.hunters_focus =
-      make_buff<stat_buff_t>( this, "hunters_focus" )
-          ->add_stat( STAT_HASTE_RATING, fs_weapon_trait_values.hunters_focus_haste[ fs_weapons.hunters_focus ] )
-          ->set_duration( fs_weapon_trait_values.hunters_focus_duration[ fs_weapons.hunters_focus ] )
-          ->set_max_stack( fs_weapon_trait_values.hunters_focus_max_stacks[ fs_weapons.hunters_focus ] )
-          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+  auto hf_rank = fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_HUNTERS_FOCUS ];
+  fs_buffs.hunters_focus = make_buff<stat_buff_t>( this, "hunters_focus" )
+                               ->add_stat( STAT_HASTE_RATING, fs_weapon_trait_values.hunters_focus_haste[ hf_rank ] )
+                               ->set_duration( fs_weapon_trait_values.hunters_focus_duration[ hf_rank ] )
+                               ->set_max_stack( fs_weapon_trait_values.hunters_focus_max_stacks[ hf_rank ] )
+                               ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
+  auto ps_rank = fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_PATIENT_SOUL ];
   fs_buffs.patient_soul =
       make_buff<stat_buff_t>( this, "patient_soul" )
-          ->add_stat( STAT_VERSATILITY_RATING,
-                      fs_weapon_trait_values.patient_soul_expertise[ fs_weapons.patient_soul ] )
-          ->set_default_value( fs_weapon_trait_values.patient_soul_max_hp[ fs_weapons.patient_soul ] )
+          ->add_stat( STAT_VERSATILITY_RATING, fs_weapon_trait_values.patient_soul_expertise[ ps_rank ] )
+          ->set_default_value( fs_weapon_trait_values.patient_soul_max_hp[ ps_rank ] )
           ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
           ->set_expire_callback( [ this ]( buff_t* b, int stacks, timespan_t duration ) {
             b->player->resources.initial_multiplier[ RESOURCE_HEALTH ] -= b->default_value;
@@ -1503,7 +1581,7 @@ void fs_player_t::create_buffs()
   }
     
   fs_buffs.hidden_power = make_buff<fs_player_buff_t>( this, "hidden_power" )
-                              ->set_default_value( fs_weapon_trait_values.hidden_power_amp[ fs_weapons.hidden_power ] )
+                              ->set_default_value( fs_weapon_trait_values.hidden_power_amp[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_HIDDEN_POWER ] ] )
                               ->set_duration( fs_weapon_trait_values.hidden_power_buff_duration );
 
   switch ( convert_hybrid_stat( STAT_STR_AGI_INT ) )
@@ -1557,7 +1635,7 @@ void fs_player_t::create_buffs()
   fs_buffs.seized_opportunity =
       make_buff<stat_buff_t>( this, "seized_opportunity" )
           ->add_stat( STAT_CRIT_RATING,
-                      fs_weapon_trait_values.seized_opportunity_crit[ fs_weapons.seized_opportunity ] )
+                      fs_weapon_trait_values.seized_opportunity_crit[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_SEIZED_OPPORTUNITY ] ] )
           ->set_max_stack( 20 )
           ->set_duration( 12_s );
 
@@ -1769,34 +1847,6 @@ void fs_player_t::create_options()
   add_option( opt_func( "relic1", parse_fsrelic1 ) );
   add_option( opt_func( "relic2", parse_fsrelic2 ) );
 
-  add_option( opt_uint( "weapon_trait.amethyst_splinters", fs_weapons.amethyst_splinters, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.brave_machinations", fs_weapons.brave_machinations, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.diamond_strike", fs_weapons.diamond_strike, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.divine_mediation", fs_weapons.divine_mediation, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.emerald_judgement", fs_weapons.emerald_judgement, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.first_man_standing", fs_weapons.first_man_standing, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.grounded_spirit", fs_weapons.grounded_spirit, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.heart_of_stone", fs_weapons.heart_of_stone, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.heroic_brand", fs_weapons.heroic_brand, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.hidden_power", fs_weapons.hidden_power, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.hunters_focus", fs_weapons.hunters_focus, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.inspired_allegiance", fs_weapons.inspired_allegiance, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.iron_spikes", fs_weapons.iron_spikes, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.kindling", fs_weapons.kindling, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.king_of_the_hill", fs_weapons.king_of_the_hill, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.latent_resurgence", fs_weapons.latent_resurgence, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.martial_initiative", fs_weapons.martial_initiative, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.navigators_intuition", fs_weapons.navigators_intuition, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.patient_soul", fs_weapons.patient_soul, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.ruby_storm", fs_weapons.ruby_storm, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.sapphire_aurastone", fs_weapons.sapphire_aurastone, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.seized_opportunity", fs_weapons.seized_opportunity, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.stalwart_readiness", fs_weapons.stalwart_readiness, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.treasure_hunters_delight", fs_weapons.treasure_hunters_delight, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.vengeful_soul", fs_weapons.vengeful_soul, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.visions_of_grandeur", fs_weapons.visions_of_grandeur, 0, 4 ) );
-  add_option( opt_uint( "weapon_trait.willful_momentum", fs_weapons.willful_momentum, 0, 4 ) );
-
   add_option( opt_float( "spirit_refund_mul", spirit_refund_mul ) );
 }
 
@@ -1980,15 +2030,15 @@ void fs_player_t::init_special_effects()
 
   if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_9 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
-    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
-    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplicative_multiplier[ STAT_STRENGTH ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplicative_multiplier[ STAT_INTELLECT ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
+    base.attribute_multiplicative_multiplier[ STAT_AGILITY ] *= 1.0 + fs_gems.diamond_main_stat_amp_major;
   }
   else if ( fs_gems.gem_powers[ GEM_DIAMOND ] >= GEM_TIER_4 )
   {
-    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
-    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
-    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplicative_multiplier[ STAT_STRENGTH ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplicative_multiplier[ STAT_INTELLECT ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
+    base.attribute_multiplicative_multiplier[ STAT_AGILITY ] *= 1.0 + fs_gems.diamond_main_stat_amp_minor;
   }
 
   // TODO: Implement as a health based check and buff that turns on & off.
@@ -2076,7 +2126,7 @@ void fs_player_t::init_special_effects()
 
   if ( fs_sets.torment_of_baelaurum )
   {
-    base.attribute_multiplier[ convert_hybrid_stat( STAT_STR_AGI_INT ) ] *= 1.0 + fs_sets.torment_of_baelaurum_amp;
+    base.attribute_multiplicative_multiplier[ convert_hybrid_stat( STAT_STR_AGI_INT ) ] *= 1.0 + fs_sets.torment_of_baelaurum_amp;
   }
 
   if ( fs_sets.dark_prophecy )
@@ -2187,19 +2237,20 @@ void fs_player_t::init_special_effects()
   if ( overcap > 0.0 )
   {
     auto mul = overcap * fs_gems.gem_power_mult;
-    base.attribute_multiplier[ STAT_STRENGTH ] *= 1.0 + mul;
-    base.attribute_multiplier[ STAT_INTELLECT ] *= 1.0 + mul;
-    base.attribute_multiplier[ STAT_AGILITY ] *= 1.0 + mul;
-    base.attribute_multiplier[ STAT_STAMINA ] *= 1.0 + mul;
+    base.attribute_multiplicative_multiplier[ STAT_STRENGTH ] *= 1.0 + mul;
+    base.attribute_multiplicative_multiplier[ STAT_INTELLECT ] *= 1.0 + mul;
+    base.attribute_multiplicative_multiplier[ STAT_AGILITY ] *= 1.0 + mul;
+    base.attribute_multiplicative_multiplier[ STAT_STAMINA ] *= 1.0 + mul;
   }
 
-  if ( fs_weapons.willful_momentum > 0 )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_WILLFUL_MOMENTUM ] > 0 )
   {
     passive.add_stat( STAT_MASTERY_RATING,
-                      fs_weapon_trait_values.willful_momentum_spirit[ fs_weapons.willful_momentum ] );
+        fs_weapon_trait_values
+            .willful_momentum_spirit[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_WILLFUL_MOMENTUM ] ] );
   }
 
-  if ( fs_weapons.kindling )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_KINDLING ] )
   {
     struct kindling_dot_t : public actions::fs_proc_spell_t
     {
@@ -2217,7 +2268,9 @@ void fs_player_t::init_special_effects()
 
         name_str_reporting = "Kindling";
 
-        spell_power_mod.tick = p->fs_weapon_trait_values.kindling_tick_damage[ p->fs_weapons.kindling ];
+        spell_power_mod.tick =
+            p->fs_weapon_trait_values
+                .kindling_tick_damage[ p->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_KINDLING ] ];
       }
     };
 
@@ -2243,7 +2296,7 @@ void fs_player_t::init_special_effects()
     dbc->activate();
   }
 
-  if ( fs_weapons.emerald_judgement )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_EMERALD_JUDGEMENT ] )
   {
     struct emerald_judgement_t : public actions::fs_proc_spell_t
     {
@@ -2255,7 +2308,9 @@ void fs_player_t::init_special_effects()
 
         name_str_reporting = "Emerald Judgement";
 
-        spell_power_mod.direct = p->fs_weapon_trait_values.emerald_judgement_dmg[ p->fs_weapons.emerald_judgement ];
+        spell_power_mod.direct =
+            p->fs_weapon_trait_values
+                .emerald_judgement_dmg[ p->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_EMERALD_JUDGEMENT ] ];
       }
 
       void execute() override
@@ -2274,7 +2329,8 @@ void fs_player_t::init_special_effects()
     effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
     effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
     effect->cooldown_    = 0_s;
-    effect->ppm_         = -fs_weapon_trait_values.emerald_judgement_ppm[ fs_weapons.emerald_judgement ];
+    effect->ppm_ = -fs_weapon_trait_values
+                        .emerald_judgement_ppm[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_EMERALD_JUDGEMENT ] ];
     effect->set_can_proc_from_procs( true );
     effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
     effect->rppm_blp_    = real_ppm_t::BLP_ENABLED;
@@ -2290,7 +2346,7 @@ void fs_player_t::init_special_effects()
     dbc->activate();
   }
 
-  if ( fs_weapons.ruby_storm )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_RUBY_STORM ] )
   {
     struct ruby_storm_t : public actions::fs_proc_spell_t
     {
@@ -2305,7 +2361,9 @@ void fs_player_t::init_special_effects()
       void execute() override
       {
         base_dd_min = base_dd_max = fs_p()->resources.max[ RESOURCE_HEALTH ] *
-                                    fs_p()->fs_weapon_trait_values.ruby_storm_damage[ fs_p()->fs_weapons.ruby_storm ];
+            fs_p()
+                ->fs_weapon_trait_values
+                .ruby_storm_damage[ fs_p()->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_RUBY_STORM ] ];
 
         base_t::execute();
       }
@@ -2317,7 +2375,9 @@ void fs_player_t::init_special_effects()
     effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
     effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
     effect->cooldown_    = 0_s;
-    effect->ppm_         = -fs_weapon_trait_values.ruby_storm_ppm[ fs_weapons.ruby_storm ];
+    effect->ppm_ =
+        -fs_weapon_trait_values
+             .ruby_storm_ppm[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_RUBY_STORM ] ];
     effect->set_can_proc_from_procs( true );
     effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
     effect->rppm_blp_    = real_ppm_t::BLP_ENABLED;
@@ -2333,7 +2393,7 @@ void fs_player_t::init_special_effects()
     dbc->activate();
   }
 
-  if ( fs_weapons.navigators_intuition )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_NAVIGATORS_INTUITION ] )
   {
 
     auto effect                   = new special_effect_t( this );
@@ -2342,8 +2402,11 @@ void fs_player_t::init_special_effects()
     effect->proc_flags_           = PF_ALL_DAMAGE | PF_ALL_HEAL;
     effect->proc_flags2_          = PF2_ALL_CAST;
     effect->has_use_buff_override = true;
-    effect->cooldown_             = fs_weapon_trait_values.navigators_intuition_cd[ fs_weapons.navigators_intuition ];
-    effect->proc_chance_ = fs_weapon_trait_values.navigators_intuition_chance[ fs_weapons.navigators_intuition ];
+    effect->cooldown_ =
+        fs_weapon_trait_values
+            .navigators_intuition_cd[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_NAVIGATORS_INTUITION ] ];
+    effect->proc_chance_ = fs_weapon_trait_values.navigators_intuition_chance
+                               [ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_NAVIGATORS_INTUITION ] ];
     effect->type         = special_effect_e::SPECIAL_EFFECT_EQUIP;
 
     static constexpr std::array<stat_e, 4> secondary_ratings = { STAT_VERSATILITY_RATING, STAT_MASTERY_RATING, STAT_HASTE_RATING,
@@ -2359,11 +2422,13 @@ void fs_player_t::init_special_effects()
         {
           buffs[ stat ] =
               make_buff<stat_buff_t>( p, fmt::format( "navigators_intuition_{}", util::stat_type_abbrev( stat ) ) )
-                  ->add_stat(
-                      stat, p->fs_weapon_trait_values.navigators_intuition_stats[ p->fs_weapons.navigators_intuition ] )
+                  ->add_stat( stat,
+                              p->fs_weapon_trait_values.navigators_intuition_stats
+                                  [ p->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_NAVIGATORS_INTUITION ] ] )
                   ->set_name_reporting( fmt::format( "Navigator's Intuition {}", util::stat_type_abbrev( stat ) ) )
                   ->set_duration(
-                      p->fs_weapon_trait_values.navigators_intuition_duration[ p->fs_weapons.navigators_intuition ] );
+                      p->fs_weapon_trait_values.navigators_intuition_duration
+                          [ p->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_NAVIGATORS_INTUITION ] ] );
         }
       }
 
@@ -2387,7 +2452,7 @@ void fs_player_t::init_special_effects()
     dbc->activate();
   }
 
-  if ( fs_weapons.diamond_strike )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_DIAMOND_STRIKE ] )
   {
     struct diamond_strike_t : public actions::fs_proc_spell_t
     {
@@ -2399,7 +2464,9 @@ void fs_player_t::init_special_effects()
 
         name_str_reporting = "Diamond Strike";
 
-        spell_power_mod.direct = p->fs_weapon_trait_values.diamond_strike_dmg[ p->fs_weapons.diamond_strike ];
+        spell_power_mod.direct =
+            p->fs_weapon_trait_values
+                .diamond_strike_dmg[ p->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_DIAMOND_STRIKE ] ];
       }
 
       double composite_target_da_multiplier( player_t* t ) const override
@@ -2427,7 +2494,9 @@ void fs_player_t::init_special_effects()
     effect->proc_flags_  = PF_ALL_DAMAGE | PF_PERIODIC;
     effect->proc_flags2_ = PF2_ALL_HIT | PF2_PERIODIC_DAMAGE;
     effect->cooldown_    = 0_s;
-    effect->ppm_         = -fs_weapon_trait_values.diamond_strike_ppm[ fs_weapons.diamond_strike ];
+    effect->ppm_ =
+        -fs_weapon_trait_values
+             .diamond_strike_ppm[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_DIAMOND_STRIKE ] ];
     effect->set_can_proc_from_procs( true );
     effect->rppm_scale_  = rppm_scale_e::RPPM_HASTE;
     effect->rppm_blp_    = real_ppm_t::BLP_ENABLED;
@@ -2471,7 +2540,7 @@ void fs_player_t::init_special_effects()
     }
   };
 
-  if ( fs_weapons.hidden_power )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_HIDDEN_POWER ] )
   {
     auto fs_effect                   = new special_effect_t( this );
     fs_effect->spell_id              = 1341;
@@ -2490,7 +2559,7 @@ void fs_player_t::init_special_effects()
     cb->activate();
   }
 
-  if ( fs_weapons.seized_opportunity )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_SEIZED_OPPORTUNITY ] )
   {
     auto fs_effect                   = new special_effect_t( this );
     fs_effect->spell_id              = 1342;
@@ -2510,7 +2579,7 @@ void fs_player_t::init_special_effects()
     cb->activate();
   }
 
-  if ( fs_weapons.vengeful_soul )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_VENGEFUL_SOUL ] )
   {
     auto effect                   = new special_effect_t( this );
     effect->spell_id              = 1343;
@@ -2534,7 +2603,7 @@ void fs_player_t::init_special_effects()
     cb->activate();
   }
 
-  if ( fs_weapons.hunters_focus )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_HUNTERS_FOCUS ] )
   {
     auto effect                   = new special_effect_t( this );
     effect->spell_id              = 1347;
@@ -2556,7 +2625,7 @@ void fs_player_t::init_special_effects()
   }
 
 
-  if ( fs_weapons.inspired_allegiance )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_INSPIRED_ALLEGIANCE ] )
   {
     struct inspired_allegiance_t: dbc_proc_callback_t
     {
@@ -2575,7 +2644,9 @@ void fs_player_t::init_special_effects()
         if ( p()->weapon_cd )
         {
           p()->weapon_cd->adjust(
-              -p()->fs_weapon_trait_values.inspired_allegiance_cdr[ p()->fs_weapons.inspired_allegiance ], true, true );
+              -p()->fs_weapon_trait_values.inspired_allegiance_cdr
+                   [ p()->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_INSPIRED_ALLEGIANCE ] ],
+              true, true );
         }
 
         p()->get_target_data( p() )->buffs.inspired_allegiance->trigger();
@@ -2593,7 +2664,8 @@ void fs_player_t::init_special_effects()
         }
 
         rng().shuffle( allies.begin(), allies.end() );
-        size_t max_targets = p()->fs_weapon_trait_values.inspired_allegiance_allies[ p()->fs_weapons.inspired_allegiance ];
+        size_t max_targets = p()->fs_weapon_trait_values.inspired_allegiance_allies
+                                 [ p()->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_INSPIRED_ALLEGIANCE ] ];
 
         size_t count = 0;
         for ( auto& ally : allies )
@@ -2638,7 +2710,7 @@ void fs_player_t::init_assessors()
     } );
   }
 
-  if ( fs_weapons.amethyst_splinters > 0 )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_AMETHYST_SPLINTERS ] > 0 )
   {
     assessor_out_damage.add( assessor::TARGET_DAMAGE + 2, [ this ]( result_amount_type, action_state_t* s ) {
       if ( s->result == RESULT_CRIT )
@@ -2659,7 +2731,7 @@ void fs_player_t::init_assessors()
     } );
   }
 
-  if ( fs_weapons.sapphire_aurastone )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_SAPPHIRE_AURASTONE ] )
   {
     assessor_out_damage.add( assessor::TARGET_DAMAGE + 3, [ this ]( result_amount_type, action_state_t* s ) {
       if ( s->result_amount > 0 && s->action && s->action->id != fs_actions.aurastone_dmg->id )
@@ -2669,22 +2741,28 @@ void fs_player_t::init_assessors()
     } );
   }
 
-  if ( fs_weapons.patient_soul )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_PATIENT_SOUL ] )
   {
     buffs.movement->add_stack_change_callback( [ this ]( buff_t*, int old, int _new ) {
       if ( _new )
       {
         event_t::cancel( patient_soul_stopped );
-        patient_soul_moved =
-            make_event( sim, fs_weapon_trait_values.patient_soul_moving[ fs_weapons.patient_soul ], [ this ]() {
+        patient_soul_moved = make_event(
+            sim,
+            fs_weapon_trait_values
+                .patient_soul_moving[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_PATIENT_SOUL ] ],
+            [ this ]() {
               fs_buffs.patient_soul->expire();
               patient_soul_moved = nullptr;
             } );
       }
       else
       {
-        patient_soul_stopped =
-            make_event( sim, fs_weapon_trait_values.patient_soul_stationary[ fs_weapons.patient_soul ], [ this ]() {
+        patient_soul_stopped = make_event(
+            sim,
+            fs_weapon_trait_values
+                .patient_soul_stationary[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_PATIENT_SOUL ] ],
+            [ this ]() {
               fs_buffs.patient_soul->trigger();
               patient_soul_stopped = nullptr;
               event_t::cancel( patient_soul_moved );
@@ -2730,7 +2808,7 @@ void fs_player_t::init_finished()
 
 void fs_player_t::spirit_refund()
 {
-  if ( fs_weapons.willful_momentum )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_WILLFUL_MOMENTUM ] )
     fs_buffs.willful_momentum->trigger();
   
   fs_buffs.rising_spirit->trigger();
@@ -2740,11 +2818,11 @@ void fs_player_t::spirit_refund()
 
 void fs_player_t::used_ultimate()
 {
-  if ( fs_weapons.visions_of_grandeur > 0 && weapon_cd )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_VISIONS_OF_GRANDEUR ] > 0 && weapon_cd )
   {
     //weapon_cd->reset( false, -1 );
 
-    unsigned grandeur = fs_weapons.visions_of_grandeur;
+    unsigned grandeur = fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_VISIONS_OF_GRANDEUR ];
     double cdr        = fs_weapon_trait_values.grandeur_weapon_cdr[ grandeur ];
     weapon_cd->adjust( -cdr * cooldown_t::cooldown_duration( weapon_cd ), true, true );
   }
@@ -2754,7 +2832,7 @@ void fs_player_t::used_ultimate()
     fs_buffs.drakheims_absolution->trigger();
   }
 
-  if ( fs_weapons.sapphire_aurastone )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_SAPPHIRE_AURASTONE ] )
   {
     get_target_data( this )->debuffs.aurastone_accumulator->trigger();
   }
@@ -2764,11 +2842,11 @@ void fs_player_t::init_background_actions()
 {
   player_t::init_background_actions();
 
-  if ( fs_weapons.amethyst_splinters )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_AMETHYST_SPLINTERS ] )
     fs_actions.amethyst_splinters = new actions::amethyst_splinters_t( "amethyst_splinters", this );
   if ( fs_weapons.equipped_weapon == FSWEAPON_VOIDBRINGERS_TOUCH )
     fs_actions.voidbringer_dmg = new actions::voidbringers_touch_dmg_t( "voidbringers_touch_dmg", this );
-  if ( fs_weapons.sapphire_aurastone )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_SAPPHIRE_AURASTONE ] )
     fs_actions.aurastone_dmg = new actions::sapphire_aurastone_dmg_t( "sapphire_aurastone_dmg", this );
   if ( finesse_traits[ THE_HERETIC ] )
     fs_actions.the_heretic = new actions::the_heretic_dmg_t( "the_heretic_dmg", this );
@@ -2823,7 +2901,7 @@ void fs_player_t::arise()
     fs_buffs.the_wayfarer_cd->trigger();
   }
 
-  if ( fs_weapons.patient_soul )
+  if ( fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_PATIENT_SOUL ] )
   {
     fs_buffs.patient_soul->trigger();
   }
@@ -2927,7 +3005,10 @@ void fs_player_t::sapphire_aurastone_accumulate( double damage )
   if ( !fs_buffs.spirit_of_heroism->check() )
     return;
 
-  auto accumulated = fs_weapon_trait_values.sapphire_aurastone_dmg_acc[ fs_weapons.sapphire_aurastone ] * damage;
+  auto accumulated =
+      fs_weapon_trait_values
+          .sapphire_aurastone_dmg_acc[ fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_SAPPHIRE_AURASTONE ] ] *
+      damage;
 
   for ( size_t i = 0; i < active_aurastone_buffs.size(); i++ )
   {

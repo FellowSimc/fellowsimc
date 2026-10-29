@@ -1309,7 +1309,8 @@ player_t::base_initial_current_t::base_initial_current_t()
     armor_coeff( 0 ),
     sleeping( false ),
     rating(),
-    attribute_multiplier(),
+    attribute_multiplicative_multiplier(),
+    attribute_additive_multiplier(),
     spell_power_multiplier( 1.0 ),
     attack_power_multiplier( 1.0 ),
     base_armor_multiplier( 1.0 ),
@@ -1318,7 +1319,8 @@ player_t::base_initial_current_t::base_initial_current_t()
     crit_healing_multiplier( 1.0 ),
     position( POSITION_BACK )
 {
-  range::fill( attribute_multiplier, 1.0 );
+  range::fill( attribute_multiplicative_multiplier, 1.0 );
+  range::fill( attribute_additive_multiplier, 1.0 );
 }
 
 void sc_format_to( const player_t::base_initial_current_t& s, fmt::format_context::iterator out )
@@ -1349,7 +1351,7 @@ void sc_format_to( const player_t::base_initial_current_t& s, fmt::format_contex
   fmt::format_to( out, " distance={}", s.distance );
   fmt::format_to( out, " armor_coeff={}", s.armor_coeff );
   fmt::format_to( out, " sleeping={}", s.sleeping );
-  // attribute_multiplier
+  // attribute_multiplicative_multiplier
   fmt::format_to( out, " spell_power_multiplier={}", s.spell_power_multiplier );
   fmt::format_to( out, " attack_power_multiplier={}", s.attack_power_multiplier );
   fmt::format_to( out, " base_armor_multiplier={}", s.base_armor_multiplier );
@@ -5228,7 +5230,8 @@ double player_t::composite_attribute( attribute_e attr ) const
 
 double player_t::composite_attribute_multiplier( attribute_e attr ) const
 {
-  double m = current.attribute_multiplier[ attr ];
+  double m = current.attribute_multiplicative_multiplier[ attr ];
+  m *= current.attribute_additive_multiplier[ attr ];
 
   if ( is_pet() || is_enemy() || type == HEALING_ENEMY )
     return m;
@@ -7916,7 +7919,7 @@ void player_t::target_mitigation( school_e school, result_amount_type dmg_type, 
     if ( s->action && !s->action->ignores_armor )
     {
       double armor  = s -> target_armor;
-      double resist = armor / ( 0.9232 * armor + s->action->player->base.armor_coeff );
+      double resist = ( armor * 0.0052 ) / ( 7 + armor * 0.0048 );
       resist        = clamp( resist, 0.0, armor_cap );
       s -> result_amount *= 1.0 - resist;
     }

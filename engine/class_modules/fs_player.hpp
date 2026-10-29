@@ -358,35 +358,6 @@ public:
     fsweapon_e equipped_weapon = fsweapon_e::FSWEAPON_NONE;
 
     std::array<unsigned short, WEAPON_TRAIT_MAX> weapon_traits = {};
-
-    // You know I should have made these into an enum and an array shouldn't I...
-    unsigned amethyst_splinters               = 0;
-    unsigned brave_machinations               = 0;
-    unsigned diamond_strike                   = 0;
-    unsigned divine_mediation                 = 0;
-    unsigned emerald_judgement                = 0;
-    unsigned first_man_standing               = 0;
-    unsigned grounded_spirit                  = 0;
-    unsigned heart_of_stone                   = 0;
-    unsigned heroic_brand                     = 0;
-    unsigned hidden_power                     = 0;
-    unsigned hunters_focus                    = 0;
-    unsigned inspired_allegiance              = 0;
-    unsigned iron_spikes                      = 0;
-    unsigned kindling                         = 0;
-    unsigned king_of_the_hill                 = 0;
-    unsigned latent_resurgence                = 0;
-    unsigned martial_initiative               = 0;
-    unsigned navigators_intuition             = 0;
-    unsigned patient_soul                     = 0;
-    unsigned ruby_storm                       = 0;
-    unsigned sapphire_aurastone               = 0;
-    unsigned seized_opportunity               = 0;
-    unsigned stalwart_readiness               = 0;
-    unsigned treasure_hunters_delight         = 0;
-    unsigned vengeful_soul                    = 0;
-    unsigned visions_of_grandeur              = 0;
-    unsigned willful_momentum                 = 0;
   } fs_weapons;
     
   struct fs_relic_t
@@ -1095,14 +1066,16 @@ public:
   fs_weapon_action_t( util::string_view n, fs_player_t* p, util::string_view options = {} )
     : ab( n, p, options ), active_weapon( false )
   {
-    if ( p->fs_weapons.brave_machinations )
+    auto brave_rank = p->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_BRAVE_MACHINATIONS ];
+    if ( brave_rank )
     {
-      ab::base_crit += p->fs_weapon_trait_values.brave_machinations_crit[ p->fs_weapons.brave_machinations ];
+      ab::base_crit += p->fs_weapon_trait_values.brave_machinations_crit[ brave_rank ];
     }
 
-    if ( p->fs_weapons.heroic_brand )
+    auto brand_rank = p->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_HEROIC_BRAND ];
+    if ( brand_rank )
     {
-      ab::base_multiplier *= p->fs_weapon_trait_values.heroic_brand_amp[ p->fs_weapons.heroic_brand ];
+      ab::base_multiplier *= p->fs_weapon_trait_values.heroic_brand_amp[ brand_rank ];
     }
 
     ab::ignores_class_cdr = true;
@@ -1112,10 +1085,10 @@ public:
   {
     ab::init_finished();
 
-    unsigned grandeur = ab::fs_p()->fs_weapons.visions_of_grandeur;
-    double spirit       = ab::fs_p()->fs_weapon_trait_values.grandeur_weapon_spirit[ grandeur ];
+    unsigned grandeur  = ab::fs_p()->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_VISIONS_OF_GRANDEUR ];
+    double spirit      = ab::fs_p()->fs_weapon_trait_values.grandeur_weapon_spirit[ grandeur ];
     double mul_from_cd = ab::cooldown->duration / 30_s;
-    grandeur_gain       = mul_from_cd * spirit;
+    grandeur_gain      = mul_from_cd * spirit;
 
     if ( active_weapon && !ab::background && !ab::channeled )
     {
@@ -1142,23 +1115,24 @@ public:
 
   void execute() override
   {
-    if ( !ab::background && ab::fs_p()->fs_weapons.brave_machinations )
+    if ( !ab::background && ab::fs_p()->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_BRAVE_MACHINATIONS ] )
     {
       ab::fs_p()->brave_machinations_available = true;
     }
 
-    if ( !ab::background && ab::fs_p()->fs_weapons.martial_initiative )
+    auto martial_rank = ab::fs_p()->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_MARTIAL_INITIATIVE ];
+    if ( !ab::background && martial_rank )
     {
       ab::fs_p()->fs_buffs.martial_initiative->trigger(
           1,
           ab::fs_p()->weapon_cd->base_duration *
-              ab::fs_p()
-                  ->fs_weapon_trait_values.martial_initiative_duration[ ab::fs_p()->fs_weapons.martial_initiative ] );
+              ab::fs_p()->fs_weapon_trait_values.martial_initiative_duration[ martial_rank ] );
     }
 
     ab::execute();
 
-    if ( !ab::background && ab::fs_p()->fs_weapons.visions_of_grandeur )
+    auto vog_rank = ab::fs_p()->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_VISIONS_OF_GRANDEUR ];
+    if ( !ab::background && vog_rank )
     {
       ab::fs_p()->resource_gain( RESOURCE_SPIRIT, grandeur_gain, ab::fs_p()->fs_gains.grandeur, this );
     }
@@ -1168,17 +1142,17 @@ public:
   {
     ab::impact( s );
 
-    if ( ab::fs_p()->fs_weapons.brave_machinations && ab::fs_p()->brave_machinations_available &&
+    auto brave_rank = ab::fs_p()->fs_weapons.weapon_traits[ weapon_trait_e::WEAPON_TRAIT_BRAVE_MACHINATIONS ];
+    if ( brave_rank && ab::fs_p()->brave_machinations_available &&
          s->result == RESULT_CRIT && s->result_amount > 0 )
     {
       ab::fs_p()->brave_machinations_available = false;
 
       // Event to make sure the CDR is reduced after the weapon goes on CD.
-      make_event( ab::sim, 0_ms, [ this ]() {
-        ab::fs_p()->weapon_cd->adjust(
-            -ab::fs_p()->weapon_cd->base_duration *
-                ab::fs_p()->fs_weapon_trait_values.brave_machinations_cdr[ ab::fs_p()->fs_weapons.brave_machinations ],
-            false );
+      make_event( ab::sim, 0_ms, [ this, brave_rank ]() {
+        ab::fs_p()->weapon_cd->adjust( -ab::fs_p()->weapon_cd->base_duration *
+                                           ab::fs_p()->fs_weapon_trait_values.brave_machinations_cdr[ brave_rank ],
+                                       false );
       } );
     }
   }

@@ -128,6 +128,15 @@ slot_rarity_base               = 1.0;
 
 base_settings = ItemCalculationSettings(0.25, 0.3, 0.5, 0.7, 0.6, 0.15)
 
+pools_by_mod = {
+  "gems": ["ruby", "amethyst", "topaz", "emerald", "sapphire", "diamond"],
+  "aspects": ["amethyst_splinters", "brave_machinations", "diamond_strike", "emerald_judgement", "martial_initiative", "ruby_storm", "sapphire_aurastone", "visions_of_grandeur"],
+  "stats": ["undines_cunning", "sphinxs_cunning", "chimeras_cunning", "salamanders_cunning", "unicorns_cunning", "banshees_cunning"],
+  "stats_150": ["undines_cunning:1", "sphinxs_cunning:1", "chimeras_cunning:1", "salamanders_cunning:1", "unicorns_cunning:1", "banshees_cunning:1"],
+  "stats_300": ["undines_cunning:2", "sphinxs_cunning:2", "chimeras_cunning:2", "salamanders_cunning:2", "unicorns_cunning:2", "banshees_cunning:2"],
+  "glyphs": ["the_trickster", "the_subduer", "the_sinister", "the_vehement", "the_philosopher", "the_mystic", "the_monarch", "the_wayfarer"],
+  "sigils": ["inspired_allegiance", "kindling", "seized_opportunity", "hidden_power", "hunters_focus", "patient_soul", "vengeful_soul", "willful_momentum"]
+}
 
 slot_weights = {
   Slot.NONE: 0,
@@ -292,18 +301,7 @@ class Item:
     mod_number = self.modifiers()
 
     if mod_number < 1:
-      return
-
-    pools_by_mod = {
-      "gems": ["ruby", "amethyst", "topaz", "emerald", "sapphire", "diamond"],
-      "aspects": ["amethyst_splinters", "brave_machinations", "diamond_strike", "emerald_judgement", "martial_initiative", "ruby_storm", "sapphire_aurastone", "visions_of_grandeur"],
-      "stats": ["undines_cunning", "sphinxs_cunning", "chimeras_cunning", "salamanders_cunning", "unicorns_cunning", "banshees_cunning"],
-      "stats_150": ["undines_cunning:1", "sphinxs_cunning:1", "chimeras_cunning:1", "salamanders_cunning:1", "unicorns_cunning:1", "banshees_cunning:1"],
-      "stats_300": ["undines_cunning:2", "sphinxs_cunning:2", "chimeras_cunning:2", "salamanders_cunning:2", "unicorns_cunning:2", "banshees_cunning:2"],
-      "glyphs": ["the_trickster", "the_subduer", "the_sinister", "the_vehement", "the_philosopher", "the_mystic", "the_monarch", "the_wayfarer"],
-      "sigils": ["inspired_allegiance", "kindling", "seized_opportunity", "hidden_power", "hunters_focus", "patient_soul", "vengeful_soul", "willful_momentum"]
-    }
-    
+      return   
 
     pools = []
 
@@ -1589,6 +1587,50 @@ def fully_geared_guy():
 
   print(c.simc_output())
 
+gem_thresholds = [ 80, 150, 300, 450, 600, 800, 1250, 1500]
+# 220, 1000 are defensives
+
+def generate_copies(copy_from: str = "Xavian", role: Role = Role.DPS):
+  c = Character(role)
+  c.createRandomItem(Slot.WEAPON, 315, True)
+  c.items[Slot.WEAPON].modifier_strings = []
+
+  sim_output = ""
+
+  for name,pool in pools_by_mod.items():
+    if name == "stats" or name == "stats_150":
+      continue
+    print(pool)
+
+    if name == "gems":
+      for gem_color in pool:
+        for threshold in gem_thresholds:
+          if gem_color == "diamond":
+            if threshold == 1500:
+              continue
+
+          sim_output += f"copy={gem_color}_{threshold},{copy_from}\n"
+          sim_output += f"gems.{gem_color}_power={threshold}\n\n"
+
+    if name == "stats_300":
+      for stat in pool:
+          stat_stripped = stat.split(":")[0]
+          sim_output += f"copy={stat_stripped},{copy_from}\n"
+          sim_output += f"chest=chest,ilevel=360,rarity=legendary,affixes={stat}\n\n"
+
+    if name == "sigils" or name == "glyphs" or name == "aspects":
+      for mod in pool:
+          for mod_num in [1, 4]:
+            sim_output += f"copy={mod}_{mod_num},{copy_from}\n"
+            mod_str = "/".join([mod] * mod_num)
+            sim_output += f"chest=chest,ilevel=360,rarity=legendary,affixes={mod_str}\n\n"
+
+  with open("generated/__test.simc", "w") as f:
+    f.write(sim_output)
+
+  return sim_output
+
+
 if __name__ == "__main__":
   # check_again()
   # testGems()
@@ -1612,4 +1654,8 @@ if __name__ == "__main__":
 
   # testCharStuff()
 
-  fully_geared_guy()
+  # fully_geared_guy()
+
+  print(generate_copies("Xavian", Role.TANK))
+
+

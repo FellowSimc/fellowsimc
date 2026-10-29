@@ -1888,10 +1888,8 @@ void item_t::decode_affix_list()
 {
   if ( parsed.rarity == RARITY_LEGENDARY )
   {
-    player->base.attribute_multiplier[ player->convert_hybrid_stat( STAT_STR_AGI_INT ) ] *= 1.1;
+    player->base.attribute_multiplicative_multiplier[ player->convert_hybrid_stat( STAT_STR_AGI_INT ) ] *= 1.1;
     player->has_legendary = true;
-
-    return;
   }
 
   if ( !option_affix_list_str.empty() )
@@ -1902,13 +1900,14 @@ void item_t::decode_affix_list()
     {
       auto split2             = util::string_split<util::string_view>( affix_str, ":" );
       gear_affix_e affix_stat = gear_affix_from_string( split2[ 0 ] );
+      sim->print_debug( "{} - decodes {} from {} og: {}", *player, affix_stat, split2[ 0 ], affix_str );
       add_gear_affix_stats( affix_stat, true );
 
       fellowship::fs_player_t* casted_player = dynamic_cast<fellowship::fs_player_t*>( player );
 
       if ( casted_player )
       {
-        if ( affix_stat >= GEAR_AFFIX_ENCHANT_START && affix_stat <= GEAR_AFFIX_ENCHANT_END )
+        if ( affix_stat > GEAR_AFFIX_ENCHANT_START && affix_stat < GEAR_AFFIX_ENCHANT_END )
         {
           int affix_value = 0;
           if ( split2.size() > 1 )
@@ -1952,12 +1951,12 @@ void item_t::decode_affix_list()
           }
         }
 
-        if ( affix_stat >= GEAR_AFFIX_FINESSE_START && affix_stat <= GEAR_AFFIX_FINESSE_END )
+        if ( affix_stat > GEAR_AFFIX_FINESSE_START && affix_stat < GEAR_AFFIX_FINESSE_END )
         {
           casted_player->finesse_traits[ finesse_trait_from_gear_affix( affix_stat ) ]++;
         }
 
-        if ( affix_stat >= GEAR_AFFIX_ATTUNEMENT_START && affix_stat <= GEAR_AFFIX_ATTUNEMENT_END )
+        if ( affix_stat > GEAR_AFFIX_ATTUNEMENT_START && affix_stat < GEAR_AFFIX_ATTUNEMENT_END )
         {
           auto ring = ( slot == SLOT_FINGER_1 || slot == SLOT_FINGER_2 );
 
@@ -1966,7 +1965,7 @@ void item_t::decode_affix_list()
           casted_player->fs_gems.gem_powers[ gem_type_from_gear_affix( affix_stat ) ] += attunement_value;
         }
 
-        if ( affix_stat >= GEAR_AFFIX_TRAIT_START && affix_stat <= GEAR_AFFIX_TRAIT_END )
+        if ( affix_stat > GEAR_AFFIX_TRAIT_START && affix_stat < GEAR_AFFIX_TRAIT_END )
         {
           casted_player->fs_weapons.weapon_traits[ weapon_trait_from_gear_affix( affix_stat ) ]++;
         }

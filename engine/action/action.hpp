@@ -873,15 +873,9 @@ public:
                      composite_additive_cooldown_reduction( cd ) * composite_multiplicative_cooldown_reduction( cd ) );
   }
 
-  virtual double composite_additive_cooldown_recovery_rate( const cooldown_t& ) const
-  {
-    return additive_cooldown_recovery_rate;
-  }
+  virtual double composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const;
 
-  virtual double composite_multiplicative_cooldown_recovery_rate( const cooldown_t& ) const
-  {
-    return multiplicative_cooldown_recovery_rate;
-  }
+  virtual double composite_multiplicative_cooldown_recovery_rate( const cooldown_t& cd ) const;
 
   virtual double recharge_rate_multiplier( const cooldown_t& cd ) const
   {

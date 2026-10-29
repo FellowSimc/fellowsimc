@@ -105,6 +105,7 @@ public:
     buff_t* hallowed_shield;
     buff_t* grossly_incandescent;
     buff_t* swift_reprieval;
+    buff_t* magic_ward;
   } buffs;
 
   struct cooldowns_t
@@ -192,6 +193,8 @@ public:
 
   struct spell_const_t
   {
+    double shining_halo_dr_mult = 0.8;
+
     double sunstruck_mana_refund_base      = 100;
     double sunstruck_mana_refund_per_stack = 50;
     timespan_t sunstruck_duration          = 20_s;
@@ -423,6 +426,7 @@ public:
   }
   stat_e convert_hybrid_stat( stat_e s ) const override;
 
+  void target_mitigation( school_e school, result_amount_type dmg_type, action_state_t* s ) override;
   double composite_parry( action_state_t* s ) const override;
   double composite_attribute_multiplier( attribute_e attr ) const override;
   double composite_melee_auto_attack_speed() const override;
@@ -443,6 +447,7 @@ public:
   double non_stacking_movement_modifier() const override;
   double stacking_movement_modifier() const override;
   void invalidate_cache( cache_e ) override;
+  double composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const override;
   void update_invictus_haste();
 
   double resource_gain( resource_e r, double amount, gain_t* source = nullptr, action_t* a = nullptr ) override;
@@ -1650,12 +1655,19 @@ struct aura_of_solace_t : public xavian_spell_t
     id         = 16;
 
     harmful            = false;
-    _procs_golden_hour = true;
+    _procs_golden_hour = false;
+        
+    gcd_type    = gcd_haste_type::NONE;
+    trigger_gcd = 0_s;
 
     name_str_reporting = "Aura of Solace";
 
     resource_current            = RESOURCE_MANA;
     base_costs[ RESOURCE_MANA ] = p->find_csv_data( "Sune.DamageTransferAura.ManaCostPerPeriod" )->value();
+
+    cooldown->hasted   = false;
+    cooldown->duration = p->find_csv_data( "Sune.DamageTransferAura.Cooldown" )->seconds();
+    cooldown->charges  = 1;
 
     ability_flags |= ability_type_e::ABILITY_UTILITY;
   }
@@ -1776,7 +1788,7 @@ struct solar_shield_buff_t : public absorb_buff_t
     sim->print_debug( "{} changes stored Solar Shield maximum from {} to {}", *player, initial_size, value );
     initial_size = value;
 
-    if ( p()->talents_enabled( xavian_t::INVICTUS ) )
+    if ( p()->talents_enabled( xavian_t::INVICTUS ) && !check() )
     {
       p()->buffs.invictus_haste->increment();
       p()->get_target_data( player )->buffs.invictus_expertise->trigger();
@@ -1820,6 +1832,9 @@ struct solar_shield_t : public xavian_absorb_t
     attack_power_mod.direct = p->find_csv_data( "Sune.SingleTargetAbsorb.AbsorbStrengthCoefficient" )->value();
 
     ability_flags |= ability_type_e::ABILITY_DEFENSIVE;
+
+    // 50% Shield DR Gimmick. Half the value before invictus.
+    base_multiplier *= 2.0;
   }
 
   absorb_buff_t* create_buff( const action_state_t* s ) override
@@ -1849,7 +1864,8 @@ struct solar_shield_t : public xavian_absorb_t
 
     if ( p()->talents_enabled( xavian_t::INVICTUS ) )
     {
-      p()->actions.invictus->execute_on_target( p()->target, s->result_amount );
+      // Use half because shield size was doubled to account for 50% Shield DR.
+      p()->actions.invictus->execute_on_target( p()->target, s->result_amount / 2 );
     }
   }
 
@@ -1858,6 +1874,9 @@ struct solar_shield_t : public xavian_absorb_t
     xavian_absorb_t::execute();
 
     p()->buffs.hallowed_shield->expire();
+
+    if ( p()->talents_enabled( xavian_t::MAGIC_WARD ) )
+      p()->buffs.magic_ward->trigger();
   }
 };
 
@@ -1900,6 +1919,28 @@ struct invictus_dmg_t : public xavian_spell_t
   }
 };
 
+struct taunt_t : public xavian_spell_t
+{
+  taunt_t( xavian_t* p, std::string_view opt ) : xavian_spell_t( "taunt", p, opt )
+  {
+    id = 21;
+
+    harmful            = true;
+    _procs_golden_hour = true;
+
+    gcd_type    = gcd_haste_type::NONE;
+    trigger_gcd = 0_s;
+
+    name_str_reporting = "Taunt";
+        
+    cooldown->hasted   = false;
+    cooldown->duration = p->find_csv_data( "Sune.SingleTargetTaunt.Cooldown" )->seconds();
+    cooldown->charges  = as<int>( p->find_csv_data( "Sune.TauntCharges" )->value() );    
+
+    ability_flags |= ability_type_e::ABILITY_UTILITY;
+  }
+};
+
 }  // namespace actions
 
 xavian_td_t::xavian_td_t( player_t* target, xavian_t* source )
@@ -1934,6 +1975,28 @@ xavian_td_t::xavian_td_t( player_t* target, xavian_t* source )
                           ->set_duration( source->spell_const.sunstruck_duration )
                           ->set_max_stack( source->spell_const.suntruck_max_stacks )
                           ->set_refresh_behavior( buff_refresh_behavior::DURATION );
+}
+
+void xavian_t::target_mitigation( school_e school, result_amount_type dmg_type, action_state_t* s )
+{
+  if ( s->result_amount == 0 )
+    return;
+
+  if ( buffs.decree_of_the_sun_invuln->check() )
+  {
+    s->result_amount = 0;
+    return;
+  }
+
+  if ( school != SCHOOL_PHYSICAL && buffs.magic_ward->check() )
+    s->result_amount *= buffs.magic_ward->check_value();
+
+  s->result_amount *= 1 - buffs.decree_of_the_sun_dr->check_value();
+
+  if ( buffs.shining_halo->check() )
+    s->result_amount *= spell_const.shining_halo_dr_mul;
+
+  fs_player_t::target_mitigation( school, dmg_type, s );
 }
 
 double xavian_t::composite_parry( action_state_t* s ) const
@@ -2125,6 +2188,8 @@ action_t* xavian_t::create_action( util::string_view name, util::string_view opt
     return new actions::shining_halo_t( this, options_str );
   else if ( name == "solar_shield" )
     return new actions::solar_shield_t( this, options_str );
+  else if ( name == "taunt" )
+    return new actions::taunt_t( this, options_str );
 
   return fs_player_t::create_action( name, options_str );
 }
@@ -2206,6 +2271,8 @@ void xavian_t::init_spells()
 {
   fs_player_t::init_spells();
 
+  spell_const.shining_halo_dr_mul = find_csv_data( "Sune.DroppedPulseAoe.SelfIncomingDamageMultiplier" )->value();
+
   talents.gleaming_strikes_omnistrike_sunstruck_amp =
       find_csv_data( "Sune.AoeMeleeDamageBoostAndManaRefundDebuff.AoeMeleeBonusDamagePerStack" )->value();
 
@@ -2282,10 +2349,11 @@ void xavian_t::create_buffs()
                              ->set_max_stack( 4 )
                              ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
-  buffs.shining_halo = make_buff<xavian_buff_t>( this, "shining_halo" )
-                           ->set_duration( find_csv_data( "Sune.DroppedPulseAoe.AoeDuration" )->seconds() )
-                           ->set_max_stack( 1 )
-                           ->set_refresh_behavior( buff_refresh_behavior::DURATION )
+  buffs.shining_halo =
+      make_buff<xavian_buff_t>( this, "shining_halo" )
+          ->set_duration( find_csv_data( "Sune.DroppedPulseAoe.AoeDuration" )->seconds() )
+          ->set_max_stack( 1 )
+          ->set_refresh_behavior( buff_refresh_behavior::DURATION )
           ->set_freeze_stacks( true )
           ->set_tick_zero( true )
           ->set_period( find_csv_data( "Sune.DroppedPulseAoe.AoePeriod" )->seconds() )
@@ -2325,10 +2393,14 @@ void xavian_t::create_buffs()
                                          }
                                        } );
 
-  buffs.decree_of_the_sun_dr = make_buff<xavian_buff_t>( this, "decree_of_the_sun_dr" )
-                                   ->set_duration( spell_const.decree_of_the_sun_dr_duration )
-                                   ->set_max_stack( 1 )
-                                   ->set_refresh_behavior( buff_refresh_behavior::DURATION );
+  buffs.decree_of_the_sun_dr =
+      make_buff<xavian_buff_t>( this, "decree_of_the_sun_dr" )
+          ->set_duration( spell_const.decree_of_the_sun_dr_duration )
+          ->set_default_value(
+              find_csv_data( "Sune.SelfImmunityAndAoeHeal.SelfBuff.DamageReduction.IncomingDamageMultiplier" )
+                  ->value() )
+          ->set_max_stack( 1 )
+          ->set_refresh_behavior( buff_refresh_behavior::DURATION );
 
   buffs.vanguard_of_vengeance = make_buff<xavian_buff_t>( this, "vanguard_of_vengeance" )
                                     ->set_duration( talents.vanguard_of_vengeance_buff_duration )
@@ -2339,6 +2411,15 @@ void xavian_t::create_buffs()
   buffs.swift_reprieval = make_buff<xavian_buff_t>( this, "swift_reprieval" )
                               ->set_max_stack( spell_const.swift_reprieval_max_stacks )
                               ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+
+  buffs.magic_ward =
+      make_buff<xavian_buff_t>( this, "magic_ward" )
+          ->set_duration(
+              find_csv_data( "Sune.SingleTargetAbsorb.Talent.MagicDamageReductionBuff.Duration" )->seconds() )
+          ->set_default_value(
+              find_csv_data( "Sune.SingleTargetAbsorb.Talent.MagicDamageReductionBuff.IncomingMagicDamageMultiplier" )
+                  ->value() )
+          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   buffs.aura_of_solace =
       make_buff<xavian_buff_t>( this, "aura_of_solace" )
@@ -2373,15 +2454,40 @@ void xavian_t::create_buffs()
                               ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 }
 
+double xavian_t::composite_additive_cooldown_recovery_rate(const cooldown_t& cd) const
+{
+  double cdr = fs_player_t::composite_additive_cooldown_recovery_rate( cd );
+
+  if ( talents_enabled( INVICTUS ) && buffs.invictus_haste->check() )
+  {
+    if ( cd.action && !cd.action->ignores_class_cdr )
+    {
+      cdr += buffs.invictus_haste->current_value;
+    }
+  }
+
+  return cdr;
+}
+
 void xavian_t::update_invictus_haste()
 {
   buffs.invictus_haste->current_value = talents.invictus_haste_cdr * cache.attack_haste_pct();
+  
+  for ( action_t* a : action_list )
+  {
+    if ( a && !a->ignores_class_cdr )
+    {
+      a->cooldown->adjust_recharge_multiplier();
+    }
+  }
 }
 
 // xavian_t::invalidate_cache =========================================
 
 void xavian_t::invalidate_cache( cache_e c )
 {
+  fs_player_t::invalidate_cache( c );
+  
   switch ( c )
   {
     case CACHE_HASTE:
@@ -2391,8 +2497,6 @@ void xavian_t::invalidate_cache( cache_e c )
     default:
       break;
   }
-
-  fs_player_t::invalidate_cache( c );
 }
 
 void xavian_t::create_options()

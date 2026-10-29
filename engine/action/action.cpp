@@ -5386,6 +5386,16 @@ void action_t::html_customsection( report::sc_html_stream& os )
   }
 }
 
+double action_t::composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const
+{
+  return additive_cooldown_recovery_rate + player->composite_additive_cooldown_recovery_rate( cd );
+}
+
+double action_t::composite_multiplicative_cooldown_recovery_rate( const cooldown_t& cd ) const
+{
+  return multiplicative_cooldown_recovery_rate * player->composite_multiplicative_cooldown_recovery_rate( cd );
+}
+
 void action_t::execute_on_target( player_t* t, double amount )
 {
   assert( t );

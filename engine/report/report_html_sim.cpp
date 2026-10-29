@@ -993,7 +993,7 @@ void print_html_masthead( report::sc_html_stream& os, const sim_t& sim )
   if ( !git_info::available())
   {
   os.printf(
-      "<h2>for World of Warcraft %s %s (wow build level %d)</h2>\n\n",
+      "<h2>for Fellowship %s %s (wow build level %d)</h2>\n\n",
       dbc::client_data_version_str( sim.dbc->ptr ), type,
       dbc::client_data_build( sim.dbc->ptr ) );
   }
@@ -1001,7 +1001,7 @@ void print_html_masthead( report::sc_html_stream& os, const sim_t& sim )
   {
     std::string commit_link = "https://github.com/simulationcraft/simc/commit/";
     commit_link += git_info::revision();
-    os.printf("<h2>for World of Warcraft %s %s (hotfix %s/%d, git build <a href=\"%s\">%s</a>)</h2>\n\n",
+    os.printf("<h2>for Fellowship %s %s (hotfix %s/%d, git build <a href=\"%s\">%s</a>)</h2>\n\n",
         dbc::client_data_version_str( sim.dbc->ptr ), type,
         dbc::hotfix_date_str( sim.dbc->ptr ), dbc::hotfix_build_version( sim.dbc->ptr ),
         commit_link.c_str(), git_info::revision());

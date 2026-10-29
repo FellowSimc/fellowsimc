@@ -255,7 +255,8 @@ struct player_t : public actor_t
     bool sleeping;
     rating_t rating;
 
-    std::array<double, ATTRIBUTE_MAX> attribute_multiplier;
+    std::array<double, ATTRIBUTE_MAX> attribute_multiplicative_multiplier;
+    std::array<double, ATTRIBUTE_MAX> attribute_additive_multiplier;
     double spell_power_multiplier, attack_power_multiplier, base_armor_multiplier, armor_multiplier;
     double crit_damage_multiplier, crit_healing_multiplier;
     position_e position;
@@ -1052,6 +1053,12 @@ public:
 
   double apply_combat_rating_fellow_dr( double value ) const;
   double apply_combat_rating_dr( rating_e rating, double value ) const;
+
+  virtual double composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const
+  { return 0.0; }
+
+  virtual double composite_multiplicative_cooldown_recovery_rate( const cooldown_t& cd ) const
+  { return 1.0; }
 
   virtual double composite_melee_haste_pct() const;
   virtual double composite_melee_haste() const;

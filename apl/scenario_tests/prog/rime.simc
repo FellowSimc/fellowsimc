@@ -1,0 +1,29 @@
+rime="Rime"
+
+apl/rime/rime_apl.simc
+
+head=head,ilevel=120,tempering=1,rarity=epic,variant=svth,main_secondary=spirit/expertise
+neck=neck,ilevel=135,tempering=1,rarity=epic,variant=ffffneck,main_secondary=expertise/crit
+shoulders=shoulders,ilevel=105,tempering=1,rarity=rare,variant=ffff,main_secondary=haste/crit
+back=back,ilevel=135,tempering=1,rarity=rare,variant=ffff,main_secondary=expertise/crit
+chest=chest,ilevel=105,tempering=1,rarity=rare,variant=ffff,main_secondary=haste/crit
+wrists=wrists,ilevel=120,tempering=1,rarity=rare,variant=svth,main_secondary=haste/crit
+hands=hands,ilevel=105,tempering=1,rarity=rare,variant=svth,main_secondary=crit/expertise
+legs=legs,ilevel=135,tempering=1,rarity=epic,variant=svth,main_secondary=spirit/crit
+feet=feet,ilevel=120,tempering=1,rarity=epic,variant=ffff,main_secondary=haste/expertise
+finger1=finger1,ilevel=120,tempering=1,rarity=rare,variant=ffffring,main_secondary=haste/crit
+finger2=finger2,ilevel=135,tempering=1,rarity=rare,variant=svthring,main_secondary=crit/spirit
+trinket1=trinket1,ilevel=105,tempering=1,rarity=rare,variant=relic,main_secondary=haste
+trinket2=trinket2,ilevel=105,tempering=1,rarity=rare,variant=relic,main_secondary=haste
+main_hand=main_hand,ilevel=150,tempering=0,rarity=epic,variant=weap,main_secondary=haste/crit/expertise/spirit
+
+talents=avalanche:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/cold_shower:1/greater_glacial_blast:1
+
+# apl/generated/rime_row1_2pt.simc
+# apl/generated/rime_row2_4pt.simc
+# apl/generated/rime_row3_5pt.simc
+# apl/generated/rime_row3_7pt.simc
+# apl/generated/rime_row4_8pt.simc
+# apl/generated/rime_row5_10pt.simc
+# apl/generated/rime_row6_12pt.simc
+# apl/generated/rime_row6_14pt.simc

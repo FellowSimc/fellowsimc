@@ -147,7 +147,7 @@ constexpr weapon_trait_e weapon_trait_pretty( std::string_view trait )
 #define FINESSE_LIST( X )                                                                 \
   X( THE_INTREPID, the_intrepid, "The Intrepid" )                                         \
   X( THE_TRICKSTER, the_trickster, "The Trickster" )                                      \
-  X( SUBDUER, subduer, "Subduer" )                                                        \
+  X( THE_SUBDUER, the_subduer, "The Subduer" )                                            \
   X( THE_CELESTIAL, the_celestial, "The Celestial" )                                      \
   X( THE_SINISTER, the_sinister, "The Sinister" )                                         \
   X( THE_HERETIC, the_heretic, "The Heretic" )                                            \
@@ -251,13 +251,13 @@ enum gear_affix_e : unsigned
 #define X( UPPER, lower, pretty ) GEAR_AFFIX_TRAIT_##UPPER,
   WEAPON_TRAIT_LIST( X )
 #undef X
-      GEAR_AFFIX_TRAIT_END,
+  GEAR_AFFIX_TRAIT_END,
 
   GEAR_AFFIX_FINESSE_START,
 #define X( UPPER, lower, pretty ) GEAR_AFFIX_FINESSE_##UPPER,
   FINESSE_LIST( X )
 #undef X
-      GEAR_AFFIX_FINESSE_END,
+ GEAR_AFFIX_FINESSE_END,
 
   GEAR_AFFIX_MAX
 };
@@ -2099,22 +2099,19 @@ constexpr std::string_view gear_affix_stat_lower( gear_affix_e t )
 
 constexpr std::string_view gear_affix_lower( gear_affix_e t )
 {
-  if ( t == finesse_trait_e::FINESSE_NONE || t >= finesse_trait_e::FINESSE_MAX )
-    return "unknown gear affix";
-
-  if ( t >= gear_affix_e::GEAR_AFFIX_FINESSE_START && t < gear_affix_e::GEAR_AFFIX_FINESSE_END )
+  if ( t > gear_affix_e::GEAR_AFFIX_FINESSE_START && t < gear_affix_e::GEAR_AFFIX_FINESSE_END )
     return finesse_trait_lower( finesse_trait_from_gear_affix( t ) );
 
-  if ( t >= gear_affix_e::GEAR_AFFIX_TRAIT_START && t < gear_affix_e::GEAR_AFFIX_TRAIT_END )
+  if ( t > gear_affix_e::GEAR_AFFIX_TRAIT_START && t < gear_affix_e::GEAR_AFFIX_TRAIT_END )
     return weapon_trait_lower( weapon_trait_from_gear_affix( t ) );
 
-  if ( t >= gear_affix_e::GEAR_AFFIX_ATTUNEMENT_START && t < gear_affix_e::GEAR_AFFIX_ATTUNEMENT_END )
+  if ( t > gear_affix_e::GEAR_AFFIX_ATTUNEMENT_START && t < gear_affix_e::GEAR_AFFIX_ATTUNEMENT_END )
     return gem_type_lower( gem_type_from_gear_affix( t ) );
 
-  if ( t >= gear_affix_e::GEAR_AFFIX_STAT_START && t < gear_affix_e::GEAR_AFFIX_STAT_END )
+  if ( t > gear_affix_e::GEAR_AFFIX_STAT_START && t < gear_affix_e::GEAR_AFFIX_STAT_END )
     return gear_affix_stat_lower( t );
     
-  if ( t >= gear_affix_e::GEAR_AFFIX_ENCHANT_START && t < gear_affix_e::GEAR_AFFIX_ENCHANT_END )
+  if ( t > gear_affix_e::GEAR_AFFIX_ENCHANT_START && t < gear_affix_e::GEAR_AFFIX_ENCHANT_END )
     return gear_enchant_lower( t );
 
   return "error gear affix";

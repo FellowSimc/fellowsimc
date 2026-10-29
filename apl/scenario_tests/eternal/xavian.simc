@@ -1,0 +1,359 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+# max_time=250
+# max_time=60
+target_error=0.2
+iterations=15000
+# iterations=5000
+chart_show_relative_difference=1
+vary_combat_length=0.0
+single_actor_batch=1
+max_time=720
+# max_time=100
+desired_targets=1
+override.ruby_allow_boss_amp=0
+
+raid_events+=/adds,count=10,duration=1.5,cooldown=60,first=0
+
+enemy="e1"
+actions=/auto_attack_hit,damage=12000,attack_speed=2,aoe_tanks=1
+
+# copy="e2"
+# copy="e3"
+# copy="e4"
+# copy="e5"
+# copy="e6"
+# copy="e7"
+# copy="e8"
+# copy="e9"
+# copy="e10"
+# copy="e11"
+# copy="e12"
+# copy="e13"
+# copy="e14"
+# copy="e15"
+# copy="e16"
+# copy="e17"
+# copy="e18"
+# copy="e19"
+# copy="e20"
+
+
+xavian="Xavian"
+role=tank
+
+# apl/rime/rime_apl.simc
+
+# head=head,ilevel=120,tempering=1,rarity=epic,variant=svth,main_secondary=spirit/expertise
+# neck=neck,ilevel=135,tempering=1,rarity=epic,variant=ffffneck,main_secondary=expertise/crit
+# shoulders=shoulders,ilevel=105,tempering=1,rarity=rare,variant=ffff,main_secondary=haste/crit
+# back=back,ilevel=135,tempering=1,rarity=rare,variant=ffff,main_secondary=expertise/crit
+# chest=chest,ilevel=105,tempering=1,rarity=rare,variant=ffff,main_secondary=haste/crit
+# wrists=wrists,ilevel=120,tempering=1,rarity=rare,variant=svth,main_secondary=haste/crit
+# hands=hands,ilevel=105,tempering=1,rarity=rare,variant=svth,main_secondary=crit/expertise
+# legs=legs,ilevel=135,tempering=1,rarity=epic,variant=svth,main_secondary=spirit/crit
+# feet=feet,ilevel=120,tempering=1,rarity=epic,variant=ffff,main_secondary=haste/expertise
+# finger1=finger1,ilevel=120,tempering=1,rarity=rare,variant=ffffring,main_secondary=haste/crit
+# finger2=finger2,ilevel=135,tempering=1,rarity=rare,variant=svthring,main_secondary=crit/spirit
+# trinket1=trinket1,ilevel=105,tempering=1,rarity=rare,variant=relic,main_secondary=haste
+# trinket2=trinket2,ilevel=105,tempering=1,rarity=rare,variant=relic,main_secondary=haste
+# main_hand=main_hand,ilevel=150,tempering=0,rarity=epic,variant=weap,main_secondary=haste/crit/expertise/spirit
+
+
+head=head,ilevel=315,variant=ffff,rarity=regal,main_secondary=expertise/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/the_trickster
+shoulders=shoulders,ilevel=315,variant=svth,rarity=regal,main_secondary=expertise/crit,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+back=back,ilevel=315,variant=ffff,rarity=regal,main_secondary=haste/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+chest=chest,ilevel=360,rarity=legendary
+hands=hands,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+legs=legs,ilevel=315,variant=svth,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=sapphire_aurastone/the_trickster/ruby
+feet=feet,ilevel=315,variant=svth,rarity=regal,main_secondary=haste/haste,tempering=8,affixes=martial_initiative/the_trickster/the_trickster
+
+neck=neck,ilevel=315,variant=ffffneck,rarity=regal,main_secondary=haste/expertise,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+wrists=wrists,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+finger1=finger1,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+finger2=finger2,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+trinket1=trinket1,ilevel=315,variant=relic,rarity=regal,main_secondary=haste,tempering=8,affixes=salamanders_cunning:2/emerald/emerald
+trinket2=trinket2,ilevel=315,variant=relic,rarity=regal,main_secondary=expertise,tempering=8,affixes=salamanders_cunning:2/sapphire/sapphire
+main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum
+
+gems.sapphire_power=1000
+gems.emerald_power=1000
+
+# gear_haste_rating=143
+# gear_crit_rating=238
+# gear_versatility_rating=143
+# gear_mastery_rating=48
+
+
+
+# gems.sapphire_power=500
+# gems.ruby_power=500
+# gems.amethyst_power=500
+# gems.emerald_power=500
+
+sets.seal_of_the_heskyr=1
+sets.dark_prophecy=1
+
+actions.precombat=snapshot_stats
+actions.precombat+=/variable,name=aura_farm,op=reset,default=0
+actions.precombat+=/variable,name=taunt_max,op=reset,default=0
+actions.precombat+=/aura_of_solace
+
+actions=solar_shield
+actions+=/solar_blades
+actions+=/aura_of_solace,if=variable.aura_farm
+actions+=/taunt,if=full_recharge_time<=3&!buff.golden_hour.up&variable.taunt_max
+actions+=/alzeracs_shackle
+actions+=/shining_halo,if=!buff.shining_halo.up
+actions+=/decree_of_the_sun
+actions+=/omnistrike
+actions+=/brilliant_flash,if=buff.omega_reprieval.at_max_stacks|buff.omega_reprieval.stack>1&cooldown.omega_reprieval.remains<=gcd.max+3*talent.celestial_favor
+actions+=/omega_reprieval
+actions+=/blinding_slash,target_if=min:debuff.blind.stack,if=debuff.blind.stack<1|!talent.gleaming_strikes&active_enemies>1
+actions+=/fated_strike
+actions+=/brilliant_flash
+actions+=/sun_strike,if=talent.gleaming_strikes
+actions+=/blinding_slash,if=active_enemies>1
+actions+=/sun_strike
+
+
+legendary.solar_glare=1
+talents=vanguard_of_vengeance:1/invictus:1/golden_hour:1/solar_burn:1/rising_sun:1/suns_touch:1
+
+# copy="shackle"
+weapon=alzeracs_shackle
+
+gems.sapphire_power=1500
+gems.emerald_power=1500
+gems.diamond_power=1250
+
+
+
+# copy="Defensive","Xavian"
+# talents=vanguard_of_vengeance:1/invictus:1/golden_hour:1/solar_burn:1/rising_sun:1/hallowed_shield:1
+
+# copy=fated_strike,Xavian
+# weapon=fated_strike
+
+
+# copy="ST_Build","Xavian"
+# head=head,ilevel=315,variant=ffff,rarity=regal,main_secondary=expertise/haste,tempering=8,affixes=emerald_judgement/diamond_strike/the_trickster
+# shoulders=shoulders,ilevel=315,variant=svth,rarity=regal,main_secondary=expertise/crit,tempering=8,affixes=diamond_strike/the_wayfarer/hunters_focus
+# back=back,ilevel=315,variant=ffff,rarity=regal,main_secondary=haste/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+# chest=chest,ilevel=360,rarity=legendary
+# hands=hands,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+# legs=legs,ilevel=315,variant=svth,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=sapphire_aurastone/diamond_strike/the_wayfarer
+# feet=feet,ilevel=315,variant=svth,rarity=regal,main_secondary=haste/haste,tempering=8,affixes=martial_initiative/diamond_strike/kindling
+
+# neck=neck,ilevel=315,variant=ffffneck,rarity=regal,main_secondary=haste/expertise,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# wrists=wrists,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# finger1=finger1,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# finger2=finger2,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# trinket1=trinket1,ilevel=315,variant=relic,rarity=regal,main_secondary=haste,tempering=8,affixes=salamanders_cunning:2/emerald/emerald
+# trinket2=trinket2,ilevel=315,variant=relic,rarity=regal,main_secondary=expertise,tempering=8,affixes=salamanders_cunning:2/sapphire/sapphire
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/kindling
+
+# copy="ST_Build_Fated","Xavian"
+# head=head,ilevel=315,variant=ffff,rarity=regal,main_secondary=expertise/haste,tempering=8,affixes=emerald_judgement/diamond_strike/the_trickster
+# shoulders=shoulders,ilevel=315,variant=svth,rarity=regal,main_secondary=expertise/crit,tempering=8,affixes=diamond_strike/the_wayfarer/hunters_focus
+# back=back,ilevel=315,variant=ffff,rarity=regal,main_secondary=haste/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+# chest=chest,ilevel=360,rarity=legendary
+# hands=hands,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+# legs=legs,ilevel=315,variant=svth,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=sapphire_aurastone/diamond_strike/the_wayfarer
+# feet=feet,ilevel=315,variant=svth,rarity=regal,main_secondary=haste/haste,tempering=8,affixes=martial_initiative/diamond_strike/kindling
+
+# neck=neck,ilevel=315,variant=ffffneck,rarity=regal,main_secondary=haste/expertise,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# wrists=wrists,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# finger1=finger1,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# finger2=finger2,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# trinket1=trinket1,ilevel=315,variant=relic,rarity=regal,main_secondary=haste,tempering=8,affixes=salamanders_cunning:2/emerald/emerald
+# trinket2=trinket2,ilevel=315,variant=relic,rarity=regal,main_secondary=expertise,tempering=8,affixes=salamanders_cunning:2/sapphire/sapphire
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/kindling
+
+# weapon=fated_strike
+
+# copy="ST_Build_Fated_Playable","Xavian"
+# head=head,ilevel=315,variant=ffff,rarity=regal,main_secondary=expertise/haste,tempering=8,affixes=emerald_judgement/diamond_strike/the_trickster
+# shoulders=shoulders,ilevel=315,variant=svth,rarity=regal,main_secondary=expertise/crit,tempering=8,affixes=diamond_strike/the_wayfarer/hunters_focus
+# back=back,ilevel=315,variant=ffff,rarity=regal,main_secondary=haste/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+# chest=chest,ilevel=360,rarity=legendary
+# hands=hands,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+# legs=legs,ilevel=315,variant=svth,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=sapphire_aurastone/diamond_strike/the_wayfarer
+# feet=feet,ilevel=315,variant=svth,rarity=regal,main_secondary=haste/haste,tempering=8,affixes=martial_initiative/diamond_strike/kindling
+
+# neck=neck,ilevel=315,variant=ffffneck,rarity=regal,main_secondary=haste/expertise,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# wrists=wrists,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# finger1=finger1,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# finger2=finger2,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# trinket1=trinket1,ilevel=315,variant=relic,rarity=regal,main_secondary=haste,tempering=8,affixes=salamanders_cunning:2/emerald/emerald
+# trinket2=trinket2,ilevel=315,variant=relic,rarity=regal,main_secondary=expertise,tempering=8,affixes=salamanders_cunning:2/sapphire/sapphire
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/kindling
+
+# weapon=fated_strike
+# talents=vanguard_of_vengeance:1/invictus:1/golden_hour:1/solar_burn:1/rising_sun:1
+
+
+# copy=amethyst_splinters_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/amethyst_splinters
+
+# copy=amethyst_splinters_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/amethyst_splinters/amethyst_splinters/amethyst_splinters/amethyst_splinters
+
+# copy=brave_machinations_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/brave_machinations
+
+# copy=brave_machinations_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/brave_machinations/brave_machinations/brave_machinations/brave_machinations
+
+# copy=diamond_strike_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/diamond_strike
+
+# copy=diamond_strike_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/diamond_strike/diamond_strike/diamond_strike/diamond_strike
+
+# copy=emerald_judgement_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/emerald_judgement
+
+# copy=emerald_judgement_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/emerald_judgement/emerald_judgement/emerald_judgement/emerald_judgement
+
+# copy=martial_initiative_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/martial_initiative
+
+# copy=martial_initiative_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/martial_initiative/martial_initiative/martial_initiative/martial_initiative
+
+# copy=ruby_storm_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/ruby_storm
+
+# copy=ruby_storm_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/ruby_storm/ruby_storm/ruby_storm/ruby_storm
+
+# copy=sapphire_aurastone_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/sapphire_aurastone
+
+# copy=sapphire_aurastone_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/sapphire_aurastone/sapphire_aurastone/sapphire_aurastone/sapphire_aurastone
+
+# copy=visions_of_grandeur_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/visions_of_grandeur
+
+# copy=visions_of_grandeur_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/visions_of_grandeur/visions_of_grandeur/visions_of_grandeur/visions_of_grandeur
+
+# copy=undines_cunning,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/undines_cunning:2
+
+# copy=sphinxs_cunning,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/sphinxs_cunning:2
+
+# copy=chimeras_cunning,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/chimeras_cunning:2
+
+# copy=salamanders_cunning,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/salamanders_cunning:2
+
+# copy=unicorns_cunning,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/unicorns_cunning:2
+
+# copy=banshees_cunning,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/banshees_cunning:2
+
+# copy=the_trickster_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_trickster
+
+# copy=the_trickster_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_trickster/the_trickster/the_trickster/the_trickster
+
+# copy=the_subduer_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_subduer
+
+# copy=the_subduer_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_subduer/the_subduer/the_subduer/the_subduer
+
+# copy=the_sinister_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_sinister
+
+# copy=the_sinister_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_sinister/the_sinister/the_sinister/the_sinister
+
+# copy=the_vehement_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_vehement
+
+# copy=the_vehement_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_vehement/the_vehement/the_vehement/the_vehement
+
+# copy=the_philosopher_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_philosopher
+
+# copy=the_philosopher_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_philosopher/the_philosopher/the_philosopher/the_philosopher
+
+# copy=the_mystic_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_mystic
+
+# copy=the_mystic_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_mystic/the_mystic/the_mystic/the_mystic
+
+# copy=the_monarch_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_monarch
+
+# copy=the_monarch_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_monarch/the_monarch/the_monarch/the_monarch
+
+# copy=the_wayfarer_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_wayfarer
+
+# copy=the_wayfarer_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/the_wayfarer/the_wayfarer/the_wayfarer/the_wayfarer
+
+# copy=inspired_allegiance_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/inspired_allegiance
+
+# copy=inspired_allegiance_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/inspired_allegiance/inspired_allegiance/inspired_allegiance/inspired_allegiance
+
+# copy=kindling_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/kindling
+
+# copy=kindling_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/kindling/kindling/kindling/kindling
+
+# copy=seized_opportunity_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/seized_opportunity
+
+# copy=seized_opportunity_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/seized_opportunity/seized_opportunity/seized_opportunity/seized_opportunity
+
+# copy=hidden_power_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/hidden_power
+
+# copy=hidden_power_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/hidden_power/hidden_power/hidden_power/hidden_power
+
+# copy=hunters_focus_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/hunters_focus
+
+# copy=hunters_focus_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/hunters_focus/hunters_focus/hunters_focus/hunters_focus
+
+# copy=patient_soul_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/patient_soul
+
+# copy=patient_soul_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/patient_soul/patient_soul/patient_soul/patient_soul
+
+# copy=vengeful_soul_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/vengeful_soul
+
+# copy=vengeful_soul_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/vengeful_soul/vengeful_soul/vengeful_soul/vengeful_soul
+
+# copy=willful_momentum_1,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/willful_momentum
+
+# copy=willful_momentum_4,Xavian
+# main_hand=main_hand,ilevel=315,variant=weaptank,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum/willful_momentum/willful_momentum/willful_momentum/willful_momentum
+

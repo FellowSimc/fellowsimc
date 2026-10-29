@@ -313,6 +313,7 @@ SC_ENUM_FORMATTER( buff_tick_behavior,      util::buff_tick_behavior_string );
 SC_ENUM_FORMATTER( buff_tick_time_behavior, util::buff_tick_time_behavior_string );
 SC_ENUM_FORMATTER( action_energize,         util::action_energize_type_string );
 SC_ENUM_FORMATTER( action_e,                util::action_type_string );
+SC_ENUM_FORMATTER( gear_affix_e,            gear_affix_lower );
 
 #undef SC_ENUM_FORMATTER
 } // namespace fmt

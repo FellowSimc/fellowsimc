@@ -1,0 +1,336 @@
+report_details=1
+optimal_raid=0
+# max_time=420
+# max_time=50
+max_time=250
+# max_time=60
+target_error=0.25
+iterations=15000
+chart_show_relative_difference=1
+vary_combat_length=0.1
+single_actor_batch=1
+max_time=720
+desired_targets=1
+# relative_difference_base="Base Rime"
+
+# apl/chuey_dungeon.simc
+
+# apl/dungeon.simc
+
+rime="30 t1"
+level=80
+
+apl/rime/rime_apl.simc
+
+head=hat,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=30,tempering=1,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=30,tempering=1,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+# weapon=voidbringers_touch
+
+# weapon_trait.hunters_focus=1
+# weapon_trait.vengeful_soul=1
+# weapon_trait.seized_opportunity=1
+
+# legendary.skandis_decree=1
+# legendary.frostwyrms_spite=1
+# legendary.undulating_spirit=1
+# weapon=chronoshift
+
+# # Talons Beam Okay
+# talents=burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/cold_shower:1/glacial_assault:1/greater_glacial_blast:1/icy_talons:1/navirs_keeper:1/wisdom_of_the_north:1
+# Talons Beam Overall Best
+talents=biting_cold:1/burstbolter:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/cold_shower:1/greater_glacial_blast:1/icy_talons:1/supreme_torrent:1
+
+# # Beam
+# talents=biting_cold:1/bursting_swallows:1/cascading_blitz:1/chilling_finesse:1/coalescing_frost:1/icy_flow:1/soulfrost_torrent:1/supreme_torrent:1/wisdom_of_the_north:1
+
+# gear has 4 stats
+# 14 blessings
+# 18 mods
+
+sets.dark_prophecy=1
+sets.deaths_grasp=1
+sets.draconic_might=1
+sets.seal_of_the_heskyr=1
+
+# +8 in sets, 26 mods
+
+gems.amethyst_power=500
+gems.sapphire_power=500
+gems.emerald_power=500
+gems.ruby_power=500
+
+weapon_trait.hunters_focus=4
+# 30 mods
+weapon_trait.amethyst_splinters=4
+# 34 mods
+weapon_trait.emerald_judgement=2
+# 36 mods
+weapon_trait.visions_of_grandeur=1
+# 37 mods
+weapon_trait.martial_initiative=1
+# 38 mods
+
+copy="Ilvl 90 t0"
+head=hat,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=90,tempering=0,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=90,tempering=0,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+
+copy="Ilvl 90 t1"
+head=hat,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=90,tempering=1,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=90,tempering=1,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+
+copy="Ilvl 105 t0"
+head=hat,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=105,tempering=0,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=105,tempering=0,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+copy="Ilvl 105 t1"
+head=hat,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=105,tempering=1,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=105,tempering=1,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+copy="Ilvl 105 t2"
+head=hat,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=105,tempering=2,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=105,tempering=2,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+copy="Ilvl 180 t0"
+head=hat,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=180,tempering=0,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=180,tempering=0,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+copy="Ilvl 180 t1"
+head=hat,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=180,tempering=1,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=180,tempering=1,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+copy="Ilvl 180 t2"
+head=hat,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=180,tempering=2,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=180,tempering=2,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+copy="Ilvl 180 t3"
+head=hat,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=180,tempering=3,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=180,tempering=3,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+copy="Ilvl 225 t0"
+head=hat,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=225,tempering=0,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=225,tempering=0,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+copy="Ilvl 225 t1"
+head=hat,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=225,tempering=1,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=225,tempering=1,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+copy="Ilvl 225 t2"
+head=hat,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=225,tempering=2,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=225,tempering=2,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste
+
+
+copy="Ilvl 225 t3"
+head=hat,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=crit,fixed_secondary=primary/primary
+shoulder=shoulder,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=haste,fixed_secondary=primary/primary
+back=back,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=expertise,fixed_secondary=expertise/crit
+chest=chest,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=haste,fixed_secondary=primary/primary,affixes=haste/haste/the_trickster/the_trickster/the_trickster/the_trickster
+hands=hands,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=haste,fixed_secondary=haste/crit
+legs=legs,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=haste,fixed_secondary=haste/crit
+feet=feet,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=haste,fixed_secondary=crit/crit,affixes=subduer/subduer/subduer/subduer
+
+neck=neck,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=haste/crit,fixed_secondary=crit/spirit
+wrist=wrists,rarity=regal,variant=big_secondary,ilevel=225,tempering=3,main_secondary=crit,fixed_secondary=crit/crit
+
+finger1=ring1,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+finger2=ring2,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=haste/crit,fixed_secondary=haste/haste,affixes=the_philosopher/the_philosopher
+trinket1=relic1,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=haste/crit,fixed_secondary=crit/haste,affixes=the_monarch/the_vehement
+trinket2=relic2,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=spirit/crit,fixed_secondary=haste/haste
+
+main_hand=weap,rarity=regal,variant=evens,ilevel=225,tempering=3,main_secondary=crit,fixed_secondary=haste/haste,affixes=crit/haste

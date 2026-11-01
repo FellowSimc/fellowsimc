@@ -10,7 +10,7 @@ iterations=15000
 chart_show_relative_difference=1
 vary_combat_length=0.0
 single_actor_batch=1
-max_time=720
+max_time=300
 # max_time=100
 desired_targets=1
 

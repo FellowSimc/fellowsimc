@@ -542,6 +542,7 @@ public:
 
   void regen( timespan_t periodicity ) override;
 
+  double composite_additive_cooldown_recovery_rate( const cooldown_t& cd ) const override;
   double composite_attribute_multiplier( attribute_e attr ) const override;
   double composite_player_critical_damage_multiplier( const action_state_t* /* s */ ) const override;
   double composite_melee_auto_attack_speed() const override;
@@ -786,7 +787,7 @@ public:
     return debug_cast<const fs_player_t*>( ab::player );
   }
 
-  void schedule_execute_child_attack( action_state_t* parent_state )
+  void schedule_execute_child_attack( action_state_t* parent_state, bool use_parent_crit = false )
   {
     ab::set_target( parent_state->target );
     action_state_t* damage_state = ab::get_state();
@@ -794,6 +795,9 @@ public:
 
     ab::snapshot_state( damage_state, result_amount_type::DMG_DIRECT );
     damage_state->persistent_multiplier = parent_state->persistent_multiplier;
+    
+    if ( use_parent_crit )
+      damage_state->crit_chance = parent_state->crit_chance;
 
     ab::schedule_execute( damage_state );
   }

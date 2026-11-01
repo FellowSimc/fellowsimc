@@ -429,9 +429,7 @@ struct fated_strike_t : fs_weapon_action_t<attack_t>
   {
     id = 20001;
 
-    base_execute_time = trigger_gcd = min_gcd = 0.3_s;
-
-    gcd_type                = gcd_haste_type::NONE;
+    gcd_type                = gcd_haste_type::HASTE;
     attack_power_mod.direct = p->find_csv_data("Weapon.CleaveDamageBuffCooldownReduction.PrimaryAttributeCoefficient")->value();
 
     double cleave_mod = p->find_csv_data( "Weapon.CleaveDamageBuffCooldownReduction.Cleave.PrimaryAttributeCoefficient" )->value();
@@ -1648,10 +1646,10 @@ void fs_player_t::create_buffs()
 
   struct fated_strike_buff_t : fs_player_buff_t
   {
-    double cdr_mod = 2.0;
     fated_strike_buff_t( player_t* pl ) : fs_player_buff_t( pl, "fated_strike" )
     {
       set_duration( 6_s );
+      set_default_value( 2.0 );
       add_stack_change_callback( [ this ]( buff_t*, int, int _new ) {
         if ( _new )
         {
@@ -1659,7 +1657,6 @@ void fs_player_t::create_buffs()
           {
             if ( !action->ignores_class_cdr )
             {
-              action->additive_cooldown_recovery_rate += cdr_mod;
               action->cooldown->adjust_recharge_multiplier();
             }
           }
@@ -1670,7 +1667,6 @@ void fs_player_t::create_buffs()
           {
             if ( !action->ignores_class_cdr )
             {
-              action->additive_cooldown_recovery_rate -= cdr_mod;
               action->cooldown->adjust_recharge_multiplier();
             }
           }
@@ -1725,15 +1721,15 @@ void fs_player_t::invalidate_cache( cache_e c )
 {
   player_t::invalidate_cache( c );
 
-  //if ( c == cache_e::CACHE_MASTERY && fs_buffs.the_philosopher->check() )
-  //{
-  //  auto mast = std::min( finesse_trait_values.finesse_g_max, cache.mastery() );
+  if ( c == cache_e::CACHE_MASTERY && fs_buffs.the_philosopher->check() )
+  {
+    auto mast = std::min( finesse_trait_values.finesse_g_max, cache.mastery() );
 
-  //  auto new_val = finesse_trait_values.finesse_g_spirit_to_stats[ finesse_traits[ THE_PHILOSOPHER ] ] * mast;
+    auto new_val = finesse_trait_values.finesse_g_spirit_to_stats[ finesse_traits[ THE_PHILOSOPHER ] ] * mast;
 
-  //  fs_buffs.the_philosopher->current_value = new_val;
-  //  fs_buffs.the_philosopher->invalidate_cache();
-  //}
+    fs_buffs.the_philosopher->current_value = new_val;
+    fs_buffs.the_philosopher->invalidate_cache();
+  }
 }
 
 bool parse_fsweapon( sim_t* sim, std::string_view, std::string_view value )
@@ -1782,6 +1778,16 @@ bool parse_fsrelic2( sim_t* sim, std::string_view, std::string_view value )
 
   sim->error( "{} relic string '{}' not valid.", sim->active_player->name(), value );
   return false;
+}
+
+
+double fs_player_t::composite_additive_cooldown_recovery_rate(const cooldown_t& cd) const
+{
+  double additive_cdr = player_t::composite_additive_cooldown_recovery_rate( cd );
+
+  additive_cdr += fs_buffs.fated_strike->check_value();
+
+  return additive_cdr;
 }
 
 

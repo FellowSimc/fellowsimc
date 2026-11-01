@@ -1098,22 +1098,6 @@ struct skull_crusher_t : public tariq_attack_t
       add_child( p()->actions.chain_lightning_ace_of_spades_crush );
   }
 
-  double composite_crit_chance() const override
-  {
-    auto cc = base_t::composite_crit_chance();
-
-    if ( p()->talents_enabled( tariq_t::THEM_BONES ) )
-    {
-      if ( p()->rng_objects.them_bones->trigger() )
-      {
-        cc += them_bones_cc;
-        p()->procs.them_bones->occur();
-      }
-    }
-
-    return cc;
-  }
-
   double cost() const override
   {
     auto amount = base_t::cost();
@@ -1150,11 +1134,27 @@ struct skull_crusher_t : public tariq_attack_t
   {
     consume_square_hammer();
 
+    bool them_bones = false;
+    if ( p()->talents_enabled( tariq_t::THEM_BONES ) )
+    {
+      if ( p()->rng_objects.them_bones->trigger() )
+      {
+        them_bones = true;
+
+        if ( !pre_execute_state )
+          pre_execute_state = get_state();
+
+        snapshot_state( pre_execute_state, result_amount_type::DMG_DIRECT );
+        pre_execute_state->crit_chance += them_bones_cc;
+        p()->procs.them_bones->occur();
+      }
+    }
+
     base_t::execute();
 
     if ( in_thunder_call() )
     {
-      lightning_attack->schedule_execute_child_attack( execute_state );
+      lightning_attack->schedule_execute_child_attack( execute_state, them_bones );
     }
 
     p()->buffs.focused_wrath->decrement();
@@ -1271,6 +1271,8 @@ struct hammer_storm_t : public tariq_attack_t
   hammer_storm_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
     : tariq_attack_t( name, p, options_str )
   {
+    ability_lag.mean = 1_ms;
+
     id                 = 6;
     name_str_reporting = "Hammer Storm";
 
@@ -1597,6 +1599,11 @@ struct chain_lightning_t : public tariq_lightning_attack_t
       }
     }
 
+    if ( target_list_end < tl.end() )
+    {
+      rng().shuffle( target_list_end, tl.end() );
+    }
+
     while ( tl.size() < n_targets() )
     {
       target_list_end = tl.end();
@@ -1608,11 +1615,11 @@ struct chain_lightning_t : public tariq_lightning_attack_t
           tl.push_back( t );
         }
       }
-    }
 
-    if ( target_list_end < tl.end() )
-    {
-      rng().shuffle( target_list_end, tl.end() );
+      if ( target_list_end < tl.end() )
+      {
+        rng().shuffle( target_list_end, tl.end() );
+      }
     }
 
     return tl.size();
@@ -1673,6 +1680,8 @@ struct leap_smash_t : public tariq_attack_t
 
     trigger_gcd = timespan_t::zero();
 
+    travel_delay = p->find_csv_data( "Ink.MoveToLocationAoeDamage.MoveDuration" )->value();
+
     cooldown->duration = p->find_csv_data( "Ink.MoveToLocationAoeDamage.Cooldown" )->seconds();
     cooldown->hasted   = true;
     cooldown->charges  = 1;
@@ -1699,13 +1708,8 @@ struct leap_smash_t : public tariq_attack_t
     {
       p()->get_target_data( s->target )->debuffs.slayers_mosh->trigger();
     }
-  }
 
-  void execute() override
-  {
-    base_t::execute();
-
-    if ( hit_any_target && p()->talents_enabled( tariq_t::MOUTH_FOR_WAR ) )
+    if ( s->chain_target == 0 && p()->talents_enabled( tariq_t::MOUTH_FOR_WAR ) )
     {
       p()->buffs.focused_wrath->trigger( 1 );
     }
@@ -1772,6 +1776,11 @@ struct raging_tempest_t : public tariq_lightning_attack_t
     p()->fs_buffs.spirit_of_heroism->trigger();
     p()->buffs.raging_tempest->trigger();
     p()->used_ultimate();
+
+    if ( p()->talent_enabled( tariq_t::RIDE_THE_LIGHTNING ) )
+    {
+      p()->buffs.ride_the_lightning->trigger( 1, p()->buffs.raging_tempest->base_buff_duration );
+    }
   }
 };
 
@@ -2153,6 +2162,7 @@ void tariq_t::create_buffs()
           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
           ->set_period( find_csv_data( "Ink.ChargedBuff.Talent.RageIncrease.TickInterval" )->seconds() )
           ->set_freeze_stacks( true )
+          ->set_tick_time_behavior( buff_tick_time_behavior::HASTED )
           ->set_tick_callback( [ this ]( buff_t* buff, int current_tick, timespan_t tick_time ) {
             resource_gain( RESOURCE_FURY, talents.ride_the_lightning_fury_per_tick, gains.ride_the_lightning );
           } );

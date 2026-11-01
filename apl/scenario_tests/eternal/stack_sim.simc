@@ -28,3 +28,6 @@ desired_targets=1
 # apl/scenario_tests/eternal/gunde_heartsplitter.simc
 # apl/scenario_tests/eternal/tariq_lightning.simc
 # apl/scenario_tests/eternal/tariq_schism.simc
+
+
+apl/scenario_tests/eternal/tariq.simc

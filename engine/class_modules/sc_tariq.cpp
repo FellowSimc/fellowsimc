@@ -73,7 +73,7 @@ public:
   {
     buff_t* thunder_call;
     buff_t* focused_wrath;
-    buff_t* raging_currents;
+    buff_t* raging_tempest;
     buff_t* ride_the_lightning;
     buff_t* square_hammer_stacking;
     buff_t* square_hammer_buff;
@@ -183,417 +183,43 @@ public:
 
   struct spell_const_t
   {
-    // Ink.MeleeAutoAttack.StrengthCoefficient, 1.24
-    // Ink.MeleeAutoAttack.ResourceGain, 0.01	; In percentage of max
-    // Ink.MeleeAutoAttack.Spread, 0.1
-    // Ink.MeleeAutoAttack.VisualHitDelay, 0.6	; AutoAttackBuff uses the same
-    timespan_t auto_attack_time = 30_s;
-    double auto_attack_coeff = 1.24;
-    timespan_t melee_hit_visual_delay = 0.6_s;
-    double auto_attack_fury           = 1.0;
+    // Only care about "percents"
+    double max_fury = 100.0;  
 
-    // Ink.SpiritProc.ResourceRefund.FlatSpiritPointGain, 1.0
-
-    // Ink.Rage.MaxRageMultiplier, 200.0					; This is multiplied with his strength and will result in his total amount of max rage
-    // Ink.Rage.RageIncreaseBaseline, 0.5				;was 7.0        The rage will increase by RageIncreaseBaseline * (Damage Done / 100) and same for Damage Taken
-    
-    //Ink.DodgeChanceIncreaseForMeleeAttacks, 0.03	; This is an additive operation
-    double wild_swing_extra_dodge = 0.03;
-    //Ink.Expertise.ExpertiseDivider, 3.0	; (Expertise % / ExpertiseDivider)% * Stacks
-
-    //Ink.Expertise.LightningDamageIncrease.ExpertiseMultiplier, 1.0
-    
-    //Ink.Rage.MaxRageMultiplier, 200.0					; This is multiplied with his strength and will result in his total amount of max rage
-    //Ink.Rage.RageIncreaseBaseline, 0.5				;was 7.0        The rage will increase by RageIncreaseBaseline * (Damage Done / 100) and same for Damage Taken
-    //Ink.Rage.OutOfCombat.TickInterval, 1.0
-    //Ink.Rage.OutOfCombat.AmountToSpendPerTick, 0.02		; Percentage of Max Rage
-
-    double max_fury = 100.0; // Only care about "percents"
-
-    
-    //Ink.AutoAttackBuff.StrengthCoefficient, 6.2560	;was 4.065 then 5.0813 then 4.3902
-    double heavy_strike_coeff = 5.66;
-    //Ink.AutoAttackBuff.Weak.DamageMultiplier, 0.2
-    //Ink.AutoAttackBuff.Weak.ResourceGainMultiplier, 0.2
-    //Ink.AutoAttackBuff.Cleave.DamageMultiplier, 0.20	;was 0.50
-    double heavy_strike_cleave_multiplier = 0.3;
-    //Ink.AutoAttackBuff.Cleave.PieMaxRadius, 800.0	; Total length
-    //Ink.AutoAttackBuff.Cleave.PieMinRadius, 10.0	; Offset from character position. VFX will also start from here
-    //Ink.AutoAttackBuff.Cleave.PieAngleWidth, 270.0
-    //Ink.AutoAttackBuff.Cleave.TargetThresholdForDamageScale, 5.0	;was 8.0
-    double heavy_strike_target_threshold = 8.0;
-    //Ink.AutoAttackBuff.ResourceGain, 0.12	; was 0.05 In percentage of max
-    double heavy_strike_fury = 12;
-    //Ink.AutoAttackBuff.Cost, 0.0
-    //Ink.AutoAttackBuff.VisualDelay, 0.6
-    //Ink.AutoAttackBuff.Cooldown, 8.0
-    timespan_t heavy_strike_cooldown = 8_s;
-    //Ink.AutoAttackBuff.Lightning.StrengthCoefficient, 2.1896 	;was 1.4227 and then x and then 1.7784
-    double heavy_strike_lightning_coeff = 1.98;
-    //Ink.AutoAttackBuff.Lightning.TargetThresholdForDamageScale, 5.0	;was 8.0
-    double heavy_strike_lightning_threshold = 5.0;
-    //Ink.AutoAttackBuff.Lightning.VisualDelay, 0.25	; Added upon the original visual delay
-
-    //Ink.MoveToLocationAoeDamage.MaxRangeHorizontal, 3000.0
-    //Ink.MoveToLocationAoeDamage.MaxRangeUp, 1000.0
-    //Ink.MoveToLocationAoeDamage.MaxRangeDown, 5000.0
-    //Ink.MoveToLocationAoeDamage.StrengthCoefficient, 0.69
-    double leap_smash_coeff = 0.69;
-    //Ink.MoveToLocationAoeDamage.Spread, 0.1
-    //Ink.MoveToLocationAoeDamage.DamageRadius, 500.0
-    //Ink.MoveToLocationAoeDamage.TargetThresholdForDamageScale, 8.0
-    double leap_smash_threshold = 8;
-    //Ink.MoveToLocationAoeDamage.MoveDuration, 0.25
-    //Ink.MoveToLocationAoeDamage.Cooldown, 20.0
-    timespan_t leap_smash_cooldown = 20_s;
-    
-
-    //Ink.HeavySingleTargetAttack.StrengthCoefficient, 12.2071				;was 9.162 then 10.078 then 13.4374 then 17.4686 then 11.4218
-    double skull_crusher_coeff = 11.6;
-    //Ink.HeavySingleTargetAttack.Spread, 0.1
-    //Ink.HeavySingleTargetAttack.VisualHitDelay, 0.52
-    //Ink.HeavySingleTargetAttack.Cost, 0.25	; Percentage of Max Rage
-    double skull_crusher_cost = 25;
-    //Ink.HeavySingleTargetAttack.Cooldown, 1.0
-    timespan_t skull_crusher_gcd = 1_s;
-    //Ink.HeavySingleTargetAttack.Lightning.StrengthCoefficient, 4.2725 	;was 2.863 then 3.5273 then 4.7031 then 6.1140 then 3.9976
-    double skull_crusher_lightning_coeff = 4.06;
-    //Ink.HeavySingleTargetAttack.Lightning.Spread, 0.20
-    //Ink.HeavySingleTargetAttack.Lightning.VisualHitDelay, 0.35	; Added upon the original visual delay
-    
-    //Ink.AoeAttack.StrengthCoefficient, 1.2514	;was 1.1047 then 1.3256 then 1.0970
-    double hammer_storm_coeff = 2.23;
-    //Ink.AoeAttack.Spread, 0.1
-    //Ink.AoeAttack.Radius, 700.0
-    //Ink.AoeAttack.TargetThresholdForDamageScale, 8.0
-    double hammer_storm_threshold = 12.0;
-    //Ink.AoeAttack.VisualHitDelay, 0.00	; Leaving this as 0 means that the hit will be registret immediately on the first tick
-    //Ink.AoeAttack.VisualEndDelay, 0.3 Ink.AoeAttack.Cost, 0.50				;
-    // Percentage of Max Rage
-    double hammer_storm_cost = 50;
-    // Ink.AoeAttack.CostPerTick, 0.04		; DISABLED Percentage of Max Rage
-    //Ink.AoeAttack.TickInterval, 0.50
-    timespan_t hammer_storm_period = 0.5_s;
-    int hammer_storm_spins         = 3;
-    //Ink.AoeAttack.MaxAttacks, 4.0			; (Activation + ticks)
-    //Ink.AoeAttack.MaxRageToSpend, 0.25	; Percentage of Max Rage
-    //Ink.AoeAttack.Cooldown, 1.5
-    //Ink.AoeAttack.Lightning.StrengthCoefficient, 0.4380	;was 0.3866 then 0.425 then 0.3840
-    double hammer_storm_lightning_coeff = 0.78;
-    //Ink.AoeAttack.Lightning.Spread, 0.20
-    //Ink.AoeAttack.Lightning.VisualDelay, 0.08	; Added upon the original visual delay
-    //Ink.AoeAttack.Lightning.TargetThresholdForDamageScale, 10.0	;was 12.0
-    double hammer_storm_lightning_threshold = 15.0;
-    //Ink.AoeAttack.Talent.ReducedIncomingDamage.IncomingDamageMultiplier, 0.80	;talent disabled
-    //Ink.AoeAttack.Talent.ReducedIncomingDamage.IncreasedStatBonus, 0.20			;talent disabled	
-    //Ink.AoeAttack.Talent.ReducedIncomingDamage.PassiveReduceIncomingAoeDamage, 0.10
-    //Ink.AoeAttack.Talent.ReducedDurationIncreasedDamageCost.CostMultiplier, 2.0	;not used
-    //Ink.AoeAttack.Talent.ReducedDurationIncreasedDamageCost.DamageMultiplier, 1.00	;not used
-    //Ink.AoeAttack.Talent.ReducedDurationIncreasedDamageCost.DurationMultiplier, 0.5	;not used
-    //Ink.AoeAttack.Talent.ReducedDurationIncreasedDamageCost.DamageExponential, 1.35
-    double hammer_storm_amp_per_spin = 1.35;
-    //Ink.AoeAttack.Talent.ReducedDurationIncreasedDamageCost.MaxNumberOfTicks, 3.15
-    
-
-    ////Ink.SecondChanceSingleTargetAttack.StrengthCoefficient, 5.915	;was 5.20
-    //double face_breaker_coeff = 5.915;
-    ////Ink.SecondChanceSingleTargetAttack.Spread, 0.1
-    ////Ink.SecondChanceSingleTargetAttack.VisualHitDelay, 0.23
-    ////Ink.SecondChanceSingleTargetAttack.Cost, 0.0
-    ////Ink.SecondChanceSingleTargetAttack.Cooldown, 9.0
-    //timespan_t face_breaker_cooldown = 9_s;
-    ////Ink.SecondChanceSingleTargetAttack.Proc.NotActive.DamageMultiplier, 0.2
-    ////Ink.SecondChanceSingleTargetAttack.ResourceGain, 0.05	; In percentage of max
-    //double face_breaker_fury = 5;
-    ////Ink.SecondChanceSingleTargetAttack.Talent.IncreasedCritChance.Increase, 0.40	; Additive
-    ////Ink.SecondChanceSingleTargetAttack.Talent.PassiveIncreasedDamageMultiplier.Increase, 1.00	; 
-    ////Ink.SecondChanceSingleTargetAttack.Talent.CritBleed.DamageToDotScaler, 3.00
-    ////Ink.SecondChanceSingleTargetAttack.Talent.CritBleed.DotDuration, 24.0
-    ////Ink.SecondChanceSingleTargetAttack.Talent.CritBleed.DotTickPeriod, 1.5
-    //Ink.SecondChanceSingleTargetAttack.Talent.CritAoe.DirectDamageToDamageScaler, 0.50		;was 0.30
-    double face_breaker_cleave_fraction = 0.5;
-    //Ink.SecondChanceSingleTargetAttack.Talent.CritAoe.TargetThresholdForDamageScale, 12.0
-    double face_breaker_cleave_falloff = 12.0;
-    
-
-    //Ink.SingleTargetHeavyNonSpender.StrengthCoefficient, 5.915	;was 4.732
-    double face_breaker_coeff = 6.18426;
-    //Ink.SingleTargetHeavyNonSpender.VisualHitDelay, 0.23
-    //Ink.SingleTargetHeavyNonSpender.Cost, 0.0
-    //Ink.SingleTargetHeavyNonSpender.Cooldown, 6.0
-    timespan_t face_breaker_cd = 6_s;
-    //Ink.SingleTargetHeavyNonSpender.ResourceGain, 0.07	;was 0.05 In percentage of max
-    double face_breaker_fury = 7;
-
-    //Ink.CleaveAttack.StrengthCoefficient, 1.5625	;was 1.25
-    double wild_swing_coeff = 1.2914;
-    //Ink.CleaveAttack.Spread, 0.1
-    //Ink.CleaveAttack.Radius, 500.0
-    //Ink.CleaveAttack.TargetThresholdForDamageScale, 5.0
-    double wild_swing_threshold = 5;
-    //Ink.CleaveAttack.VisualHitDelay, 0.15
-    //Ink.CleaveAttack.Cooldown, 1.5
-    //Ink.CleaveAttack.Cost, 0.0
-    //Ink.CleaveAttack.ResourceGain, 0.03		;was 2.5 In percentage of max
-    double wild_swing_fury = 3;
-    //Ink.CleaveAttack.DodgeChanceIncrease.MinNumOfTargets, 1.0	; The dodge chance increase is at max at and before this value
-    //Ink.CleaveAttack.DodgeChanceIncrease.DodgeChanceDecreasePerTarget, 0.08	; Dodge chance decrease of MaxDodgeChanceIncrease per additional target after MinNumOfTargets
-    //Ink.CleaveAttack.DodgeChanceIncrease.MaxDodgeChanceIncrease, 0.16	; The dodge chance at and below MinNumOfTargets
-    double wild_swing_max_dodge = 0.16;
-    double wild_swing_dodge_decrease_per_target = 0.08;
-    
-    //Ink.ChargedBuff.VisualDelay, 0.27
-    //Ink.ChargedBuff.Duration, 21.0
-    timespan_t thunder_call_duration = 21_s;
-    //Ink.ChargedBuff.Cooldown, 45.0
-    timespan_t thunder_call_cooldown = 45_s;
-    //Ink.ChargedBuff.ResourceGain, 0.0
-    
-    //Ink.BouncyProjectile.StrengthCoefficient, 2.0163	;was 1.47 then 2.205 then 1.617 then 1.6979 then 1.568 then 1.1290
-    double chain_lightning_coeff = 1.4998;
-    //Ink.BouncyProjectile.Spread, 0.1
-    //Ink.BouncyProjectile.MaxRange, 3000.0
-    //Ink.BouncyProjectile.MaxNumOfTargets, 6.0
-    int chain_lightning_bounces = 6;
-    //Ink.BouncyProjectile.BounceSearchMaxRadius, 700.0
-    //Ink.BouncyProjectile.Cooldown, 8.0
-    timespan_t chain_lightning_cooldown = 8_s;
-    //Ink.BouncyProjectile.TimeBetweenTargets, 0.05
-    //Ink.BouncyProjectile.SpawnDelay, 0.30
-    timespan_t chain_lightning_delay = 0.3_s;
-    //Ink.BouncyProjectile.ResourceGainPerTarget, 0.012	; was 0.015In percentage of max
-    double chain_lightning_fury_per_hit = 1.2;
-    
-    //Ink.MeleeInterrupt.Range, 550.0
-    //Ink.MeleeInterrupt.Duration, 4.0
-    //Ink.MeleeInterrupt.Cooldown, 16.0
-    
-    //Ink.EnhancedChargedBuff.SpiritPointCost, 100.0
-    //Ink.EnhancedChargedBuff.ResourceGain, 0.0
-    //Ink.EnhancedChargedBuff.BuffDuration, 21.0				;Should be equal to and increase with Heroism Duration gem bonuses
-    //timespan_t raging_tempest_empowered_thundercall_duration = 21_s;
-    //Ink.EnhancedChargedBuff.MaxRangeHorizontal, 3000.0
-    //Ink.EnhancedChargedBuff.MaxRangeUp, 1000.0
-    //Ink.EnhancedChargedBuff.MaxRangeDown, 5000.0
-    //Ink.EnhancedChargedBuff.MoveDuration, 0.3
-    //Ink.EnhancedChargedBuff.VisualHitDelay, 0.2
-    //Ink.EnhancedChargedBuff.AoeImpact.StrengthCoefficient, 10.06
-    double raging_tempest_impact_coeff = 10.06;
-    //Ink.EnhancedChargedBuff.AoeImpact.DamageRadius, 500.0
-    //Ink.EnhancedChargedBuff.AoeImpact.TargetThresholdForDamageScale, 5.0
-    double raging_tempest_impact_threshold = 5;
-    //Ink.EnhancedChargedBuff.PulsatingSingleDamage.PulsePeriod, 1.0
-    timespan_t raging_tempest_pulse_period = 1_s;
-    //Ink.EnhancedChargedBuff.PulsatingSingleDamage.TargetingRange, 800.0
-    //Ink.EnhancedChargedBuff.PulsatingSingleDamage.VisualDelay, 0.05
-    //Ink.EnhancedChargedBuff.PulsatingSingleDamage.Damage.StrengthCoefficient, 1.54
-    double raging_tempest_pulse_coeff = 1.54;
-    //Ink.EnhancedChargedBuff.PulsatingSingleDamage.Damage.Spread, 0.1
-    //Ink.EnhancedChargedBuff.PulsatingSingleDamage.SelfBuff.CritChanceIncreasePerStack, 0.01
-    double raging_tempest_currents_expertise_per_stack = 0.01;
-    //Ink.EnhancedChargedBuff.PulsatingSingleDamage.SelfBuff.StackCap, 20 ; NOTE; SET IN GE!!! THIS IS NOT USED
-    int raging_tempest_currents_max_stack = 20;
-    //Ink.EnhancedChargedBuff.PulsatingSingleDamage.SelfBuff.Duration, 20.0			;Should be equal to and increase with Heroism Duration gem bonuses
-    timespan_t raging_tempest_currents_duration = 20_s;
-    
-    //Ink.LowHealthSingleTargetResourceDamage.VisualHitDelay, 0.23
-    //Ink.LowHealthSingleTargetResourceDamage.StrengthCoefficient, 3.6575	;was 3.08
-    double culling_strike_coeff = 3.182025;
-    //Ink.LowHealthSingleTargetResourceDamage.Spread, 0.1
-    //Ink.LowHealthSingleTargetResourceDamage.MaxResourceToSpend, 0.10		    ; Percentage of Max fury
-    double culling_strike_max_fury = 10;
-    //Ink.LowHealthSingleTargetResourceDamage.DamageIncreasePerResource, 0.40		; Per Resource means per every percentage of fury
-    double culling_strike_increase_per_fury = 0.4;
-    //Ink.LowHealthSingleTargetResourceDamage.Cooldown, 6.0
-    timespan_t culling_strike_cooldown = 6_s;
-    //Ink.LowHealthSingleTargetResourceDamage.Lightning.Buff.Duration, 8.0
-    //Ink.LowHealthSingleTargetResourceDamage.Lightning.Buff.StrengthIncreasePerStack, 1.02
-    
-    //Ink.AoeFear.Radius, 1200.0
-    //Ink.AoeFear.Duration, 12.0
-    //Ink.AoeFear.MaxNumTargets, 40.0
-    //Ink.AoeFear.EffectDamageThresholdScaler, 30.0
-    //Ink.AoeFear.VisualDelay, 0.3
-    //Ink.AoeFear.Cooldown, 90.0
-   
-    //Ink.CostReductionBuff.Duration, 15
-    timespan_t focused_wrath_duration = 15_s;
-    //Ink.CostReductionBuff.Cooldown, 90
-    timespan_t focused_wrath_cooldown = 90_s;
-    //Ink.CostReductionBuff.CostReduction, 0.48
-    double focused_wrath_cost_multiplier = 0.48;
-    //Ink.CostReductionBuff.DamageIncrease, 1.4
+    // Initialized in Init Spells
     double focused_wrath_damage_multiplier = 1.1;
-    //Ink.CostReductionBuff.NumOfStacks, 2.0
-    int focused_wrath_stacks = 2;
-    int focused_wrath_max_stacks = 3;
-    //Ink.CostReductionBuff.VisualDelay, 0.3
-    //Ink.CostReductionBuff.Talent.CooldownReductionInSeconds, 45.0
-    
-    //Ink.SelfDefenceBuff.Cooldown, 30.0
-    //Ink.SelfDefenceBuff.FirstDuration, 4.0
-    //Ink.SelfDefenceBuff.FirstIncomingDamageReduction, 0.6
-    //Ink.SelfDefenceBuff.SecondIncomingDamageReduction, 0.8
-    //Ink.SelfDefenceBuff.VisualDelay, 0.3
-    //Ink.SelfDefenceBuff.Talent.IncreasedDurationAndTaunt.AdditionalDuration, 4.0
-    //Ink.SelfDefenceBuff.Talent.IncreasedDurationAndTaunt.Taunt.MaxRange, 4000.0
-    //Ink.SelfDefenceBuff.Talent.IncreasedDurationAndTaunt.Taunt.Cooldown, 15.0
-    //Ink.SelfDefenceBuff.Talent.IncreasedDurationAndTaunt.Taunt.Duration, 8.0
-    //Ink.SelfDefenceBuff.Talent.IncreasedDurationAndTaunt.Taunt.VisualDelay, 0.18
+    double focused_wrath_cost_multiplier   = 0.48;
   } spell_const;
 
   struct talents_t
   {
-    double pneuma_start_spirit = 50;
+    // Not in Data
+    timespan_t schism_duration = 30_s;
+    int schism_stacks              = 2;
     double pneuma_generated_spirit = 1.0;
 
-    int mouth_for_war_focused_wrath_stacks = 1;
-
-    // Heavy Strike
-    // Ink.Talent.AutoAttackBuffDurationalStatBonus.StatIncrease, 0.015		;This is the active effect on attackspeedincrease talent
-    double far_beyond_driven_spirit_per_stack = 0.015;
-    // Ink.Talent.AutoAttackBuffDurationalStatBonus.Duration, 20.0
-    timespan_t far_beyond_driven_duration = 20_s;
-    // Ink.Talent.AutoAttackBuffDurationalStatBonus.MaxStacks, 5.0
-    int far_beyond_driven_max_stacks = 5;
-    // Ink.AutoAttackBuff.Talent.GainToIncreasedDamage.DamageIncreasePerStack, 0.08	;was 0.05
-    // Ink.AutoAttackBuff.Talent.GainToIncreasedDamage.PassiveCritStrikePowerScaler, 1.10
-    // Ink.AutoAttackBuff.Talent.GainToIncreasedDamage.MaxStacks, 3.0
-    // Ink.AutoAttackBuff.Talent.GainToIncreasedDamage.ConsumeStacks.CooldownReduction, 0.4
-    
-    // Ink.AutoAttackBuff.Talent.StackingBuffConsumedByNextSpender.Stacker.MaxStacks, 5.0		;new Square
-    int square_hammer_max_stacks = 5;
-    // Hammer Ink.AutoAttackBuff.Talent.StackingBuffConsumedByNextSpender.Stacker.Duration, 20.0
-    timespan_t square_hammer_duration = 20_s;
-    // Ink.AutoAttackBuff.Talent.StackingBuffConsumedByNextSpender.Buff.Duration, 4.0
-    timespan_t square_hammer_expertise_duration = 4_s;
-    // Ink.AutoAttackBuff.Talent.StackingBuffConsumedByNextSpender.Buff.AddedExpertisePerStack, 0.05
-    double square_hammer_expertise_per_stack = 0.08;
-    timespan_t square_hammer_cdr_per_stack   = 1_s;
-    
-    // Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.ProcChance, 0.08
-    double kill_em_all_chance = 0.1;
-    // Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.Buff.Duration, 8.0
-    timespan_t kill_em_all_duration = 8_s;
-    // Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.Buff.MaxStacks, 2.0
-    int kill_em_all_stacks = 2;
-    // Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.Buff.AutoAttackBuffDamageScaler, 3.00	;was 4.00
-    double kill_em_all_dmg_multiplier = 2.5; // Multiplier, not an increase.
-    double kill_em_all_cda            = 0.6;
-
-    // Leap Smash
-    // Ink.MoveToLocationAoeDamage.ResourceGain, 0.20
-    double high_road_leap_smash_fury = 20;
-    // Ink.MoveToLocationAoeDamage.VisualHitDelay, 0.03
-    // Ink.MoveToLocationAoeDamage.Talent.TargetExtraInkDamage.IncomingDamageScaler, 1.15
-    // Ink.MoveToLocationAoeDamage.Talent.TargetExtraInkDamage.Duration, 4.0
-    // Ink.MoveToLocationAoeDamage.Talent.ProcCostReductionBuff.Chance, 0.50
-    // Ink.MoveToLocationAoeDamage.Talent.ReducedCooldownIfNoHit.CooldownReductionInSeconds, 10.0
-    // Ink.MoveToLocationAoeDamage.Talent.ReducedCooldownIfNoHit.MovementSpeedBuff.MovementSpeedScaler, 1.50
-    // Ink.MoveToLocationAoeDamage.Talent.ReducedCooldownIfNoHit.MovementSpeedBuff.Duration, 4.0
-    // Ink.MoveToLocationAoeDamage.Talent.IncreasedCriticalChance.AddedCrit, 0.40
-
-    // Skull Crusher
-    // Ink.HeavySingleTargetAttack.Talent.IncreasedDamageScaler, 1.20
-    // Ink.HeavySingleTargetAttack.Talent.ProcAddedCritChance.Chance, 0.30
-    double them_bones_chance = 0.3;
-    // Ink.HeavySingleTargetAttack.Talent.ProcAddedCritChance.AddedCritChance, 1.0
-    double them_bones_cc = 1.0;
-    // Ink.HeavySingleTargetAttack.SwingTimerPauseDuration, 1.00	;was 0.75
-    // Ink.HeavySingleTargetAttack.Talent.HeavySingleTargetAttackAoe.DamageScaler, 0.10
-    double sledgehammer_multiplier = 0.1;
-    // Ink.HeavySingleTargetAttack.Talent.HeavySingleTargetAttackAoe.Radius, 500.0
-    // Ink.HeavySingleTargetAttack.Talent.HeavySingleTargetAttackAoe.TargetThresholdForDamageScale, 8.0
-    double sledgehammer_threshold = 8;
-
-    // Thunder Call
-    //Ink.ChargedBuff.Talent.RageIncrease.Duration, 21.0
-    timespan_t ride_the_lightning_duration = 21_s;
-    // Ink.ChargedBuff.Talent.RageIncrease.TickInterval, 0.1	;was 0.2
-    timespan_t ride_the_lightning_period = 0.1_s;
-    // Ink.ChargedBuff.Talent.RageIncrease.RagePerTick, 0.00143	; was 0.003 Percentage of Max Rage
-    double ride_the_lightning_fury_per_tick = 0.143;
-    // Ink.ChargedBuff.Talent.AddedHaste, 0.05
-    double ride_the_lightning_haste = 0.05;
-    // Ink.ChargedBuff.Talent.LifestealAndStatboost.IncomingDamageMultiplier, 0.90
-    // Ink.ChargedBuff.Talent.LifestealAndStatboost.DamageMultiplier, 1.05
-    // Ink.ChargedBuff.Talent.LifestealAndStatboost.LifestealIncrease, 0.05
-    // Ink.ChargedBuff.Talent.LifestealAndStatboost.Duration, 20.0
-    // Ink.ChargedBuff.Talent.LifestealAndStatboost.TimeBetweenApplication, 0.1
-
-    // Chain Lightning
-    
-    // Ink.BouncyProjectile.Talent.IncreasedMaxNumOfTargets.TotalTargets, 8.0
-    int thunderstruck_max_bounces = 9;
-    
-    
-    //Ink.BouncyProjectile.Talent.FreeCastFromAttack.Chance, 0.20			;Blood and Thunder
-    double blood_and_thunder_chance = 0.2;
-    //Ink.BouncyProjectile.Talent.FreeCastFromAttack.VFXDuration, 1.5		; The time until the vfx disappears
-    //Ink.BouncyProjectile.Talent.FreeCastFromAttack.ActivationToLightningDelay, 0.2	; The time it takes between the first vfx and the spawn of the projectile
-    
-    //Ink.BouncyProjectile.Talent.FreeCastFromAoeAttack.PPMChance, 3.0	;Legendary Ring
-    double ace_of_spades_ppm = 3;
-    //Ink.BouncyProjectile.Talent.FreeCastFromAoeAttack.VFXDuration, 1.5		; The time until the vfx disappears
-    //Ink.BouncyProjectile.Talent.FreeCastFromAoeAttack.ActivationToLightningDelay, 0.2	; The time it takes between the first vfx and the spawn of the projectile
-    //Ink.BouncyProjectile.Talent.Charged.MaxCharges, 2.0
-    int ace_of_spades_charges = 2;
-    
-    //Ink.BouncyProjectile.Talent.DamagePerUniqueTarget.Scaler, 0.40	;new talent
-    double the_motherload_increase_per_enemy = 0.65;
-    // Ink.BouncyProjectile.Talent.IncreasedDamage.DamageMultiplier, 1.10	;now as part of Blood and Thunder
-    double the_motherload_multiplier = 1.0;
+    // Not in data, BUGGED - MEANT TO BE 60%
+    double kill_em_all_cda                 = 1.6;
+    timespan_t square_hammer_cdr_per_stack = 1_s;
         
-    // Ink.LowHealthSingleTargetResourceDamage.Talent.AddedCritChance, 0.35
-    double killing_in_the_name_cc = 0.5;
-
-    // Face Breaker
-    // Ink.SecondChanceSingleTargetAttack.Talent.IncreasedCritChance.Increase, 0.40	; Additive
-    double left_hand_path_cc = 0.6;
-    
-    // Ink.Talent.PassiveLightningCritChanceIncrease, 0.20
-    double crack_the_sky_lightning_crit_chance = 0.2;
-
-    // Ink.Talent.ChanceIncreasedSpenderDamage.PPM, 3.2	;old
-    // Ink.Talent.ChanceIncreasedSpenderDamage.ProcChance, 0.25
-    double schism_proc_chance = 0.35;
-    // Ink.Talent.ChanceIncreasedSpenderDamage.HeavySingleTargetAttack.DamageMultiplier, 3.50
-    double schism_damage_skull_crusher_multiplier = 2.5;
-    // Ink.Talent.ChanceIncreasedSpenderDamage.AoeAttack.DamageMultiplier, 3.50
-    double schism_damage_hammer_storm_multiplier = 2.5;
-    timespan_t schism_duration = 30_s;
-    int schism_stacks = 2;
-
-    // Ink.Talent.DecreasedIncomingMagicDamage.DamageMultiplier, 0.90
-    // Ink.Talent.UnchargedResourceIncrease.ResourceMultiplier, 1.10
+    // Initialised in Init Spells
+    double crack_the_sky_lightning_crit_chance = 0;
+    double ride_the_lightning_fury_per_tick    = 0;
 
     // Ink.Talent.IncreasedMovementSpeed.SpeedMultiplier, 1.2
     double bloodline_movement_speed_mul = 1.2;
-    // Ink.Talent.PassiveResourceGeneration.FuryPerTick, 0.01
-    double bloodline_fury_amount = 1.0;
-    // Ink.Talent.PassiveResourceGeneration.Period, 1.0
-    timespan_t bloodline_fury_period = 1_s;
-
   } talents;
 
   struct legendary_t
   {
-    bool slayers_mosh      = false;
+    // Automatically initialized in init_spells
     timespan_t slayers_mosh_duration = 6_s;
-    double slayers_mosh_multiplier    = 1.2;
+    double slayers_mosh_multiplier   = 1.2;
+    int thundering_vortex_needed     = 20;
 
     bool thundering_vortex = false;
-    int thundering_vortex_needed = 20;
-    double thundering_vortex_multiplier = 1.5;
-    double thundering_vortex_cl_fury_multiplier = 1.5;
-
-    // Ink.LowHealthSingleTargetResourceDamage.Talent.Chance, 0.06
-    // Ink.LowHealthSingleTargetResourceDamage.Talent.ResourceAmountToDamage, 0.20
-    // Ink.LowHealthSingleTargetResourceDamage.Talent.BuffDuration, 8.0
     bool executioners_grin = false;
-    double executioners_grin_chance = 0.06;
-    int executioners_grin_counted_fury = 30;
-    timespan_t executioners_grin_duration = 8_s;
+    bool slayers_mosh      = false;
   } legendary;
 
   struct options_t
@@ -876,14 +502,14 @@ public:
 
     if ( p()->rng_objects.kill_em_all->trigger() )
     {
-      p()->buffs.kill_em_all->trigger( p()->talents.kill_em_all_stacks );
+      p()->buffs.kill_em_all->trigger();
       p()->procs.kill_em_all->occur();
     }
   }
 
   bool in_thunder_call()
   {
-    return p()->buffs.thunder_call->check() || p()->buffs.raging_currents->check();
+    return p()->buffs.thunder_call->check() || p()->buffs.raging_tempest->check();
   }
 
   void consume_square_hammer()
@@ -998,7 +624,8 @@ private:
   using ab = tariq_attack_t;
 
 public:
-  tariq_lightning_attack_t( util::string_view n, tariq_t* p, util::string_view o = {} ) : ab( n, p, o )
+  tariq_lightning_attack_t( util::string_view n, tariq_t* p, util::string_view o = {} )
+    : ab( n, p, o )
   {
     special = true;
     school  = SCHOOL_MAGIC;
@@ -1090,7 +717,7 @@ struct melee_t : public attack_t
     trigger_gcd        = timespan_t::zero();
     name_str_reporting = reporting_name;
 
-    attack_power_mod.direct = p->spell_const.auto_attack_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Ink.MeleeAutoAttack.StrengthCoefficient" )->value();
   }
 
   void reset() override
@@ -1148,12 +775,13 @@ struct auto_melee_attack_t : public action_t
 
     background = true;
 
+
     p->actions.melee_hit = debug_cast<melee_t*>( p->find_action( "auto_attack_damage" ) );
     if ( !p->actions.melee_hit )
       p->actions.melee_hit = new melee_t( "auto_attack_damage", "Auto Attack", p );
 
     p->main_hand_attack                    = p->actions.melee_hit;
-    p->main_hand_attack->base_execute_time = p->spell_const.auto_attack_time;
+    p->main_hand_attack->base_execute_time = p->find_csv_data( "Ink.AutoAttackSwingTimerDuration" )->seconds();
     p->main_hand_attack->id                = 1;
 
     id = 1;
@@ -1187,17 +815,14 @@ struct wild_swing_t : public tariq_attack_t
 
     ability_flags |= ability_type_e::ABILITY_BASIC;
 
-    // cooldown->duration = p->spell_const.blood_arc_cooldown;
-    // cooldown->charges  = 1;
-    // cooldown->hasted   = true;
-
-    attack_power_mod.direct = p->spell_const.wild_swing_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Ink.CleaveAttack.StrengthCoefficient" )->value();
 
     aoe                 = -1;
-    reduced_aoe_targets = p->spell_const.wild_swing_threshold;
+    reduced_aoe_targets = p->find_csv_data( "Ink.CleaveAttack.TargetThresholdForDamageScale" )->value();
 
     energize_resource = RESOURCE_FURY;
-    energize_amount   = p->spell_const.wild_swing_fury;
+    // Data has it as percentage.
+    energize_amount   = p->find_csv_data( "Ink.CleaveAttack.ResourceGain" )->value() * 100;
     energize_type     = action_energize::ON_CAST;
   }
 };
@@ -1212,23 +837,26 @@ struct face_breaker_t : public tariq_attack_t
 
     ability_flags |= ability_type_e::ABILITY_BASIC;
 
-    cooldown->duration = p->spell_const.face_breaker_cd;
+    cooldown->duration = p->find_csv_data( "Ink.SingleTargetHeavyNonSpender.Cooldown" )->seconds();
     cooldown->charges  = 1;
     cooldown->hasted   = true;
 
-    attack_power_mod.direct = p->spell_const.face_breaker_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Ink.SingleTargetHeavyNonSpender.StrengthCoefficient" )->value();
 
     aoe                 = -1;
     full_amount_targets = 1;
-    base_aoe_multiplier = p->spell_const.face_breaker_cleave_fraction;
-    reduced_aoe_targets = p->spell_const.face_breaker_cleave_falloff;
+
+    base_aoe_multiplier =
+        p->find_csv_data( "Ink.SecondChanceSingleTargetAttack.Talent.CritAoe.DirectDamageToDamageScaler" )->value();
+    reduced_aoe_targets =
+        p->find_csv_data( "Ink.SecondChanceSingleTargetAttack.Talent.CritAoe.TargetThresholdForDamageScale" )->value();
 
     energize_resource = RESOURCE_FURY;
-    energize_amount   = p->spell_const.face_breaker_fury;
+    energize_amount   = p->find_csv_data( "Ink.SingleTargetHeavyNonSpender.ResourceGain" )->value() * 100;
     energize_type     = action_energize::ON_CAST;
 
     if ( p->talents_enabled( tariq_t::LEFT_HAND_PATH ) )
-      base_crit += p->talents.left_hand_path_cc;
+      base_crit += p->find_csv_data( "Ink.SecondChanceSingleTargetAttack.Talent.IncreasedCritChance.Increase" )->value();
   }
 };
 
@@ -1246,10 +874,10 @@ struct heavy_strike_t : public tariq_attack_t
 
       ability_flags |= ability_type_e::ABILITY_CORE;
 
-      attack_power_mod.direct = p->spell_const.heavy_strike_lightning_coeff;
+      attack_power_mod.direct = p->find_csv_data( "Ink.AutoAttackBuff.Lightning.StrengthCoefficient" )->value();
 
       aoe                 = -1;
-      reduced_aoe_targets = p->spell_const.heavy_strike_lightning_threshold;
+      reduced_aoe_targets = p->find_csv_data( "Ink.AutoAttackBuff.Lightning.TargetThresholdForDamageScale" )->value();
     }
 
     double composite_da_multiplier( const action_state_t* s ) const override
@@ -1271,19 +899,19 @@ struct heavy_strike_t : public tariq_attack_t
 
     ability_flags |= ability_type_e::ABILITY_CORE;
 
-    cooldown->duration = p->spell_const.heavy_strike_cooldown;
+    cooldown->duration = p->find_csv_data( "Ink.AutoAttackBuff.Cooldown" )->seconds();
     cooldown->charges  = 1;
     cooldown->hasted   = true;
 
-    attack_power_mod.direct = p->spell_const.heavy_strike_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Ink.AutoAttackBuff.StrengthCoefficient" )->value();
 
     aoe                 = -1;
     full_amount_targets = 1;
-    base_aoe_multiplier = p->spell_const.heavy_strike_cleave_multiplier;
-    reduced_aoe_targets = p->spell_const.heavy_strike_target_threshold;
+    base_aoe_multiplier = p->find_csv_data( "Ink.AutoAttackBuff.Cleave.DamageMultiplier" )->value();
+    reduced_aoe_targets = p->find_csv_data( "Ink.AutoAttackBuff.Cleave.TargetThresholdForDamageScale" )->value();
 
     energize_resource = RESOURCE_FURY;
-    energize_amount   = p->spell_const.heavy_strike_fury;
+    energize_amount   = p->find_csv_data( "Ink.AutoAttackBuff.ResourceGain")->value() * 100;
     energize_type     = action_energize::ON_CAST;
 
     add_child( lightning_attack );
@@ -1361,7 +989,7 @@ struct skull_crusher_t : public tariq_attack_t
 
       ability_flags |= ability_type_e::ABILITY_POWER;
 
-      attack_power_mod.direct = p->spell_const.skull_crusher_lightning_coeff;
+      attack_power_mod.direct = p->find_csv_data( "Ink.HeavySingleTargetAttack.Lightning.StrengthCoefficient" )->value();
     }
 
     double composite_da_multiplier( const action_state_t* s ) const override
@@ -1382,8 +1010,8 @@ struct skull_crusher_t : public tariq_attack_t
     sledgehammer_t( util::string_view name, tariq_t* p ) : tariq_attack_t( std::format( "{}_sledgehammer", name ), p )
     {
       aoe                 = -1;
-      base_multiplier     = p->spell_const.heavy_strike_cleave_multiplier;
-      reduced_aoe_targets = p->spell_const.heavy_strike_target_threshold;
+      base_multiplier     = p->find_csv_data( "Ink.HeavySingleTargetAttack.Talent.HeavySingleTargetAttackAoe.DamageScaler" )->value();
+      reduced_aoe_targets = p->find_csv_data( "Ink.HeavySingleTargetAttack.Talent.HeavySingleTargetAttackAoe.TargetThresholdForDamageScale" )->value();
     }
 
     size_t available_targets( std::vector<player_t*>& tl ) const override
@@ -1433,22 +1061,25 @@ struct skull_crusher_t : public tariq_attack_t
 
   skull_crusher_lightning_t* lightning_attack;
   sledgehammer_t* sledgehammer;
+  double them_bones_cc;
+
   skull_crusher_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
     : tariq_attack_t( name, p, options_str ),
       lightning_attack( new skull_crusher_lightning_t( name, p ) ),
-      sledgehammer( nullptr )
+      sledgehammer( nullptr ),
+      them_bones_cc( p->find_csv_data( "Ink.HeavySingleTargetAttack.Talent.ProcAddedCritChance.AddedCritChance" )->value() )
   {
     id                 = 5;
     name_str_reporting = "Skull Crusher";
 
     ability_flags |= ability_type_e::ABILITY_POWER;
 
-    attack_power_mod.direct = p->spell_const.skull_crusher_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Ink.HeavySingleTargetAttack.StrengthCoefficient" )->value();
 
     resource_current            = RESOURCE_FURY;
-    base_costs[ RESOURCE_FURY ] = p->spell_const.skull_crusher_cost;
+    base_costs[ RESOURCE_FURY ] = p->find_csv_data( "Ink.HeavySingleTargetAttack.Cost" )->value() * 100;
 
-    trigger_gcd = p->spell_const.skull_crusher_gcd;
+    trigger_gcd = p->find_csv_data( "Ink.HeavySingleTargetAttack.Cooldown" )->seconds();
 
     add_child( lightning_attack );
 
@@ -1475,7 +1106,7 @@ struct skull_crusher_t : public tariq_attack_t
     {
       if ( p()->rng_objects.them_bones->trigger() )
       {
-        cc += p()->talents.them_bones_cc;
+        cc += them_bones_cc;
         p()->procs.them_bones->occur();
       }
     }
@@ -1564,9 +1195,9 @@ struct hammer_storm_t : public tariq_attack_t
 
       ability_flags |= ability_type_e::ABILITY_POWER;
 
-      attack_power_mod.direct = p->spell_const.hammer_storm_lightning_coeff;
+      attack_power_mod.direct = p->find_csv_data( "Ink.AoeAttack.Lightning.StrengthCoefficient" )->value();
       aoe                     = -1;
-      reduced_aoe_targets     = p->spell_const.hammer_storm_lightning_threshold;
+      reduced_aoe_targets     = p->find_csv_data( "Ink.AoeAttack.Lightning.TargetThresholdForDamageScale" )->value();
     }
 
     double composite_da_multiplier( const action_state_t* s ) const override
@@ -1595,9 +1226,9 @@ struct hammer_storm_t : public tariq_attack_t
 
       ability_flags |= ability_type_e::ABILITY_POWER;
 
-      attack_power_mod.direct = p->spell_const.hammer_storm_coeff;
+      attack_power_mod.direct = p->find_csv_data( "Ink.AoeAttack.StrengthCoefficient" )->value();
       aoe                     = -1;
-      reduced_aoe_targets     = p->spell_const.hammer_storm_threshold;
+      reduced_aoe_targets     = p->find_csv_data( "Ink.AoeAttack.TargetThresholdForDamageScale" )->value();
 
       add_child( lightning_attack );
     }
@@ -1646,13 +1277,15 @@ struct hammer_storm_t : public tariq_attack_t
     ability_flags |= ability_type_e::ABILITY_POWER;
 
     resource_current            = RESOURCE_FURY;
-    base_costs[ RESOURCE_FURY ] = p->spell_const.hammer_storm_cost;
+    base_costs[ RESOURCE_FURY ] = p->find_csv_data( "Ink.AoeAttack.Cost" )->value() * 100;
 
     channeled           = true;
     hasted_ticks        = true;
     hasted_dot_duration = true;
-    dot_duration        = p->spell_const.hammer_storm_period * p->spell_const.hammer_storm_spins;
-    base_tick_time      = p->spell_const.hammer_storm_period;
+    base_tick_time      = p->find_csv_data( "Ink.AoeAttack.TickInterval" )->seconds();
+    // Includes activation for some reason. 
+    int spins           = as<int>( p->find_csv_data( "Ink.AoeAttack.MaxAttacks" )->value() ) - 1;
+    dot_duration        = base_tick_time * spins;
 
     custom_tick_action = new hammer_storm_hit_t( name, p );
 
@@ -1720,8 +1353,13 @@ struct hammer_storm_t : public tariq_attack_t
 struct culling_strike_t : public tariq_attack_t
 {
   double max_cost;
+  double dmg_increase_per_fury;
+  double executioners_grin_fury;
   culling_strike_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-    : tariq_attack_t( name, p, options_str ), max_cost( p->spell_const.culling_strike_max_fury )
+    : tariq_attack_t( name, p, options_str ),
+      max_cost( p->find_csv_data( "Ink.LowHealthSingleTargetResourceDamage.MaxResourceToSpend" )->value() * 100 ),
+      dmg_increase_per_fury( p->find_csv_data( "Ink.LowHealthSingleTargetResourceDamage.DamageIncreasePerResource" )->value() ),
+      executioners_grin_fury( p->find_csv_data( "Ink.LowHealthSingleTargetResourceDamage.Talent.ResourceAmountToDamage" )->value() )
   {
     id                 = 7;
     name_str_reporting = "Culling Strike";
@@ -1729,11 +1367,11 @@ struct culling_strike_t : public tariq_attack_t
     ability_flags |= ability_type_e::ABILITY_POWER;
 
     
-    cooldown->duration = p->spell_const.culling_strike_cooldown;
+    cooldown->duration = p->find_csv_data( "Ink.LowHealthSingleTargetResourceDamage.Cooldown" )->seconds();
     cooldown->charges  = 1;
     cooldown->hasted   = true;
 
-    attack_power_mod.direct = p->spell_const.culling_strike_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Ink.LowHealthSingleTargetResourceDamage.StrengthCoefficient" )->value();
 
     resource_current            = RESOURCE_FURY;
     base_costs[ RESOURCE_FURY ] = 1.0;
@@ -1741,7 +1379,7 @@ struct culling_strike_t : public tariq_attack_t
     trigger_gcd = 0_s;
 
     if ( p->talents_enabled( tariq_t::KILLING_IN_THE_NAME ) )
-      base_crit += p->talents.killing_in_the_name_cc;
+      base_crit += p->find_csv_data( "Ink.LowHealthSingleTargetResourceDamage.Talent.AddedCritChance" )->value();
 
     if ( p->talents_enabled( tariq_t::PNEUMA ) )
     {
@@ -1771,10 +1409,9 @@ struct culling_strike_t : public tariq_attack_t
   {
     auto dam = base_t::composite_da_multiplier( s );
 
-    auto resource_cost =
-        p()->buffs.executioners_grin->check() ? p()->legendary.executioners_grin_counted_fury : last_resource_cost;
+    auto resource_cost = p()->buffs.executioners_grin->check() ? executioners_grin_fury : last_resource_cost;
 
-    dam *= 1.0 + resource_cost * p()->spell_const.culling_strike_increase_per_fury;
+    dam *= 1.0 + resource_cost * dmg_increase_per_fury;
 
     return dam;
   }
@@ -1797,7 +1434,7 @@ struct thunder_call_t : public tariq_spell_t
 
     trigger_gcd = timespan_t::zero();
 
-    cooldown->duration = p->spell_const.thunder_call_cooldown;
+    cooldown->duration = p->find_csv_data( "Ink.ChargedBuff.Cooldown" )->seconds();
     cooldown->hasted   = false;
     cooldown->charges  = 1;
 
@@ -1830,43 +1467,45 @@ struct chain_lightning_t : public tariq_lightning_attack_t
   mutable std::unordered_set<size_t> hit_players;
   mutable std::vector<player_t*>::iterator target_list_end;
 
+  double motherload_per_target_amp;
   chain_lightning_t( util::string_view name, tariq_t* p, util::string_view options_str = {},
                      secondary_trigger _trigger_type = secondary_trigger::NONE )
     : tariq_lightning_attack_t( name, p, options_str ),
       trigger_type( _trigger_type ),
-      hit_players()
+      hit_players(),
+      motherload_per_target_amp( p->find_csv_data( "Ink.BouncyProjectile.Talent.DamagePerUniqueTarget.Scaler" )->value() )
   {
     id = 9;
 
     name_str_reporting = "Chain Lightning";
 
-    cooldown->duration = p->spell_const.chain_lightning_cooldown;
+    cooldown->duration = p->find_csv_data( "Ink.BouncyProjectile.Cooldown" )->seconds();
     cooldown->hasted   = true;
     cooldown->charges  = 1;
 
     ability_flags |= ability_type_e::ABILITY_CORE;
 
     energize_resource = RESOURCE_FURY;
-    energize_amount   = p->spell_const.chain_lightning_fury_per_hit;
+    energize_amount   = p->find_csv_data( "Ink.BouncyProjectile.ResourceGainPerTarget" )->value() * 100;
     energize_type     = action_energize::PER_HIT;
 
-    attack_power_mod.direct = p->spell_const.chain_lightning_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Ink.BouncyProjectile.StrengthCoefficient" )->value();
 
-    aoe = p->spell_const.chain_lightning_bounces;
+    aoe = as<int>( p->find_csv_data( "Ink.BouncyProjectile.MaxNumOfTargets" )->value() );
 
     if ( p->legendary.thundering_vortex )
     {
-      energize_amount *= p->legendary.thundering_vortex_cl_fury_multiplier;
+      energize_amount *= p->find_csv_data( "Ink.BouncyProjectile.Talent.BouncyProjectile.IncreasedFuryGeneration.FuryScaler" )->value();
     }
 
     if ( p->talents_enabled( tariq_t::THUNDERSTRUCK ) )
-      aoe = p->talents.thunderstruck_max_bounces;
+      aoe = as<int>( p->find_csv_data( "Ink.BouncyProjectile.Talent.IncreasedMaxNumOfTargets.TotalTargets" )->value() );
 
     if ( p->talents_enabled( tariq_t::ACE_OF_SPADES ) )
-      cooldown->charges = p->talents.ace_of_spades_charges;
+      cooldown->charges = as<int>( p->find_csv_data( "Ink.BouncyProjectile.Talent.Charged.MaxCharges" )->value() );
 
     if ( p->talents_enabled( tariq_t::THE_MOTHERLOAD ) )
-      attack_power_mod.direct *= p->talents.the_motherload_multiplier;
+      attack_power_mod.direct *= p->find_csv_data( "Ink.BouncyProjectile.Talent.IncreasedDamage.DamageMultiplier" )->value();
 
     if ( _trigger_type != secondary_trigger::NONE )
     {
@@ -1905,7 +1544,7 @@ struct chain_lightning_t : public tariq_lightning_attack_t
 
     if ( p()->talents_enabled( tariq_t::THE_MOTHERLOAD ) && hit_players.size() > 1 )
     {
-      dam *= 1.0 + p()->talents.the_motherload_increase_per_enemy * ( hit_players.size() - 1 );
+      dam *= 1.0 + motherload_per_target_amp * ( hit_players.size() - 1 );
     }
 
     return dam;
@@ -1917,7 +1556,7 @@ struct chain_lightning_t : public tariq_lightning_attack_t
 
     if ( p()->buffs.thundering_vortex->check() >= p()->legendary.thundering_vortex_needed )
     {
-      pm *= p()->legendary.thundering_vortex_multiplier;
+      pm *= p()->buffs.thundering_vortex->default_value;
     }
 
     return pm;
@@ -1998,8 +1637,10 @@ struct chain_lightning_t : public tariq_lightning_attack_t
 
 struct focused_wrath_t : public tariq_spell_t
 {
+  int focused_wrath_stacks;
   focused_wrath_t( util::string_view name, tariq_t* p, util::string_view options_str = {} )
-    : tariq_spell_t( name, p, options_str )
+    : tariq_spell_t( name, p, options_str ),
+      focused_wrath_stacks( as<int>( p->find_csv_data( "Ink.CostReductionBuff.NumOfStacks" )->value() ) )
   {
     id = 10;
 
@@ -2007,7 +1648,7 @@ struct focused_wrath_t : public tariq_spell_t
 
     trigger_gcd = timespan_t::zero();
 
-    cooldown->duration = p->spell_const.focused_wrath_cooldown;
+    cooldown->duration = p->find_csv_data( "Ink.CostReductionBuff.Cooldown" )->seconds();
     cooldown->hasted   = false;
     cooldown->charges  = 1;
 
@@ -2017,7 +1658,7 @@ struct focused_wrath_t : public tariq_spell_t
   void execute() override
   {
     base_t::execute();
-    p()->buffs.focused_wrath->trigger( p()->spell_const.focused_wrath_stacks );
+    p()->buffs.focused_wrath->trigger( focused_wrath_stacks );
   }
 };
 
@@ -2032,20 +1673,20 @@ struct leap_smash_t : public tariq_attack_t
 
     trigger_gcd = timespan_t::zero();
 
-    cooldown->duration = p->spell_const.leap_smash_cooldown;
+    cooldown->duration = p->find_csv_data( "Ink.MoveToLocationAoeDamage.Cooldown" )->seconds();
     cooldown->hasted   = true;
     cooldown->charges  = 1;
 
     ability_flags |= ability_type_e::ABILITY_MOVEMENT;
 
-    attack_power_mod.direct = p->spell_const.leap_smash_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Ink.MoveToLocationAoeDamage.StrengthCoefficient" )->value();
     aoe                     = -1;
-    reduced_aoe_targets     = p->spell_const.leap_smash_threshold;
+    reduced_aoe_targets     = p->find_csv_data( "Ink.MoveToLocationAoeDamage.TargetThresholdForDamageScale" )->value();
 
     if ( p->talents_enabled( tariq_t::HIGH_ROAD ) )
     {
       energize_resource = RESOURCE_FURY;
-      energize_amount   = p->talents.high_road_leap_smash_fury;
+      energize_amount   = p->find_csv_data( "Ink.MoveToLocationAoeDamage.ResourceGain" )->value() * 100;
       energize_type     = action_energize::ON_CAST;
     }
   }
@@ -2066,7 +1707,7 @@ struct leap_smash_t : public tariq_attack_t
 
     if ( hit_any_target && p()->talents_enabled( tariq_t::MOUTH_FOR_WAR ) )
     {
-      p()->buffs.focused_wrath->trigger( p()->talents.mouth_for_war_focused_wrath_stacks );
+      p()->buffs.focused_wrath->trigger( 1 );
     }
   }
 };
@@ -2080,7 +1721,7 @@ struct raging_currents_t : public tariq_lightning_attack_t
     background = true;
 
     ability_flags |= ability_type_e::ABILITY_SPIRIT;
-    attack_power_mod.direct = p->spell_const.raging_tempest_pulse_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Ink.EnhancedChargedBuff.PulsatingSingleDamage.Damage.StrengthCoefficient" )->value();
 
     name_str_reporting = "Raging Currents";
   }
@@ -2088,8 +1729,12 @@ struct raging_currents_t : public tariq_lightning_attack_t
   void execute()
   {
     auto& tl = target_list();
-    rng().shuffle( tl.begin(), tl.end() );
-    base_t::execute();    
+    if ( tl.size() > 0 )
+    {
+      rng().shuffle( tl.begin(), tl.end() );
+      target = tl[ 0 ];
+      base_t::execute();
+    }
   }
 };
 
@@ -2106,9 +1751,9 @@ struct raging_tempest_t : public tariq_lightning_attack_t
 
     ability_flags |= ability_type_e::ABILITY_SPIRIT;
 
-    attack_power_mod.direct = p->spell_const.raging_tempest_impact_coeff;
+    attack_power_mod.direct = p->find_csv_data( "Ink.EnhancedChargedBuff.AoeImpact.StrengthCoefficient" )->value();
     aoe                     = -1;
-    reduced_aoe_targets     = p->spell_const.raging_tempest_impact_threshold;
+    reduced_aoe_targets     = p->find_csv_data( "Ink.EnhancedChargedBuff.AoeImpact.TargetThresholdForDamageScale" )->value();
 
     resource_current              = RESOURCE_SPIRIT;
     base_costs[ RESOURCE_SPIRIT ] = 100;
@@ -2125,7 +1770,7 @@ struct raging_tempest_t : public tariq_lightning_attack_t
     base_t::execute();
 
     p()->fs_buffs.spirit_of_heroism->trigger();
-    p()->buffs.raging_currents->trigger();
+    p()->buffs.raging_tempest->trigger();
     p()->used_ultimate();
   }
 };
@@ -2134,6 +1779,8 @@ struct raging_tempest_t : public tariq_lightning_attack_t
 
 tariq_td_t::tariq_td_t( player_t* target, tariq_t* source ) : fellowship::fs_player_td_t( target, source ), debuffs()
 {
+
+  // Do not use find_csv_data in td_t as these can be constructed mid sim and the search is relatively slow, even if only done once per enemy.
   debuffs.slayers_mosh = make_buff( *this, "slayers_mosh" )
                              ->set_duration( source->legendary.slayers_mosh_duration )
                              ->set_default_value( source->legendary.slayers_mosh_multiplier - 1 );
@@ -2398,12 +2045,8 @@ void tariq_t::init_base_stats()
   if ( talents_enabled( tariq_t::BLOODLINE ) )
   {
     resources.base_regen_per_second[ RESOURCE_FURY ] =
-        talents.bloodline_fury_amount / talents.bloodline_fury_period.total_seconds();
-  }
-
-  if ( talents_enabled( tariq_t::PNEUMA ) )
-  {
-    resources.start_at[ RESOURCE_SPIRIT ] += talents.pneuma_start_spirit;
+        find_csv_data( "Ink.Talent.PassiveResourceGeneration.FuryPerTick" )->value() * 100.0 /
+        find_csv_data( "Ink.Talent.PassiveResourceGeneration.Period" )->value();
   }
 }
 
@@ -2412,6 +2055,22 @@ void tariq_t::init_base_stats()
 void tariq_t::init_spells()
 {
   fs_player_t::init_spells();
+
+  talents.ride_the_lightning_fury_per_tick = find_csv_data( "Ink.ChargedBuff.Talent.RageIncrease.RagePerTick" )->value() * 100;
+
+  legendary.slayers_mosh_duration =
+      find_csv_data( "Ink.MoveToLocationAoeDamage.Talent.TargetExtraInkDamage.Duration" )->seconds();
+
+  legendary.slayers_mosh_multiplier = find_csv_data( "Ink.MoveToLocationAoeDamage.Talent.TargetExtraInkDamage.IncomingDamageScaler" )->value();
+
+  legendary.thundering_vortex_needed =
+      as<int>( find_csv_data( "Ink.BouncyProjectile.Talent.GainToIncreasedDamage.StacksConsumed" )->value() );
+
+  spell_const.focused_wrath_damage_multiplier = find_csv_data( "Ink.CostReductionBuff.DamageIncrease" )->value();
+  spell_const.focused_wrath_cost_multiplier   = find_csv_data( "Ink.CostReductionBuff.CostReduction" )->value();
+
+  talents.crack_the_sky_lightning_crit_chance =
+      find_csv_data( "Ink.Talent.PassiveLightningCritChanceIncrease" )->value();
 
   //actions.auto_attack = new actions::auto_melee_attack_t( this, "" );
 }
@@ -2469,81 +2128,86 @@ void tariq_t::create_buffs()
 {
   fs_player_t::create_buffs();
 
-  buffs.executioners_grin =
-      make_buff<tariq_buff_t>( this, "executioners_grin" )->set_duration( legendary.executioners_grin_duration );
+  buffs.executioners_grin = make_buff<tariq_buff_t>( this, "executioners_grin" )
+          ->set_duration( find_csv_data( "Ink.LowHealthSingleTargetResourceDamage.Talent.BuffDuration" )->seconds() );
 
-  buffs.thunder_call =
-      make_buff<tariq_buff_t>( this, "thunder_call" )->set_duration( spell_const.thunder_call_duration );
+  buffs.thunder_call = make_buff<tariq_buff_t>( this, "thunder_call" )
+                           ->set_duration( find_csv_data( "Ink.ChargedBuff.Duration" )->seconds() );
 
-  buffs.raging_currents = make_buff<tariq_buff_t>( this, "raging_currents" )
-                              ->set_duration( spell_const.raging_tempest_currents_duration )
-                              ->set_default_value( spell_const.raging_tempest_currents_expertise_per_stack )
-                              ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
-                              ->set_period( spell_const.raging_tempest_pulse_period )
-                              ->set_tick_time_behavior( buff_tick_time_behavior::HASTED )
-                              ->set_max_stack( spell_const.raging_tempest_currents_max_stack )
-                              ->set_tick_callback( [ this ]( buff_t* buff, int current_tick, timespan_t tick_time ) {
-                                actions.raging_currents->execute();
-                              } );
+  buffs.raging_tempest =
+      make_buff<tariq_buff_t>( this, "raging_tempest" )
+          ->set_duration( find_csv_data( "Ink.EnhancedChargedBuff.PulsatingSingleDamage.SelfBuff.Duration" )->seconds() )
+          ->set_default_value( find_csv_data( "Ink.EnhancedChargedBuff.PulsatingSingleDamage.SelfBuff.CritChanceIncreasePerStack" )->value() )
+          ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+          ->set_period( find_csv_data( "Ink.EnhancedChargedBuff.PulsatingSingleDamage.PulsePeriod" )->seconds() )
+          ->set_tick_time_behavior( buff_tick_time_behavior::HASTED )
+          ->set_max_stack( as<int>( find_csv_data( "Ink.EnhancedChargedBuff.PulsatingSingleDamage.SelfBuff.StackCap" )->value() ) )
+          ->set_tick_callback( [ this ]( buff_t* buff, int current_tick, timespan_t tick_time ) {
+            actions.raging_currents->execute();
+          } );
 
   buffs.ride_the_lightning =
-      make_buff<tariq_buff_t>( this, "raging_currents" )
-          ->set_duration( talents.ride_the_lightning_duration )
-          ->set_default_value( talents.ride_the_lightning_haste )
+      make_buff<tariq_buff_t>( this, "ride_the_lightning" )
+          ->set_duration( find_csv_data( "Ink.ChargedBuff.Talent.RageIncrease.Duration" )->seconds() )
+          ->set_default_value( find_csv_data( "Ink.ChargedBuff.Talent.AddedHaste" )->value() )
           ->set_pct_buff_type( STAT_PCT_BUFF_HASTE )
-          ->set_period( talents.ride_the_lightning_period )
+          ->set_period( find_csv_data( "Ink.ChargedBuff.Talent.RageIncrease.TickInterval" )->seconds() )
           ->set_freeze_stacks( true )
           ->set_tick_callback( [ this ]( buff_t* buff, int current_tick, timespan_t tick_time ) {
             resource_gain( RESOURCE_FURY, talents.ride_the_lightning_fury_per_tick, gains.ride_the_lightning );
           } );
 
-  buffs.kill_em_all = make_buff<tariq_buff_t>( this, "kill_em_all" )
-                          ->set_duration( talents.kill_em_all_duration )
-                          ->set_default_value( talents.kill_em_all_dmg_multiplier - 1 )
-                          ->set_max_stack( talents.kill_em_all_stacks )
-                          ->add_stack_change_callback(
-                              [ this ]( auto, auto, auto ) { cooldowns.heavy_strike->adjust_recharge_multiplier(); } );
+  buffs.kill_em_all =
+      make_buff<tariq_buff_t>( this, "kill_em_all" )
+          ->set_reverse( true )
+          ->set_duration( find_csv_data( "Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.Buff.Duration" )->seconds() )
+          ->set_default_value( find_csv_data( "Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.Buff.AutoAttackBuffDamageScaler" )->value() - 1 )
+          ->set_max_stack( as<int>( find_csv_data( "Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.Buff.MaxStacks" )->value() ) )
+          ->add_stack_change_callback( [ this ]( auto, auto, auto ) { cooldowns.heavy_strike->adjust_recharge_multiplier(); } );
 
   buffs.focused_wrath = make_buff<tariq_buff_t>( this, "focused_wrath" )
-                            ->set_duration( spell_const.focused_wrath_duration )
-                            ->set_max_stack( spell_const.focused_wrath_max_stacks );
+          ->set_duration( find_csv_data( "Ink.CostReductionBuff.Duration" )->seconds() )
+          ->set_max_stack( as<int>( find_csv_data( "Ink.CostReductionBuff.MaxStacksLimit" )->value() ) );
 
-  buffs.square_hammer_stacking = make_buff<tariq_buff_t>( this, "square_hammer_stacking" )
-                                     ->set_duration( talents.square_hammer_duration )
-                                     ->set_max_stack( talents.square_hammer_max_stacks )
-                                     ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+  buffs.square_hammer_stacking =
+      make_buff<tariq_buff_t>( this, "square_hammer_stacking" )
+          ->set_duration( find_csv_data( "Ink.AutoAttackBuff.Talent.StackingBuffConsumedByNextSpender.Stacker.Duration" )->seconds() )
+          ->set_max_stack( as<int>( find_csv_data( "Ink.AutoAttackBuff.Talent.StackingBuffConsumedByNextSpender.Stacker.MaxStacks" )->value() ) )
+          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
-  buffs.square_hammer_buff = make_buff<tariq_buff_t>( this, "square_hammer_buff" )
-                                 ->set_duration( talents.square_hammer_expertise_duration )
-                                 //->set_max_stack( talents.square_hammer_max_stacks )
-                                 ->set_max_stack( 1 )
-                                 ->set_default_value( talents.square_hammer_expertise_per_stack )
-                                 ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
-                                 ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+  buffs.square_hammer_buff =
+      make_buff<tariq_buff_t>( this, "square_hammer_buff" )
+          ->set_duration( find_csv_data( "Ink.AutoAttackBuff.Talent.StackingBuffConsumedByNextSpender.Buff.Duration" )->seconds() )
+          ->set_max_stack( 1 )
+          ->set_default_value( find_csv_data( "Ink.AutoAttackBuff.Talent.StackingBuffConsumedByNextSpender.Buff.AddedExpertisePerStack" ) ->value() )
+          ->set_pct_buff_type( STAT_PCT_BUFF_VERSATILITY )
+          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
-  buffs.far_beyond_driven = make_buff<tariq_buff_t>( this, "far_beyond_driven" )
-                                ->set_duration( talents.far_beyond_driven_duration )
-                                ->set_max_stack( talents.far_beyond_driven_max_stacks )
-                                ->set_default_value( talents.far_beyond_driven_spirit_per_stack )
-                                ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY )
-                                ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
+  buffs.far_beyond_driven =
+      make_buff<tariq_buff_t>( this, "far_beyond_driven" )
+          ->set_duration( find_csv_data( "Ink.Talent.AutoAttackBuffDurationalStatBonus.Duration" )->seconds() )
+          ->set_max_stack( as<int>( find_csv_data( "Ink.Talent.AutoAttackBuffDurationalStatBonus.MaxStacks" )->value() ) )
+          ->set_default_value( find_csv_data( "Ink.Talent.AutoAttackBuffDurationalStatBonus.StatIncrease" )->value() )
+          ->set_pct_buff_type( STAT_PCT_BUFF_MASTERY )
+          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT );
 
   buffs.schism_hammer_storm = make_buff<tariq_buff_t>( this, "schism_hammer_storm" )
                                   ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
                                   ->set_max_stack( talents.schism_stacks )
                                   ->set_duration( talents.schism_duration )
-                                  ->set_default_value( talents.schism_damage_hammer_storm_multiplier - 1 );
+                                  ->set_default_value( find_csv_data( "Ink.Talent.ChanceIncreasedSpenderDamage.AoeAttack.DamageMultiplier" )->value() - 1 );
 
   buffs.schism_skull_crusher = make_buff<tariq_buff_t>( this, "schism_skull_crusher" )
                                    ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
                                    ->set_max_stack( talents.schism_stacks )
                                    ->set_duration( talents.schism_duration )
-                                   ->set_default_value( talents.schism_damage_skull_crusher_multiplier - 1 );
+                                   ->set_default_value( find_csv_data( "Ink.Talent.ChanceIncreasedSpenderDamage.HeavySingleTargetAttack.DamageMultiplier" )->value() - 1 );
 
-  buffs.thundering_vortex = make_buff<tariq_buff_t>( this, "thundering_vortex" )
-                                ->set_max_stack( legendary.thundering_vortex_needed * 2 )
-                                ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
-                                ->set_default_value( legendary.thundering_vortex_multiplier - 1 );
+  buffs.thundering_vortex =
+      make_buff<tariq_buff_t>( this, "thundering_vortex" )
+          ->set_max_stack( legendary.thundering_vortex_needed * 2 )
+          ->set_constant_behavior( buff_constant_behavior::NEVER_CONSTANT )
+          ->set_default_value( find_csv_data( "Ink.BouncyProjectile.Talent.GainToIncreasedDamage.StacksReached.ChainLightningDamageScaler" )->value() );
 }
 
 // tariq_t::invalidate_cache =========================================
@@ -2678,15 +2342,17 @@ void tariq_t::init_background_actions()
 void tariq_t::init_rng()
 {
   fs_player_t::init_rng();
-
-  rng_objects.them_bones           = get_accumulated_rng( "them_bones",             rng::CfromP( talents.them_bones_chance ) );
-  rng_objects.schism_skull_crusher = get_accumulated_rng( "schism_skull_crusher",   rng::CfromP( talents.schism_proc_chance ) );
-  rng_objects.schism_hammer_storm  = get_accumulated_rng( "schism_hammer_storm",    rng::CfromP( talents.schism_proc_chance ) );
-  rng_objects.kill_em_all          = get_accumulated_rng( "kill_em_all",            rng::CfromP( talents.kill_em_all_chance ) );
-  rng_objects.blood_and_thunder    = get_accumulated_rng( "blood_and_thunder",      rng::CfromP( talents.blood_and_thunder_chance ) );
-  rng_objects.executioners_grin    = get_accumulated_rng( "executioners_grin",      rng::CfromP( legendary.executioners_grin_chance ) );
   
-  rng_objects.ace_of_spades = get_rppm( "ace_of_spades", talents.ace_of_spades_ppm, 1.0, RPPM_HASTE );
+  double schism_chance = rng::CfromP( find_csv_data( "Ink.Talent.ChanceIncreasedSpenderDamage.ProcChance" )->value() );
+
+  rng_objects.them_bones           = get_accumulated_rng( "them_bones",             rng::CfromP( find_csv_data( "Ink.HeavySingleTargetAttack.Talent.ProcAddedCritChance.Chance" )->value() ) );
+  rng_objects.schism_skull_crusher = get_accumulated_rng( "schism_skull_crusher",   schism_chance );
+  rng_objects.schism_hammer_storm  = get_accumulated_rng( "schism_hammer_storm",    schism_chance );
+  rng_objects.kill_em_all          = get_accumulated_rng( "kill_em_all",            rng::CfromP( find_csv_data( "Ink.AutoAttackBuff.Talent.AlwaysHitWindowBuff.ProcChance" )->value() ) );
+  rng_objects.blood_and_thunder    = get_accumulated_rng( "blood_and_thunder",      rng::CfromP( find_csv_data( "Ink.BouncyProjectile.Talent.FreeCastFromAttack.Chance" )->value() ) );
+  rng_objects.executioners_grin    = get_accumulated_rng( "executioners_grin",      rng::CfromP( find_csv_data( "Ink.LowHealthSingleTargetResourceDamage.Talent.Chance" )->value() ) );
+  
+  rng_objects.ace_of_spades = get_rppm( "ace_of_spades", find_csv_data( "Ink.BouncyProjectile.Talent.FreeCastFromAoeAttack.PPMChance" )->value(), 1.0, RPPM_HASTE );
 }
 
 // tariq_t::reset ===========================================================

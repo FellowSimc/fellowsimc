@@ -1,0 +1,147 @@
+tariq="Tariq"
+
+
+# head=head,ilevel=315,variant=ffff,rarity=regal,main_secondary=expertise/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/the_trickster
+# shoulders=shoulders,ilevel=315,variant=svth,rarity=regal,main_secondary=expertise/crit,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+# back=back,ilevel=315,variant=ffff,rarity=regal,main_secondary=haste/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+# chest=chest,ilevel=360,rarity=legendary
+# hands=hands,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=emerald_judgement/the_wayfarer/hunters_focus
+# legs=legs,ilevel=315,variant=svth,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=sapphire_aurastone/the_trickster/ruby
+# feet=feet,ilevel=315,variant=svth,rarity=regal,main_secondary=haste/haste,tempering=8,affixes=martial_initiative/the_trickster/the_trickster
+
+# neck=neck,ilevel=315,variant=ffffneck,rarity=regal,main_secondary=haste/expertise,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# wrists=wrists,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# finger1=finger1,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# finger2=finger2,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=salamanders_cunning:2/diamond/diamond
+# trinket1=trinket1,ilevel=315,variant=relic,rarity=regal,main_secondary=haste,tempering=8,affixes=salamanders_cunning:2/emerald/emerald
+# trinket2=trinket2,ilevel=315,variant=relic,rarity=regal,main_secondary=expertise,tempering=8,affixes=salamanders_cunning:2/sapphire/sapphire
+# main_hand=main_hand,ilevel=315,variant=weap,rarity=regal,tempering=8,affixes=salamanders_cunning:2/diamond/diamond/hunters_focus/salamanders_cunning:2/banshees_cunning:2/visions_of_grandeur:2/willful_momentum
+
+# primary_stat=161
+# stamina=306
+# armor=634
+# crit_rating=89
+# haste_rating=71
+# expertise_rating=119
+# spirit_rating=207
+
+# gems.sapphire_power=1000
+# gems.emerald_power=1000
+
+# sets.seal_of_the_heskyr=1
+# sets.dark_prophecy=1
+
+
+
+
+head=head,ilevel=315,variant=ffff,rarity=regal,main_secondary=expertise/haste,tempering=8
+shoulders=shoulders,ilevel=315,variant=svth,rarity=regal,main_secondary=expertise/crit,tempering=8
+back=back,ilevel=315,variant=ffff,rarity=regal,main_secondary=haste/haste,tempering=8
+chest=chest,ilevel=360,rarity=legendary
+hands=hands,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8
+legs=legs,ilevel=315,variant=svth,rarity=regal,main_secondary=crit/haste,tempering=8
+feet=feet,ilevel=315,variant=svth,rarity=regal,main_secondary=haste/haste,tempering=8
+
+neck=neck,ilevel=315,variant=ffffneck,rarity=regal,main_secondary=haste/expertise,tempering=8
+wrists=wrists,ilevel=315,variant=ffff,rarity=regal,main_secondary=crit/haste,tempering=8
+finger1=finger1,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8
+finger2=finger2,ilevel=315,variant=ffffring,rarity=regal,main_secondary=crit/haste,tempering=8,affixes=the_vehement/the_trickster
+trinket1=trinket1,ilevel=315,variant=relic,rarity=regal,main_secondary=haste,tempering=8
+trinket2=trinket2,ilevel=315,variant=relic,rarity=regal,main_secondary=expertise,tempering=8,affixes=the_philosopher/the_philosopher/the_philosopher/the_philosopher
+main_hand=main_hand,ilevel=315,variant=weap,rarity=regal,tempering=8,affixes=the_mystic/the_mystic/the_mystic/the_mystic/martial_initiative/visions_of_grandeur/visions_of_grandeur/emerald_judgement/amethyst_splinters/seized_opportunity/seized_opportunity/hunters_focus/hunters_focus/hunters_focus/hunters_focus
+
+
+gear_strength=161
+gear_stamina=306
+gear_crit_rating=105
+gear_haste_rating=101
+gear_mastery_rating=261
+gear_versatility_rating=119
+
+sets.seal_of_the_heskyr=1
+sets.drakheims_absolution=1
+
+gems.sapphire_power=1200
+gems.emerald_power=1200
+gems.amethyst_power=500
+gems.topaz_power=500
+
+legendary.slayers_mosh=1
+
+weapon=fated_strike
+
+talents=high_road:1/square_hammer:1/mouth_for_war:1/bloodline:1/ride_the_lightning:1/schism:1/far_beyond_driven:1/them_bones:1/crack_the_sky:1
+
+
+actions.precombat=snapshot_stats
+
+actions.finishers=/
+actions.finishers+=/hammer_storm,if=buff.schism_hammer_storm.up&(buff.focused_wrath.up|active_enemies>=2&(buff.schism_hammer_storm.stack=2|buff.schism_hammer_storm.remains<=gcd.max*3))
+actions.finishers+=/skull_crusher,if=buff.schism_skull_crusher.up&(buff.schism_skull_crusher.stack=2|buff.schism_skull_crusher.remains<=gcd.max*3|buff.focused_wrath.up)
+actions.finishers+=/skull_crusher,if=(talent.schism)&(fury>50)
+#&(fury>=90|fight_remains<=10|buff.thunder_call.up)
+actions.finishers+=/hammer_storm,if=active_enemies>=3&(fury>50|fight_remains<=10|buff.thunder_call.up&buff.thunder_call.remains<=gcd.max)
+#&(!talent.schism|fury>=50)
+actions.finishers+=/skull_crusher,if=active_enemies<3&(fury>50|fight_remains<=10|buff.thunder_call.up&buff.thunder_call.remains<=gcd.max)
+
+actions=/
+actions+=/thunder_call
+actions+=/raging_tempest,if=!buff.thunder_call.up
+actions+=/leap_smash,if=talent.high_road&fury.deficit>=20|talent.mouth_for_war&!buff.focused_wrath.at_max_stacks|legendary.slayers_mosh|1
+actions+=/voidbringers_touch
+actions+=/sahrils_wrath,if=buff.thunder_call.up
+actions+=/focused_wrath,if=buff.focused_wrath.stack<2
+actions+=/culling_strike,if=active_enemies<=20&(fury>=10)|buff.executioners_grin.up|talent.pneuma
+actions+=/heavy_strike,if=buff.kill_em_all.up
+actions+=/chain_lightning,if=fury.deficit>=10
+actions+=/heavy_strike,if=fury.deficit>=12
+actions+=/call_action_list,name=finishers
+#,if=fury.deficit>=12
+actions+=/face_breaker,if=fury.deficit>=7
+actions+=/fated_strike
+#,if=fury.deficit>=7
+
+#&(!talent.schism|fury>50)
+# actions+=/skull_crusher,if=buff.schism_skull_crusher.up&(fury>=90|fight_remains<=10|buff.thunder_call.up)
+# actions+=/hammer_storm,if=buff.schism_hammer_storm.up
+# actions+=/skull_crusher,if=(active_enemies<=2|talent.sledgehammer|talent.schism)&(fury>=80|fight_remains<=10|buff.thunder_call.up)|talent.schism&fury>50
+# actions+=/hammer_storm,if=(active_enemies>=3)&(fury>=80|fight_remains<=10|buff.thunder_call.up)
+actions+=/earthbreaker
+actions+=/wild_swing
+
+
+copy="CJ Apl"
+
+actions=/
+actions+=/thunder_call
+actions+=/call_action_list,name=fated_strike_pre_sequence_into_fated_strike,if=cooldown.fated_strike.ready
+actions+=/raging_tempest
+actions+=/leap_smash,if=fury.deficit>=15
+actions+=/voidbringers_touch
+actions+=/sahrils_wrath,if=buff.thunder_call.up|buff.raging_tempest.up
+actions+=/focused_wrath
+actions+=/culling_strike,if=active_enemies<=20
+actions+=/heavy_strike,if=fury.deficit>=12
+actions+=/chain_lightning,if=legendary.thundering_vortex|talent.thunderstruck&fury.deficit>=10
+actions+=/call_action_list,name=finishers,if=buff.thunder_call.up|buff.raging_tempest.up
+actions+=/chain_lightning
+actions+=/face_breaker,if=fury.deficit>=7
+actions+=/call_action_list,name=finishers
+actions+=/wild_swing
+
+actions.precombat=/
+actions.precombat+=/snapshot_stats
+
+actions.finishers=/
+actions.finishers+=/hammer_storm,if=talent.schism&buff.schism_hammer_storm.at_max_stacks&active_enemies>1
+actions.finishers+=/hammer_storm,if=talent.schism&buff.schism_hammer_storm.up&active_enemies>1&debuff.slayers_mosh.remains>gcd&(buff.thunder_call.up|buff.raging_tempest.up)
+actions.finishers+=/hammer_storm,if=talent.schism&buff.schism_hammer_storm.up&active_enemies>1&(buff.thunder_call.remains<gcd*2|buff.raging_tempest.remains<gcd*2)
+actions.finishers+=/hammer_storm,if=talent.schism&buff.schism_hammer_storm.up&active_enemies=1&buff.focused_wrath.up
+actions.finishers+=/hammer_storm,if=!talent.schism&active_enemies>=3
+actions.finishers+=/skull_crusher,if=(talent.schism&!(buff.schism_hammer_storm.at_max_stacks&active_enemies>1))|(!talent.schism&active_enemies<=2)
+
+actions.fated_strike_pre_sequence_into_fated_strike=/
+actions.fated_strike_pre_sequence_into_fated_strike+=/hammer_storm,if=buff.schism_hammer_storm.at_max_stacks&fury>85&cooldown.leap_smash.ready&talent.high_road
+actions.fated_strike_pre_sequence_into_fated_strike+=/skull_crusher,if=fury>85&cooldown.leap_smash.ready&talent.high_road
+actions.fated_strike_pre_sequence_into_fated_strike+=/leap_smash,if=fury.deficit>=15&talent.high_road
+actions.fated_strike_pre_sequence_into_fated_strike+=/fated_strike
